@@ -1,0 +1,15 @@
+[submodule "frtk/vendor/spdlog"]
+	path = frtk/vendor/spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "frtk/vendor/glm"]
+	path = frtk/vendor/glm
+	url = https://github.com/g-truc/glm
+[submodule "frtk/vendor/yalm"]
+	path = frtk/vendor/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp
+[submodule "frtk/vendor/yaml_cpp"]
+	path = frtk/vendor/yaml_cpp
+	url = https://github.com/jbeder/yaml-cpp
+[submodule "frtk/vendor/yaml-cpp"]
+	path = frtk/vendor/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp

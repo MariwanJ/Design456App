@@ -1,0 +1,20 @@
+# Directories
+.vs/
+bin/
+bin-int/
+
+# Files
+*.user
+
+
+.vscode/
+*.sln
+*.vcxproj
+frtk/*.vcxproj
+frtk/*.vcxproj.filters
+
+*.sln
+*.vcxproj
+frtk/vendor/fltk
+frtk/vendor/Glad/*.vcxproj
+frtk/vendor/Glad/*.vcxproj.filters
