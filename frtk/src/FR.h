@@ -212,3 +212,49 @@ namespace COLOR {
 #define FR_OLDLACE              =   ( 0.9922,  0.9608,  0.9020,  1.0000)
 #define FR_GLASS                =   ( 0.3300,  1.0000,  1.0000,  1.0000)
 };
+
+#include<fr_callbacks.h>
+
+class FR {
+	FR() {}; //NO need for a constructor.
+public:
+	//static variables used for mouse events inside fgwl.
+	static int glfw_e_x;  //SAVE X AND Y OF LAST CLICK INSIDE GLFW
+	static int glfw_e_y;
+	static int glfw_click;
+	static int glfw_double_click;
+
+	//Avoid running GLFW OR GLAD CODE whiel GLFW is not created
+	static bool s_GLFWInitialized;
+	static bool s_GladInitialized;
+
+};
+
+
+
+enum {
+
+	GLFW_WINDOW_CLOSE,
+	GLFW_WINDOW_RESIZE,
+	GLFW_FOCUSE,
+	GLFW_APP_RENDER,
+	GLFW_KEY_PRESSED,
+	GLFW_KEY_RELEASED,
+	GLFW_KEY_TYPED,
+	
+	//MOUSE
+	GLFW_MOUSE_LEFT_PUSH,
+	GLFW_MOUSE_RIGHT_PUSH,
+	GLFW_MOUSE_LEFT_RELEASE,
+	GLFW_MOUSE_RIGHT_RELEASE,
+	GLFW_MOUSE_MIDDLE_PUSH,
+	GLFW_MOUSE_MIDDLE_RELEASE,
+	GLFW_MOUSE_DOUBLE_CLICK,   //ONE CLICK IS JUST PUSH
+	
+	GLFW_MOUSE_MOVE,
+	GLFW_MOUSE_SCROLL,
+
+
+
+
+};

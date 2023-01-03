@@ -1,8 +1,8 @@
 /*                                                                      *
  This file is a part of the Open Source Design456App                    *
-                                                                *
+                                                                        *
  Copyright (C) 2023                                                     *
-                                                                    *
+                                                                        *
  This library is free software; you can redistribute it and/or          *
  modify it under the terms of the GNU Lesser General Public             *
  License as published by the Free Software Foundation; either           *
@@ -16,8 +16,8 @@
  You should have received a copy of the GNU Lesser General Public       *
  License along with this library; if not, If not, see                   *
  <http://www.gnu.org/licenses/>										*
- .																*                                                                       *
- Author :Mariwan Jalal    mariwan.jalal@gmail.com                        *
+ .																*
+ Author :Mariwan Jalal    mariwan.jalal@gmail.com                       *
 */
 
 #ifndef FR_GL3WINDOW_H
@@ -26,6 +26,18 @@
 
 #include <frtk.h>
 #include<Fr_Core.h>
+
+//callbacks - private
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+void cursor_position_callback(GLFWwindow*, double xpos, double ypos);
+void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cursor entered the window's client area, or GL_FALSE if it left it.
+void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
+void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
+
+
+
 
 class FRTK_API Fr_GL3Window : public Fl_Window {
 public:
@@ -39,16 +51,19 @@ public:
     virtual void resizeGlWindow(int x, int y, int w, int h);
     void resize(int x, int y, int w, int h) override;
 
-    virtual void draw() override;
-    virtual void redraw();
-    virtual void show() override;
-    virtual void gladEvents(int events);
-    virtual int handle(int event) override;
+    virtual void draw() override;           //fltk
+    virtual void redraw();                  //both
+    virtual void show() override;           //both
+    virtual void gladEvents(int events);    //
+    virtual int handle(int event) override; //FLTK handle 
+    virtual int glfw_handle(int evenet); //Take care of GLFW events 
 
 protected:
-    int  createGLFWwindow();
+    int createGLFWwindow();
     int updateGLFWWindow();
+
 private:
+
     bool overlay;
     //Let FLTK draw over GLFW
     void setOverlay();
@@ -74,10 +89,12 @@ private:
     static bool s_GLFWInitialized;
     static bool s_GladInitialized;
 
-    int _xGl;
-    int _yGl;
-    int _wGl;
-    int _hGl;
+    int _xGl; // It is different than FLTK. But it is reference to x()
+    int _yGl; // It is different than FLTK. But it is reference to y()
+    int _wGl; // It is different than FLTK. But it is reference to w()
+    int _hGl; // It is different than FLTK. But it is reference to h()
+
+
 };
 
 #endif

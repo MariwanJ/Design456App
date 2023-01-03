@@ -1,8 +1,8 @@
 /*                                                                      *
  This file is a part of the Open Source Design456App                    *
-                                                                *
+                                                                        *
  Copyright (C) 2023                                                     *
-                                                                    *
+                                                                        *
  This library is free software; you can redistribute it and/or          *
  modify it under the terms of the GNU Lesser General Public             *
  License as published by the Free Software Foundation; either           *
@@ -16,7 +16,7 @@
  You should have received a copy of the GNU Lesser General Public       *
  License along with this library; if not, If not, see                   *
  <http://www.gnu.org/licenses/>										*
- .																*                                                                       *
+ .																*
  Author :Mariwan Jalal    mariwan.jalal@gmail.com                        *
 */
 
