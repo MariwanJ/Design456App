@@ -20,52 +20,36 @@
  Author :Mariwan Jalal    mariwan.jalal@gmail.com                       *
 */
 
-#ifndef FR_CORE_H
-#define FR_CORE_H
-
-#include<Fr_Log.h>
+#include <fr_widgets/fr_basic_shapes.h>
 
 
-#ifdef FRTK_ENABLE_ASSERTS
-#define FRTK_APP_ASSERT(x, ...) { if(!(x)) { APP_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
-#define FRTK_CORE_ASSERT(x, ...) { if(!(x)) { FR_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
-#else
-#define FRTK_ASSERT(x, ...)
-#define FRTK_CORE_ASSERT(x, ...)
-#endif
+// An array of 3 vectors which represents 3 vertices
+static const GLfloat g_vertex_buffer_data[] = {
+   -1.0f, -1.0f, 0.0f,
+   1.0f, -1.0f, 0.0f,
+   0.0f,  1.0f, 0.0f,
+};
 
+void draw_triangle(GLuint& vertexBuffer) {
 
-#ifdef FRTK_PLATFORM_WINDOWS
-#include <Windows.h>
-#ifdef FR_BUILD_STATIC
-#define FRTK_API 			//NOTHING
-#else
-#ifdef FR_BUILD_DLL
-#define FRTK_API __declspec(dllexport)
-#else
-#define FRTK_API __declspec(dllimport)
-#endif
-#endif
-#else
-#error FRTK NOT IMPLEMENTED
-#endif
+    unsigned int VertexArrayID = 0;
+    glGenVertexArrays(1, &VertexArrayID);
+    glBindVertexArray(VertexArrayID);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
 
-
-
-
-#define setBIT(x) (1 << x)
-#define clearBIT(x) (0 << x)
-
-#if defined(__APPLE__)
-#  include <OpenGL/gl3.h> // defines OpenGL 3.0+ functions
-#else
-#if defined(_WIN32)
-#define GLAD_STATIC 1
-#endif
-#include<../Glad/include/glad/glad.h>
-#endif
-
-
-
-
-#endif
+    // 1st attribute buffer : vertices
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glVertexAttribPointer(
+        0,
+        3,              // size
+        GL_FLOAT,       // type
+        GL_FALSE,       // normalized?
+        0,              // stride   
+        (void*)0        // array buffer offset
+    );
+    // Draw the triangle !
+    glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+    glDisableVertexAttribArray(0);
+}

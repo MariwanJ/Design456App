@@ -41,6 +41,11 @@ Fr_GL3Window::Fr_GL3Window(int w, int h) : Fl_Window(0, 0, w, h, "") {}
 
 static int counter = 0;
 
+int Fr_GL3Window::_xGl = 0;
+int Fr_GL3Window::_yGl = 0;
+int Fr_GL3Window::_wGl = 0;
+int Fr_GL3Window::_hGl = 0;
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -212,7 +217,8 @@ int Fr_GL3Window::createGLFWwindow()
         ShowWindow(glfwHND, SW_SHOW);
         glfwGetFramebufferSize(pWindow, &_wGl, &_hGl);
         glViewport(_xGl, _yGl, _wGl, _hGl);
-        glClearColor(1, 0, 1, 1);
+        //glClearColor(1, 0, 1, 1);
+
         glClear(GL_COLOR_BUFFER_BIT);
 
 
@@ -233,7 +239,9 @@ int Fr_GL3Window::createGLFWwindow()
 
 int Fr_GL3Window::updateGLFWWindow()
 {
-    UpdateWindow(glfwHND);
+    //UpdateWindow(glfwHND);
+    if (s_GladInitialized)
+        draw_triangle(vertexBuffer);
     glfwSwapBuffers(pWindow);
     glfwPollEvents();
     return 0;
@@ -242,7 +250,7 @@ int Fr_GL3Window::updateGLFWWindow()
 void Fr_GL3Window::framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     if (s_GladInitialized && s_GLFWInitialized) {
-        glViewport(_wGl, _hGl);
+        glViewport(0,0,_wGl, _hGl);
     }
 }
 
@@ -280,14 +288,14 @@ void Fr_GL3Window::show() {
     Fl_Window::show();
     //Create the GLFW Window
     if (createGLFWwindow() != 0) {
-        unsigned int id = 0;
-        glGenVertexArrays(1, &id);
+
         if (s_GladInitialized == true) {
-            glad_glClearColor(0.0, 1.0, 0.0, 1.0);
-            glClearColor(1, 0, 1, 1);
+            glad_glClearColor(0.0, 0.0, 1.0, 1.0);
+
             glClear(GL_COLOR_BUFFER_BIT);
             UpdateWindow(glfwHND);
         }
+        
     }
 }
 

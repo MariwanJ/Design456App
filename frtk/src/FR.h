@@ -25,6 +25,8 @@
 
 
 
+
+
  /**
 	The major release version
   */
@@ -253,8 +255,6 @@ enum {
 	
 	GLFW_MOUSE_MOVE,
 	GLFW_MOUSE_SCROLL,
-
-
 
 
 };

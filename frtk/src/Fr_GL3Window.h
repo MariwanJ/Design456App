@@ -7,12 +7,12 @@
  modify it under the terms of the GNU Lesser General Public             *
  License as published by the Free Software Foundation; either           *
  version 2 of the License, or (at your option) any later version.       *
-                                                                *
+                                                                        *
  This library is distributed in the hope that it will be useful,        *
  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU      *
  Lesser General Public License for more details.                        *
-                                                                *
+                                                                        *
  You should have received a copy of the GNU Lesser General Public       *
  License along with this library; if not, If not, see                   *
  <http://www.gnu.org/licenses/>										*
@@ -36,11 +36,6 @@ void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cur
 void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
 void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
 
-int Fr_GL3Window::_xGl=0;
-int Fr_GL3Window::_yGl=0;
-int Fr_GL3Window::_wGl=0;
-
-static int _hGl; // It is different than FLTK. But it is depends on h()
 class FRTK_API Fr_GL3Window : public Fl_Window {
 public:
     Fr_GL3Window(int x, int y, int w, int h, const char* l);
@@ -73,13 +68,8 @@ private:
     static void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
     static void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
 
-
     bool overlay;
-    //Let FLTK draw over GLFW
     void setOverlay();
-    /* Don't draw over GLFW -
-    Warning the object will still try to draw but
-    it will not be visible */
     void removeOverlya();
 
     GLuint shaderProgram;
@@ -104,5 +94,11 @@ private:
     static int _wGl; // It is different than FLTK. But it is depends on  w()
     static int _hGl; // It is different than FLTK. But it is depends on h()
 };
+
+
+
+
+void draw_triangle(GLuint& vertexBuffer);
+
 
 #endif

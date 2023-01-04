@@ -35,18 +35,19 @@
 #include <unordered_map>
 #include <unordered_set>
 
+
 #include <FL/Fl.H>
 #include <FL/fl_types.h>
 //#include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Window.H>
 
+#include <GLFW/glfw3.h>
+#include <GLFW/glfw3native.h>
+
 #include<glad/glad.h>
 
 #include <Fr_GL3Window.h>
 #include <FL/platform.H>
-
-#include <GLFW/glfw3.h>
-#include <GLFW/glfw3native.h>
 
 #include <FL/gl.h> // for gl_texture_reset()
 #include <Fr_Log.h>
@@ -54,8 +55,12 @@
 #include "spdlog/fmt/ostr.h"
 
 #include <FR.h>
-#include<Fr_GL3Window.h>
 
+
+
+
+//drawing
+#include<fr_widgets/fr_basic_shapes.h>
 
 
 #endif
