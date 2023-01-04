@@ -22,10 +22,10 @@
 
 #ifndef FR_GL3WINDOW_H
 #define FR_GL3WINDOW_H
-
-
 #include <frtk.h>
 #include<Fr_Core.h>
+
+class Fr_GL3Window;
 
 //callbacks - private
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -36,9 +36,11 @@ void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cur
 void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
 void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
 
+int Fr_GL3Window::_xGl=0;
+int Fr_GL3Window::_yGl=0;
+int Fr_GL3Window::_wGl=0;
 
-
-
+static int _hGl; // It is different than FLTK. But it is depends on h()
 class FRTK_API Fr_GL3Window : public Fl_Window {
 public:
     Fr_GL3Window(int x, int y, int w, int h, const char* l);
@@ -55,14 +57,22 @@ public:
     virtual void redraw();                  //both
     virtual void show() override;           //both
     virtual void gladEvents(int events);    //
-    virtual int handle(int event) override; //FLTK handle 
-    virtual int glfw_handle(int evenet); //Take care of GLFW events 
+    virtual int handle(int event) override; //FLTK handle
+    virtual int glfw_handle(int evenet); //Take care of GLFW events
 
 protected:
     int createGLFWwindow();
     int updateGLFWWindow();
 
 private:
+    static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+    static void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+    static void cursor_position_callback(GLFWwindow*, double xpos, double ypos);
+    static void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cursor entered the window's client area, or GL_FALSE if it left it.
+    static void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
+    static void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
+
 
     bool overlay;
     //Let FLTK draw over GLFW
@@ -89,12 +99,10 @@ private:
     static bool s_GLFWInitialized;
     static bool s_GladInitialized;
 
-    int _xGl; // It is different than FLTK. But it is reference to x()
-    int _yGl; // It is different than FLTK. But it is reference to y()
-    int _wGl; // It is different than FLTK. But it is reference to w()
-    int _hGl; // It is different than FLTK. But it is reference to h()
-
-
+    static int _xGl; // It is different than FLTK. But it is depends on  x()
+    static int _yGl; // It is different than FLTK. But it is depends on  y()
+    static int _wGl; // It is different than FLTK. But it is depends on  w()
+    static int _hGl; // It is different than FLTK. But it is depends on h()
 };
 
 #endif

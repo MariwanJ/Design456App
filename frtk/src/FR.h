@@ -223,7 +223,7 @@ public:
 	static int glfw_e_y;
 	static int glfw_click;
 	static int glfw_double_click;
-
+	
 	//Avoid running GLFW OR GLAD CODE whiel GLFW is not created
 	static bool s_GLFWInitialized;
 	static bool s_GladInitialized;
