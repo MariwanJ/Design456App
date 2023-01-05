@@ -73,7 +73,7 @@ void scroll_callback(GLFWwindow*, double xoffset, double yoffset)
 
 
 
-Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) : Fl_Window(x, y, w, h, l), overlay(true) {
+Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) : Fl_Window(x, y, w, h, l), overlay(false) {
     /*
     * from https://discourse.glfw.org/t/attach-a-glfwwindow-to-windows-window-client-area/882/5:
     *
@@ -103,7 +103,7 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) : Fl_Windo
     _yGl = border;
     _wGl = w - border;
     _hGl = h - border;
-    gl_version_major = 3;
+    gl_version_major = 4;
     gl_version_minor = 3;
 
     if (!s_GLFWInitialized)
@@ -159,14 +159,22 @@ void Fr_GL3Window::reset() {
 
 void Fr_GL3Window::resizeGlWindow(int _xG, int _yG, int _wG, int _hG)
 {
+    _xG = border;
+    _yG = border;
+    _wG = w() - border;
+    _hG = h() - border;
+
     if (pWindow != nullptr) {
         glfwSetWindowPos(pWindow, _xG, _yG);
         glfwSetWindowSize(pWindow, _wG, _hG);
         //printf("xgl=%i ygl=%i wgl=%i hgl=%i\n", _xG, _yG, _wG, _hG);
     }
+    if(s_GladInitialized)
+        updateGLFWWindow();
 }
 
 int Fr_GL3Window::handle(int event) {
+    updateGLFWWindow();
     return Fl_Window::handle(event);
 }
 
@@ -184,8 +192,10 @@ int Fr_GL3Window::createGLFWwindow()
         glfwMakeContextCurrent(pWindow);
 
         int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-        if (status == 1)
+        if (status == 1) {
             s_GladInitialized = true;
+            draw_triangle(vertexBuffer);
+        }
         else
             s_GladInitialized = false;
 
@@ -204,8 +214,8 @@ int Fr_GL3Window::createGLFWwindow()
         }
 
         DWORD style = GetWindowLong(glfwHND, GWL_STYLE); //get the b style
-        style &= ~(WS_POPUP | WS_CAPTION); //reset the �caption� and �popup� bits
-        style |= WS_CHILD; //set the �child� bit
+        style &= ~(WS_POPUP | WS_CAPTION); //reset the caption and popup bits
+        style |= WS_CHILD; //set the child bit
         style |= WS_OVERLAPPED;
         SetWindowLong(glfwHND, GWL_STYLE, style); //set the new style of b
         MoveWindow(glfwHND, _xGl, _yGl, _wGl, _hGl, true); //place b at (x,y,w,h) in a
@@ -215,6 +225,7 @@ int Fr_GL3Window::createGLFWwindow()
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         ShowWindow(glfwHND, SW_SHOW);
+
         glfwGetFramebufferSize(pWindow, &_wGl, &_hGl);
         glViewport(_xGl, _yGl, _wGl, _hGl);
         //glClearColor(1, 0, 1, 1);
@@ -239,11 +250,14 @@ int Fr_GL3Window::createGLFWwindow()
 
 int Fr_GL3Window::updateGLFWWindow()
 {
-    //UpdateWindow(glfwHND);
-    if (s_GladInitialized)
-        draw_triangle(vertexBuffer);
-    glfwSwapBuffers(pWindow);
+    UpdateWindow(glfwHND);
     glfwPollEvents();
+    glfwSwapBuffers(pWindow);
+    if (s_GladInitialized) {
+        //glad_glClearColor(0.0, 1.0, 0.0, 1.0);
+        glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+        glFlush();
+    }
     return 0;
 }
 

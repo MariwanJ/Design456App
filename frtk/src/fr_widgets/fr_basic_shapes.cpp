@@ -24,7 +24,7 @@
 
 
 // An array of 3 vectors which represents 3 vertices
-static const GLfloat g_vertex_buffer_data[] = {
+static const GLfloat buffer[] = {
    -1.0f, -1.0f, 0.0f,
    1.0f, -1.0f, 0.0f,
    0.0f,  1.0f, 0.0f,
@@ -32,24 +32,28 @@ static const GLfloat g_vertex_buffer_data[] = {
 
 void draw_triangle(GLuint& vertexBuffer) {
 
-    unsigned int VertexArrayID = 0;
-    glGenVertexArrays(1, &VertexArrayID);
-    glBindVertexArray(VertexArrayID);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-
+    glGenBuffers(1, &vertexBuffer);
     // 1st attribute buffer : vertices
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0,
+        2,
+        GL_FLOAT, GL_FALSE,
+        sizeof(float) * 2,
+        (void*)0);
+
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glVertexAttribPointer(
+    glBufferData(GL_ARRAY_BUFFER, sizeof(buffer), buffer, GL_STATIC_DRAW);
+/*    glVertexAttribPointer(
         0,
         3,              // size
         GL_FLOAT,       // type
         GL_FALSE,       // normalized?
         0,              // stride   
         (void*)0        // array buffer offset
-    );
+    );*/
     // Draw the triangle !
-    glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
     glDisableVertexAttribArray(0);
+
+  
+
 }
