@@ -120,15 +120,14 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) : Fl_Windo
     glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
     pWindow = glfwCreateWindow(_wGl, _hGl, "", NULL, NULL);
 
-
-
-
-
-
-    end();
+    // end();
 }
 
-
+void Fr_GL3Window::flush() {
+    //damage(FL_DAMAGE_ALL); //ALWAYS DRAW EVERYTHING FOR OpenGL Window
+    updateGLFWWindow();
+    Fl::flush();
+}
 Fr_GL3Window::~Fr_GL3Window()
 {
     glfwDestroyWindow(pWindow);
@@ -139,15 +138,15 @@ Fr_GL3Window::~Fr_GL3Window()
 void Fr_GL3Window::draw() {
     if (overlay) {
         Fl_Window::draw();
-        updateGLFWWindow();
+        //updateGLFWWindow();
         //FRTK_CORE_INFO("[DRAW BOTH] {0}");
         printf("overlay%i\n", counter);
         counter++;
     }
     else {
-        updateGLFWWindow();
+        //updateGLFWWindow();
         Fl_Window::draw();
-        printf("not overlay%i\n", counter);
+       // printf("not overlay%i\n", counter);
         counter++;
     }
 }
@@ -174,13 +173,20 @@ void Fr_GL3Window::resizeGlWindow(int _xG, int _yG, int _wG, int _hG)
 }
 
 int Fr_GL3Window::handle(int event) {
-    updateGLFWWindow();
+    damage(FL_DAMAGE_ALL);
+    gladEvents(event);
     return Fl_Window::handle(event);
 }
 
 int Fr_GL3Window::glfw_handle(int evenet)
 {
     return 0;
+}
+
+void Fr_GL3Window::hide()
+{
+    glfwMakeContextCurrent(nullptr);
+    Fl_Window::hide();
 }
 
 int Fr_GL3Window::createGLFWwindow()
@@ -190,11 +196,10 @@ int Fr_GL3Window::createGLFWwindow()
     int result = 0;
     if (pWindow != nullptr) {
         glfwMakeContextCurrent(pWindow);
-
         int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
         if (status == 1) {
             s_GladInitialized = true;
-            draw_triangle(vertexBuffer);
+            UpdateWindow(glfwHND);
         }
         else
             s_GladInitialized = false;
@@ -228,8 +233,6 @@ int Fr_GL3Window::createGLFWwindow()
 
         glfwGetFramebufferSize(pWindow, &_wGl, &_hGl);
         glViewport(_xGl, _yGl, _wGl, _hGl);
-        //glClearColor(1, 0, 1, 1);
-
         glClear(GL_COLOR_BUFFER_BIT);
 
 
@@ -241,7 +244,6 @@ int Fr_GL3Window::createGLFWwindow()
         glfwSetMouseButtonCallback(pWindow, mouse_button_callback);
         glfwSetScrollCallback(pWindow, scroll_callback);
         //glfwSetJoystickCallback(joystick_callback);
-
         UpdateWindow(glfwHND);
         result = 1;
     }
@@ -250,13 +252,14 @@ int Fr_GL3Window::createGLFWwindow()
 
 int Fr_GL3Window::updateGLFWWindow()
 {
-    UpdateWindow(glfwHND);
+    //UpdateWindow(glfwHND);
     glfwPollEvents();
     glfwSwapBuffers(pWindow);
     if (s_GladInitialized) {
-        //glad_glClearColor(0.0, 1.0, 0.0, 1.0);
+        glad_glClearColor(0.08, 1.0, 0.18, 1.0);
         glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
-        glFlush();
+        draw_triangle(vertexBuffer);
+        glad_glFlush();
     }
     return 0;
 }
@@ -302,43 +305,43 @@ void Fr_GL3Window::show() {
     Fl_Window::show();
     //Create the GLFW Window
     if (createGLFWwindow() != 0) {
-
         if (s_GladInitialized == true) {
-            glad_glClearColor(0.0, 0.0, 1.0, 1.0);
-
+            //glad_glClearColor(1.0, 0.16, 0.18, 1.0);
+            updateGLFWWindow();
             glClear(GL_COLOR_BUFFER_BIT);
-            UpdateWindow(glfwHND);
+            
         }
-        
     }
 }
 
 void Fr_GL3Window::gladEvents(int events)
 {
+    updateGLFWWindow();
 }
 
 void Fr_GL3Window::resize(int x, int y, int w, int h)
 {
-    _xGl = border;
-    _yGl = border;
-    _wGl = w - 2 * border;
-    _hGl = h - 2 * border;
-    printf("x=%i y=%i w=%i h=%i\n", x, y, w, h);
+    _xGl = x+border;
+    _yGl = y+border;
+    _wGl = w -  border;
+    _hGl = h -  border;
 
-    resizeGlWindow(_xGl, _yGl, _wGl, _hGl);
     if (s_GladInitialized) {
+        printf("x=%i y=%i w=%i h=%i\n", x, y, w, h);
+        resizeGlWindow(_xGl, _yGl, _wGl, _hGl);
         glViewport(_xGl, _yGl, _wGl, _hGl);
+        flush();
     }
     Fl_Window::resize(x, y, w, h);
-    redraw();
-    //updateGLFWWindow();
+    Fl_Window::redraw();
+    updateGLFWWindow();
 }
 
 void Fr_GL3Window::redraw()
 {
-    Fl_Window::damage(FL_DAMAGE_ALL);
-    Fl_Window::redraw();
+    //Fl_Window::damage(FL_DAMAGE_ALL);
     updateGLFWWindow();
+    Fl_Window::redraw();
 }
 
 

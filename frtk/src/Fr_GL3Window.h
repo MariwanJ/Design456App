@@ -54,7 +54,7 @@ public:
     virtual void gladEvents(int events);    //
     virtual int handle(int event) override; //FLTK handle
     virtual int glfw_handle(int evenet); //Take care of GLFW events
-
+    virtual void hide();
 protected:
     int createGLFWwindow();
     int updateGLFWWindow();
@@ -81,7 +81,7 @@ private:
 
     int gl_version_major;
     int gl_version_minor;
-
+    void flush();
     static GLFWwindow* pWindow;
     static Fl_Window* FlglWindow;
 

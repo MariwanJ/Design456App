@@ -336,7 +336,6 @@ static void swapBuffersWGL(_GLFWwindow* window)
             }
         }
     }
-
     SwapBuffers(window->context.wgl.dc);
 }
 
