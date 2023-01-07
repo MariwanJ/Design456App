@@ -27,6 +27,13 @@ GLuint m_QuadVA, m_QuadVB, m_QuadIB;
 bool s_GLFWInitialized;
 #define border 0
 
+void pfltkWindow_close_cb(Fr_GL3Window* w, void* v) {
+    Fr_GL3Window *win= (Fr_GL3Window*)v;
+    win->exit();
+
+
+}
+
 GLFWwindow* Fr_GL3Window::pWindow = nullptr;
 
 bool Fr_GL3Window::s_GLFWInitialized = false;
@@ -115,10 +122,8 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) : Fl_Widge
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_version_minor);
     glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
     glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    //pWindow = glfwCreateWindow(_wGl, _hGl, "", NULL, NULL);
     pfltkWindow = new Fl_Double_Window(x, y,w, h, l);
-    
+    pfltkWindow->callback((Fl_Callback*)pfltkWindow_close_cb,(void*)this);
 }
 
 void Fr_GL3Window::flush() {
@@ -133,6 +138,13 @@ Fr_GL3Window::~Fr_GL3Window()
     if (pfltkWindow) {
         pfltkWindow->hide();
     }
+}
+
+int Fr_GL3Window::exit()
+{
+    glfwDestroyWindow(pWindow);
+    pfltkWindow->~Fl_Double_Window();
+    return 1;
 }
 
 void Fr_GL3Window::draw() {
@@ -239,7 +251,7 @@ int Fr_GL3Window::embeddGLfwWindow()
     DWORD style = GetWindowLong(glfwHND, GWL_STYLE); //get the b style
     style &= ~(WS_POPUP | WS_CAPTION); //reset the caption and popup bits
     style |= WS_CHILD; //set the child bit
-    style |= WS_OVERLAPPED;
+    //style |= WS_OVERLAPPED;
     SetWindowLong(glfwHND, GWL_STYLE, style); //set the new style of b
     MoveWindow(glfwHND, _xGl, _yGl, _wGl, _hGl, true); //place b at (x,y,w,h) in a
     SetParent(glfwHND, hwParentWindow);

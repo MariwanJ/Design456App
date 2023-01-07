@@ -44,7 +44,7 @@ public:
     Fr_GL3Window(int w, int h, const char* l);
     Fr_GL3Window(int w, int h);
     virtual ~Fr_GL3Window();
-
+    virtual int exit();
     Fl_Double_Window *pfltkWindow;
     int embeddGLfwWindow();
     virtual void reset(void);
