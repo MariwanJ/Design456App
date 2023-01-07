@@ -103,7 +103,7 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) : Fl_Windo
     _yGl = border;
     _wGl = w - border;
     _hGl = h - border;
-    gl_version_major = 4;
+    gl_version_major = 3;
     gl_version_minor = 3;
 
     if (!s_GLFWInitialized)
@@ -118,6 +118,9 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) : Fl_Windo
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_version_minor);
     glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
     glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwSwapInterval(1);
+
     pWindow = glfwCreateWindow(_wGl, _hGl, "", NULL, NULL);
 
     // end();
@@ -131,6 +134,7 @@ void Fr_GL3Window::flush() {
 Fr_GL3Window::~Fr_GL3Window()
 {
     glfwDestroyWindow(pWindow);
+    glfwTerminate();
     pWindow = nullptr;
     Fl_Window::~Fl_Window();
 }
@@ -173,7 +177,8 @@ void Fr_GL3Window::resizeGlWindow(int _xG, int _yG, int _wG, int _hG)
 }
 
 int Fr_GL3Window::handle(int event) {
-    damage(FL_DAMAGE_ALL);
+   // damage(FL_DAMAGE_ALL);
+   
     gladEvents(event);
     return Fl_Window::handle(event);
 }
@@ -187,6 +192,15 @@ void Fr_GL3Window::hide()
 {
     glfwMakeContextCurrent(nullptr);
     Fl_Window::hide();
+}
+
+
+int Fr_GL3Window::GLFWrun()
+{
+    while ((Fl_X::first!=nullptr) | !glfwWindowShouldClose(pWindow)) {
+        updateGLFWWindow();
+    }
+    return 0;
 }
 
 int Fr_GL3Window::createGLFWwindow()
@@ -226,9 +240,11 @@ int Fr_GL3Window::createGLFWwindow()
         MoveWindow(glfwHND, _xGl, _yGl, _wGl, _hGl, true); //place b at (x,y,w,h) in a
         SetParent(glfwHND, hwParentWindow);
 
+
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        
         ShowWindow(glfwHND, SW_SHOW);
 
         glfwGetFramebufferSize(pWindow, &_wGl, &_hGl);
@@ -249,18 +265,40 @@ int Fr_GL3Window::createGLFWwindow()
     }
     return result;
 }
-
+#include <fr_widgets/fr_basic_shapes.h>
 int Fr_GL3Window::updateGLFWWindow()
 {
+    printf("update\n");
     //UpdateWindow(glfwHND);
-    glfwPollEvents();
+
     glfwSwapBuffers(pWindow);
     if (s_GladInitialized) {
         glad_glClearColor(0.08, 1.0, 0.18, 1.0);
-        glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+      //  glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
         draw_triangle(vertexBuffer);
+        glfwPollEvents();
         glad_glFlush();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     return 0;
 }
 
@@ -316,7 +354,7 @@ void Fr_GL3Window::show() {
 
 void Fr_GL3Window::gladEvents(int events)
 {
-    updateGLFWWindow();
+   // updateGLFWWindow();
 }
 
 void Fr_GL3Window::resize(int x, int y, int w, int h)

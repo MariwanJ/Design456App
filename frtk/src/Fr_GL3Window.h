@@ -55,6 +55,7 @@ public:
     virtual int handle(int event) override; //FLTK handle
     virtual int glfw_handle(int evenet); //Take care of GLFW events
     virtual void hide();
+    int GLFWrun();
 protected:
     int createGLFWwindow();
     int updateGLFWWindow();
