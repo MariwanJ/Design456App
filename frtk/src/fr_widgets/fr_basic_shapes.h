@@ -25,8 +25,9 @@
 #define  FR_BASIC_SHAPES_H
 
 #include<frtk.h>
+#include <../deps/linmath.h>
 
-//void draw_triangle(GLuint& vertexBuffer);
+int draw_triangle(GLuint& vertexBuffer, GLFWwindow *pWindow);
 
 
 

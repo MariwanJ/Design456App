@@ -24,6 +24,7 @@
 #define FR_GL3WINDOW_H
 #include <frtk.h>
 #include<Fr_Core.h>
+#include<fr_widgets/fr_basic_shapes.h>
 
 class Fr_GL3Window;
 
@@ -36,7 +37,7 @@ void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cur
 void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
 void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
 
-class FRTK_API Fr_GL3Window : public Fl_Window {
+class FRTK_API Fr_GL3Window :public Fl_Widget {
 public:
     Fr_GL3Window(int x, int y, int w, int h, const char* l);
     Fr_GL3Window(int x, int y, int w, int h);
@@ -44,15 +45,17 @@ public:
     Fr_GL3Window(int w, int h);
     virtual ~Fr_GL3Window();
 
+    Fl_Double_Window *pfltkWindow;
+    int embeddGLfwWindow();
     virtual void reset(void);
     virtual void resizeGlWindow(int x, int y, int w, int h);
-    void resize(int x, int y, int w, int h) override;
-
-    virtual void draw() override;           //fltk
+    void resize(int x, int y, int w, int h);
+    void resizable(Fl_Widget* w);
+    virtual void draw() ;           //fltk
     virtual void redraw();                  //both
-    virtual void show() override;           //both
+    virtual void show() ;           //both
     virtual void gladEvents(int events);    //
-    virtual int handle(int event) override; //FLTK handle
+    virtual int handle(int event); //FLTK handle
     virtual int glfw_handle(int evenet); //Take care of GLFW events
     virtual void hide();
     int GLFWrun();
@@ -84,7 +87,6 @@ private:
     int gl_version_minor;
     void flush();
     static GLFWwindow* pWindow;
-    static Fl_Window* FlglWindow;
 
     HWND glfwHND;
     static bool s_GLFWInitialized;
@@ -95,11 +97,6 @@ private:
     static int _wGl; // It is different than FLTK. But it is depends on  w()
     static int _hGl; // It is different than FLTK. But it is depends on h()
 };
-
-
-
-
-void draw_triangle(GLuint& vertexBuffer);
 
 
 #endif

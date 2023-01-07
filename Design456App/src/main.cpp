@@ -29,40 +29,26 @@
 int main(int argc, char** argv)
 {
     Fr_GL3Window* win = new Fr_GL3Window(0, 0, 900, 600, "test");
-    win->begin();
     win->label("Click GL panel to reshape");
-    win->resizable(win);
+    
+    //win->resizable(win);
     Fl_Button* b = new Fl_Button(10, 5, 50, 40, "clickme");
-    win->end();
+    win->resizable(b);
     win->show();
+    //win->pfltkWindow->show();
     win->GLFWrun();
 }
-
 
 /*
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/glad.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-//E:\TEMP\Hazel\Hazel\vendor\GLFW\deps
 #include <../deps/linmath.h>
 
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdio.h>
-
-typedef struct Vertex
-{
-    vec2 pos;
-    vec3 col;
-} Vertex;
-
-static const Vertex vertices[3] =
-{
-    { { -0.6f, -0.4f }, { 1.f, 0.f, 0.f } },
-    { {  0.6f, -0.4f }, { 0.f, 1.f, 0.f } },
-    { {   0.f,  0.6f }, { 0.f, 0.f, 1.f } }
-};
 
 static const char* vertex_shader_text =
 "#version 330\n"
@@ -99,20 +85,50 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 int main(void)
 {
     glfwSetErrorCallback(error_callback);
-
+    Fl_Window *win = new Fl_Window(1000, 890,"rr");
     if (!glfwInit())
         exit(EXIT_FAILURE);
-
+    win->show();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(640, 480, "OpenGL Triangle", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(600, 600, "OpenGL Triangle", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
+
+
+    //***************************************
+
+
+    HWND glfwHND = glfwGetWin32Window(window);
+    HWND hwParentWindow = fl_win32_xid(win);
+    int result = 0;
+    if (hwParentWindow == 0) {
+        printf("Failed to get HWND of the window please debugme!!\n");
+        return 0;
+    }
+
+    DWORD style = GetWindowLong(glfwHND, GWL_STYLE); //get the b style
+    style &= ~(WS_POPUP | WS_CAPTION); //reset the caption and popup bits
+    style |= WS_CHILD; //set the child bit
+    style |= WS_OVERLAPPED;
+    SetWindowLong(glfwHND, GWL_STYLE, style); //set the new style of b
+    MoveWindow(glfwHND, 0, 0, 800, 600, true); //place b at (x,y,w,h) in a
+    SetParent(glfwHND, hwParentWindow);
+    UpdateWindow(glfwHND);
+    ShowWindow(glfwHND, SW_SHOW);
+    //return 1;//everything is OK.
+
+
+
+
+
+    //***********************************
+
 
     glfwSetKeyCallback(window, key_callback);
 

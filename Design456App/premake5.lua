@@ -45,7 +45,10 @@ To use /MTd in premake:
 	defines{
 		"GLFW_EXPOSE_NATIVE_WIN32",
 		"GLFW_INCLUDE_NONE",
-		"FRTK_ENABLE_ASSERTS" 
+		"FRTK_ENABLE_ASSERTS" ,
+		"GLAD_GL_IMPLEMENTATION",
+		"FL_INTERNALS",
+		"FL_LIBRARY"
 	}
 
 	flags

@@ -38,7 +38,7 @@
 
 #include <FL/Fl.H>
 #include <FL/fl_types.h>
-//#include <FL/Fl_Double_Window.H>
+#include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Window.H>
 
 #include <GLFW/glfw3.h>
