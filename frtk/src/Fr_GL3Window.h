@@ -45,15 +45,15 @@ public:
     Fr_GL3Window(int w, int h);
     virtual ~Fr_GL3Window();
     virtual int exit();
-    Fl_Double_Window *pfltkWindow;
+    Fl_Double_Window* pfltkWindow;
     int embeddGLfwWindow();
     virtual void reset(void);
     virtual void resizeGlWindow(int x, int y, int w, int h);
     void resize(int x, int y, int w, int h);
     void resizable(Fl_Widget* w);
-    virtual void draw() ;           //fltk
+    virtual void draw();           //fltk
     virtual void redraw();                  //both
-    virtual void show() ;           //both
+    virtual void show();           //both
     virtual void gladEvents(int events);    //
     virtual int handle(int event); //FLTK handle
     virtual int glfw_handle(int evenet); //Take care of GLFW events
@@ -97,6 +97,5 @@ private:
     static int _wGl; // It is different than FLTK. But it is depends on  w()
     static int _hGl; // It is different than FLTK. But it is depends on h()
 };
-
 
 #endif

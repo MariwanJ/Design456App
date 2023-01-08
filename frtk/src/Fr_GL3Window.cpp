@@ -28,10 +28,8 @@ bool s_GLFWInitialized;
 #define border 0
 
 void pfltkWindow_close_cb(Fr_GL3Window* w, void* v) {
-    Fr_GL3Window *win= (Fr_GL3Window*)v;
+    Fr_GL3Window* win = (Fr_GL3Window*)v;
     win->exit();
-
-
 }
 
 GLFWwindow* Fr_GL3Window::pWindow = nullptr;
@@ -106,7 +104,7 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) : Fl_Widge
     _yGl = border;
     _wGl = w - border;
     _hGl = h - border;
-    gl_version_major = 3;
+    gl_version_major = 4;
     gl_version_minor = 3;
     glfwSetErrorCallback(error_callback);
 
@@ -122,8 +120,8 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) : Fl_Widge
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_version_minor);
     glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
     glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
-    pfltkWindow = new Fl_Double_Window(x, y,w, h, l);
-    pfltkWindow->callback((Fl_Callback*)pfltkWindow_close_cb,(void*)this);
+    pfltkWindow = new Fl_Double_Window(x, y, w, h, l);
+    pfltkWindow->callback((Fl_Callback*)pfltkWindow_close_cb, (void*)this);
 }
 
 void Fr_GL3Window::flush() {
@@ -208,36 +206,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
         glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
 
-int Fr_GL3Window::GLFWrun()
-{
-    while ((Fl_X::first != nullptr) && !glfwWindowShouldClose(pWindow)) {
-        //updateGLFWWindow();
-        
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-        // glfwSetKeyCallback(window, key_callback);
-        glfwMakeContextCurrent(pWindow);
-        glfwSwapInterval(1);
-        // NOTE: OpenGL error checks have been omitted for brevity
-
-       while (!glfwWindowShouldClose(pWindow))
-        {
-           int width, height;
-           glfwGetFramebufferSize(pWindow, &width, &height);
-           const float ratio = width / (float)height;
-           glfwMakeContextCurrent(pWindow);
-
-           glViewport(0, 0, width, height);
-           glClear(GL_COLOR_BUFFER_BIT);
-
-            draw_triangle(vertexBuffer, pWindow);
-            glfwSwapBuffers(pWindow);
-            glfwPollEvents();
-            glad_glFlush();
-        }
-    }
-    return 0;
-}
-
 int Fr_GL3Window::embeddGLfwWindow()
 {
     HWND glfwHND = glfwGetWin32Window(pWindow);
@@ -282,13 +250,13 @@ int Fr_GL3Window::createGLFWwindow()
         glfwSwapInterval(1);  // GLFW Update rate - interval
         //GLFW_EXPOSE_NATIVE_WIN32
         glEnable(GL_DEPTH_TEST);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glfwGetFramebufferSize(pWindow, &_wGl, &_hGl);
-        embeddGLfwWindow();
+        //glEnable(GL_BLEND);
+        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        //glfwGetFramebufferSize(pWindow, &_wGl, &_hGl);
+       // embeddGLfwWindow();
 
-        glClear(GL_COLOR_BUFFER_BIT);
-        glViewport(_xGl, _yGl, _wGl, _hGl);
+       // glClear(GL_COLOR_BUFFER_BIT);
+       // glViewport(_xGl, _yGl, _wGl, _hGl);
 
         // GLFW callbacks  https://www.glfw.org/docs/3.3/input_guide.html
         glfwSetFramebufferSizeCallback(pWindow, framebuffer_size_callback);
@@ -391,6 +359,50 @@ void Fr_GL3Window::redraw()
 {
     updateGLFWWindow();
     pfltkWindow->redraw();
+}
+
+int Fr_GL3Window::GLFWrun()
+{
+    while ((Fl_X::first != nullptr) && !glfwWindowShouldClose(pWindow)) {
+        updateGLFWWindow();
+
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+        // glfwSetKeyCallback(window, key_callback);
+        glfwMakeContextCurrent(pWindow);
+        glfwSwapInterval(1);
+        // NOTE: OpenGL error checks have been omitted for brevity
+
+        unsigned int shader = CreateShader(vertexShaderSource, fragmentShaderSource);
+        glUseProgram(shader);
+        float vertices[] = {
+            -0.5f, -0.5f, 0.0f,
+             0.5f, -0.5f, 0.0f,
+             0.0f,  0.5f, 0.0f
+        };
+        glGenBuffers(1, &vertexBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+
+        while (!glfwWindowShouldClose(pWindow))
+        {
+            glClear(GL_COLOR_BUFFER_BIT);
+            glad_glClearColor(1.0, 0.16, 0.18, 1.0);
+
+            //int width, height;
+            //glfwGetFramebufferSize(pWindow, &width, &height);
+            //const float ratio = width / (float)height;
+            //glDrawArrays(GL_TRIANGLES, 0, 3);
+            //glViewport(0, 0, width, height);
+
+            draw_triangle(vertexBuffer, pWindow);
+            glfwSwapBuffers(pWindow);
+            glfwPollEvents();
+            //glad_glFlush();
+        }
+    }
+    return 0;
 }
 
 Fr_GL3Window::Fr_GL3Window(int w, int h, const char* l) : Fl_Widget(0, 0, w, h, l) {}
