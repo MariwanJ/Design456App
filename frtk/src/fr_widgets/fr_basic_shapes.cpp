@@ -32,24 +32,24 @@
 #include <stddef.h>
 #include <stdio.h>
 
-const char* fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"\n"
-"void main()\n"
-"{\n"
-"    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-"}\0";
-
-const char* vertexShaderSource = "#version 330 core\n"
+std::string  vertexShader = "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n"
 "void main()\n"
 "{\n"
 "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
 "}\0";
 
+std::string fragmentShader ="#version 330 core\n"
+"out vec4 FragColor;\n"
+"void main()\n"
+"{\n"
+"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+"}\n\0";
+
+
 
 unsigned int CompileShader(unsigned int type, const std::string & source) {
-    unsigned int id = glCreateShader(GL_VERTEX_SHADER);
+    unsigned int id = glCreateShader(type);
     const char* src = source.c_str();
     glShaderSource(id, 1, &src, nullptr);
     glCompileShader(id);
@@ -77,6 +77,16 @@ unsigned int CreateShader(const std::string& vertexShader, const std::string & f
     glAttachShader(program, vs);
     glAttachShader(program, fs);
     glLinkProgram(program);
+    int success;
+    glGetProgramiv(program, GL_LINK_STATUS, &success);
+    char infoLog[512];
+    if (!success) {
+        glGetProgramInfoLog(program, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+    }
+
+    
+    
     glValidateProgram(program);
 
     glDeleteShader(vs);
@@ -89,10 +99,8 @@ unsigned int CreateShader(const std::string& vertexShader, const std::string & f
 static int once=0;
 int draw_triangle(GLuint& vertexBuffer, GLFWwindow* pWindow)
 {
-   
-
     glDrawArrays(GL_TRIANGLES, 0, 3);
-    glDisableVertexAttribArray(0);
+   // glDisableVertexAttribArray(0);
     return 1;
 }
 

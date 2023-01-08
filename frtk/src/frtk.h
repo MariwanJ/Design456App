@@ -41,10 +41,11 @@
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Window.H>
 
-#include <GLFW/glfw3.h>
-#include <GLFW/glfw3native.h>
 
 #include<glad/glad.h>
+
+#include <GLFW/glfw3.h>
+#include <GLFW/glfw3native.h>
 
 #include <Fr_GL3Window.h>
 #include <FL/platform.H>

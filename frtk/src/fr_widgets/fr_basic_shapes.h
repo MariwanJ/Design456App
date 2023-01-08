@@ -31,7 +31,7 @@ int draw_triangle(GLuint& vertexBuffer, GLFWwindow* pWindow);
 unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
 unsigned int CompileShader(unsigned int type, const std::string& source);
 
-extern const char* fragmentShaderSource;
-extern const char* vertexShaderSource;
+extern std::string fragmentShader;
+extern std::string vertexShader;
 
 #endif

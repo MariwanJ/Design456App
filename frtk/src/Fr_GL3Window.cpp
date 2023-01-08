@@ -104,7 +104,7 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) : Fl_Widge
     _yGl = border;
     _wGl = w - border;
     _hGl = h - border;
-    gl_version_major = 4;
+    gl_version_major = 3;
     gl_version_minor = 3;
     glfwSetErrorCallback(error_callback);
 
@@ -120,6 +120,8 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) : Fl_Widge
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_version_minor);
     glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
     glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
     pfltkWindow = new Fl_Double_Window(x, y, w, h, l);
     pfltkWindow->callback((Fl_Callback*)pfltkWindow_close_cb, (void*)this);
 }
@@ -372,31 +374,55 @@ int Fr_GL3Window::GLFWrun()
         glfwSwapInterval(1);
         // NOTE: OpenGL error checks have been omitted for brevity
 
-        unsigned int shader = CreateShader(vertexShaderSource, fragmentShaderSource);
-        glUseProgram(shader);
-        float vertices[] = {
-            -0.5f, -0.5f, 0.0f,
-             0.5f, -0.5f, 0.0f,
-             0.0f,  0.5f, 0.0f
+         shaderProgram = CreateShader(vertexShader, fragmentShader);
+        glUseProgram(shaderProgram);
+        float positions[] = {
+        -0.5f, -0.5f, 0.0f, // left
+        0.5f, -0.5f , 0.0f, // right
+        0.0f,  0.5f , 0.0f  // top
         };
-        glGenBuffers(1, &vertexBuffer);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+        GLuint VBO,VAO;
 
+        glGenVertexArrays(1, &VAO);
+        glGenBuffers(1, &VBO);
+        // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+        glBindVertexArray(VAO);
+
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
+
+        // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
+        // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
+        glBindVertexArray(0);
+
+
+        // uncomment this call to draw in wireframe polygons.
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+        glBindVertexArray(VAO);
         while (!glfwWindowShouldClose(pWindow))
         {
-            glClear(GL_COLOR_BUFFER_BIT);
-            glad_glClearColor(1.0, 0.16, 0.18, 1.0);
+            //glfwMakeContextCurrent(pWindow);
 
-            //int width, height;
-            //glfwGetFramebufferSize(pWindow, &width, &height);
+            //glClearColor(0.080, 0.76, 0.78, 1.0);
+            glClear(GL_COLOR_BUFFER_BIT);
+
+            glUseProgram(shaderProgram);
+            glBindVertexArray(VAO);
+           // int width, height;
+           //glfwGetFramebufferSize(pWindow, &width, &height);
             //const float ratio = width / (float)height;
-            //glDrawArrays(GL_TRIANGLES, 0, 3);
             //glViewport(0, 0, width, height);
 
-            draw_triangle(vertexBuffer, pWindow);
+            glDrawArrays(GL_TRIANGLES, 0, 3);
+            glBindVertexArray(0);
+            //draw_triangle(VAO, pWindow);
             glfwSwapBuffers(pWindow);
             glfwPollEvents();
             //glad_glFlush();
