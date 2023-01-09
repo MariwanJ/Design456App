@@ -37,7 +37,7 @@ void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cur
 void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
 void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
 
-class FRTK_API Fr_GL3Window :public Fl_Widget {
+class FRTK_API Fr_GL3Window  {
 public:
     Fr_GL3Window(int x, int y, int w, int h, const char* l);
     Fr_GL3Window(int x, int y, int w, int h);
@@ -52,6 +52,10 @@ public:
     void resize(int x, int y, int w, int h);
     void resizable(Fl_Widget* w);
     virtual void draw();           //fltk
+    int x();
+    int y();
+    int w();
+    int h();
     virtual void redraw();                  //both
     virtual void show();           //both
     virtual void gladEvents(int events);    //
@@ -91,6 +95,11 @@ private:
     HWND glfwHND;
     static bool s_GLFWInitialized;
     static bool s_GladInitialized;
+
+    int _x;
+    int _y;
+    int _w;
+    int _h;
 
     static int _xGl; // It is different than FLTK. But it is depends on  x()
     static int _yGl; // It is different than FLTK. But it is depends on  y()

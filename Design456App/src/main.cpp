@@ -29,7 +29,7 @@
 int main(int argc, char** argv)
 {
     Fr_GL3Window* win = new Fr_GL3Window(0, 0, 900, 600, "test");
-    win->label("Click GL panel to reshape");
+    //win->label("Click GL panel to reshape");
     
     //win->resizable(win);
     Fl_Button* b = new Fl_Button(10, 5, 50, 40, "clickme");

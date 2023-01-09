@@ -74,7 +74,7 @@ static void error_callback(int error, const char* description)
     fprintf(stderr, "Error: %s\n", description);
 }
 
-Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) : Fl_Widget(x, y, w, h, l), overlay(false) {
+Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :overlay(false) {
     /*
     * from https://discourse.glfw.org/t/attach-a-glfwwindow-to-windows-window-client-area/882/5:
     *
@@ -104,6 +104,10 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) : Fl_Widge
     _yGl = border;
     _wGl = w - border;
     _hGl = h - border;
+    _x = x;
+    _y = y;
+    _w = w;
+    _h = h;
     gl_version_major = 3;
     gl_version_minor = 3;
     glfwSetErrorCallback(error_callback);
@@ -162,6 +166,20 @@ void Fr_GL3Window::draw() {
         counter++;
     }
 }
+int Fr_GL3Window::x() {
+    return _x;
+}
+int Fr_GL3Window::y() {
+    return _y;
+}
+
+int Fr_GL3Window::w() {
+    return _w;
+}
+
+int Fr_GL3Window::h() {
+    return _h;
+}
 
 void Fr_GL3Window::reset() {
     shaderProgram = 0;
@@ -185,7 +203,7 @@ void Fr_GL3Window::resizeGlWindow(int _xG, int _yG, int _wG, int _hG)
 }
 
 int Fr_GL3Window::handle(int event) {
-    damage(FL_DAMAGE_ALL);
+   // damage(FL_DAMAGE_ALL);
 
     gladEvents(event);
     return pfltkWindow->handle(event);
@@ -365,7 +383,8 @@ void Fr_GL3Window::redraw()
 
 int Fr_GL3Window::GLFWrun()
 {
-    while ((Fl_X::first != nullptr) && !glfwWindowShouldClose(pWindow)) {
+    /*/*pfltkWindow->Fl_X::first != nullptr)  &&*/
+    while ( !glfwWindowShouldClose(pWindow)) {
         updateGLFWWindow();
 
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -431,6 +450,12 @@ int Fr_GL3Window::GLFWrun()
     return 0;
 }
 
-Fr_GL3Window::Fr_GL3Window(int w, int h, const char* l) : Fl_Widget(0, 0, w, h, l) {}
-Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h) : Fl_Widget(x, y, w, h, "GL3Window") {}
-Fr_GL3Window::Fr_GL3Window(int w, int h) : Fl_Widget(0, 0, w, h, "GL3Window") {}
+Fr_GL3Window::Fr_GL3Window(int w, int h, const char* l)  {
+    Fr_GL3Window(0, 0, w, h, l);
+}
+Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h)  {
+    Fr_GL3Window(x, y, w, h, "TestGLFW");
+}
+Fr_GL3Window::Fr_GL3Window(int w, int h)  {
+    Fr_GL3Window(0, 0, w, h, "TestGLFW");
+}
