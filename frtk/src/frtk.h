@@ -23,6 +23,10 @@
 #ifndef FRTK_H
 #define FRTK_H
 
+#include<glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <GLFW/glfw3native.h>
+
 #include <iostream>
 #include <memory>
 #include <utility>
@@ -41,20 +45,13 @@
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Window.H>
 
-
-#include<glad/glad.h>
-
-#include <GLFW/glfw3.h>
-#include <GLFW/glfw3native.h>
-
-#include <Fr_GL3Window.h>
+//#include <Fr_GL3Window.h>
 #include <FL/platform.H>
 
 #include <FL/gl.h> // for gl_texture_reset()
 #include <Fr_Log.h>
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/ostr.h"
-
 #include <FR.h>
 
 

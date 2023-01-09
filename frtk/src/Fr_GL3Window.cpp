@@ -126,12 +126,12 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :overlay(f
     glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    pfltkWindow = new Fl_Double_Window(x, y, w, h, l);
-    pfltkWindow->callback((Fl_Callback*)pfltkWindow_close_cb, (void*)this);
+    //pfltkWindow = new Fl_Double_Window(x, y, w, h, l);
+    //pfltkWindow->callback((Fl_Callback*)pfltkWindow_close_cb, (void*)this);
 }
 
 void Fr_GL3Window::flush() {
-    updateGLFWWindow();
+    //updateGLFWWindow();
     Fl::flush();
 }
 Fr_GL3Window::~Fr_GL3Window()
@@ -206,7 +206,8 @@ int Fr_GL3Window::handle(int event) {
    // damage(FL_DAMAGE_ALL);
 
     gladEvents(event);
-    return pfltkWindow->handle(event);
+    //return pfltkWindow->handle(event);
+    return 1;
 }
 
 int Fr_GL3Window::glfw_handle(int evenet)
@@ -217,7 +218,7 @@ int Fr_GL3Window::glfw_handle(int evenet)
 void Fr_GL3Window::hide()
 {
     glfwMakeContextCurrent(nullptr);
-    pfltkWindow->hide();
+   // pfltkWindow->hide();
 }
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -276,7 +277,7 @@ int Fr_GL3Window::createGLFWwindow()
        // embeddGLfwWindow();
 
        // glClear(GL_COLOR_BUFFER_BIT);
-       // glViewport(_xGl, _yGl, _wGl, _hGl);
+        glViewport(_xGl, _yGl, _wGl, _hGl);
 
         // GLFW callbacks  https://www.glfw.org/docs/3.3/input_guide.html
         glfwSetFramebufferSizeCallback(pWindow, framebuffer_size_callback);
@@ -336,7 +337,7 @@ void Fr_GL3Window::removeOverlya()
 }
 
 void Fr_GL3Window::show() {
-    pfltkWindow->show();
+    //pfltkWindow->show();
     //Create the GLFW Window
     if (createGLFWwindow() != 0) {
         if (s_GladInitialized == true) {
@@ -365,20 +366,20 @@ void Fr_GL3Window::resize(int x, int y, int w, int h)
         glViewport(_xGl, _yGl, _wGl, _hGl);
         flush();
     }
-    pfltkWindow->resize(x, y, w, h);
-    pfltkWindow->redraw();
+    //pfltkWindow->resize(x, y, w, h);
+    //pfltkWindow->redraw();
     updateGLFWWindow();
 }
 
 void Fr_GL3Window::resizable(Fl_Widget* w)
 {
-    pfltkWindow->resizable(w);
+    //pfltkWindow->resizable(w);
 }
 
 void Fr_GL3Window::redraw()
 {
     updateGLFWWindow();
-    pfltkWindow->redraw();
+    //pfltkWindow->redraw();
 }
 
 int Fr_GL3Window::GLFWrun()

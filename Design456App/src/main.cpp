@@ -25,7 +25,7 @@
 #include <Fr_GL3Window.h>
 
 /* Main application code */
-
+/*
 int main(int argc, char** argv)
 {
     Fr_GL3Window* win = new Fr_GL3Window(0, 0, 900, 600, "test");
@@ -33,11 +33,11 @@ int main(int argc, char** argv)
     
     //win->resizable(win);
     //Fl_Button* b = new Fl_Button(10, 5, 50, 40, "clickme");
-    win->pfltkWindow->resizable(win->pfltkWindow);
+    //win->pfltkWindow->resizable(win->pfltkWindow);
     win->show();
     win->GLFWrun();
-}
-/*
+}*/
+
 #include <GLAD/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -63,7 +63,60 @@ const char *fragmentShaderSource = "#version 330 core\n"
     "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
     "}\n\0";
 
-int main()
+class mine : public Fl_Window {
+public:
+    mine(int x, int y, int w, int h, const char* l);
+    int run();
+    Fl_Window* pfltkWindow = this;
+
+    int embeddGLfwWindow();
+    GLFWwindow* pWindow;
+    int _xGl, _yGl, _wGl, _hGl;
+
+};
+mine::mine(int x, int y, int w, int h,const char*l):Fl_Window(x, y, w, h, l) {
+    resizable(this);
+    _xGl = x;
+    _yGl = y;
+    _wGl = w-50;
+    _hGl = h-50;
+}
+
+int main(int argc, char** argv) {
+    mine *f = new mine(0, 0, 800, 600, "test");
+
+
+
+    f->show();
+   return f->run();
+}
+int mine::embeddGLfwWindow()
+{
+    HWND glfwHND = glfwGetWin32Window(pWindow);
+    HWND hwParentWindow = fl_win32_xid(pfltkWindow);
+    int result = 0;
+    if (hwParentWindow == 0) {
+        printf("Failed to get HWND of the window please debugme!!\n");
+        return 0;
+    }
+
+    DWORD style = (DWORD) GetWindowLong(glfwHND, GWL_STYLE); //get the b style
+    style &= ~(WS_POPUP | WS_CAPTION); //reset the caption and popup bits
+    style |= WS_CHILD; //set the child bit
+    style |= WS_OVERLAPPED;
+    SetWindowLong(glfwHND, GWL_STYLE, style); //set the new style of b
+    SetParent(glfwHND, hwParentWindow);
+
+    MoveWindow(glfwHND, _xGl, _yGl, _wGl, _hGl, true); //place b at (x,y,w,h) in a
+    UpdateWindow(glfwHND);
+    ShowWindow(glfwHND, SW_SHOW);
+    UpdateWindow(glfwHND);
+
+    return 1;//everything is OK.
+}
+
+
+int mine::run()
 {
     // glfw: initialize and configure
     // ------------------------------
@@ -79,6 +132,9 @@ int main()
     // glfw window creation
     // --------------------
     GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    pWindow = window;
+
+
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -172,6 +228,7 @@ int main()
 
     // render loop
     // -----------
+    embeddGLfwWindow();
     while (!glfwWindowShouldClose(window))
     {
         // input
@@ -193,6 +250,8 @@ int main()
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
         glfwPollEvents();
+        pfltkWindow->redraw();
+
     }
 
     // optional: de-allocate all resources once they've outlived their purpose:
@@ -222,4 +281,4 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     // make sure the viewport matches the new window dimensions; note that width and
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
-}*/
+}
