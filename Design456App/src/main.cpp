@@ -25,19 +25,19 @@
 #include <Fr_GL3Window.h>
 
 /* Main application code */
-/*
+
 int main(int argc, char** argv)
 {
     Fr_GL3Window* win = new Fr_GL3Window(0, 0, 900, 600, "test");
-    //win->label("Click GL panel to reshape");
+    win->label("Click GL panel to reshape");
     
-    //win->resizable(win);
-    //Fl_Button* b = new Fl_Button(10, 5, 50, 40, "clickme");
-    //win->pfltkWindow->resizable(win->pfltkWindow);
+    win->resizable(win);
+    Fl_Button* b = new Fl_Button(10, 5, 50, 40, "clickme");
     win->show();
     win->GLFWrun();
-}*/
+}
 
+/*
 #include <GLAD/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -281,4 +281,4 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     // make sure the viewport matches the new window dimensions; note that width and
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
-}
+}*/

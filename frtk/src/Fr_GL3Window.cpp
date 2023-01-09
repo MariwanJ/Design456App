@@ -26,7 +26,25 @@
 GLuint m_QuadVA, m_QuadVB, m_QuadIB;
 bool s_GLFWInitialized;
 #define border 0
+#define redrawFPS  1.0/24.0  // (24 Frames per sec)
 
+/*********************************************/
+
+const char* vertexShaderSource = "#version 330 core\n"
+"layout (location = 0) in vec3 aPos;\n"
+"void main()\n"
+"{\n"
+"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+"}\0";
+const char* fragmentShaderSource = "#version 330 core\n"
+"out vec4 FragColor;\n"
+"void main()\n"
+"{\n"
+"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+"}\n\0";
+
+
+/***********************/
 void pfltkWindow_close_cb(Fr_GL3Window* w, void* v) {
     Fr_GL3Window* win = (Fr_GL3Window*)v;
     win->exit();
@@ -47,6 +65,7 @@ int Fr_GL3Window::_hGl = 0;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+    Fl_Double_Window* pfltkWindow= (Fl_Double_Window*)glfwGetWindowUserPointer(window);
 }
 
 void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -74,7 +93,13 @@ static void error_callback(int error, const char* description)
     fprintf(stderr, "Error: %s\n", description);
 }
 
-Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :overlay(false) {
+void Fr_GL3Window::redrawFLTKTimer_cb(void* window) {
+    Fr_GL3Window * win = (Fr_GL3Window*)window;
+    win->redraw();
+    Fl::repeat_timeout(redrawFPS, redrawFLTKTimer_cb, (void*)win);
+}
+
+Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Double_Window(x, y, w, h, l), overlay(false) {
     /*
     * from https://discourse.glfw.org/t/attach-a-glfwwindow-to-windows-window-client-area/882/5:
     *
@@ -104,13 +129,12 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :overlay(f
     _yGl = border;
     _wGl = w - border;
     _hGl = h - border;
-    _x = x;
-    _y = y;
-    _w = w;
-    _h = h;
     gl_version_major = 3;
     gl_version_minor = 3;
     glfwSetErrorCallback(error_callback);
+
+    //TODO DOSENT WORK .. WHY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+    Fl::add_timeout(1.0 / 24.0, redrawFLTKTimer_cb, (void*)this);       // 24fps timer
 
     if (!s_GLFWInitialized)
     {
@@ -126,22 +150,23 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :overlay(f
     glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    //pfltkWindow = new Fl_Double_Window(x, y, w, h, l);
-    //pfltkWindow->callback((Fl_Callback*)pfltkWindow_close_cb, (void*)this);
+    pfltkWindow = this;
+    pfltkWindow->callback((Fl_Callback*)pfltkWindow_close_cb, (void*)this);
+
+
+
 }
 
 void Fr_GL3Window::flush() {
-    //updateGLFWWindow();
+    updateGLFWWindow();
     Fl::flush();
 }
 Fr_GL3Window::~Fr_GL3Window()
 {
-    glfwDestroyWindow(pWindow);
-    glfwTerminate();
-    pWindow = nullptr;
-    if (pfltkWindow) {
-        pfltkWindow->hide();
-    }
+    ///Fl_Double_Window::hide();
+    //glfwDestroyWindow(pWindow);
+    //glfwTerminate();
+    //glfwDestroyWindow(pWindow);
 }
 
 int Fr_GL3Window::exit()
@@ -153,32 +178,19 @@ int Fr_GL3Window::exit()
 
 void Fr_GL3Window::draw() {
     if (overlay) {
-        pfltkWindow->damage(FL_DAMAGE_ALL); // TODO: FIXME: Or redraw?
+        Fl_Double_Window::draw();
         updateGLFWWindow();
         //FRTK_CORE_INFO("[DRAW BOTH] {0}");
         printf("overlay%i\n", counter);
         counter++;
     }
     else {
+        Fl_Double_Window::draw();
         updateGLFWWindow();
-        pfltkWindow->damage(FL_DAMAGE_ALL);
         // printf("not overlay%i\n", counter);
         counter++;
     }
-}
-int Fr_GL3Window::x() {
-    return _x;
-}
-int Fr_GL3Window::y() {
-    return _y;
-}
-
-int Fr_GL3Window::w() {
-    return _w;
-}
-
-int Fr_GL3Window::h() {
-    return _h;
+    Fl::flush();
 }
 
 void Fr_GL3Window::reset() {
@@ -188,6 +200,7 @@ void Fr_GL3Window::reset() {
 
 void Fr_GL3Window::resizeGlWindow(int _xG, int _yG, int _wG, int _hG)
 {
+    /*/
     _xG = border;
     _yG = border;
     _wG = w() - border;
@@ -200,14 +213,14 @@ void Fr_GL3Window::resizeGlWindow(int _xG, int _yG, int _wG, int _hG)
     }
     if (s_GladInitialized)
         updateGLFWWindow();
+    MoveWindow(glfwHND, _xGl, _yGl, _wGl, _hGl, true); //place b at (x,y,w,h) in a
+    */
+    updateGLFWWindow();
 }
 
 int Fr_GL3Window::handle(int event) {
-   // damage(FL_DAMAGE_ALL);
-
-    gladEvents(event);
-    //return pfltkWindow->handle(event);
-    return 1;
+    //gladEvents(event);
+    return Fl_Double_Window::handle(event);
 }
 
 int Fr_GL3Window::glfw_handle(int evenet)
@@ -218,13 +231,13 @@ int Fr_GL3Window::glfw_handle(int evenet)
 void Fr_GL3Window::hide()
 {
     glfwMakeContextCurrent(nullptr);
-   // pfltkWindow->hide();
 }
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
+
 }
 
 int Fr_GL3Window::embeddGLfwWindow()
@@ -240,7 +253,7 @@ int Fr_GL3Window::embeddGLfwWindow()
     DWORD style = GetWindowLong(glfwHND, GWL_STYLE); //get the b style
     style &= ~(WS_POPUP | WS_CAPTION); //reset the caption and popup bits
     style |= WS_CHILD; //set the child bit
-    //style |= WS_OVERLAPPED;
+    style |= WS_OVERLAPPED;
     SetWindowLong(glfwHND, GWL_STYLE, style); //set the new style of b
     MoveWindow(glfwHND, _xGl, _yGl, _wGl, _hGl, true); //place b at (x,y,w,h) in a
     SetParent(glfwHND, hwParentWindow);
@@ -251,50 +264,140 @@ int Fr_GL3Window::embeddGLfwWindow()
 
 int Fr_GL3Window::createGLFWwindow()
 {
-    pWindow = glfwCreateWindow(1000, 800, "", NULL, NULL);
-    //GWLF Window construction
     int result = 0;
-    if (pWindow != nullptr) {
-        glfwMakeContextCurrent(pWindow);
-        int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-        if (status == 1) {
-            s_GladInitialized = true;
-        }
-        else
-            s_GladInitialized = false;
 
-        if (!s_GladInitialized) {
-            std::cout << "Sorry check your code, glad is not initialized\n";
-            return 0;
-        }
-        glfwMakeContextCurrent(pWindow);
-        glfwSwapInterval(1);  // GLFW Update rate - interval
-        //GLFW_EXPOSE_NATIVE_WIN32
-        glEnable(GL_DEPTH_TEST);
-        //glEnable(GL_BLEND);
-        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        //glfwGetFramebufferSize(pWindow, &_wGl, &_hGl);
-       // embeddGLfwWindow();
+    //***********************************************************************************************
+        // glfw: initialize and configure
+    // ------------------------------
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-       // glClear(GL_COLOR_BUFFER_BIT);
-        glViewport(_xGl, _yGl, _wGl, _hGl);
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
 
-        // GLFW callbacks  https://www.glfw.org/docs/3.3/input_guide.html
-        glfwSetFramebufferSizeCallback(pWindow, framebuffer_size_callback);
-        glfwSetKeyCallback(pWindow, keyboard_callback);
-        glfwSetCursorPosCallback(pWindow, cursor_position_callback);
-        glfwSetCursorEnterCallback(pWindow, cursor_enter_callback);
-        glfwSetMouseButtonCallback(pWindow, mouse_button_callback);
-        glfwSetScrollCallback(pWindow, scroll_callback);
-        //glfwSetJoystickCallback(joystick_callback);
-        result = 1;
+    // glfw window creation
+    // --------------------
+    GLFWwindow* window = glfwCreateWindow(_wGl, _hGl, "LearnOpenGL", NULL, NULL);
+    pWindow = window;
+    glfwSetWindowUserPointer(window, (void*)pfltkWindow); //allow user data go to the callback //TODO use this with all callbacks
+    if (window == NULL)
+    {
+        std::cout << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+        return -1;
     }
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+    // glad: load all OpenGL function pointers
+    // ---------------------------------------
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
+
+    // build and compile our shader program
+    // ------------------------------------
+    // vertex shader
+    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+    glCompileShader(vertexShader);
+    // check for shader compile errors
+    int success;
+    char infoLog[512];
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+    }
+
+    // fragment shader
+    unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+    glCompileShader(fragmentShader);
+    // check for shader compile errors
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+    }
+    // link shaders
+    unsigned int shaderProgram = glCreateProgram();
+    glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, fragmentShader);
+    glLinkProgram(shaderProgram);
+    // check for linking errors
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+    }
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+
+    // set up vertex data (and buffer(s)) and configure vertex attributes
+    // ------------------------------------------------------------------
+    float vertices[] = {
+        -0.5f, -0.5f, 0.0f, // left
+        0.5f, -0.5f , 0.0f, // right
+        0.0f,  0.5f , 0.0f  // top
+    };
+
+
+
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
+    // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
+    glBindVertexArray(0);
+
+    // uncomment this call to draw in wireframe polygons.
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    // render loop
+    // -----------
+    embeddGLfwWindow();
+    
+    //***************************************************
+
+    //glViewport(_xGl, _yGl, _wGl, _hGl);
+
+    // GLFW callbacks  https://www.glfw.org/docs/3.3/input_guide.html
+    glfwSetFramebufferSizeCallback(pWindow, framebuffer_size_callback);
+    glfwSetKeyCallback(pWindow, keyboard_callback);
+    glfwSetCursorPosCallback(pWindow, cursor_position_callback);
+    glfwSetCursorEnterCallback(pWindow, cursor_enter_callback);
+    glfwSetMouseButtonCallback(pWindow, mouse_button_callback);
+    glfwSetScrollCallback(pWindow, scroll_callback);
+    //glfwSetJoystickCallback(joystick_callback);
+    result = 1;
+
     return result;
 }
 #include <fr_widgets/fr_basic_shapes.h>
 int Fr_GL3Window::updateGLFWWindow()
 {
     if (s_GladInitialized) {
+        glad_glFlush();
     }
     return 0;
 }
@@ -337,126 +440,75 @@ void Fr_GL3Window::removeOverlya()
 }
 
 void Fr_GL3Window::show() {
-    //pfltkWindow->show();
+    Fl_Double_Window::show();
     //Create the GLFW Window
-    if (createGLFWwindow() != 0) {
-        if (s_GladInitialized == true) {
-            //glad_glClearColor(1.0, 0.16, 0.18, 1.0);
-            updateGLFWWindow();
-            glClear(GL_COLOR_BUFFER_BIT);
+    if (pWindow==nullptr){
+        if (createGLFWwindow() != 0) {
+            if (s_GladInitialized == true) {
+                glad_glClearColor(1.0, 0.16, 0.18, 1.0);
+                updateGLFWWindow();
+                glClear(GL_COLOR_BUFFER_BIT);
+            }
         }
     }
 }
 
 void Fr_GL3Window::gladEvents(int events)
 {
-    // updateGLFWWindow();
+     updateGLFWWindow();
 }
 
 void Fr_GL3Window::resize(int x, int y, int w, int h)
 {
-    _xGl = x + border;
-    _yGl = y + border;
-    _wGl = w - border;
-    _hGl = h - border;
+    Fl_Double_Window::resize(x, y, w, h);
+    _xGl = Fl_Double_Window::x() + border;
+    _yGl = Fl_Double_Window::y() + border;
+    _wGl = Fl_Double_Window::w() - border;
+    _hGl = Fl_Double_Window::h() - border;
 
     if (s_GladInitialized) {
         printf("x=%i y=%i w=%i h=%i\n", x, y, w, h);
         resizeGlWindow(_xGl, _yGl, _wGl, _hGl);
         glViewport(_xGl, _yGl, _wGl, _hGl);
-        flush();
     }
-    //pfltkWindow->resize(x, y, w, h);
-    //pfltkWindow->redraw();
-    updateGLFWWindow();
+    damage(FL_DAMAGE_ALL);
+    Fl_Double_Window::draw();
 }
 
 void Fr_GL3Window::resizable(Fl_Widget* w)
 {
-    //pfltkWindow->resizable(w);
-}
-
-void Fr_GL3Window::redraw()
-{
-    updateGLFWWindow();
-    //pfltkWindow->redraw();
+    Fl_Double_Window::resizable(w);
+    
 }
 
 int Fr_GL3Window::GLFWrun()
 {
-    /*/*pfltkWindow->Fl_X::first != nullptr)  &&*/
-    while ( !glfwWindowShouldClose(pWindow)) {
-        updateGLFWWindow();
+    while (!glfwWindowShouldClose(pWindow))
+    {
+        // input
+        // -----
+       // processInput(window);
 
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-        // glfwSetKeyCallback(window, key_callback);
-        glfwMakeContextCurrent(pWindow);
-        glfwSwapInterval(1);
-        // NOTE: OpenGL error checks have been omitted for brevity
+        // render
+        // ------
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
 
-         shaderProgram = CreateShader(vertexShader, fragmentShader);
+        // draw our first triangle
         glUseProgram(shaderProgram);
-        float positions[] = {
-        -0.5f, -0.5f, 0.0f, // left
-        0.5f, -0.5f , 0.0f, // right
-        0.0f,  0.5f , 0.0f  // top
-        };
-        GLuint VBO,VAO;
+        glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        // glBindVertexArray(0); // no need to unbind it every time
 
-        glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
-        // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-        glBindVertexArray(VAO);
-
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
-
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);
-
-        // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
-        // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-        glBindVertexArray(0);
-
-
-        // uncomment this call to draw in wireframe polygons.
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-        glBindVertexArray(VAO);
-        while (!glfwWindowShouldClose(pWindow))
-        {
-            //glfwMakeContextCurrent(pWindow);
-
-            //glClearColor(0.080, 0.76, 0.78, 1.0);
-            glClear(GL_COLOR_BUFFER_BIT);
-
-            glUseProgram(shaderProgram);
-            glBindVertexArray(VAO);
-           // int width, height;
-           //glfwGetFramebufferSize(pWindow, &width, &height);
-            //const float ratio = width / (float)height;
-            //glViewport(0, 0, width, height);
-
-            glDrawArrays(GL_TRIANGLES, 0, 3);
-            glBindVertexArray(0);
-            //draw_triangle(VAO, pWindow);
-            glfwSwapBuffers(pWindow);
-            glfwPollEvents();
-            //glad_glFlush();
-        }
+        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+        // -------------------------------------------------------------------------------
+        glfwSwapBuffers(pWindow);
+        glfwPollEvents();
+        glad_glFlush();
     }
     return 0;
 }
 
-Fr_GL3Window::Fr_GL3Window(int w, int h, const char* l)  {
-    Fr_GL3Window(0, 0, w, h, l);
-}
-Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h)  {
-    Fr_GL3Window(x, y, w, h, "TestGLFW");
-}
-Fr_GL3Window::Fr_GL3Window(int w, int h)  {
-    Fr_GL3Window(0, 0, w, h, "TestGLFW");
-}
+Fr_GL3Window::Fr_GL3Window(int w, int h, const char* l) :Fl_Double_Window(0, 0, w, h, l) {}
+Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h) : Fl_Double_Window(x, y, w, h, "TestOpenGl") {}
+Fr_GL3Window::Fr_GL3Window(int w, int h) : Fl_Double_Window(0, 0, w, h, "TestOpenGl") {}
