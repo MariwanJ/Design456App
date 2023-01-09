@@ -32,8 +32,8 @@ int main(int argc, char** argv)
     //win->label("Click GL panel to reshape");
     
     //win->resizable(win);
-    Fl_Button* b = new Fl_Button(10, 5, 50, 40, "clickme");
-    win->resizable(b);
+    //Fl_Button* b = new Fl_Button(10, 5, 50, 40, "clickme");
+    win->pfltkWindow->resizable(win->pfltkWindow);
     win->show();
     win->GLFWrun();
 }
