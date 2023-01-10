@@ -20,19 +20,23 @@
  Author :Mariwan Jalal    mariwan.jalal@gmail.com                       *
 */
 
-
 #include <FL/Fl_Button.H>
 #include <Fr_GL3Window.h>
 
 /* Main application code */
 
+static void buttonPressed(Fl_Widget* w, void* data) {
+    Fl_Button* bb = (Fl_Button*)(data);
+    std::cout << "You clicked me!!\n";
+}
 int main(int argc, char** argv)
 {
     Fr_GL3Window* win = new Fr_GL3Window(0, 0, 900, 600, "test");
     win->label("Click GL panel to reshape");
-    
+
     win->resizable(win);
     Fl_Button* b = new Fl_Button(10, 5, 50, 40, "clickme");
+    b->callback((Fl_Callback*)buttonPressed, b);
     win->show();
     win->GLFWrun();
 }
@@ -72,7 +76,6 @@ public:
     int embeddGLfwWindow();
     GLFWwindow* pWindow;
     int _xGl, _yGl, _wGl, _hGl;
-
 };
 mine::mine(int x, int y, int w, int h,const char*l):Fl_Window(x, y, w, h, l) {
     resizable(this);
@@ -84,8 +87,6 @@ mine::mine(int x, int y, int w, int h,const char*l):Fl_Window(x, y, w, h, l) {
 
 int main(int argc, char** argv) {
     mine *f = new mine(0, 0, 800, 600, "test");
-
-
 
     f->show();
    return f->run();
@@ -115,7 +116,6 @@ int mine::embeddGLfwWindow()
     return 1;//everything is OK.
 }
 
-
 int mine::run()
 {
     // glfw: initialize and configure
@@ -134,7 +134,6 @@ int mine::run()
     GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
     pWindow = window;
 
-
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -151,7 +150,6 @@ int mine::run()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
-
 
     // build and compile our shader program
     // ------------------------------------
@@ -222,7 +220,6 @@ int mine::run()
     // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
     glBindVertexArray(0);
 
-
     // uncomment this call to draw in wireframe polygons.
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -251,7 +248,6 @@ int mine::run()
         glfwSwapBuffers(window);
         glfwPollEvents();
         pfltkWindow->redraw();
-
     }
 
     // optional: de-allocate all resources once they've outlived their purpose:

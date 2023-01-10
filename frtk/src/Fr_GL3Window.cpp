@@ -28,6 +28,8 @@ bool s_GLFWInitialized;
 #define border 0
 #define redrawFPS  1.0/24.0  // (24 Frames per sec)
 
+float Fr_GL3Window::fltktimerValue = 0.0;
+
 /*********************************************/
 
 const char* vertexShaderSource = "#version 330 core\n"
@@ -44,6 +46,10 @@ const char* fragmentShaderSource = "#version 330 core\n"
 "}\n\0";
 
 
+
+double Fr_GL3Window::newTime = 0.0;
+double Fr_GL3Window::oldTime = 0.0;
+
 /***********************/
 void pfltkWindow_close_cb(Fr_GL3Window* w, void* v) {
     Fr_GL3Window* win = (Fr_GL3Window*)v;
@@ -51,6 +57,7 @@ void pfltkWindow_close_cb(Fr_GL3Window* w, void* v) {
 }
 
 GLFWwindow* Fr_GL3Window::pWindow = nullptr;
+
 
 bool Fr_GL3Window::s_GLFWInitialized = false;
 bool Fr_GL3Window::s_GladInitialized = false;
@@ -61,6 +68,13 @@ int Fr_GL3Window::_xGl = 0;
 int Fr_GL3Window::_yGl = 0;
 int Fr_GL3Window::_wGl = 0;
 int Fr_GL3Window::_hGl = 0;
+
+static void redrawFLTKTimer_cb(void* window) {
+    Fr_GL3Window* win = (Fr_GL3Window*)window;
+    win->damage(FL_DAMAGE_ALL);
+    win->draw();
+    Fl::repeat_timeout(redrawFPS, redrawFLTKTimer_cb, (void*)win);
+}
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -91,12 +105,6 @@ void scroll_callback(GLFWwindow*, double xoffset, double yoffset)
 static void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
-}
-
-void Fr_GL3Window::redrawFLTKTimer_cb(void* window) {
-    Fr_GL3Window * win = (Fr_GL3Window*)window;
-    win->redraw();
-    Fl::repeat_timeout(redrawFPS, redrawFLTKTimer_cb, (void*)win);
 }
 
 Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Double_Window(x, y, w, h, l), overlay(false) {
@@ -133,8 +141,7 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Double
     gl_version_minor = 3;
     glfwSetErrorCallback(error_callback);
 
-    //TODO DOSENT WORK .. WHY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
-    Fl::add_timeout(1.0 / 24.0, redrawFLTKTimer_cb, (void*)this);       // 24fps timer
+
 
     if (!s_GLFWInitialized)
     {
@@ -146,13 +153,12 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Double
     //Hint to GLFW  - Window is visible, not decorated and gl version is 3.3
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl_version_major);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_version_minor);
-    glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
+    glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
     glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     pfltkWindow = this;
     pfltkWindow->callback((Fl_Callback*)pfltkWindow_close_cb, (void*)this);
-
 
 
 }
@@ -264,6 +270,7 @@ int Fr_GL3Window::embeddGLfwWindow()
 
 int Fr_GL3Window::createGLFWwindow()
 {
+
     int result = 0;
 
     //***********************************************************************************************
@@ -447,6 +454,7 @@ void Fr_GL3Window::show() {
             if (s_GladInitialized == true) {
                 glad_glClearColor(1.0, 0.16, 0.18, 1.0);
                 updateGLFWWindow();
+                glfwSwapInterval(1);
                 glClear(GL_COLOR_BUFFER_BIT);
             }
         }
@@ -483,14 +491,27 @@ void Fr_GL3Window::resizable(Fl_Widget* w)
 
 int Fr_GL3Window::GLFWrun()
 {
+    //TODO DOSENT WORK .. WHY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+    //Fl::add_timeout(1, redrawFLTKTimer_cb, pfltkWindow);       // 24fps timer
+    //Fl::wait(1);
     while (!glfwWindowShouldClose(pWindow))
     {
-        // input
-        // -----
-       // processInput(window);
+        //Update FLTK 24 frames/sec    
+        newTime = glfwGetTime();
+        if (oldTime == 0) {
+            oldTime = newTime;
+        }
+        double delta = newTime - oldTime;
+        oldTime = newTime;
+        fltktimerValue = fltktimerValue + delta;
+        if (fltktimerValue >= redrawFPS){
+            fltktimerValue = 0.0;
+            redrawFLTKTimer_cb(this);
+        }
 
         // render
         // ------
+
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -498,7 +519,7 @@ int Fr_GL3Window::GLFWrun()
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         glDrawArrays(GL_TRIANGLES, 0, 3);
-        // glBindVertexArray(0); // no need to unbind it every time
+        glBindVertexArray(0); // no need to unbind it every time
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------

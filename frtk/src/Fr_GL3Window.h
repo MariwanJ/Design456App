@@ -58,7 +58,10 @@ public:
     virtual int glfw_handle(int evenet); //Take care of GLFW events
     virtual void hide();
     int GLFWrun();
-    static void redrawFLTKTimer_cb(void*window);
+    //static void redrawFLTKTimer_cb(void*window);
+    static float fltktimerValue;
+    static double oldTime;
+    static double newTime;
 
 protected:
     int createGLFWwindow();

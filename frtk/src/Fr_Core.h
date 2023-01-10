@@ -24,7 +24,7 @@
 #define FR_CORE_H
 
 #include<Fr_Log.h>
-
+#include<test/threads.h>
 
 #ifdef FRTK_ENABLE_ASSERTS
 #define FRTK_APP_ASSERT(x, ...) { if(!(x)) { APP_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
@@ -64,8 +64,6 @@
 #endif
 #include<../Glad/include/glad/glad.h>
 #endif
-
-
 
 
 #endif
