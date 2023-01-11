@@ -38,19 +38,6 @@ float Fr_GL3Window::fltktimerValue = 0.0;
 
 /*********************************************/
 
-const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"}\0";
-const char* fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-"}\n\0";
-
 
 
 double Fr_GL3Window::newTime = 0.0;
@@ -316,44 +303,44 @@ int Fr_GL3Window::createGLFWwindow()
     // build and compile our shader program
     // ------------------------------------
     // vertex shader
-    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
+    //unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    //glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+    //glCompileShader(vertexShader);
     // check for shader compile errors
-    int success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-
+    //int success;
+    //char infoLog[512];
+    ////glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    //if (!success)
+    //{
+    //    glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+    //    std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+    //}
+    //
     // fragment shader
-    unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-    // check for shader compile errors
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-    // link shaders
-    unsigned int shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    // check for linking errors
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-    }
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-
+    //unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    //glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+    //glCompileShader(fragmentShader);
+    //// check for shader compile errors
+    //glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+    //if (!success)
+    //{
+    //    glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+    //    std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+    //}
+    //// link shaders
+    //unsigned int shaderProgram = glCreateProgram();
+    //glAttachShader(shaderProgram, vertexShader);
+    //glAttachShader(shaderProgram, fragmentShader);
+    //glLinkProgram(shaderProgram);
+    //// check for linking errors
+    //glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    //if (!success) {
+    //    glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+    //    std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+    //}
+    //glDeleteShader(vertexShader);
+    //glDeleteShader(fragmentShader);
+    //
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
     float vertices[] = {
@@ -361,7 +348,6 @@ int Fr_GL3Window::createGLFWwindow()
         0.5f, -0.5f , 0.0f, // right
         0.0f,  0.5f , 0.0f  // top
     };
-
 
 
     glGenVertexArrays(1, &VAO);
@@ -499,6 +485,8 @@ int Fr_GL3Window::GLFWrun()
     //TODO DOSENT WORK .. WHY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
     //Fl::add_timeout(1, redrawFLTKTimer_cb, pfltkWindow);       // 24fps timer
     //Fl::wait(1);
+    shaderProgram = CreateShader(vertexShaderSource, fragmentShaderSource);
+
     while (!glfwWindowShouldClose(pWindow))
     {
         //Update FLTK 24 frames/sec    
@@ -506,6 +494,8 @@ int Fr_GL3Window::GLFWrun()
         if (oldTime == 0) {
             oldTime = newTime;
         }
+
+        glUseProgram(shaderProgram);
         double delta = newTime - oldTime;
         oldTime = newTime;
         fltktimerValue = fltktimerValue + delta;

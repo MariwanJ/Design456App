@@ -31,14 +31,14 @@
 #include <../deps/linmath.h>
 
 
-std::string  vertexShader = "#version 330 core\n"
+std::string vertexShaderSource = "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n"
 "void main()\n"
 "{\n"
 "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
 "}\0";
 
-std::string fragmentShader ="#version 330 core\n"
+std::string fragmentShaderSource ="#version 330 core\n"
 "out vec4 FragColor;\n"
 "void main()\n"
 "{\n"
@@ -46,10 +46,8 @@ std::string fragmentShader ="#version 330 core\n"
 "}\n\0";
 
 
-
-unsigned int CompileShader(unsigned int type, const std::string & source) {
+unsigned int CompileShader(unsigned int type, const char *src) {
     unsigned int id = glCreateShader(type);
-    const char* src = source.c_str();
     glShaderSource(id, 1, &src, nullptr);
     glCompileShader(id);
 
@@ -60,7 +58,7 @@ unsigned int CompileShader(unsigned int type, const std::string & source) {
         glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
         char* message =(char*) calloc(length * sizeof(char),sizeof(char));
         glGetShaderInfoLog(id,length, &length, message);
-        std::cout << "Failed to compile "<< (type ==GL_VERTEX_SHADER ? "vertex" : "fragment")<< "shader!" <<std::endl;
+        std::cout << "Failed to compile "<< (type ==GL_VERTEX_SHADER ? "vertex" : "fragment\n")<< "shader!\n";
         std::cout << message << std::endl;
         glDeleteShader(id);
         return 0;
@@ -70,8 +68,8 @@ unsigned int CompileShader(unsigned int type, const std::string & source) {
 
 unsigned int CreateShader(const std::string& vertexShader, const std::string & fragmentShader) {
     unsigned int program = glCreateProgram();
-    unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
-    unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
+    unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader.c_str());
+    unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader.c_str());
 
     glAttachShader(program, vs);
     glAttachShader(program, fs);
@@ -83,11 +81,8 @@ unsigned int CreateShader(const std::string& vertexShader, const std::string & f
         glGetProgramInfoLog(program, 512, NULL, infoLog);
         std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
     }
-
-    
-    
+   
     glValidateProgram(program);
-
     glDeleteShader(vs);
     glDeleteShader(fs);
 
