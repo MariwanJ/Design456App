@@ -43,12 +43,4 @@
 #include <stddef.h>
 #include <stdio.h>
 
-
-
-
-
-//drawing
-#include<fr_widgets/fr_basic_shapes.h>
-
-
 #endif

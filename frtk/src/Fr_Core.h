@@ -25,9 +25,10 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 // 
 
-
 #ifndef FR_CORE_H
 #define FR_CORE_H
+
+
 
 #include<Fr_Log.h>
 #include<glad/glad.h>
@@ -49,6 +50,10 @@
 #include <FR.h>
 
 #include<fr_widgets/fr_basic_shapes.h>
+
+#include<render.h>
+#include <vertexBuffer.h>
+#include<indexedBuffer.h>
 
 #ifdef FRTK_ENABLE_ASSERTS
 #define FRTK_APP_ASSERT(x, ...) { if(!(x)) { APP_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }

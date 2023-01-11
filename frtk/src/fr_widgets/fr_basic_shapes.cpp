@@ -23,13 +23,9 @@
 // SOFTWARE.
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
-// 
+//
 
-
-#include <fr_widgets/fr_basic_shapes.h>
-
-#include <../deps/linmath.h>
-
+#include<Fr_Core.h>
 
 std::string vertexShaderSource = "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n"

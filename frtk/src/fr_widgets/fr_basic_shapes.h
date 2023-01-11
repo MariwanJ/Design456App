@@ -28,7 +28,7 @@
 #ifndef  FR_BASIC_SHAPES_H
 #define  FR_BASIC_SHAPES_H
 #include<frtk.h>
-#include<Fr_Core.h>
+
 
 #include <../deps/linmath.h>
 
@@ -41,6 +41,22 @@ unsigned int CompileShader(unsigned int type, const char*);
 extern std::string vertexShaderSource  ;
 extern std::string fragmentShaderSource;
 
+const float TriangleVertices[] = {
+    -0.5f, -0.5f, 0.0f, // left
+    0.5f, -0.5f , 0.0f, // right
+    0.0f,  0.5f , 0.0f  // top
+};
 
+
+const float SquareVertices[] = {
+     0.5f,  0.5f, 0.0f,  // top right
+     0.5f, -0.5f, 0.0f,  // bottom right
+    -0.5f, -0.5f, 0.0f,  // bottom left
+    -0.5f,  0.5f, 0.0f   // top left 
+};
+const unsigned int SquareIndices[] = {  // start at 0
+    0, 1, 3,   // first triangle
+    1, 2, 3    // second triangle
+};
 
 #endif
