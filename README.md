@@ -1,5 +1,7 @@
 # Design456App
-Turn Design456 Workbench to more powerful software
+Turn Design456 Workbench to more powerful software. Combine FLTK, GLFW, and maybe Imgui to one application.
+Take benifit of each tool whenever you want to make a different type of window. 
+All these tools will be used for making a good direct modeling tool.
 
 # Notes:
 This is an expermental pieces of code. Please don't use it in any serious application. 
