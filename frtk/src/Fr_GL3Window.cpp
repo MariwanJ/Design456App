@@ -127,12 +127,12 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Double
     control->UpdateWindow();
     */
 
-    //TODO FIXME//
+    //Default size is the size of the FLTK window
 
-    _xGl = border;
-    _yGl = border;
-    _wGl = w - border;
-    _hGl = h - border;
+    _xGl = x;
+    _yGl = y;
+    _wGl = w ;
+    _hGl = h ;
     gl_version_major = 3;
     gl_version_minor = 3;
     glfwSetErrorCallback(error_callback);
