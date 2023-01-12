@@ -53,6 +53,8 @@ public:
     virtual int exit();
     Fl_Double_Window* pfltkWindow;
     int embeddGLfwWindow();
+    int releaseGLfwWindow();
+
     virtual void reset(void);
     virtual void resizeGlWindow(int x, int y, int w, int h);
     void resize(int x, int y, int w, int h);

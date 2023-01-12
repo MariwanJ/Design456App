@@ -49,6 +49,7 @@ project "frtk"
 		"GLAD_GL_IMPLEMENTATION",
 		"FL_INTERNALS",
 		"FL_LIBRARY",
+		"FRTK_ENABLE_ASSERTS"  ---debug break enable
 	}
 
 	includedirs

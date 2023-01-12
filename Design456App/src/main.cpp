@@ -31,17 +31,28 @@
 
 /* Main application code */
 
-static void buttonPressed(Fl_Widget* w, void* data) {
-    Fl_Button* bb = (Fl_Button*)(data);
-    std::cout << "You clicked me!!\n";
+
+static void buttonPressed1(Fl_Widget* w, void* data) {
+    Fr_GL3Window * b1 = (Fr_GL3Window*)(data);
+    std::cout << "You clicked me1!!\n";
+    b1->releaseGLfwWindow();
 }
+static void buttonPressed2(Fl_Widget* w, void* data) {
+    Fr_GL3Window* b2 = (Fr_GL3Window*)(data);
+    std::cout << "You clicked me2!!\n";
+    b2->embeddGLfwWindow();
+}
+
 int main(int argc, char** argv)
 {
     Fr_GL3Window* win = new Fr_GL3Window(0, 0, 1000, 800, "Modern OpenGL with FLTK support");
-    win->setOpenGLWinowSize(30, 30, 600, 600);
+    win->setOpenGLWinowSize(70, 60, 600, 600);
     win->resizable(win);
-    Fl_Button* b = new Fl_Button(10, 5, 50, 40, "clickme");
-    b->callback((Fl_Callback*)buttonPressed, b);
+    Fl_Button* b1 = new Fl_Button(10, 5, 50, 40, "Release");
+    Fl_Button* b2 = new Fl_Button(100, 5, 50, 40, "CHILD");
+
+    b1->callback((Fl_Callback*)buttonPressed1, win);
+    b2->callback((Fl_Callback*)buttonPressed2, win);
     win->show();
     win->GLFWrun();
 }

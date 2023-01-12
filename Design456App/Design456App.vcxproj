@@ -58,7 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GLFW_EXPOSE_NATIVE_WIN32;GLFW_INCLUDE_NONE;FRTK_ENABLE_ASSERTS;GLAD_GL_IMPLEMENTATION;FL_INTERNALS;FL_LIBRARY;FRTK_PLATFORM_WINDOWS;FRTK_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLFW_EXPOSE_NATIVE_WIN32;GLFW_INCLUDE_NONE;GLAD_GL_IMPLEMENTATION;FL_INTERNALS;FL_LIBRARY;FRTK_ENABLE_ASSERTS;FRTK_PLATFORM_WINDOWS;FRTK_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\frtk\vendor\Glad\include;..\frtk\vendor\spdlog\include;..\frtk\vendor\fltk;..\frtk\src;..\frtk\vendor\GLFW\include;..\frtk\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -78,7 +78,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GLFW_EXPOSE_NATIVE_WIN32;GLFW_INCLUDE_NONE;FRTK_ENABLE_ASSERTS;GLAD_GL_IMPLEMENTATION;FL_INTERNALS;FL_LIBRARY;FRTK_PLATFORM_WINDOWS;FRTK_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLFW_EXPOSE_NATIVE_WIN32;GLFW_INCLUDE_NONE;GLAD_GL_IMPLEMENTATION;FL_INTERNALS;FL_LIBRARY;FRTK_ENABLE_ASSERTS;FRTK_PLATFORM_WINDOWS;FRTK_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\frtk\vendor\Glad\include;..\frtk\vendor\spdlog\include;..\frtk\vendor\fltk;..\frtk\src;..\frtk\vendor\GLFW\include;..\frtk\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>

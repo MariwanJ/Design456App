@@ -48,8 +48,10 @@ To use /MTd in premake:
 		"FRTK_ENABLE_ASSERTS" ,
 		"GLAD_GL_IMPLEMENTATION",
 		"FL_INTERNALS",
-		"FL_LIBRARY"
+		"FL_LIBRARY",
+		"FRTK_ENABLE_ASSERTS"  ---debug break enable  
 	}
+
 
 	flags
 	{

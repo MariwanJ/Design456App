@@ -104,29 +104,7 @@ static void error_callback(int error, const char* description)
 * FIXME: CLEANUP CODE
 */
 Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Double_Window(x, y, w, h, l), overlay(false) {
-    /*
-    * from https://discourse.glfw.org/t/attach-a-glfwwindow-to-windows-window-client-area/882/5:
-    *
-    BEFORE you #include your glfw includes, define the native win32 glfw exposure such as:
-
-    #define GLFW_EXPOSE_NATIVE_WIN32
-    #include <GLFW/glfw3.h>
-    #include <GLFW/glfw3native.h>
-
-    Next, make sure to include the glfw3native.h as shown above. Clean and rebuild and you should then have access to the function �HWND glfwGetWin32Window(GLFWwindow *window)� which returns a HWND handle from your GLFWwindow
-    Next, create a static control or dialog to use as the parent.
-    Somehwere in your code after both the control/dialog and GLFWwindow have been instanciated get the HWND handle and change its style to be a chiild as follows:
-
-    DWORD style = GetWindowLong(handle, GWL_STYLE); //get the b style
-    style &= ~(WS_POPUP | WS_CAPTION); //reset the �caption� and �popup� bits
-    style |= WS_CHILD; //set the �child� bit
-    SetWindowLong(handle, GWL_STYLE, style); //set the new style of b
-    The
-    window->SetParent(control);
-    window->MoveWindow(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top); //place b at (x,y,w,h) in a
-    control->UpdateWindow();
-    */
-
+   
     //Default size is the size of the FLTK window
 
     _xGl = x;
@@ -147,7 +125,7 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Double
         s_GLFWInitialized = true;
     }
     //Hint to GLFW  - Window is visible, not decorated and gl version is 3.3
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl_version_major);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl_version_major) ;
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_version_minor);
     glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
     glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
@@ -241,6 +219,9 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 int Fr_GL3Window::embeddGLfwWindow()
 {
+    /*
+   * from https://discourse.glfw.org/t/attach-a-glfwwindow-to-windows-window-client-area/882/5:
+   */
     HWND glfwHND = glfwGetWin32Window(pWindow);
     HWND hwParentWindow = fl_win32_xid(pfltkWindow);
     int result = 0;
@@ -259,6 +240,28 @@ int Fr_GL3Window::embeddGLfwWindow()
     UpdateWindow(glfwHND);
     ShowWindow(glfwHND, SW_SHOW);
     return 1;//everything is OK.
+}
+
+int Fr_GL3Window::releaseGLfwWindow()
+{
+    //todo fixme:
+    HWND glfwHND = glfwGetWin32Window(pWindow);
+    HWND hwParentWindow = fl_win32_xid(pfltkWindow);
+    int result = 0;
+    if (hwParentWindow == 0) {
+        printf("Failed to get HWND of the window please debugme!!\n");
+        return 0;
+    }
+
+    DWORD style = GetWindowLong(glfwHND, GWL_STYLE); //get the b style
+    style |= (WS_POPUP | WS_CAPTION); //reset the caption and popup bits
+    SetWindowLong(glfwHND, GWL_STYLE, style); //set the new style of b
+    MoveWindow(glfwHND, _xGl, _yGl, _wGl, _hGl, true); //place b at (x,y,w,h) in a
+    SetParent(glfwHND, nullptr);
+    UpdateWindow(glfwHND);
+    ShowWindow(glfwHND, SW_SHOW);
+    return 1;//everything is OK.
+
 }
 
 int Fr_GL3Window::createGLFWwindow()
@@ -307,7 +310,7 @@ int Fr_GL3Window::createGLFWwindow()
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(SquareIndices), SquareIndices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(TriangleVertices), TriangleVertices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
