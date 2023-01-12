@@ -1,19 +1,19 @@
-//                                                                      
-// This file is a part of the Open Source Design456App                    
+//
+// This file is a part of the Open Source Design456App
 // MIT License
-// 
+//
 // Copyright (c) 2023
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,7 +23,7 @@
 // SOFTWARE.
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
-// 
+//
 
 
 
@@ -31,7 +31,6 @@
 
 GLuint m_QuadVA, m_QuadVB, m_QuadIB;
 bool s_GLFWInitialized;
-#define border 0
 #define redrawFPS  1.0/24.0  // (24 Frames per sec)
 
 float Fr_GL3Window::fltktimerValue = 0.0;
@@ -100,6 +99,10 @@ static void error_callback(int error, const char* description)
     fprintf(stderr, "Error: %s\n", description);
 }
 
+/**
+* Class constructor -
+* FIXME: CLEANUP CODE
+*/
 Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Double_Window(x, y, w, h, l), overlay(false) {
     /*
     * from https://discourse.glfw.org/t/attach-a-glfwwindow-to-windows-window-client-area/882/5:
@@ -155,19 +158,24 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Double
 
 
 }
-
+/**
+* Force updating both windows
+* TODO:FIXME
+*/
 void Fr_GL3Window::flush() {
     updateGLFWWindow();
     Fl::flush();
 }
+
+//FIXME
 Fr_GL3Window::~Fr_GL3Window()
 {
-    ///Fl_Double_Window::hide();
-    //glfwDestroyWindow(pWindow);
-    //glfwTerminate();
-    //glfwDestroyWindow(pWindow);
+    //exit();
 }
 
+/**
+* Exit application and destroy both windows.
+*/
 int Fr_GL3Window::exit()
 {
     glfwDestroyWindow(pWindow);
@@ -175,6 +183,7 @@ int Fr_GL3Window::exit()
     return 1;
 }
 
+//TODO FIXME
 void Fr_GL3Window::draw() {
     if (overlay) {
         Fl_Double_Window::draw();
@@ -191,28 +200,20 @@ void Fr_GL3Window::draw() {
     }
     Fl::flush();
 }
-
+//TODO FIXME: Do we need this?
 void Fr_GL3Window::reset() {
     shaderProgram = 0;
 }
-
-void Fr_GL3Window::resizeGlWindow(int _xG, int _yG, int _wG, int _hG)
+/**
+*Resize only the GLFW Window.
+*/
+void Fr_GL3Window::resizeGlWindow(int xGl, int yGl, int wGl, int hGl)
 {
-    /*/
-    _xG = border;
-    _yG = border;
-    _wG = w() - border;
-    _hG = h() - border;
-
-    if (pWindow != nullptr) {
-        glfwSetWindowPos(pWindow, _xG, _yG);
-        glfwSetWindowSize(pWindow, _wG, _hG);
-        //printf("xgl=%i ygl=%i wgl=%i hgl=%i\n", _xG, _yG, _wG, _hG);
-    }
-    if (s_GladInitialized)
-        updateGLFWWindow();
-    MoveWindow(glfwHND, _xGl, _yGl, _wGl, _hGl, true); //place b at (x,y,w,h) in a
-    */
+    _xGl = xGl;
+    _yGl = yGl;
+    _wGl = wGl;
+    _hGl = hGl;
+    // TODO Should fixme
     updateGLFWWindow();
 }
 
@@ -324,7 +325,7 @@ int Fr_GL3Window::createGLFWwindow()
     // render loop
     // -----------
     embeddGLfwWindow();
-    
+
     //***************************************************
 
     //glViewport(_xGl, _yGl, _wGl, _hGl);
@@ -386,6 +387,13 @@ void Fr_GL3Window::removeOverlya()
     overlay = false;
 }
 
+/**
+* This will prepare showing the windows.
+* Nothing still be drawn before running the
+* application
+* You need to use Fr_GL3Window::run () to get
+* things running and shown on the screen.
+*/
 void Fr_GL3Window::show() {
     Fl_Double_Window::show();
     //Create the GLFW Window
@@ -400,20 +408,17 @@ void Fr_GL3Window::show() {
         }
     }
 }
-
+//TODO FIXME:
 void Fr_GL3Window::gladEvents(int events)
 {
      updateGLFWWindow();
 }
-
+/**
+* Resize both windows. FLTK and GLFW. Be aware that you need to set GLFW size before resizing this
+*/
 void Fr_GL3Window::resize(int x, int y, int w, int h)
 {
     Fl_Double_Window::resize(x, y, w, h);
-    _xGl = Fl_Double_Window::x() + border;
-    _yGl = Fl_Double_Window::y() + border;
-    _wGl = Fl_Double_Window::w() - border;
-    _hGl = Fl_Double_Window::h() - border;
-
     if (s_GladInitialized) {
         printf("x=%i y=%i w=%i h=%i\n", x, y, w, h);
         resizeGlWindow(_xGl, _yGl, _wGl, _hGl);
@@ -423,22 +428,32 @@ void Fr_GL3Window::resize(int x, int y, int w, int h)
     Fl_Double_Window::draw();
 }
 
+/**
+* Put resizable widget for the whole window
+*   TODO: You need to add some more code to allow GLFW to be resizable
+*/
 void Fr_GL3Window::resizable(Fl_Widget* w)
 {
     Fl_Double_Window::resizable(w);
-    
 }
-
+/**
+* Run the application . This is a replacer of Fl:run.
+* We need to make our own since FLTK will not be involved
+* in keeping the window visible directly.
+* GLFW will keep the whole window visible
+* to the time any of them hides or terminates
+*
+*/
 int Fr_GL3Window::GLFWrun()
 {
-    //TODO DOSENT WORK .. WHY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+    //TODO DOSENT WORK .. WHY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //Fl::add_timeout(1, redrawFLTKTimer_cb, pfltkWindow);       // 24fps timer
     //Fl::wait(1);
     shaderProgram = CreateShader(vertexShaderSource, fragmentShaderSource);
 
     while (!glfwWindowShouldClose(pWindow))
     {
-        //Update FLTK 24 frames/sec    
+        //Update FLTK 24 frames/sec
         newTime = glfwGetTime();
         if (oldTime == 0) {
             oldTime = newTime;
@@ -473,7 +488,13 @@ int Fr_GL3Window::GLFWrun()
     }
     return 0;
 }
-
+void Fr_GL3Window::setOpenGLWinowSize(int xGL, int yGL, int wGL, int hGL)
+{
+    _xGl = xGL;
+    _yGl = yGL;
+    _wGl = wGL;
+    _hGl = hGL;
+}
 Fr_GL3Window::Fr_GL3Window(int w, int h, const char* l) :Fl_Double_Window(0, 0, w, h, l) {}
 Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h) : Fl_Double_Window(x, y, w, h, "TestOpenGl") {}
 Fr_GL3Window::Fr_GL3Window(int w, int h) : Fl_Double_Window(0, 0, w, h, "TestOpenGl") {}
