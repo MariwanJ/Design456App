@@ -104,7 +104,7 @@ static void error_callback(int error, const char* description)
 * FIXME: CLEANUP CODE
 */
 Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Double_Window(x, y, w, h, l), overlay(false) {
-   
+
     //Default size is the size of the FLTK window
 
     _xGl = x;
@@ -231,6 +231,7 @@ int Fr_GL3Window::embeddGLfwWindow()
     }
 
     DWORD style = GetWindowLong(glfwHND, GWL_STYLE); //get the b style
+
     style &= ~(WS_POPUP | WS_CAPTION); //reset the caption and popup bits
     style |= WS_CHILD; //set the child bit
     style |= WS_OVERLAPPED;
@@ -254,7 +255,7 @@ int Fr_GL3Window::releaseGLfwWindow()
     }
 
     DWORD style = GetWindowLong(glfwHND, GWL_STYLE); //get the b style
-    style |= (WS_POPUP | WS_CAPTION); //reset the caption and popup bits
+    style |= (WS_POPUP | WS_MAXIMIZEBOX| WS_MINIMIZEBOX  | WS_SIZEBOX | WS_SYSMENU| WS_CAPTION); //reset the caption and popup bits
     SetWindowLong(glfwHND, GWL_STYLE, style); //set the new style of b
     MoveWindow(glfwHND, _xGl, _yGl, _wGl, _hGl, true); //place b at (x,y,w,h) in a
     SetParent(glfwHND, nullptr);
@@ -285,6 +286,7 @@ int Fr_GL3Window::createGLFWwindow()
     // glfw window creation
     // --------------------
     GLFWwindow* window = glfwCreateWindow(_wGl, _hGl, "LearnOpenGL", NULL, NULL);
+
     pWindow = window;
     glfwSetWindowUserPointer(window, (void*)pfltkWindow); //allow user data go to the callback //TODO use this with all callbacks
     if (window == NULL)
