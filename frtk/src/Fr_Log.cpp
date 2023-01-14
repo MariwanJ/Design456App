@@ -26,9 +26,9 @@
 // 
 
 
-#include "Fr_Log.h"
+#include <Fr_Log.h>
 
-#include "spdlog/sinks/stdout_color_sinks.h"
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 std::shared_ptr<spdlog::logger> Fr_Log::s_FRTKLogger;
 std::shared_ptr<spdlog::logger> Fr_Log::s_APPLogger;

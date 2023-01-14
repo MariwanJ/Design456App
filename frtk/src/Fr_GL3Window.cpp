@@ -347,6 +347,8 @@ int Fr_GL3Window::createGLFWwindow()
 
     return result;
 }
+Scene *Fr_GL3Window::scene = 0;
+
 int Fr_GL3Window::updateGLFWWindow()
 {
     if (s_GladInitialized) {
@@ -355,32 +357,6 @@ int Fr_GL3Window::updateGLFWWindow()
     return 0;
 }
 
-void Fr_GL3Window::framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    if (s_GladInitialized && s_GLFWInitialized) {
-        glViewport(0, 0, _wGl, _hGl);
-    }
-}
-
-void Fr_GL3Window::keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-}
-
-void Fr_GL3Window::cursor_position_callback(GLFWwindow*, double xpos, double ypos)
-{
-}
-
-void Fr_GL3Window::cursor_enter_callback(GLFWwindow*, int entered)
-{
-}
-
-void Fr_GL3Window::mouse_button_callback(GLFWwindow*, int button, int action, int mods)
-{
-}
-
-void Fr_GL3Window::scroll_callback(GLFWwindow*, double xoffset, double yoffset)
-{
-}
 
 void Fr_GL3Window::setOverlay()
 {
@@ -487,6 +463,7 @@ int Fr_GL3Window::GLFWrun()
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
+        //scene->RenderScene();
         glfwSwapBuffers(pWindow);
         glfwPollEvents();
         glad_glFlush();

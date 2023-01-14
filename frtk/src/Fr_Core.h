@@ -29,7 +29,7 @@
 #define FR_CORE_H
 
 
-
+#include <FR.h>
 #include<Fr_Log.h>
 
 #if defined(__APPLE__)
@@ -55,14 +55,31 @@
 #include <Fr_Log.h>
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/ostr.h"
-#include <FR.h>
+
 
 #include<fr_widgets/fr_basic_shapes.h>
 
-#include<render.h>
 #include <vertexBuffer.h>
 #include<indexedBuffer.h>
-#include <camera.h>
+
+
+//From Scene-graph git hub  
+
+
+
+//#include<Group.h>
+//#include<Light.h>
+//#include<Manipulator.h>
+//#include<Mesh.h>
+//#include<Camera.h>
+//#include<Scene.h>
+//#include<ShaderProgram.h>
+//#include<ToonShaderNode.h>
+//#include<Transform.h>
+
+
+//From Scene-graph git hub  
+
 /*
     __linux__       Defined on Linux
     __sun           Defined on Solaris

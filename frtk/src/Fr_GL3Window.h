@@ -30,7 +30,7 @@
 #define FR_GL3WINDOW_H
 #include <frtk.h>
 #include<Fr_Core.h>
-
+#include<Scene.h>
 
 class Fr_GL3Window;
 
@@ -71,7 +71,7 @@ public:
     static double oldTime;
     static double newTime;
     void setOpenGLWinowSize(int xGL, int yGL, int wGL, int hGL);
-
+    static Scene* scene;
 
 protected:
     int createGLFWwindow();

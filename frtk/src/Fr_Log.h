@@ -29,8 +29,8 @@
 #define FR_LOG_H
 
 
-#include "spdlog/spdlog.h"
-#include "spdlog/fmt/ostr.h"
+#include <spdlog/spdlog.h>
+#include <spdlog/fmt/ostr.h>
 
 
 class  Fr_Log
