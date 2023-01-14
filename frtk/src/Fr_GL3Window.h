@@ -54,6 +54,7 @@ public:
     Fl_Double_Window* pfltkWindow;
     int embeddGLfwWindow();
     int releaseGLfwWindow();
+    void redraw();
 
     virtual void reset(void);
     virtual void resizeGlWindow(int x, int y, int w, int h);
@@ -66,6 +67,7 @@ public:
     virtual int glfw_handle(int evenet); //Take care of GLFW events
     virtual void hide();
     int GLFWrun();
+    void redrawFLTKTimer_cb(void* window);
     //static void redrawFLTKTimer_cb(void*window);
     static float fltktimerValue;
     static double oldTime;
