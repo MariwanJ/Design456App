@@ -31,7 +31,7 @@
 
 GLuint m_QuadVA, m_QuadVB, m_QuadIB;
 bool s_GLFWInitialized;
-#define fltkredrawFPS   0.1    // (1.0/10.0)  // (10 Frames per sec)
+#define redrawFPS  1.0/24.0  // (24 Frames per sec)
 
 float Fr_GL3Window::fltktimerValue = 0.0;
 
@@ -61,6 +61,12 @@ int Fr_GL3Window::_yGl = 0;
 int Fr_GL3Window::_wGl = 0;
 int Fr_GL3Window::_hGl = 0;
 
+static void redrawFLTKTimer_cb(void* window) {
+    Fr_GL3Window* win = (Fr_GL3Window*)window;
+    win->damage(FL_DAMAGE_ALL);
+    win->draw();
+    Fl::repeat_timeout(redrawFPS, redrawFLTKTimer_cb, (void*)win);
+}
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -170,6 +176,7 @@ void Fr_GL3Window::draw() {
         // printf("not overlay%i\n", counter);
         counter++;
     }
+    Fl::flush();
 }
 //TODO FIXME: Do we need this?
 void Fr_GL3Window::reset() {
@@ -225,10 +232,9 @@ int Fr_GL3Window::embeddGLfwWindow()
 
     DWORD style = GetWindowLong(glfwHND, GWL_STYLE); //get the b style
 
-    style &= ~(WS_POPUP | WS_CAPTION ); //reset the caption and popup bits
+    style &= ~(WS_POPUP | WS_CAPTION); //reset the caption and popup bits
     style |= WS_CHILD; //set the child bit
     style |= WS_OVERLAPPED;
-
     SetWindowLong(glfwHND, GWL_STYLE, style); //set the new style of b
     MoveWindow(glfwHND, _xGl, _yGl, _wGl, _hGl, true); //place b at (x,y,w,h) in a
     SetParent(glfwHND, hwParentWindow);
@@ -239,7 +245,7 @@ int Fr_GL3Window::embeddGLfwWindow()
 
 int Fr_GL3Window::releaseGLfwWindow()
 {
-    //todo fixme: Border of the window is not correct. Don't know why
+    //todo fixme:
     HWND glfwHND = glfwGetWin32Window(pWindow);
     HWND hwParentWindow = fl_win32_xid(pfltkWindow);
     int result = 0;
@@ -248,25 +254,15 @@ int Fr_GL3Window::releaseGLfwWindow()
         return 0;
     }
 
-    DWORD style= GetWindowLong(glfwHND, GWL_STYLE); //get the b style
-    //style = (WS_POPUP |  ); //reset the caption and popup bits
-    //style |= ( WS_DLGFRAME| WS_CAPTION |WS_THICKFRAME | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_SIZEBOX | WS_SYSMENU  );
-    style = WS_OVERLAPPEDWINDOW|WS_POPUPWINDOW;
-
+    DWORD style = GetWindowLong(glfwHND, GWL_STYLE); //get the b style
+    style |= (WS_POPUP | WS_MAXIMIZEBOX| WS_MINIMIZEBOX  | WS_SIZEBOX | WS_SYSMENU| WS_CAPTION); //reset the caption and popup bits
     SetWindowLong(glfwHND, GWL_STYLE, style); //set the new style of b
+    MoveWindow(glfwHND, _xGl, _yGl, _wGl, _hGl, true); //place b at (x,y,w,h) in a
     SetParent(glfwHND, nullptr);
     UpdateWindow(glfwHND);
     ShowWindow(glfwHND, SW_SHOW);
-
-    //MoveWindow(glfwHND, _xGl, _yGl, _wGl, _hGl, true); //place b at (x,y,w,h) in a
     return 1;//everything is OK.
 
-}
-
-void Fr_GL3Window::redraw()
-{
-    Fl_Double_Window::redraw();
-    Fl_Double_Window::flush();
 }
 
 int Fr_GL3Window::createGLFWwindow()
@@ -353,9 +349,9 @@ int Fr_GL3Window::createGLFWwindow()
 }
 int Fr_GL3Window::updateGLFWWindow()
 {
-    //if (s_GladInitialized) {
-    //    glad_glFlush();
-   // }
+    if (s_GladInitialized) {
+        glad_glFlush();
+    }
     return 0;
 }
 
@@ -445,11 +441,6 @@ void Fr_GL3Window::resizable(Fl_Widget* w)
 {
     Fl_Double_Window::resizable(w);
 }
-
-void Fr_GL3Window::redrawFLTKTimer_cb(void* window) {
-    redraw();
-}
-
 /**
 * Run the application . This is a replacer of Fl:run.
 * We need to make our own since FLTK will not be involved
@@ -464,21 +455,27 @@ int Fr_GL3Window::GLFWrun()
     //Fl::add_timeout(1, redrawFLTKTimer_cb, pfltkWindow);       // 24fps timer
     //Fl::wait(1);
     shaderProgram = CreateShader(vertexShaderSource, fragmentShaderSource);
-    oldTime = 0;
+
     while (!glfwWindowShouldClose(pWindow))
     {
-        //Update FLTK 25 frames/sec
+        //Update FLTK 24 frames/sec
         newTime = glfwGetTime();
-        
-        double delta = (newTime - oldTime);
-        if (delta>= fltkredrawFPS){
+        if (oldTime == 0) {
+            oldTime = newTime;
+        }
+
+        glUseProgram(shaderProgram);
+        double delta = newTime - oldTime;
+        oldTime = newTime;
+        fltktimerValue = fltktimerValue + delta;
+        if (fltktimerValue >= redrawFPS){
             fltktimerValue = 0.0;
             redrawFLTKTimer_cb(this);
-            oldTime = glfwGetTime();  //executing the above is costsam. So we need a new time
         }
+
         // render
         // ------
-        glUseProgram(shaderProgram);
+
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
