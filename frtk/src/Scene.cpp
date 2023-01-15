@@ -9,13 +9,13 @@
 #include "Scene.h"
 
 Scene::Scene() :
-    background_{0.8, 0.8, 0.8} {
+    background_{ 0.8, 0.8, 0.8,1.0 } {
 }
 
 void Scene::SetBackgroud(float r, float g, float b) {
-    background_[0] = r;
-    background_[1] = g;
-    background_[2] = b;
+    background_.r = r;
+    background_.g = g;
+    background_.b = b;
 }
 
 void Scene::RenderScene() {
@@ -23,11 +23,13 @@ void Scene::RenderScene() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glClearColor(background_[0], background_[1], background_[2], 1.0);
+    glClearColor(background_.r, background_.g, background_.b, 1.0);
 
     RenderInfo render_info;
-    if (!SetupCamera(render_info.projection, render_info.modelview))
-        throw std::runtime_error("Scene::Render(): Camera not found");
+    if (!SetupCamera(render_info.projection, render_info.modelview)){
+        //throw std::runtime_error("Scene::Render(): Camera not found");
+        std::cout << "not fourn" << std::endl;
+    }
     SetupLight(render_info.modelview, render_info.lights);
 
     int draw_framebuffer = 0;

@@ -12,9 +12,10 @@
 #include<frtk.h>
 #include<Fr_Core.h>
 
-#include "Node.h"
+#include <Node.h>
 
 class Manipulator;
+
 
 /**
  * Scene's camera
@@ -72,5 +73,5 @@ private:
     std::unique_ptr<Manipulator> manipulator_;
 };
 
-#endif
 
+#endif

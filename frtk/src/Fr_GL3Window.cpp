@@ -103,7 +103,10 @@ static void error_callback(int error, const char* description)
 * Class constructor -
 * FIXME: CLEANUP CODE
 */
-Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Double_Window(x, y, w, h, l), overlay(false) {
+Scene* Fr_GL3Window::scene = nullptr;
+Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Double_Window(x, y, w, h, l),
+                                                                        overlay(false),
+                                                                        curr_camera(kDriver){
 
     //Default size is the size of the FLTK window
 
@@ -161,6 +164,61 @@ int Fr_GL3Window::exit()
     return 1;
 }
 
+
+
+#include<Mesh.h>
+#include<ToonShaderNode.h>
+
+
+static std::shared_ptr<Transform> CreateRoad() {
+    auto floor = std::make_shared<Transform>();
+
+    auto quad = std::make_shared<Mesh>("E:/Projects/Design456App/frtk/src/data/quad.msh");
+
+    auto grass_t = std::make_shared<Transform>();
+    grass_t->Scale(1000, 0, 1000);
+    floor->AddNode(grass_t);
+
+    auto grass = std::make_shared<ToonShaderNode>(0xBADA5F);
+    grass->SetMesh(quad);
+    grass_t->AddNode(grass);
+
+    auto road_t = std::make_shared<Transform>();
+    road_t->Scale(1000, 1, 10);
+    road_t->Translate(0, 0.001, 0);
+    floor->AddNode(road_t);
+
+    auto road = std::make_shared<ToonShaderNode>(0x111111);
+    road->SetMesh(quad);
+    road_t->AddNode(road);
+
+    auto strip = std::make_shared<ToonShaderNode>(0xEEEE11);
+    strip->SetMesh(quad);
+
+    for (int i = 0; i < 125; ++i) {
+        auto strip_t = std::make_shared<Transform>();
+        strip_t->Translate(i * 8 - 500, 0.002, 0);
+        strip_t->Scale(2.5, 1, 0.2);
+        floor->AddNode(strip_t);
+        strip_t->AddNode(strip);
+    }
+
+    return floor;
+}
+
+void Fr_GL3Window::CreateScene()
+{
+    //static void CreateScene() {
+    scene = new Scene();
+    scene->SetBackgroud(0.69, 0.95, 1.00);
+    auto camera = CreateCamera(scene, kGlobal);
+    camera->SetEye(20, 5, 20);
+    camera->SetCenter(0.5, 0.5, 0);
+    camera->SetUp(0, 1, 0);
+    scene->AddNode(CreateSun());
+    scene->AddNode(CreateRoad());
+
+}
 //TODO FIXME
 void Fr_GL3Window::draw() {
     if (overlay) {
@@ -327,9 +385,13 @@ int Fr_GL3Window::createGLFWwindow()
     // uncomment this call to draw in wireframe polygons.
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+
+
+
     // render loop
-    // -----------
-    embeddGLfwWindow();
+
+    
+   embeddGLfwWindow();
 
     //***************************************************
 
@@ -347,7 +409,6 @@ int Fr_GL3Window::createGLFWwindow()
 
     return result;
 }
-Scene *Fr_GL3Window::scene = 0;
 
 int Fr_GL3Window::updateGLFWWindow()
 {
@@ -430,8 +491,8 @@ int Fr_GL3Window::GLFWrun()
     //TODO DOSENT WORK .. WHY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //Fl::add_timeout(1, redrawFLTKTimer_cb, pfltkWindow);       // 24fps timer
     //Fl::wait(1);
-    shaderProgram = CreateShader(vertexShaderSource, fragmentShaderSource);
-
+    //shaderProgram = CreateShader(vertexShaderSource, fragmentShaderSource);
+    CreateScene();
     while (!glfwWindowShouldClose(pWindow))
     {
         //Update FLTK 24 frames/sec
@@ -450,25 +511,44 @@ int Fr_GL3Window::GLFWrun()
         }
 
         // render
-        // ------
-
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        // draw our first triangle
-        glUseProgram(shaderProgram);
-        glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-        glBindVertexArray(0); // no need to unbind it every time
-
-        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-        // -------------------------------------------------------------------------------
-        //scene->RenderScene();
+        scene->RenderScene();
         glfwSwapBuffers(pWindow);
         glfwPollEvents();
-        glad_glFlush();
+        //glad_glFlush();
     }
     return 0;
+}
+std::shared_ptr<Camera> Fr_GL3Window::CreateCamera(Group* parent, int cameraId)
+{
+        camera = std::make_shared<Camera>();
+        camera->SetPerspective(40, 0.5, 50);
+        camera->SetActive(false);
+        parent->AddNode(camera);
+        manipulator = new Manipulator();
+        camera->SetManipulator(std::unique_ptr<Manipulator>(manipulator));
+
+        cameras[cameraId].camera = camera.get();
+        cameras[cameraId].manipulator = manipulator;
+
+        return camera;
+    
+}
+
+
+std::shared_ptr<Transform> Fr_GL3Window::CreateSun() {
+    sun = new Transform();
+    auto sun_height = std::make_shared<Transform>();
+    sun_height->Translate(30, 500, 30);
+    sun->AddNode(sun_height);
+
+    auto light = std::make_shared<Light>();
+    light->SetPosition(0, 0, 0);
+    light->SetDiffuse(0.5, 0.5, 0.5);
+    light->SetAmbient(0.4, 0.4, 0.4);
+    light->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
+    sun_height->AddNode(light);
+
+    return std::shared_ptr<Transform>(sun);
 }
 void Fr_GL3Window::setOpenGLWinowSize(int xGL, int yGL, int wGL, int hGL)
 {

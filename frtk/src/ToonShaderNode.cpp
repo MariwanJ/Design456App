@@ -25,9 +25,9 @@ ToonShaderNode::ToonShaderNode(unsigned int color, float silhouette) :
     SetColor(color);
     if (!shared_) {
         shared_ = new Shared;
-        shared_->toon_program = new ShaderProgram("shaders/toonshader");
-        shared_->silhouette_program = new ShaderProgram("shaders/silhouette");
-        shared_->shadowmap_program = new ShaderProgram("shaders/shadowmap");
+        shared_->toon_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/toonshader");
+        shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
+        shared_->shadowmap_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/shadowmap");
     }
 }
 

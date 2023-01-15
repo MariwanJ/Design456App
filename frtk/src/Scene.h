@@ -15,6 +15,13 @@
 /**
  * The scene root
  */
+typedef struct {
+    float r;
+    float g;
+    float b;
+    float a; //alpha
+} bkgC;
+
 class Scene : public Group {
 public:
     /**
@@ -34,7 +41,7 @@ public:
     void RenderScene();
 
 private:
-    float background_[3];
+    bkgC  background_;
 };
 
 #endif

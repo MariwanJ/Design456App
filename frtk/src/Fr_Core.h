@@ -51,14 +51,13 @@
 //#include <Fr_GL3Window.h>
 #include <FL/platform.H>
 
-//#include <FL/gl.h> // for gl_texture_reset()
+
 #include <Fr_Log.h>
-#include "spdlog/spdlog.h"
-#include "spdlog/fmt/ostr.h"
+#include <spdlog/spdlog.h>
+#include <spdlog/fmt/ostr.h>
 
 
 #include<fr_widgets/fr_basic_shapes.h>
-
 #include <vertexBuffer.h>
 #include<indexedBuffer.h>
 
@@ -141,6 +140,8 @@ static unsigned char GLLogCall() {
 
 #define setBIT(x) (1 << x)
 #define clearBIT(x) (0 << x)
+
+
 
 #endif
 #endif

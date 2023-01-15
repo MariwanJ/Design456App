@@ -9,11 +9,9 @@
 #include <cmath>
 
 #include <glm/gtc/matrix_transform.hpp>
-#include <GL/gl.h>
-
-#include "Camera.h"
-
-#include "Manipulator.h"
+#include <glad/glad.h>
+#include <Camera.h>
+#include <Manipulator.h>
 
 Camera::Camera() :
     eye_{1, 0, 0},

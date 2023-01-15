@@ -8,9 +8,8 @@
 
 #ifndef SHADERPROGRAM_H
 #define SHADERPROGRAM_H
-
-#include <string>
-
+#include<frtk.h>
+#include<Fr_Core.h>
 #include <glm/glm.hpp>
 
 class ShaderProgram {

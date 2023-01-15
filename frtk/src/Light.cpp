@@ -17,6 +17,10 @@ Light::Light() :
     specular_(0.4, 0.4, 0.4, 1),
     attenuation_(1, 0, 0),
     spot_enabled_(false),
+    sm_projection_(0),
+    sm_framebuffer_(0),
+    sm_renderbuffer_(0),
+    sm_texture_(0),
     sm_enable_(false) {
 }
 

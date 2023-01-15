@@ -6,12 +6,8 @@
  * Trabalho - Projeto Final
  */
 
-#include <fstream>
-#include <iostream>
-#include <stdexcept>
-
 #include <glm/gtc/type_ptr.hpp>
-#include <GL/glew.h>
+#include<glad/glad.h>
 
 #include "ShaderProgram.h"
 
@@ -94,10 +90,12 @@ void ShaderProgram::CompileShader(int shader_type, const std::string& path) {
     if (!success) {
         GLint length = 0;
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
-        char log[length];
+        
+        char *log=new char(length);
         glGetShaderInfoLog(shader, length, &length, log);
         glDeleteShader(shader);
         throw std::runtime_error(log);
+        delete[]log;
     }
     glAttachShader(program_, shader);
 }

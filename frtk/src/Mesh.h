@@ -9,10 +9,8 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include <array>
-#include <string>
-#include <vector>
-
+#include<frtk.h>
+#include<Fr_Core.h>
 #include <glm/glm.hpp>
 
 class Mesh {

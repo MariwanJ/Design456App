@@ -28,77 +28,49 @@
 
 #include <FL/Fl_Button.H>
 #include <Fr_GL3Window.h>
-
-/* Main application code */
-
-
-static void buttonPressed1(Fl_Widget* w, void* data) {
-    Fr_GL3Window * b1 = (Fr_GL3Window*)(data);
-    std::cout << "You clicked me1!!\n";
-    b1->releaseGLfwWindow();
-}
-static void buttonPressed2(Fl_Widget* w, void* data) {
-    Fr_GL3Window* b2 = (Fr_GL3Window*)(data);
-    std::cout << "You clicked me2!!\n";
-    b2->embeddGLfwWindow();
-}
-
 #include<Scene.h>
 #include<Camera.h>
 #include<Manipulator.h>
 
-/* Cameras and manipulators */
-enum CameraList {
-    kGlobal,
-    kDriver,
-    kJeep,
-    kNCameras
-};
-static struct {
-    Camera* camera;
-    Manipulator* manipulator;
-} cameras[kNCameras];
 
-static std::shared_ptr<Camera> CreateCamera(Group* parent, int cameraId) {
-    auto camera = std::make_shared<Camera>();
-    camera->SetPerspective(40, 0.5, 50);
-    camera->SetActive(false);
-    parent->AddNode(camera);
-    auto manipulator = new Manipulator();
-    camera->SetManipulator(std::unique_ptr<Manipulator>(manipulator));
+//static void buttonPressed1(Fl_Widget* w, void* data) {
+//    Fr_GL3Window * b1 = (Fr_GL3Window*)(data);
+//    std::cout << "You clicked me1!!\n";
+//    b1->releaseGLfwWindow();
+//}
+//static void buttonPressed2(Fl_Widget* w, void* data) {
+//    Fr_GL3Window* b2 = (Fr_GL3Window*)(data);
+//    std::cout << "You clicked me2!!\n";
+//    b2->embeddGLfwWindow();
+//}
 
-    cameras[cameraId].camera = camera.get();
-    cameras[cameraId].manipulator = manipulator;
-
-    return camera;
-}
-
-static void CreateScene(Scene* scene) {
-     scene = new Scene();
-    scene->SetBackgroud(0.69, 0.95, 1.00);
-
-    auto camera = CreateCamera(scene, kGlobal);
-
-    camera->SetEye(20, 5, 20);
-    camera->SetCenter(0.5, 0.5, 0);
-    camera->SetUp(0, 1, 0);
-
-    //scene->AddNode(CreateSun());
-  //  scene->AddNode(CreateRoad());
- //   scene->AddNode(CreateShip());
- //   scene->AddNode(CreateJeep());
-}
+//
+//static std::shared_ptr<Camera> CreateCamera(Group* parent, int cameraId) {
+//    auto camera = std::make_shared<Camera>();
+//    camera->SetPerspective(40, 0.5, 50);
+//    camera->SetActive(false);
+//    parent->AddNode(camera);
+//    auto manipulator = new Manipulator();
+//    camera->SetManipulator(std::unique_ptr<Manipulator>(manipulator));
+//
+//    cameras[cameraId].camera = camera.get();
+//    cameras[cameraId].manipulator = manipulator;
+//
+//    return camera;
+//}
+#include<Application.h>
 int main(int argc, char** argv)
 {
-    Fr_GL3Window* win = new Fr_GL3Window(0, 0, 1000, 800, "Modern OpenGL with FLTK support");
-    win->setOpenGLWinowSize(70, 60, 600, 600);
-    win->resizable(win);
-    Fl_Button* b1 = new Fl_Button(10, 5, 50, 40, "Release");
-    Fl_Button* b2 = new Fl_Button(100, 5, 50, 40, "CHILD");
-    CreateScene(win->scene);
+    //Fr_GL3Window* win = new Fr_GL3Window(0, 0, 1000, 800, "Modern OpenGL with FLTK support");
+    //win->setOpenGLWinowSize(70, 60, 600, 600);
+    //win->resizable(win);
+    //Fl_Button* b1 = new Fl_Button(10, 5, 50, 40, "Release");
+    //Fl_Button* b2 = new Fl_Button(100, 5, 50, 40, "CHILD");
+    //win->CreateScene();
     //b1->callback((Fl_Callback*)buttonPressed1, win);
    // b2->callback((Fl_Callback*)buttonPressed2, win);
-    win->show();
+    //win->show();
 
-    win->GLFWrun();
+    //win->GLFWrun();
+    return FakeMain(argc, argv);
 }

@@ -6,14 +6,9 @@
  * Trabalho - Projeto Final
  */
 
-#include <iostream>
-#include <algorithm>
-#include <cmath>
-
 #include <glm/gtx/transform.hpp>
-#include <GL/gl.h>
-
 #include "Manipulator.h"
+#include<glad/glad.h>
 
 Manipulator::Manipulator() :
     reference_(0, 0, 0),

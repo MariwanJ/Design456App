@@ -6,15 +6,8 @@
  * Trabalho - Projeto Final
  */
 
-#include <cinttypes>
-#include <fstream>
-#include <iostream>
-#include <limits>
-#include <stdexcept>
 
-#include <GL/glew.h>
-
-#include "Mesh.h"
+#include <Mesh.h>
 
 Mesh::Mesh(const std::string& path) :
     vbo_{0, 0, 0},

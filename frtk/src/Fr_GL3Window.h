@@ -28,9 +28,33 @@
 
 #ifndef FR_GL3WINDOW_H
 #define FR_GL3WINDOW_H
+
 #include <frtk.h>
 #include<Fr_Core.h>
 #include<Scene.h>
+#include<Camera.h>
+#include<Manipulator.h>
+#include<Transform.h>
+#include<Light.h>
+#include <glm/gtc/matrix_transform.hpp>
+/* Cameras and manipulators */
+
+class Camera;
+enum CameraList {
+    kGlobal,
+    kDriver,
+//    kJeep,
+    kNCameras
+};
+
+typedef struct {
+    Camera* camera;
+    Manipulator* manipulator;
+ } cam;
+ 
+
+
+static int curr_camera = kDriver;
 
 class Fr_GL3Window;
 
@@ -57,7 +81,11 @@ public:
 
     virtual void reset(void);
     virtual void resizeGlWindow(int x, int y, int w, int h);
-    void resize(int x, int y, int w, int h);
+    virtual void CreateScene();
+    virtual std::shared_ptr<Camera> CreateCamera(Group* parent, int cameraId);
+    virtual std::shared_ptr<Transform> CreateSun();
+    
+       void resize(int x, int y, int w, int h);
     void resizable(Fl_Widget* w);
     virtual void draw();           //fltk
     virtual void show();           //both
@@ -71,7 +99,12 @@ public:
     static double oldTime;
     static double newTime;
     void setOpenGLWinowSize(int xGL, int yGL, int wGL, int hGL);
+
     static Scene* scene;
+    cam cameras[kNCameras];
+    std::shared_ptr<Camera> camera;
+    Manipulator *manipulator;
+
 
 protected:
     int createGLFWwindow();
@@ -101,6 +134,8 @@ private:
     int gl_version_minor;
     void flush();
     static GLFWwindow* pWindow;
+    
+    Transform *sun;
 
     HWND glfwHND;
     static bool s_GLFWInitialized;
@@ -109,6 +144,8 @@ private:
     static int _yGl; // It is different than FLTK. But it is depends on  y()
     static int _wGl; // It is different than FLTK. But it is depends on  w()
     static int _hGl; // It is different than FLTK. But it is depends on h()
+    int curr_camera ;
+
 };
 
 #endif

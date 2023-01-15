@@ -28,6 +28,6 @@
 #ifndef APPLICAION_H
 #define APPLICATION_H
 
-
+int FakeMain(int argc, char* argv[]);
 
 #endif

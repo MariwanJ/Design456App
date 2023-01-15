@@ -9,7 +9,8 @@
 #ifndef MANIPULATOR_H
 #define MANIPULATOR_H
 
-#include <array>
+#include<frtk.h>
+#include<Fr_Core.h>
 
 #include <glm/glm.hpp>
 
