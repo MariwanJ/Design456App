@@ -44,7 +44,7 @@ public:
     /**
      * Mouse button function
      */
-    void GlutMouse(int button, int state, int x, int y);
+    void GLFWMouse(int button, int state, double x, double y);
 
     /**
      * Mouse motion function
@@ -62,16 +62,16 @@ private:
 
     /** Verifies the k_button state and sets the k_operation */
     template<int k_button, Operation k_operation>
-    void SetOperation(int button, int state, int x, int y);
+    void SetOperation(int button, int state, double x,double y);
 
     /** Computes the sphere vector for rotation */
-    glm::vec3 computeSphereCoordinates(int x, int y);
+    glm::vec3 computeSphereCoordinates(double x, double y);
 
     glm::vec3 reference_;
     glm::mat4 matrix_;
     glm::mat4 inv_;
     Operation operation_;
-    float x_, y_;
+    double x_, y_;
     glm::vec3 v_;
     bool invertX_, invertY_;
 };

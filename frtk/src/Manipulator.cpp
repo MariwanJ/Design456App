@@ -46,7 +46,7 @@ void Manipulator::SetReferencePoint(float x, float y, float z) {
     reference_ = glm::vec3(x, y, z);
 }
 
-void Manipulator::GlutMouse(int button, int state, int x, int y) {
+void Manipulator::GLFWMouse(int button, int state, double x, double y) {
     SetOperation<0, Operation::kRotation>(button, state, x, y);
     SetOperation<2, Operation::kZoom>(button, state, x, y);
 }
@@ -82,7 +82,7 @@ void Manipulator::GlutMotion(int x, int y) {
 }
 
 template<int k_button, Manipulator::Operation k_operation>
-void Manipulator::SetOperation(int button, int state, int x, int y) {
+void Manipulator::SetOperation(int button, int state, double x, double y) {            ///TODO FIXME : CHANGE THE STATE TO A BETTER AND MEANINGSFULL ENUM. 
     if (button == k_button) {
         if (state == 0 && operation_ == Operation::kNone) {
             operation_ = k_operation;
@@ -95,7 +95,7 @@ void Manipulator::SetOperation(int button, int state, int x, int y) {
     }
 }
 
-glm::vec3 Manipulator::computeSphereCoordinates(int x, int y) {
+glm::vec3 Manipulator::computeSphereCoordinates(double x, double y) {
     int vp[4]; 
     glGetIntegerv(GL_VIEWPORT, vp);
     const float w = vp[2];

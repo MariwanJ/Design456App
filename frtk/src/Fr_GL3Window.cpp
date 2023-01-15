@@ -31,7 +31,7 @@
 
 GLuint m_QuadVA, m_QuadVB, m_QuadIB;
 bool s_GLFWInitialized;
-#define redrawFPS  1.0/24.0  // (24 Frames per sec)
+#define redrawFPS  1.0/50.0  // (24 Frames per sec)
 
 float Fr_GL3Window::fltktimerValue = 0.0;
 
@@ -56,6 +56,7 @@ bool Fr_GL3Window::s_GladInitialized = false;
 
 static int counter = 0;
 
+Fr_GL3Window* FR::globalP_pWindow = nullptr;
 int Fr_GL3Window::_xGl = 0;
 int Fr_GL3Window::_yGl = 0;
 int Fr_GL3Window::_wGl = 0;
@@ -68,31 +69,6 @@ static void redrawFLTKTimer_cb(void* window) {
     Fl::repeat_timeout(redrawFPS, redrawFLTKTimer_cb, (void*)win);
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    glViewport(0, 0, width, height);
-    Fl_Double_Window* pfltkWindow= (Fl_Double_Window*)glfwGetWindowUserPointer(window);
-}
-
-void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-}
-
-void cursor_position_callback(GLFWwindow*, double xpos, double ypos)
-{
-}
-
-void cursor_enter_callback(GLFWwindow*, int entered)
-{
-}
-
-void mouse_button_callback(GLFWwindow*, int button, int action, int mods)
-{
-}
-
-void scroll_callback(GLFWwindow*, double xoffset, double yoffset)
-{
-}
 
 static void error_callback(int error, const char* description)
 {
@@ -109,6 +85,7 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Double
                                                                         curr_camera(kDriver){
 
     //Default size is the size of the FLTK window
+    FR::globalP_pWindow = this;
 
     _xGl = x;
     _yGl = y;
@@ -117,6 +94,7 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Double
     gl_version_major = 3;
     gl_version_minor = 3;
     glfwSetErrorCallback(error_callback);
+
 
 
 

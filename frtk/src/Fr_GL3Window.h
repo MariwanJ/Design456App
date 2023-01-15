@@ -53,19 +53,18 @@ typedef struct {
  } cam;
  
 
-
 static int curr_camera = kDriver;
 
 class Fr_GL3Window;
 
 //callbacks - private
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-
-void cursor_position_callback(GLFWwindow*, double xpos, double ypos);
-void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cursor entered the window's client area, or GL_FALSE if it left it.
-void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
-void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
+//void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+//void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+//
+//void cursor_position_callback(GLFWwindow*, double xpos, double ypos);
+//void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cursor entered the window's client area, or GL_FALSE if it left it.
+//void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
+//void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
 
 class FRTK_API Fr_GL3Window : public Fl_Double_Window {
 public:

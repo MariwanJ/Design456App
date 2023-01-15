@@ -66,8 +66,16 @@ void Fr_GL3Window::cursor_enter_callback(GLFWwindow*, int entered)
 {
 }
 
-void Fr_GL3Window::mouse_button_callback(GLFWwindow*, int button, int action, int mods)
+void Fr_GL3Window::mouse_button_callback(GLFWwindow*win, int button, int action, int mods)
 {
+    int state = 0; //TODO FIXME DONT KNOW WHAT TO WRITE
+    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+        double cposx, cposy;
+        glfwGetCursorPos(win, &cposx, &cposy);
+        if (FR::globalP_pWindow != nullptr) {
+            FR::globalP_pWindow->cameras[FR::globalP_pWindow->curr_camera].manipulator->GLFWMouse(button, state, cposx, cposy);
+        }
+    }
 }
 
 void Fr_GL3Window::scroll_callback(GLFWwindow*, double xoffset, double yoffset)
@@ -80,6 +88,11 @@ int FakeMain(int argc, char* argv[]) {
     Fr_GL3Window* win = new Fr_GL3Window(0, 0, 1000, 800, "Modern OpenGL with FLTK support");
     win->setOpenGLWinowSize(70, 60, 900, 700);
     win->resizable(win);
+    //win->resizable(win);
+//Fl_Button* b1 = new Fl_Button(10, 5, 50, 40, "Release");
+//Fl_Button* b2 = new Fl_Button(100, 5, 50, 40, "CHILD");
+
+
     win->show();
     win->GLFWrun();
     return 0; 

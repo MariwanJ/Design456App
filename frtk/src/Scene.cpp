@@ -30,6 +30,7 @@ void Scene::RenderScene() {
         //throw std::runtime_error("Scene::Render(): Camera not found");
         std::cout << "not fourn" << std::endl;
     }
+    std::cout << "ok" << std::endl;
     SetupLight(render_info.modelview, render_info.lights);
 
     int draw_framebuffer = 0;

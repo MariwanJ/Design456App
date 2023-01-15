@@ -33,16 +33,16 @@
 #include<Manipulator.h>
 
 
-//static void buttonPressed1(Fl_Widget* w, void* data) {
-//    Fr_GL3Window * b1 = (Fr_GL3Window*)(data);
-//    std::cout << "You clicked me1!!\n";
-//    b1->releaseGLfwWindow();
-//}
-//static void buttonPressed2(Fl_Widget* w, void* data) {
-//    Fr_GL3Window* b2 = (Fr_GL3Window*)(data);
-//    std::cout << "You clicked me2!!\n";
-//    b2->embeddGLfwWindow();
-//}
+static void buttonPressed1(Fl_Widget* w, void* data) {
+    Fr_GL3Window * b1 = (Fr_GL3Window*)(data);
+    std::cout << "You clicked me1!!\n";
+    b1->releaseGLfwWindow();
+}
+static void buttonPressed2(Fl_Widget* w, void* data) {
+    Fr_GL3Window* b2 = (Fr_GL3Window*)(data);
+    std::cout << "You clicked me2!!\n";
+    b2->embeddGLfwWindow();
+}
 
 //
 //static std::shared_ptr<Camera> CreateCamera(Group* parent, int cameraId) {
@@ -61,16 +61,16 @@
 #include<Application.h>
 int main(int argc, char** argv)
 {
-    //Fr_GL3Window* win = new Fr_GL3Window(0, 0, 1000, 800, "Modern OpenGL with FLTK support");
-    //win->setOpenGLWinowSize(70, 60, 600, 600);
-    //win->resizable(win);
-    //Fl_Button* b1 = new Fl_Button(10, 5, 50, 40, "Release");
-    //Fl_Button* b2 = new Fl_Button(100, 5, 50, 40, "CHILD");
+    Fr_GL3Window* win = new Fr_GL3Window(0, 0, 1000, 800, "Modern OpenGL with FLTK support");
+    win->setOpenGLWinowSize(70, 60, 600, 600);
+    win->resizable(win);
+    Fl_Button* b1 = new Fl_Button(10, 5, 50, 40, "Release");
+    Fl_Button* b2 = new Fl_Button(100, 5, 50, 40, "CHILD");
     //win->CreateScene();
-    //b1->callback((Fl_Callback*)buttonPressed1, win);
-   // b2->callback((Fl_Callback*)buttonPressed2, win);
-    //win->show();
+    b1->callback((Fl_Callback*)buttonPressed1, win);
+    b2->callback((Fl_Callback*)buttonPressed2, win);
+    win->show();
 
-    //win->GLFWrun();
-    return FakeMain(argc, argv);
+    win->GLFWrun();
+    //return FakeMain(argc, argv);
 }
