@@ -189,7 +189,7 @@ void Fr_GL3Window::CreateScene()
     //static void CreateScene() {
     scene = new Scene();
     scene->SetBackgroud(0.69, 0.95, 1.00);
-    auto camera = CreateCamera(scene, kGlobal);
+    auto camera = CreateCamera(scene, kDriver);
     camera->SetEye(20, 5, 20);
     camera->SetCenter(0.5, 0.5, 0);
     camera->SetUp(0, 1, 0);
