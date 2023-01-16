@@ -41,10 +41,10 @@
 
 class Camera;
 enum CameraList {
-    kGlobal,
-    kDriver,
-//    kJeep,
-    kNCameras
+    Cam1,
+    Cam2,
+    Cam3,
+    Cam4
 };
 
 typedef struct {
@@ -53,7 +53,7 @@ typedef struct {
  } cam;
  
 
-static int curr_camera = kDriver;
+static int curr_camera = Cam1;
 
 class Fr_GL3Window;
 
@@ -100,7 +100,7 @@ public:
     void setOpenGLWinowSize(int xGL, int yGL, int wGL, int hGL);
 
     static Scene* scene;
-    cam cameras[kNCameras];
+    std::vector<cam> cameras;
     std::shared_ptr<Camera> camera;
     Manipulator *manipulator;
 

@@ -115,7 +115,7 @@ static unsigned char GLLogCall() {
     }
     return 1;
 }
-#define GLResetError {while(glGetError != GL_NO_ERROR);}
+#define GLResetError {while(glGetError() != GL_NO_ERROR);}
 #ifdef _DEBUG
 #define glCheckFunc(x) GLResetError;x; FRTK_CORE_APP_ASSERT(GLLogCall());
 #endif

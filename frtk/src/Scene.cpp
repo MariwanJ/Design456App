@@ -19,34 +19,34 @@ void Scene::SetBackgroud(float r, float g, float b) {
 }
 
 void Scene::RenderScene() {
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glClearColor(background_.r, background_.g, background_.b, 1.0);
+    //glCheckFunc(glEnable(GL_TEXTURE_2D)); Not a OPENGL3+ function
+    glCheckFunc(glEnable(GL_DEPTH_TEST));
+    glCheckFunc(glEnable(GL_BLEND));
+    glCheckFunc(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+    glCheckFunc(glClearColor(background_.r, background_.g, background_.b, 1.0));
 
     RenderInfo render_info;
     if (!SetupCamera(render_info.projection, render_info.modelview)){
         //throw std::runtime_error("Scene::Render(): Camera not found");
-        std::cout << "not fourn" << std::endl;
+        std::cout << "not found" << std::endl;
     }
     std::cout << "ok" << std::endl;
     SetupLight(render_info.modelview, render_info.lights);
 
     int draw_framebuffer = 0;
-    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &draw_framebuffer);
+    glCheckFunc(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &draw_framebuffer));
 
     SetupShadowMap(render_info.shadowmap);
 
-    glPushAttrib(GL_VIEWPORT_BIT);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, render_info.shadowmap.framebuffer);
-    glViewport(0, 0, render_info.shadowmap.width, render_info.shadowmap.height);
-    glClear(GL_DEPTH_BUFFER_BIT); 
+    //glCheckFunc(glPushAttrib(GL_VIEWPORT_BIT));  NOT OPENGL3+ Function
+    glCheckFunc(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, render_info.shadowmap.framebuffer));
+    glCheckFunc(glViewport(0, 0, render_info.shadowmap.width, render_info.shadowmap.height));
+    glCheckFunc(glClear(GL_DEPTH_BUFFER_BIT)); 
     RenderShadowMap(render_info.shadowmap, render_info.shadowmap.modelview);
-    glPopAttrib();
+    //glCheckFunc(glPopAttrib());
 
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_framebuffer);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
+    glCheckFunc(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_framebuffer));
+    glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
     render_info.id = 0;
     render_info.render_transparent = false;

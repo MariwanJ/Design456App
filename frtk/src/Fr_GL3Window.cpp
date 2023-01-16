@@ -82,7 +82,7 @@ static void error_callback(int error, const char* description)
 Scene* Fr_GL3Window::scene = nullptr;
 Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Double_Window(x, y, w, h, l),
                                                                         overlay(false),
-                                                                        curr_camera(kDriver){
+                                                                        curr_camera(Cam1){
 
     //Default size is the size of the FLTK window
     FR::globalP_pWindow = this;
@@ -92,7 +92,7 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Double
     _wGl = w ;
     _hGl = h ;
     gl_version_major = 3;
-    gl_version_minor = 3;
+    gl_version_minor = 0;
     glfwSetErrorCallback(error_callback);
 
 
@@ -184,17 +184,181 @@ static std::shared_ptr<Transform> CreateRoad() {
     return floor;
 }
 
+static std::shared_ptr<Transform> CreateShip() {
+    auto ship_t = std::make_shared<Transform>();
+    ship_t->Translate(-10, 10, 0);
+    ship_t->Scale(10, 10, 10);
+    ship_t->Rotate(90, 0, -1, 0);
+    ship_t->Rotate(90, -1, 0, 0);
+
+    auto ship = std::make_shared<ToonShaderNode>(0x444444);
+    ship->SetMesh("E:/Projects/try things/Scene-Graph-222_Important/src/data/klingon_starship.off");
+    ship_t->AddNode(ship);
+
+    return ship_t;
+}
+
+static std::shared_ptr<ToonShaderNode> CreateJeepItem(
+    std::shared_ptr<Transform> jeep, const std::string& name,
+    unsigned int color) {
+    auto item = std::make_shared<ToonShaderNode>(color, 0.009);
+    item->SetMesh("E:/Projects/try things/Scene-Graph-222_Important/src/data/jeep_" + name + ".msh");
+    jeep->AddNode(item);
+    return item;
+}
+
+static std::shared_ptr<Transform> CreateJeep() {
+    auto jeep = std::make_shared<Transform>();
+    jeep->Rotate(90, -1, 0, 0);
+
+    // Create static stuff
+    CreateJeepItem(jeep, "body", 0xD1943F);
+    CreateJeepItem(jeep, "lanterns", 0x991111);
+    CreateJeepItem(jeep, "handle", 0xAAAAEE);
+    CreateJeepItem(jeep, "panel", 0x222222);
+    CreateJeepItem(jeep, "seat", 0x705A34);
+    CreateJeepItem(jeep, "windshieldcleaner", 0x222222);
+    auto windshield = CreateJeepItem(jeep, "windshield", 0xBBBBEE);
+    windshield->SetOpacity(0.3);
+
+    // Create driver
+    auto bunny_t = std::make_shared<Transform>();
+    bunny_t->Translate(0.9, -0.6, 1.2);
+    bunny_t->Scale(0.6, 0.6, 0.6);
+    bunny_t->Rotate(90, 1, 0, 0);
+    bunny_t->Rotate(90, 0, 1, 0);
+    jeep->AddNode(bunny_t);
+
+    auto bunny = std::make_shared<ToonShaderNode>(0xAA55AA, 0.02);
+    bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/try things/Scene-Graph-222_Important/src/data/bunny.off"));
+    bunny_t->AddNode(bunny);
+
+    // Create right wheel
+    auto rightwheel = std::make_shared<Transform>();
+    rightwheel->Translate(-2.5, 0.644, -0.438);
+    auto tire = CreateJeepItem(rightwheel, "tire", 0x444444);
+    auto hubcap = CreateJeepItem(rightwheel, "hubcap", 0xAAAAAA);
+
+    // Create front right wheel
+    auto frontrightwheel_speed = std::make_shared<Transform>();
+    frontrightwheel_speed->AddNode(rightwheel);
+
+    auto frontrightwheel_direction = std::make_shared<Transform>();
+    frontrightwheel_direction->AddNode(frontrightwheel_speed);
+
+    auto frontrightwheel = std::make_shared<Transform>();
+    frontrightwheel->AddNode(frontrightwheel_direction);
+    frontrightwheel->Translate(2.5, -0.644, 0.438);
+    jeep->AddNode(frontrightwheel);
+
+    // Create back right wheel
+    auto backrightwheel_speed = std::make_shared<Transform>();
+    backrightwheel_speed->AddNode(rightwheel);
+
+    auto backrightwheel = std::make_shared<Transform>();
+    backrightwheel->AddNode(backrightwheel_speed);
+    backrightwheel->Translate(0, -0.644, 0.438);
+    jeep->AddNode(backrightwheel);
+
+    // Create left wheel
+    auto leftwheel = std::make_shared<Transform>();
+    leftwheel->Rotate(180, 0, 0, 1);
+    leftwheel->AddNode(rightwheel);
+
+    // Create front left wheel
+    auto frontleftwheel_speed = std::make_shared<Transform>();
+    frontleftwheel_speed->AddNode(leftwheel);
+
+    auto frontleftwheel_direction = std::make_shared<Transform>();
+    frontleftwheel_direction->AddNode(frontleftwheel_speed);
+
+    auto frontleftwheel = std::make_shared<Transform>();
+    frontleftwheel->AddNode(frontleftwheel_direction);
+    frontleftwheel->Translate(2.5, 0.644, 0.438);
+    jeep->AddNode(frontleftwheel);
+
+    // Create back left wheel
+    auto backleftwheel_speed = std::make_shared<Transform>();
+    backleftwheel_speed->AddNode(leftwheel);
+
+    auto backleftwheel = std::make_shared<Transform>();
+    backleftwheel->AddNode(backleftwheel_speed);
+    backleftwheel->Translate(0, 0.644, 0.438);
+    jeep->AddNode(backleftwheel);
+
+    // Create lights
+    auto rightlight = std::make_shared<Transform>();
+    auto rightlight_model = CreateJeepItem(rightlight, "light", 0xEEEEEE);
+    rightlight_model->SetOpacity(0.3);
+    jeep->AddNode(rightlight);
+
+    auto rightlight_spot = std::make_shared<Light>();
+    rightlight_spot->SetActive(false);
+    rightlight_spot->SetPosition(2.956, -0.514, 1.074);
+    rightlight_spot->SetupSpot(1, 0, -0.1, 45, 16);
+    rightlight_spot->SetDiffuse(0, 0, 0);
+    rightlight_spot->SetAmbient(0.42, 0.42, 0.42);
+    rightlight_spot->SetAttenuation(1, 0.002, 0);
+    rightlight->AddNode(rightlight_spot);
+    //jeep_light = rightlight_spot.get();
+
+    auto leftlight = std::make_shared<Transform>();
+    leftlight->Translate(0, 1.028, 0);
+    leftlight->AddNode(rightlight);
+    jeep->AddNode(leftlight);
+
+    // Create steering wheel
+    auto steering_wheel_centered = std::make_shared<Transform>();
+    steering_wheel_centered->Translate(-1.111, -0.495, -1.372);
+    CreateJeepItem(steering_wheel_centered, "steeringwheel", 0x222222);
+
+    auto steering_wheel_engine = std::make_shared<Transform>();
+    steering_wheel_engine->AddNode(steering_wheel_centered);
+
+    auto steering_wheel = std::make_shared<Transform>();
+    steering_wheel->AddNode(steering_wheel_engine);
+    steering_wheel->Translate(1.111, 0.495, 1.372);
+    jeep->AddNode(steering_wheel);
+    /*
+    // Creates the engine
+    engine = new Engine(jeep, frontleftwheel_direction,
+        frontrightwheel_direction, frontleftwheel_speed,
+        frontrightwheel_speed, backleftwheel_speed, backrightwheel_speed,
+        steering_wheel_engine);*/
+
+
+    // Creates the driver camera
+    auto drivercamera_t = std::make_shared<Transform>();
+    drivercamera_t->Translate(0.6, 0.5, 1.7);
+    drivercamera_t->Rotate(90, 1, 0, 0);
+    jeep->AddNode(drivercamera_t);
+
+  
+
+    return jeep;
+}
+
+
 void Fr_GL3Window::CreateScene()
 {
     //static void CreateScene() {
     scene = new Scene();
     scene->SetBackgroud(0.69, 0.95, 1.00);
-    auto camera = CreateCamera(scene, kDriver);
+    auto camera = CreateCamera(scene, Cam1);
+
+    auto drivercamera_t = std::make_shared<Transform>();
+    auto drivercamera = CreateCamera(drivercamera_t.get(), Cam2);
+    drivercamera->SetActive(true);
+    drivercamera->SetEye(0, 0, 0);
+    drivercamera->SetCenter(1, 0, 0);
+    drivercamera->SetUp(0, 1, 0);
     camera->SetEye(20, 5, 20);
     camera->SetCenter(0.5, 0.5, 0);
     camera->SetUp(0, 1, 0);
     scene->AddNode(CreateSun());
     scene->AddNode(CreateRoad());
+    scene->AddNode(CreateShip());
+    scene->AddNode(CreateJeep());
 
 }
 //TODO FIXME
@@ -362,7 +526,7 @@ int Fr_GL3Window::createGLFWwindow()
 
     // uncomment this call to draw in wireframe polygons.
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
+    pWindow = window;
 
 
 
@@ -479,7 +643,7 @@ int Fr_GL3Window::GLFWrun()
             oldTime = newTime;
         }
 
-        glUseProgram(shaderProgram);
+        //glUseProgram(shaderProgram);
         double delta = newTime - oldTime;
         oldTime = newTime;
         fltktimerValue = fltktimerValue + delta;
@@ -504,12 +668,11 @@ std::shared_ptr<Camera> Fr_GL3Window::CreateCamera(Group* parent, int cameraId)
         parent->AddNode(camera);
         manipulator = new Manipulator();
         camera->SetManipulator(std::unique_ptr<Manipulator>(manipulator));
-
-        cameras[cameraId].camera = camera.get();
-        cameras[cameraId].manipulator = manipulator;
-
+        cam newCam;
+        newCam.camera = camera.get();
+        newCam.manipulator = manipulator;
+        cameras.push_back(newCam);
         return camera;
-
 }
 
 
