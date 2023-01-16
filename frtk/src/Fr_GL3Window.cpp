@@ -368,7 +368,7 @@ int Fr_GL3Window::createGLFWwindow()
 
     // render loop
 
-    
+
    embeddGLfwWindow();
 
     //***************************************************
@@ -509,7 +509,7 @@ std::shared_ptr<Camera> Fr_GL3Window::CreateCamera(Group* parent, int cameraId)
         cameras[cameraId].manipulator = manipulator;
 
         return camera;
-    
+
 }
 
 
