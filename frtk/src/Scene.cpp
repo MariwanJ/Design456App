@@ -20,6 +20,7 @@ void Scene::SetBackgroud(float r, float g, float b) {
 
 void Scene::RenderScene() {
     //glCheckFunc(glEnable(GL_TEXTURE_2D)); Not a OPENGL3+ function
+    glfwSwapInterval(1);
     glCheckFunc(glEnable(GL_DEPTH_TEST));
     glCheckFunc(glEnable(GL_BLEND));
     glCheckFunc(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
@@ -33,19 +34,23 @@ void Scene::RenderScene() {
     std::cout << "ok" << std::endl;
     SetupLight(render_info.modelview, render_info.lights);
 
-    int draw_framebuffer = 0;
-    glCheckFunc(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &draw_framebuffer));
+    GLuint draw_framebuffer = 0;
+    glGenBuffers(1, &draw_framebuffer);
+    //glCheckFunc(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &draw_framebuffer));
 
     SetupShadowMap(render_info.shadowmap);
 
     //glCheckFunc(glPushAttrib(GL_VIEWPORT_BIT));  NOT OPENGL3+ Function
-    glCheckFunc(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, render_info.shadowmap.framebuffer));
+    glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, render_info.shadowmap.framebuffer));
+    //glCheckFunc(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, render_info.shadowmap.framebuffer));
     glCheckFunc(glViewport(0, 0, render_info.shadowmap.width, render_info.shadowmap.height));
-    glCheckFunc(glClear(GL_DEPTH_BUFFER_BIT)); 
+    glCheckFunc(glClear(GL_DEPTH_BUFFER_BIT));
     RenderShadowMap(render_info.shadowmap, render_info.shadowmap.modelview);
     //glCheckFunc(glPopAttrib());
 
-    glCheckFunc(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_framebuffer));
+    glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, draw_framebuffer));
+
+    //glCheckFunc(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_framebuffer));
     glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
     render_info.id = 0;
@@ -54,5 +59,11 @@ void Scene::RenderScene() {
     render_info.id = 0;
     render_info.render_transparent = true;
     Render(render_info, render_info.modelview);
+
+
+    //glfwSwapBuffers();
+    glfwPollEvents();
+    //glad_glFlush();
+
 }
 

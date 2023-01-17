@@ -151,7 +151,7 @@ int Fr_GL3Window::exit()
 static std::shared_ptr<Transform> CreateRoad() {
     auto floor = std::make_shared<Transform>();
 
-    auto quad = std::make_shared<Mesh>("E:/Projects/Design456App/frtk/src/data/quad.msh");
+    auto quad = std::make_shared<Mesh>("C:/Temp/Design456App/frtk/src/data/quad.msh");
 
     auto grass_t = std::make_shared<Transform>();
     grass_t->Scale(1000, 0, 1000);
@@ -192,7 +192,7 @@ static std::shared_ptr<Transform> CreateShip() {
     ship_t->Rotate(90, -1, 0, 0);
 
     auto ship = std::make_shared<ToonShaderNode>(0x444444);
-    ship->SetMesh("E:/Projects/try things/Scene-Graph-222_Important/src/data/klingon_starship.off");
+    ship->SetMesh("C:/Temp/Design456App/frtk/src/data/klingon_starship.off");
     ship_t->AddNode(ship);
 
     return ship_t;
@@ -202,7 +202,7 @@ static std::shared_ptr<ToonShaderNode> CreateJeepItem(
     std::shared_ptr<Transform> jeep, const std::string& name,
     unsigned int color) {
     auto item = std::make_shared<ToonShaderNode>(color, 0.009);
-    item->SetMesh("E:/Projects/try things/Scene-Graph-222_Important/src/data/jeep_" + name + ".msh");
+    item->SetMesh("C:/Temp/Design456App/frtk/src/data/jeep_" + name + ".msh");
     jeep->AddNode(item);
     return item;
 }
@@ -230,7 +230,7 @@ static std::shared_ptr<Transform> CreateJeep() {
     jeep->AddNode(bunny_t);
 
     auto bunny = std::make_shared<ToonShaderNode>(0xAA55AA, 0.02);
-    bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/try things/Scene-Graph-222_Important/src/data/bunny.off"));
+    bunny->SetMesh(std::make_shared<Mesh>("C:/Temp/Design456App/frtk/src/data/bunny.off"));
     bunny_t->AddNode(bunny);
 
     // Create right wheel
@@ -654,8 +654,8 @@ int Fr_GL3Window::GLFWrun()
 
         // render
         scene->RenderScene();
-        glfwSwapBuffers(pWindow);
-        glfwPollEvents();
+        //glfwSwapBuffers(pWindow);
+        //glfwPollEvents();
         //glad_glFlush();
     }
     return 0;
