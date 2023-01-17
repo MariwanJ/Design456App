@@ -20,10 +20,11 @@ void Scene::SetBackgroud(float r, float g, float b) {
 
 void Scene::RenderScene() {
     //glCheckFunc(glEnable(GL_TEXTURE_2D)); Not a OPENGL3+ function
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glClearColor(background_.r, background_.g, background_.b, 1.0);
+    glfwSwapInterval(1);
+    glCheckFunc(glEnable(GL_DEPTH_TEST));
+    glCheckFunc(glEnable(GL_BLEND));
+    glCheckFunc(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+    glCheckFunc(glClearColor(background_.r, background_.g, background_.b, 1.0));
 
     RenderInfo render_info;
     if (!SetupCamera(render_info.projection, render_info.modelview)) {
@@ -33,8 +34,9 @@ void Scene::RenderScene() {
     //std::cout << "ok" << std::endl;
     SetupLight(render_info.modelview, render_info.lights);
 
-    int draw_framebuffer = 0;
-    glCheckFunc(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &draw_framebuffer));
+    GLuint draw_framebuffer = 0;
+    glGenBuffers(1, &draw_framebuffer);
+    //glCheckFunc(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &draw_framebuffer));
 
     SetupShadowMap(render_info.shadowmap);
 
@@ -54,5 +56,11 @@ void Scene::RenderScene() {
     render_info.id = 0;
     render_info.render_transparent = true;
     Render(render_info, render_info.modelview);
+
+
+    //glfwSwapBuffers();
+    glfwPollEvents();
+    //glad_glFlush();
+
 }
 
