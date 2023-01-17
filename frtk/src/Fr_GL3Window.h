@@ -37,7 +37,8 @@
 #include<Transform.h>
 #include<Light.h>
 #include <glm/gtc/matrix_transform.hpp>
-/* Cameras and manipulators */
+/* 
+and manipulators */
 
 class Camera;
 enum CameraList {

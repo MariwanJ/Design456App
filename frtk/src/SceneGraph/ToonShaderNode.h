@@ -51,18 +51,19 @@ public:
     /**
      * Renders the shadow map
      */
-    void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) override;
+    void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview);
 
     /**
      * Renders the node
      */
-    void Render(RenderInfo& info, const glm::mat4& modelview) override;
+    void Render(RenderInfo& info, const glm::mat4& modelview);
 
 private:
     /**
      * Sets the uniform light data
      */
-    void LoadLights(ShaderProgram *program, const std::vector<LightInfo>& lights);
+    void LoadLights(ShaderProgram *program,
+            const std::vector<LightInfo>& lights);
 
     /**
      * Renders the silhouette

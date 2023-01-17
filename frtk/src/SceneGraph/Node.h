@@ -16,7 +16,6 @@
 /**
  * A generic node that can be attached to the graph
  * It offers an empty implementation to it's methods
- * Will be sub-classed by several other classes like (Group, Light, ..etc)
  */
 class Node {
 public:
@@ -84,7 +83,8 @@ public:
      * Sets the lights
      * Returns the light info by reference
      */
-    virtual void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights);
+    virtual void SetupLight(const glm::mat4& modelview, 
+            std::vector<LightInfo>& lights);
 
     /**
      * Sets the shadow map
@@ -94,7 +94,8 @@ public:
     /**
      * Renders the shadow map
      */
-    virtual void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview);
+    virtual void RenderShadowMap(ShadowMapInfo& info,
+            const glm::mat4& modelview);
 
     /**
      * Renders the node

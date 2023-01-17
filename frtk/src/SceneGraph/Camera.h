@@ -9,13 +9,12 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include<frtk.h>
-#include<Fr_Core.h>
+#include <array>
+#include <memory>
 
-#include <Node.h>
+#include "Node.h"
 
 class Manipulator;
-
 
 /**
  * Scene's camera

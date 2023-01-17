@@ -31,7 +31,7 @@
 
 GLuint m_QuadVA, m_QuadVB, m_QuadIB;
 bool s_GLFWInitialized;
-#define redrawFPS  1.0/50.0  // (24 Frames per sec)
+#define redrawFPS  1.0/25.0  // (24 Frames per sec)
 
 float Fr_GL3Window::fltktimerValue = 0.0;
 
@@ -207,6 +207,7 @@ static std::shared_ptr<ToonShaderNode> CreateJeepItem(
     return item;
 }
 
+
 static std::shared_ptr<Transform> CreateJeep() {
     auto jeep = std::make_shared<Transform>();
     jeep->Rotate(90, -1, 0, 0);
@@ -319,13 +320,12 @@ static std::shared_ptr<Transform> CreateJeep() {
     steering_wheel->AddNode(steering_wheel_engine);
     steering_wheel->Translate(1.111, 0.495, 1.372);
     jeep->AddNode(steering_wheel);
-    /*
+
     // Creates the engine
-    engine = new Engine(jeep, frontleftwheel_direction,
+    /*engine = new Engine(jeep, frontleftwheel_direction,
         frontrightwheel_direction, frontleftwheel_speed,
         frontrightwheel_speed, backleftwheel_speed, backrightwheel_speed,
         steering_wheel_engine);*/
-
 
     // Creates the driver camera
     auto drivercamera_t = std::make_shared<Transform>();
@@ -333,10 +333,26 @@ static std::shared_ptr<Transform> CreateJeep() {
     drivercamera_t->Rotate(90, 1, 0, 0);
     jeep->AddNode(drivercamera_t);
 
-  
+    auto drivercamera = FR::globalP_pWindow->CreateCamera(drivercamera_t.get(), FR::globalP_pWindow->cameras.size());
+    drivercamera->SetActive(true);
+    drivercamera->SetEye(0, 0, 0);
+    drivercamera->SetCenter(1, 0, 0);
+    drivercamera->SetUp(0, 1, 0);
+
+    // Creates the 3rd person camera
+    auto jeepcamera_t = std::make_shared<Transform>();
+    jeepcamera_t->Rotate(90, 1, 0, 0);
+    jeep->AddNode(jeepcamera_t);
+
+    auto jeepcamera = FR::globalP_pWindow->CreateCamera(jeepcamera_t.get(), FR::globalP_pWindow->cameras.size());
+    FR::globalP_pWindow->cameras[FR::globalP_pWindow->cameras.size()-1].manipulator->SetReferencePoint(1, 1, 0);
+    jeepcamera->SetEye(-6, 2, 0);
+    jeepcamera->SetCenter(1, 1, 0);
+    jeepcamera->SetUp(0, 1, 0);
 
     return jeep;
 }
+
 
 
 void Fr_GL3Window::CreateScene()
@@ -346,20 +362,15 @@ void Fr_GL3Window::CreateScene()
     scene->SetBackgroud(0.69, 0.95, 1.00);
     auto camera = CreateCamera(scene, Cam1);
 
-    auto drivercamera_t = std::make_shared<Transform>();
-    auto drivercamera = CreateCamera(drivercamera_t.get(), Cam2);
-    drivercamera->SetActive(true);
-    drivercamera->SetEye(0, 0, 0);
-    drivercamera->SetCenter(1, 0, 0);
-    drivercamera->SetUp(0, 1, 0);
     camera->SetEye(20, 5, 20);
     camera->SetCenter(0.5, 0.5, 0);
     camera->SetUp(0, 1, 0);
+
     scene->AddNode(CreateSun());
     scene->AddNode(CreateRoad());
     scene->AddNode(CreateShip());
     scene->AddNode(CreateJeep());
-
+    scene->AddNode(CreateJeep());
 }
 //TODO FIXME
 void Fr_GL3Window::draw() {
@@ -533,7 +544,7 @@ int Fr_GL3Window::createGLFWwindow()
     // render loop
 
 
-   embeddGLfwWindow();
+   //embeddGLfwWindow();
 
     //***************************************************
 
@@ -585,8 +596,7 @@ void Fr_GL3Window::show() {
         if (createGLFWwindow() != 0) {
             if (s_GladInitialized == true) {
                 glad_glClearColor(1.0, 0.16, 0.18, 1.0);
-                updateGLFWWindow();
-                glfwSwapInterval(1);
+               // updateGLFWWindow();
                 glClear(GL_COLOR_BUFFER_BIT);
             }
         }
@@ -635,6 +645,7 @@ int Fr_GL3Window::GLFWrun()
     //Fl::wait(1);
     //shaderProgram = CreateShader(vertexShaderSource, fragmentShaderSource);
     CreateScene();
+    glfwSwapInterval(1);
     while (!glfwWindowShouldClose(pWindow))
     {
         //Update FLTK 24 frames/sec
@@ -668,6 +679,7 @@ std::shared_ptr<Camera> Fr_GL3Window::CreateCamera(Group* parent, int cameraId)
         parent->AddNode(camera);
         manipulator = new Manipulator();
         camera->SetManipulator(std::unique_ptr<Manipulator>(manipulator));
+
         cam newCam;
         newCam.camera = camera.get();
         newCam.manipulator = manipulator;

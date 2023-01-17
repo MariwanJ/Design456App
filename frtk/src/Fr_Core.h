@@ -111,6 +111,7 @@ DEBUG_BRAK  raise(SIGTRAP)   //ALL POSIX OS
 static unsigned char GLLogCall() {
     while(GLenum error = glGetError()) {
         std::cout << "[OpenGL Error] {" << error << "}\n";
+        std::flush(std::cout);
         return 0;
     }
     return 1;

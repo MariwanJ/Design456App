@@ -9,8 +9,9 @@
 #ifndef GROUP_H
 #define GROUP_H
 
-#include<frtk.h>
-#include<Fr_Core.h>
+#include <memory>
+#include <vector>
+
 #include "Node.h"
 
 /**
@@ -33,28 +34,30 @@ public:
      * Returns true if the camera has been set
      * Returns the camera info by reference
      */
-    virtual bool SetupCamera(glm::mat4& projection, glm::mat4& modelview) override;
+    virtual bool SetupCamera(glm::mat4& projection, glm::mat4& modelview);
 
     /**
      * Sets the lights
      * Returns the light info by reference
      */
-    virtual void SetupLight(const glm::mat4& modelview,  std::vector<LightInfo>& lights) override;
+    virtual void SetupLight(const glm::mat4& modelview, 
+            std::vector<LightInfo>& lights);
 
     /**
      * Sets the shadow map
      */
-    virtual bool SetupShadowMap(ShadowMapInfo& info) override;
+    virtual bool SetupShadowMap(ShadowMapInfo& info);
 
     /**
      * Renders the shadow map
      */
-    virtual void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) override;
+    virtual void RenderShadowMap(ShadowMapInfo& info,
+            const glm::mat4& modelview);
 
     /**
      * Renders the node
      */
-    virtual void Render(RenderInfo& info, const glm::mat4& modelview) override;
+    virtual void Render(RenderInfo& info, const glm::mat4& modelview);
 
 private:
     /** Group's children */

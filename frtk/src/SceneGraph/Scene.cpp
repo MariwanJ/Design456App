@@ -6,47 +6,48 @@
  * Trabalho - Projeto Final
  */
 
+#include <stdexcept>
+
+#include <GL/glew.h>
+
 #include "Scene.h"
 
 Scene::Scene() :
-    background_{ 0.8, 0.8, 0.8,1.0 } {
+    background_{0.8, 0.8, 0.8} {
 }
 
 void Scene::SetBackgroud(float r, float g, float b) {
-    background_.r = r;
-    background_.g = g;
-    background_.b = b;
+    background_[0] = r;
+    background_[1] = g;
+    background_[2] = b;
 }
 
 void Scene::RenderScene() {
-    //glCheckFunc(glEnable(GL_TEXTURE_2D)); Not a OPENGL3+ function
+    glEnable(GL_TEXTURE_2D);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glClearColor(background_.r, background_.g, background_.b, 1.0);
+    glClearColor(background_[0], background_[1], background_[2], 1.0);
 
     RenderInfo render_info;
-    if (!SetupCamera(render_info.projection, render_info.modelview)) {
+    if (!SetupCamera(render_info.projection, render_info.modelview))
         throw std::runtime_error("Scene::Render(): Camera not found");
-        std::cout << "not found" << std::endl;
-    }
-    //std::cout << "ok" << std::endl;
     SetupLight(render_info.modelview, render_info.lights);
 
     int draw_framebuffer = 0;
-    glCheckFunc(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &draw_framebuffer));
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &draw_framebuffer);
 
     SetupShadowMap(render_info.shadowmap);
 
-    //glCheckFunc(glPushAttrib(GL_VIEWPORT_BIT));  NOT OPENGL3+ Function
+    glPushAttrib(GL_VIEWPORT_BIT);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, render_info.shadowmap.framebuffer);
     glViewport(0, 0, render_info.shadowmap.width, render_info.shadowmap.height);
     glClear(GL_DEPTH_BUFFER_BIT); 
     RenderShadowMap(render_info.shadowmap, render_info.shadowmap.modelview);
-    //glCheckFunc(glPopAttrib());
+    glPopAttrib();
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_framebuffer);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 
     render_info.id = 0;
     render_info.render_transparent = false;

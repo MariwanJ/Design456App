@@ -16,10 +16,8 @@ void Group::AddNode(std::shared_ptr<Node> node) {
 }
 
 bool Group::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
-    int ww = 0;
     if (active_)
         for (auto& node : nodes_)
-            //If the node is not subclassed and it is only a node, this will always return false. 
             if (node->SetupCamera(projection, modelview))
                 return true;
     return false;

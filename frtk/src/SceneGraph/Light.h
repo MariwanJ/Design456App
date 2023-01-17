@@ -9,8 +9,7 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 
-#include<frtk.h>
-#include<Fr_Core.h>
+#include <array>
 
 #include "Node.h"
 
@@ -59,18 +58,19 @@ public:
     /**
      * Enables the shadow map
      */
-    void EnableShadowMap(const glm::vec3& center, const glm::vec3& up,  const glm::mat4& projection);
+    void EnableShadowMap(const glm::vec3& center, const glm::vec3& up,
+            const glm::mat4& projection);
 
     /**
      * Sets the lights
      * Returns the light info by reference
      */
-    void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) override;
+    void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights);
 
     /**
      * Sets the shadow map
      */
-    bool SetupShadowMap(ShadowMapInfo& info) override;
+    bool SetupShadowMap(ShadowMapInfo& info);
 
 private:
     // Constants

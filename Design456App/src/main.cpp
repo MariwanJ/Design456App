@@ -53,7 +53,8 @@ static void buttonPressed2(Fl_Widget* w, void* data) {
 //    auto manipulator = new Manipulator();
 //    camera->SetManipulator(std::unique_ptr<Manipulator>(manipulator));
 //
-//    cameras[cameraId].camera = camera.get();
+//    
+// [cameraId].camera = camera.get();
 //    cameras[cameraId].manipulator = manipulator;
 //
 //    return camera;
