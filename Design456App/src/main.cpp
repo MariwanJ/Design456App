@@ -53,15 +53,17 @@ static void buttonPressed2(Fl_Widget* w, void* data) {
 //    auto manipulator = new Manipulator();
 //    camera->SetManipulator(std::unique_ptr<Manipulator>(manipulator));
 //
-//    
+//
 // [cameraId].camera = camera.get();
 //    cameras[cameraId].manipulator = manipulator;
 //
 //    return camera;
 //}
 #include<Application.h>
+
 int main(int argc, char** argv)
 {
+
     Fr_GL3Window* win = new Fr_GL3Window(0, 0, 1000, 800, "Modern OpenGL with FLTK support");
     win->setOpenGLWinowSize(70, 60, 600, 600);
     win->resizable(win);
@@ -71,7 +73,8 @@ int main(int argc, char** argv)
     b1->callback((Fl_Callback*)buttonPressed1, win);
     b2->callback((Fl_Callback*)buttonPressed2, win);
     win->show();
-
+    Instrumentor::Get().BeginSession("Session Name");        // Begin session
     win->GLFWrun();
+    Instrumentor::Get().EndSession();                        // End Session
     //return FakeMain(argc, argv);
 }

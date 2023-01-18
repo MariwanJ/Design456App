@@ -61,6 +61,7 @@ project "frtk"
         "$(SolutionDir)frtk/vendor/fltk/",
 		"$(SolutionDir)frtk/vendor/spdlog/include",
 		"src",
+		"$(SolutionDir)frtk/vendor/instrumentation",
 		--"%{IncludeDir.yaml-cpp}",
         --"%{IncludeDir.ImGui}",
 	}

@@ -28,6 +28,8 @@
 #ifndef APPLICAION_H
 #define APPLICATION_H
 
+#include<Fr_Core.h>
+
 int FakeMain(int argc, char* argv[]);
 
 #endif

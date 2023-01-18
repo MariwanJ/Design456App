@@ -1,19 +1,19 @@
-//                                                                      
-// This file is a part of the Open Source Design456App                    
+//
+// This file is a part of the Open Source Design456App
 // MIT License
-// 
+//
 // Copyright (c) 2023
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,7 +23,7 @@
 // SOFTWARE.
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
-// 
+//
 
 #ifndef FR_CORE_H
 #define FR_CORE_H
@@ -62,7 +62,7 @@
 #include<indexedBuffer.h>
 
 
-//From Scene-graph git hub  
+//From Scene-graph git hub
 
 
 
@@ -77,7 +77,7 @@
 //#include<Transform.h>
 
 
-//From Scene-graph git hub  
+//From Scene-graph git hub
 
 /*
     __linux__       Defined on Linux
@@ -95,7 +95,7 @@
 #ifdef _WIN32
     #define DEBUG_BREAK __debugbreak()
 #elif defined(__APPLE__)
-    DEBUG_BRAK  raise(SIGTRAP)   //Not sure if it works TODO : CHECKME 
+    DEBUG_BRAK  raise(SIGTRAP)   //Not sure if it works TODO : CHECKME
 #elif define(__linux__)
 DEBUG_BRAK  raise(SIGTRAP)   //ALL POSIX OS
 #endif
@@ -104,7 +104,7 @@ DEBUG_BRAK  raise(SIGTRAP)   //ALL POSIX OS
 *  You should also have a valid GLAD initialization
 */
 #ifdef FRTK_ENABLE_ASSERTS
-#define FRTK_CORE_APP_ASSERT(x, ...)  if(!(x)) DEBUG_BREAK; 
+#define FRTK_CORE_APP_ASSERT(x, ...)  if(!(x)) DEBUG_BREAK;
 #else
 #define FRTK_CORE_APP_ASSERT(x, ...)
 #endif
@@ -122,7 +122,7 @@ static unsigned char GLLogCall() {
 #endif
 
 
-//Create DLL/SO or link statically ? 
+//Create DLL/SO or link statically ?
 
 #ifdef FRTK_PLATFORM_WINDOWS  //PLATFORM CHECK
 #include <Windows.h>
@@ -139,10 +139,13 @@ static unsigned char GLLogCall() {
 #error FRTK NOT IMPLEMENTED
 #endif  //PLATFORM CHECK
 
-#define setBIT(x) (1 << x)
-#define clearBIT(x) (0 << x)
-
 
 
 #endif
+
+#define setBIT(x) (1 << x)
+#define clearBIT(x) (0 << x)
+ #include <Instrumentor.h>
+
+
 #endif
