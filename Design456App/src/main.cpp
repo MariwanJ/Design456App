@@ -73,8 +73,6 @@ int main(int argc, char** argv)
     b1->callback((Fl_Callback*)buttonPressed1, win);
     b2->callback((Fl_Callback*)buttonPressed2, win);
     win->show();
-    Instrumentor::Get().BeginSession("Session Name");        // Begin session
     win->GLFWrun();
-    Instrumentor::Get().EndSession();                        // End Session
     //return FakeMain(argc, argv);
 }

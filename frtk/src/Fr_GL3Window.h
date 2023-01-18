@@ -67,7 +67,7 @@ class Fr_GL3Window;
 //void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
 //void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
 
-class FRTK_API Fr_GL3Window : public Fl_Double_Window {
+class FRTK_API Fr_GL3Window : public Fl_Window {
 public:
     Fr_GL3Window(int x, int y, int w, int h, const char* l);
     Fr_GL3Window(int x, int y, int w, int h);
@@ -75,16 +75,16 @@ public:
     Fr_GL3Window(int w, int h);
     virtual ~Fr_GL3Window();
     virtual int exit();
-    Fl_Double_Window* pfltkWindow;
+    Fl_Window* pfltkWindow;
     int embeddGLfwWindow();
     int releaseGLfwWindow();
-
+    virtual GLFWwindow* getCurrentGLWindow();
     virtual void reset(void);
     virtual void resizeGlWindow(int x, int y, int w, int h);
     virtual void CreateScene();
     virtual std::shared_ptr<Camera> CreateCamera(Group* parent, int cameraId);
     virtual std::shared_ptr<Transform> CreateSun();
-    
+
        void resize(int x, int y, int w, int h);
     void resizable(Fl_Widget* w);
     virtual void draw();           //fltk
@@ -104,12 +104,14 @@ public:
     std::vector<cam> cameras;
     std::shared_ptr<Camera> camera;
     Manipulator *manipulator;
-
+    static GLFWwindow* pWindow;
 
 protected:
     int createGLFWwindow();
     int updateGLFWWindow();
     unsigned int VBO, VAO;
+    
+
 private:
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     static void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -133,7 +135,6 @@ private:
     int gl_version_major;
     int gl_version_minor;
     void flush();
-    static GLFWwindow* pWindow;
     
     Transform *sun;
 

@@ -8,10 +8,9 @@
 
 #ifndef SCENE_H
 #define SCENE_H
-#include<frtk.h>
+//#include<frtk.h>
 #include<Fr_Core.h>
-#include "Group.h"
-
+#include <Group.h>
 /**
  * The scene root
  */
@@ -28,7 +27,6 @@ public:
      * Default Constructor
      */
     Scene();
-
     /**
      * Sets the background color
      */
@@ -39,7 +37,7 @@ public:
      * Throws runtime_error if there's no camera
      */
     void RenderScene();
-
+    static void*linkToglfw;
 private:
     bkgC  background_;
 };

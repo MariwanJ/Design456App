@@ -6,10 +6,11 @@
  * Trabalho - Projeto Final
  */
 
-#include "Scene.h"
+#include <Scene.h>
+void* Scene::linkToglfw=nullptr;
 
 Scene::Scene() :
-    background_{ 0.8, 0.8, 0.8,1.0 } {
+    background_{ 0.8, 0.8, 0.8,1.0 }{
 }
 
 void Scene::SetBackgroud(float r, float g, float b) {
@@ -20,7 +21,6 @@ void Scene::SetBackgroud(float r, float g, float b) {
 
 void Scene::RenderScene() {
     //glCheckFunc(glEnable(GL_TEXTURE_2D)); Not a OPENGL3+ function
-    glfwSwapInterval(1);
     glCheckFunc(glEnable(GL_DEPTH_TEST));
     glCheckFunc(glEnable(GL_BLEND));
     glCheckFunc(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
@@ -29,26 +29,25 @@ void Scene::RenderScene() {
     RenderInfo render_info;
     if (!SetupCamera(render_info.projection, render_info.modelview)) {
         throw std::runtime_error("Scene::Render(): Camera not found");
-        std::cout << "not found" << std::endl;
+        //std::cout << "not found" << std::endl;
     }
     //std::cout << "ok" << std::endl;
     SetupLight(render_info.modelview, render_info.lights);
-
     GLuint draw_framebuffer = 0;
-    glGenBuffers(1, &draw_framebuffer);
-    //glCheckFunc(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &draw_framebuffer));
-
+    glCheckFunc(glGenBuffers(1, &draw_framebuffer));
     SetupShadowMap(render_info.shadowmap);
-
     //glCheckFunc(glPushAttrib(GL_VIEWPORT_BIT));  NOT OPENGL3+ Function
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, render_info.shadowmap.framebuffer);
-    glViewport(0, 0, render_info.shadowmap.width, render_info.shadowmap.height);
+    glCheckFunc(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, render_info.shadowmap.framebuffer));
+    glCheckFunc(glViewport(0, 0, render_info.shadowmap.width, render_info.shadowmap.height));
     glClear(GL_DEPTH_BUFFER_BIT); 
     RenderShadowMap(render_info.shadowmap, render_info.shadowmap.modelview);
-    //glCheckFunc(glPopAttrib());
-
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_framebuffer);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glCheckFunc(glDrawBuffer(draw_framebuffer));
+    glCheckFunc(glfwSwapBuffers((GLFWwindow*)linkToglfw));
+    glCheckFunc(glDeleteBuffers(1,&draw_framebuffer));
+    //glCheckFunc(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_framebuffer)); depricated 
+    glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+    glCheckFunc(glDrawBuffer(draw_framebuffer));
+    glfwSwapBuffers((GLFWwindow*)linkToglfw);
 
     render_info.id = 0;
     render_info.render_transparent = false;
@@ -56,11 +55,5 @@ void Scene::RenderScene() {
     render_info.id = 0;
     render_info.render_transparent = true;
     Render(render_info, render_info.modelview);
-
-
-    //glfwSwapBuffers();
-    glfwPollEvents();
-    //glad_glFlush();
-
 }
 

@@ -45,7 +45,7 @@
 
 #include <FL/Fl.H>
 #include <FL/fl_types.h>
-#include <FL/Fl_Double_Window.H>
+//#include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Window.H>
 
 //#include <Fr_GL3Window.h>
@@ -145,7 +145,7 @@ static unsigned char GLLogCall() {
 
 #define setBIT(x) (1 << x)
 #define clearBIT(x) (0 << x)
- #include <Instrumentor.h>
+#include <../instrumentation/Instrumentor.h>
 
 
 #endif

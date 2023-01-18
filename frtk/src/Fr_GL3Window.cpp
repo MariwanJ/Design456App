@@ -80,7 +80,7 @@ static void error_callback(int error, const char* description)
 * FIXME: CLEANUP CODE
 */
 Scene* Fr_GL3Window::scene = nullptr;
-Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Double_Window(x, y, w, h, l),
+Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Window(x, y, w, h, l),
                                                                         overlay(false),
                                                                         curr_camera(Cam1){
 
@@ -91,8 +91,8 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Double
     _yGl = y;
     _wGl = w ;
     _hGl = h ;
-    gl_version_major = 3;
-    gl_version_minor = 0;
+    gl_version_major = 4;
+    gl_version_minor = 3;
     glfwSetErrorCallback(error_callback);
 
 
@@ -138,7 +138,7 @@ Fr_GL3Window::~Fr_GL3Window()
 int Fr_GL3Window::exit()
 {
     glfwDestroyWindow(pWindow);
-    pfltkWindow->~Fl_Double_Window();
+    pfltkWindow->~Fl_Window();
     return 1;
 }
 
@@ -151,7 +151,7 @@ int Fr_GL3Window::exit()
 static std::shared_ptr<Transform> CreateRoad() {
     auto floor = std::make_shared<Transform>();
 
-    auto quad = std::make_shared<Mesh>("C:/Temp/Design456App/frtk/src/data/quad.msh");
+    auto quad = std::make_shared<Mesh>("E:/Projects/Design456App/frtk/src/data/quad.msh");
 
     auto grass_t = std::make_shared<Transform>();
     grass_t->Scale(1000, 0, 1000);
@@ -192,7 +192,7 @@ static std::shared_ptr<Transform> CreateShip() {
     ship_t->Rotate(90, -1, 0, 0);
 
     auto ship = std::make_shared<ToonShaderNode>(0x444444);
-    ship->SetMesh("C:/Temp/Design456App/frtk/src/data/klingon_starship.off");
+    ship->SetMesh("E:/Projects/Design456App/frtk/src/data/klingon_starship.off");
     ship_t->AddNode(ship);
 
     return ship_t;
@@ -202,7 +202,7 @@ static std::shared_ptr<ToonShaderNode> CreateJeepItem(
     std::shared_ptr<Transform> jeep, const std::string& name,
     unsigned int color) {
     auto item = std::make_shared<ToonShaderNode>(color, 0.009);
-    item->SetMesh("C:/Temp/Design456App/frtk/src/data/jeep_" + name + ".msh");
+    item->SetMesh("E:/Projects/Design456App/frtk/src/data/jeep_" + name + ".msh");
     jeep->AddNode(item);
     return item;
 }
@@ -231,7 +231,7 @@ static std::shared_ptr<Transform> CreateJeep() {
     jeep->AddNode(bunny_t);
 
     auto bunny = std::make_shared<ToonShaderNode>(0xAA55AA, 0.02);
-    bunny->SetMesh(std::make_shared<Mesh>("C:/Temp/Design456App/frtk/src/data/bunny.off"));
+    bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/frtk/src/data/bunny.off"));
     bunny_t->AddNode(bunny);
 
     // Create right wheel
@@ -353,12 +353,15 @@ static std::shared_ptr<Transform> CreateJeep() {
     return jeep;
 }
 
-
-
+GLFWwindow* Fr_GL3Window::getCurrentGLWindow()
+{
+    return pWindow;
+}
 void Fr_GL3Window::CreateScene()
 {
     //static void CreateScene() {
-    scene = new Scene();
+    scene = new Scene();//Save a link to the windows also. 
+    scene->linkToglfw = this;
     scene->SetBackgroud(0.69, 0.95, 1.00);
     auto camera = CreateCamera(scene, Cam1);
 
@@ -375,14 +378,14 @@ void Fr_GL3Window::CreateScene()
 //TODO FIXME
 void Fr_GL3Window::draw() {
     if (overlay) {
-        Fl_Double_Window::draw();
+        Fl_Window::draw();
         updateGLFWWindow();
         //FRTK_CORE_INFO("[DRAW BOTH] {0}");
         printf("overlay%i\n", counter);
         counter++;
     }
     else {
-        Fl_Double_Window::draw();
+        Fl_Window::draw();
         updateGLFWWindow();
         // printf("not overlay%i\n", counter);
         counter++;
@@ -408,7 +411,7 @@ void Fr_GL3Window::resizeGlWindow(int xGl, int yGl, int wGl, int hGl)
 
 int Fr_GL3Window::handle(int event) {
     //gladEvents(event);
-    return Fl_Double_Window::handle(event);
+    return Fl_Window::handle(event);
 }
 
 int Fr_GL3Window::glfw_handle(int evenet)
@@ -496,18 +499,17 @@ int Fr_GL3Window::createGLFWwindow()
 
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(_wGl, _hGl, "LearnOpenGL", NULL, NULL);
+    pWindow = glfwCreateWindow(_wGl, _hGl, "LearnOpenGL", NULL, NULL);
 
-    pWindow = window;
-    glfwSetWindowUserPointer(window, (void*)pfltkWindow); //allow user data go to the callback //TODO use this with all callbacks
-    if (window == NULL)
+    glfwSetWindowUserPointer(pWindow, (void*)pfltkWindow); //allow user data go to the callback //TODO use this with all callbacks
+    if (pWindow == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
     }
-    glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwMakeContextCurrent(pWindow);
+    glfwSetFramebufferSizeCallback(pWindow, framebuffer_size_callback);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -517,34 +519,31 @@ int Fr_GL3Window::createGLFWwindow()
         return -1;
     }
 
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(TriangleVertices), TriangleVertices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    //glGenVertexArrays(1, &VAO);
+    //glGenBuffers(1, &VBO);
+    //// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+    //glBindVertexArray(VAO);
+    //
+    //glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    //glBufferData(GL_ARRAY_BUFFER, sizeof(TriangleVertices), TriangleVertices, GL_STATIC_DRAW);
+    //
+    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    //glEnableVertexAttribArray(0);
+    //
+    //// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
+    //glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
     // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-    glBindVertexArray(0);
+    //glBindVertexArray(0);
 
     // uncomment this call to draw in wireframe polygons.
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    pWindow = window;
-
-
 
     // render loop
 
 
-   //embeddGLfwWindow();
+   embeddGLfwWindow();
 
     //***************************************************
 
@@ -590,13 +589,13 @@ void Fr_GL3Window::removeOverlya()
 * things running and shown on the screen.
 */
 void Fr_GL3Window::show() {
-    Fl_Double_Window::show();
+    Fl_Window::show();
     //Create the GLFW Window
     if (pWindow==nullptr){
         if (createGLFWwindow() != 0) {
             if (s_GladInitialized == true) {
                 glad_glClearColor(1.0, 0.16, 0.18, 1.0);
-               // updateGLFWWindow();
+                updateGLFWWindow();
                 glClear(GL_COLOR_BUFFER_BIT);
             }
         }
@@ -612,14 +611,14 @@ void Fr_GL3Window::gladEvents(int events)
 */
 void Fr_GL3Window::resize(int x, int y, int w, int h)
 {
-    Fl_Double_Window::resize(x, y, w, h);
+    Fl_Window::resize(x, y, w, h);
     if (s_GladInitialized) {
         printf("x=%i y=%i w=%i h=%i\n", x, y, w, h);
         resizeGlWindow(_xGl, _yGl, _wGl, _hGl);
         glViewport(_xGl, _yGl, _wGl, _hGl);
     }
-    damage(FL_DAMAGE_ALL);
-    Fl_Double_Window::draw();
+    //damage(FL_DAMAGE_ALL);
+    Fl_Window::draw();
 }
 
 /**
@@ -628,7 +627,7 @@ void Fr_GL3Window::resize(int x, int y, int w, int h)
 */
 void Fr_GL3Window::resizable(Fl_Widget* w)
 {
-    Fl_Double_Window::resizable(w);
+    Fl_Window::resizable(w);
 }
 /**
 * Run the application . This is a replacer of Fl:run.
@@ -644,8 +643,12 @@ int Fr_GL3Window::GLFWrun()
     //Fl::add_timeout(1, redrawFLTKTimer_cb, pfltkWindow);       // 24fps timer
     //Fl::wait(1);
     //shaderProgram = CreateShader(vertexShaderSource, fragmentShaderSource);
+
+
+
     CreateScene();
     glfwSwapInterval(1);
+    glfwMakeContextCurrent(pWindow);
     while (!glfwWindowShouldClose(pWindow))
     {
         //Update FLTK 24 frames/sec
@@ -661,13 +664,20 @@ int Fr_GL3Window::GLFWrun()
         if (fltktimerValue >= redrawFPS){
             fltktimerValue = 0.0;
             redrawFLTKTimer_cb(this);
+            Fl::flush();
         }
 
         // render
+        Instrumentor::Get().BeginSession("RenderScene");        // Begin session 
+        {
+        InstrumentationTimer timer("RenderScene");   // Place code like this in scopes you'd like to include in profiling
         scene->RenderScene();
-        //glfwSwapBuffers(pWindow);
-        //glfwPollEvents();
-        //glad_glFlush();
+        glfwSwapBuffers(pWindow);
+        }
+        
+        Instrumentor::Get().EndSession();                        // End Session        
+        glfwPollEvents();
+
     }
     return 0;
 }
@@ -710,6 +720,6 @@ void Fr_GL3Window::setOpenGLWinowSize(int xGL, int yGL, int wGL, int hGL)
     _wGl = wGL;
     _hGl = hGL;
 }
-Fr_GL3Window::Fr_GL3Window(int w, int h, const char* l) :Fl_Double_Window(0, 0, w, h, l) {}
-Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h) : Fl_Double_Window(x, y, w, h, "TestOpenGl") {}
-Fr_GL3Window::Fr_GL3Window(int w, int h) : Fl_Double_Window(0, 0, w, h, "TestOpenGl") {}
+Fr_GL3Window::Fr_GL3Window(int w, int h, const char* l) :Fl_Window(0, 0, w, h, l) {}
+Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h) : Fl_Window(x, y, w, h, "TestOpenGl") {}
+Fr_GL3Window::Fr_GL3Window(int w, int h) : Fl_Window(0, 0, w, h, "TestOpenGl") {}
