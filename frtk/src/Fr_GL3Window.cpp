@@ -82,7 +82,7 @@ static void error_callback(int error, const char* description)
 Scene* Fr_GL3Window::scene = nullptr;
 Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Window(x, y, w, h, l),
                                                                         overlay(false),
-                                                                        curr_camera(Cam1){
+                                                                        curr_camera(Cam3){
 
     //Default size is the size of the FLTK window
     FR::globalP_pWindow = this;
@@ -361,7 +361,7 @@ void Fr_GL3Window::CreateScene()
 {
     //static void CreateScene() {
     scene = new Scene();//Save a link to the windows also. 
-    scene->linkToglfw = this;
+    scene->linkToglfw= pWindow;
     scene->SetBackgroud(0.69, 0.95, 1.00);
     auto camera = CreateCamera(scene, Cam1);
 
@@ -666,7 +666,7 @@ int Fr_GL3Window::GLFWrun()
             redrawFLTKTimer_cb(this);
             Fl::flush();
         }
-
+        /*
         // render
         Instrumentor::Get().BeginSession("RenderScene");        // Begin session 
         {
@@ -675,7 +675,9 @@ int Fr_GL3Window::GLFWrun()
         glfwSwapBuffers(pWindow);
         }
         
-        Instrumentor::Get().EndSession();                        // End Session        
+        Instrumentor::Get().EndSession();                        // End Session      */
+        scene->RenderScene();
+        glfwSwapBuffers(pWindow);
         glfwPollEvents();
 
     }

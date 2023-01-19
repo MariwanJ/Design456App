@@ -17,8 +17,8 @@ Node::~Node() {
 
 bool Node::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {   
     //Dummy code doese nothing should  be subclassed 
-    (void)projection;
-    (void)modelview;
+    //(void)projection;
+    //(void)modelview;
     return false;
 }
 

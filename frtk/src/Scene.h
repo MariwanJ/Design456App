@@ -29,7 +29,7 @@ public:
     Scene();
     /**
      * Sets the background color
-     */
+     */ 
     void SetBackgroud(float r, float g, float b);
 
     void SetBackgroud(float r, float g, float b, float alfa);
@@ -39,7 +39,8 @@ public:
      * Throws runtime_error if there's no camera
      */
     void RenderScene();
-    static void*linkToglfw;
+    static GLFWwindow*linkToglfw;
+
 private:
     bkgC  background_;
 };
