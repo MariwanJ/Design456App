@@ -447,6 +447,7 @@ void Fr_GL3Window::resizable(Fl_Widget* w)
 * to the time any of them hides or terminates
 *
 */
+static float countert = 0.0;
 int Fr_GL3Window::GLFWrun()
 {
     //TODO DOSENT WORK .. WHY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -461,7 +462,7 @@ int Fr_GL3Window::GLFWrun()
         if (oldTime == 0) {
             oldTime = newTime;
         }
-
+        countert += 0.001;
         glUseProgram(shaderProgram);
         double delta = newTime - oldTime;
         oldTime = newTime;
@@ -473,8 +474,12 @@ int Fr_GL3Window::GLFWrun()
 
         // render
         // ------
+        countert += 0.001;
+        glClearColor(0.0 + countert, 1.0f - countert, 0.3f, 1.0f);
+        if (countert >= 1)
+            countert = 0;
 
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(countert, 1.0-countert, countert, 1.0-countert);
         glClear(GL_COLOR_BUFFER_BIT);
 
         // draw our first triangle
