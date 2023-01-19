@@ -95,7 +95,7 @@ void ShaderProgram::CompileShader(int shader_type, const std::string& path) {
         glGetShaderInfoLog(shader, length, &length, log);
         glDeleteShader(shader);
         throw std::runtime_error(log);
-        delete[]log;
+        delete log;
     }
     glAttachShader(program_, shader);
 }

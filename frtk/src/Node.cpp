@@ -24,26 +24,26 @@ bool Node::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
 
 void Node::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) {
     //Dummy code doese nothing should  be subclassed 
-    (void)modelview;
-    (void)lights;
+   /*/ (void)modelview;
+    (void)lights;*/
 }
 
 bool Node::SetupShadowMap(ShadowMapInfo& info) {
     //Dummy code does nothing should be subclassed
-    (void)info;
+    /*(void)info;*/
     return false;
 }
 
 void Node::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) {
     //Dummy code does nothing should be subclassed
-    (void)info;
-    (void)modelview;
+    /*(void)info;
+    (void)modelview;*/
 }
 
 void Node::Render(RenderInfo& info, const glm::mat4& modelview) {
     //Dummy code does nothing should be subclassed
-    (void)info;
-    (void)modelview;
+    /*(void)info;
+    (void)modelview;*/
 }
 
 void Node::SetActive(bool active) {
