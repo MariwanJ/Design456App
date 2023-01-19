@@ -42,6 +42,7 @@ and manipulators */
 
 class Camera;
 enum CameraList {
+    defaultCam = 0,
     Cam1,
     Cam2,
     Cam3,

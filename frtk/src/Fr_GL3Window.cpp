@@ -42,6 +42,10 @@ float Fr_GL3Window::fltktimerValue = 0.0;
 double Fr_GL3Window::newTime = 0.0;
 double Fr_GL3Window::oldTime = 0.0;
 
+
+
+
+
 /***********************/
 void pfltkWindow_close_cb(Fr_GL3Window* w, void* v) {
     Fr_GL3Window* win = (Fr_GL3Window*)v;
@@ -359,20 +363,27 @@ GLFWwindow* Fr_GL3Window::getCurrentGLWindow()
 }
 void Fr_GL3Window::CreateScene()
 {
-    //static void CreateScene() {
+
     scene = new Scene();//Save a link to the windows also. 
-    scene->linkToglfw= pWindow;
+    scene->linkToglfw = pWindow;
     scene->SetBackgroud(0.69, 0.95, 1.00);
+
+    
+    auto Dcamera = CreateCamera(scene, defaultCam);
+    Dcamera->SetEye(-6, 2, -20);
+    Dcamera->SetCenter(0, 0, 100);
+    Dcamera->SetUp(0, 1, 0);
+    
+    
     auto camera = CreateCamera(scene, Cam1);
 
     camera->SetEye(20, 5, 20);
     camera->SetCenter(0.5, 0.5, 0);
     camera->SetUp(0, 1, 0);
-
-    scene->AddNode(CreateSun());
-    scene->AddNode(CreateRoad());
+    camera->SetActive(true);
+    
     scene->AddNode(CreateShip());
-    scene->AddNode(CreateJeep());
+    scene->AddNode(CreateRoad());
     scene->AddNode(CreateJeep());
 }
 //TODO FIXME
@@ -518,7 +529,8 @@ int Fr_GL3Window::createGLFWwindow()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
-
+    s_GladInitialized = true;
+    FR::s_GladInitialized = true;
     //glGenVertexArrays(1, &VAO);
     //glGenBuffers(1, &VBO);
     //// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
@@ -679,13 +691,12 @@ int Fr_GL3Window::GLFWrun()
         scene->RenderScene();
         glfwSwapBuffers(pWindow);
         glfwPollEvents();
-
     }
     return 0;
 }
 std::shared_ptr<Camera> Fr_GL3Window::CreateCamera(Group* parent, int cameraId)
 {
-        camera = std::make_shared<Camera>();
+        camera = std::make_shared<Camera>();   //Shared pointer to the camera, 
         camera->SetPerspective(40, 0.5, 50);
         camera->SetActive(false);
         parent->AddNode(camera);

@@ -65,7 +65,7 @@ int main(int argc, char** argv)
 {
 
     Fr_GL3Window* win = new Fr_GL3Window(0, 0, 1000, 800, "Modern OpenGL with FLTK support");
-    win->setOpenGLWinowSize(70, 60, 600, 600);
+    win->setOpenGLWinowSize(70, 60, 900, 740);
     win->resizable(win);
     Fl_Button* b1 = new Fl_Button(10, 5, 50, 40, "Release");
     Fl_Button* b2 = new Fl_Button(100, 5, 50, 40, "CHILD");
