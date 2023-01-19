@@ -64,8 +64,8 @@ static void buttonPressed2(Fl_Widget* w, void* data) {
 int main(int argc, char** argv)
 {
 
-    Fr_GL3Window* win = new Fr_GL3Window(0, 0, 1000, 800, "Modern OpenGL with FLTK support");
-    win->setOpenGLWinowSize(70, 60, 900, 740);
+    Fr_GL3Window* win = new Fr_GL3Window(0, 0, 1000, 900, "Modern OpenGL with FLTK support");
+    win->setOpenGLWinowSize(10, 60, 990, 850);
     win->resizable(win);
     Fl_Button* b1 = new Fl_Button(10, 5, 50, 40, "Release");
     Fl_Button* b2 = new Fl_Button(100, 5, 50, 40, "CHILD");

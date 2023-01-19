@@ -377,13 +377,14 @@ void Fr_GL3Window::CreateScene()
     
     auto camera = CreateCamera(scene, Cam1);
 
-    camera->SetEye(20, 5, 20);
+    camera->SetEye(5, 5, 5);
     camera->SetCenter(0.5, 0.5, 0);
     camera->SetUp(0, 1, 0);
     camera->SetActive(true);
-    
-    scene->AddNode(CreateShip());
+
+    //scene->AddNode(CreateSun());          //Dosen't work!!
     scene->AddNode(CreateRoad());
+    scene->AddNode(CreateShip());
     scene->AddNode(CreateJeep());
 }
 //TODO FIXME
@@ -559,7 +560,7 @@ int Fr_GL3Window::createGLFWwindow()
 
     //***************************************************
 
-    //glViewport(_xGl, _yGl, _wGl, _hGl);
+    glViewport(_xGl, _yGl, _wGl, _hGl);
 
     // GLFW callbacks  https://www.glfw.org/docs/3.3/input_guide.html
     glfwSetFramebufferSizeCallback(pWindow, framebuffer_size_callback);
@@ -626,6 +627,11 @@ void Fr_GL3Window::resize(int x, int y, int w, int h)
     Fl_Window::resize(x, y, w, h);
     if (s_GladInitialized) {
         printf("x=%i y=%i w=%i h=%i\n", x, y, w, h);
+        
+//FIXME - CALCUALTE HOW RESIZE AFFECT GLFW
+        _wGl = w - _xGl;
+        _hGl = h - _yGl;
+
         resizeGlWindow(_xGl, _yGl, _wGl, _hGl);
         glViewport(_xGl, _yGl, _wGl, _hGl);
     }
@@ -688,6 +694,9 @@ int Fr_GL3Window::GLFWrun()
         }
         
         Instrumentor::Get().EndSession();                        // End Session      */
+        glClearColor(0.9, 0.8f, 0.8f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
         scene->RenderScene();
         glfwSwapBuffers(pWindow);
         glfwPollEvents();
@@ -732,6 +741,7 @@ void Fr_GL3Window::setOpenGLWinowSize(int xGL, int yGL, int wGL, int hGL)
     _yGl = yGL;
     _wGl = wGL;
     _hGl = hGL;
+    resizeGlWindow(_xGl, _yGl, _wGl, _hGl);
 }
 Fr_GL3Window::Fr_GL3Window(int w, int h, const char* l) :Fl_Window(0, 0, w, h, l) {}
 Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h) : Fl_Window(x, y, w, h, "TestOpenGl") {}
