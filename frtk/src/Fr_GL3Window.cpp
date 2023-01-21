@@ -29,6 +29,11 @@
 
 #include<Fr_GL3Window.h>
 
+//Remove me later : TODO
+#include<Mesh.h>
+#include<ToonShaderNode.h>
+//End remove me later 
+
 GLuint m_QuadVA, m_QuadVB, m_QuadIB;
 bool s_GLFWInitialized;
 #define redrawFPS  1.0/25.0  // (24 Frames per sec)
@@ -84,7 +89,7 @@ static void error_callback(int error, const char* description)
 * FIXME: CLEANUP CODE
 */
 Scene* Fr_GL3Window::scene = nullptr;
-Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Window(x, y, w, h, l),
+Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Window(x, y, w, h, l),Ox(x),Oy(y),Ow(w),Oh(h),
                                                                         overlay(false),
                                                                         curr_camera(Cam3){
 
@@ -95,11 +100,10 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Window
     _yGl = y;
     _wGl = w ;
     _hGl = h ;
+
     gl_version_major = 4;
     gl_version_minor = 3;
     glfwSetErrorCallback(error_callback);
-
-
 
 
     if (!s_GLFWInitialized)
@@ -127,6 +131,7 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Window
 */
 void Fr_GL3Window::flush() {
     updateGLFWWindow();
+    glad_glFlush();
     Fl::flush();
 }
 
@@ -141,15 +146,14 @@ Fr_GL3Window::~Fr_GL3Window()
 */
 int Fr_GL3Window::exit()
 {
-    glfwDestroyWindow(pWindow);
-    pfltkWindow->~Fl_Window();
+    if (pWindow)
+        glfwDestroyWindow(pWindow);
+    if (pfltkWindow)
+        pfltkWindow->~Fl_Window();
     return 1;
 }
 
 
-
-#include<Mesh.h>
-#include<ToonShaderNode.h>
 
 
 static std::shared_ptr<Transform> CreateRoad() {
@@ -411,13 +415,20 @@ void Fr_GL3Window::reset() {
 /**
 *Resize only the GLFW Window.
 */
+void Fr_GL3Window::resizeGlWindow(float ratio)
+{
+    //We don't chage _xGl or _hGl
+    _wGl = int(float(_wGl) * ratio);
+    _hGl = int(float(_hGl) * ratio);
+    updateGLFWWindow();
+}
 void Fr_GL3Window::resizeGlWindow(int xGl, int yGl, int wGl, int hGl)
 {
+    //Use this to resize the GLFW window regardless the ratio
     _xGl = xGl;
     _yGl = yGl;
     _wGl = wGl;
     _hGl = hGl;
-    // TODO Should fixme
     updateGLFWWindow();
 }
 
@@ -577,6 +588,8 @@ int Fr_GL3Window::createGLFWwindow()
 
 int Fr_GL3Window::updateGLFWWindow()
 {
+    //MoveWindow(glfwHND, _xGl, _yGl, _wGl, _hGl, true); //place b at (x,y,w,h) in a
+    UpdateWindow(glfwHND);
     if (s_GladInitialized) {
         glad_glFlush();
     }
@@ -607,9 +620,9 @@ void Fr_GL3Window::show() {
     if (pWindow==nullptr){
         if (createGLFWwindow() != 0) {
             if (s_GladInitialized == true) {
-                glad_glClearColor(1.0, 0.16, 0.18, 1.0);
+                //glad_glClearColor(1.0, 0.16, 0.18, 1.0);
+                //glClear(GL_COLOR_BUFFER_BIT);
                 updateGLFWWindow();
-                glClear(GL_COLOR_BUFFER_BIT);
             }
         }
     }
@@ -625,15 +638,11 @@ void Fr_GL3Window::gladEvents(int events)
 void Fr_GL3Window::resize(int x, int y, int w, int h)
 {
     Fl_Window::resize(x, y, w, h);
+    float _ratio = float(w * h)/float(Ow * Oh) ;  /// Calculate ratio of resized of window 
+    printf("ratio= %f\n", _ratio);
     if (s_GladInitialized) {
-        printf("x=%i y=%i w=%i h=%i\n", x, y, w, h);
-        
-//FIXME - CALCUALTE HOW RESIZE AFFECT GLFW
-        _wGl = w - _xGl;
-        _hGl = h - _yGl;
-
-        resizeGlWindow(_xGl, _yGl, _wGl, _hGl);
-        glViewport(_xGl, _yGl, _wGl, _hGl);
+        if (_ratio !=0)
+            resizeGlWindow(_ratio);
     }
     //damage(FL_DAMAGE_ALL);
     Fl_Window::draw();
@@ -694,8 +703,8 @@ int Fr_GL3Window::GLFWrun()
         }
         
         Instrumentor::Get().EndSession();                        // End Session      */
-        glClearColor(0.9, 0.8f, 0.8f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        //glClearColor(0.9, 0.8f, 0.8f, 1.0f);
+        //glClear(GL_COLOR_BUFFER_BIT);
 
         scene->RenderScene();
         glfwSwapBuffers(pWindow);
@@ -729,7 +738,7 @@ std::shared_ptr<Transform> Fr_GL3Window::CreateSun() {
     auto light = std::make_shared<Light>();
     light->SetPosition(0, 0, 0);
     light->SetDiffuse(0.5, 0.5, 0.5);
-    light->SetAmbient(0.4, 0.4, 0.4);
+    light->SetAmbient(1.0, 1., 1.0);
     light->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
     sun_height->AddNode(light);
 
@@ -743,6 +752,6 @@ void Fr_GL3Window::setOpenGLWinowSize(int xGL, int yGL, int wGL, int hGL)
     _hGl = hGL;
     resizeGlWindow(_xGl, _yGl, _wGl, _hGl);
 }
-Fr_GL3Window::Fr_GL3Window(int w, int h, const char* l) :Fl_Window(0, 0, w, h, l) {}
-Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h) : Fl_Window(x, y, w, h, "TestOpenGl") {}
-Fr_GL3Window::Fr_GL3Window(int w, int h) : Fl_Window(0, 0, w, h, "TestOpenGl") {}
+Fr_GL3Window::Fr_GL3Window(int w, int h, const char* l) :Fl_Window(0, 0, w, h, l),Ox(0),Oy(0),Ow(w),Oh(h) {}
+Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h) : Fl_Window(x, y, w, h, "TestOpenGl"), Ox(x), Oy(y), Ow(w), Oh(h) {}
+Fr_GL3Window::Fr_GL3Window(int w, int h) : Fl_Window(0, 0, w, h, "TestOpenGl"), Ox(0), Oy(0), Ow(w), Oh(h) {}

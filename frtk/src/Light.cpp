@@ -51,8 +51,7 @@ void Light::SetupSpot(float x, float y, float z, float cutoff, float exponent) {
     spot_exponent_ = exponent;
 }
 
-void Light::EnableShadowMap(const glm::vec3& center, const glm::vec3& up,
-        const glm::mat4& projection) {
+void Light::EnableShadowMap(const glm::vec3& center, const glm::vec3& up, const glm::mat4& projection) {
     sm_enable_ = true;
     sm_center_ = center;
     sm_up_ = up;
@@ -75,14 +74,12 @@ void Light::EnableShadowMap(const glm::vec3& center, const glm::vec3& up,
     // Create texture
     glGenTextures(1, &sm_texture_);
     glBindTexture(GL_TEXTURE_2D, sm_texture_);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 0,
-            GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);  
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);  
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);  
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);  
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-            GL_TEXTURE_2D, sm_texture_, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, sm_texture_, 0);
 
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if (status != GL_FRAMEBUFFER_COMPLETE)

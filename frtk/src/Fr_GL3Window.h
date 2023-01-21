@@ -81,12 +81,13 @@ public:
     int releaseGLfwWindow();
     virtual GLFWwindow* getCurrentGLWindow();
     virtual void reset(void);
+    virtual void resizeGlWindow(float ratio);
     virtual void resizeGlWindow(int x, int y, int w, int h);
     virtual void CreateScene();
     virtual std::shared_ptr<Camera> CreateCamera(Group* parent, int cameraId);
     virtual std::shared_ptr<Transform> CreateSun();
 
-       void resize(int x, int y, int w, int h);
+    void resize(int x, int y, int w, int h);
     void resizable(Fl_Widget* w);
     virtual void draw();           //fltk
     virtual void show();           //both
@@ -147,7 +148,7 @@ private:
     static int _wGl; // It is different than FLTK. But it is depends on  w()
     static int _hGl; // It is different than FLTK. But it is depends on h()
     int curr_camera ;
-
+    const int Ox, Oy, Ow, Oh; //origional vlaues. 
 };
 
 #endif

@@ -32,16 +32,27 @@
 #include<Camera.h>
 #include<Manipulator.h>
 
-
+static bool releaseChild = false;
 static void buttonPressed1(Fl_Widget* w, void* data) {
     Fr_GL3Window * b1 = (Fr_GL3Window*)(data);
+    b1->cameras[curr_camera].camera->SetActive(false);
+    curr_camera = (curr_camera + 1) % Cam4;
+    b1->cameras[curr_camera].camera->SetActive(true);
+
     std::cout << "You clicked me1!!\n";
-    b1->releaseGLfwWindow();
+    //b1->releaseGLfwWindow();
 }
 static void buttonPressed2(Fl_Widget* w, void* data) {
     Fr_GL3Window* b2 = (Fr_GL3Window*)(data);
     std::cout << "You clicked me2!!\n";
-    b2->embeddGLfwWindow();
+    if (releaseChild) {
+        b2->embeddGLfwWindow();
+        releaseChild = false;
+    }
+    else {
+        b2->releaseGLfwWindow();
+        releaseChild=true;
+    }
 }
 
 //
@@ -65,10 +76,10 @@ int main(int argc, char** argv)
 {
 
     Fr_GL3Window* win = new Fr_GL3Window(0, 0, 1000, 900, "Modern OpenGL with FLTK support");
-    win->setOpenGLWinowSize(10, 60, 990, 850);
+    win->setOpenGLWinowSize(60, 60, 800, 600);
     win->resizable(win);
-    Fl_Button* b1 = new Fl_Button(10, 5, 50, 40, "Release");
-    Fl_Button* b2 = new Fl_Button(100, 5, 50, 40, "CHILD");
+    Fl_Button* b1 = new Fl_Button(10, 5, 50, 40, "Camera View");
+    Fl_Button* b2 = new Fl_Button(100, 5, 50, 40, "Release/CHILD");
     //win->CreateScene();
     b1->callback((Fl_Callback*)buttonPressed1, win);
     b2->callback((Fl_Callback*)buttonPressed2, win);

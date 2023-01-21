@@ -51,8 +51,7 @@ bool Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
 
     int vp[4]; 
     glGetIntegerv(GL_VIEWPORT, vp); 
-    projection = glm::perspective((float)(fovy_ * M_PI / 180.0),
-            (float)vp[2]/vp[3], znear_, zfar_);
+    projection = glm::perspective((float)(fovy_ * M_PI / 180.0),(float)vp[2]/vp[3], znear_, zfar_);
     modelview = glm::lookAt(eye_, center_, up_);
     if (manipulator_)
         modelview *= manipulator_->GetMatrix(glm::normalize(center_ - eye_));

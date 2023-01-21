@@ -10,7 +10,7 @@
 GLFWwindow* Scene::linkToglfw=nullptr;
 
 Scene::Scene() :
-    background_{ 0.8, 0.8, 0.8,1.0 }{
+    background_{ 0.9, 0.9, 0.9,1.0 }{
 }
 
 void Scene::SetBackgroud(float r, float g, float b) {
