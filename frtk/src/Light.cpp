@@ -61,33 +61,32 @@ void Light::EnableShadowMap(const glm::vec3& center, const glm::vec3& up, const 
     int height = kShadowmapHeight;
 
     // Create Framebuffer
-    glGenFramebuffers(1, &sm_framebuffer_);
-    glBindFramebuffer(GL_FRAMEBUFFER, sm_framebuffer_);
+    glCheckFunc( glGenFramebuffers(1, &sm_framebuffer_));
+    glCheckFunc(glBindFramebuffer(GL_FRAMEBUFFER, sm_framebuffer_));
 
     // Create Renderbuffer
-    glGenRenderbuffers(1, &sm_renderbuffer_);
-    glBindRenderbuffer(GL_RENDERBUFFER, sm_renderbuffer_);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-            GL_RENDERBUFFER, sm_renderbuffer_);
+    glCheckFunc(glGenRenderbuffers(1, &sm_renderbuffer_));
+    glCheckFunc(glBindRenderbuffer(GL_RENDERBUFFER, sm_renderbuffer_));
+    glCheckFunc(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height));
+    glCheckFunc(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, sm_renderbuffer_));
 
     // Create texture
-    glGenTextures(1, &sm_texture_);
-    glBindTexture(GL_TEXTURE_2D, sm_texture_);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);  
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);  
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);  
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);  
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, sm_texture_, 0);
+    glCheckFunc(glGenTextures(1, &sm_texture_));
+    glCheckFunc(glBindTexture(GL_TEXTURE_2D, sm_texture_));
+    glCheckFunc(glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0));
+    glCheckFunc(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+    glCheckFunc(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
+    glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+    glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+    glCheckFunc(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, sm_texture_, 0));
 
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if (status != GL_FRAMEBUFFER_COMPLETE)
         throw std::runtime_error("Couldn't create shadowmap frame buffer");
 
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
-    glBindTexture(GL_TEXTURE_2D, 0);  
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glCheckFunc(glBindRenderbuffer(GL_RENDERBUFFER, 0));
+    glCheckFunc(glBindTexture(GL_TEXTURE_2D, 0));
+    glCheckFunc(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 }
 
 void Light::SetupLight(const glm::mat4& modelview,

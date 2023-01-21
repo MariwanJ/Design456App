@@ -91,7 +91,7 @@ static void error_callback(int error, const char* description)
 Scene* Fr_GL3Window::scene = nullptr;
 Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Window(x, y, w, h, l),Ox(x),Oy(y),Ow(w),Oh(h),
                                                                         overlay(false),
-                                                                        curr_camera(Cam3){
+                                                                        curr_camera(Cam2){
 
     //Default size is the size of the FLTK window
     FR::globalP_pWindow = this;
@@ -590,9 +590,11 @@ int Fr_GL3Window::updateGLFWWindow()
 {
     //MoveWindow(glfwHND, _xGl, _yGl, _wGl, _hGl, true); //place b at (x,y,w,h) in a
     UpdateWindow(glfwHND);
+    RedrawWindow(glfwHND, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
     if (s_GladInitialized) {
         glad_glFlush();
     }
+
     return 0;
 }
 
@@ -703,11 +705,10 @@ int Fr_GL3Window::GLFWrun()
         }
         
         Instrumentor::Get().EndSession();                        // End Session      */
-        //glClearColor(0.9, 0.8f, 0.8f, 1.0f);
-        //glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(0.9, 0.8f, 0.8f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
 
         scene->RenderScene();
-        glfwSwapBuffers(pWindow);
         glfwPollEvents();
     }
     return 0;
@@ -736,10 +737,10 @@ std::shared_ptr<Transform> Fr_GL3Window::CreateSun() {
     sun->AddNode(sun_height);
 
     auto light = std::make_shared<Light>();
-    light->SetPosition(0, 0, 0);
-    light->SetDiffuse(0.5, 0.5, 0.5);
-    light->SetAmbient(1.0, 1., 1.0);
-    light->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
+    //light->SetPosition(0, 0, 0);
+    //light->SetDiffuse(0.5, 0.5, 0.5);
+    //light->SetAmbient(1.0, 1., 1.0);
+    //light->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
     sun_height->AddNode(light);
 
     return std::shared_ptr<Transform>(sun);

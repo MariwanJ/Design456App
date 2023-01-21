@@ -47,8 +47,8 @@ void Manipulator::SetReferencePoint(float x, float y, float z) {
 }
 
 void Manipulator::GLFWMouse(int button, int state, double x, double y) {
-    SetOperation<0, Operation::kRotation>(button, state, x, y);
-    SetOperation<2, Operation::kZoom>(button, state, x, y);
+    SetOperation<0, Operation::kRotation>(button, state, x, y);  //mouse move + right click
+    SetOperation<2, Operation::kZoom>(button, state, x, y);   ///Mouse move+leftclick
 }
 
 void Manipulator::SetInvertAxis(bool invertX, bool invertY) {

@@ -58,8 +58,34 @@ void Fr_GL3Window::keyboard_callback(GLFWwindow* window, int key, int scancode, 
 {
 }
 
-void Fr_GL3Window::cursor_position_callback(GLFWwindow*, double xpos, double ypos)
+void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double ypos)
 {
+    /*
+        if (glfwGetMouseButton(win, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
+        {
+            return;
+        }
+     */
+        int state = 0; //TODO FIXME DONT KNOW WHAT TO WRITE
+        int button=-1;
+        if (FR::glfw_MouseButton==GLFW_MOUSE_BUTTON_LEFT)
+            button= 0;//TODO FIDME 
+        else if (FR::glfw_MouseButton == GLFW_MOUSE_BUTTON_RIGHT)
+            button = 1;//TODO FIDME 
+        
+            double cposx, cposy;
+            glfwGetCursorPos(win, &cposx, &cposy);
+            FR::glfw_e_x = cposx;
+            FR::glfw_e_y = cposy;
+            if (button ==0 || button ==1)
+                if (win != nullptr) {
+                    std::cout << cposx << " " << cposy << std::endl;
+                    FR::globalP_pWindow->cameras[FR::globalP_pWindow->curr_camera].manipulator->GLFWMouse(button, state, cposx, cposy);
+                   // FR::globalP_pWindow->updateGLFWWindow();
+                  //  glfwSwapBuffers(win);
+                    FR::globalP_pWindow->scene->RenderScene();
+        }
+    
 }
 
 void Fr_GL3Window::cursor_enter_callback(GLFWwindow*, int entered)
@@ -68,14 +94,7 @@ void Fr_GL3Window::cursor_enter_callback(GLFWwindow*, int entered)
 
 void Fr_GL3Window::mouse_button_callback(GLFWwindow*win, int button, int action, int mods)
 {
-    int state = 0; //TODO FIXME DONT KNOW WHAT TO WRITE
-    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
-        double cposx, cposy;
-        glfwGetCursorPos(win, &cposx, &cposy);
-        if (FR::globalP_pWindow != nullptr) {
-            FR::globalP_pWindow->cameras[FR::globalP_pWindow->curr_camera].manipulator->GLFWMouse(button, state, cposx, cposy);
-        }
-    }
+    FR::glfw_MouseButton = button;
 }
 
 void Fr_GL3Window::scroll_callback(GLFWwindow*, double xoffset, double yoffset)

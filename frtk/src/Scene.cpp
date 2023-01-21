@@ -44,7 +44,7 @@ void Scene::RenderScene() {
     SetupShadowMap(render_info.shadowmap);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, render_info.shadowmap.framebuffer);
     glViewport(0, 0, render_info.shadowmap.width, render_info.shadowmap.height);
-   // glClear(GL_DEPTH_BUFFER_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT);
     RenderShadowMap(render_info.shadowmap, render_info.shadowmap.modelview);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_framebuffer);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -54,7 +54,7 @@ void Scene::RenderScene() {
     render_info.id = 0;
     render_info.render_transparent = true;
     Render(render_info, render_info.modelview);
-   // glDrawArrays(GL_TRIANGLES, 0, draw_framebuffer);
+    //glDrawArrays(GL_TRIANGLES, 0, draw_framebuffer);
 
     // draw our first triangle
     //glUseProgram(shaderProgram);
@@ -67,7 +67,7 @@ void Scene::RenderScene() {
     if (linkToglfw!=nullptr){
     glfwSwapBuffers(linkToglfw);
     glfwPollEvents();
-    glad_glFlush();
+    //glad_glFlush();
     }
     else {
         std::cout << "link to glfw not defined\n";

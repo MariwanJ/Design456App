@@ -53,9 +53,9 @@ public:
 
 private:
     enum class Operation {
-        kRotation,
-        kZoom,
-        kNone
+        kRotation,  //Mouse click and drag
+        kZoom,       //Left mouse and drag
+        kNone       //nothing
     };
 
     const float kZoomScale = 1.0f;
