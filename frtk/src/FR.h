@@ -226,6 +226,7 @@ namespace COLOR {
 };
 
 #include<fr_callbacks.h>
+class Fr_GL3Window; // compiler should define that later. 
 
 class FR {
 	FR() {}; //NO need for a constructor.
@@ -235,11 +236,17 @@ public:
 	static int glfw_e_y;
 	static int glfw_click;
 	static int glfw_double_click;
+	static int glfw_MouseButton;
 	
 	//Avoid running GLFW OR GLAD CODE whiel GLFW is not created
 	static bool s_GLFWInitialized;
 	static bool s_GladInitialized;
+
+	static Fr_GL3Window* globalP_pWindow;
+
 };
+
+
 
 
 

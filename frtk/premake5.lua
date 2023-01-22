@@ -49,6 +49,7 @@ project "frtk"
 		"GLAD_GL_IMPLEMENTATION",
 		"FL_INTERNALS",
 		"FL_LIBRARY",
+		"_USE_MATH_DEFINES",	--MS MATH reauire this M_PI for example
 		"FRTK_ENABLE_ASSERTS"  ---debug break enable
 	}
 
@@ -60,6 +61,7 @@ project "frtk"
         "$(SolutionDir)frtk/vendor/fltk/",
 		"$(SolutionDir)frtk/vendor/spdlog/include",
 		"src",
+		"$(SolutionDir)frtk/vendor/instrumentation",
 		--"%{IncludeDir.yaml-cpp}",
         --"%{IncludeDir.ImGui}",
 	}

@@ -28,22 +28,47 @@
 
 #ifndef FR_GL3WINDOW_H
 #define FR_GL3WINDOW_H
+
 #include <frtk.h>
 #include<Fr_Core.h>
+#include<Scene.h>
+#include<Camera.h>
+#include<Manipulator.h>
+#include<Transform.h>
+#include<Light.h>
+#include <glm/gtc/matrix_transform.hpp>
+/* 
+and manipulators */
 
+class Camera;
+enum CameraList {
+    defaultCam = 0,
+    Cam1,
+    Cam2,
+    Cam3,
+    Cam4
+};
+
+typedef struct {
+    Camera* camera;
+    Manipulator* manipulator;
+ } cam;
+ 
+
+static int curr_camera = Cam1;
 
 class Fr_GL3Window;
 
 //callbacks - private
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+//void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+//void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+//
+//void cursor_position_callback(GLFWwindow*, double xpos, double ypos);
+//void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cursor entered the window's client area, or GL_FALSE if it left it.
+//void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
+//void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
 
-void cursor_position_callback(GLFWwindow*, double xpos, double ypos);
-void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cursor entered the window's client area, or GL_FALSE if it left it.
-void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
-void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
-
-class FRTK_API Fr_GL3Window : public Fl_Double_Window {
+class FRTK_API Fr_GL3Window : public Fl_Window {
 public:
     Fr_GL3Window(int x, int y, int w, int h, const char* l);
     Fr_GL3Window(int x, int y, int w, int h);
@@ -51,12 +76,17 @@ public:
     Fr_GL3Window(int w, int h);
     virtual ~Fr_GL3Window();
     virtual int exit();
-    Fl_Double_Window* pfltkWindow;
+    Fl_Window* pfltkWindow;
     int embeddGLfwWindow();
     int releaseGLfwWindow();
-
+    virtual GLFWwindow* getCurrentGLWindow();
     virtual void reset(void);
+    virtual void resizeGlWindow(float ratio);
     virtual void resizeGlWindow(int x, int y, int w, int h);
+    virtual void CreateScene();
+    virtual std::shared_ptr<Camera> CreateCamera(Group* parent, int cameraId);
+    virtual std::shared_ptr<Transform> CreateSun();
+
     void resize(int x, int y, int w, int h);
     void resizable(Fl_Widget* w);
     virtual void draw();           //fltk
@@ -72,11 +102,18 @@ public:
     static double newTime;
     void setOpenGLWinowSize(int xGL, int yGL, int wGL, int hGL);
 
+    static Scene* scene;
+    std::vector<cam> cameras;
+    std::shared_ptr<Camera> camera;
+    Manipulator *manipulator;
+    static GLFWwindow* pWindow;
 
 protected:
     int createGLFWwindow();
     int updateGLFWWindow();
     unsigned int VBO, VAO;
+    
+
 private:
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     static void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -100,7 +137,8 @@ private:
     int gl_version_major;
     int gl_version_minor;
     void flush();
-    static GLFWwindow* pWindow;
+    
+    Transform *sun;
 
     HWND glfwHND;
     static bool s_GLFWInitialized;
@@ -109,6 +147,8 @@ private:
     static int _yGl; // It is different than FLTK. But it is depends on  y()
     static int _wGl; // It is different than FLTK. But it is depends on  w()
     static int _hGl; // It is different than FLTK. But it is depends on h()
+    int curr_camera ;
+    const int Ox, Oy, Ow, Oh; //origional vlaues. 
 };
 
 #endif

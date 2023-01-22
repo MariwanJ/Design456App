@@ -27,20 +27,27 @@
 
 #ifndef FRTK_H
 #define FRTK_H
+#include <array>
 
-#include <iostream>
-#include <memory>
-#include <utility>
 #include <algorithm>
+#include <cinttypes>
+#include <cmath>
+#include <fstream>
 #include <functional>
-#include <string>
+#include <iostream>
+#include <limits>
+#include <memory>
 #include <sstream>
-#include <vector>
 #include <stdarg.h>
+#include <stddef.h>
+#include <stdexcept>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
+#include <tuple>
 #include <unordered_map>
 #include <unordered_set>
-#include <stdlib.h>
-#include <stddef.h>
-#include <stdio.h>
+#include <utility>
+#include <vector>
 
 #endif
