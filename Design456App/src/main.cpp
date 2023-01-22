@@ -40,7 +40,6 @@ static void buttonPressed1(Fl_Widget* w, void* data) {
     b1->cameras[curr_camera].camera->SetActive(true);
 
     std::cout << "You clicked me1!!\n";
-    //b1->releaseGLfwWindow();
 }
 static void buttonPressed2(Fl_Widget* w, void* data) {
     Fr_GL3Window* b2 = (Fr_GL3Window*)(data);
@@ -55,26 +54,10 @@ static void buttonPressed2(Fl_Widget* w, void* data) {
     }
 }
 
-//
-//static std::shared_ptr<Camera> CreateCamera(Group* parent, int cameraId) {
-//    auto camera = std::make_shared<Camera>();
-//    camera->SetPerspective(40, 0.5, 50);
-//    camera->SetActive(false);
-//    parent->AddNode(camera);
-//    auto manipulator = new Manipulator();
-//    camera->SetManipulator(std::unique_ptr<Manipulator>(manipulator));
-//
-//
-// [cameraId].camera = camera.get();
-//    cameras[cameraId].manipulator = manipulator;
-//
-//    return camera;
-//}
 #include<Application.h>
 
 int main(int argc, char** argv)
 {
-
     Fr_GL3Window* win = new Fr_GL3Window(0, 0, 1000, 900, "Modern OpenGL with FLTK support");
     win->setOpenGLWinowSize(60, 60, 800, 600);
     win->resizable(win);
