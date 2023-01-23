@@ -1,13 +1,13 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1,0400
+version 1.0400
 header_name {.h}
 code_name {.cxx}
 Function {make_Window()} {open return_type void
 } {
   Fl_Window {} {open
-    xywh {0 23 1536 801} type Double hide
+    xywh {200 132 1536 816} type Double visible
   } {
-    Fl_Menu_Bar {} {
+    Fl_Menu_Bar {} {open
       xywh {0 0 1540 30}
     } {
       Submenu {} {
@@ -40,7 +40,7 @@ Function {make_Window()} {open return_type void
         }
       }
       Submenu {} {
-        label {&Edit} open
+        label {&Edit}
         xywh {20 20 57 19}
       } {
         MenuItem {} {
@@ -77,7 +77,7 @@ Function {make_Window()} {open return_type void
         }
       }
       Submenu {} {
-        label {&View} open
+        label {&View}
         xywh {25 25 57 19}
       } {
         Submenu {} {
@@ -132,7 +132,7 @@ Function {make_Window()} {open return_type void
         xywh {35 35 28 19}
       } {
         MenuItem {} {
-          label {&All                               }
+          label {&All Faces                               }
           xywh {45 45 28 19}
         }
         MenuItem {} {
@@ -151,68 +151,55 @@ Function {make_Window()} {open return_type void
           label {Bottom faces}
           xywh {75 75 28 19}
         }
+      }
+      Submenu {} {
+        label {&Window} open
+        xywh {55 55 28 19}
+      } {
         MenuItem {} {
-          label {&Window}
+          label {&All                               }
+          xywh {65 65 28 19}
+        }
+        MenuItem {} {
+          label {Vertical faces}
+          xywh {55 55 28 19}
+        }
+        MenuItem {} {
+          label {Horizontal faces}
+          xywh {75 75 28 19}
+        }
+        MenuItem {} {
+          label {Top Faces}
           xywh {85 85 28 19}
         }
         MenuItem {} {
-          label {&Help}
+          label {Bottom faces}
           xywh {95 95 28 19}
         }
-        Submenu {} {
-          label {&Window} open
-          xywh {45 45 28 19}
-        } {
-          MenuItem {} {
-            label {&All                               }
-            xywh {55 55 28 19}
-          }
-          MenuItem {} {
-            label {Vertical faces}
-            xywh {45 45 28 19}
-          }
-          MenuItem {} {
-            label {Horizontal faces}
-            xywh {65 65 28 19}
-          }
-          MenuItem {} {
-            label {Top Faces}
-            xywh {75 75 28 19}
-          }
-          MenuItem {} {
-            label {Bottom faces}
-            xywh {85 85 28 19}
-          }
-          MenuItem {} {
-            label {&Window}
-            xywh {95 95 28 19}
-          }
-          MenuItem {} {
-            label {&Help}
-            xywh {105 105 28 19}
-          }
-          Submenu {} {
-            label {&Help} open
-            xywh {55 55 28 19}
-          } {
-            MenuItem {} {
-              label {&Help}
-              xywh {115 115 28 19}
-            }
-            MenuItem {} {
-              label About
-              xywh {105 105 28 19}
-            }
-          }
+      }
+      Submenu {} {
+        label {&Help} open
+        xywh {70 70 28 19}
+      } {
+        MenuItem {} {
+          label {&Help}
+          xywh {130 130 28 19}
+        }
+        MenuItem {} {
+          label About
+          xywh {120 120 28 19}
         }
       }
     }
+    Fl_Menu_Bar barStatus {selected
+      xywh {0 796 1536 25}
+    } {}
     Fl_Tabs {} {
       xywh {0 30 1540 115} labelsize 10
     } {
       Fl_Group {} {
         label Basic open
-        xywh {0 55 1539 90} labelsize 12 hide
+        xywh {0 55 1539 90} labelsize 12
       } {}
       Fl_Group {} {
         label Advanced open
@@ -223,18 +210,18 @@ Function {make_Window()} {open return_type void
         xywh {0 55 1539 90} labelsize 12 hide
       } {}
       Fl_Group {} {
-        label Operations open
-        xywh {0 55 1539 90} labelsize 12
+        label Operations
+        xywh {0 55 1539 90} labelsize 12 hide
       } {}
     }
-    Fl_Tile {} {open
-      xywh {25 25 15 15}
+    Fl_Tile {} {
+      xywh {0 146 1539 653}
     } {
-      Fl_Group {} {open selected
-        xywh {0 145 265 659}
-      } {}
       Fl_Group {} {open
-        xywh {262 144 1277 660}
+        xywh {0 149 265 650}
+      } {}
+      Fl_Group grpFLGW {open
+        xywh {266 148 1271 650}
       } {}
     }
   }
