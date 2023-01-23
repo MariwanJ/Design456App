@@ -1,13 +1,18 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0400
+version 1,0400
 header_name {.h}
 code_name {.cxx}
-Function {make_Window()} {open return_type void
+decl {\#include<Fr_Core.h>
+\#include<Fr_GL3Window.h>} {public global
+}
+
+Function {Create_App()} {open return_type {Fr_GL3Window*}
 } {
-  Fl_Window {} {open
-    xywh {200 132 1536 816} type Double visible
+  Fl_Window pfltkWindow {
+    label Design456App open selected
+    xywh {7 32 1530 800} type Single visible
   } {
-    Fl_Menu_Bar {} {open
+    Fl_Menu_Bar {} {
       xywh {0 0 1540 30}
     } {
       Submenu {} {
@@ -24,11 +29,11 @@ Function {make_Window()} {open return_type void
         }
         MenuItem {} {
           label {&Close                             }
-          tooltip {Close current file} xywh {25 25 28 19} shortcut 0x4ffc1 divider
+          tooltip {Close current file} xywh {25 25 28 19} shortcut 0x4ffc1
         }
         MenuItem {} {
           label {Save &As                           }
-          tooltip {Save file as} xywh {35 35 28 19} shortcut 0x50073 divider
+          tooltip {Save file as} xywh {35 35 28 19} shortcut 0x50073
         }
         MenuItem {} {
           label Import
@@ -49,7 +54,7 @@ Function {make_Window()} {open return_type void
         }
         MenuItem {} {
           label {&Redo                              }
-          tooltip {Redo last action} xywh {20 20 28 19} shortcut 0x40079 divider
+          tooltip {Redo last action} xywh {20 20 28 19} shortcut 0x40079
         }
         MenuItem {} {
           label {&Copy                              }
@@ -65,7 +70,7 @@ Function {make_Window()} {open return_type void
         }
         MenuItem {} {
           label {Douplicate                         }
-          tooltip {Duplicate selected shape} xywh {60 60 28 19} shortcut 0x40064 divider
+          tooltip {Duplicate selected shape} xywh {60 60 28 19} shortcut 0x40064
         }
         MenuItem {} {
           label {&Preferences                       }
@@ -120,11 +125,11 @@ Function {make_Window()} {open return_type void
         }
         MenuItem {} {
           label {Reset View}
-          xywh {55 55 28 19} shortcut 0x72 divider
+          xywh {55 55 28 19} shortcut 0x72
         }
         MenuItem {} {
           label {&Camera Setting}
-          xywh {65 65 28 19} divider
+          xywh {65 65 28 19}
         }
       }
       Submenu {} {
@@ -191,16 +196,66 @@ Function {make_Window()} {open return_type void
         }
       }
     }
-    Fl_Menu_Bar barStatus {selected
-      xywh {0 796 1536 25}
+    Fl_Menu_Bar barStatus {
+      xywh {0 767 1536 25}
     } {}
-    Fl_Tabs {} {
-      xywh {0 30 1540 115} labelsize 10
+    Fl_Tabs tabToolbars {open
+      xywh {0 30 1540 121} labelsize 10
     } {
       Fl_Group {} {
-        label Basic open
+        label {2D Primatives}
         xywh {0 55 1539 90} labelsize 12
-      } {}
+      } {
+        Fl_Button btnPoint {
+          callback {createPoint_cb();}
+          image {../../resources/icons/46/Point.png} xywh {5 57 46 46} align 16
+        }
+        Fl_Button btnLine {
+          callback {createLine_cb();}
+          image {../../resources/icons/46/Line.png} xywh {51 57 46 46} align 16
+        }
+        Fl_Button btnTriangle {
+          callback {createTriangle_cb();}
+          image {../../resources/icons/46/Triangle.png} xywh {97 57 46 46} align 16
+        }
+        Fl_Button btnSquare {
+          callback {createSquare_cb();}
+          image {../../resources/icons/46/Square.png} xywh {144 57 46 46} align 16
+        }
+        Fl_Button btnPolygon {
+          callback {createPolygon_cb();}
+          image {../../resources/icons/46/Polygon.png} xywh {191 57 46 46} align 16
+        }
+      }
+      Fl_Group {} {
+        label Basic
+        xywh {0 55 1539 96} labelsize 12 hide
+      } {
+        Fl_Button btnBox {
+          callback {createBox_cb();}
+          image {../../resources/icons/46/Box.png} xywh {5 57 46 46} align 16
+        }
+        Fl_Button btnCylinder {
+          callback {createCylinder_cb();}
+          image {../../resources/icons/46/Cylinder.png} xywh {51 57 46 46} align 16
+        }
+        Fl_Button btnSphere {
+          callback {createSphere_cb();}
+          image {../../resources/icons/46/Sphere.png} xywh {97 57 46 46} align 16 resizable
+        }
+        Fl_Button btnCone {
+          callback {createCone_cb();}
+          image {../../resources/icons/46/Cone.png} xywh {143 57 46 46} align 16
+        }
+        Fl_Button btnTours {
+          callback {createTours_cb();}
+          image {../../resources/icons/46/Torus.png} xywh {189 57 46 46} align 16
+        }
+        Fl_Button btnTours {
+          callback {createTours_cb();}
+          image {../../resources/icons/46/Tube.png} xywh {235 57 46 46} align 16
+        }
+      }
       Fl_Group {} {
         label Advanced open
         xywh {0 55 1539 90} labelsize 12 hide
@@ -214,15 +269,72 @@ Function {make_Window()} {open return_type void
         xywh {0 55 1539 90} labelsize 12 hide
       } {}
     }
-    Fl_Tile {} {
-      xywh {0 146 1539 653}
+    Fl_Tile {} {open
+      xywh {0 151 1529 617}
     } {
       Fl_Group {} {open
-        xywh {0 149 265 650}
+        xywh {0 152 265 625}
       } {}
       Fl_Group grpFLGW {open
-        xywh {266 148 1271 650}
-      } {}
+        xywh {266 152 1264 613}
+      } {
+        Fl_Wizard pWindow {open
+          xywh {266 152 1264 613} box NO_BOX
+          class GLFWwindow
+        } {}
+      }
     }
   }
+  code {Fr_GL3Window * Application=new Fr_GL3Window(0,0,1530,800,"Design456App");
+return Application;} {}
+}
+
+Function {createBox_cb()} {return_type void
+} {
+  code {printf("BOX!\\n");} {}
+}
+
+Function {createCylinder_cb()} {open return_type void
+} {
+  code {printf("Cylinder!\\n");} {}
+}
+
+Function {createSphere_cb()} {open return_type void
+} {
+  code {printf("Sphere!\\n");} {}
+}
+
+Function {createCone_cb()} {open return_type void
+} {
+  code {printf("Cone!\\n");} {}
+}
+
+Function {createTours_cb()} {open return_type void
+} {
+  code {printf("Tours!\\n");} {}
+}
+
+Function {createPoint_cb()} {open return_type void
+} {
+  code {printf("Point!\\n");} {}
+}
+
+Function {createLine_cb()} {open return_type void
+} {
+  code {printf("Line!\\n");} {}
+}
+
+Function {createTriangle_cb()} {open return_type void
+} {
+  code {printf("Triangle!\\n");} {}
+}
+
+Function {createSquare_cb()} {open return_type void
+} {
+  code {printf("Square!\\n");} {}
+}
+
+Function {createPolygon_cb()} {open return_type void
+} {
+  code {printf("Polygon!\\n");} {}
 }
