@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1,0400
+version 1.0400
 header_name {.h}
 code_name {.cxx}
 decl {\#include<Fr_Core.h>
@@ -9,8 +9,8 @@ decl {\#include<Fr_Core.h>
 Function {Create_App()} {open return_type {Fr_GL3Window*}
 } {
   Fl_Window pfltkWindow {
-    label Design456App open selected
-    xywh {7 32 1530 800} type Single visible
+    label Design456App open
+    xywh {8 32 1530 800} type Single visible
   } {
     Fl_Menu_Bar {} {
       xywh {0 0 1540 30}
@@ -204,7 +204,7 @@ Function {Create_App()} {open return_type {Fr_GL3Window*}
     } {
       Fl_Group {} {
         label {2D Primatives}
-        xywh {0 55 1539 90} labelsize 12
+        xywh {0 55 1539 90} labelsize 12 hide
       } {
         Fl_Button btnPoint {
           callback {createPoint_cb();}
@@ -259,11 +259,21 @@ Function {Create_App()} {open return_type {Fr_GL3Window*}
       Fl_Group {} {
         label Advanced open
         xywh {0 55 1539 90} labelsize 12 hide
-      } {}
+      } {
+        Fl_Button btnParaboloid {
+          callback {createParaboloid_cb();}
+          image {../../resources/icons/46/Paraboloid.png} xywh {5 57 46 46} align 16
+        }
+      }
       Fl_Group {} {
         label Alignment open
-        xywh {0 55 1539 90} labelsize 12 hide
-      } {}
+        xywh {0 55 1539 90} labelsize 12
+      } {
+        Fl_Button btnAlignToPlane {
+          callback {createAlignToPlane_cb();} selected
+          image {../../resources/icons/46/AlignToPlane.png} xywh {15 67 46 46} align 16
+        }
+      }
       Fl_Group {} {
         label Operations
         xywh {0 55 1539 90} labelsize 12 hide
@@ -335,6 +345,11 @@ Function {createSquare_cb()} {open return_type void
 }
 
 Function {createPolygon_cb()} {open return_type void
+} {
+  code {printf("Polygon!\\n");} {}
+}
+
+Function {createParaboloid_cb()} {open return_type void
 } {
   code {printf("Polygon!\\n");} {}
 }
