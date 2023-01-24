@@ -48,9 +48,6 @@ double Fr_GL3Window::newTime = 0.0;
 double Fr_GL3Window::oldTime = 0.0;
 
 
-
-
-
 /***********************/
 void pfltkWindow_close_cb(Fr_GL3Window* w, void* v) {
     Fr_GL3Window* win = (Fr_GL3Window*)v;
@@ -91,7 +88,7 @@ static void error_callback(int error, const char* description)
 Scene* Fr_GL3Window::scene = nullptr;
 Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Window(x, y, w, h, l),Ox(x),Oy(y),Ow(w),Oh(h),
                                                                         overlay(false),
-                                                                        curr_camera(Cam2){
+                                                                        curr_camera(defaultCam){
 
     //Default size is the size of the FLTK window
     FR::globalP_pWindow = this;
@@ -123,7 +120,6 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Window
     pfltkWindow = this;
     pfltkWindow->callback((Fl_Callback*)pfltkWindow_close_cb, (void*)this);
 
-
 }
 /**
 * Force updating both windows
@@ -153,243 +149,27 @@ int Fr_GL3Window::exit()
     return 1;
 }
 
-
-
-
-static std::shared_ptr<Transform> CreateRoad() {
-    auto floor = std::make_shared<Transform>();
-
-    auto quad = std::make_shared<Mesh>("E:/Projects/Design456App/frtk/src/data/quad.msh");
-
-    auto grass_t = std::make_shared<Transform>();
-    grass_t->Scale(1000, 0, 1000);
-    floor->AddNode(grass_t);
-
-    auto grass = std::make_shared<ToonShaderNode>(0xBADA5F);
-    grass->SetMesh(quad);
-    grass_t->AddNode(grass);
-
-    auto road_t = std::make_shared<Transform>();
-    road_t->Scale(1000, 1, 10);
-    road_t->Translate(0, 0.001, 0);
-    floor->AddNode(road_t);
-
-    auto road = std::make_shared<ToonShaderNode>(0x111111);
-    road->SetMesh(quad);
-    road_t->AddNode(road);
-
-    auto strip = std::make_shared<ToonShaderNode>(0xEEEE11);
-    strip->SetMesh(quad);
-
-    for (int i = 0; i < 125; ++i) {
-        auto strip_t = std::make_shared<Transform>();
-        strip_t->Translate(i * 8 - 500, 0.002, 0);
-        strip_t->Scale(2.5, 1, 0.2);
-        floor->AddNode(strip_t);
-        strip_t->AddNode(strip);
-    }
-
-    return floor;
-}
-
-static std::shared_ptr<Transform> CreateShip() {
-    auto ship_t = std::make_shared<Transform>();
-    ship_t->Translate(-10, 10, 0);
-    ship_t->Scale(10, 10, 10);
-    ship_t->Rotate(90, 0, -1, 0);
-    ship_t->Rotate(90, -1, 0, 0);
-
-    auto ship = std::make_shared<ToonShaderNode>(0x444444);
-    ship->SetMesh("E:/Projects/Design456App/frtk/src/data/klingon_starship.off");
-    ship_t->AddNode(ship);
-
-    return ship_t;
-}
-
-static std::shared_ptr<ToonShaderNode> CreateJeepItem(
-    std::shared_ptr<Transform> jeep, const std::string& name,
-    unsigned int color) {
-    auto item = std::make_shared<ToonShaderNode>(color, 0.009);
-    item->SetMesh("E:/Projects/Design456App/frtk/src/data/jeep_" + name + ".msh");
-    jeep->AddNode(item);
-    return item;
-}
-
-
-static std::shared_ptr<Transform> CreateJeep() {
-    auto jeep = std::make_shared<Transform>();
-    jeep->Rotate(90, -1, 0, 0);
-
-    // Create static stuff
-    CreateJeepItem(jeep, "body", 0xD1943F);
-    CreateJeepItem(jeep, "lanterns", 0x991111);
-    CreateJeepItem(jeep, "handle", 0xAAAAEE);
-    CreateJeepItem(jeep, "panel", 0x222222);
-    CreateJeepItem(jeep, "seat", 0x705A34);
-    CreateJeepItem(jeep, "windshieldcleaner", 0x222222);
-    auto windshield = CreateJeepItem(jeep, "windshield", 0xBBBBEE);
-    windshield->SetOpacity(0.3);
-
-    // Create driver
-    auto bunny_t = std::make_shared<Transform>();
-    bunny_t->Translate(0.9, -0.6, 1.2);
-    bunny_t->Scale(0.6, 0.6, 0.6);
-    bunny_t->Rotate(90, 1, 0, 0);
-    bunny_t->Rotate(90, 0, 1, 0);
-    jeep->AddNode(bunny_t);
-
-    auto bunny = std::make_shared<ToonShaderNode>(0xAA55AA, 0.02);
-    bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/frtk/src/data/bunny.off"));
-    bunny_t->AddNode(bunny);
-
-    // Create right wheel
-    auto rightwheel = std::make_shared<Transform>();
-    rightwheel->Translate(-2.5, 0.644, -0.438);
-    auto tire = CreateJeepItem(rightwheel, "tire", 0x444444);
-    auto hubcap = CreateJeepItem(rightwheel, "hubcap", 0xAAAAAA);
-
-    // Create front right wheel
-    auto frontrightwheel_speed = std::make_shared<Transform>();
-    frontrightwheel_speed->AddNode(rightwheel);
-
-    auto frontrightwheel_direction = std::make_shared<Transform>();
-    frontrightwheel_direction->AddNode(frontrightwheel_speed);
-
-    auto frontrightwheel = std::make_shared<Transform>();
-    frontrightwheel->AddNode(frontrightwheel_direction);
-    frontrightwheel->Translate(2.5, -0.644, 0.438);
-    jeep->AddNode(frontrightwheel);
-
-    // Create back right wheel
-    auto backrightwheel_speed = std::make_shared<Transform>();
-    backrightwheel_speed->AddNode(rightwheel);
-
-    auto backrightwheel = std::make_shared<Transform>();
-    backrightwheel->AddNode(backrightwheel_speed);
-    backrightwheel->Translate(0, -0.644, 0.438);
-    jeep->AddNode(backrightwheel);
-
-    // Create left wheel
-    auto leftwheel = std::make_shared<Transform>();
-    leftwheel->Rotate(180, 0, 0, 1);
-    leftwheel->AddNode(rightwheel);
-
-    // Create front left wheel
-    auto frontleftwheel_speed = std::make_shared<Transform>();
-    frontleftwheel_speed->AddNode(leftwheel);
-
-    auto frontleftwheel_direction = std::make_shared<Transform>();
-    frontleftwheel_direction->AddNode(frontleftwheel_speed);
-
-    auto frontleftwheel = std::make_shared<Transform>();
-    frontleftwheel->AddNode(frontleftwheel_direction);
-    frontleftwheel->Translate(2.5, 0.644, 0.438);
-    jeep->AddNode(frontleftwheel);
-
-    // Create back left wheel
-    auto backleftwheel_speed = std::make_shared<Transform>();
-    backleftwheel_speed->AddNode(leftwheel);
-
-    auto backleftwheel = std::make_shared<Transform>();
-    backleftwheel->AddNode(backleftwheel_speed);
-    backleftwheel->Translate(0, 0.644, 0.438);
-    jeep->AddNode(backleftwheel);
-
-    // Create lights
-    auto rightlight = std::make_shared<Transform>();
-    auto rightlight_model = CreateJeepItem(rightlight, "light", 0xEEEEEE);
-    rightlight_model->SetOpacity(0.3);
-    jeep->AddNode(rightlight);
-
-    auto rightlight_spot = std::make_shared<Light>();
-    rightlight_spot->SetActive(false);
-    rightlight_spot->SetPosition(2.956, -0.514, 1.074);
-    rightlight_spot->SetupSpot(1, 0, -0.1, 45, 16);
-    rightlight_spot->SetDiffuse(0, 0, 0);
-    rightlight_spot->SetAmbient(0.42, 0.42, 0.42);
-    rightlight_spot->SetAttenuation(1, 0.002, 0);
-    rightlight->AddNode(rightlight_spot);
-    //jeep_light = rightlight_spot.get();
-
-    auto leftlight = std::make_shared<Transform>();
-    leftlight->Translate(0, 1.028, 0);
-    leftlight->AddNode(rightlight);
-    jeep->AddNode(leftlight);
-
-    // Create steering wheel
-    auto steering_wheel_centered = std::make_shared<Transform>();
-    steering_wheel_centered->Translate(-1.111, -0.495, -1.372);
-    CreateJeepItem(steering_wheel_centered, "steeringwheel", 0x222222);
-
-    auto steering_wheel_engine = std::make_shared<Transform>();
-    steering_wheel_engine->AddNode(steering_wheel_centered);
-
-    auto steering_wheel = std::make_shared<Transform>();
-    steering_wheel->AddNode(steering_wheel_engine);
-    steering_wheel->Translate(1.111, 0.495, 1.372);
-    jeep->AddNode(steering_wheel);
-
-    // Creates the engine
-    /*engine = new Engine(jeep, frontleftwheel_direction,
-        frontrightwheel_direction, frontleftwheel_speed,
-        frontrightwheel_speed, backleftwheel_speed, backrightwheel_speed,
-        steering_wheel_engine);*/
-
-    // Creates the driver camera
-    auto drivercamera_t = std::make_shared<Transform>();
-    drivercamera_t->Translate(0.6, 0.5, 1.7);
-    drivercamera_t->Rotate(90, 1, 0, 0);
-    jeep->AddNode(drivercamera_t);
-
-    auto drivercamera = FR::globalP_pWindow->CreateCamera(drivercamera_t.get(), FR::globalP_pWindow->cameras.size());
-    drivercamera->SetActive(true);
-    drivercamera->SetEye(0, 0, 0);
-    drivercamera->SetCenter(1, 0, 0);
-    drivercamera->SetUp(0, 1, 0);
-
-    // Creates the 3rd person camera
-    auto jeepcamera_t = std::make_shared<Transform>();
-    jeepcamera_t->Rotate(90, 1, 0, 0);
-    jeep->AddNode(jeepcamera_t);
-
-    auto jeepcamera = FR::globalP_pWindow->CreateCamera(jeepcamera_t.get(), FR::globalP_pWindow->cameras.size());
-    FR::globalP_pWindow->cameras[FR::globalP_pWindow->cameras.size()-1].manipulator->SetReferencePoint(1, 1, 0);
-    jeepcamera->SetEye(-6, 2, 0);
-    jeepcamera->SetCenter(1, 1, 0);
-    jeepcamera->SetUp(0, 1, 0);
-
-    return jeep;
-}
-
 GLFWwindow* Fr_GL3Window::getCurrentGLWindow()
 {
     return pWindow;
 }
 void Fr_GL3Window::CreateScene()
 {
-
     scene = new Scene();//Save a link to the windows also. 
     scene->linkToglfw = pWindow;
     scene->SetBackgroud(0.69, 0.95, 1.00);
 
-    
     auto Dcamera = CreateCamera(scene, defaultCam);
     Dcamera->SetEye(-6, 2, -20);
     Dcamera->SetCenter(0, 0, 100);
     Dcamera->SetUp(0, 1, 0);
     
+    /*
+    * Add here the nodes - Grid, and XYZ axis 
+    */
     
-    auto camera = CreateCamera(scene, Cam1);
 
-    camera->SetEye(5, 5, 5);
-    camera->SetCenter(0.5, 0.5, 0);
-    camera->SetUp(0, 1, 0);
-    camera->SetActive(true);
-
-    //scene->AddNode(CreateSun());          //Dosen't work!!
-    scene->AddNode(CreateRoad());
-    scene->AddNode(CreateShip());
-    scene->AddNode(CreateJeep());
+    //scene->AddNode(CreateJeep());
 }
 //TODO FIXME
 void Fr_GL3Window::draw() {
@@ -403,7 +183,6 @@ void Fr_GL3Window::draw() {
     else {
         Fl_Window::draw();
         updateGLFWWindow();
-        // printf("not overlay%i\n", counter);
         counter++;
     }
     Fl::flush();
@@ -451,7 +230,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
-
 }
 
 int Fr_GL3Window::embeddGLfwWindow()
@@ -499,16 +277,13 @@ int Fr_GL3Window::releaseGLfwWindow()
     UpdateWindow(glfwHND);
     ShowWindow(glfwHND, SW_SHOW);
     return 1;//everything is OK.
-
 }
 
 int Fr_GL3Window::createGLFWwindow()
 {
 
-    int result = 0;
-
     //***********************************************************************************************
-        // glfw: initialize and configure
+    // glfw: initialize and configure
     // ------------------------------
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -543,31 +318,7 @@ int Fr_GL3Window::createGLFWwindow()
     }
     s_GladInitialized = true;
     FR::s_GladInitialized = true;
-    //glGenVertexArrays(1, &VAO);
-    //glGenBuffers(1, &VBO);
-    //// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-    //glBindVertexArray(VAO);
-    //
-    //glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(TriangleVertices), TriangleVertices, GL_STATIC_DRAW);
-    //
-    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    //glEnableVertexAttribArray(0);
-    //
-    //// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-    //glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
-    // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-    //glBindVertexArray(0);
-
-    // uncomment this call to draw in wireframe polygons.
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-    // render loop
-
-
-   embeddGLfwWindow();
+    embeddGLfwWindow();
 
     //***************************************************
 
@@ -580,10 +331,8 @@ int Fr_GL3Window::createGLFWwindow()
     glfwSetCursorEnterCallback(pWindow, cursor_enter_callback);
     glfwSetMouseButtonCallback(pWindow, mouse_button_callback);
     glfwSetScrollCallback(pWindow, scroll_callback);
-    //glfwSetJoystickCallback(joystick_callback);
-    result = 1;
-
-    return result;
+    glfwSetJoystickCallback(joystick_callback);
+    return 1;
 }
 
 int Fr_GL3Window::updateGLFWWindow()
@@ -594,7 +343,6 @@ int Fr_GL3Window::updateGLFWWindow()
     if (s_GladInitialized) {
         glad_glFlush();
     }
-
     return 0;
 }
 
@@ -658,6 +406,7 @@ void Fr_GL3Window::resizable(Fl_Widget* w)
 {
     Fl_Window::resizable(w);
 }
+
 /**
 * Run the application . This is a replacer of Fl:run.
 * We need to make our own since FLTK will not be involved
@@ -668,14 +417,7 @@ void Fr_GL3Window::resizable(Fl_Widget* w)
 */
 int Fr_GL3Window::GLFWrun()
 {
-    //TODO DOSENT WORK .. WHY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //Fl::add_timeout(1, redrawFLTKTimer_cb, pfltkWindow);       // 24fps timer
-    //Fl::wait(1);
-    //shaderProgram = CreateShader(vertexShaderSource, fragmentShaderSource);
-
-
-
-    CreateScene();
+    CreateScene();   //Main drawing process.
     glfwSwapInterval(1);
     glfwMakeContextCurrent(pWindow);
     while (!glfwWindowShouldClose(pWindow))
@@ -685,8 +427,6 @@ int Fr_GL3Window::GLFWrun()
         if (oldTime == 0) {
             oldTime = newTime;
         }
-
-        //glUseProgram(shaderProgram);
         double delta = newTime - oldTime;
         oldTime = newTime;
         fltktimerValue = fltktimerValue + delta;
@@ -695,19 +435,9 @@ int Fr_GL3Window::GLFWrun()
             redrawFLTKTimer_cb(this);
             Fl::flush();
         }
-        /*
-        // render
-        Instrumentor::Get().BeginSession("RenderScene");        // Begin session 
-        {
-        InstrumentationTimer timer("RenderScene");   // Place code like this in scopes you'd like to include in profiling
-        scene->RenderScene();
-        glfwSwapBuffers(pWindow);
-        }
-        
-        Instrumentor::Get().EndSession();                        // End Session      */
+
         glClearColor(0.9, 0.8f, 0.8f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-
         scene->RenderScene();
         glfwPollEvents();
     }

@@ -31,14 +31,13 @@ public:
      * Sets the background color
      */ 
     void SetBackgroud(float r, float g, float b);
-
     void SetBackgroud(float r, float g, float b, float alfa);
 
     /**
      * Renders the scene
      * Throws runtime_error if there's no camera
      */
-    void RenderScene();
+    virtual void RenderScene();
     static GLFWwindow*linkToglfw;
 
 private:

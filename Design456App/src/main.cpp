@@ -30,8 +30,8 @@
 
 int main(int argc, char** argv)
 {
-    Fr_GL3Window* Design456App = Create_App();
-    
-    win->GLFWrun();
+    Application* Design456App = new Application();
+    Design456App->show();
+    Design456App->GLFWrun();
     //return FakeMain(argc, argv);
 }

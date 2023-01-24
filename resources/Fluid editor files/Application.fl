@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0400
+version 1,0400
 header_name {.h}
 code_name {.cxx}
 decl {\#include<Fr_Core.h>
@@ -10,9 +10,9 @@ Function {Create_App()} {open return_type {Fr_GL3Window*}
 } {
   Fl_Window pfltkWindow {
     label Design456App open
-    xywh {8 32 1530 800} type Single visible
+    xywh {7 32 1530 800} type Single hide resizable
   } {
-    Fl_Menu_Bar {} {
+    Fl_Menu_Bar {} {open selected
       xywh {0 0 1540 30}
     } {
       Submenu {} {
@@ -187,11 +187,11 @@ Function {Create_App()} {open return_type {Fr_GL3Window*}
         xywh {70 70 28 19}
       } {
         MenuItem {} {
-          label {&Help}
-          xywh {130 130 28 19}
+          label {&Help                           }
+          xywh {130 130 28 19} shortcut 0xffbe
         }
         MenuItem {} {
-          label About
+          label {About                           }
           xywh {120 120 28 19}
         }
       }
@@ -257,7 +257,7 @@ Function {Create_App()} {open return_type {Fr_GL3Window*}
         }
       }
       Fl_Group {} {
-        label Advanced open
+        label Advanced
         xywh {0 55 1539 90} labelsize 12 hide
       } {
         Fl_Button btnParaboloid {
@@ -266,27 +266,32 @@ Function {Create_App()} {open return_type {Fr_GL3Window*}
         }
       }
       Fl_Group {} {
-        label Alignment open
-        xywh {0 55 1539 90} labelsize 12
+        label Alignment
+        xywh {0 55 1539 90} labelsize 12 hide
       } {
         Fl_Button btnAlignToPlane {
-          callback {createAlignToPlane_cb();} selected
-          image {../../resources/icons/46/AlignToPlane.png} xywh {15 67 46 46} align 16
+          callback {createAlignToPlane_cb();}
+          image {../../resources/icons/46/AlignToPlane.png} xywh {5 57 46 46} align 16
         }
       }
       Fl_Group {} {
-        label Operations
-        xywh {0 55 1539 90} labelsize 12 hide
-      } {}
+        label Operations open
+        xywh {0 55 1539 90} labelsize 12
+      } {
+        Fl_Button btnExtract {
+          callback {createExtract_cb();}
+          image {../../resources/icons/46/Extract.png} xywh {5 57 46 46} align 16
+        }
+      }
     }
-    Fl_Tile {} {open
-      xywh {0 151 1529 617}
+    Fl_Tile {} {
+      xywh {0 151 1529 617} resizable
     } {
       Fl_Group {} {open
         xywh {0 152 265 625}
       } {}
       Fl_Group grpFLGW {open
-        xywh {266 152 1264 613}
+        xywh {266 152 1264 613} resizable
       } {
         Fl_Wizard pWindow {open
           xywh {266 152 1264 613} box NO_BOX
