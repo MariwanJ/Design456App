@@ -31,7 +31,7 @@
 
 #include<frtk.h>
 #include<Fr_Core.h>
-#include "Node.h"
+#include <Node.h>
 
 /**
  * A container for other nodes
