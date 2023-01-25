@@ -77,8 +77,12 @@ public:
     int releaseGLfwWindow();
     virtual GLFWwindow* getCurrentGLWindow();
     virtual void reset(void);
+
     virtual void resizeGlWindow(float ratio);
     virtual void resizeGlWindow(int x, int y, int w, int h);
+    void setOpenGLWinowSize(int xGL, int yGL, int wGL, int hGL);
+
+
     virtual void CreateScene();  //Must be overriden to get the desired results
     virtual std::shared_ptr<Camera> CreateCamera(Group* parent, int cameraId);
     virtual std::shared_ptr<Transform> CreateSun();
@@ -96,7 +100,6 @@ public:
     static float fltktimerValue;
     static double oldTime;
     static double newTime;
-    void setOpenGLWinowSize(int xGL, int yGL, int wGL, int hGL);
 
     static Scene* scene;
     std::vector<cam> cameras;

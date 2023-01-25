@@ -436,7 +436,7 @@ int Fr_GL3Window::GLFWrun()
             Fl::flush();
         }
 
-        glClearColor(0.9, 0.8f, 0.8f, 1.0f);
+        glClearColor(0.6, 0.6, 0.5, 1.0);  //From Wings3d
         glClear(GL_COLOR_BUFFER_BIT);
         scene->RenderScene();
         glfwPollEvents();

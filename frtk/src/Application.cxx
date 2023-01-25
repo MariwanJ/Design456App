@@ -202,11 +202,8 @@ Fl_Menu_Item menu_[] = {
  {0,0,0,0,0,0,0,0,0}
 };
 
-Application::Application():Fr_GL3Window(0, 0, 1530, 800, "Design456App"){
-    //Default constructor if nothing is given
-}
 
-Application::Application(int x, int y, int w, int h, char* l) :Fr_GL3Window(0, 0, 1530, 800, "Design456App") {
+Application::Application(int x, int y, int w, int h, char* l) :Fr_GL3Window(x,y,w,h,l) {
     begin(); {
         barMenu = new Fl_Menu_Bar(0, 0, 1540, 30);
         barMenu->menu(menu_);
