@@ -1,10 +1,31 @@
-/**
- * PUC-Rio 2015.2
- * INF1339 - Computação Gráfica Tridimensional
- * Professor: Waldemar Celes
- * Gabriel de Quadros Ligneul 1212560
- * Trabalho - Projeto Final
- */
+//
+// This file is a part of the Open Source Design456App
+// MIT License
+//
+// Copyright (c) 2023
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//  Original Author : Gabriel de Quadros  https://github.com/gligneul
+//  Modified to use with this project by :
+//  Author :Mariwan Jalal    mariwan.jalal@gmail.com
+//
+
 
 #include <Scene.h>
 GLFWwindow* Scene::linkToglfw=nullptr;
@@ -30,7 +51,7 @@ void Scene::SetBackgroud(float r, float g, float b,float alfa) {
 * This is a general process  for drawing camera, shadow map, render shape /faces ..etc
 */
 void Scene::RenderScene() {
-    
+
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -49,7 +70,7 @@ void Scene::RenderScene() {
     glViewport(0, 0, render_info.shadowmap.width, render_info.shadowmap.height);
     glClear(GL_DEPTH_BUFFER_BIT);
     RenderShadowMap(render_info.shadowmap, render_info.shadowmap.modelview);
-    
+
     //Render faces/shapes
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_framebuffer);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -59,7 +80,7 @@ void Scene::RenderScene() {
     render_info.id = 0;
     render_info.render_transparent = true;
     Render(render_info, render_info.modelview);
-    
+
     glDrawArrays(GL_TRIANGLES, 0, render_info.shadowmap.width);
     glBindVertexArray(0); // no need to unbind it every time
 
