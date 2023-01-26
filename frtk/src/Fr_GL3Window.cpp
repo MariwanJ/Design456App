@@ -388,8 +388,6 @@ void Fr_GL3Window::resize(int x, int y, int w, int h)
 {
     Fl_Window::resize(x, y, w, h);
     float _ratio = float(w * h)/float(Ow * Oh) ;  /// Calculate ratio of resized of window 
-    //std::cout << "ratio= " << _ratio << std::endl;
-    //printf("ratio= %f\n", _ratio);
     if (s_GladInitialized) {
         if (_ratio !=0)
             resizeGlWindow(_ratio);
