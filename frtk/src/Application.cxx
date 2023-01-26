@@ -203,7 +203,7 @@ Fl_Menu_Item menu_[] = {
 };
 
 
-Application::Application(int x, int y, int w, int h, char* l) :Fr_GL3Window(x,y,w,h,l) {
+Application::Application(int x, int y, int w, int h, const char* l) :Fr_GL3Window(x,y,w,h,l) {
     begin(); {
         barMenu = new Fl_Menu_Bar(0, 0, 1540, 30);
         barMenu->menu(menu_);
@@ -323,20 +323,24 @@ Application::Application(int x, int y, int w, int h, char* l) :Fr_GL3Window(x,y,
         tabToolbars->end();
 
         tilMainWindow = new Fl_Tile(0, 151, 1529, 617);
-        tilGToolBars = new Fl_Group(0, 152, 265, 625);
+        tilGToolBars = new Fl_Group(0, 151, 265, 617);
         tilGToolBars->begin();
         {
+            Fl_Button t(0, 151, 265, 625, "");
             //TODO .: aDD HERE WIDGET TOOLS LIKE IN THE WORKBENCH
         }
         tilGToolBars->end();
 
-        tilGglfw = new Fl_Group(266, 152, 1264, 613);
+        tilGglfw = new Fl_Group(265, 151, 1264, 617);
         tilGglfw->begin();
         {
-            setOpenGLWinowSize(266, 152, 1264, 613);
+            setOpenGLWinowSize(265, 151, 1264, 617);
         }
+
         tilGglfw->end();
-        Fl_Group::current()->resizable(grpFLGW);
+        tilMainWindow->resizable(tilGglfw);
+        tilMainWindow->end();
+        //Fl_Group::current()->resizable(grpFLGW);
     }
     end();
 }

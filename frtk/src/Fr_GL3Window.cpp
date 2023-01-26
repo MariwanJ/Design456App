@@ -72,7 +72,6 @@ static void redrawFLTKTimer_cb(void* window) {
     Fr_GL3Window* win = (Fr_GL3Window*)window;
     win->damage(FL_DAMAGE_ALL);
     win->draw();
-    Fl::repeat_timeout(redrawFPS, redrawFLTKTimer_cb, (void*)win);
 }
 
 
@@ -169,7 +168,7 @@ void Fr_GL3Window::CreateScene()
     */
     
 
-    //scene->AddNode(CreateJeep());
+    scene->AddNode(CreateGrid());
 }
 //TODO FIXME
 void Fr_GL3Window::draw() {
@@ -389,7 +388,8 @@ void Fr_GL3Window::resize(int x, int y, int w, int h)
 {
     Fl_Window::resize(x, y, w, h);
     float _ratio = float(w * h)/float(Ow * Oh) ;  /// Calculate ratio of resized of window 
-    printf("ratio= %f\n", _ratio);
+    //std::cout << "ratio= " << _ratio << std::endl;
+    //printf("ratio= %f\n", _ratio);
     if (s_GladInitialized) {
         if (_ratio !=0)
             resizeGlWindow(_ratio);

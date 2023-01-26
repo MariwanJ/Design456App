@@ -6,9 +6,10 @@
 #include<Fr_Core.h>
 #include<Fr_GL3Window.h>
 
+
 class Application : public Fr_GL3Window {
 public:
-    Application(int x = 0, int y = 0, int w = 1530, int h = 800, char* l = "Design456App");
+    Application(int x = 0, int y = 0, int w = 1530, int h = 800, const char* l = "Design456App");
     ~Application();
     
     int run(int argc, char** argv);
