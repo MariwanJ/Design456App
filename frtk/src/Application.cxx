@@ -6,7 +6,7 @@
 
 /*
 
-    GLFW CALLBACKS 
+    GLFW CALLBACKS
 */
 
 
@@ -37,9 +37,9 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
     int state = 0; //TODO FIXME DONT KNOW WHAT TO WRITE
     int button = -1;
     if (FR::glfw_MouseButton == GLFW_MOUSE_BUTTON_LEFT)
-        button = 0;//TODO FIDME 
+        button = 0;//TODO FIDME
     else if (FR::glfw_MouseButton == GLFW_MOUSE_BUTTON_RIGHT)
-        button = 1;//TODO FIDME 
+        button = 1;//TODO FIDME
 
     double cposx, cposy;
     glfwGetCursorPos(win, &cposx, &cposy);
@@ -133,7 +133,7 @@ static Fl_Image* image_Polygon() {
 }
 
 static void cb_btnBox(Fl_Button*, void*) {
-    
+
 }
 
 static Fl_Image* image_Box() {
@@ -171,7 +171,7 @@ Fl_Menu_Item menu_[] = {
  {"Show Ground Plane                  ", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"Show Active Plane", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {0,0,0,0,0,0,0,0,0},
- {"&Toolbars                          ", 0,  0, 0, 64, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {"&Toolbar                          ", 0,  0, 0, 64, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"Main Toolbar                       ", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"Selection Toolbar                  ", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"View Option Toolbar                ", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
@@ -206,12 +206,12 @@ Fl_Menu_Item menu_[] = {
 Application::Application(int x, int y, int w, int h, const char* l) :Fr_GL3Window(x,y,w,h,l) {
     begin(); {
         barMenu = new Fl_Menu_Bar(0, 0, 1540, 30);
-        barMenu->menu(menu_);
+        //barMenu->menu(menu_);
         barStatus = new Fl_Menu_Bar(0, 767, 1536, 25);
         tabToolbars = new Fl_Tabs(0, 30, 1540, 121);
         tabToolbars->labelsize(10);
         tabToolbars->begin(); {
-            grp2DPrimatives = new Fl_Group(0, 55, 1539, 90, "2D Primatives");
+            grp2DPrimatives = new Fl_Group(0, 55, 1539, 90, "2D Primitives");
             grp2DPrimatives->labelsize(12);
             grp2DPrimatives->hide();
             grp2DPrimatives->begin(); {
@@ -310,7 +310,7 @@ Application::Application(int x, int y, int w, int h, const char* l) :Fr_GL3Windo
 
             grpOperations = new Fl_Group(0, 55, 1539, 90, "Operations");
             grpOperations->labelsize(12);
-            grpOperations->begin(); 
+            grpOperations->begin();
             {
                 btnExtract = new Fl_Button(5, 57, 46, 46);
                 btnExtract->image(image_Extract());
@@ -341,6 +341,7 @@ Application::Application(int x, int y, int w, int h, const char* l) :Fr_GL3Windo
         tilMainWindow->resizable(tilGglfw);
         tilMainWindow->end();
         //Fl_Group::current()->resizable(grpFLGW);
+        resizable(this);
     }
     end();
 }

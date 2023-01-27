@@ -32,7 +32,7 @@
 //Remove me later : TODO
 #include<Mesh.h>
 #include<ToonShaderNode.h>
-//End remove me later 
+//End remove me later
 
 GLuint m_QuadVA, m_QuadVB, m_QuadIB;
 bool s_GLFWInitialized;
@@ -154,7 +154,7 @@ GLFWwindow* Fr_GL3Window::getCurrentGLWindow()
 }
 void Fr_GL3Window::CreateScene()
 {
-    scene = new Scene();//Save a link to the windows also. 
+    scene = new Scene();//Save a link to the windows also.
     scene->linkToglfw = pWindow;
     scene->SetBackgroud(0.69, 0.95, 1.00);
 
@@ -162,13 +162,14 @@ void Fr_GL3Window::CreateScene()
     Dcamera->SetEye(-6, 2, -20);
     Dcamera->SetCenter(0, 0, 100);
     Dcamera->SetUp(0, 1, 0);
-    
+
     /*
-    * Add here the nodes - Grid, and XYZ axis 
+    * Add here the nodes - Grid, and XYZ axis
     */
-    
+
 
     scene->AddNode(CreateGrid());
+
 }
 //TODO FIXME
 void Fr_GL3Window::draw() {
@@ -387,7 +388,7 @@ void Fr_GL3Window::gladEvents(int events)
 void Fr_GL3Window::resize(int x, int y, int w, int h)
 {
     Fl_Window::resize(x, y, w, h);
-    float _ratio = float(w * h)/float(Ow * Oh) ;  /// Calculate ratio of resized of window 
+    float _ratio = float(w * h)/float(Ow * Oh) ;  /// Calculate ratio of resized of window
     if (s_GladInitialized) {
         if (_ratio !=0)
             resizeGlWindow(_ratio);
@@ -443,7 +444,7 @@ int Fr_GL3Window::GLFWrun()
 }
 std::shared_ptr<Camera> Fr_GL3Window::CreateCamera(Group* parent, int cameraId)
 {
-        camera = std::make_shared<Camera>();   //Shared pointer to the camera, 
+        camera = std::make_shared<Camera>();   //Shared pointer to the camera,
         camera->SetPerspective(40, 0.5, 50);
         camera->SetActive(false);
         parent->AddNode(camera);
