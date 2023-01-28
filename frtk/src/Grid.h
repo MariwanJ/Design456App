@@ -5,7 +5,7 @@
 #include <Transform.h>
 #include <Mesh.h>
 #include <Node.h>
-
+#include <Light.h>
 std::shared_ptr<Transform>CreateGrid();
 
 class Grid :public Node

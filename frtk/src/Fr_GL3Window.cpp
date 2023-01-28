@@ -158,8 +158,29 @@ void Fr_GL3Window::CreateScene()
     * Add here the nodes - Grid, and XYZ axis
     */
     scene->AddNode(Dcamera);
-    Dcamera->SetActive(true);
+     Dcamera->SetActive(true);
+
+
+    
+
+    auto rightlight_spot = std::make_shared<Light>();
+    rightlight_spot->SetActive(true);
+    rightlight_spot->SetPosition(2.956, -0.514, 1.074);
+    rightlight_spot->SetupSpot(1, 0, -0.1, 45, 16);
+    rightlight_spot->SetDiffuse(0, 0, 0);
+    rightlight_spot->SetAmbient(0.42, 0.42, 0.42);
+    rightlight_spot->SetAttenuation(1, 0.002, 0);
+
+
+
+    
+
+
+    //scene->AddNode(rightlight_spot);
+
     scene->AddNode(CreateGrid());
+
+
 }
 
 //TODO FIXME
@@ -432,7 +453,7 @@ int Fr_GL3Window::GLFWrun()
             Fl::flush();
         }
 
-        glClearColor(0.6, 0.6, 0.5, 1.0);  //From Wings3d
+        glClearColor(FR_LEMONCHIFFON); 
         glClear(GL_COLOR_BUFFER_BIT);
 
         scene->RenderScene();
