@@ -705,7 +705,7 @@ int Fr_GL3Window::GLFWrun()
         }
         
         Instrumentor::Get().EndSession();                        // End Session      */
-        glClearColor(0.9, 0.8f, 0.8f, 1.0f);
+        glClearColor (FR_LAVENDER);
         glClear(GL_COLOR_BUFFER_BIT);
 
         scene->RenderScene();
