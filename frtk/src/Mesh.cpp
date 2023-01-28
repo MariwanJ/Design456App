@@ -37,15 +37,15 @@ Mesh::Mesh(const std::string& path) :
 
 Mesh::~Mesh() {
     if (vao_ != 0) {
-        glDeleteVertexArrays(1, &vao_);
-        glDeleteBuffers(3, vbo_);
+        glCheckFunc(glDeleteVertexArrays(1, &vao_));
+        glCheckFunc(glDeleteBuffers(3, vbo_));
     }
 }
 
 void Mesh::Draw() {
-    glBindVertexArray(vao_);
-    glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
+    glCheckFunc(glBindVertexArray(vao_));
+    glCheckFunc(glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0));
+    glCheckFunc(glBindVertexArray(0));
 }
 
 void Mesh::GetMesh(std::vector<float>& vertices, std::vector<float>& normals,
@@ -225,26 +225,23 @@ void Mesh::InitializeVBO(const std::vector<float>& vertices,
         const std::vector<float>& normals,
         const std::vector<unsigned int> indices) {
 
-    glGenBuffers(3, vbo_);
-    glGenVertexArrays(1, &vao_);
-    glBindVertexArray(vao_);
+    glCheckFunc(glGenBuffers(3, vbo_));
+    glCheckFunc(glGenVertexArrays(1, &vao_));
+    glCheckFunc(glBindVertexArray(vao_));
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(),
-            vertices.data(), GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]));
+    glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW));
+    glCheckFunc(glEnableVertexAttribArray(0));
+    glCheckFunc(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL));
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * normals.size(), 
-            normals.data(), GL_STATIC_DRAW);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]));
+    glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * normals.size(), normals.data(), GL_STATIC_DRAW));
+    glCheckFunc(glEnableVertexAttribArray(1));
+    glCheckFunc(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL));
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[2]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
-             indices.data(), GL_STATIC_DRAW);
+    glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[2]));
+    glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW));
 
-    glBindVertexArray(0);
+    glCheckFunc(glBindVertexArray(0));
 }
 

@@ -26,12 +26,9 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 #include <cmath>
-
 #include <glm/gtx/transform.hpp>
-
-#include "Manipulator.h"
-
-#include "Transform.h"
+#include <Manipulator.h>
+#include <Transform.h>
 
 Transform::Transform() :
     manipulator_{nullptr} {
@@ -44,8 +41,7 @@ void Transform::LoadIndentity() {
 }
 
 void Transform::Rotate(float angle, float x, float y, float z) {
-    matrix_ = glm::rotate(matrix_, (float)(angle * M_PI / 180.0),
-            glm::vec3(x, y, z));
+    matrix_ = glm::rotate(matrix_, (float)(angle * M_PI / 180.0), glm::vec3(x, y, z));
     inverse_ = glm::inverse(matrix_);
 }
 
@@ -76,8 +72,7 @@ bool Transform::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
     return false;
 }
 
-void Transform::SetupLight(const glm::mat4& modelview,
-        std::vector<LightInfo>& lights) {
+void Transform::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) {
     if (!active_)
         return;
 
@@ -100,8 +95,7 @@ bool Transform::SetupShadowMap(ShadowMapInfo& info) {
     return false;
 }
 
-void Transform::RenderShadowMap(ShadowMapInfo& info,
-        const glm::mat4& modelview) {
+void Transform::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) {
     if (!active_)
         return;
 

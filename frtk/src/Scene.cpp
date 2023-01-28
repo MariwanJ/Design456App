@@ -51,49 +51,34 @@ void Scene::SetBackgroud(float r, float g, float b,float alfa) {
 * This is a general process  for drawing camera, shadow map, render shape /faces ..etc
 */
 void Scene::RenderScene() {
-
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glCheckFunc( glEnable(GL_DEPTH_TEST));
+    glCheckFunc( glEnable(GL_BLEND));
+    glCheckFunc( glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
     RenderInfo render_info;
     //Create camera if required
     if (!SetupCamera(render_info.projection, render_info.modelview)) 
-        ;// throw std::runtime_error("Scene::Render(): Camera not found");         #TODO FIX THAT!!!
+        throw std::runtime_error("Scene::Render(): Camera not found");        // #TODO FIX THAT!!!
 
     SetupLight(render_info.modelview, render_info.lights);
     int draw_framebuffer = 0;
-    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &draw_framebuffer);
-
+    glCheckFunc(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &draw_framebuffer));
+    
     //render shadow map
-    SetupShadowMap(render_info.shadowmap);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, render_info.shadowmap.framebuffer);
-    glViewport(0, 0, render_info.shadowmap.width, render_info.shadowmap.height);
-    glClear(GL_DEPTH_BUFFER_BIT);
-    RenderShadowMap(render_info.shadowmap, render_info.shadowmap.modelview);
-
+    if(SetupShadowMap(render_info.shadowmap)) {
+        glCheckFunc( glBindFramebuffer(GL_DRAW_FRAMEBUFFER, render_info.shadowmap.framebuffer));
+        glCheckFunc( glViewport(0, 0, render_info.shadowmap.width, render_info.shadowmap.height));
+        glCheckFunc( glClear(GL_DEPTH_BUFFER_BIT));
+        RenderShadowMap(render_info.shadowmap, render_info.shadowmap.modelview);
+    }
     //Render faces/shapes
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_framebuffer);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glCheckFunc(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_framebuffer));
+    glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
     render_info.id = 0;
     render_info.render_transparent = false;
     Render(render_info, render_info.modelview);
     render_info.id = 0;
     render_info.render_transparent = true;
     Render(render_info, render_info.modelview);
-
-    glDrawArrays(GL_TRIANGLES, 0, render_info.shadowmap.width);
-    glBindVertexArray(0); // no need to unbind it every time
-
-    // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-    // -------------------------------------------------------------------------------
-    if (linkToglfw!=nullptr){
-    glfwSwapBuffers(linkToglfw);
-    glfwPollEvents();
-    //glad_glFlush();
-    }
-    else {
-        std::cout << "link to glfw not defined\n";
-    }
 }
 

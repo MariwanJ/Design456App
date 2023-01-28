@@ -12,7 +12,7 @@ Function {Create_App()} {open return_type {Fr_GL3Window*}
     label Design456App open
     xywh {7 32 1530 800} type Single hide resizable
   } {
-    Fl_Menu_Bar {} {open selected
+    Fl_Menu_Bar {} {open
       xywh {0 0 1540 30}
     } {
       Submenu {} {
@@ -204,7 +204,7 @@ Function {Create_App()} {open return_type {Fr_GL3Window*}
     } {
       Fl_Group {} {
         label {2D Primatives}
-        xywh {0 55 1539 90} labelsize 12 hide
+        xywh {0 55 1539 90} labelsize 12
       } {
         Fl_Button btnPoint {
           callback {createPoint_cb();}
@@ -276,7 +276,7 @@ Function {Create_App()} {open return_type {Fr_GL3Window*}
       }
       Fl_Group {} {
         label Operations open
-        xywh {0 55 1539 90} labelsize 12
+        xywh {0 55 1539 90} labelsize 12 hide
       } {
         Fl_Button btnExtract {
           callback {createExtract_cb();}
@@ -293,7 +293,7 @@ Function {Create_App()} {open return_type {Fr_GL3Window*}
       Fl_Group grpFLGW {open
         xywh {266 152 1264 613} resizable
       } {
-        Fl_Wizard pWindow {open
+        Fl_Wizard pWindow {open selected
           xywh {266 152 1264 613} box NO_BOX
           class GLFWwindow
         } {}

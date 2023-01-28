@@ -25,27 +25,26 @@
 //  Modified to use with this project by :
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-#ifndef TOONSHADERNODE_H
-#define TOONSHADERNODE_H
+#ifndef OBJECTSHADERNODE_H
+#define OBJECTSHADERNODE_H
 
 #include <memory>
-
-#include "Node.h"
+#include <Node.h>
 
 class Mesh;
 class ShaderProgram;
 
-class ToonShaderNode : public Node {
+class ObjectShaderNode : public Node {
 public:
     /**
      * Constructor
      */
-    ToonShaderNode(unsigned int color = 0x111111, float silhouette = 0.005);
+    ObjectShaderNode(unsigned int color = 0x111111, float silhouette = 0.005);
 
     /**
      * Destructor
      */
-    ~ToonShaderNode();
+    ~ObjectShaderNode();
 
     /**
      * Sets the color
@@ -93,8 +92,8 @@ private:
 
     // Shared between instances
     struct Shared {
-        ShaderProgram *toon_program;
-        ShaderProgram *silhouette_program;
+        ShaderProgram *object_program;
+        ShaderProgram *silhouette_program;          //the dark shape and outline of object
         ShaderProgram *shadowmap_program;
     };
     static Shared *shared_;

@@ -6,7 +6,7 @@
  * Trabalho - Projeto Final
  */
 
-#version 130
+#version 330 core
 
 struct LightInfo {
     vec4 position;

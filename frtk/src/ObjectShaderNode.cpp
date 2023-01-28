@@ -28,10 +28,10 @@
 #include <glm/gtx/transform.hpp>
 #include "Mesh.h"
 #include "ShaderProgram.h"
-#include "ToonShaderNode.h"
-#include<glad/glad.h>
+#include "ObjectShaderNode.h"
+#include <glad/glad.h>
 
-ToonShaderNode::Shared *ToonShaderNode::shared_ = nullptr;
+ObjectShaderNode::Shared *ObjectShaderNode::shared_ = nullptr;
 
 static const glm::mat4 kShadowMapBiasMatrix(
     0.5, 0.0, 0.0, 0.0,
@@ -39,22 +39,22 @@ static const glm::mat4 kShadowMapBiasMatrix(
     0.0, 0.0, 0.5, 0.0,
     0.5, 0.5, 0.5, 1.0);
 
-ToonShaderNode::ToonShaderNode(unsigned int color, float silhouette) :
+ObjectShaderNode::ObjectShaderNode(unsigned int color, float silhouette) :
     mesh_{nullptr},
     silhouette_(silhouette) {
     SetColor(color);
     if (!shared_) {
         shared_ = new Shared;
-        shared_->toon_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/toonshader");
+        shared_->object_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/objectshader");
         shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
         shared_->shadowmap_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/shadowmap");
     }
 }
 
-ToonShaderNode::~ToonShaderNode() {
+ObjectShaderNode::~ObjectShaderNode() {
 }
 
-void ToonShaderNode::SetColor(unsigned int color, float alpha) {
+void ObjectShaderNode::SetColor(unsigned int color, float alpha) {
     color_ = glm::vec4(
        ((color >> 16) & 0xFF) / 255.0f,
        ((color >> 8) & 0xFF) / 255.0f,
@@ -63,20 +63,19 @@ void ToonShaderNode::SetColor(unsigned int color, float alpha) {
     );
 }
 
-void ToonShaderNode::SetOpacity(float alpha) {
+void ObjectShaderNode::SetOpacity(float alpha) {
     color_.a  = alpha;
 }
 
-void ToonShaderNode::SetMesh(std::shared_ptr<Mesh> mesh) {
+void ObjectShaderNode::SetMesh(std::shared_ptr<Mesh> mesh) {
     mesh_ = mesh;
 }
 
-void ToonShaderNode::SetMesh(const std::string& mesh) {
+void ObjectShaderNode::SetMesh(const std::string& mesh) {
     mesh_ = std::make_shared<Mesh>(mesh);
 }
 
-void ToonShaderNode::LoadLights(ShaderProgram *program,
-        const std::vector<LightInfo>& lights) {
+void ObjectShaderNode::LoadLights(ShaderProgram *program, const std::vector<LightInfo>& lights) {
     unsigned int nlights = std::min(lights.size(), kMaxLights);
     program->SetUniformInteger("nlights", nlights);
     for (size_t i = 0; i < nlights; ++i) {
@@ -93,7 +92,7 @@ void ToonShaderNode::LoadLights(ShaderProgram *program,
     }
 }
 
-void ToonShaderNode::RenderShadowMap(ShadowMapInfo& info,
+void ObjectShaderNode::RenderShadowMap(ShadowMapInfo& info,
         const glm::mat4& modelview) {
     if (!active_)
         return;
@@ -115,7 +114,7 @@ void ToonShaderNode::RenderShadowMap(ShadowMapInfo& info,
     program->Disable();
 }
 
-void ToonShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
+void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     if (!active_ ||
         (info.render_transparent && color_.a == 1) ||
         (!info.render_transparent && color_.a < 1))
@@ -123,15 +122,16 @@ void ToonShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
 
     auto mvp = info.projection * modelview;
     auto normalmatrix = glm::transpose(glm::inverse(modelview));
-    auto sm_mvp = color_.a == 1 ? info.shadowmap.mvp[info.id] :
-                                  info.shadowmap.mvp_transparent[info.id];
+    ShaderProgram* program = shared_->object_program;
 
-    if (color_.a == 1)
+    //Avoid segmentation fault - Mariwan
+    if (info.shadowmap.mvp.size() > 0 && info.id < info.shadowmap.mvp.size() && info.shadowmap.mvp_transparent.size()>0) {
+        auto sm_mvp = color_.a == 1 ? info.shadowmap.mvp[info.id] : info.shadowmap.mvp_transparent[info.id];
+        program->SetUniformMat4("sm_mvp", kShadowMapBiasMatrix * sm_mvp);
+    }
+        if (color_.a == 1)
         RenderSilhouette(mvp);
-
-    ShaderProgram *program = shared_->toon_program;
     program->Enable();
-
     LoadLights(program, info.lights);
     program->SetAttribLocation("position", 0);
     program->SetAttribLocation("normal", 1);
@@ -139,24 +139,23 @@ void ToonShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     program->SetUniformMat4("normalmatrix", normalmatrix);
     program->SetUniformMat4("mvp", mvp);
     program->SetUniformVec4("color", color_);
-    program->SetUniformMat4("sm_mvp", kShadowMapBiasMatrix * sm_mvp);
     program->SetUniformInteger("sm_light", info.shadowmap.light_id);
     
-    
-    glPushAttrib(GL_TEXTURE_BIT);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture);
-    shared_->toon_program->SetUniformInteger("sm_texture", 0);
+    //TODO FIXME -- THIS IS OLD OPENGL - DOSENT WORK FO RNEW OPENGL
+    //glCheckFunc(glPushAttrib(GL_TEXTURE_BIT));
+    glCheckFunc(glActiveTexture(GL_TEXTURE0));
+    glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));
+    shared_->object_program->SetUniformInteger("sm_texture", 0);
 
     mesh_->Draw();
     program->Disable();
 
-    glPopAttrib();
+    //glPopAttrib();
 
     info.id++;
 }
 
-void ToonShaderNode::RenderSilhouette(const glm::mat4& mvp) {
+void ObjectShaderNode::RenderSilhouette(const glm::mat4& mvp) {
     ShaderProgram *program = shared_->silhouette_program;
     program->Enable();
     program->SetAttribLocation("position", 0);
@@ -166,4 +165,3 @@ void ToonShaderNode::RenderSilhouette(const glm::mat4& mvp) {
     mesh_->Draw();
     program->Disable();
 }
-

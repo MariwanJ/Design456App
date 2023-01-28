@@ -107,7 +107,7 @@ public:
     std::shared_ptr<Camera> camera;
     Manipulator *manipulator;
     static GLFWwindow* pWindow;
-
+    static void deinitializeGlad();
 protected:
     int createGLFWwindow();
     int updateGLFWWindow();

@@ -30,6 +30,8 @@
 
 
 #include <FR.h>
+#include <frtk.h>
+
 #include<Fr_Log.h>
 
 #if defined(__APPLE__)
@@ -47,7 +49,6 @@
 #include <FL/fl_types.h>
 #include <FL/platform.H>
 
-#include <Fr_Core.h>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Menu_Bar.H>
 #include <FL/Fl_Tabs.H>
@@ -68,8 +69,6 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
 #include <../instrumentation/Instrumentor.h>
-
-#include<fr_widgets/fr_basic_shapes.h>
 
 #ifdef _WIN32
     #define DEBUG_BREAK __debugbreak()

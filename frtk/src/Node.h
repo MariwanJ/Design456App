@@ -29,8 +29,8 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include <vector>
-
+#include <frtk.h>
+#include <Fr_Core.h>
 #include <glm/glm.hpp>
 
 /**

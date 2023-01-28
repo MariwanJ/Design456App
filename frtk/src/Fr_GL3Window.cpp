@@ -25,13 +25,11 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-
-
 #include<Fr_GL3Window.h>
 
 //Remove me later : TODO
 #include<Mesh.h>
-#include<ToonShaderNode.h>
+#include<ObjectShaderNode.h>
 //End remove me later
 
 GLuint m_QuadVA, m_QuadVB, m_QuadIB;
@@ -42,20 +40,18 @@ float Fr_GL3Window::fltktimerValue = 0.0;
 
 /*********************************************/
 
-
-
 double Fr_GL3Window::newTime = 0.0;
 double Fr_GL3Window::oldTime = 0.0;
-
 
 /***********************/
 void pfltkWindow_close_cb(Fr_GL3Window* w, void* v) {
     Fr_GL3Window* win = (Fr_GL3Window*)v;
+    win->deinitializeGlad();
     win->exit();
+    exit(0);
 }
 
 GLFWwindow* Fr_GL3Window::pWindow = nullptr;
-
 
 bool Fr_GL3Window::s_GLFWInitialized = false;
 bool Fr_GL3Window::s_GladInitialized = false;
@@ -73,7 +69,6 @@ static void redrawFLTKTimer_cb(void* window) {
     win->damage(FL_DAMAGE_ALL);
     win->draw();
 }
-
 
 static void error_callback(int error, const char* description)
 {
@@ -101,7 +96,6 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Window
     gl_version_minor = 3;
     glfwSetErrorCallback(error_callback);
 
-
     if (!s_GLFWInitialized)
     {
         int success = glfwInit();
@@ -118,14 +112,13 @@ Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Window
 
     pfltkWindow = this;
     pfltkWindow->callback((Fl_Callback*)pfltkWindow_close_cb, (void*)this);
-
 }
+
 /**
 * Force updating both windows
 * TODO:FIXME
 */
 void Fr_GL3Window::flush() {
-    updateGLFWWindow();
     glad_glFlush();
     Fl::flush();
 }
@@ -152,45 +145,42 @@ GLFWwindow* Fr_GL3Window::getCurrentGLWindow()
 {
     return pWindow;
 }
+
 void Fr_GL3Window::CreateScene()
 {
     scene = new Scene();//Save a link to the windows also.
     scene->linkToglfw = pWindow;
-    scene->SetBackgroud(0.69, 0.95, 1.00);
-
     auto Dcamera = CreateCamera(scene, defaultCam);
     Dcamera->SetEye(-6, 2, -20);
     Dcamera->SetCenter(0, 0, 100);
     Dcamera->SetUp(0, 1, 0);
-
     /*
     * Add here the nodes - Grid, and XYZ axis
     */
-
-
+    scene->AddNode(Dcamera);
+    Dcamera->SetActive(true);
     scene->AddNode(CreateGrid());
-
 }
+
 //TODO FIXME
 void Fr_GL3Window::draw() {
     if (overlay) {
         Fl_Window::draw();
-        updateGLFWWindow();
-        //FRTK_CORE_INFO("[DRAW BOTH] {0}");
         printf("overlay%i\n", counter);
         counter++;
     }
     else {
         Fl_Window::draw();
-        updateGLFWWindow();
         counter++;
     }
     Fl::flush();
 }
+
 //TODO FIXME: Do we need this?
 void Fr_GL3Window::reset() {
     shaderProgram = 0;
 }
+
 /**
 *Resize only the GLFW Window.
 */
@@ -200,12 +190,14 @@ void Fr_GL3Window::resizeGlWindow(float ratio)
     _wGl = int(float(_wGl) * ratio);
     _hGl = int(float(_hGl) * ratio);
     updateGLFWWindow();
+
 }
+
 void Fr_GL3Window::resizeGlWindow(int xGl, int yGl, int wGl, int hGl)
 {
     //Use this to resize the GLFW window regardless the ratio
-    _xGl = xGl;
-    _yGl = yGl;
+    _xGl = x()+xGl;
+    _yGl = y()+yGl;
     _wGl = wGl;
     _hGl = hGl;
     updateGLFWWindow();
@@ -244,9 +236,7 @@ int Fr_GL3Window::embeddGLfwWindow()
         printf("Failed to get HWND of the window please debugme!!\n");
         return 0;
     }
-
     DWORD style = GetWindowLong(glfwHND, GWL_STYLE); //get the b style
-
     style &= ~(WS_POPUP | WS_CAPTION); //reset the caption and popup bits
     style |= WS_CHILD; //set the child bit
     style |= WS_OVERLAPPED;
@@ -279,9 +269,13 @@ int Fr_GL3Window::releaseGLfwWindow()
     return 1;//everything is OK.
 }
 
+void Fr_GL3Window::deinitializeGlad()
+{
+    s_GladInitialized = false;
+}
+
 int Fr_GL3Window::createGLFWwindow()
 {
-
     //***********************************************************************************************
     // glfw: initialize and configure
     // ------------------------------
@@ -322,7 +316,7 @@ int Fr_GL3Window::createGLFWwindow()
 
     //***************************************************
 
-    glViewport(_xGl, _yGl, _wGl, _hGl);
+
 
     // GLFW callbacks  https://www.glfw.org/docs/3.3/input_guide.html
     glfwSetFramebufferSizeCallback(pWindow, framebuffer_size_callback);
@@ -337,15 +331,14 @@ int Fr_GL3Window::createGLFWwindow()
 
 int Fr_GL3Window::updateGLFWWindow()
 {
-    //MoveWindow(glfwHND, _xGl, _yGl, _wGl, _hGl, true); //place b at (x,y,w,h) in a
+    MoveWindow(glfwHND, _xGl, _yGl, _wGl, _hGl, true); //place b at (x,y,w,h) in a
     UpdateWindow(glfwHND);
-    RedrawWindow(glfwHND, NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
+    RedrawWindow(glfwHND, NULL, NULL, RDW_FRAME | RDW_INTERNALPAINT);
     if (s_GladInitialized) {
         glad_glFlush();
     }
     return 0;
 }
-
 
 void Fr_GL3Window::setOverlay()
 {
@@ -364,6 +357,7 @@ void Fr_GL3Window::removeOverlya()
 * You need to use Fr_GL3Window::run () to get
 * things running and shown on the screen.
 */
+
 void Fr_GL3Window::show() {
     Fl_Window::show();
     //Create the GLFW Window
@@ -377,11 +371,13 @@ void Fr_GL3Window::show() {
         }
     }
 }
+
 //TODO FIXME:
 void Fr_GL3Window::gladEvents(int events)
 {
      updateGLFWWindow();
 }
+
 /**
 * Resize both windows. FLTK and GLFW. Be aware that you need to set GLFW size before resizing this
 */
@@ -419,6 +415,7 @@ int Fr_GL3Window::GLFWrun()
     CreateScene();   //Main drawing process.
     glfwSwapInterval(1);
     glfwMakeContextCurrent(pWindow);
+    glViewport(0, 0, _wGl, _hGl);
     while (!glfwWindowShouldClose(pWindow))
     {
         //Update FLTK 24 frames/sec
@@ -437,11 +434,16 @@ int Fr_GL3Window::GLFWrun()
 
         glClearColor(0.6, 0.6, 0.5, 1.0);  //From Wings3d
         glClear(GL_COLOR_BUFFER_BIT);
+
         scene->RenderScene();
-        glfwPollEvents();
+        if (s_GladInitialized) {
+        glCheckFunc(glfwSwapBuffers(pWindow));
+        glCheckFunc(glfwPollEvents());
+        }
     }
     return 0;
 }
+
 std::shared_ptr<Camera> Fr_GL3Window::CreateCamera(Group* parent, int cameraId)
 {
         camera = std::make_shared<Camera>();   //Shared pointer to the camera,
@@ -466,14 +468,14 @@ std::shared_ptr<Transform> Fr_GL3Window::CreateSun() {
     sun->AddNode(sun_height);
 
     auto light = std::make_shared<Light>();
-    //light->SetPosition(0, 0, 0);
-    //light->SetDiffuse(0.5, 0.5, 0.5);
-    //light->SetAmbient(1.0, 1., 1.0);
-    //light->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
+    light->SetPosition(0, 0, 0);
+    light->SetDiffuse(0.5, 0.5, 0.5);
+    light->SetAmbient(1.0, 1., 1.0);
+    light->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
     sun_height->AddNode(light);
-
     return std::shared_ptr<Transform>(sun);
 }
+
 void Fr_GL3Window::setOpenGLWinowSize(int xGL, int yGL, int wGL, int hGL)
 {
     _xGl = xGL;

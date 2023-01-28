@@ -141,7 +141,6 @@ bool Light::SetupShadowMap(ShadowMapInfo& info) {
     info.texture = sm_texture_;
     info.width = kShadowmapWidth;
     info.height = kShadowmapHeight;
-
     return true;
 }
 
