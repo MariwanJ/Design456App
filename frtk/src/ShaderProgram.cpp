@@ -103,25 +103,25 @@ void ShaderProgram::CompileShader(int shader_type, const std::string& path) {
     auto shader_str = ReadFile(path);
     auto shader_cstr = shader_str.c_str();
     auto shader = glCreateShader(shader_type);
-    glShaderSource(shader, 1, &shader_cstr, NULL);
-    glCompileShader(shader);
+    glCheckFunc( glShaderSource(shader, 1, &shader_cstr, NULL));
+    glCheckFunc(glCompileShader(shader));
     GLint success = 0;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    glCheckFunc(glGetShaderiv(shader, GL_COMPILE_STATUS, &success));
     if (!success) {
         GLint length = 0;
-        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
+        glCheckFunc(glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length));
         
         char *log=new char(length);
-        glGetShaderInfoLog(shader, length, &length, log);
-        glDeleteShader(shader);
+        glCheckFunc(glGetShaderInfoLog(shader, length, &length, log));
+        glCheckFunc(glDeleteShader(shader));
         throw std::runtime_error(log);
         delete log;
     }
-    glAttachShader(program_, shader);
+    glCheckFunc(glAttachShader(program_, shader));
 }
 
 void ShaderProgram::LinkShader() {
-    glLinkProgram(program_);
+    glCheckFunc( glLinkProgram(program_));
     // TODO verify status
 }
 

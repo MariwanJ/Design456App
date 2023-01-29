@@ -35,11 +35,9 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
             return;
         }
      */
-    int state = 0; //TODO FIXME DONT KNOW WHAT TO WRITE
-    int button = -1;
+    int button;
     if (FR::glfw_MouseButton == GLFW_MOUSE_BUTTON_LEFT){
         button = 0;//TODO FIDME
-        FR::glfw_MouseButton = -1;
     }
     else if (FR::glfw_MouseButton == GLFW_MOUSE_BUTTON_RIGHT)
     {
@@ -56,7 +54,8 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
     FR::glfw_e_y = cposy;
     if (button == 0 || button == 1)
         if (win != nullptr) {
-            FR::globalP_pWindow->cameras[FR::globalP_pWindow->curr_camera].manipulator->GLFWMouse(button, state, cposx, cposy);
+            FR::globalP_pWindow->cameras[FR::globalP_pWindow->curr_camera].manipulator->GLFWMouse(button,FR::glfw_MouseClicked,cposx, cposy);
+            FR::globalP_pWindow->cameras[FR::globalP_pWindow->curr_camera].manipulator->GLFWMotion(cposx, cposy);
             FR::globalP_pWindow->scene->RenderScene();
             button = -1;
         }
@@ -68,6 +67,12 @@ void Fr_GL3Window::cursor_enter_callback(GLFWwindow*, int entered)
 
 void Fr_GL3Window::mouse_button_callback(GLFWwindow* win, int button, int action, int mods)
 {
+    if (GLFW_PRESS == action) {
+        FR::glfw_MouseClicked = 0; //Pressed
+    }
+    else if(GLFW_RELEASE == action){
+        FR::glfw_MouseClicked = 1; //Released
+    }
     FR::glfw_MouseButton = button;
 }
 

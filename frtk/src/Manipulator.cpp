@@ -76,7 +76,7 @@ void Manipulator::SetInvertAxis(bool invertX, bool invertY) {
     invertY_ = invertY;
 }
 
-void Manipulator::GlutMotion(int x, int y) {
+void Manipulator::GLFWMotion(int x, int y) {
     if (operation_ == Operation::kNone)
         return;
 

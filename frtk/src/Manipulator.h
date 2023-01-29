@@ -68,7 +68,7 @@ public:
     /**
      * Mouse motion function
      */
-    void GlutMotion(int x, int y);
+    void GLFWMotion(int x, int y);
 
 private:
     enum class Operation {
