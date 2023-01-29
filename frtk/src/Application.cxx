@@ -37,10 +37,19 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
      */
     int state = 0; //TODO FIXME DONT KNOW WHAT TO WRITE
     int button = -1;
-    if (FR::glfw_MouseButton == GLFW_MOUSE_BUTTON_LEFT)
+    if (FR::glfw_MouseButton == GLFW_MOUSE_BUTTON_LEFT){
         button = 0;//TODO FIDME
+        FR::glfw_MouseButton = -1;
+    }
     else if (FR::glfw_MouseButton == GLFW_MOUSE_BUTTON_RIGHT)
+    {
         button = 1;//TODO FIDME
+        FR::glfw_MouseButton = -1;
+    }
+    else {
+        button = -1;
+        FR::glfw_MouseButton = -1;
+    }
     double cposx, cposy;
     glfwGetCursorPos(win, &cposx, &cposy);
     FR::glfw_e_x = cposx;
@@ -49,6 +58,7 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
         if (win != nullptr) {
             FR::globalP_pWindow->cameras[FR::globalP_pWindow->curr_camera].manipulator->GLFWMouse(button, state, cposx, cposy);
             FR::globalP_pWindow->scene->RenderScene();
+            button = -1;
         }
 }
 
@@ -328,16 +338,15 @@ Application::Application(int x, int y, int w, int h, const char* l) :Fr_GL3Windo
         tilGToolBars->end();
 
         tilGglfw = new Fl_Group(265, 151, 1264, 617);
-        tilGglfw->box(FL_UP_BOX);
+        tilGglfw->box(FL_DOWN_BOX);
         tilGglfw->begin();
         {
-            setOpenGLWinowSize(tilGglfw->x(), tilGglfw->y(), tilGglfw->w(), tilGglfw->h());
+            setOpenGLWinowSize(tilGglfw->x()+68, tilGglfw->y()+39, tilGglfw->w()+313, tilGglfw->h()+149);
         }
         tilGglfw->end();
         tilMainWindow->resizable(tilGglfw);
         tilMainWindow->end();
-        //printf("group %i %i", tilGglfw->x(), tilGglfw->y());
-        //Fl_Group::current()->resizable(grpFLGW);
+
         resizable(this);
     }
     end();

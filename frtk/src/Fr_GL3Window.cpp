@@ -145,11 +145,12 @@ GLFWwindow* Fr_GL3Window::getCurrentGLWindow()
 {
     return pWindow;
 }
-
 void Fr_GL3Window::CreateScene()
 {
     scene = new Scene();//Save a link to the windows also.
+
     scene->linkToglfw = pWindow;
+
     auto Dcamera = CreateCamera(scene, defaultCam);
     Dcamera->SetEye(-6, 2, -20);
     Dcamera->SetCenter(0, 0, 100);
@@ -158,10 +159,7 @@ void Fr_GL3Window::CreateScene()
     * Add here the nodes - Grid, and XYZ axis
     */
     scene->AddNode(Dcamera);
-     Dcamera->SetActive(true);
-
-
-    
+    Dcamera->SetActive(true);
 
     auto rightlight_spot = std::make_shared<Light>();
     rightlight_spot->SetActive(true);
@@ -170,11 +168,6 @@ void Fr_GL3Window::CreateScene()
     rightlight_spot->SetDiffuse(0, 0, 0);
     rightlight_spot->SetAmbient(0.42, 0.42, 0.42);
     rightlight_spot->SetAttenuation(1, 0.002, 0);
-
-
-
-    
-
 
     //scene->AddNode(rightlight_spot);
 
@@ -337,8 +330,6 @@ int Fr_GL3Window::createGLFWwindow()
 
     //***************************************************
 
-
-
     // GLFW callbacks  https://www.glfw.org/docs/3.3/input_guide.html
     glfwSetFramebufferSizeCallback(pWindow, framebuffer_size_callback);
     glfwSetKeyCallback(pWindow, keyboard_callback);
@@ -453,8 +444,9 @@ int Fr_GL3Window::GLFWrun()
             Fl::flush();
         }
 
-        glClearColor(FR_LEMONCHIFFON); 
         glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(FR_LIGHTCYAN); 
+       
 
         scene->RenderScene();
         if (s_GladInitialized) {

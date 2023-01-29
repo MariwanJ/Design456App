@@ -66,6 +66,7 @@ void Scene::RenderScene() {
     
     //render shadow map
     if(SetupShadowMap(render_info.shadowmap)) {
+        glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
         glCheckFunc( glBindFramebuffer(GL_DRAW_FRAMEBUFFER, render_info.shadowmap.framebuffer));
         glCheckFunc( glViewport(0, 0, render_info.shadowmap.width, render_info.shadowmap.height));
         glCheckFunc( glClear(GL_DEPTH_BUFFER_BIT));
