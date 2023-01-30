@@ -1,5 +1,6 @@
 /**
- * PUC-Rio 2015.2
+ * objectShader FS
+ *PUC-Rio 2015.2
  * INF1339 - Computação Gráfica Tridimensional
  * Professor: Waldemar Celes
  * Gabriel de Quadros Ligneul 1212560
@@ -24,9 +25,9 @@ const int MAX_LIGHTS = 8;
 const int NUM_COLORS = 5;
 const vec3 GLOBAL_AMBIENT = vec3(0.2, 0.2, 0.2);
 
-in vec3 frag_position;
-in vec3 frag_normal;
-in vec3 frag_sm_position;
+layout (location=0) in vec3 frag_position;
+layout (location=1) in vec3 frag_normal;
+layout (location=2) in vec3 frag_sm_position;
 
 uniform vec4 color;
 uniform int nlights;
@@ -34,7 +35,7 @@ uniform LightInfo lights[MAX_LIGHTS];
 uniform int sm_light;
 uniform sampler2D sm_texture;
 
-out vec4 frag_color;
+layout (location=0) out vec4 frag_color;
 
 bool is_shadow()
 {

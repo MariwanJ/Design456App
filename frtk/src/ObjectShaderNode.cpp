@@ -145,9 +145,9 @@ void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     //****************************************************************************************FIXME
     //TODO FIXME -- THIS IS OLD OPENGL - DOSENT WORK FO RNEW OPENGL
     //glCheckFunc(glPushAttrib(GL_TEXTURE_BIT));
-   // glCheckFunc(glActiveTexture(GL_TEXTURE0+0));
-   // glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));                THIS CAUSE ISSUE FIXME
-    //shared_->object_program->SetUniformInteger("sm_texture", 0);
+   glCheckFunc(glActiveTexture(GL_TEXTURE0+0));
+  // glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));           //     THIS CAUSE ISSUE FIXME!!!!!!!!!!!!!!!!!!!
+    shared_->object_program->SetUniformInteger("sm_texture", 0);
 
     mesh_->Draw();
     program->Disable();

@@ -160,17 +160,6 @@ void Fr_GL3Window::CreateScene()
     */
     scene->AddNode(Dcamera);
     Dcamera->SetActive(true);
-
-    auto rightlight_spot = std::make_shared<Light>();
-    rightlight_spot->SetActive(true);
-    rightlight_spot->SetPosition(2.956, -0.514, 1.074);
-    rightlight_spot->SetupSpot(1, 0, -0.1, 45, 16);
-    rightlight_spot->SetDiffuse(0, 0, 0);
-    rightlight_spot->SetAmbient(0.42, 0.42, 0.42);
-    rightlight_spot->SetAttenuation(1, 0.002, 0);
-
-    //scene->AddNode(rightlight_spot);
-
     scene->AddNode(CreateGrid());
 
 
@@ -428,6 +417,8 @@ int Fr_GL3Window::GLFWrun()
     glfwSwapInterval(1);
     glfwMakeContextCurrent(pWindow);
     glViewport(0, 0, _wGl, _hGl);
+
+
     while (!glfwWindowShouldClose(pWindow))
     {
         //Update FLTK 24 frames/sec
