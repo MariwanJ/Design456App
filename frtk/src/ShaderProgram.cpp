@@ -28,18 +28,18 @@
 
 #include <glm/gtc/type_ptr.hpp>
 #include<glad/glad.h>
-
+#include <Fr_Core.h>
 #include "ShaderProgram.h"
 
 ShaderProgram::ShaderProgram(const std::string& prefix) :
-    program_(glCreateProgram()) {
+    program_((glCreateProgram())) {
     CompileShader(GL_VERTEX_SHADER, prefix + "_vs.glsl"); 
     CompileShader(GL_FRAGMENT_SHADER, prefix + "_fs.glsl");
     LinkShader();
 }
 
 ShaderProgram::~ShaderProgram() {
-    glDeleteProgram(program_);
+    glCheckFunc(glDeleteProgram(program_));
 }
 
 unsigned int ShaderProgram::GetHandle() {
@@ -60,21 +60,21 @@ std::string ShaderProgram::ReadFile(const std::string& path) {
 }
 
 void ShaderProgram::Enable() {
-    glUseProgram(program_);
+    glCheckFunc( glUseProgram(program_));
 }
 
 void ShaderProgram::Disable() {
-    glUseProgram(0);
+    glCheckFunc(glUseProgram(0));
 }
 
 void ShaderProgram::SetUniformInteger(const std::string& name, int value) {
-    GLuint location = glGetUniformLocation(program_, name.c_str());
-    glUniform1i(location, value);
+    GLuint location = glGetUniformLocation(program_, name.c_str() );
+    glCheckFunc(glUniform1i(location, value));
 }
 
 void ShaderProgram::SetUniformFloat(const std::string& name, float value) {
     GLuint location = glGetUniformLocation(program_, name.c_str());
-    glUniform1f(location, value);
+    glCheckFunc(glUniform1f(location, value));
 }
 
 void ShaderProgram::SetUniformVec3(const std::string& name,
@@ -96,7 +96,7 @@ void ShaderProgram::SetUniformMat4(const std::string& name,
 }
 
 void ShaderProgram::SetAttribLocation(const char *name, unsigned int location) {
-    glBindAttribLocation(program_, location, name);
+    glCheckFunc(glBindAttribLocation(program_, location, name));
 
     //printf("location=%i name=%s  \n", location, name);
 }
