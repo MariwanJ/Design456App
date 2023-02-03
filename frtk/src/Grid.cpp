@@ -22,11 +22,17 @@ std::shared_ptr<Transform>CreateGrid() {
     auto bunny = std::make_shared<ObjectShaderNode>(0x59a0d6, 0.001);
     //bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/xy_plane.off"));
     bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/frtk/src/data/bunny.off"));
+
+
+    auto rightlight_spot = std::make_shared<Light>();
+    rightlight_spot->SetActive(false);
+    rightlight_spot->SetPosition(2.956, -0.514, 1.074);
+    rightlight_spot->SetupSpot(1, 0, -0.1, 45, 16);
+    rightlight_spot->SetDiffuse(0, 0, 0);
+    rightlight_spot->SetAmbient(0.42, 0.42, 0.42);
+    rightlight_spot->SetAttenuation(1, 0.002, 0);
+    bunny_t->AddNode(rightlight_spot);
     bunny_t->AddNode(bunny);
-
-
-
-
 
  
     //floor->AddNode(bunny_t);

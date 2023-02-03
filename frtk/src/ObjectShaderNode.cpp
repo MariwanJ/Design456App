@@ -46,7 +46,7 @@ ObjectShaderNode::ObjectShaderNode(unsigned int color, float silhouette) :
     if (!shared_) {
         shared_ = new Shared;
         shared_->object_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/objectshader");
-        shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
+      shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
         shared_->shadowmap_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/shadowmap");
     }
 }
@@ -96,6 +96,8 @@ void ObjectShaderNode::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& mod
     if (!active_)
         return;
 
+    return;  //testa not draw anything.
+
     auto mvp = info.projection * modelview;
 
     if (color_.a != 1) {
@@ -104,7 +106,6 @@ void ObjectShaderNode::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& mod
     }
 
     info.mvp.push_back(mvp);
-
     ShaderProgram *program = shared_->shadowmap_program;
     program->Enable();
     program->SetAttribLocation("position", 0);
@@ -128,10 +129,13 @@ void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
         auto sm_mvp = color_.a == 1 ? info.shadowmap.mvp[info.id] : info.shadowmap.mvp_transparent[info.id];
         program->SetUniformMat4("sm_mvp", kShadowMapBiasMatrix * sm_mvp);
     }
-    if (color_.a == 1)
-        RenderSilhouette(mvp);
+    /*if (color_.a == 1)
+        RenderSilhouette(mvp);*/
+
     program->Enable();
     LoadLights(program, info.lights);
+
+
     program->SetAttribLocation("position", 0);
     program->SetAttribLocation("normal", 1);
     program->SetUniformMat4("modelview", modelview);
@@ -140,21 +144,19 @@ void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     program->SetUniformVec4("color", color_);
     program->SetUniformInteger("sm_light", info.shadowmap.light_id);
     
-    /*
+
     //****************************************************************************************FIXME
     //TODO FIXME -- THIS IS OLD OPENGL - DOSENT WORK FO RNEW OPENGL
-    //glCheckFunc(glPushAttrib(GL_TEXTURE_BIT));
-   glCheckFunc(glActiveTexture(GL_TEXTURE0));
-   //glCheckFunc(glEnable(GL_TEXTURE));
+    glGenTextures(1, &info.shadowmap.texture);
    glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));           //     THIS CAUSE ISSUE FIXME!!!!!!!!!!!!!!!!!!!
    shared_->object_program->SetUniformInteger("sm_texture", 0);
 
-    mesh_->Draw();
-    program->Enable();
-    //program->Disable();
 
-    //glPopAttrib();
-    */
+   mesh_->Draw();
+   program->Enable();
+   program->Disable();
+   // glPopAttrib();
+
     info.id++;
 }
 

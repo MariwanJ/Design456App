@@ -147,22 +147,6 @@ GLFWwindow* Fr_GL3Window::getCurrentGLWindow()
 }
 
 static Transform* sun = nullptr;
-static std::shared_ptr<Transform> CreateSun() {
-    sun = new Transform();
-
-    auto sun_height = std::make_shared<Transform>();
-    sun_height->Translate(30, 500, 30);
-    sun->AddNode(sun_height);
-
-    auto light = std::make_shared<Light>();
-    light->SetPosition(0, 0, 0);
-    light->SetDiffuse(0.5, 0.5, 0.5);
-    light->SetAmbient(0.4, 0.4, 0.4);
-    light->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
-    sun_height->AddNode(light);
-    return std::shared_ptr<Transform>(sun);
-}
-
 
 void Fr_GL3Window::CreateScene()
 {
@@ -177,11 +161,10 @@ void Fr_GL3Window::CreateScene()
     /*
     * Add here the nodes - Grid, and XYZ axis
     */
+    scene->AddNode(CreateSun());
     scene->AddNode(Dcamera);
     Dcamera->SetActive(true);
     scene->AddNode(CreateGrid());
-   // scene->AddNode(CreateSun());
-
 
 }
 
@@ -497,6 +480,7 @@ std::shared_ptr<Transform> Fr_GL3Window::CreateSun() {
     light->SetAmbient(1.0, 1., 1.0);
     light->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
     sun_height->AddNode(light);
+    sun->SetActive(true);
     return std::shared_ptr<Transform>(sun);
 }
 

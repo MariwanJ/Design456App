@@ -124,6 +124,16 @@ void ShaderProgram::CompileShader(int shader_type, const std::string& path) {
 
 void ShaderProgram::LinkShader() {
     glCheckFunc( glLinkProgram(program_));
+    GLint program_linked;
+    glGetProgramiv(program_, GL_LINK_STATUS, &program_linked);
+    if (program_linked != GL_TRUE)
+    {
+        GLsizei log_length = 0;
+        GLchar message[1024];
+        glGetProgramInfoLog(program_, 1024, &log_length, message);
+        // Write the error to a log
+    }
+
     // TODO verify status
 }
 
