@@ -11,7 +11,9 @@ It is still in very earliy development stage and I need more time to make it use
 Only Windows is supported. Glad is not the latest. My laptop dosen't support that. 
 
 # Status:
-1-GLFW window is embedded to FLTK. But refereshing / repainint is not working well. FLTK dosen't update the embedded system as it should. Why? I don't know yet :(
+1-GLFW window is embedded to FLTK. 
+
+2-Shader problem is kind of fixed and now I can see the shader. 
 
 2-Some issues with the LOG system. 
 
@@ -20,6 +22,8 @@ Only Windows is supported. Glad is not the latest. My laptop dosen't support tha
 4-You need to download FLTK and compile it by yourself. It should be under frtk/vendor/fltk folder. 
 
 5-Since I am submoduling some libraries, lua files are not included with these submodules. At the moment I don't know how to get that fixed. You find the files under the folder Resources for each module.
+
+OpenGL is not easy. I am not used to write code for OpenGL. No more and I have to learn at least the basics so I can write the base code for the Wings conversion. 
 
 Don't forget that you need to download preemake5.exe 
 
