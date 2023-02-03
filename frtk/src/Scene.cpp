@@ -55,7 +55,6 @@ void Scene::RenderScene() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //glClearColor(background_[0], background_[1], background_[2], 1.0);
 
     RenderInfo render_info;
     if (!SetupCamera(render_info.projection, render_info.modelview))
@@ -66,13 +65,9 @@ void Scene::RenderScene() {
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &draw_framebuffer);
 
     SetupShadowMap(render_info.shadowmap);
-
-   // glPushAttrib(GL_VIEWPORT_BIT);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, render_info.shadowmap.framebuffer);
-    //glViewport(0, 0, render_info.shadowmap.width, render_info.shadowmap.height);
     glClear(GL_DEPTH_BUFFER_BIT);
     RenderShadowMap(render_info.shadowmap, render_info.shadowmap.modelview);
-  //  glPopAttrib();
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_framebuffer);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
