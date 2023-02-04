@@ -76,12 +76,17 @@ void Fr_GL3Window::mouse_button_callback(GLFWwindow* win, int button, int action
     FR::glfw_MouseButton = button;
 }
 
-void Fr_GL3Window::scroll_callback(GLFWwindow*, double xoffset, double yoffset)
+void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
 {
+    if (win != nullptr) {
+        FR::globalP_pWindow->cameras[FR::globalP_pWindow->curr_camera].manipulator->GLFWMouse(2, FR::glfw_MouseClicked, xoffset, yoffset);
+        FR::globalP_pWindow->scene->RenderScene();
+    }
 }
 
 void Fr_GL3Window::joystick_callback(int jid, int events)
 {
+
 }
 
 

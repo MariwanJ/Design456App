@@ -43,6 +43,12 @@ public:
     Mesh(const std::string& path);
 
     /**
+    *   This will be used to create an instance of the mesh without a file. 
+    *  Data should be entered to the class using SetVertex
+    */
+    Mesh();
+
+    /**
      * Destructor
      */
     ~Mesh();
@@ -57,6 +63,11 @@ public:
      */
     void GetMesh(std::vector<float>& vertices, std::vector<float>& normals,
             std::vector<unsigned int>& indices);
+
+    /**
+    *   Set the mesh information
+    */
+    void Mesh::SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices);
 
 private:
     /**

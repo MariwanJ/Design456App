@@ -164,6 +164,8 @@ void Fr_GL3Window::CreateScene()
     scene->AddNode(CreateSun());
     scene->AddNode(Dcamera);
     Dcamera->SetActive(true);
+    scene->AddNode(bunny());
+    //CreateGrid();
     scene->AddNode(CreateGrid());
 
 }
@@ -480,7 +482,7 @@ std::shared_ptr<Transform> Fr_GL3Window::CreateSun() {
     light->SetAmbient(1.0, 1., 1.0);
     light->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
     sun_height->AddNode(light);
-    sun->SetActive(true);
+    sun->SetActive(true );   //A must to have or the rabbit mesh will be black.
     return std::shared_ptr<Transform>(sun);
 }
 

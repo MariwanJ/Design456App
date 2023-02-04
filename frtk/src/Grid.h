@@ -7,6 +7,7 @@
 #include <Node.h>
 #include <Light.h>
 std::shared_ptr<Transform>CreateGrid();
+std::shared_ptr<Transform>bunny();
 
 class Grid :public Node
 {

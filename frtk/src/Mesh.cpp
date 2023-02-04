@@ -34,6 +34,8 @@ Mesh::Mesh(const std::string& path) :
     ReadFile(path, vertices_, normals_, indices_);
     InitializeVBO(vertices_, normals_, indices_);
 }
+Mesh::Mesh(): vbo_{ 0, 0, 0 }, vao_(0){
+}
 
 Mesh::~Mesh() {
     if (vao_ != 0) {
@@ -48,12 +50,25 @@ void Mesh::Draw() {
     glCheckFunc(glBindVertexArray(0));
 }
 
-void Mesh::GetMesh(std::vector<float>& vertices, std::vector<float>& normals,
-        std::vector<unsigned int>& indices) {
+void Mesh::GetMesh(std::vector<float>& vertices, std::vector<float>& normals, std::vector<unsigned int>& indices) {
     vertices = vertices_;
     normals = normals_;
     indices = indices_;
+
 }
+
+void Mesh::SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices) {  
+    for (int i = 0; i < vertices.size(); i++)
+        vertices_.push_back(vertices[i]);
+
+    for (int i = 0; i < indices.size(); i++)
+        indices_.push_back(indices[i]);
+
+    CalculateNormals(vertices, indices, normals_);
+    NormalizeVertices(vertices_);
+    InitializeVBO(vertices_, normals_, indices_);
+}
+
 
 glm::vec3 Mesh::GetVertex(unsigned int index, const float vertices[]) {
     return glm::vec3(
@@ -63,8 +78,7 @@ glm::vec3 Mesh::GetVertex(unsigned int index, const float vertices[]) {
     );
 }
 
-void Mesh::SetVertex(unsigned int index, float vertices[],
-        const glm::vec3& vertex) {
+void Mesh::SetVertex(unsigned int index, float vertices[], const glm::vec3& vertex) {
     vertices[index * 3] = vertex[0];
     vertices[index * 3 + 1] = vertex[1];
     vertices[index * 3 + 2] = vertex[2];
@@ -172,8 +186,9 @@ void Mesh::NormalizeVertices(std::vector<float>& vertices) {
     }
 }
 
-void Mesh::CalculateNormals(const std::vector<float>& vertices,
-        const std::vector<unsigned int>& indices, std::vector<float>& normals) {
+void Mesh::CalculateNormals(const std::vector<float>& vertices, 
+                            const std::vector<unsigned int>& indices, 
+                            std::vector<float>& normals) {
 
     // Initialize the normals
     std::vector<glm::vec3> pre_normals(vertices.size() / 3);
@@ -182,7 +197,7 @@ void Mesh::CalculateNormals(const std::vector<float>& vertices,
     }
 
     // Calculate the normals for each triangle vertex
-    for (size_t i = 0; i < indices.size(); i += 3) {
+    for (size_t i = 0; i < indices.size()-3; i += 3) {
         // Triangle vertices' indices
         unsigned int v[3] = {indices[i], indices[i + 1], indices[i + 2]};
 
