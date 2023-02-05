@@ -58,15 +58,8 @@ void Mesh::GetMesh(std::vector<float>& vertices, std::vector<float>& normals, st
 }
 
 void Mesh::SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices) {  
-    for (int i = 0; i < vertices.size(); i++)
-        vertices_.push_back(vertices[i]);
-
-    for (int i = 0; i < indices.size(); i++)
-        indices_.push_back(indices[i]);
-
-    CalculateNormals(vertices, indices, normals_);
-    NormalizeVertices(vertices_);
-    InitializeVBO(vertices_, normals_, indices_);
+    vertices_ = vertices;
+    indices_ = indices;
 }
 
 

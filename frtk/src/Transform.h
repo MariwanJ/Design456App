@@ -72,7 +72,7 @@ public:
      * Returns true if the camera has been set
      * Returns the camera info by reference
      */
-    bool SetupCamera(glm::mat4& projection, glm::mat4& modelview);
+    bool SetupCamera(glm::mat4& projection, glm::mat4& modelview) override;
 
     /**
      * Sets the lights
@@ -83,17 +83,17 @@ public:
     /**
      * Sets the shadow map
      */
-    bool SetupShadowMap(ShadowMapInfo& info);
+    bool SetupShadowMap(ShadowMapInfo& info) override;
 
     /**
      * Renders the shadow map
      */
-    void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview);
+    void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) override;
 
     /**
      * Renders the node
      */
-    void Render(RenderInfo& info, const glm::mat4& modelview);
+    void Render(RenderInfo& info, const glm::mat4& modelview) override;
 
 private:
     std::unique_ptr<Manipulator> manipulator_;

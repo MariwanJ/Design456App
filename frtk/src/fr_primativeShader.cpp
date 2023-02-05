@@ -27,12 +27,12 @@
 //
 #include <glm/gtx/transform.hpp>
 #include <Mesh.h>
+#include <fr_primatives.h>
 #include <ShaderProgram.h>
-#include <ObjectShaderNode.h>
+#include <fr_primativeShader.h>
 #include <glad/glad.h>
-#include<fr_primatives.h>
 
-ObjectShaderNode::Shared *ObjectShaderNode::shared_ = nullptr;
+Fr_PrimaitiveShader::Shared *Fr_PrimaitiveShader::shared_ = nullptr;
 
 static const glm::mat4 kShadowMapBiasMatrix(
     0.5, 0.0, 0.0, 0.0,
@@ -40,22 +40,22 @@ static const glm::mat4 kShadowMapBiasMatrix(
     0.0, 0.0, 0.5, 0.0,
     0.5, 0.5, 0.5, 1.0);
 
-ObjectShaderNode::ObjectShaderNode(unsigned int color, float silhouette) :
-    mesh_{nullptr},
-    silhouette_(silhouette) {
+Fr_PrimaitiveShader::Fr_PrimaitiveShader(unsigned int color, float silhouette) :
+                                    primative_{nullptr}, silhouette_(silhouette) {
     SetColor(color);
     if (!shared_) {
         shared_ = new Shared;
-        shared_->object_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/objectshader");
-      shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
+
+        shared_->primative_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/objectshader");
+        shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
         shared_->shadowmap_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/shadowmap");
     }
 }
 
-ObjectShaderNode::~ObjectShaderNode() {
+Fr_PrimaitiveShader::~Fr_PrimaitiveShader() {
 }
 
-void ObjectShaderNode::SetColor(unsigned int color, float alpha) {
+void Fr_PrimaitiveShader::SetColor(unsigned int color, float alpha) {
     color_ = glm::vec4(
        ((color >> 16) & 0xFF) / 255.0f,
        ((color >> 8) & 0xFF) / 255.0f,
@@ -64,19 +64,15 @@ void ObjectShaderNode::SetColor(unsigned int color, float alpha) {
     );
 }
 
-void ObjectShaderNode::SetOpacity(float alpha) {
+void Fr_PrimaitiveShader::SetOpacity(float alpha) {
     color_.a  = alpha;
 }
 
-void ObjectShaderNode::SetMesh(std::shared_ptr<Mesh> mesh) {
-    mesh_ = mesh;
+void Fr_PrimaitiveShader::SetPrimative(std::shared_ptr<Fr_Primatives> primative) {
+    primative_ = primative;
 }
 
-void ObjectShaderNode::SetMesh(const std::string& mesh) {
-    mesh_ = std::make_shared<Mesh>(mesh);
-}
-
-void ObjectShaderNode::LoadLights(ShaderProgram *program, const std::vector<LightInfo>& lights) {
+void Fr_PrimaitiveShader::LoadLights(ShaderProgram *program, const std::vector<LightInfo>& lights) {
     unsigned int nlights = std::min(lights.size(), kMaxLights);
     program->SetUniformInteger("nlights", nlights);
     for (size_t i = 0; i < nlights; ++i) {
@@ -93,7 +89,7 @@ void ObjectShaderNode::LoadLights(ShaderProgram *program, const std::vector<Ligh
     }
 }
 
-void ObjectShaderNode::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) {
+void Fr_PrimaitiveShader::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) {
     if (!active_)
         return;
 
@@ -109,11 +105,11 @@ void ObjectShaderNode::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& mod
     program->Enable();
     program->SetAttribLocation("position", 0);
     program->SetUniformMat4("mvp", mvp);
-    mesh_->Draw();
+    primative_->Draw();
     program->Disable();
 }
 
-void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
+void Fr_PrimaitiveShader::Render(RenderInfo& info, const glm::mat4& modelview) {
     if (!active_ ||
         (info.render_transparent && color_.a == 1) ||
         (!info.render_transparent && color_.a < 1))
@@ -121,7 +117,7 @@ void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
 
     auto mvp = info.projection * modelview;
     auto normalmatrix = glm::transpose(glm::inverse(modelview));
-    ShaderProgram* program = shared_->object_program;
+    ShaderProgram* program = shared_->primative_program;
 
     //Avoid segmentation fault - Mariwan
     if (info.shadowmap.mvp.size() > 0 && info.id < info.shadowmap.mvp.size() && info.shadowmap.mvp_transparent.size()>0) {
@@ -147,23 +143,23 @@ void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     //****************************************************************************************FIXME
     //TODO FIXME -- THIS IS OLD OPENGL - DOSENT WORK FO RNEW OPENGL
     glGenTextures(1, &info.shadowmap.texture);
-   glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));           //     THIS CAUSE ISSUE FIXME!!!!!!!!!!!!!!!!!!!
-   shared_->object_program->SetUniformInteger("sm_texture", 0);
+    glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));           //     THIS CAUSE ISSUE FIXME!!!!!!!!!!!!!!!!!!!
+    shared_->primative_program->SetUniformInteger("sm_texture", 0);
 
 
-   mesh_->Draw();
+   primative_->Draw();
    program->Enable();
    program->Disable();
-    info.id++;
+   info.id++;
 }
 
-void ObjectShaderNode::RenderSilhouette(const glm::mat4& mvp) {
+void Fr_PrimaitiveShader::RenderSilhouette(const glm::mat4& mvp) {
     ShaderProgram *program = shared_->silhouette_program;
     program->Enable();
     program->SetAttribLocation("position", 0);
     program->SetAttribLocation("normal", 1);
     program->SetUniformFloat("silhouette", silhouette_);
     program->SetUniformMat4("mvp", mvp);
-    mesh_->Draw();
+    primative_->Draw();
     program->Disable();
 }

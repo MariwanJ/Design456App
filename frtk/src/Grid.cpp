@@ -4,7 +4,7 @@
 
 
 #include <ObjectShaderNode.h>
-
+#include <fr_primativeShader.h>
 //Temporary code to have something to show.
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -76,10 +76,10 @@ std::shared_ptr<Transform>CreateGrid() {
         }
     }
     grid_t->Scale(50, 50, 50);
-    std::shared_ptr<Mesh> mymesh =  std::make_shared<Mesh>();
+    std::shared_ptr<Fr_Primatives> mymesh =  std::make_shared<Fr_Primatives>();
     mymesh->SetVertexes(vertices, indices);
-    auto grid = std::make_shared<ObjectShaderNode>(0xbc5e13, 0.005); //  color and 
-    grid->SetMesh(mymesh);
+    auto grid = std::make_shared<Fr_PrimaitiveShader>(0xbc5e13, 0.005); //  color and 
+    grid->SetPrimative(mymesh);
     grid_t->AddNode(grid);
     return grid_t;
 }

@@ -6,6 +6,8 @@
 #include <Mesh.h>
 #include <Node.h>
 #include <Light.h>
+#include <fr_primatives.h>
+
 std::shared_ptr<Transform>CreateGrid();
 std::shared_ptr<Transform>bunny();
 
