@@ -19,7 +19,7 @@ std::shared_ptr<Transform>bunny() {
     //bunny_t->Rotate(0, 0, 0, 1);
     //bunny_t->Rotate(90, 0, 0, 1);
 
-    auto bunny = std::make_shared<ObjectShaderNode>(0xbc5e13, 0.005); //  color and 
+    auto bunny = std::make_shared<ObjectShaderNode>(0xbc5e13, 0.005); //  color and
     //bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/xy_plane.off"));
     bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/frtk/src/data/bunny.off"));
 
@@ -65,20 +65,20 @@ std::shared_ptr<Transform>CreateGrid() {
 
             indices.push_back(row1 + i);
             indices.push_back(row1 + i + 1);
-            indices.push_back(row1 + i + 1);
-            indices.push_back(row2 + i + 1);
+            /*indices.push_back(row1 + i + 1);
+            indices.push_back(row2 + i + 1);*/
 
             indices.push_back(row2 + i + 1);
             indices.push_back(row2 + i );
-            indices.push_back(row2 + i );
-            indices.push_back(row1 + i);
+            //indices.push_back(row2 + i );
+            //indices.push_back(row1 + i);
 
         }
     }
     grid_t->Scale(50, 50, 50);
     std::shared_ptr<Fr_Primatives> mymesh =  std::make_shared<Fr_Primatives>();
     mymesh->SetVertexes(vertices, indices);
-    auto grid = std::make_shared<Fr_PrimaitiveShader>(0xbc5e13, 0.005); //  color and 
+    auto grid = std::make_shared<Fr_PrimaitiveShader>(0xbc5e13, 0.005); //  color and
     grid->SetPrimative(mymesh);
     grid_t->AddNode(grid);
     return grid_t;

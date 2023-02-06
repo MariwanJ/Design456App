@@ -13,8 +13,8 @@ Fr_Primatives::~Fr_Primatives() {
 void Fr_Primatives::Draw()
 {
     glCheckFunc(glBindVertexArray(vao_));
-    glCheckFunc(glDrawElements(GL_LINES, indices_.size(), GL_UNSIGNED_INT, 0));  //---> implement me -- TODO:FIXME 
-     glCheckFunc(glBindVertexArray(0));
+    glCheckFunc(glDrawArrays(GL_LINES, 0, indices_.size() ));  //---> implement me -- TODO:FIXME
+    glCheckFunc(glBindVertexArray(0));
 }
 
 void Fr_Primatives::setDrawType(int type)
