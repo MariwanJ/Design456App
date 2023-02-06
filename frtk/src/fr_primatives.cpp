@@ -1,6 +1,6 @@
 #include <fr_primatives.h>
 
-Fr_Primatives::Fr_Primatives() :vbo_{ 0, 0, 0 }, vao_(0), drawType(-1){
+Fr_Primatives::Fr_Primatives() :vbo_{ 0, 0, 0 }, vao_(0), drawType(GL_LINES){
 }
 
 Fr_Primatives::~Fr_Primatives() {
@@ -12,9 +12,13 @@ Fr_Primatives::~Fr_Primatives() {
 
 void Fr_Primatives::Draw()
 {
-    glCheckFunc(glBindVertexArray(vao_));
-    glCheckFunc(glDrawArrays(GL_LINES, 0, indices_.size() ));  //---> implement me -- TODO:FIXME
-    glCheckFunc(glBindVertexArray(0));
+    GLuint length;
+    if (drawType==GL_LINES){
+        glCheckFunc(glBindVertexArray(vao_));
+        length = (GLuint)indices_.size() * 2;
+        glCheckFunc(glDrawElements(GL_LINES, length, GL_UNSIGNED_INT, NULL));
+        glCheckFunc(glBindVertexArray(0));
+    }
 }
 
 void Fr_Primatives::setDrawType(int type)
@@ -36,6 +40,9 @@ void Fr_Primatives::GetPrimatives(std::vector<float>& vertices, std::vector<floa
 void Fr_Primatives::SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices) {
     vertices_ = vertices;
     indices_ = indices;
+
+    //CalculateNormals(vertices, indices, normals_);
+    //NormalizeVertices(vertices_);
 }
 
 glm::vec3 Fr_Primatives::GetVertex(unsigned int index, const float vertices[]) {
@@ -52,9 +59,9 @@ void Fr_Primatives::SetVertex(unsigned int index, float vertices[], const glm::v
     vertices[index * 3 + 2] = vertex[2];
 }
 
-void Fr_Primatives::CalculateNormals(const std::vector<float>& vertices,
-    const std::vector<unsigned int>& indices,
-    std::vector<float>& normals) {
+void Fr_Primatives::CalculateNormals(const std::vector<float>& vertices,  
+                                    const std::vector<unsigned int>& indices,
+                                    std::vector<float>& normals) {
     // Initialize the normals
     std::vector<glm::vec3> pre_normals(vertices.size() / 3);
     for (size_t i = 0; i < pre_normals.size(); ++i) {
@@ -101,9 +108,28 @@ void Fr_Primatives::CalculateNormals(const std::vector<float>& vertices,
         SetVertex(i, normals.data(), glm::normalize(pre_normals[i]));
 }
 
-void Fr_Primatives::InitializeVBO(const std::vector<float>& vertices,
-    const std::vector<float>& normals,
-    const std::vector<unsigned int> indices) {
+void Fr_Primatives::NormalizeVertices(std::vector<float>& vertices) {
+    glm::vec3 min(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+    float max = std::numeric_limits<float>::min();
+
+    for (size_t i = 0; i < vertices.size(); i += 3) {
+        for (size_t j = 0; j < 3; ++j) {
+            min[j] = std::min(min[j], vertices[i + j]);
+            max = std::max(max, vertices[i + j] - min[j]);
+        }
+    }
+
+    for (size_t i = 0; i < vertices.size() / 3; ++i) {
+        glm::vec3 vertex = GetVertex(i, vertices.data());
+        glm::vec3 normalized = (vertex - min) / max - 0.5f;
+        SetVertex(i, vertices.data(), normalized);
+    }
+}
+
+void Fr_Primatives::InitializeVBO(const std::vector<float>& vertices,  
+                                 const std::vector<float>& normals,
+                                 const std::vector<unsigned int> indices) {
+    
     glCheckFunc(glGenBuffers(3, vbo_));
     glCheckFunc(glGenVertexArrays(1, &vao_));
     glCheckFunc(glBindVertexArray(vao_));

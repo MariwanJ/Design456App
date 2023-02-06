@@ -39,47 +39,41 @@ std::shared_ptr<Transform>bunny() {
 std::shared_ptr<Transform>CreateGrid() {
     auto grid_t = std::make_shared<Transform>();
 
-    int slices = 50;
+    int sections = 5;
+    int gridSize = 1;
     unsigned int vao;
     unsigned int vbo;
 
     std::vector<float> vertices;
-    std::vector<unsigned int> indices;
-
-    for (int j = 0; j <= slices; ++j) {
-        for (int i = 0; i <= slices; ++i) {
-            float x = (float)i / (float)slices;
-            float y = 0;
-            float z = (float)j / (float)slices;
+    float x , y , z  ;
+    x = y = z = 0;
+    for (int j = 0; j <= sections; j+=gridSize) {
+        for (int i = 0; i <= sections; i+=gridSize) {
+             x = i;
+             y = j;
+            float z = 0.0;
             vertices.push_back(x);
             vertices.push_back(y);
             vertices.push_back(z);
         }
     }
 
-    for (int j = 0; j < slices; ++j) {
-        for (int i = 0; i < slices; ++i) {
-
-            int row1 = j * (slices + 1);
-            int row2 = (j + 1) * (slices + 1);
-
-            indices.push_back(row1 + i);
-            indices.push_back(row1 + i + 1);
-            /*indices.push_back(row1 + i + 1);
-            indices.push_back(row2 + i + 1);*/
-
-            indices.push_back(row2 + i + 1);
-            indices.push_back(row2 + i );
-            //indices.push_back(row2 + i );
-            //indices.push_back(row1 + i);
-
-        }
+    std::vector<unsigned int> indices;
+    int rowLength = sections+ 1;
+    int noOfVerticies = (int)vertices.size();
+    for (int i = 0; i < sections; i++) {
+        //row  
+        indices.push_back(i * rowLength);
+        indices.push_back((i + 1) * rowLength - 1);  
+        //column first point and last point
+        indices.push_back(i);
+        indices.push_back(noOfVerticies - rowLength + i);        
     }
     grid_t->Scale(50, 50, 50);
-    std::shared_ptr<Fr_Primatives> mymesh =  std::make_shared<Fr_Primatives>();
-    mymesh->SetVertexes(vertices, indices);
+    std::shared_ptr<Fr_Primatives> primative =  std::make_shared<Fr_Primatives>();
+    primative->SetVertexes(vertices, indices);
     auto grid = std::make_shared<Fr_PrimaitiveShader>(0xbc5e13, 0.005); //  color and
-    grid->SetPrimative(mymesh);
+    grid->SetPrimative(primative);
     grid_t->AddNode(grid);
     return grid_t;
 }

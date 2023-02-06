@@ -230,8 +230,8 @@ void Mesh::CalculateNormals(const std::vector<float>& vertices,
 }
 
 void Mesh::InitializeVBO(const std::vector<float>& vertices,
-        const std::vector<float>& normals,
-        const std::vector<unsigned int> indices) {
+                            const std::vector<float>& normals,
+                            const std::vector<unsigned int> indices) {
 
     glCheckFunc(glGenBuffers(3, vbo_));
     glCheckFunc(glGenVertexArrays(1, &vao_));

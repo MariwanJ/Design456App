@@ -31,6 +31,8 @@ private:
     void InitializeVBO(const std::vector<float>& vertices, 
                                         const std::vector<float>& normals,
                                         const std::vector<unsigned int> indices);
+    
+    void NormalizeVertices(std::vector<float>& vertices);
 
     int drawType;
     std::vector<float> vertices_;
