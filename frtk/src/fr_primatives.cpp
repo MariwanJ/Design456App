@@ -16,7 +16,7 @@ void Fr_Primatives::Draw()
     if (drawType==GL_LINES){
         glCheckFunc(glBindVertexArray(vao_));
         length = (GLuint)indices_.size() * 2;
-        glCheckFunc(glDrawElements(GL_LINES, length, GL_UNSIGNED_INT, NULL));
+        glCheckFunc(glDrawArrays(GL_LINES, 0, vertices_.size()));
         glCheckFunc(glBindVertexArray(0));
     }
 }
@@ -42,7 +42,8 @@ void Fr_Primatives::SetVertexes(std::vector<float>& vertices, std::vector<unsign
     indices_ = indices;
 
     //CalculateNormals(vertices, indices, normals_);
-    //NormalizeVertices(vertices_);
+    NormalizeVertices(vertices_);
+    InitializeVBO(vertices_, normals_, indices_);
 }
 
 glm::vec3 Fr_Primatives::GetVertex(unsigned int index, const float vertices[]) {
@@ -59,7 +60,7 @@ void Fr_Primatives::SetVertex(unsigned int index, float vertices[], const glm::v
     vertices[index * 3 + 2] = vertex[2];
 }
 
-void Fr_Primatives::CalculateNormals(const std::vector<float>& vertices,  
+void Fr_Primatives::CalculateNormals(const std::vector<float>& vertices,
                                     const std::vector<unsigned int>& indices,
                                     std::vector<float>& normals) {
     // Initialize the normals
@@ -126,10 +127,10 @@ void Fr_Primatives::NormalizeVertices(std::vector<float>& vertices) {
     }
 }
 
-void Fr_Primatives::InitializeVBO(const std::vector<float>& vertices,  
+void Fr_Primatives::InitializeVBO(const std::vector<float>& vertices,
                                  const std::vector<float>& normals,
                                  const std::vector<unsigned int> indices) {
-    
+
     glCheckFunc(glGenBuffers(3, vbo_));
     glCheckFunc(glGenVertexArrays(1, &vao_));
     glCheckFunc(glBindVertexArray(vao_));
