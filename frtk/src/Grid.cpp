@@ -38,19 +38,31 @@ std::shared_ptr<Transform>bunny() {
 
 std::shared_ptr<Transform>CreateGrid() {
     auto grid_t = std::make_shared<Transform>();
-    grid_t->Scale(25, 25, 25);
-    int sections = 5;
+    grid_t->Scale(1, 1, 1);
+    int sections = 50;
     int gridSize = 1;
     unsigned int vao;
     unsigned int vbo;
-
     std::vector<float> vertices;
     float x , y , z  ;
     x = y = z = 0;
-    for (int j = 0; j <= sections; j+=gridSize) {
-        for (int i = 0; i <= sections; i+=gridSize) {
-             x = i;
-             y = j;
+    //First lines 
+    
+    for (int i = 0; i < sections; i += gridSize) {
+        for (int j = 0; j <=sections; j+=sections) {
+             x = i * gridSize;
+             y = j*gridSize;
+            float z = 0.0;
+            vertices.push_back(x);
+            vertices.push_back(y);
+            vertices.push_back(z);
+        }
+    }
+    //Second lines to create the squre plane
+    for (int i = 0; i < sections; i += gridSize) {
+        for (int j = 0; j <= sections; j += sections) {
+            x = j*gridSize;
+            y = i*gridSize;
             float z = 0.0;
             vertices.push_back(x);
             vertices.push_back(y);
@@ -59,20 +71,14 @@ std::shared_ptr<Transform>CreateGrid() {
     }
 
     std::vector<unsigned int> indices;
-    int rowLength = sections+ 1;
     int noOfVerticies = (int)vertices.size();
-    for (int i = 0; i < sections; i++) {
-        //row  
-        indices.push_back(i * rowLength);
-        indices.push_back((i + 1) * rowLength - 1);  
-        //column first point and last point
+    for (int i = 0; i < sections*2; i++) {
         indices.push_back(i);
-        indices.push_back(noOfVerticies - rowLength + i);        
     }
-    grid_t->Scale(50, 50, 50);
+    grid_t->Scale(10, 10, 10);
     std::shared_ptr<Fr_Primatives> primative =  std::make_shared<Fr_Primatives>();
     primative->SetVertexes(vertices, indices);
-    auto grid = std::make_shared<Fr_PrimaitiveShader>(0xbc5e13, 0.005); //  color and
+    auto grid = std::make_shared<Fr_PrimaitiveShader>(0x222222, 0.005); //  color and
     grid->SetPrimative(primative);
     grid_t->AddNode(grid);
     return grid_t;

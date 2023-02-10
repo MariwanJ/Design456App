@@ -30,32 +30,35 @@
 #include "Manipulator.h"
 #include<glad/glad.h>
 
+//Scroll zoomming scale - default is 10.0 
+float Manipulator::kZoomScale = 10.0f;
+
 Manipulator::Manipulator() :
     reference_(0, 0, 0),
     matrix_(1.0),
     inv_(1.0),
-    operation_{Operation::kNone},
-    x_{0},
-    y_{0},
+    operation_{ Operation::kNone },
+    x_{ 0 },
+    y_{ 0 },
     v_(0, 0, 0),
-    invertX_{false},
-    invertY_{false} {
+    invertX_{ false },
+    invertY_{ false } {
 }
 
 glm::mat4 Manipulator::GetMatrix(const glm::vec3& look_dir) {
     glm::vec3 manip_dir = glm::vec3(0, 0, -1);
     if (glm::length(look_dir - manip_dir) < 0.01)
         return glm::translate(reference_)
-               * matrix_
-               * glm::translate(-reference_);
+        * matrix_
+        * glm::translate(-reference_);
 
     glm::vec3 w = glm::cross(look_dir, manip_dir);
     float theta = asin(glm::length(w));
     return glm::translate(reference_)
-           * glm::rotate(-theta, w)
-           * matrix_
-           * glm::rotate(theta, w)
-           * glm::translate(-reference_);
+        * glm::rotate(-theta, w)
+        * matrix_
+        * glm::rotate(theta, w)
+        * glm::translate(-reference_);
 }
 
 glm::mat4 Manipulator::GetInverse() {
@@ -87,36 +90,69 @@ void Manipulator::GLFWMotion(int x, int y) {
         if (theta != 0)
             matrix_ = glm::rotate(theta, w) * matrix_;
         v_ = v;
-    } else if (operation_ == Operation::kZoom) {
-        int vp[4]; 
+    }
+    /*    Scroll will do this job
+    else if (operation_ == Operation::kZoom) {
+        int vp[4];
         glGetIntegerv(GL_VIEWPORT, vp);
         float dy = y - y_;
         float f = dy / vp[3];
         float scale = 1 + kZoomScale * f;
         matrix_ = glm::scale(glm::vec3(scale, scale, scale)) * matrix_;
     }
-
+    */
     inv_ = glm::inverse(matrix_);
     x_ = x;
     y_ = y;
 }
+/**
+*   Mouse scroll - Zomming 
+*/
+void Manipulator::GLFWScroll(int x, int y) {
+
+    int vp[4];
+    glGetIntegerv(GL_VIEWPORT, vp);
+    float dy = y;
+    float f = dy / vp[3];
+    float scale = 1 + kZoomScale * f;
+    matrix_ = glm::scale(glm::vec3(scale, scale, scale)) * matrix_;
+    inv_ = glm::inverse(matrix_);
+    x_ += x;
+    y_ += y;
+}
+
+double Manipulator::get_X() const
+{
+    return x_;
+}
+
+double Manipulator::get_Y() const
+{
+    return y_;
+}
+
+void Manipulator::setZommingScale(float _scale)
+{
+    kZoomScale = _scale;
+}
 
 template<int k_button, Manipulator::Operation k_operation>
-void Manipulator::SetOperation(int button, int state, double x, double y) {            ///TODO FIXME : CHANGE THE STATE TO A BETTER AND MEANINGSFULL ENUM. 
+void Manipulator::SetOperation(int button, int state, double x, double y) {            ///TODO FIXME : CHANGE THE STATE TO A BETTER AND MEANINGSFULL ENUM.
     if (button == k_button) {
         if (state == 0 && operation_ == Operation::kNone) {
             operation_ = k_operation;
             x_ = x;
             y_ = y;
             v_ = computeSphereCoordinates(x, y);
-        } else if (state == 1 && operation_ == k_operation) {
+        }
+        else if (state == 1 && operation_ == k_operation) {
             operation_ = Operation::kNone;
         }
     }
 }
 
 glm::vec3 Manipulator::computeSphereCoordinates(double x, double y) {
-    int vp[4]; 
+    int vp[4];
     glGetIntegerv(GL_VIEWPORT, vp);
     const float w = vp[2];
     const float h = vp[3];
@@ -133,10 +169,10 @@ glm::vec3 Manipulator::computeSphereCoordinates(double x, double y) {
     if (dist > 1.0f) {
         vx /= dist;
         vy /= dist;
-    } else {
+    }
+    else {
         vz = sqrt(1 - vx * vx - vy * vy);
     }
 
     return glm::vec3(vx, vy, vz);
 }
-

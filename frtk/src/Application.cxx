@@ -78,8 +78,14 @@ void Fr_GL3Window::mouse_button_callback(GLFWwindow* win, int button, int action
 
 void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
 {
+    double x, y;
+    x = FR::globalP_pWindow->cameras[FR::globalP_pWindow->curr_camera].manipulator->get_X();
+    y= FR::globalP_pWindow->cameras[FR::globalP_pWindow->curr_camera].manipulator->get_Y();
     if (win != nullptr) {
-        FR::globalP_pWindow->cameras[FR::globalP_pWindow->curr_camera].manipulator->GLFWMouse(2, FR::glfw_MouseClicked, xoffset, yoffset);
+        std::cout << "(" << x << "," << y << ")" << "   -> "  ;
+        std::cout<<"(" << (xoffset) << "," << yoffset << ")" << std::endl;
+
+        FR::globalP_pWindow->cameras[FR::globalP_pWindow->curr_camera].manipulator->GLFWScroll(xoffset, yoffset);
         FR::globalP_pWindow->scene->RenderScene();
     }
 }

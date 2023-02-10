@@ -69,6 +69,11 @@ public:
      * Mouse motion function
      */
     void GLFWMotion(int x, int y);
+    void GLFWScroll(int x, int y);
+
+    double get_X()const;
+    double get_Y()const;
+    void setZommingScale(float scale);
 
 private:
     enum class Operation {
@@ -77,7 +82,7 @@ private:
         kNone       //nothing
     };
 
-    const float kZoomScale = 1.0f;
+    static float kZoomScale;
 
     /** Verifies the k_button state and sets the k_operation */
     template<int k_button, Operation k_operation>
