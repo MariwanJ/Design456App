@@ -133,20 +133,19 @@ void Fr_Primatives::InitializeVBO(const std::vector<float>& vertices,
 
     glCheckFunc(glGenBuffers(3, vbo_));
     glCheckFunc(glGenVertexArrays(1, &vao_));
-    glCheckFunc(glBindVertexArray(vao_));
+    glCheckFunc(glBindVertexArray(vao_));       //Keeps all instructions related this object
 
-    glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]));
+    glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]));        //First object buffer
     glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW));
     glCheckFunc(glEnableVertexAttribArray(0));
-    glCheckFunc(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL));
+    glCheckFunc(glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, NULL));
 
     glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]));
-    glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * normals.size(), normals.data(), GL_STATIC_DRAW));
+    glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 4, normals.data(), GL_STATIC_DRAW));
     glCheckFunc(glEnableVertexAttribArray(1));
-    glCheckFunc(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL));
+    glCheckFunc(glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, NULL));
 
     glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[2]));
-    glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW));
-
+    glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER,4 * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW));
     glCheckFunc(glBindVertexArray(0));
 }

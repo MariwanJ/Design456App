@@ -38,7 +38,7 @@ std::shared_ptr<Transform>bunny() {
 
 std::shared_ptr<Transform>CreateGrid() {
     auto grid_t = std::make_shared<Transform>();
-
+    grid_t->Scale(25, 25, 25);
     int sections = 5;
     int gridSize = 1;
     unsigned int vao;
