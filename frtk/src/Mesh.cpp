@@ -1,11 +1,30 @@
-/**
- * PUC-Rio 2015.2
- * INF1339 - Computação Gráfica Tridimensional
- * Professor: Waldemar Celes
- * Gabriel de Quadros Ligneul 1212560
- * Trabalho - Projeto Final
- */
-
+//
+// This file is a part of the Open Source Design456App
+// MIT License
+//
+// Copyright (c) 2023
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//  Original Author : Gabriel de Quadros  https://github.com/gligneul
+//  Modified to use with this project by :
+//  Author :Mariwan Jalal    mariwan.jalal@gmail.com
+//
 
 #include <Mesh.h>
 
@@ -15,26 +34,34 @@ Mesh::Mesh(const std::string& path) :
     ReadFile(path, vertices_, normals_, indices_);
     InitializeVBO(vertices_, normals_, indices_);
 }
+Mesh::Mesh(): vbo_{ 0, 0, 0 }, vao_(0){
+}
 
 Mesh::~Mesh() {
     if (vao_ != 0) {
-        glDeleteVertexArrays(1, &vao_);
-        glDeleteBuffers(3, vbo_);
+        glCheckFunc(glDeleteVertexArrays(1, &vao_));
+        glCheckFunc(glDeleteBuffers(3, vbo_));
     }
 }
 
 void Mesh::Draw() {
-    glBindVertexArray(vao_);
-    glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
+    glCheckFunc(glBindVertexArray(vao_));
+    glCheckFunc(glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0));
+    glCheckFunc(glBindVertexArray(0));
 }
 
-void Mesh::GetMesh(std::vector<float>& vertices, std::vector<float>& normals,
-        std::vector<unsigned int>& indices) {
+void Mesh::GetMesh(std::vector<float>& vertices, std::vector<float>& normals, std::vector<unsigned int>& indices) {
     vertices = vertices_;
     normals = normals_;
     indices = indices_;
+
 }
+
+void Mesh::SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices) {  
+    vertices_ = vertices;
+    indices_ = indices;
+}
+
 
 glm::vec3 Mesh::GetVertex(unsigned int index, const float vertices[]) {
     return glm::vec3(
@@ -44,8 +71,7 @@ glm::vec3 Mesh::GetVertex(unsigned int index, const float vertices[]) {
     );
 }
 
-void Mesh::SetVertex(unsigned int index, float vertices[],
-        const glm::vec3& vertex) {
+void Mesh::SetVertex(unsigned int index, float vertices[], const glm::vec3& vertex) {
     vertices[index * 3] = vertex[0];
     vertices[index * 3 + 1] = vertex[1];
     vertices[index * 3 + 2] = vertex[2];
@@ -153,8 +179,9 @@ void Mesh::NormalizeVertices(std::vector<float>& vertices) {
     }
 }
 
-void Mesh::CalculateNormals(const std::vector<float>& vertices,
-        const std::vector<unsigned int>& indices, std::vector<float>& normals) {
+void Mesh::CalculateNormals(const std::vector<float>& vertices, 
+                            const std::vector<unsigned int>& indices, 
+                            std::vector<float>& normals) {
 
     // Initialize the normals
     std::vector<glm::vec3> pre_normals(vertices.size() / 3);
@@ -163,7 +190,7 @@ void Mesh::CalculateNormals(const std::vector<float>& vertices,
     }
 
     // Calculate the normals for each triangle vertex
-    for (size_t i = 0; i < indices.size(); i += 3) {
+    for (size_t i = 0; i < indices.size()-3; i += 3) {
         // Triangle vertices' indices
         unsigned int v[3] = {indices[i], indices[i + 1], indices[i + 2]};
 
@@ -203,29 +230,26 @@ void Mesh::CalculateNormals(const std::vector<float>& vertices,
 }
 
 void Mesh::InitializeVBO(const std::vector<float>& vertices,
-        const std::vector<float>& normals,
-        const std::vector<unsigned int> indices) {
+                            const std::vector<float>& normals,
+                            const std::vector<unsigned int> indices) {
 
-    glGenBuffers(3, vbo_);
-    glGenVertexArrays(1, &vao_);
-    glBindVertexArray(vao_);
+    glCheckFunc(glGenBuffers(3, vbo_));
+    glCheckFunc(glGenVertexArrays(1, &vao_));
+    glCheckFunc(glBindVertexArray(vao_));
+    
+    glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]));
+    glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW));
+    glCheckFunc(glEnableVertexAttribArray(0));
+    glCheckFunc(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL));
+    
+    glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]));
+    glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * normals.size(), normals.data(), GL_STATIC_DRAW));
+    glCheckFunc(glEnableVertexAttribArray(1));
+    glCheckFunc(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL));
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(),
-            vertices.data(), GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * normals.size(), 
-            normals.data(), GL_STATIC_DRAW);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[2]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
-             indices.data(), GL_STATIC_DRAW);
-
-    glBindVertexArray(0);
+    glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[2]));
+    glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW));
+    
+    glCheckFunc(glBindVertexArray(0));
 }
 

@@ -1,4 +1,5 @@
 /**
+ * SHADOMAP FS
  * PUC-Rio 2015.2
  * INF1339 - Computação Gráfica Tridimensional
  * Professor: Waldemar Celes
@@ -6,7 +7,7 @@
  * Trabalho - Projeto Final
  */
 
-#version 130
+#version 330 core
 
 void main() {
 }

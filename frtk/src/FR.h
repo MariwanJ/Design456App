@@ -70,159 +70,159 @@ struct T {
 
 typedef T FR_COLOR;
 namespace COLOR {
-#define FR_TRANSPARENCY         =   (-1.0000, -1.0000, -1.0000,  1.0000)		   // No color
-#define FR_PINK                 =   ( 1.0000,  0.7529,  0.7961,  1.0000)
-#define FR_BLUE                 =   ( 0.0000,  0.0000,  1.0000,  1.0000)
-#define FR_BLUEG                =   ( 0.6941,  0.8700,  0.9216,  1.0000)
-#define FR_HONEYDEW             =   ( 0.9412,  1.0000,  0.9412,  1.0000)
-#define FR_PURPLE               =   ( 0.5020,  0.0000,  0.5020,  1.0000)
-#define FR_FUCHSIA              =   ( 1.0000,  0.0000,  1.0000,  1.0000)
-#define FR_LAWNGREEN            =   ( 0.4863,  0.9882,  0.0000,  1.0000)
-#define FR_AMETHYST             =   ( 0.6000,  0.4000,  0.8000,  1.0000)
-#define FR_CRIMSON              =   ( 0.8627,  0.0784,  0.2353,  1.0000)
-#define FR_WHITE                =   ( 1.0000,  1.0000,  1.0000,  1.0000)
-#define FR_NAVAJOWHITE          =   ( 1.0000,  0.8706,  0.6784,  1.0000)
-#define FR_CORNSILK             =   ( 1.0000,  0.9725,  0.8627,  1.0000)
-#define FR_BISQUE               =   ( 1.0000,  0.8941,  0.7686,  1.0000)
-#define FR_PALEGREEN            =   ( 0.5961,  0.9843,  0.5961,  1.0000)
-#define FR_BROWN                =   ( 0.6471,  0.1647,  0.1647,  1.0000)
-#define FR_DARKTURQUOISE        =   ( 0.0000,  0.8078,  0.8196,  1.0000)
-#define FR_DARKGREEN            =   ( 0.0000,  0.3922,  0.0000,  1.0000)
-#define FR_MEDIUMORCHID         =   ( 0.7294,  0.3333,  0.8275,  1.0000)
-#define FR_CHOCOLATE            =   ( 0.8235,  0.4118,  0.1176,  1.0000)
-#define FR_PAPAYAWHIP           =   ( 1.0000,  0.9373,  0.8353,  1.0000)
-#define FR_OLIVE                =   ( 0.5020,  0.5020,  0.0000,  1.0000)
-#define FR_SILVER               =   ( 0.7529,  0.7529,  0.7529,  1.0000)
-#define FR_PEACHPUFF            =   ( 1.0000,  0.8549,  0.7255,  1.0000)
-#define FR_PLUM                 =   ( 0.8667,  0.6275,  0.8667,  1.0000)
-#define FR_DARKGOLDENROD        =   ( 0.7216,  0.5255,  0.0431,  1.0000)
-#define FR_SLATEGREY            =   ( 0.4392,  0.5020,  0.5647,  1.0000)
-#define FR_MINTCREAM            =   ( 0.9608,  1.0000,  0.9804,  1.0000)
-#define FR_CORNFLOWERBLUE       =   ( 0.3922,  0.5843,  0.9294,  1.0000)
-#define FR_GOLD                 =   ( 1.0000,  0.8431,  0.0000,  1.0000)
-#define FR_HOTPINK              =   ( 1.0000,  0.4118,  0.7059,  1.0000)
-#define FR_DARKBLUE             =   ( 0.0000,  0.0000,  0.5451,  1.0000)
-#define FR_LIMEGREEN            =   ( 0.1961,  0.8039,  0.1961,  1.0000)
-#define FR_DEEPSKYBLUE          =   ( 0.0000,  0.7490,  1.0000,  1.0000)
-#define FR_DARKKHAKI            =   ( 0.7412,  0.7176,  0.4196,  1.0000)
-#define FR_LIGHTGREY            =   ( 0.8275,  0.8275,  0.8275,  1.0000)
-#define FR_YELLOW               =   ( 1.0000,  1.0000,  0.0000,  1.0000)
-#define FR_GAINSBORO            =   ( 0.8627,  0.8627,  0.8627,  1.0000)
-#define FR_MISTYROSE            =   ( 1.0000,  0.8941,  0.8824,  1.0000)
-#define FR_SANDYBROWN           =   ( 0.9569,  0.6431,  0.3765,  1.0000)
-#define FR_DEEPPINK             =   ( 1.0000,  0.0784,  0.5765,  1.0000)
-#define FR_MAGENTA              =   ( 1.0000,  0.0000,  1.0000,  1.0000)
-#define FR_ALICEBLUE            =   ( 0.9412,  0.9725,  1.0000,  1.0000)
-#define FR_DARKCYAN             =   ( 0.0000,  0.5451,  0.5451,  1.0000)
-#define FR_DARKSLATEGREY        =   ( 0.1843,  0.3098,  0.3098,  1.0000)
-#define FR_GREENYELLOW          =   ( 0.6784,  1.0000,  0.1843,  1.0000)
-#define FR_DARKORCHID           =   ( 0.6000,  0.1961,  0.8000,  1.0000)
-#define FR_OLIVEDRAB            =   ( 0.4196,  0.5569,  0.1373,  1.0000)
-#define FR_CHARTREUSE           =   ( 0.4980,  1.0000,  0.0000,  1.0000)
-#define FR_PERU                 =   ( 0.8039,  0.5216,  0.2471,  1.0000)
-#define FR_ORANGE               =   ( 1.0000,  0.6471,  0.0000,  1.0000)
-#define FR_RED                  =   ( 1.0000,  0.0000,  0.0000,  1.0000)
-#define FR_WHEAT                =   ( 0.9608,  0.8706,  0.7020,  1.0000)
-#define FR_LIGHTCYAN            =   ( 0.8784,  1.0000,  1.0000,  1.0000)
-#define FR_LIGHTSEAGREEN        =   ( 0.1255,  0.6980,  0.6667,  1.0000)
-#define FR_BLUEVIOLET           =   ( 0.5412,  0.1686,  0.8863,  1.0000)
-#define FR_LIGHTSLATEGREY       =   ( 0.4667,  0.5333,  0.6000,  1.0000)
-#define FR_CYAN                 =   ( 0.0000,  1.0000,  1.0000,  1.0000)
-#define FR_MEDIUMPURPLE         =   ( 0.5765,  0.4392,  0.8588,  1.0000)
-#define FR_MIDNIGHTBLUE         =   ( 0.0980,  0.0980,  0.4392,  1.0000)
-#define FR_FIREBRICK            =   ( 0.6980,  0.1333,  0.1333,  1.0000)
-#define FR_PALETURQUOISE        =   ( 0.6863,  0.9333,  0.9333,  1.0000)
-#define FR_PALEGOLDENROD        =   ( 0.9333,  0.9098,  0.6667,  1.0000)
-#define FR_GRAY                 =   ( 0.5020,  0.5020,  0.5020,  1.0000)
-#define FR_MEDIUMSEAGREEN       =   ( 0.2353,  0.7020,  0.4431,  1.0000)
-#define FR_MOCCASIN             =   ( 1.0000,  0.8941,  0.7098,  1.0000)
-#define FR_IVORY                =   ( 1.0000,  1.0000,  0.9412,  1.0000)
-#define FR_DARKSLATEBLUE        =   ( 0.2824,  0.2392,  0.5451,  1.0000)
-#define FR_BEIGE                =   ( 0.9608,  0.9608,  0.8627,  1.0000)
-#define FR_GREEN                =   ( 0.0000,  0.5020,  0.0000,  1.0000)
-#define FR_SLATEBLUE            =   ( 0.4157,  0.3529,  0.8039,  1.0000)
-#define FR_TEAL                 =   ( 0.0000,  0.5020,  0.5020,  1.0000)
-#define FR_AZURE                =   ( 0.9412,  1.0000,  1.0000,  1.0000)
-#define FR_LIGHTSTEELBLUE       =   ( 0.6902,  0.7686,  0.8706,  1.0000)
-#define FR_DIMGREY              =   ( 0.4118,  0.4118,  0.4118,  1.0000)
-#define FR_TAN                  =   ( 0.8235,  0.7059,  0.5490,  1.0000)
-#define FR_ANTIQUEWHITE         =   ( 0.9804,  0.9216,  0.8431,  1.0000)
-#define FR_SKYBLUE              =   ( 0.5294,  0.8078,  0.9216,  1.0000)
-#define FR_GHOSTWHITE           =   ( 0.9725,  0.9725,  1.0000,  1.0000)
-#define FR_MEDIUMTURQUOISE      =   ( 0.2824,  0.8196,  0.8000,  1.0000)
-#define FR_FLORALWHITE          =   ( 1.0000,  0.9804,  0.9412,  1.0000)
-#define FR_LAVENDERBLUSH        =   ( 1.0000,  0.9412,  0.9608,  1.0000)
-#define FR_SEAGREEN             =   ( 0.1804,  0.5451,  0.3412,  1.0000)
-#define FR_LAVENDER             =   ( 0.9020,  0.9020,  0.9804,  1.0000)
-#define FR_BLANCHEDALMOND       =   ( 1.0000,  0.9216,  0.8039,  1.0000)
-#define FR_DARKOLIVEGREEN       =   ( 0.3333,  0.4196,  0.1843,  1.0000)
-#define FR_DARKSEAGREEN         =   ( 0.5608,  0.7373,  0.5608,  1.0000)
-#define FR_SPRINGGREEN          =   ( 0.0000,  1.0000,  0.4980,  1.0000)
-#define FR_NAVY                 =   ( 0.0000,  0.0000,  0.5020,  1.0000)
-#define FR_ORCHID               =   ( 0.8549,  0.4392,  0.8392,  1.0000)
-#define FR_SADDLEBROWN          =   ( 0.5451,  0.2706,  0.0745,  1.0000)
-#define FR_INDIANRED            =   ( 0.8039,  0.3608,  0.3608,  1.0000)
-#define FR_SNOW                 =   ( 1.0000,  0.9804,  0.9804,  1.0000)
-#define FR_STEELBLUE            =   ( 0.2745,  0.5098,  0.7059,  1.0000)
-#define FR_MEDIUMSLATEBLUE      =   ( 0.4824,  0.4078,  0.9333,  1.0000)
-#define FR_BLACK                =   ( 0.0000,  0.0000,  0.0000,  1.0000)
-#define FR_LIGHTBLUE            =   ( 0.6784,  0.8471,  0.9020,  1.0000)
-#define FR_TURQUOISE            =   ( 0.2510,  0.8784,  0.8157,  1.0000)
-#define FR_MEDIUMVIOLETRED      =   ( 0.7804,  0.0824,  0.5216,  1.0000)
-#define FR_DARKVIOLET           =   ( 0.5804,  0.0000,  0.8275,  1.0000)
-#define FR_DARKGRAY             =   ( 0.6627,  0.6627,  0.6627,  1.0000)
-#define FR_SECIAL_GRAY          =   ( 0.9101,  0.9101,  0.9101,  1.0000)
-#define FR_SALMON               =   ( 0.9804,  0.5020,  0.4471,  1.0000)
-#define FR_DARKMAGENTA          =   ( 0.5451,  0.0000,  0.5451,  1.0000)
-#define FR_TOMATO               =   ( 1.0000,  0.3882,  0.2784,  1.0000)
-#define FR_WHITESMOKE           =   ( 0.9608,  0.9608,  0.9608,  1.0000)
-#define FR_GOLDENROD            =   ( 0.8549,  0.6471,  0.1255,  1.0000)
-#define FR_MEDIUMSPRINGGREEN    =   ( 0.0000,  0.9804,  0.6039,  1.0000)
-#define FR_DODGERBLUE           =   ( 0.1176,  0.5647,  1.0000,  1.0000)
-#define FR_AQUA                 =   ( 0.0000,  1.0000,  1.0000,  1.0000)
-#define FR_FORESTGREEN          =   ( 0.1333,  0.5451,  0.1333,  1.0000)
-#define FR_LEMONCHIFFON         =   ( 1.0000,  0.9804,  0.8039,  1.0000)
-#define FR_LIGHTSLATEGRAY       =   ( 0.4667,  0.5333,  0.6000,  1.0000)
-#define FR_SLATEGRAY            =   ( 0.4392,  0.5020,  0.5647,  1.0000)
-#define FR_LIGHTGRAY            =   ( 0.8275,  0.8275,  0.8275,  1.0000)
-#define FR_INDIGO               =   ( 0.2941,  0.0000,  0.5098,  1.0000)
-#define FR_CADETBLUE            =   ( 0.3725,  0.6196,  0.6275,  1.0000)
-#define FR_LIGHTYELLOW          =   ( 1.0000,  1.0000,  0.8784,  1.0000)
-#define FR_DARKORANGE           =   ( 1.0000,  0.5490,  0.0000,  1.0000)
-#define FR_POWDERBLUE           =   ( 0.6902,  0.8784,  0.9020,  1.0000)
-#define FR_ROYALBLUE            =   ( 0.2549,  0.4118,  0.8824,  1.0000)
-#define FR_SIENNA               =   ( 0.6275,  0.3216,  0.1765,  1.0000)
-#define FR_THISTLE              =   ( 0.8471,  0.7490,  0.8471,  1.0000)
-#define FR_LIME                 =   ( 0.0000,  1.0000,  0.0000,  1.0000)
-#define FR_SEASHELL             =   ( 1.0000,  0.9608,  0.9333,  1.0000)
-#define FR_DARKRED              =   ( 0.5451,  0.0000,  0.0000,  1.0000)
-#define FR_LIGHTSKYBLUE         =   ( 0.5294,  0.8078,  0.9804,  1.0000)
-#define FR_SPECIAL_BLUE         =   ( 0.7421,  0.8828,  0.9218,  1.0000)            //Default grid color
-#define FR_YELLOWGREEN          =   ( 0.6039,  0.8039,  0.1961,  1.0000)
-#define FR_AQUAMARINE           =   ( 0.4980,  1.0000,  0.8314,  1.0000)
-#define FR_LIGHTCORAL           =   ( 0.9412,  0.5020,  0.5020,  1.0000)
-#define FR_DARKSLATEGRAY        =   ( 0.1843,  0.3098,  0.3098,  1.0000)
-#define FR_KHAKI                =   ( 0.9412,  0.9020,  0.5490,  1.0000)
-#define FR_DARKGREY             =   ( 0.6627,  0.6627,  0.6627,  1.0000)
-#define FR_BURLYWOOD            =   ( 0.8706,  0.7216,  0.5294,  1.0000)
-#define FR_LIGHTGOLDENRODYELLOW =   ( 0.9804,  0.9804,  0.8235,  1.0000)
-#define FR_MEDIUMBLUE           =   ( 0.0000,  0.0000,  0.8039,  1.0000)
-#define FR_DARKSALMON           =   ( 0.9137,  0.5882,  0.4784,  1.0000)
-#define FR_ROSYBROWN            =   ( 0.7373,  0.5608,  0.5608,  1.0000)
-#define FR_LIGHTSALMON          =   ( 1.0000,  0.6275,  0.4784,  1.0000)
-#define FR_PALEVIOLETRED        =   ( 0.8588,  0.4392,  0.5765,  1.0000)
-#define FR_CORAL                =   ( 1.0000,  0.4980,  0.3137,  1.0000)
-#define FR_VIOLET               =   ( 0.9333,  0.5098,  0.9333,  1.0000)
-#define FR_GREY                 =   ( 0.5020,  0.5020,  0.5020,  1.0000)
-#define FR_LIGHTGREEN           =   ( 0.5647,  0.9333,  0.5647,  1.0000)
-#define FR_LINEN                =   ( 0.9804,  0.9412,  0.9020,  1.0000)
-#define FR_ORANGERED            =   ( 1.0000,  0.2706,  0.0000,  1.0000)
-#define FR_DIMGRAY              =   ( 0.4118,  0.4118,  0.4118,  1.0000)
-#define FR_MAROON               =   ( 0.5020,  0.0000,  0.0000,  1.0000)
-#define FR_LIGHTPINK            =   ( 1.0000,  0.7137,  0.7569,  1.0000)
-#define FR_MEDIUMAQUAMARINE     =   ( 0.4000,  0.8039,  0.6667,  1.0000)
-#define FR_OLDLACE              =   ( 0.9922,  0.9608,  0.9020,  1.0000)
-#define FR_GLASS                =   ( 0.3300,  1.0000,  1.0000,  1.0000)
+#define FR_TRANSPARENCY         -1.0000f, -1.0000f, -1.0000f,  1.0000f		   // No color
+#define FR_PINK                  1.0000f,  0.7529f,  0.7961f,  1.0000f
+#define FR_BLUE                  0.0000f,  0.0000f,  1.0000f,  1.0000f
+#define FR_BLUEG                 0.6941f,  0.8700f,  0.9216f,  1.0000f
+#define FR_HONEYDEW              0.9412f,  1.0000f,  0.9412f,  1.0000f
+#define FR_PURPLE                0.5020f,  0.0000f,  0.5020f,  1.0000f
+#define FR_FUCHSIA               1.0000f,  0.0000f,  1.0000f,  1.0000f
+#define FR_LAWNGREEN             0.4863f,  0.9882f,  0.0000f,  1.0000f
+#define FR_AMETHYST              0.6000f,  0.4000f,  0.8000f,  1.0000f
+#define FR_CRIMSON               0.8627f,  0.0784f,  0.2353f,  1.0000f
+#define FR_WHITE                 1.0000f,  1.0000f,  1.0000f,  1.0000f
+#define FR_NAVAJOWHITE           1.0000f,  0.8706f,  0.6784f,  1.0000f
+#define FR_CORNSILK              1.0000f,  0.9725f,  0.8627f,  1.0000f
+#define FR_BISQUE                1.0000f,  0.8941f,  0.7686f,  1.0000f
+#define FR_PALEGREEN             0.5961f,  0.9843f,  0.5961f,  1.0000f
+#define FR_BROWN                 0.6471f,  0.1647f,  0.1647f,  1.0000f
+#define FR_DARKTURQUOISE         0.0000f,  0.8078f,  0.8196f,  1.0000f
+#define FR_DARKGREEN             0.0000f,  0.3922f,  0.0000f,  1.0000f
+#define FR_MEDIUMORCHID          0.7294f,  0.3333f,  0.8275f,  1.0000f
+#define FR_CHOCOLATE             0.8235f,  0.4118f,  0.1176f,  1.0000f
+#define FR_PAPAYAWHIP            1.0000f,  0.9373f,  0.8353f,  1.0000f
+#define FR_OLIVE                 0.5020f,  0.5020f,  0.0000f,  1.0000f
+#define FR_SILVER                0.7529f,  0.7529f,  0.7529f,  1.0000f
+#define FR_PEACHPUFF             1.0000f,  0.8549f,  0.7255f,  1.0000f
+#define FR_PLUM                  0.8667f,  0.6275f,  0.8667f,  1.0000f
+#define FR_DARKGOLDENROD         0.7216f,  0.5255f,  0.0431f,  1.0000f
+#define FR_SLATEGREY             0.4392f,  0.5020f,  0.5647f,  1.0000f
+#define FR_MINTCREAM             0.9608f,  1.0000f,  0.9804f,  1.0000f
+#define FR_CORNFLOWERBLUE        0.3922f,  0.5843f,  0.9294f,  1.0000f
+#define FR_GOLD                  1.0000f,  0.8431f,  0.0000f,  1.0000f
+#define FR_HOTPINK               1.0000f,  0.4118f,  0.7059f,  1.0000f
+#define FR_DARKBLUE              0.0000f,  0.0000f,  0.5451f,  1.0000f
+#define FR_LIMEGREEN             0.1961f,  0.8039f,  0.1961f,  1.0000f
+#define FR_DEEPSKYBLUE           0.0000f,  0.7490f,  1.0000f,  1.0000f
+#define FR_DARKKHAKI             0.7412f,  0.7176f,  0.4196f,  1.0000f
+#define FR_LIGHTGREY             0.8275f,  0.8275f,  0.8275f,  1.0000f
+#define FR_YELLOW                1.0000f,  1.0000f,  0.0000f,  1.0000f
+#define FR_GAINSBORO             0.8627f,  0.8627f,  0.8627f,  1.0000f
+#define FR_MISTYROSE             1.0000f,  0.8941f,  0.8824f,  1.0000f
+#define FR_SANDYBROWN            0.9569f,  0.6431f,  0.3765f,  1.0000f
+#define FR_DEEPPINK              1.0000f,  0.0784f,  0.5765f,  1.0000f
+#define FR_MAGENTA               1.0000f,  0.0000f,  1.0000f,  1.0000f
+#define FR_ALICEBLUE             0.9412f,  0.9725f,  1.0000f,  1.0000f
+#define FR_DARKCYAN              0.0000f,  0.5451f,  0.5451f,  1.0000f
+#define FR_DARKSLATEGREY         0.1843f,  0.3098f,  0.3098f,  1.0000f
+#define FR_GREENYELLOW           0.6784f,  1.0000f,  0.1843f,  1.0000f
+#define FR_DARKORCHID            0.6000f,  0.1961f,  0.8000f,  1.0000f
+#define FR_OLIVEDRAB             0.4196f,  0.5569f,  0.1373f,  1.0000f
+#define FR_CHARTREUSE            0.4980f,  1.0000f,  0.0000f,  1.0000f
+#define FR_PERU                  0.8039f,  0.5216f,  0.2471f,  1.0000f
+#define FR_ORANGE                1.0000f,  0.6471f,  0.0000f,  1.0000f
+#define FR_RED                   1.0000f,  0.0000f,  0.0000f,  1.0000f
+#define FR_WHEAT                 0.9608f,  0.8706f,  0.7020f,  1.0000f
+#define FR_LIGHTCYAN             0.8784f,  1.0000f,  1.0000f,  1.0000f
+#define FR_LIGHTSEAGREEN         0.1255f,  0.6980f,  0.6667f,  1.0000f
+#define FR_BLUEVIOLET            0.5412f,  0.1686f,  0.8863f,  1.0000f
+#define FR_LIGHTSLATEGREY        0.4667f,  0.5333f,  0.6000f,  1.0000f
+#define FR_CYAN                  0.0000f,  1.0000f,  1.0000f,  1.0000f
+#define FR_MEDIUMPURPLE          0.5765f,  0.4392f,  0.8588f,  1.0000f
+#define FR_MIDNIGHTBLUE          0.0980f,  0.0980f,  0.4392f,  1.0000f
+#define FR_FIREBRICK             0.6980f,  0.1333f,  0.1333f,  1.0000f
+#define FR_PALETURQUOISE         0.6863f,  0.9333f,  0.9333f,  1.0000f
+#define FR_PALEGOLDENROD         0.9333f,  0.9098f,  0.6667f,  1.0000f
+#define FR_GRAY                  0.5020f,  0.5020f,  0.5020f,  1.0000f
+#define FR_MEDIUMSEAGREEN        0.2353f,  0.7020f,  0.4431f,  1.0000f
+#define FR_MOCCASIN              1.0000f,  0.8941f,  0.7098f,  1.0000f
+#define FR_IVORY                 1.0000f,  1.0000f,  0.9412f,  1.0000f
+#define FR_DARKSLATEBLUE         0.2824f,  0.2392f,  0.5451f,  1.0000f
+#define FR_BEIGE                 0.9608f,  0.9608f,  0.8627f,  1.0000f
+#define FR_GREEN                 0.0000f,  0.5020f,  0.0000f,  1.0000f
+#define FR_SLATEBLUE             0.4157f,  0.3529f,  0.8039f,  1.0000f
+#define FR_TEAL                  0.0000f,  0.5020f,  0.5020f,  1.0000f
+#define FR_AZURE                 0.9412f,  1.0000f,  1.0000f,  1.0000f
+#define FR_LIGHTSTEELBLUE        0.6902f,  0.7686f,  0.8706f,  1.0000f
+#define FR_DIMGREY               0.4118f,  0.4118f,  0.4118f,  1.0000f
+#define FR_TAN                   0.8235f,  0.7059f,  0.5490f,  1.0000f
+#define FR_ANTIQUEWHITE          0.9804f,  0.9216f,  0.8431f,  1.0000f
+#define FR_SKYBLUE               0.5294f,  0.8078f,  0.9216f,  1.0000f
+#define FR_GHOSTWHITE            0.9725f,  0.9725f,  1.0000f,  1.0000f
+#define FR_MEDIUMTURQUOISE       0.2824f,  0.8196f,  0.8000f,  1.0000f
+#define FR_FLORALWHITE           1.0000f,  0.9804f,  0.9412f,  1.0000f
+#define FR_LAVENDERBLUSH         1.0000f,  0.9412f,  0.9608f,  1.0000f
+#define FR_SEAGREEN              0.1804f,  0.5451f,  0.3412f,  1.0000f
+#define FR_LAVENDER              0.9020f,  0.9020f,  0.9804f,  1.0000f
+#define FR_BLANCHEDALMOND        1.0000f,  0.9216f,  0.8039f,  1.0000f
+#define FR_DARKOLIVEGREEN        0.3333f,  0.4196f,  0.1843f,  1.0000f
+#define FR_DARKSEAGREEN          0.5608f,  0.7373f,  0.5608f,  1.0000f
+#define FR_SPRINGGREEN           0.0000f,  1.0000f,  0.4980f,  1.0000f
+#define FR_NAVY                  0.0000f,  0.0000f,  0.5020f,  1.0000f
+#define FR_ORCHID                0.8549f,  0.4392f,  0.8392f,  1.0000f
+#define FR_SADDLEBROWN           0.5451f,  0.2706f,  0.0745f,  1.0000f
+#define FR_INDIANRED             0.8039f,  0.3608f,  0.3608f,  1.0000f
+#define FR_SNOW                  1.0000f,  0.9804f,  0.9804f,  1.0000f
+#define FR_STEELBLUE             0.2745f,  0.5098f,  0.7059f,  1.0000f
+#define FR_MEDIUMSLATEBLUE       0.4824f,  0.4078f,  0.9333f,  1.0000f
+#define FR_BLACK                 0.0000f,  0.0000f,  0.0000f,  1.0000f
+#define FR_LIGHTBLUE             0.6784f,  0.8471f,  0.9020f,  1.0000f
+#define FR_TURQUOISE             0.2510f,  0.8784f,  0.8157f,  1.0000f
+#define FR_MEDIUMVIOLETRED       0.7804f,  0.0824f,  0.5216f,  1.0000f
+#define FR_DARKVIOLET            0.5804f,  0.0000f,  0.8275f,  1.0000f
+#define FR_DARKGRAY              0.6627f,  0.6627f,  0.6627f,  1.0000f
+#define FR_SECIAL_GRAY           0.9101f,  0.9101f,  0.9101f,  1.0000f
+#define FR_SALMON                0.9804f,  0.5020f,  0.4471f,  1.0000f
+#define FR_DARKMAGENTA           0.5451f,  0.0000f,  0.5451f,  1.0000f
+#define FR_TOMATO                1.0000f,  0.3882f,  0.2784f,  1.0000f
+#define FR_WHITESMOKE            0.9608f,  0.9608f,  0.9608f,  1.0000f
+#define FR_GOLDENROD             0.8549f,  0.6471f,  0.1255f,  1.0000f
+#define FR_MEDIUMSPRINGGREEN     0.0000f,  0.9804f,  0.6039f,  1.0000f
+#define FR_DODGERBLUE            0.1176f,  0.5647f,  1.0000f,  1.0000f
+#define FR_AQUA                  0.0000f,  1.0000f,  1.0000f,  1.0000f
+#define FR_FORESTGREEN           0.1333f,  0.5451f,  0.1333f,  1.0000f
+#define FR_LEMONCHIFFON          1.0000f,  0.9804f,  0.8039f,  1.0000f
+#define FR_LIGHTSLATEGRAY        0.4667f,  0.5333f,  0.6000f,  1.0000f
+#define FR_SLATEGRAY             0.4392f,  0.5020f,  0.5647f,  1.0000f
+#define FR_LIGHTGRAY             0.8275f,  0.8275f,  0.8275f,  1.0000f
+#define FR_INDIGO                0.2941f,  0.0000f,  0.5098f,  1.0000f
+#define FR_CADETBLUE             0.3725f,  0.6196f,  0.6275f,  1.0000f
+#define FR_LIGHTYELLOW           1.0000f,  1.0000f,  0.8784f,  1.0000f
+#define FR_DARKORANGE            1.0000f,  0.5490f,  0.0000f,  1.0000f
+#define FR_POWDERBLUE            0.6902f,  0.8784f,  0.9020f,  1.0000f
+#define FR_ROYALBLUE             0.2549f,  0.4118f,  0.8824f,  1.0000f
+#define FR_SIENNA                0.6275f,  0.3216f,  0.1765f,  1.0000f
+#define FR_THISTLE               0.8471f,  0.7490f,  0.8471f,  1.0000f
+#define FR_LIME                  0.0000f,  1.0000f,  0.0000f,  1.0000f
+#define FR_SEASHELL              1.0000f,  0.9608f,  0.9333f,  1.0000f
+#define FR_DARKRED               0.5451f,  0.0000f,  0.0000f,  1.0000f
+#define FR_LIGHTSKYBLUE          0.5294f,  0.8078f,  0.9804f,  1.0000f
+#define FR_SPECIAL_BLUE          0.7421f,  0.8828f,  0.9218f,  1.0000f            //Default grid color
+#define FR_YELLOWGREEN           0.6039f,  0.8039f,  0.1961f,  1.0000f
+#define FR_AQUAMARINE            0.4980f,  1.0000f,  0.8314f,  1.0000f
+#define FR_LIGHTCORAL            0.9412f,  0.5020f,  0.5020f,  1.0000f
+#define FR_DARKSLATEGRAY         0.1843f,  0.3098f,  0.3098f,  1.0000f
+#define FR_KHAKI                 0.9412f,  0.9020f,  0.5490f,  1.0000f
+#define FR_DARKGREY              0.6627f,  0.6627f,  0.6627f,  1.0000f
+#define FR_BURLYWOOD             0.8706f,  0.7216f,  0.5294f,  1.0000f
+#define FR_LIGHTGOLDENRODYELLOW  0.9804f,  0.9804f,  0.8235f,  1.0000f
+#define FR_MEDIUMBLUE            0.0000f,  0.0000f,  0.8039f,  1.0000f
+#define FR_DARKSALMON            0.9137f,  0.5882f,  0.4784f,  1.0000f
+#define FR_ROSYBROWN             0.7373f,  0.5608f,  0.5608f,  1.0000f
+#define FR_LIGHTSALMON           1.0000f,  0.6275f,  0.4784f,  1.0000f
+#define FR_PALEVIOLETRED         0.8588f,  0.4392f,  0.5765f,  1.0000f
+#define FR_CORAL                 1.0000f,  0.4980f,  0.3137f,  1.0000f
+#define FR_VIOLET                0.9333f,  0.5098f,  0.9333f,  1.0000f
+#define FR_GREY                  0.5020f,  0.5020f,  0.5020f,  1.0000f
+#define FR_LIGHTGREEN            0.5647f,  0.9333f,  0.5647f,  1.0000f
+#define FR_LINEN                 0.9804f,  0.9412f,  0.9020f,  1.0000f
+#define FR_ORANGERED             1.0000f,  0.2706f,  0.0000f,  1.0000f
+#define FR_DIMGRAY               0.4118f,  0.4118f,  0.4118f,  1.0000f
+#define FR_MAROON                0.5020f,  0.0000f,  0.0000f,  1.0000f
+#define FR_LIGHTPINK             1.0000f,  0.7137f,  0.7569f,  1.0000f
+#define FR_MEDIUMAQUAMARINE      0.4000f,  0.8039f,  0.6667f,  1.0000f
+#define FR_OLDLACE               0.9922f,  0.9608f,  0.9020f,  1.0000f
+#define FR_GLASS                 0.3300f,  1.0000f,  1.0000f,  1.0000f
 };
 
 #include<fr_callbacks.h>
@@ -236,6 +236,7 @@ public:
 	static int glfw_e_y;
 	static int glfw_click;
 	static int glfw_double_click;
+	static int glfw_MouseClicked;
 	static int glfw_MouseButton;
 	
 	//Avoid running GLFW OR GLAD CODE whiel GLFW is not created

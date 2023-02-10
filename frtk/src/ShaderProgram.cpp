@@ -1,25 +1,45 @@
-/**
- * PUC-Rio 2015.2
- * INF1339 - Computação Gráfica Tridimensional
- * Professor: Waldemar Celes
- * Gabriel de Quadros Ligneul 1212560
- * Trabalho - Projeto Final
- */
+//
+// This file is a part of the Open Source Design456App
+// MIT License
+//
+// Copyright (c) 2023
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//  Original Author : Gabriel de Quadros  https://github.com/gligneul
+//  Modified to use with this project by :
+//  Author :Mariwan Jalal    mariwan.jalal@gmail.com
+//
 
 #include <glm/gtc/type_ptr.hpp>
 #include<glad/glad.h>
-
+#include <Fr_Core.h>
 #include "ShaderProgram.h"
 
 ShaderProgram::ShaderProgram(const std::string& prefix) :
-    program_(glCreateProgram()) {
+    program_((glCreateProgram())) {
     CompileShader(GL_VERTEX_SHADER, prefix + "_vs.glsl"); 
     CompileShader(GL_FRAGMENT_SHADER, prefix + "_fs.glsl");
     LinkShader();
 }
 
 ShaderProgram::~ShaderProgram() {
-    glDeleteProgram(program_);
+    glCheckFunc(glDeleteProgram(program_));
 }
 
 unsigned int ShaderProgram::GetHandle() {
@@ -40,21 +60,21 @@ std::string ShaderProgram::ReadFile(const std::string& path) {
 }
 
 void ShaderProgram::Enable() {
-    glUseProgram(program_);
+    glCheckFunc( glUseProgram(program_));
 }
 
 void ShaderProgram::Disable() {
-    glUseProgram(0);
+    glCheckFunc(glUseProgram(0));
 }
 
 void ShaderProgram::SetUniformInteger(const std::string& name, int value) {
-    GLuint location = glGetUniformLocation(program_, name.c_str());
-    glUniform1i(location, value);
+    GLuint location = glGetUniformLocation(program_, name.c_str() );
+    glCheckFunc(glUniform1i(location, value));
 }
 
 void ShaderProgram::SetUniformFloat(const std::string& name, float value) {
     GLuint location = glGetUniformLocation(program_, name.c_str());
-    glUniform1f(location, value);
+    glCheckFunc(glUniform1f(location, value));
 }
 
 void ShaderProgram::SetUniformVec3(const std::string& name,
@@ -76,32 +96,44 @@ void ShaderProgram::SetUniformMat4(const std::string& name,
 }
 
 void ShaderProgram::SetAttribLocation(const char *name, unsigned int location) {
-    glBindAttribLocation(program_, location, name);
+    glCheckFunc(glBindAttribLocation(program_, location, name));
+
+    //printf("location=%i name=%s  \n", location, name);
 }
 
 void ShaderProgram::CompileShader(int shader_type, const std::string& path) {
     auto shader_str = ReadFile(path);
     auto shader_cstr = shader_str.c_str();
     auto shader = glCreateShader(shader_type);
-    glShaderSource(shader, 1, &shader_cstr, NULL);
-    glCompileShader(shader);
+    glCheckFunc( glShaderSource(shader, 1, &shader_cstr, NULL));
+    glCheckFunc(glCompileShader(shader));
     GLint success = 0;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    glCheckFunc(glGetShaderiv(shader, GL_COMPILE_STATUS, &success));
     if (!success) {
         GLint length = 0;
-        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
+        glCheckFunc(glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length));
         
         char *log=new char(length);
-        glGetShaderInfoLog(shader, length, &length, log);
-        glDeleteShader(shader);
+        glCheckFunc(glGetShaderInfoLog(shader, length, &length, log));
+        glCheckFunc(glDeleteShader(shader));
         throw std::runtime_error(log);
         delete log;
     }
-    glAttachShader(program_, shader);
+    glCheckFunc(glAttachShader(program_, shader));
 }
 
 void ShaderProgram::LinkShader() {
-    glLinkProgram(program_);
+    glCheckFunc( glLinkProgram(program_));
+    GLint program_linked;
+    glGetProgramiv(program_, GL_LINK_STATUS, &program_linked);
+    if (program_linked != GL_TRUE)
+    {
+        GLsizei log_length = 0;
+        GLchar message[1024];
+        glGetProgramInfoLog(program_, 1024, &log_length, message);
+        // Write the error to a log
+    }
+
     // TODO verify status
 }
 

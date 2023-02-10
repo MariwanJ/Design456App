@@ -33,6 +33,7 @@ project "frtk"
 	{
 		"src/**.h",
 		"src/**.cpp",
+		"src/**.cxx",
         
 		--"vendor/glm/glm/**.hpp",
 		--"vendor/glm/glm/**.inl",

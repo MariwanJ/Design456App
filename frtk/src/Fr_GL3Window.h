@@ -30,50 +30,47 @@
 #define FR_GL3WINDOW_H
 
 #include <frtk.h>
-#include<Fr_Core.h>
+//#include<Fr_Core.h>
 #include<Scene.h>
 #include<Camera.h>
 #include<Manipulator.h>
-#include<Transform.h>
+//#include<Transform.h>
 #include<Light.h>
 #include <glm/gtc/matrix_transform.hpp>
-/* 
-and manipulators */
+#include <Grid.h>
 
+
+/* Cameras */
 class Camera;
 enum CameraList {
-    defaultCam = 0,
-    Cam1,
-    Cam2,
-    Cam3,
-    Cam4
+    defaultCam = 0, //This is not fixed and can be moved , others are not.
+    CamTop,
+    CamBottom,
+    CamRight,
+    CamLeft,
+    CamFront,
+    CamBack,
 };
 
+//Camera struct which will keep the camera and a manipulator for the camera
 typedef struct {
     Camera* camera;
     Manipulator* manipulator;
  } cam;
  
 
-static int curr_camera = Cam1;
+static int curr_camera = defaultCam;
 
 class Fr_GL3Window;
 
-//callbacks - private
-//void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-//void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-//
-//void cursor_position_callback(GLFWwindow*, double xpos, double ypos);
-//void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cursor entered the window's client area, or GL_FALSE if it left it.
-//void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
-//void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
-
 class FRTK_API Fr_GL3Window : public Fl_Window {
 public:
+    //class constructors
     Fr_GL3Window(int x, int y, int w, int h, const char* l);
     Fr_GL3Window(int x, int y, int w, int h);
     Fr_GL3Window(int w, int h, const char* l);
     Fr_GL3Window(int w, int h);
+    
     virtual ~Fr_GL3Window();
     virtual int exit();
     Fl_Window* pfltkWindow;
@@ -81,9 +78,13 @@ public:
     int releaseGLfwWindow();
     virtual GLFWwindow* getCurrentGLWindow();
     virtual void reset(void);
+
     virtual void resizeGlWindow(float ratio);
     virtual void resizeGlWindow(int x, int y, int w, int h);
-    virtual void CreateScene();
+    void setOpenGLWinowSize(int xGL, int yGL, int wGL, int hGL);
+
+
+    virtual void CreateScene();  //Must be overriden to get the desired results
     virtual std::shared_ptr<Camera> CreateCamera(Group* parent, int cameraId);
     virtual std::shared_ptr<Transform> CreateSun();
 
@@ -95,24 +96,22 @@ public:
     virtual int handle(int event); //FLTK handle
     virtual int glfw_handle(int evenet); //Take care of GLFW events
     virtual void hide();
-    int GLFWrun();
-    //static void redrawFLTKTimer_cb(void*window);
+    virtual int GLFWrun();
+
     static float fltktimerValue;
     static double oldTime;
     static double newTime;
-    void setOpenGLWinowSize(int xGL, int yGL, int wGL, int hGL);
 
     static Scene* scene;
     std::vector<cam> cameras;
     std::shared_ptr<Camera> camera;
     Manipulator *manipulator;
     static GLFWwindow* pWindow;
-
+    static void deinitializeGlad();
 protected:
     int createGLFWwindow();
     int updateGLFWWindow();
-    unsigned int VBO, VAO;
-    
+    //unsigned int VBO, VAO;
 
 private:
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -122,7 +121,7 @@ private:
     static void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cursor entered the window's client area, or GL_FALSE if it left it.
     static void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
     static void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
-
+    static void joystick_callback(int jid, int events);
     bool overlay;
     void setOverlay();
     void removeOverlya();

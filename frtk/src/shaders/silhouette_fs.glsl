@@ -1,4 +1,5 @@
 /**
+ * SILHOUETTE FS
  * PUC-Rio 2015.2
  * INF1339 - Computação Gráfica Tridimensional
  * Professor: Waldemar Celes
@@ -6,9 +7,9 @@
  * Trabalho - Projeto Final
  */
 
-#version 130
+#version 330 core
 
-out vec4 frag_color;
+layout (location = 0) out vec4 frag_color;
 
 void main () {
     if (gl_FrontFacing)

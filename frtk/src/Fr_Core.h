@@ -30,6 +30,8 @@
 
 
 #include <FR.h>
+#include <frtk.h>
+
 #include<Fr_Log.h>
 
 #if defined(__APPLE__)
@@ -45,53 +47,29 @@
 
 #include <FL/Fl.H>
 #include <FL/fl_types.h>
-//#include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Window.H>
-
-//#include <Fr_GL3Window.h>
 #include <FL/platform.H>
+
+#include <FL/Fl_Window.H>
+#include <FL/Fl_Menu_Bar.H>
+#include <FL/Fl_Tabs.H>
+#include <FL/Fl_Menu_Bar.H>
+#include <FL/Fl_Group.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Tile.H>
+#include <FL/Fl_Window.H>
+#include <FL/Fl_Tabs.H>
+#include <FL/Fl_Group.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Tile.H>
+
+//#include <FL/Fl_Double_Window.H>
 
 
 #include <Fr_Log.h>
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
+#include <../instrumentation/Instrumentor.h>
 
-
-#include<fr_widgets/fr_basic_shapes.h>
-#include <vertexBuffer.h>
-#include<indexedBuffer.h>
-
-
-//From Scene-graph git hub
-
-
-
-//#include<Group.h>
-//#include<Light.h>
-//#include<Manipulator.h>
-//#include<Mesh.h>
-//#include<Camera.h>
-//#include<Scene.h>
-//#include<ShaderProgram.h>
-//#include<ToonShaderNode.h>
-//#include<Transform.h>
-
-
-//From Scene-graph git hub
-
-/*
-    __linux__       Defined on Linux
-    __sun           Defined on Solaris
-    __FreeBSD__     Defined on FreeBSD
-    __NetBSD__      Defined on NetBSD
-    __OpenBSD__     Defined on OpenBSD
-    __APPLE__       Defined on Mac OS X
-    __hpux          Defined on HP-UX
-    __osf__         Defined on Tru64 UNIX (formerly DEC OSF1)
-    __sgi           Defined on Irix
-    _AIX            Defined on AIX
-    _WIN32          Defined on Windows
-*/
 #ifdef _WIN32
     #define DEBUG_BREAK __debugbreak()
 #elif defined(__APPLE__)
@@ -145,7 +123,7 @@ static unsigned char GLLogCall() {
 
 #define setBIT(x) (1 << x)
 #define clearBIT(x) (0 << x)
-#include <../instrumentation/Instrumentor.h>
+
 
 
 #endif

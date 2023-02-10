@@ -1,4 +1,5 @@
 /**
+ * SHADOWMAP VS 
  * PUC-Rio 2015.2
  * INF1339 - Computação Gráfica Tridimensional
  * Professor: Waldemar Celes
@@ -6,9 +7,9 @@
  * Trabalho - Projeto Final
  */
 
-#version 130
+#version 330 core
 
-in vec3 position;
+layout (location = 0) in vec3 position;
 
 uniform mat4 mvp;
 
