@@ -155,10 +155,18 @@ void Fr_GL3Window::CreateScene()
     scene->linkToglfw = pWindow;
 
     auto Dcamera = CreateCamera(scene, defaultCam);
+/*
     Dcamera->SetEye(-6, 2, -20);
     Dcamera->SetCenter(0, 0, 100);
     Dcamera->SetUp(0, 1, 0);
-    /*
+*/
+
+    Dcamera->SetEye(0, 2, -15);
+    Dcamera->SetCenter(0, 0, 50);
+    Dcamera->SetUp(0, 1, 0);
+
+
+  /*
     * Add here the nodes - Grid, and XYZ axis
     */
     scene->AddNode(CreateSun());
@@ -452,7 +460,18 @@ int Fr_GL3Window::GLFWrun()
     }
     return 0;
 }
+/**
+PerspectiveCamera 
+  
+  position 17.463835 -17.463825 13.463827\n  
+  orientation 0.74290609 0.30772209 0.59447283  1.2171158\n  
+  nearDistance 0.42925534\n 
+  farDistance 1761.75\n  
+  aspectRatio 1\n  
+  focalDistance 30.248238\n  
+  heightAngle 0.78539819
 
+  */
 std::shared_ptr<Camera> Fr_GL3Window::CreateCamera(Group* parent, int cameraId)
 {
         camera = std::make_shared<Camera>();   //Shared pointer to the camera,

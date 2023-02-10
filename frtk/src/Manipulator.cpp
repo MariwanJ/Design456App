@@ -31,7 +31,7 @@
 #include<glad/glad.h>
 
 //Scroll zoomming scale - default is 10.0 
-float Manipulator::kZoomScale = 10.0f;
+float Manipulator::kZoomScale = 50.0f;
 
 Manipulator::Manipulator() :
     reference_(0, 0, 0),

@@ -13,15 +13,17 @@
 std::shared_ptr<Transform>bunny() {
     //auto floor = std::make_shared<Transform>();
     auto bunny_t = std::make_shared<Transform>();
-    bunny_t->Translate(0, 0, 10);
-    bunny_t->Scale(5, 5, 5);
+    bunny_t->Translate(0, 0, 0);
+    bunny_t->Scale(1, 1, 1);
     bunny_t->Rotate(0, 1, 0, 0);
     //bunny_t->Rotate(0, 0, 0, 1);
     //bunny_t->Rotate(90, 0, 0, 1);
 
     auto bunny = std::make_shared<ObjectShaderNode>(0xbc5e13, 0.005); //  color and
+
     //bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/xy_plane.off"));
-    bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/frtk/src/data/bunny.off"));
+    //bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/frtk/src/data/bunny.off"));
+    bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/Cube.off"));
 
     auto rightlight_spot = std::make_shared<Light>();
     rightlight_spot->SetActive(false);
