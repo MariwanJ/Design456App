@@ -34,6 +34,17 @@
 
 #include <Node.h>
 
+//PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT, 
+typedef enum class CameraList {
+    PERSPECTIVE = 0, //This is not fixed and can be moved , others are not.
+    ORTHOGRAPHIC,
+    TOP,
+    BOTTOM,
+    RIGHT,
+    LEFT,
+    FRONT,
+    BACK,
+};
 class Manipulator;
 
 
@@ -83,13 +94,21 @@ public:
      */
     virtual bool SetupCamera(glm::mat4& projection, glm::mat4& modelview);
 
+    /**
+    *   Setup camera type , default perspective
+    */
+    void setCameraType(CameraList camTyp = CameraList::PERSPECTIVE);
+
+    CameraList getCameraType();
+
 private:
+    CameraList camType_ ;
     glm::vec3 eye_;
     glm::vec3 center_;
-    glm::vec3 up_;
-    float fovy_;
-    float znear_;
-    float zfar_;
+    glm::vec3 up_;  //RIGHT
+    float fovy_;    //LEFT
+    float znear_;   //BOTTOM
+    float zfar_;   //TOP 
     std::unique_ptr<Manipulator> manipulator_;
 };
 

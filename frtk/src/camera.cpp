@@ -26,7 +26,6 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-
 #include <cmath>
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -35,13 +34,14 @@
 #include <Manipulator.h>
 
 Camera::Camera() :
-    eye_{1, 0, 0},
-    center_{0, 0, 0},
-    up_{0, 1, 0},
-    fovy_{50},
-    znear_{1},
-    zfar_{100},
-    manipulator_{} {
+    eye_{ 1, 0, 0 },
+    center_{ 0, 0, 0 },
+    up_{ 0, 1, 0 },
+    fovy_{ 50 },
+    znear_{ 1 },
+    zfar_{ 100 },
+    manipulator_{},
+    camType_(CameraList::PERSPECTIVE){
 }
 
 void Camera::SetEye(float x, float y, float z) {
@@ -57,9 +57,9 @@ void Camera::SetUp(float x, float y, float z) {
 }
 
 void Camera::SetPerspective(float fovy, float znear, float zfar) {
-    fovy_ = fovy;
-    znear_ = znear;
-    zfar_ = zfar;
+    fovy_ = fovy;   //LEFT
+    znear_ = znear;  //BOTTOM
+    zfar_ = zfar;    //TOP
 }
 
 void Camera::SetManipulator(std::unique_ptr<Manipulator> manipulator) {
@@ -69,14 +69,52 @@ void Camera::SetManipulator(std::unique_ptr<Manipulator> manipulator) {
 bool Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
     if (!active_)
         return false;
-
-    int vp[4]; 
-    glGetIntegerv(GL_VIEWPORT, vp); 
-    projection = glm::perspective((float)(fovy_ * M_PI / 180.0),(float)vp[2]/vp[3], znear_, zfar_);
-    modelview = glm::lookAt(eye_, center_, up_);
-    if (manipulator_)
-        modelview *= manipulator_->GetMatrix(glm::normalize(center_ - eye_));
-
+    int vp[4];
+    switch (camType_) {
+    case CameraList::PERSPECTIVE: {
+        glGetIntegerv(GL_VIEWPORT, vp);
+                                            //RIGHT                     LEFT                    BOTTOM    TOP   
+        projection = glm::perspective((float)(fovy_ * M_PI / 180.0), (float)vp[2] / vp[3], znear_, zfar_);
+        modelview = glm::lookAt(eye_, center_, up_);
+        if (manipulator_)
+            modelview *= manipulator_->GetMatrix(glm::normalize(center_ - eye_));
+        //These might change - TODO FIXEME:
+        SetEye(0, 2, -15);
+        SetCenter(0, 0, 50);
+        SetUp(0, 1, 0);
+    
+    }
+        break;
+    case CameraList::ORTHOGRAPHIC: {
+        //TODO FIXME
+        glGetIntegerv(GL_VIEWPORT, vp);
+                                //RIGHT                             LEFT                    BOTTOM    TOP     
+        projection = glm::ortho((float)(fovy_ * M_PI / 180.0), (float)vp[2] / vp[3], znear_, zfar_);
+        modelview = glm::lookAt(eye_, center_, up_);
+        if (manipulator_)
+            modelview *= manipulator_->GetMatrix(glm::normalize(center_ - eye_));
+        }
+                                 break;
+    case CameraList::TOP: {
+    }
+                        break;
+    case CameraList::BOTTOM: {
+    }
+                           break;
+    }
     return true;
 }
+/**
+*   Set camera type
+*/
+void Camera::setCameraType(CameraList camTyp)
+{
+    camType_ = camTyp;
+}
 
+/**
+*   Get Camera Type
+*/
+CameraList Camera::getCameraType() {
+    return camType_;
+}

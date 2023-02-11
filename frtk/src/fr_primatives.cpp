@@ -131,7 +131,7 @@ void Fr_Primatives::InitializeVBO(const std::vector<float>& vertices,
                                  const std::vector<float>& normals,
                                  const std::vector<unsigned int> indices) {
 
-    glCheckFunc(glGenBuffers(3, vbo_));
+    glCheckFunc(glGenBuffers(1, vbo_));
     glCheckFunc(glGenVertexArrays(1, &vao_));
     glCheckFunc(glBindVertexArray(vao_));       //Keeps all instructions related this object
     
@@ -139,16 +139,6 @@ void Fr_Primatives::InitializeVBO(const std::vector<float>& vertices,
     glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW));
     glCheckFunc(glEnableVertexAttribArray(0));
     glCheckFunc(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), NULL));
-    /*
-    glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]));
-    glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 4, normals.data(), GL_STATIC_DRAW));
-    glCheckFunc(glEnableVertexAttribArray(1));
-    glCheckFunc(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL));
-
-    glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[2]));
-    glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER,3 * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW));
-    */
     glCheckFunc(glBindVertexArray(0));
-    
-    
+
 }

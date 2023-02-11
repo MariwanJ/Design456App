@@ -42,15 +42,7 @@
 
 /* Cameras */
 class Camera;
-enum CameraList {
-    defaultCam = 0, //This is not fixed and can be moved , others are not.
-    CamTop,
-    CamBottom,
-    CamRight,
-    CamLeft,
-    CamFront,
-    CamBack,
-};
+
 
 //Camera struct which will keep the camera and a manipulator for the camera
 typedef struct {
@@ -58,19 +50,13 @@ typedef struct {
     Manipulator* manipulator;
  } cam;
  
-
-static int curr_camera = defaultCam;
-
 class Fr_GL3Window;
 
 class FRTK_API Fr_GL3Window : public Fl_Window {
 public:
     //class constructors
     Fr_GL3Window(int x, int y, int w, int h, const char* l);
-    Fr_GL3Window(int x, int y, int w, int h);
-    Fr_GL3Window(int w, int h, const char* l);
-    Fr_GL3Window(int w, int h);
-    
+   
     virtual ~Fr_GL3Window();
     virtual int exit();
     Fl_Window* pfltkWindow;
@@ -85,7 +71,6 @@ public:
 
 
     virtual void CreateScene();  //Must be overriden to get the desired results
-    virtual std::shared_ptr<Camera> CreateCamera(Group* parent, int cameraId);
     virtual std::shared_ptr<Transform> CreateSun();
 
     void resize(int x, int y, int w, int h);
@@ -103,25 +88,52 @@ public:
     static double newTime;
 
     static Scene* scene;
-    std::vector<cam> cameras;
+    std::vector<cam> cameras; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT, 
     std::shared_ptr<Camera> camera;
     Manipulator *manipulator;
     static GLFWwindow* pWindow;
     static void deinitializeGlad();
 protected:
+    void CreateCameras();
     int createGLFWwindow();
     int updateGLFWWindow();
-    //unsigned int VBO, VAO;
+
 
 private:
-    static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-    static void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+    void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+    void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-    static void cursor_position_callback(GLFWwindow*, double xpos, double ypos);
-    static void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cursor entered the window's client area, or GL_FALSE if it left it.
-    static void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
-    static void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
-    static void joystick_callback(int jid, int events);
+    void cursor_position_callback(GLFWwindow*, double xpos, double ypos);
+    void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cursor entered the window's client area, or GL_FALSE if it left it.
+    void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
+    void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
+    void joystick_callback(int jid, int events);
+
+
+    class GLFWCallbackWrapper
+    {
+    public:
+        GLFWCallbackWrapper() = delete;
+        GLFWCallbackWrapper(const GLFWCallbackWrapper&) = delete;
+        GLFWCallbackWrapper(GLFWCallbackWrapper&&) = delete;
+        ~GLFWCallbackWrapper() = delete;
+
+        //These are for avoiding error when you call non static functions.
+        static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+        static void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+        static void cursor_position_callback(GLFWwindow*, double xpos, double ypos);
+        static void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cursor entered the window's client area, or GL_FALSE if it left it.
+        static void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
+        static void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
+        static void joystick_callback(int jid, int events);
+        static void setGLFWwindow(Fr_GL3Window* glfwWindow);
+    private:
+        static  Fr_GL3Window* s_fr_glfwwindow;
+    };
+
+
+
     bool overlay;
     void setOverlay();
     void removeOverlya();
@@ -146,7 +158,7 @@ private:
     static int _yGl; // It is different than FLTK. But it is depends on  y()
     static int _wGl; // It is different than FLTK. But it is depends on  w()
     static int _hGl; // It is different than FLTK. But it is depends on h()
-    int curr_camera ;
+    CameraList active_camera_ ;
     const int Ox, Oy, Ow, Oh; //origional vlaues. 
 };
 

@@ -55,6 +55,7 @@ GLFWwindow* Fr_GL3Window::pWindow = nullptr;
 
 bool Fr_GL3Window::s_GLFWInitialized = false;
 bool Fr_GL3Window::s_GladInitialized = false;
+Fr_GL3Window* Fr_GL3Window::GLFWCallbackWrapper::s_fr_glfwwindow = nullptr;
 
 static int counter = 0;
 
@@ -80,10 +81,9 @@ static void error_callback(int error, const char* description)
 * FIXME: CLEANUP CODE
 */
 Scene* Fr_GL3Window::scene = nullptr;
-Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h, const char* l) :Fl_Window(x, y, w, h, l),Ox(x),Oy(y),Ow(w),Oh(h),
+Fr_GL3Window::Fr_GL3Window(int x=0, int y=0, int w=900, int h=800, const char* l="FLTK_GLFW Test") :Fl_Window(x, y, w, h, l), Ox(x), Oy(y), Ow(w), Oh(h),
                                                                         overlay(false),
-                                                                        curr_camera(defaultCam){
-
+                                                                        active_camera_(CameraList::PERSPECTIVE){
     //Default size is the size of the FLTK window
     FR::globalP_pWindow = this;
 
@@ -151,29 +151,17 @@ static Transform* sun = nullptr;
 void Fr_GL3Window::CreateScene()
 {
     scene = new Scene();//Save a link to the windows also.
-
     scene->linkToglfw = pWindow;
 
-    auto Dcamera = CreateCamera(scene, defaultCam);
-/*
-    Dcamera->SetEye(-6, 2, -20);
-    Dcamera->SetCenter(0, 0, 100);
-    Dcamera->SetUp(0, 1, 0);
-*/
+    CreateCameras();
 
-    Dcamera->SetEye(0, 2, -15);
-    Dcamera->SetCenter(0, 0, 50);
-    Dcamera->SetUp(0, 1, 0);
 
 
   /*
     * Add here the nodes - Grid, and XYZ axis
     */
     scene->AddNode(CreateSun());
-    scene->AddNode(Dcamera);
-    Dcamera->SetActive(true);
     scene->AddNode(bunny());
-    //CreateGrid();
     scene->AddNode(CreateGrid());
 
 }
@@ -290,6 +278,30 @@ void Fr_GL3Window::deinitializeGlad()
     s_GladInitialized = false;
 }
 
+void Fr_GL3Window::CreateCameras()
+{
+    for (int i = 0; i < 6; i++) {
+        camera = std::make_shared<Camera>();   //Shared pointer to the camera,
+        camera->SetPerspective(60, 1, 100);  //don't konw how to setup this yet!!
+        if (i == 0) {
+            camera->SetPerspective(40, 0.5, 50);
+            camera->SetActive(true);   //Only one camera is defined by defualt. 
+                                       //You should activate other cameras if you want another view and deactivate the default.
+        }
+        else {
+            camera->SetActive(false);
+        }
+        scene->AddNode(camera);
+        camera->setCameraType((CameraList)i);   //Depending on the list it should be as the enum defined
+        manipulator = new Manipulator();
+        camera->SetManipulator(std::unique_ptr<Manipulator>(manipulator));
+        cam newCam;
+        newCam.camera = camera.get();
+        newCam.manipulator = manipulator;
+        cameras.push_back(newCam);
+    }
+}
+
 int Fr_GL3Window::createGLFWwindow()
 {
     //***********************************************************************************************
@@ -317,7 +329,7 @@ int Fr_GL3Window::createGLFWwindow()
         return -1;
     }
     glfwMakeContextCurrent(pWindow);
-    glfwSetFramebufferSizeCallback(pWindow, framebuffer_size_callback);
+    glfwSetFramebufferSizeCallback(pWindow, GLFWCallbackWrapper::framebuffer_size_callback);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -332,14 +344,24 @@ int Fr_GL3Window::createGLFWwindow()
 
     //***************************************************
 
+    /**
+        Based on the discussion https://stackoverflow.com/questions/7676971/pointing-to-a-function-that-is-a-class-member-glfw-setkeycallback
+    */
+    #define genericCallback(functionName)[](GLFWwindow* window, auto... args) {\
+            auto pointer = static_cast<GLFWwindow*>(glfwGetWindowUserPointer(window));\
+            if (pointer->functionName) pointer->functionName(pointer, args...);}
+
+
+
+
     // GLFW callbacks  https://www.glfw.org/docs/3.3/input_guide.html
-    glfwSetFramebufferSizeCallback(pWindow, framebuffer_size_callback);
-    glfwSetKeyCallback(pWindow, keyboard_callback);
-    glfwSetCursorPosCallback(pWindow, cursor_position_callback);
-    glfwSetCursorEnterCallback(pWindow, cursor_enter_callback);
-    glfwSetMouseButtonCallback(pWindow, mouse_button_callback);
-    glfwSetScrollCallback(pWindow, scroll_callback);
-    glfwSetJoystickCallback(joystick_callback);
+    glfwSetFramebufferSizeCallback(pWindow, GLFWCallbackWrapper::framebuffer_size_callback);
+    glfwSetKeyCallback(pWindow, GLFWCallbackWrapper::keyboard_callback);
+    glfwSetCursorPosCallback(pWindow, GLFWCallbackWrapper::cursor_position_callback);
+    glfwSetCursorEnterCallback(pWindow, GLFWCallbackWrapper::cursor_enter_callback);
+    glfwSetMouseButtonCallback(pWindow, GLFWCallbackWrapper::mouse_button_callback);
+    glfwSetScrollCallback(pWindow, GLFWCallbackWrapper::scroll_callback);
+    glfwSetJoystickCallback(GLFWCallbackWrapper::joystick_callback);
     return 1;
 }
 
@@ -473,22 +495,6 @@ PerspectiveCamera
   heightAngle 0.78539819
 
   */
-std::shared_ptr<Camera> Fr_GL3Window::CreateCamera(Group* parent, int cameraId)
-{
-        camera = std::make_shared<Camera>();   //Shared pointer to the camera,
-        camera->SetPerspective(40, 0.5, 50);
-        camera->SetActive(false);
-        parent->AddNode(camera);
-        manipulator = new Manipulator();
-        camera->SetManipulator(std::unique_ptr<Manipulator>(manipulator));
-
-        cam newCam;
-        newCam.camera = camera.get();
-        newCam.manipulator = manipulator;
-        cameras.push_back(newCam);
-        return camera;
-}
-
 
 std::shared_ptr<Transform> Fr_GL3Window::CreateSun() {
     sun = new Transform();
@@ -514,6 +520,43 @@ void Fr_GL3Window::setOpenGLWinowSize(int xGL, int yGL, int wGL, int hGL)
     _hGl = hGL;
     resizeGlWindow(_xGl, _yGl, _wGl, _hGl);
 }
-Fr_GL3Window::Fr_GL3Window(int w, int h, const char* l) :Fl_Window(0, 0, w, h, l),Ox(0),Oy(0),Ow(w),Oh(h) {}
-Fr_GL3Window::Fr_GL3Window(int x, int y, int w, int h) : Fl_Window(x, y, w, h, "TestOpenGl"), Ox(x), Oy(y), Ow(w), Oh(h) {}
-Fr_GL3Window::Fr_GL3Window(int w, int h) : Fl_Window(0, 0, w, h, "TestOpenGl"), Ox(0), Oy(0), Ow(w), Oh(h) {}
+
+void Fr_GL3Window::GLFWCallbackWrapper::framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    s_fr_glfwwindow->framebuffer_size_callback(window, width, height);
+}
+
+void Fr_GL3Window::GLFWCallbackWrapper::keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    s_fr_glfwwindow->keyboard_callback( window,  key,  scancode,  action,  mods);    
+}
+
+void Fr_GL3Window::GLFWCallbackWrapper::cursor_position_callback(GLFWwindow*window, double xpos, double ypos)
+{
+    s_fr_glfwwindow->cursor_position_callback(window, xpos, ypos);
+}
+
+void Fr_GL3Window::GLFWCallbackWrapper::cursor_enter_callback(GLFWwindow*window, int entered)
+{
+    s_fr_glfwwindow->cursor_enter_callback(window, entered);
+}
+
+void Fr_GL3Window::GLFWCallbackWrapper::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    s_fr_glfwwindow->mouse_button_callback( window, button, action, mods);
+}
+
+void Fr_GL3Window::GLFWCallbackWrapper::scroll_callback(GLFWwindow*window, double xoffset, double yoffset)
+{
+    s_fr_glfwwindow->scroll_callback(window, xoffset, yoffset);
+}
+
+void Fr_GL3Window::GLFWCallbackWrapper::joystick_callback(int jid, int events)
+{
+    s_fr_glfwwindow->joystick_callback(jid, events);
+}
+
+void Fr_GL3Window::GLFWCallbackWrapper::setGLFWwindow(Fr_GL3Window* glfwWindow)
+{
+    GLFWCallbackWrapper::s_fr_glfwwindow= glfwWindow;
+}
