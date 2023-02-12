@@ -223,6 +223,7 @@ namespace COLOR {
 #define FR_MEDIUMAQUAMARINE      0.4000f,  0.8039f,  0.6667f,  1.0000f
 #define FR_OLDLACE               0.9922f,  0.9608f,  0.9020f,  1.0000f
 #define FR_GLASS                 0.3300f,  1.0000f,  1.0000f,  1.0000f
+#define FR_WINGS3D				 0.3800f,  0.3800f,  0.3800f,  0.5000f
 };
 
 #include<fr_callbacks.h>

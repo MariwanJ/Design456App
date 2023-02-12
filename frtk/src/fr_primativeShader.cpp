@@ -32,7 +32,7 @@
 #include <fr_primativeShader.h>
 #include <glad/glad.h>
 
-Fr_PrimaitiveShader::Shared *Fr_PrimaitiveShader::shared_ = nullptr;
+Fr_PrimaitiveShader::Shared* Fr_PrimaitiveShader::shared_ = nullptr;
 
 static const glm::mat4 kShadowMapBiasMatrix(
     0.5, 0.0, 0.0, 0.0,
@@ -40,39 +40,76 @@ static const glm::mat4 kShadowMapBiasMatrix(
     0.0, 0.0, 0.5, 0.0,
     0.5, 0.5, 0.5, 1.0);
 
+void Fr_PrimaitiveShader::defaultShaders()
+{
+    f_objectshader_ = "E:/Projects/Design456App/frtk/src/shaders/objectshader";
+    f_silhouette_ = "E:/Projects/Design456App/frtk/src/shaders/silhouette";
+    f_shadowmap_ = "E:/Projects/Design456App/frtk/src/shaders/shadowmap";
+}
+
+void Fr_PrimaitiveShader::setObjectshader(const char* newValue)
+{
+    f_objectshader_ = newValue;
+}
+
+void Fr_PrimaitiveShader::setSilhouette(const char* newValue)
+{
+    f_silhouette_ = newValue;
+}
+
+void Fr_PrimaitiveShader::setShadowmap(const char* newValue)
+{
+    f_shadowmap_ = newValue;
+}
+
 Fr_PrimaitiveShader::Fr_PrimaitiveShader(unsigned int color, float silhouette) :
-                                    primative_{nullptr}, silhouette_(silhouette) {
+    primative_{ nullptr }, silhouette_(silhouette) {
     SetColor(color);
     if (!shared_) {
         shared_ = new Shared;
-
-        shared_->primative_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/objectshader");
-        shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
-        shared_->shadowmap_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/shadowmap");
+        defaultShaders();
+        shared_->primative_program = new ShaderProgram(f_objectshader_);
+        shared_->silhouette_program = new ShaderProgram(f_silhouette_);
+        shared_->shadowmap_program = new ShaderProgram(f_shadowmap_);
+    }
+}
+Fr_PrimaitiveShader::Fr_PrimaitiveShader(glm::vec4 color, float silhouette) :
+    primative_{ nullptr }, silhouette_(silhouette) {
+    SetColor(color);
+    defaultShaders();
+    if (!shared_) {
+        shared_ = new Shared;
+        shared_->primative_program = new ShaderProgram(f_objectshader_);
+        shared_->silhouette_program = new ShaderProgram(f_silhouette_);
+        shared_->shadowmap_program = new ShaderProgram(f_shadowmap_);
     }
 }
 
 Fr_PrimaitiveShader::~Fr_PrimaitiveShader() {
 }
 
+void Fr_PrimaitiveShader::SetColor(glm::vec4 color) {
+    color_ = color;
+}
+
 void Fr_PrimaitiveShader::SetColor(unsigned int color, float alpha) {
     color_ = glm::vec4(
-       ((color >> 16) & 0xFF) / 255.0f,
-       ((color >> 8) & 0xFF) / 255.0f,
-       (color & 0xFF) / 255.0f,
-       alpha
+        ((color >> 16) & 0xFF) / 255.0f,
+        ((color >> 8) & 0xFF) / 255.0f,
+        (color & 0xFF) / 255.0f,
+        alpha
     );
 }
 
 void Fr_PrimaitiveShader::SetOpacity(float alpha) {
-    color_.a  = alpha;
+    color_.a = alpha;
 }
 
 void Fr_PrimaitiveShader::SetPrimative(std::shared_ptr<Fr_Primatives> primative) {
     primative_ = primative;
 }
 
-void Fr_PrimaitiveShader::LoadLights(ShaderProgram *program, const std::vector<LightInfo>& lights) {
+void Fr_PrimaitiveShader::LoadLights(ShaderProgram* program, const std::vector<LightInfo>& lights) {
     unsigned int nlights = std::min(lights.size(), kMaxLights);
     program->SetUniformInteger("nlights", nlights);
     for (size_t i = 0; i < nlights; ++i) {
@@ -101,7 +138,7 @@ void Fr_PrimaitiveShader::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& 
     }
 
     info.mvp.push_back(mvp);
-    ShaderProgram *program = shared_->shadowmap_program;
+    ShaderProgram* program = shared_->shadowmap_program;
     program->Enable();
     program->SetAttribLocation("position", 0);
     program->SetUniformMat4("mvp", mvp);
@@ -130,7 +167,6 @@ void Fr_PrimaitiveShader::Render(RenderInfo& info, const glm::mat4& modelview) {
     program->Enable();
     LoadLights(program, info.lights);
 
-
     program->SetAttribLocation("position", 0);
     program->SetAttribLocation("normal", 1);
     program->SetUniformMat4("modelview", modelview);
@@ -138,7 +174,6 @@ void Fr_PrimaitiveShader::Render(RenderInfo& info, const glm::mat4& modelview) {
     program->SetUniformMat4("mvp", mvp);
     program->SetUniformVec4("color", color_);
     program->SetUniformInteger("sm_light", info.shadowmap.light_id);
-    
 
     //****************************************************************************************FIXME
     //TODO FIXME -- THIS IS OLD OPENGL - DOSENT WORK FO RNEW OPENGL
@@ -146,15 +181,14 @@ void Fr_PrimaitiveShader::Render(RenderInfo& info, const glm::mat4& modelview) {
     glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));           //     THIS CAUSE ISSUE FIXME!!!!!!!!!!!!!!!!!!!
     shared_->primative_program->SetUniformInteger("sm_texture", 0);
 
-
-   primative_->Draw();
-   program->Enable();
-   program->Disable();
-   info.id++;
+    primative_->Draw();
+    program->Enable();
+    program->Disable();
+    info.id++;
 }
 
 void Fr_PrimaitiveShader::RenderSilhouette(const glm::mat4& mvp) {
-    ShaderProgram *program = shared_->silhouette_program;
+    ShaderProgram* program = shared_->silhouette_program;
     program->Enable();
     program->SetAttribLocation("position", 0);
     program->SetAttribLocation("normal", 1);

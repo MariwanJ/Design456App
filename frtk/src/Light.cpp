@@ -67,7 +67,7 @@ void Light::SetAttenuation(float c, float l, float q) {
 void Light::SetupSpot(float x, float y, float z, float cutoff, float exponent) {
     spot_enabled_ = true;
     spot_direction_ = glm::vec4(glm::normalize(glm::vec3(x, y, z)), 1);
-    spot_cutoff_ = cos(cutoff * M_PI / 180.0);
+    spot_cutoff_ = cos(glm::radians(cutoff));
     spot_exponent_ = exponent;
 }
 

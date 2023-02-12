@@ -7,18 +7,18 @@
  * Trabalho - Projeto Final
  */
 
-#version 330 core
+#version 430 core
 
 struct LightInfo {
-    vec4 position;
-    vec4 diffuse;
-    vec4 specular;
-    vec4 ambient;
-    vec3 attenuation;
-    bool is_spot;
-    vec3 direction;
-    float cutoff;
-    float exponent;
+    vec4 position;         //
+    vec4 diffuse;          //
+    vec4 specular;         //
+    vec4 ambient;          //Light intensity 
+    vec3 attenuation;      //
+    bool is_spot;          //
+    vec3 direction;        //
+    float cutoff;          //
+    float exponent;        //
 };
 
 const int MAX_LIGHTS = 8;

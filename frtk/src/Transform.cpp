@@ -41,7 +41,7 @@ void Transform::LoadIndentity() {
 }
 
 void Transform::Rotate(float angle, float x, float y, float z) {
-    matrix_ = glm::rotate(matrix_, (float)(angle * M_PI / 180.0), glm::vec3(x, y, z));
+    matrix_ = glm::rotate(matrix_, glm::radians(angle), glm::vec3(x, y, z));
     inverse_ = glm::inverse(matrix_);
 }
 
@@ -59,18 +59,18 @@ void Transform::SetManipulator(std::unique_ptr<Manipulator> manipulator) {
     manipulator_ = std::move(manipulator);
 }
 
-bool Transform::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
-    if (!active_)
-        return false;
-
-    if (Group::SetupCamera(projection, modelview)) {
-        if (manipulator_)
-            modelview *= manipulator_->GetInverse();
-        modelview *= inverse_;
-        return true;
-    }
-    return false;
-}
+//bool Transform::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
+//    if (!active_)
+//        return false;
+//
+//    if (Group::SetupCamera(projection, modelview)) {
+//        if (manipulator_)
+//            modelview *= manipulator_->GetInverse();
+//        modelview *= inverse_;
+//        return true;
+//    }
+//    return false;
+//}
 
 void Transform::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) {
     if (!active_)

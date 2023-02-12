@@ -81,16 +81,16 @@ static void error_callback(int error, const char* description)
 * FIXME: CLEANUP CODE
 */
 Scene* Fr_GL3Window::scene = nullptr;
-Fr_GL3Window::Fr_GL3Window(int x=0, int y=0, int w=900, int h=800, const char* l="FLTK_GLFW Test") :Fl_Window(x, y, w, h, l), Ox(x), Oy(y), Ow(w), Oh(h),
-                                                                        overlay(false),
-                                                                        active_camera_(CameraList::PERSPECTIVE){
+Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, const char* l = "FLTK_GLFW Test") :Fl_Window(x, y, w, h, l), Ox(x), Oy(y), Ow(w), Oh(h),
+overlay(false),
+active_camera_(CameraList::PERSPECTIVE) {
     //Default size is the size of the FLTK window
     FR::globalP_pWindow = this;
 
     _xGl = x;
     _yGl = y;
-    _wGl = w ;
-    _hGl = h ;
+    _wGl = w;
+    _hGl = h;
 
     gl_version_major = 4;
     gl_version_minor = 3;
@@ -104,7 +104,7 @@ Fr_GL3Window::Fr_GL3Window(int x=0, int y=0, int w=900, int h=800, const char* l
         s_GLFWInitialized = true;
     }
     //Hint to GLFW  - Window is visible, not decorated and gl version is 3.3
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl_version_major) ;
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl_version_major);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_version_minor);
     glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
     glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
@@ -154,16 +154,12 @@ void Fr_GL3Window::CreateScene()
     scene->linkToglfw = pWindow;
 
     CreateCameras();
-
-
-
-  /*
-    * Add here the nodes - Grid, and XYZ axis
-    */
+    /*
+      * Add here the nodes - Grid, and XYZ axis
+      */
     scene->AddNode(CreateSun());
     scene->AddNode(bunny());
-    scene->AddNode(CreateGrid());
-
+    scene->AddNode(Grid().CreateGrid());
 }
 
 //TODO FIXME
@@ -194,14 +190,13 @@ void Fr_GL3Window::resizeGlWindow(float ratio)
     _wGl = int(float(_wGl) * ratio);
     _hGl = int(float(_hGl) * ratio);
     updateGLFWWindow();
-
 }
 
 void Fr_GL3Window::resizeGlWindow(int xGl, int yGl, int wGl, int hGl)
 {
     //Use this to resize the GLFW window regardless the ratio
-    _xGl = x()+xGl;
-    _yGl = y()+yGl;
+    _xGl = x() + xGl;
+    _yGl = y() + yGl;
     _wGl = wGl;
     _hGl = hGl;
     updateGLFWWindow();
@@ -264,7 +259,7 @@ int Fr_GL3Window::releaseGLfwWindow()
     }
 
     DWORD style = GetWindowLong(glfwHND, GWL_STYLE); //get the b style
-    style |= (WS_POPUP | WS_MAXIMIZEBOX| WS_MINIMIZEBOX  | WS_SIZEBOX | WS_SYSMENU| WS_CAPTION); //reset the caption and popup bits
+    style |= (WS_POPUP | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_SIZEBOX | WS_SYSMENU | WS_CAPTION); //reset the caption and popup bits
     SetWindowLong(glfwHND, GWL_STYLE, style); //set the new style of b
     MoveWindow(glfwHND, _xGl, _yGl, _wGl, _hGl, true); //place b at (x,y,w,h) in a
     SetParent(glfwHND, nullptr);
@@ -282,10 +277,8 @@ void Fr_GL3Window::CreateCameras()
 {
     for (int i = 0; i < 6; i++) {
         camera = std::make_shared<Camera>();   //Shared pointer to the camera,
-        camera->SetPerspective(60, 1, 100);  //don't konw how to setup this yet!!
         if (i == 0) {
-            camera->SetPerspective(40, 0.5, 50);
-            camera->SetActive(true);   //Only one camera is defined by defualt. 
+            camera->SetActive(true);   //Only one camera is defined by defualt.
                                        //You should activate other cameras if you want another view and deactivate the default.
         }
         else {
@@ -347,12 +340,9 @@ int Fr_GL3Window::createGLFWwindow()
     /**
         Based on the discussion https://stackoverflow.com/questions/7676971/pointing-to-a-function-that-is-a-class-member-glfw-setkeycallback
     */
-    #define genericCallback(functionName)[](GLFWwindow* window, auto... args) {\
+#define genericCallback(functionName)[](GLFWwindow* window, auto... args) {\
             auto pointer = static_cast<GLFWwindow*>(glfwGetWindowUserPointer(window));\
             if (pointer->functionName) pointer->functionName(pointer, args...);}
-
-
-
 
     // GLFW callbacks  https://www.glfw.org/docs/3.3/input_guide.html
     glfwSetFramebufferSizeCallback(pWindow, GLFWCallbackWrapper::framebuffer_size_callback);
@@ -397,7 +387,7 @@ void Fr_GL3Window::removeOverlya()
 void Fr_GL3Window::show() {
     Fl_Window::show();
     //Create the GLFW Window
-    if (pWindow==nullptr){
+    if (pWindow == nullptr) {
         if (createGLFWwindow() != 0) {
             if (s_GladInitialized == true) {
                 //glad_glClearColor(1.0, 0.16, 0.18, 1.0);
@@ -411,7 +401,7 @@ void Fr_GL3Window::show() {
 //TODO FIXME:
 void Fr_GL3Window::gladEvents(int events)
 {
-     updateGLFWWindow();
+    updateGLFWWindow();
 }
 
 /**
@@ -420,9 +410,9 @@ void Fr_GL3Window::gladEvents(int events)
 void Fr_GL3Window::resize(int x, int y, int w, int h)
 {
     Fl_Window::resize(x, y, w, h);
-    float _ratio = float(w * h)/float(Ow * Oh) ;  /// Calculate ratio of resized of window
+    float _ratio = float(w * h) / float(Ow * Oh);  /// Calculate ratio of resized of window
     if (s_GladInitialized) {
-        if (_ratio !=0)
+        if (_ratio != 0)
             resizeGlWindow(_ratio);
     }
     //damage(FL_DAMAGE_ALL);
@@ -454,7 +444,6 @@ int Fr_GL3Window::GLFWrun()
     glfwMakeContextCurrent(pWindow);
     glViewport(0, 0, _wGl, _hGl);
 
-
     while (!glfwWindowShouldClose(pWindow))
     {
         //Update FLTK 24 frames/sec
@@ -465,33 +454,32 @@ int Fr_GL3Window::GLFWrun()
         double delta = newTime - oldTime;
         oldTime = newTime;
         fltktimerValue = fltktimerValue + delta;
-        if (fltktimerValue >= redrawFPS){
+        if (fltktimerValue >= redrawFPS) {
             fltktimerValue = 0.0;
             redrawFLTKTimer_cb(this);
             Fl::flush();
         }
 
         glClear(GL_COLOR_BUFFER_BIT);
-        glClearColor(FR_LIGHTCYAN); 
-       
+        glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - defualt should be wings3D or FreeCAD
 
         scene->RenderScene();
         if (s_GladInitialized) {
-        glCheckFunc(glfwSwapBuffers(pWindow));
-        glCheckFunc(glfwPollEvents());
+            glCheckFunc(glfwSwapBuffers(pWindow));
+            glCheckFunc(glfwPollEvents());
         }
     }
     return 0;
 }
 /**
-PerspectiveCamera 
-  
-  position 17.463835 -17.463825 13.463827\n  
-  orientation 0.74290609 0.30772209 0.59447283  1.2171158\n  
-  nearDistance 0.42925534\n 
-  farDistance 1761.75\n  
-  aspectRatio 1\n  
-  focalDistance 30.248238\n  
+PerspectiveCamera
+
+  position 17.463835 -17.463825 13.463827\n
+  orientation 0.74290609 0.30772209 0.59447283  1.2171158\n
+  nearDistance 0.42925534\n
+  farDistance 1761.75\n
+  aspectRatio 1\n
+  focalDistance 30.248238\n
   heightAngle 0.78539819
 
   */
@@ -508,7 +496,7 @@ std::shared_ptr<Transform> Fr_GL3Window::CreateSun() {
     light->SetAmbient(1.0, 1., 1.0);
     light->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
     sun_height->AddNode(light);
-    sun->SetActive(true );   //A must to have or the rabbit mesh will be black.
+    sun->SetActive(true);   //A must to have or the rabbit mesh will be black.
     return std::shared_ptr<Transform>(sun);
 }
 
@@ -528,25 +516,25 @@ void Fr_GL3Window::GLFWCallbackWrapper::framebuffer_size_callback(GLFWwindow* wi
 
 void Fr_GL3Window::GLFWCallbackWrapper::keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    s_fr_glfwwindow->keyboard_callback( window,  key,  scancode,  action,  mods);    
+    s_fr_glfwwindow->keyboard_callback(window, key, scancode, action, mods);
 }
 
-void Fr_GL3Window::GLFWCallbackWrapper::cursor_position_callback(GLFWwindow*window, double xpos, double ypos)
+void Fr_GL3Window::GLFWCallbackWrapper::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
     s_fr_glfwwindow->cursor_position_callback(window, xpos, ypos);
 }
 
-void Fr_GL3Window::GLFWCallbackWrapper::cursor_enter_callback(GLFWwindow*window, int entered)
+void Fr_GL3Window::GLFWCallbackWrapper::cursor_enter_callback(GLFWwindow* window, int entered)
 {
     s_fr_glfwwindow->cursor_enter_callback(window, entered);
 }
 
 void Fr_GL3Window::GLFWCallbackWrapper::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-    s_fr_glfwwindow->mouse_button_callback( window, button, action, mods);
+    s_fr_glfwwindow->mouse_button_callback(window, button, action, mods);
 }
 
-void Fr_GL3Window::GLFWCallbackWrapper::scroll_callback(GLFWwindow*window, double xoffset, double yoffset)
+void Fr_GL3Window::GLFWCallbackWrapper::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     s_fr_glfwwindow->scroll_callback(window, xoffset, yoffset);
 }
@@ -558,5 +546,5 @@ void Fr_GL3Window::GLFWCallbackWrapper::joystick_callback(int jid, int events)
 
 void Fr_GL3Window::GLFWCallbackWrapper::setGLFWwindow(Fr_GL3Window* glfwWindow)
 {
-    GLFWCallbackWrapper::s_fr_glfwwindow= glfwWindow;
+    GLFWCallbackWrapper::s_fr_glfwwindow = glfwWindow;
 }

@@ -32,17 +32,21 @@
 class Fr_Primatives;
 class ShaderProgram;
 
-class Fr_PrimaitiveShader: public Node {
+class Fr_PrimaitiveShader : public Node {
 public:
     /**
      * Constructor
      */
     Fr_PrimaitiveShader(unsigned int color = 0x111111, float silhouette = 0.005);
 
+    Fr_PrimaitiveShader(glm::vec4 color, float silhouette = 0.005);
+
     /**
      * Destructor
      */
     ~Fr_PrimaitiveShader();
+
+    void SetColor(glm::vec4 color);
 
     /**
      * Sets the color
@@ -69,11 +73,14 @@ public:
      */
     void Render(RenderInfo& info, const glm::mat4& modelview) override;
 
+    void setObjectshader(const char* newValue);
+    void setSilhouette(const char* newValue);
+    void setShadowmap(const char* newValue);
 private:
     /**
      * Sets the uniform light data
      */
-    void LoadLights(ShaderProgram *program, const std::vector<LightInfo>& lights);
+    void LoadLights(ShaderProgram* program, const std::vector<LightInfo>& lights);
 
     /**
      * Renders the silhouette
@@ -83,19 +90,22 @@ private:
     // Constants
     const size_t kMaxLights = 8;
 
+    void defaultShaders();
     // Shared between instances
     struct Shared {
-        ShaderProgram *primative_program;
-        ShaderProgram *silhouette_program;          //the dark shape and outline of object
-        ShaderProgram *shadowmap_program;
+        ShaderProgram* primative_program;
+        ShaderProgram* silhouette_program;          //the dark shape and outline of object
+        ShaderProgram* shadowmap_program;
     };
-    static Shared *shared_;
+    static Shared* shared_;
 
     // Attributes
     std::shared_ptr <Fr_Primatives> primative_;
     glm::vec4 color_;
     float silhouette_;
+    std::string f_objectshader_;
+    std::string f_silhouette_;
+    std::string f_shadowmap_;
 };
 
 #endif
-

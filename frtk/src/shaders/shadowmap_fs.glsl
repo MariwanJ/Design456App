@@ -7,7 +7,7 @@
  * Trabalho - Projeto Final
  */
 
-#version 330 core
+#version 430 core
 
 void main() {
 }

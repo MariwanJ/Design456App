@@ -91,16 +91,6 @@ void Manipulator::GLFWMotion(int x, int y) {
             matrix_ = glm::rotate(theta, w) * matrix_;
         v_ = v;
     }
-    /*    Scroll will do this job
-    else if (operation_ == Operation::kZoom) {
-        int vp[4];
-        glGetIntegerv(GL_VIEWPORT, vp);
-        float dy = y - y_;
-        float f = dy / vp[3];
-        float scale = 1 + kZoomScale * f;
-        matrix_ = glm::scale(glm::vec3(scale, scale, scale)) * matrix_;
-    }
-    */
     inv_ = glm::inverse(matrix_);
     x_ = x;
     y_ = y;

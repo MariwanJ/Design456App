@@ -13,7 +13,7 @@ Fr_Primatives::~Fr_Primatives() {
 void Fr_Primatives::Draw()
 {
     GLuint length;
-    if (drawType==GL_LINES){
+    if (drawType == GL_LINES) {
         glCheckFunc(glBindVertexArray(vao_));
         length = (GLuint)indices_.size() * 2;
         glCheckFunc(glDrawArrays(GL_LINES, 0, vertices_.size()));
@@ -61,8 +61,8 @@ void Fr_Primatives::SetVertex(unsigned int index, float vertices[], const glm::v
 }
 
 void Fr_Primatives::CalculateNormals(const std::vector<float>& vertices,
-                                    const std::vector<unsigned int>& indices,
-                                    std::vector<float>& normals) {
+    const std::vector<unsigned int>& indices,
+    std::vector<float>& normals) {
     // Initialize the normals
     std::vector<glm::vec3> pre_normals(vertices.size() / 3);
     for (size_t i = 0; i < pre_normals.size(); ++i) {
@@ -128,17 +128,15 @@ void Fr_Primatives::NormalizeVertices(std::vector<float>& vertices) {
 }
 
 void Fr_Primatives::InitializeVBO(const std::vector<float>& vertices,
-                                 const std::vector<float>& normals,
-                                 const std::vector<unsigned int> indices) {
-
+    const std::vector<float>& normals,
+    const std::vector<unsigned int> indices) {
     glCheckFunc(glGenBuffers(1, vbo_));
     glCheckFunc(glGenVertexArrays(1, &vao_));
     glCheckFunc(glBindVertexArray(vao_));       //Keeps all instructions related this object
-    
+
     glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]));        //First object buffer
     glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW));
     glCheckFunc(glEnableVertexAttribArray(0));
-    glCheckFunc(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), NULL));
+    glCheckFunc(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL));
     glCheckFunc(glBindVertexArray(0));
-
 }

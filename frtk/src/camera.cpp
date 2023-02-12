@@ -72,35 +72,39 @@ bool Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
     int vp[4];
     switch (camType_) {
     case CameraList::PERSPECTIVE: {
+        SetEye(0, 2, -20);
+        SetCenter(0, 0, 0);
+        SetUp(0, 1, 0);
         glGetIntegerv(GL_VIEWPORT, vp);
-                                            //RIGHT                     LEFT                    BOTTOM    TOP   
-        projection = glm::perspective((float)(fovy_ * M_PI / 180.0), (float)vp[2] / vp[3], znear_, zfar_);
+                                                //RIGHT                     LEFT                    BOTTOM    TOP
+        projection = glm::perspective(glm::radians(fovy_ ), (float)vp[2] / vp[3], znear_, zfar_);
         modelview = glm::lookAt(eye_, center_, up_);
         if (manipulator_)
             modelview *= manipulator_->GetMatrix(glm::normalize(center_ - eye_));
-        //These might change - TODO FIXEME:
-        SetEye(0, 2, -15);
-        SetCenter(0, 0, 50);
-        SetUp(0, 1, 0);
-    
-    }
-        break;
+        Rotate(90.0f, 1.0f, 0.0f, 0.0f);
+        //These might change - TODO FIXEME
+        } break;
     case CameraList::ORTHOGRAPHIC: {
         //TODO FIXME
+        SetEye(0, 2, -20);
+        SetCenter(0, 0, 0);
+        SetUp(0, 1, 0);
+
         glGetIntegerv(GL_VIEWPORT, vp);
-                                //RIGHT                             LEFT                    BOTTOM    TOP     
-        projection = glm::ortho((float)(fovy_ * M_PI / 180.0), (float)vp[2] / vp[3], znear_, zfar_);
+                                        //RIGHT                             LEFT                    BOTTOM    TOP
+        projection = glm::ortho(glm::radians(fovy_), (float)vp[2] / vp[3], znear_, zfar_);
         modelview = glm::lookAt(eye_, center_, up_);
         if (manipulator_)
             modelview *= manipulator_->GetMatrix(glm::normalize(center_ - eye_));
-        }
-                                 break;
+        } break;
     case CameraList::TOP: {
-    }
-                        break;
+        SetEye(0, 2, -20);
+        SetCenter(0, 0, 0);
+        SetUp(0, 1, 0);
+        Rotate(90, 0, 1, 0); //should give top
+        } break;
     case CameraList::BOTTOM: {
-    }
-                           break;
+    } break;
     }
     return true;
 }

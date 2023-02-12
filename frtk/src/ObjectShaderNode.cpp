@@ -32,7 +32,7 @@
 #include <glad/glad.h>
 #include<fr_primatives.h>
 
-ObjectShaderNode::Shared *ObjectShaderNode::shared_ = nullptr;
+ObjectShaderNode::Shared* ObjectShaderNode::shared_ = nullptr;
 
 static const glm::mat4 kShadowMapBiasMatrix(
     0.5, 0.0, 0.0, 0.0,
@@ -41,13 +41,13 @@ static const glm::mat4 kShadowMapBiasMatrix(
     0.5, 0.5, 0.5, 1.0);
 
 ObjectShaderNode::ObjectShaderNode(unsigned int color, float silhouette) :
-    mesh_{nullptr},
+    mesh_{ nullptr },
     silhouette_(silhouette) {
     SetColor(color);
     if (!shared_) {
         shared_ = new Shared;
         shared_->object_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/objectshader");
-      shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
+        shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
         shared_->shadowmap_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/shadowmap");
     }
 }
@@ -57,15 +57,15 @@ ObjectShaderNode::~ObjectShaderNode() {
 
 void ObjectShaderNode::SetColor(unsigned int color, float alpha) {
     color_ = glm::vec4(
-       ((color >> 16) & 0xFF) / 255.0f,
-       ((color >> 8) & 0xFF) / 255.0f,
-       (color & 0xFF) / 255.0f,
-       alpha
+        ((color >> 16) & 0xFF) / 255.0f,
+        ((color >> 8) & 0xFF) / 255.0f,
+        (color & 0xFF) / 255.0f,
+        alpha
     );
 }
 
 void ObjectShaderNode::SetOpacity(float alpha) {
-    color_.a  = alpha;
+    color_.a = alpha;
 }
 
 void ObjectShaderNode::SetMesh(std::shared_ptr<Mesh> mesh) {
@@ -76,7 +76,7 @@ void ObjectShaderNode::SetMesh(const std::string& mesh) {
     mesh_ = std::make_shared<Mesh>(mesh);
 }
 
-void ObjectShaderNode::LoadLights(ShaderProgram *program, const std::vector<LightInfo>& lights) {
+void ObjectShaderNode::LoadLights(ShaderProgram* program, const std::vector<LightInfo>& lights) {
     unsigned int nlights = std::min(lights.size(), kMaxLights);
     program->SetUniformInteger("nlights", nlights);
     for (size_t i = 0; i < nlights; ++i) {
@@ -105,7 +105,7 @@ void ObjectShaderNode::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& mod
     }
 
     info.mvp.push_back(mvp);
-    ShaderProgram *program = shared_->shadowmap_program;
+    ShaderProgram* program = shared_->shadowmap_program;
     program->Enable();
     program->SetAttribLocation("position", 0);
     program->SetUniformMat4("mvp", mvp);
@@ -134,7 +134,6 @@ void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     program->Enable();
     LoadLights(program, info.lights);
 
-
     program->SetAttribLocation("position", 0);
     program->SetAttribLocation("normal", 1);
     program->SetUniformMat4("modelview", modelview);
@@ -142,23 +141,21 @@ void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     program->SetUniformMat4("mvp", mvp);
     program->SetUniformVec4("color", color_);
     program->SetUniformInteger("sm_light", info.shadowmap.light_id);
-    
 
     //****************************************************************************************FIXME
     //TODO FIXME -- THIS IS OLD OPENGL - DOSENT WORK FO RNEW OPENGL
     glGenTextures(1, &info.shadowmap.texture);
-   glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));           //     THIS CAUSE ISSUE FIXME!!!!!!!!!!!!!!!!!!!
-   shared_->object_program->SetUniformInteger("sm_texture", 0);
+    glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));           //     THIS CAUSE ISSUE FIXME!!!!!!!!!!!!!!!!!!!
+    shared_->object_program->SetUniformInteger("sm_texture", 0);
 
-
-   mesh_->Draw();
-   program->Enable();
-   program->Disable();
+    mesh_->Draw();
+    program->Enable();
+    program->Disable();
     info.id++;
 }
 
 void ObjectShaderNode::RenderSilhouette(const glm::mat4& mvp) {
-    ShaderProgram *program = shared_->silhouette_program;
+    ShaderProgram* program = shared_->silhouette_program;
     program->Enable();
     program->SetAttribLocation("position", 0);
     program->SetAttribLocation("normal", 1);

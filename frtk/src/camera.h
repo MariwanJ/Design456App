@@ -32,7 +32,25 @@
 #include<frtk.h>
 #include<Fr_Core.h>
 
-#include <Node.h>
+#include <Transform.h>
+
+/*
+    R= Righ Vector 
+    U= Up Vector 
+    D=  Direction Vector
+    P=  Camera position vector
+
+                        Rx  Ry  Rz  0               1   0   0   -Px
+            LookAt =    Ux  Uy  Uz  0       *       0   1   0   -Py
+                        Dx  Dy  Dz  0               0   0   1   -Pz
+                        0   0   0   1               0   0   0   1
+
+                        
+*/
+
+
+
+
 
 //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT, 
 typedef enum class CameraList {
@@ -49,9 +67,9 @@ class Manipulator;
 
 
 /**
- * Scene's camera
+ * Scene's camera- Must be a subclass of Transform to achive translation
  */
-class Camera : public Node {
+class Camera : public Transform {
 public:
     /**
      * Constructor

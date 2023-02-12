@@ -1,7 +1,4 @@
-
-
 #include "Grid.h"
-
 
 #include <ObjectShaderNode.h>
 #include <fr_primativeShader.h>
@@ -19,14 +16,14 @@ std::shared_ptr<Transform>bunny() {
     //bunny_t->Rotate(0, 0, 0, 1);
     //bunny_t->Rotate(90, 0, 0, 1);
 
-    auto bunny = std::make_shared<ObjectShaderNode>(0xbc5e13, 0.005); //  color and
+    auto bunny = std::make_shared<ObjectShaderNode>(0xc9c9c9, 0.005); //  color and
 
     //bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/xy_plane.off"));
     //bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/frtk/src/data/bunny.off"));
     bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/Cube.off"));
 
     auto rightlight_spot = std::make_shared<Light>();
-    rightlight_spot->SetActive(false);
+    rightlight_spot->SetActive(true);
     rightlight_spot->SetPosition(2.956, -0.514, 1.074);
     rightlight_spot->SetupSpot(1.0, 0, -0.1, 45, 16);
     rightlight_spot->SetDiffuse(0, 0, 0);
@@ -36,24 +33,83 @@ std::shared_ptr<Transform>bunny() {
     bunny_t->AddNode(bunny);
     return bunny_t;
 }
+/**
+ * Grid constructor.
+ *
+ */
+Grid::Grid()
+{
+    setGridParam();//default values. Otherwise you have to use setGridParam
+}
+/**
+ * .
+ * 
+ * \param sections No of line sections. default = 50
+ * \param gridSize Distance between each line. default = 1mm
+ * \param pos Center of the grid. Defualt is the origin (0,0,0)
+ * \param scale Scale of the grid - defualt is (1.0f,1.0f,1.0f)
+ */
+void Grid::setGridParam(unsigned int sections, 
+                        unsigned int gridSize, 
+                        glm::vec3 pos, 
+                        glm::vec3 scale){
+    sections_ = sections;
+    gridSize_ = gridSize;
+    scale_ = scale;
+    centerPos_ = pos;
+    gridColor_ = (glm::vec4)FR_SPECIAL_BLUE;
+}
 
+Grid::~Grid()
+{
+}
 
-std::shared_ptr<Transform>CreateGrid() {
+void Grid::setCenterPosition(glm::vec3 pos)
+{
+    centerPos_ = pos;
+}
+
+void Grid::setAngle(float Angle)
+{
+    gridRotation_[3] = glm::radians(Angle);
+}
+
+void Grid::setRotation(glm::vec4 rotation)
+{
+    gridRotation_ = rotation;
+}
+
+glm::vec4 Grid::getRotation(void) {
+    return gridRotation_;
+}
+
+void Grid::setVisible(bool status)
+{
+    active_ = status;
+}
+
+void Grid::setGridSize(unsigned int sizeINmm)
+{
+    gridSize_ = sizeINmm;
+}
+
+unsigned int Grid::getGridSize(void) const
+{
+    return 0;
+}
+
+std::shared_ptr<Transform> Grid::CreateGrid()
+{
     auto grid_t = std::make_shared<Transform>();
-    grid_t->Scale(1, 1, 1);
-    int sections = 50;
-    int gridSize = 1;
-    unsigned int vao;
-    unsigned int vbo;
     std::vector<float> vertices;
-    float x , y , z  ;
+    float x, y, z;
     x = y = z = 0;
-    //First lines 
-    
-    for (int i = 0; i < sections; i += gridSize) {
-        for (int j = 0; j <=sections; j+=sections) {
-             x = i * gridSize;
-             y = j*gridSize;
+
+    //First lines
+    for (int i = 0; i < sections_; i += gridSize_) {
+        for (int j = 0; j <= sections_; j += sections_) {
+            x = i * gridSize_;
+            y = j * gridSize_;
             float z = 0.0;
             vertices.push_back(x);
             vertices.push_back(y);
@@ -61,10 +117,10 @@ std::shared_ptr<Transform>CreateGrid() {
         }
     }
     //Second lines to create the squre plane
-    for (int i = 0; i < sections; i += gridSize) {
-        for (int j = 0; j <= sections; j += sections) {
-            x = j*gridSize;
-            y = i*gridSize;
+    for (int i = 0; i < sections_; i += gridSize_) {
+        for (int j = 0; j <= sections_; j += sections_) {
+            x = j * gridSize_;
+            y = i * gridSize_;
             float z = 0.0;
             vertices.push_back(x);
             vertices.push_back(y);
@@ -74,39 +130,14 @@ std::shared_ptr<Transform>CreateGrid() {
 
     std::vector<unsigned int> indices;
     int noOfVerticies = (int)vertices.size();
-    for (int i = 0; i < sections*2; i++) {
+    for (int i = 0; i < sections_ * 2; i++) {
         indices.push_back(i);
     }
     grid_t->Scale(10, 10, 10);
-    std::shared_ptr<Fr_Primatives> primative =  std::make_shared<Fr_Primatives>();
+    std::shared_ptr<Fr_Primatives> primative = std::make_shared<Fr_Primatives>();
     primative->SetVertexes(vertices, indices);
-    auto grid = std::make_shared<Fr_PrimaitiveShader>(0x222222, 0.005); //  color and
+    auto grid = std::make_shared<Fr_PrimaitiveShader>(gridColor_, 0.005); //  color and
     grid->SetPrimative(primative);
     grid_t->AddNode(grid);
-    return grid_t;
-}
-
-Grid::Grid()
-{
-}
-
-Grid::~Grid()
-{
-}
-
-void Grid::setDimentionPoints(int x1, int y1, int x2, int y2, int angle)
-{
-}
-
-void Grid::setDimention(int x, int y, int width, int angle)
-{
-}
-
-void Grid::Render(RenderInfo& info, const glm::mat4& modelview)
-{
-
-}
-
-void Grid::setGridSize(int sizeINmm)
-{
+    return grid_t; 
 }
