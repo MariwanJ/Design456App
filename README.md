@@ -23,7 +23,9 @@ Only Windows is supported. Glad is not the latest. My laptop dosen't support tha
 
 5-Since I am submoduling some libraries, lua files are not included with these submodules. At the moment I don't know how to get that fixed. You find the files under the folder Resources for each module.
 
-OpenGL is not easy. I am not used to write code for OpenGL. No more and I have to learn at least the basics so I can write the base code for the Wings conversion. 
+6-Always devbranch is the active development brnach .. But from time to time I merge what I think are good to have in main. Alot of work remained yet :(
+
+OpenGL is not easy. I am not used to write code for OpenGL. Before starting the conversion of Wings3D, I need to setup the basic drawing functionality in OpenGL.
 
 Don't forget that you need to download preemake5.exe 
 
