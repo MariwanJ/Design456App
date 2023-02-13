@@ -277,8 +277,9 @@ void Fr_GL3Window::CreateCameras()
 {
     for (int i = 0; i < 6; i++) {
         camera = std::make_shared<Camera>();   //Shared pointer to the camera,
+        camera->setCameraType(CameraList(i));
         if (i == 0) {
-            camera->SetActive(true);   //Only one camera is defined by defualt.
+            camera->SetActive(true);   //Only one camera is defined by default.
                                        //You should activate other cameras if you want another view and deactivate the default.
         }
         else {

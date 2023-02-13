@@ -81,14 +81,14 @@ bool Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
         modelview = glm::lookAt(eye_, center_, up_);
         if (manipulator_)
             modelview *= manipulator_->GetMatrix(glm::normalize(center_ - eye_));
-        Rotate(90.0f, 1.0f, 0.0f, 0.0f);
+       Rotate(-1.0f, 0.0f, 0.0f, 90.0f);
         //These might change - TODO FIXEME
         } break;
     case CameraList::ORTHOGRAPHIC: {
         //TODO FIXME
         SetEye(0, 2, -20);
         SetCenter(0, 0, 0);
-        SetUp(0, 1, 0);
+        SetUp(1, 0, 0);
 
         glGetIntegerv(GL_VIEWPORT, vp);
                                         //RIGHT                             LEFT                    BOTTOM    TOP
