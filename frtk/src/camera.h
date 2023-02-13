@@ -32,7 +32,7 @@
 #include<frtk.h>
 #include<Fr_Core.h>
 
-#include <Transform.h>
+#include <Node.h>
 
 /*
     R= Righ Vector 
@@ -69,7 +69,7 @@ class Manipulator;
 /**
  * Scene's camera- Must be a subclass of Transform to achive translation
  */
-class Camera : public Transform {
+class Camera : public Node {
 public:
     /**
      * Constructor

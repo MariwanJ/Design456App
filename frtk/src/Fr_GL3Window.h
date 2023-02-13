@@ -45,10 +45,6 @@ class Camera;
 
 
 //Camera struct which will keep the camera and a manipulator for the camera
-typedef struct {
-    Camera* camera;
-    Manipulator* manipulator;
- } cam;
  
 class Fr_GL3Window;
 
@@ -88,8 +84,8 @@ public:
     static double newTime;
 
     static Scene* scene;
-    std::vector<cam> cameras; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT, 
-    std::shared_ptr<Camera> camera;
+    std::vector<Transform> cameras; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT, 
+    //std::shared_ptr<Camera> camera;
     Manipulator *manipulator;
     static GLFWwindow* pWindow;
     static void deinitializeGlad();
