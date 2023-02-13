@@ -35,6 +35,7 @@ void Group::AddNode(std::shared_ptr<Node> node) {
     nodes_.push_back(node);
 }
 
+
 bool Group::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
     int ww = 0;
     if (active_)
@@ -70,5 +71,19 @@ void Group::Render(RenderInfo& info, const glm::mat4& modelview) {
     if (active_)
         for (auto& node : nodes_)
             node->Render(info, modelview);
+}
+
+std::shared_ptr<Node> Group::getNode(int id)
+{
+    if (nodes_.size() > 0)
+        return nodes_[id];
+    else
+        return nullptr;
+}
+
+std::vector<std::shared_ptr<Node>> Group::getNodes()
+{
+    //We don't care if nodes doesn't contain any children. Developer must know to deal with that.
+        return nodes_;
 }
 

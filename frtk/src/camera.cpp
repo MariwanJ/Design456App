@@ -62,8 +62,13 @@ void Camera::SetPerspective(float fovy, float znear, float zfar) {
     zfar_ = zfar;    //TOP
 }
 
-void Camera::SetManipulator(std::unique_ptr<Manipulator> manipulator) {
-    manipulator_ = std::move(manipulator);
+void Camera::SetManipulator(std::shared_ptr<Manipulator> manipulator) {
+    manipulator_ = std::move(manipulator); //Move ownership to this class
+}
+
+std::shared_ptr<Manipulator> Camera::getManipulator()
+{
+    return manipulator_;
 }
 
 bool Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {

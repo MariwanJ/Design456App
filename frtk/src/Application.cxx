@@ -54,8 +54,14 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
     FR::glfw_e_y = cposy;
     if (button == 0 || button == 1)
         if (win != nullptr) {
-            FR::globalP_pWindow->cameras[(unsigned int)FR::globalP_pWindow->active_camera_].manipulator->GLFWMouse(button,FR::glfw_MouseClicked,cposx, cposy);
-            FR::globalP_pWindow->cameras[(unsigned int)FR::globalP_pWindow->active_camera_].manipulator->GLFWMotion(cposx, cposy);
+            auto activeCameraTrans = FR::globalP_pWindow->cameras[(unsigned int)FR::globalP_pWindow->active_camera_];
+                if (activeCameraTrans->getNodes().size() > 1) {
+                    assert("Camera Transform should have only one child. Cannot continue!\n");
+            }
+            auto camera_= std::dynamic_pointer_cast<Camera> (activeCameraTrans->getNode(0));// There must be only one and the child is the camera
+            auto manipulator_ = camera_->getManipulator();
+            manipulator_->GLFWMouse(button,FR::glfw_MouseClicked,cposx, cposy);
+            manipulator_->GLFWMotion(cposx, cposy);
             FR::globalP_pWindow->scene->RenderScene();
             button = -1;
         }
@@ -79,10 +85,16 @@ void Fr_GL3Window::mouse_button_callback(GLFWwindow* win, int button, int action
 void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
 {
     double x, y;
-    x = FR::globalP_pWindow->cameras[(unsigned int)FR::globalP_pWindow->active_camera_].manipulator->get_X();
-    y= FR::globalP_pWindow->cameras[(unsigned int)FR::globalP_pWindow->active_camera_].manipulator->get_Y();
+    auto activeCameraTrans = FR::globalP_pWindow->cameras[(unsigned int)FR::globalP_pWindow->active_camera_];
+    if (activeCameraTrans->getNodes().size() > 1) {
+        assert("Camera Transform should have only one child. Cannot continue!\n");
+    }
+    auto camera_ = std::dynamic_pointer_cast<Camera> (activeCameraTrans->getNode(0));// There must be only one and the child is the camera
+    auto manipulator_ = camera_->getManipulator();
+    x = manipulator_->get_X();
+    y= manipulator_->get_Y();
     if (win != nullptr) {
-        FR::globalP_pWindow->cameras[(unsigned int)FR::globalP_pWindow->active_camera_].manipulator->GLFWScroll(xoffset, yoffset);
+        manipulator_->GLFWScroll(xoffset, yoffset);
         FR::globalP_pWindow->scene->RenderScene();
     }
 }

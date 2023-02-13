@@ -103,7 +103,14 @@ public:
     /**
      * Sets the manipulator
      */
-    void SetManipulator(std::unique_ptr<Manipulator> manipulator);
+    void SetManipulator(std::shared_ptr<Manipulator> manipulator);
+
+    /**
+     * Get the manipulator that is associated with the camera.
+     * 
+     * \return pointer to manipulator associated with the camera
+     */
+    std::shared_ptr<Manipulator> getManipulator();
 
     /**
      * Sets the camera
@@ -127,7 +134,7 @@ private:
     float fovy_;    //LEFT
     float znear_;   //BOTTOM
     float zfar_;   //TOP 
-    std::unique_ptr<Manipulator> manipulator_;
+    std::shared_ptr<Manipulator> manipulator_;
 };
 
 #endif

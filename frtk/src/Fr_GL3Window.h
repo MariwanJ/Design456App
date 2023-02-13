@@ -44,8 +44,6 @@
 class Camera;
 
 
-//Camera struct which will keep the camera and a manipulator for the camera
- 
 class Fr_GL3Window;
 
 class FRTK_API Fr_GL3Window : public Fl_Window {

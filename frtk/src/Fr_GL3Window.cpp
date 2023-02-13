@@ -83,7 +83,7 @@ static void error_callback(int error, const char* description)
 Scene* Fr_GL3Window::scene = nullptr;
 Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, const char* l = "FLTK_GLFW Test") :Fl_Window(x, y, w, h, l), Ox(x), Oy(y), Ow(w), Oh(h),
 overlay(false),
-active_camera_(CameraList::ORTHOGRAPHIC) {
+active_camera_(CameraList::PERSPECTIVE) {
     //Default size is the size of the FLTK window
     FR::globalP_pWindow = this;
 
@@ -276,24 +276,24 @@ void Fr_GL3Window::deinitializeGlad()
 void Fr_GL3Window::CreateCameras()
 {
     for (int i = 0; i < 6; i++) {
-        std::shared_ptr camera = std::make_shared<Camera>();   //Shared pointer to the camera,
+        std::shared_ptr camera_ = std::make_shared<Camera>();   //Shared pointer to the camera,
+        //We need to have the transform object to controll the camera. Only one child should be allowed TODO FIXME:
         auto camera_trans = std::make_shared<Transform>();
         camera_trans->Translate(0.6, 0.5, 1.7);
         camera_trans->Rotate(90, 1, 0, 0);
-        camera_trans->AddNode(camera);
+        camera_trans->AddNode(camera_);
         if (i == 0) {
-            camera->SetActive(true);   //Only one camera is defined by default.
+            camera_->SetActive(true);   //Only one camera is defined by default.
                                        //You should activate other cameras if you want another view and deactivate the default.
         }
         else {
-            camera->SetActive(false);
+            camera_->SetActive(false);
         }
-        scene->AddNode(camera);
-        camera->setCameraType((CameraList)i);   //Depending on the list it should be as the enum defined
+        scene->AddNode(camera_);
+        camera_->setCameraType((CameraList)i);   //Depending on the list it should be as the enum defined
         manipulator = new Manipulator();
-        camera->SetManipulator(std::unique_ptr<Manipulator>(manipulator));
-        
-        cameras.push_back(camera_trans);
+        camera_->SetManipulator(std::unique_ptr<Manipulator>(manipulator));
+        cameras.push_back(camera_trans);  //Transform with a camera child.
     }
 }
 

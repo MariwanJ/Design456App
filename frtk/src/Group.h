@@ -49,6 +49,20 @@ public:
     void AddNode(std::shared_ptr<Node> node);
 
     /**
+     * Retrive a pointer to the desired Node given by id number.
+     * 
+     * \param id    Node number
+     * \return pointer to the node if exists. or nullpntr
+     */
+    std::shared_ptr<Node> getNode(int id);
+
+    /**
+     * Return a pointer to the vector nodes (all of them).
+     * 
+     * \return pointer to the vector nodes even if there is no children (which will be an empty vector
+     */
+    std::vector<std::shared_ptr<Node>> getNodes();
+    /**
      * Sets the camera
      * Returns true if the camera has been set
      * Returns the camera info by reference
