@@ -176,11 +176,6 @@ void Fr_GL3Window::draw() {
     Fl::flush();
 }
 
-//TODO FIXME: Do we need this?
-void Fr_GL3Window::reset() {
-    shaderProgram = 0;
-}
-
 /**
 *Resize only the GLFW Window.
 */
@@ -204,17 +199,16 @@ void Fr_GL3Window::resizeGlWindow(int xGl, int yGl, int wGl, int hGl)
 
 int Fr_GL3Window::handle(int event) {
     //gladEvents(event);
+    //gladEvents(event);
     return Fl_Window::handle(event);
 }
 
-int Fr_GL3Window::glfw_handle(int evenet)
-{
-    return 0;
-}
-
+//TODO : FIXME : Maybe it is not correct???
 void Fr_GL3Window::hide()
 {
     glfwMakeContextCurrent(nullptr);
+    glfwDestroyWindow(pWindow);
+    Fl_Window::hide();
 }
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -291,7 +285,7 @@ void Fr_GL3Window::CreateCameras()
         }
         scene->AddNode(camera_);
         camera_->setCameraType((CameraList)i);   //Depending on the list it should be as the enum defined
-        manipulator = new Manipulator();
+        auto manipulator = new Manipulator();
         camera_->SetManipulator(std::unique_ptr<Manipulator>(manipulator));
         cameras.push_back(camera_trans);  //Transform with a camera child.
     }
@@ -398,12 +392,6 @@ void Fr_GL3Window::show() {
             }
         }
     }
-}
-
-//TODO FIXME:
-void Fr_GL3Window::gladEvents(int events)
-{
-    updateGLFWWindow();
 }
 
 /**
