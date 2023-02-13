@@ -53,6 +53,11 @@ public:
     void Rotate(float x, float y, float z, float angle);
 
     /**
+     * Multiply the current matrix by a rotation matrix
+     */
+    void Rotate(glm::vec3 axis, float angle);
+
+    /**
      * Multiply the current matrix by a translation matrix
      */
     void Translate(float x, float y, float z);

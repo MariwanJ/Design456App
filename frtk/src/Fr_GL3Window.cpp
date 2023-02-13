@@ -273,19 +273,20 @@ void Fr_GL3Window::CreateCameras()
         std::shared_ptr camera_ = std::make_shared<Camera>();   //Shared pointer to the camera,
         //We need to have the transform object to controll the camera. Only one child should be allowed TODO FIXME:
         auto camera_trans = std::make_shared<Transform>();
-        camera_trans->Translate(0.6, 0.5, 1.7);
-        camera_trans->Rotate(90, 1, 0, 0);
-        camera_trans->AddNode(camera_);
         if (i == 0) {
             camera_->SetActive(true);   //Only one camera is defined by default.
                                        //You should activate other cameras if you want another view and deactivate the default.
+           // camera_trans->Translate(0.6, 0.5, 1.7);
+            camera_trans->Rotate(glm::vec3(1, 0, 0), 180);
+            camera_trans->AddNode(camera_);
         }
         else {
             camera_->SetActive(false);
         }
-        scene->AddNode(camera_);
+        camera_trans->AddNode(camera_);
+        scene->AddNode(camera_trans);  //Add it to the scene graph, but only active one will render.
         camera_->setCameraType((CameraList)i);   //Depending on the list it should be as the enum defined
-        auto manipulator = new Manipulator();
+        auto manipulator = new Manipulator(); //manipulation for the camera.
         camera_->SetManipulator(std::unique_ptr<Manipulator>(manipulator));
         cameras.push_back(camera_trans);  //Transform with a camera child.
     }
@@ -475,15 +476,16 @@ PerspectiveCamera
   */
 
 std::shared_ptr<Transform> Fr_GL3Window::CreateSun() {
+    //TODO: FIXME:
     sun = new Transform();
     auto sun_height = std::make_shared<Transform>();
-    sun_height->Translate(30, 500, 30);
+    sun_height->Translate(30, 30, 30);
     sun->AddNode(sun_height);
 
     auto light = std::make_shared<Light>();
     light->SetPosition(0, 0, 0);
     light->SetDiffuse(0.5, 0.5, 0.5);
-    light->SetAmbient(1.0, 1., 1.0);
+    light->SetAmbient(1.0f, 1.0f, 1.0f);
     light->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
     sun_height->AddNode(light);
     sun->SetActive(true);   //A must to have or the rabbit mesh will be black.

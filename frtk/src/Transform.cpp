@@ -45,6 +45,12 @@ void Transform::Rotate(float x, float y, float z, float angle ) {
     inverse_ = glm::inverse(matrix_);
 }
 
+void Transform::Rotate(glm::vec3 axis, float angle)
+{
+    matrix_ = glm::rotate(matrix_, glm::radians(angle), axis);
+    inverse_ = glm::inverse(matrix_);
+}
+
 void Transform::Translate(float x, float y, float z) {
     matrix_ = glm::translate(matrix_, glm::vec3(x, y, z));
     inverse_ = glm::inverse(matrix_);

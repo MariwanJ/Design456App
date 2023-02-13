@@ -64,7 +64,7 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
             manipulator_->GLFWMotion(cposx, cposy);
             FR::globalP_pWindow->scene->RenderScene();
             button = -1;
-        }
+    }
 }
 
 void Fr_GL3Window::cursor_enter_callback(GLFWwindow*, int entered)
