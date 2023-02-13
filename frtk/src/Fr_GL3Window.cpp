@@ -282,7 +282,7 @@ void Fr_GL3Window::CreateCameras()
         camera_trans->Rotate(90, 1, 0, 0);
         camera_trans->AddNode(camera);
         if (i == 0) {
-            camera->SetActive(true);   //Only one camera is defined by defualt.
+            camera->SetActive(true);   //Only one camera is defined by default.
                                        //You should activate other cameras if you want another view and deactivate the default.
         }
         else {

@@ -40,7 +40,7 @@ void Transform::LoadIndentity() {
     inverse_ = glm::mat4(1.0f);
 }
 
-void Transform::Rotate(float angle, float x, float y, float z) {
+void Transform::Rotate(float x, float y, float z, float angle ) {
     matrix_ = glm::rotate(matrix_, glm::radians(angle), glm::vec3(x, y, z));
     inverse_ = glm::inverse(matrix_);
 }

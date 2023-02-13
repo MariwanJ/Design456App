@@ -84,7 +84,7 @@ public:
     static double newTime;
 
     static Scene* scene;
-    std::vector<Transform> cameras; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT, 
+    std::vector<std::shared_ptr<Transform>> cameras; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT, 
     //std::shared_ptr<Camera> camera;
     Manipulator *manipulator;
     static GLFWwindow* pWindow;
