@@ -271,14 +271,14 @@ void Fr_GL3Window::CreateCameras()
 {
     for (int i = 0; i < 6; i++) {
         std::shared_ptr camera_ = std::make_shared<Camera>();   //Shared pointer to the camera,
-        //We need to have the transform object to controll the camera. Only one child should be allowed TODO FIXME:
+        //We need to have the transform object to control the camera. Only one child should be allowed TODO FIXME:
         auto camera_trans = std::make_shared<Transform>();
         if (i == 0) {
             camera_trans->AddNode(camera_);
             camera_->SetActive(true);   //Only one camera is defined by default.
                                        //You should activate other cameras if you want another view and deactivate the default.
             camera_trans->Translate(0.6, 0.5, 1.7);
-            camera_trans->Rotate(glm::vec3(1, 0,0 ), 90);
+            camera_trans->Rotate(glm::vec3(1, 0,0 ), 180);
 
         }
         else {
