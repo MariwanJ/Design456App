@@ -72,6 +72,8 @@ public:
      */
     void SetManipulator(std::unique_ptr<Manipulator> manipulator);
 
+    bool SetupCamera(glm::mat4& projection, glm::mat4& modelview);
+
     /**
      * Sets the camera
      * Returns true if the camera has been set

@@ -30,7 +30,7 @@
 #include "Manipulator.h"
 #include<glad/glad.h>
 
-//Scroll zoomming scale - default is 10.0 
+//Scroll zooming scale - default is 10.0
 float Manipulator::kZoomScale = 50.0f;
 
 Manipulator::Manipulator() :
@@ -96,7 +96,7 @@ void Manipulator::GLFWMotion(int x, int y) {
     y_ = y;
 }
 /**
-*   Mouse scroll - Zomming 
+*   Mouse scroll - Zomming
 */
 void Manipulator::GLFWScroll(int x, int y) {
 

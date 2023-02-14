@@ -65,18 +65,18 @@ void Transform::SetManipulator(std::unique_ptr<Manipulator> manipulator) {
     manipulator_ = std::move(manipulator);
 }
 
-//bool Transform::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
-//    if (!active_)
-//        return false;
-//
-//    if (Group::SetupCamera(projection, modelview)) {
-//        if (manipulator_)
-//            modelview *= manipulator_->GetInverse();
-//        modelview *= inverse_;
-//        return true;
-//    }
-//    return false;
-//}
+bool Transform::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
+    if (!active_)
+        return false;
+
+    if (Group::SetupCamera(projection, modelview)) {
+        if (manipulator_)
+            modelview *= manipulator_->GetInverse();
+        modelview *= inverse_;
+        return true;
+    }
+    return false;
+}
 
 void Transform::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) {
     if (!active_)
