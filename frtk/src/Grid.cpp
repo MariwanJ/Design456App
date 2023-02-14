@@ -57,7 +57,7 @@ void Grid::setGridParam(unsigned int sections,
     gridSize_ = gridSize;
     scale_ = scale;
     centerPos_ = pos;
-    gridColor_ = (glm::vec4)FR_SPECIAL_BLUE;
+    gridColor_ = (glm::vec4)FR_RED;
 }
 
 Grid::~Grid()
@@ -95,7 +95,7 @@ void Grid::setGridSize(unsigned int sizeINmm)
 
 unsigned int Grid::getGridSize(void) const
 {
-    return 0;
+    return gridSize_;
 }
 
 std::shared_ptr<Transform> Grid::CreateGrid()
@@ -106,7 +106,7 @@ std::shared_ptr<Transform> Grid::CreateGrid()
     x = y = z = 0;
 
     //First lines
-    for (int i = 0; i < sections_; i += gridSize_) {
+    for (int i = 0; i <= sections_; i += gridSize_) {
         for (int j = 0; j <= sections_; j += sections_) {
             x = i * gridSize_;
             y = j * gridSize_;
@@ -117,7 +117,7 @@ std::shared_ptr<Transform> Grid::CreateGrid()
         }
     }
     //Second lines to create the squre plane
-    for (int i = 0; i < sections_; i += gridSize_) {
+    for (int i = 0; i <= sections_; i += gridSize_) {
         for (int j = 0; j <= sections_; j += sections_) {
             x = j * gridSize_;
             y = i * gridSize_;
@@ -130,7 +130,7 @@ std::shared_ptr<Transform> Grid::CreateGrid()
 
     std::vector<unsigned int> indices;
     int noOfVerticies = (int)vertices.size();
-    for (int i = 0; i < sections_ * 2; i++) {
+    for (int i = 0; i <= sections_ * 2; i++) {
         indices.push_back(i);
     }
     grid_t->Scale(10, 10, 10);

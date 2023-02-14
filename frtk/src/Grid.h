@@ -21,7 +21,7 @@ public:
  */
 	Grid();
 	
-	void setGridParam(unsigned int sections = 50,unsigned int gridSize = 1,	glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f),glm::vec3 scale = glm::vec3(0.0f, 0.0f, 0.0f));
+	void setGridParam(unsigned int sections = 100,unsigned int gridSize = 1,	glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f),glm::vec3 scale = glm::vec3(0.0f, 0.0f, 0.0f));
 	/**
 	 * Class destructor.
 	 * 
@@ -84,6 +84,5 @@ private:
 	glm::vec3 centerPos_;//Center of the grid
 	glm::vec4 gridRotation_; //(Axis, angle) 4 float values
 	glm::vec4 gridColor_;
-
 };
 
