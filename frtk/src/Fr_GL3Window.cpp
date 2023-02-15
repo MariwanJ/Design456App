@@ -160,6 +160,10 @@ void Fr_GL3Window::CreateScene()
     scene->AddNode(CreateSun());
     scene->AddNode(bunny());
     scene->AddNode(Grid().CreateGrid());
+    vert axis = Axis3D().CreateAxis3D();
+    scene->AddNode(axis.Red);
+    scene->AddNode(axis.Green);
+    scene->AddNode(axis.Blue);
 }
 
 //TODO FIXME
@@ -408,7 +412,7 @@ void Fr_GL3Window::resize(int x, int y, int w, int h)
             resizeGlWindow(_ratio);
     }
     //damage(FL_DAMAGE_ALL);
-    Fl_Window::draw();
+    //Fl_Window::draw();
 }
 
 /**

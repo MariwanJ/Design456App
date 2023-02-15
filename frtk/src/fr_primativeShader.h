@@ -40,7 +40,7 @@ public:
     Fr_PrimaitiveShader(unsigned int color = 0x111111, float silhouette = 0.005);
 
     Fr_PrimaitiveShader(glm::vec4 color, float silhouette = 0.005);
-
+    Fr_PrimaitiveShader(float color [4], float silhouette = 0.005);
     /**
      * Destructor
      */

@@ -3,7 +3,7 @@
 #ifndef Application_h
 #define Application_h
 #include <FL/Fl.H>
-#include<Fr_Core.h>
+#include<fr_core.h>
 #include<Fr_GL3Window.h>
 
 

@@ -85,6 +85,11 @@ Fr_PrimaitiveShader::Fr_PrimaitiveShader(glm::vec4 color, float silhouette) :
     }
 }
 
+Fr_PrimaitiveShader::Fr_PrimaitiveShader(float color[4], float silhouette):
+    primative_{ nullptr }, silhouette_(silhouette) {
+    Fr_PrimaitiveShader(glm::vec4(color[0], color[1], color[2], color[3]));
+}
+
 Fr_PrimaitiveShader::~Fr_PrimaitiveShader() {
 }
 

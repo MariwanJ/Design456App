@@ -30,6 +30,7 @@
 
 #include <memory>
 #include <Node.h>
+#include <fr_core.h>
 
 class Mesh;
 class ShaderProgram;
@@ -40,6 +41,8 @@ public:
      * Constructor
      */
     ObjectShaderNode(unsigned int color = 0x111111, float silhouette = 0.005);
+    ObjectShaderNode(glm::vec4 color=glm::vec4(FR_WHITE), float silhouette = 0.005);
+
 
     /**
      * Destructor
@@ -50,6 +53,13 @@ public:
      * Sets the color
      */
     void SetColor(unsigned int color, float alpha = 1.0f);
+
+
+    /**
+     * Sets the color
+     */
+    void SetColor(glm::vec4, float alpha = 1.0f);
+
 
     /**
      * Sets the opacity

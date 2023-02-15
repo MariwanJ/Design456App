@@ -28,7 +28,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 #include<glad/glad.h>
-#include <Fr_Core.h>
+#include <fr_core.h>
 #include "ShaderProgram.h"
 
 ShaderProgram::ShaderProgram(const std::string& prefix) :

@@ -1,4 +1,4 @@
-#include "Grid.h"
+#include <fr_grid.h>
 
 #include <ObjectShaderNode.h>
 #include <fr_primativeShader.h>
@@ -134,9 +134,9 @@ std::shared_ptr<Transform> Grid::CreateGrid()
         indices.push_back(i);
     }
     grid_t->Scale(10, 10, 10);
-    std::shared_ptr<Fr_Primatives> primative = std::make_shared<Fr_Primatives>();
+    std::shared_ptr<Fr_Primatives> primative = std::shared_ptr<Fr_Primatives>();
     primative->SetVertexes(vertices, indices);
-    auto grid = std::make_shared<Fr_PrimaitiveShader>(gridColor_, 0.005); //  color and
+    std::shared_ptr grid = std::make_shared<Fr_PrimaitiveShader>(gridColor_, 0.005); //  color and
     grid->SetPrimative(primative);
     grid_t->AddNode(grid);
     return grid_t; 

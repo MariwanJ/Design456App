@@ -29,7 +29,7 @@
 #ifndef SCENE_H
 #define SCENE_H
 //#include<frtk.h>
-#include<Fr_Core.h>
+#include<fr_core.h>
 #include <Group.h>
 /**
  * The scene root

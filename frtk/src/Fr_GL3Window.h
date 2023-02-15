@@ -30,15 +30,15 @@
 #define FR_GL3WINDOW_H
 
 #include <frtk.h>
-//#include<Fr_Core.h>
+//#include<fr_core.h>
 #include<Scene.h>
 #include<Camera.h>
 #include<Manipulator.h>
 //#include<Transform.h>
 #include<Light.h>
 #include <glm/gtc/matrix_transform.hpp>
-#include <Grid.h>
-
+#include <fr_grid.h>
+#include<fr_axis3D.h>
 
 /* Cameras */
 class Camera;
