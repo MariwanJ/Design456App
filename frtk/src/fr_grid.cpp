@@ -42,11 +42,7 @@ Grid::Grid()
 }
 /**
  * .
-<<<<<<< HEAD
  *
-=======
- *
->>>>>>> f54b7bbbd5e4d5081cb6d37d8d82e7d0479fae10
  * \param sections No of line sections. default = 50
  * \param gridSize Distance between each line. default = 1mm
  * \param pos Center of the grid. Defualt is the origin (0,0,0)
@@ -131,20 +127,6 @@ std::shared_ptr<Transform> Grid::CreateGrid()
             vertices.push_back(z);
         }
     }
-
-    std::vector<unsigned int> indices;
-    int noOfVerticies = (int)vertices.size();
-    for (int i = 0; i <= sections_ * 2; i++) {
-        //indices.push_back(i);
-    }
-    grid_t->Scale(10.0f, 10.0f, 10.0f);
-    std::shared_ptr<Fr_Primatives> primative = std::shared_ptr<Fr_Primatives>();
-    primative->SetVertexes(vertices, indices);
-    std::shared_ptr grid_ = std::make_shared<Fr_PrimaitiveShader>(gridColor_, 0.005f); //  color and
-    grid_->SetPrimative(primative);
-    grid_t->AddNode(grid_);
-    return grid_t;
-}
 
     std::vector<unsigned int> indices;
     int noOfVerticies = (int)vertices.size();
