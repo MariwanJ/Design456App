@@ -81,7 +81,7 @@ void Light::EnableShadowMap(const glm::vec3& center, const glm::vec3& up, const 
     int height = kShadowmapHeight;
 
     // Create Framebuffer
-    glCheckFunc( glGenFramebuffers(1, &sm_framebuffer_));
+    glCheckFunc(glGenFramebuffers(1, &sm_framebuffer_));
     glCheckFunc(glBindFramebuffer(GL_FRAMEBUFFER, sm_framebuffer_));
 
     // Create Renderbuffer
@@ -110,7 +110,7 @@ void Light::EnableShadowMap(const glm::vec3& center, const glm::vec3& up, const 
 }
 
 void Light::SetupLight(const glm::mat4& modelview,
-        std::vector<LightInfo>& lights) {
+    std::vector<LightInfo>& lights) {
     if (!active_)
         return;
 
@@ -143,4 +143,3 @@ bool Light::SetupShadowMap(ShadowMapInfo& info) {
     info.height = kShadowmapHeight;
     return true;
 }
-

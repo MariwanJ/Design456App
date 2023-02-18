@@ -14,7 +14,7 @@ workspace "Design456App"
 		"MultiProcessorCompile",
 	}
 
-outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}" 
 
 -- Include directories relative to frtk
 IncludeDir = {}

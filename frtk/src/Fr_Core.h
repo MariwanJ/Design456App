@@ -28,7 +28,6 @@
 #ifndef FR_CORE_H
 #define FR_CORE_H
 
-
 #include <FR.h>
 #include <frtk.h>
 
@@ -64,16 +63,15 @@
 
 //#include <FL/Fl_Double_Window.H>
 
-
 #include <Fr_Log.h>
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
 #include <../instrumentation/Instrumentor.h>
 
 #ifdef _WIN32
-    #define DEBUG_BREAK __debugbreak()
+#define DEBUG_BREAK __debugbreak()
 #elif defined(__APPLE__)
-    DEBUG_BRAK  raise(SIGTRAP)   //Not sure if it works TODO : CHECKME
+DEBUG_BRAK  raise(SIGTRAP)   //Not sure if it works TODO : CHECKME
 #elif define(__linux__)
 DEBUG_BRAK  raise(SIGTRAP)   //ALL POSIX OS
 #endif
@@ -87,7 +85,7 @@ DEBUG_BRAK  raise(SIGTRAP)   //ALL POSIX OS
 #define FRTK_CORE_APP_ASSERT(x, ...)
 #endif
 static unsigned char GLLogCall() {
-    while(GLenum error = glGetError()) {
+    while (GLenum error = glGetError()) {
         std::cout << "[OpenGL Error] {" << error << "}\n";
         std::flush(std::cout);
         return 0;
@@ -97,8 +95,9 @@ static unsigned char GLLogCall() {
 #define GLResetError {while(glGetError() != GL_NO_ERROR);}
 #ifdef _DEBUG
 #define glCheckFunc(x) GLResetError;x; FRTK_CORE_APP_ASSERT(GLLogCall());
+#else
+#define glCheckFunc(x)  x;
 #endif
-
 
 //Create DLL/SO or link statically ?
 
@@ -117,13 +116,9 @@ static unsigned char GLLogCall() {
 #error FRTK NOT IMPLEMENTED
 #endif  //PLATFORM CHECK
 
-
-
 #endif
 
 #define setBIT(x) (1 << x)
 #define clearBIT(x) (0 << x)
-
-
 
 #endif

@@ -3,7 +3,7 @@ project "frtk"
 	language "C++"
 	cppdialect "C++17"
 	staticruntime "off"
-	runtime "Debug"
+	--runtime "Debug"
 	
 	
 --[[  			-- To use /MT in premake:
@@ -66,6 +66,23 @@ project "frtk"
 		--"%{IncludeDir.yaml-cpp}",
         --"%{IncludeDir.ImGui}",
 	}
+	filter "system:windows"
+		systemversion "latest"
+		defines
+		{
+            "FRTK_PLATFORM_WINDOWS",
+			--"FR_BUILD_DLL",
+			"FR_BUILD_STATIC",
+			"GLFW_EXPOSE_NATIVE_WIN32",
+			'GLFW_INCLUDE_NONE ',
+			"FRTK_ENABLE_ASSERTS"
+		}
+
+	filter "configurations:Debug"
+		defines "FR_DEBUG"
+		runtime "Debug"
+		symbols "on"
+		libdirs {"$(SolutionDir)frtk/vendor/fltk/build/lib/Debug",
 		links 
 		{   
             "opengl32",
@@ -96,40 +113,40 @@ project "frtk"
 			"GLFW",
 			"Glad",
 		}
-	filter "system:windows"
-		systemversion "latest"
-		defines
-		{
-            "FRTK_PLATFORM_WINDOWS",
-			--"FR_BUILD_DLL",
-			"FR_BUILD_STATIC",
-			"GLFW_EXPOSE_NATIVE_WIN32",
-			'GLFW_INCLUDE_NONE ',
-			"FRTK_ENABLE_ASSERTS"
-		}
-
-
-	filter "configurations:Debug"
-		defines "FR_DEBUG"
-		runtime "Debug"
-		symbols "on"
-		libdirs {"$(SolutionDir)frtk/vendor/fltk/build/lib/Debug",
 		}
 
 	filter "configurations:Release"
 		defines "FR_RELEASE"
 		runtime "Release"
 		optimize "on"
+        libdirs {"$(SolutionDir)frtk/vendor/fltk/build/lib/Release",
 		links 
-		{   "fltk",
+		{   "opengl32",
+            "glu32",
+            "gdiplus",
+            "comctl32",
+            "ws2_32",
+            "kernel32",
+            "user32",
+            "gdi32",
+            "winspool",
+            "shell32",
+            "ole32",
+            "oleaut32",
+            "uuid",
+            "comdlg32",
+            "advapi32",
+            "fltk",
 			"Glad",
 			"fltk_images",
-			"fltk_jpeg",
-			"fltk_gld",
+			"fltk_gl",
 			"fltk_forms",
 			"glu32.lib",
 			"gdiplus.lib",
 		  --"ImGui",
 		  --"yaml-cpp",
 			"opengl32.lib",
+			"GLFW",
+			"Glad",
 		}
+    }

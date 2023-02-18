@@ -57,22 +57,40 @@ To use /MTd in premake:
 	{
 		"MultiProcessorCompile",
 	}
-
-	libdirs {"../frtk/vendor/fltk/build/lib/Debug"}
-	links 
-	{   "frtk",
-		"fltkd",
-		"Glad",
-		"opengl32.lib",
-		"fltk_imagesd",
-		"fltk_gld",
-		"fltk_formsd",
-		"opengl32.lib",
-		"glu32.lib",
-		"gdiplus.lib",
-		"GLFW",
-		"opengl32.lib"
-	}
+	filter "configurations:Debug"
+		libdirs {"../frtk/vendor/fltk/build/lib/Debug"}
+		links 
+		{   "frtk",
+			"fltkd",
+			"Glad",
+			"opengl32.lib",
+			"fltk_imagesd",
+			"fltk_gld",
+			"fltk_formsd",
+			"opengl32.lib",
+			"glu32.lib",
+			"gdiplus.lib",
+			"GLFW",
+			"opengl32.lib"
+		}
+	
+	filter "configurations:Release"
+		libdirs {"../frtk/vendor/fltk/build/lib/Release"}
+		links 
+		{   "frtk",
+			"fltk",
+			"Glad",
+			"opengl32.lib",
+			"fltk_images",
+			"fltk_gl",
+			"fltk_forms",
+			"opengl32.lib",
+			"glu32.lib",
+			"gdiplus.lib",
+			"GLFW",
+			"opengl32.lib"
+		}
+	
 
 
 	filter "system:windows"
