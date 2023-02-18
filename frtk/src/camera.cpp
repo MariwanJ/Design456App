@@ -77,9 +77,9 @@ bool Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
     int vp[4];
     switch (camType_) {
     case CameraList::PERSPECTIVE: {
-        SetEye(0, 2, -20);
+        SetEye(20, 20, -20);
         SetCenter(0, 0, 0);
-        SetUp(1, 1, 0);
+        SetUp(0, 1, 0);
         glGetIntegerv(GL_VIEWPORT, vp);
                                                 //RIGHT                     LEFT                    BOTTOM    TOP
         projection = glm::perspective(glm::radians(fovy_ ), (float)vp[2] / vp[3], znear_, zfar_);

@@ -28,7 +28,7 @@
 #ifndef FR_CALLBACKS_H
 #define FR_CALLBAKCS_H
 
-#include<Fr_Core.h>
+#include<fr_core.h>
 
 
 #endif

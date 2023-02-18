@@ -52,6 +52,17 @@ ObjectShaderNode::ObjectShaderNode(unsigned int color, float silhouette) :
     }
 }
 
+ObjectShaderNode::ObjectShaderNode(glm::vec4 color, float silhouette):mesh_{ nullptr },
+        silhouette_(silhouette) {
+        SetColor(color);
+        if (!shared_) {
+            shared_ = new Shared;
+            shared_->object_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/objectshader");
+            shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
+            shared_->shadowmap_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/shadowmap");
+        }
+}
+
 ObjectShaderNode::~ObjectShaderNode() {
 }
 
@@ -62,6 +73,12 @@ void ObjectShaderNode::SetColor(unsigned int color, float alpha) {
         (color & 0xFF) / 255.0f,
         alpha
     );
+}
+
+void ObjectShaderNode::SetColor(glm::vec4 color, float alpha)
+{
+    color[3] = alpha; //just in case it is not what you have in color
+    color_ = color;
 }
 
 void ObjectShaderNode::SetOpacity(float alpha) {

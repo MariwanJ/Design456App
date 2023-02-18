@@ -236,7 +236,7 @@ Fl_Menu_Item menu_[] = {
 
 Application::Application(int x, int y, int w, int h, const char* l) :Fr_GL3Window(x,y,w,h,l) {
     begin(); {
-        barMenu = new Fl_Menu_Bar(0, 0, 1540, 30);
+        //barMenu = new Fl_Menu_Bar(0, 0, 1540, 30);
         //barMenu->menu(menu_);
         barStatus = new Fl_Menu_Bar(0, 767, 1536, 25);
         tabToolbars = new Fl_Tabs(0, 30, 1540, 121);
@@ -371,7 +371,6 @@ Application::Application(int x, int y, int w, int h, const char* l) :Fr_GL3Windo
         tilGglfw->end();
         tilMainWindow->resizable(tilGglfw);
         tilMainWindow->end();
-
         resizable(this);
     }
     end();

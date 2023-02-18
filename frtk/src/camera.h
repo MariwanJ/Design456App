@@ -30,7 +30,7 @@
 #define CAMERA_H
 
 #include<frtk.h>
-#include<Fr_Core.h>
+#include<fr_core.h>
 
 #include <Node.h>
 

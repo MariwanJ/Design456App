@@ -15,7 +15,6 @@ std::shared_ptr<Transform>bunny() {
     bunny_t->Rotate(0, 1, 0, 0);
     //bunny_t->Rotate(0, 0, 0, 1);
     //bunny_t->Rotate(90, 0, 0, 1);
-
     auto bunny = std::make_shared<ObjectShaderNode>(0xc9c9c9, 0.005f); //  color and
 
     //bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/xy_plane.off"));
@@ -43,12 +42,17 @@ Grid::Grid()
 }
 /**
  * .
+<<<<<<< HEAD
  *
+=======
+ *
+>>>>>>> f54b7bbbd5e4d5081cb6d37d8d82e7d0479fae10
  * \param sections No of line sections. default = 50
  * \param gridSize Distance between each line. default = 1mm
  * \param pos Center of the grid. Defualt is the origin (0,0,0)
  * \param scale Scale of the grid - defualt is (1.0f,1.0f,1.0f)
  */
+
 void Grid::setGridParam(unsigned int sections,
     unsigned int gridSize,
     glm::vec3 pos,
@@ -125,19 +129,33 @@ std::shared_ptr<Transform> Grid::CreateGrid()
             vertices.push_back(x);
             vertices.push_back(y);
             vertices.push_back(z);
-            }
         }
-
-        std::vector<unsigned int> indices;
-        int noOfVerticies = (int)vertices.size();
-        for (int i = 0; i <= sections_ * 2; i++) {
-            //indices.push_back(i);
-        }
-        grid_t->Scale(10.0f, 10.0f, 10.0f);
-        std::shared_ptr<Fr_Primatives> primative = std::shared_ptr<Fr_Primatives>();
-        primative->SetVertexes(vertices, indices);
-        std::shared_ptr grid_ = std::make_shared<Fr_PrimaitiveShader>(gridColor_, 0.005f); //  color and
-        grid_->SetPrimative(primative);
-        grid_t->AddNode(grid_);
-        return grid_t;
     }
+
+    std::vector<unsigned int> indices;
+    int noOfVerticies = (int)vertices.size();
+    for (int i = 0; i <= sections_ * 2; i++) {
+        //indices.push_back(i);
+    }
+    grid_t->Scale(10.0f, 10.0f, 10.0f);
+    std::shared_ptr<Fr_Primatives> primative = std::shared_ptr<Fr_Primatives>();
+    primative->SetVertexes(vertices, indices);
+    std::shared_ptr grid_ = std::make_shared<Fr_PrimaitiveShader>(gridColor_, 0.005f); //  color and
+    grid_->SetPrimative(primative);
+    grid_t->AddNode(grid_);
+    return grid_t;
+}
+
+    std::vector<unsigned int> indices;
+    int noOfVerticies = (int)vertices.size();
+    for (int i = 0; i <= sections_ * 2; i++) {
+        indices.push_back(i);
+    }
+    grid_t->Scale(10, 10, 10);
+    std::shared_ptr<Fr_Primatives> primative = std::shared_ptr<Fr_Primatives>();
+    primative->SetVertexes(vertices, indices);
+    std::shared_ptr grid = std::make_shared<Fr_PrimaitiveShader>(gridColor_, 0.005); //  color and
+    grid->SetPrimative(primative);
+    grid_t->AddNode(grid);
+    return grid_t;
+}

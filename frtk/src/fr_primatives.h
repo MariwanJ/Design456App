@@ -2,7 +2,7 @@
 #define FR_PRIMATIVES_H
 
 #include <FR.h>
-#include <Fr_Core.h>
+#include <fr_core.h>
 #include <glm/glm.hpp>
 
 class Fr_Primatives
