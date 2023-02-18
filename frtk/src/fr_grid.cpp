@@ -134,10 +134,10 @@ std::shared_ptr<Transform> Grid::CreateGrid()
         indices.push_back(i);
     }
     grid_t->Scale(10, 10, 10);
-    std::shared_ptr<Fr_Primatives> primative = std::shared_ptr<Fr_Primatives>();
+    std::shared_ptr<Fr_Primatives> primative = std::make_shared<Fr_Primatives>();
     primative->SetVertexes(vertices, indices);
-    std::shared_ptr grid = std::make_shared<Fr_PrimaitiveShader>(gridColor_, 0.005); //  color and
-    grid->SetPrimative(primative);
-    grid_t->AddNode(grid);
+    std::shared_ptr gridS = std::make_shared<Fr_PrimaitiveShader>(gridColor_, 0.005); //  color and
+    gridS->SetPrimative(primative);
+    grid_t->AddNode(gridS);
     return grid_t;
 }
