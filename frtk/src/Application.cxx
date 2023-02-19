@@ -10,10 +10,8 @@
 */
 
 
-
 /* Scene and engine*/
 static Scene* scene = nullptr;
-
 
 void Fr_GL3Window::framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -178,8 +176,8 @@ static Fl_Image* image_Extract() {
 }
 
 
-Fl_Menu_Item menu_[] = {
- {"&File", 0,  0, 0, 64, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+Fl_Menu_Item Application::menu_[] = {
+ {"&File", 0,       0, 0, 64, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"&New                               ", 0x4006e,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"&Open                              ", 0x4006f,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"&Close                             ", 0x4ffc1,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
@@ -197,12 +195,12 @@ Fl_Menu_Item menu_[] = {
  {"Douplicate                         ", 0x40064,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"&Preferences                       ", 0x9006f,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {0,0,0,0,0,0,0,0,0},
- {"&View                              ", 0,  0, 0, 64, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {"&View", 0,  0, 0, 64, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"&Show                              ", 0,  0, 0, 64, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"Show Ground Plane                  ", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"Show Active Plane", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {0,0,0,0,0,0,0,0,0},
- {"&Toolbar                          ", 0,  0, 0, 64, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {"&Toolbar", 0,  0, 0, 64, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"Main Toolbar                       ", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"Selection Toolbar                  ", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"View Option Toolbar                ", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
@@ -212,21 +210,21 @@ Fl_Menu_Item menu_[] = {
  {"Reset View                         ", 0x72,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"&Camera Setting                    ", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {0,0,0,0,0,0,0,0,0},
- {"&Select                             ", 0,  0, 0, 64, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {"&Select", 0,  0, 0, 64, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"&All Faces                          ", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"Vertical faces                      ", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"Horizontal faces                    ", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"Top Faces                           ", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"Bottom faces                        ", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {0,0,0,0,0,0,0,0,0},
- {"&Window                             ", 0,  0, 0, 64, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {"&Window", 0,  0, 0, 64, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"&All                                ", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"Vertical faces                      ", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"Horizontal faces                    ", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"Top Faces                           ", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"Bottom faces                        ", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {0,0,0,0,0,0,0,0,0},
- {"&Help                               ", 0,  0, 0, 64, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
+ {"&Help", 0,  0, 0, 64, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"Help                                ", 0xffbe,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {"About                               ", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 14, 0},
  {0,0,0,0,0,0,0,0,0},
@@ -236,15 +234,16 @@ Fl_Menu_Item menu_[] = {
 
 Application::Application(int x, int y, int w, int h, const char* l) :Fr_GL3Window(x,y,w,h,l) {
     begin(); {
-        //barMenu = new Fl_Menu_Bar(0, 0, 1540, 30);
-        //barMenu->menu(menu_);
+        barMenu = new Fl_Menu_Bar(0, 0, 1540, 30);
+
         barStatus = new Fl_Menu_Bar(0, 767, 1536, 25);
         tabToolbars = new Fl_Tabs(0, 30, 1540, 121);
         tabToolbars->labelsize(10);
         tabToolbars->begin(); {
             grp2DPrimatives = new Fl_Group(0, 55, 1539, 90, "2D Primitives");
             grp2DPrimatives->labelsize(12);
-            grp2DPrimatives->hide();
+            grp2DPrimatives->show();
+            grp2DPrimatives->resizable(grp2DPrimatives);
             grp2DPrimatives->begin(); {
                 btnPoint = new Fl_Button(5, 57, 46, 46);
                 btnPoint->image(image_Point());
@@ -273,10 +272,10 @@ Application::Application(int x, int y, int w, int h, const char* l) :Fr_GL3Windo
                 //TODO:: FIXME :: ADD MORE BUTTONS HERE
             }
             grp2DPrimatives->end();
-
             grpBasic = new Fl_Group(0, 55, 1539, 96, "Basic");
             grpBasic->labelsize(12);
             grpBasic->hide();
+            grpBasic->resizable(grpBasic);
             grpBasic->begin();
             {
                 btnBox = new Fl_Button(5, 57, 46, 46);
@@ -315,6 +314,7 @@ Application::Application(int x, int y, int w, int h, const char* l) :Fr_GL3Windo
             grpAdvanced = new Fl_Group(0, 55, 1539, 90, "Advanced");
             grpAdvanced->labelsize(12);
             grpAdvanced->hide();
+            grpAdvanced->resizable(grpAdvanced);
             grpAdvanced->begin();
             {
                 btnParaboloid = new Fl_Button(5, 57, 46, 46);
@@ -328,6 +328,7 @@ Application::Application(int x, int y, int w, int h, const char* l) :Fr_GL3Windo
             grpAlignment = new Fl_Group(0, 55, 1539, 90, "Alignment");
             grpAlignment->labelsize(12);
             grpAlignment->hide();
+            grpAlignment->resizable(grpAlignment);
             grpAlignment->begin();
             {
                 btnAlignToPlane = new Fl_Button(5, 57, 46, 46);
@@ -341,6 +342,7 @@ Application::Application(int x, int y, int w, int h, const char* l) :Fr_GL3Windo
 
             grpOperations = new Fl_Group(0, 55, 1539, 90, "Operations");
             grpOperations->labelsize(12);
+            grpOperations->resizable(grpOperations);
             grpOperations->begin();
             {
                 btnExtract = new Fl_Button(5, 57, 46, 46);
@@ -372,6 +374,7 @@ Application::Application(int x, int y, int w, int h, const char* l) :Fr_GL3Windo
         tilMainWindow->resizable(tilGglfw);
         tilMainWindow->end();
         resizable(this);
+        barMenu->menu(menu_);
     }
     end();
 }

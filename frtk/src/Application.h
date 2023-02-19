@@ -6,6 +6,7 @@
 #include<fr_core.h>
 #include<Fr_GL3Window.h>
 
+;
 
 class Application : public Fr_GL3Window {
 public:
@@ -46,7 +47,7 @@ public:
     Fl_Window* pfltkWindow;
     Fl_Menu_Bar* barStatus;
     Fl_Menu_Bar* barMenu;
-    Fl_Menu_Item menu_[];
+    static Fl_Menu_Item menu_[];
 
     static void createBox_cb(Fl_Button*, void*);
     static void createCylinder_cb(Fl_Button*, void*);

@@ -44,6 +44,11 @@ Axis3D::~Axis3D()
 
 vert Axis3D::CreateAxis3D()
 {
+    float start = 10.0f;
+    float end = -10.0f;
+    float arrow1 = start-5.0;
+    float arrow2 = 5.0;
+
     vert axis_t;
     std::vector<float> verticesRed;
     std::vector<float> verticesGreen;
@@ -54,39 +59,38 @@ vert Axis3D::CreateAxis3D()
     glColor3f(1.0, 0.0, 0.0); // red x
 
     verticesRed = {
-        -4.0f,  0.0f,  0.0f,
-         4.0f,  0.0f,  0.0f,
+         end,    0.0f,     0.0f,
+         start,  0.0f,     0.0f,
 
-         4.0f,  0.0f,  0.0f,
-         3.0f,  1.0f,  0.0f,
-         4.0f,  0.0f,  0.0f,
-         3.0f, -1.0f,  0.0f
+         start,  0.0f,     0.0f,
+         arrow1, arrow2,   0.0f,
+         start,  0.0f,     0.0f,
+         arrow1, -arrow2,  0.0f
     };
 
     glColor3f(0.0, 1.0, 0.0); // green y
 
     verticesGreen = {
-        0.0f, -4.0f,  0.0f,
-        0.0f,  4.0f,  0.0f,
+        0.0f,   end,     0.0f,
+        0.0f,   start,   0.0f,
 
-        0.0f,  4.0f,  0.0f,
-        1.0f,  3.0f,  0.0f,
-        0.0f,  4.0f,  0.0f,
-       -1.0f,  3.0f,  0.0f
+        0.0f,    start,  0.0f,
+        1.0f,    arrow1, 0.0f,
+        0.0f,    start,  0.0f,
+       -arrow2,  start,  0.0f
     };
-
 
     // z 
     glColor3f(0.0, 0.0, 1.0); // blue z
 
     verticesBlue = {
-        0.0f,  0.0f, -4.0f,
-        0.0f,  0.0f,  4.0f,
+        0.0f,  0.0f,    end,
+        0.0f,  0.0f,    start,
 
-        0.0f,  0.0f,  4.0f,
-        0.0f,  1.0f,  3.0f,
-        0.0f,  0.0f,  4.0f,
-        0.0f, -1.0f,  3.0f
+        0.0f,  0.0f,    start,
+        0.0f,  arrow2,  arrow1,
+        0.0f,  0.0f,    start,
+        0.0f, -arrow2,  arrow1
     };
 
     std::vector<unsigned int> indicesRed;
@@ -105,7 +109,6 @@ vert Axis3D::CreateAxis3D()
         indicesBlue.push_back(i);
     }
 
-   
     auto primativeR= std::make_shared<Fr_Primatives>();
     primativeR->SetVertexes(verticesRed, indicesRed);
     auto axRed = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_RED), 0.005); //  color and
@@ -121,9 +124,9 @@ vert Axis3D::CreateAxis3D()
     axis_t.Green->AddNode(axGreen);
 
     auto primativeB = std::make_shared<Fr_Primatives>();
-    primativeB->SetVertexes(verticesRed, indicesBlue);
+    primativeB->SetVertexes(verticesBlue, indicesBlue);
     auto axBlue = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_BLUE), 0.005); //  color and
-    axBlue->SetPrimative(primativeG);
+    axBlue->SetPrimative(primativeB);
     axis_t.Blue= std::make_shared<Transform>();
     axis_t.Blue->AddNode(axBlue);
     axis_t.Red->Scale(1, 1, 1);

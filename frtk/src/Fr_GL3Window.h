@@ -39,7 +39,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <fr_grid.h>
 #include<fr_axis3D.h>
-
+#include <FL/Fl_Window.H>
 /* Cameras */
 class Camera;
 

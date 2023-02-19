@@ -32,9 +32,28 @@
 #include<ObjectShaderNode.h>
 //End remove me later
 
+/**
+ * 
+ * Update FLTK callback.
+ * This function should replace the need of Fl::run
+ * It will be calle 
+ * \param window
+ */
+
+static void redrawFLTKTimer_cb(void* window) {
+    Fr_GL3Window* win = (Fr_GL3Window*)window;
+   
+    
+    //Fl::do_widget_deletion();
+
+    //Fl::run_checks();
+   // Fl::run_idle();
+    win->draw();
+}
+
 GLuint m_QuadVA, m_QuadVB, m_QuadIB;
 bool s_GLFWInitialized;
-#define redrawFPS  1.0/25.0  // (24 Frames per sec)
+#define redrawFPS float(1.0/25.0)// (24 Frames per sec)
 
 float Fr_GL3Window::fltktimerValue = 0.0;
 
@@ -64,12 +83,6 @@ int Fr_GL3Window::_xGl = 0;
 int Fr_GL3Window::_yGl = 0;
 int Fr_GL3Window::_wGl = 0;
 int Fr_GL3Window::_hGl = 0;
-
-static void redrawFLTKTimer_cb(void* window) {
-    Fr_GL3Window* win = (Fr_GL3Window*)window;
-    win->damage(FL_DAMAGE_ALL);
-    win->draw();
-}
 
 static void error_callback(int error, const char* description)
 {
@@ -109,7 +122,6 @@ active_camera_(CameraList::PERSPECTIVE) {
     glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
     glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
     pfltkWindow = this;
     pfltkWindow->callback((Fl_Callback*)pfltkWindow_close_cb, (void*)this);
 }
@@ -158,7 +170,7 @@ void Fr_GL3Window::CreateScene()
       * Add here the nodes - Grid, and XYZ axis
       */
     scene->AddNode(CreateSun());
-    scene->AddNode(bunny());
+    //scene->AddNode(bunny());
     scene->AddNode(Grid().CreateGrid());
     vert axis = Axis3D().CreateAxis3D();
     scene->AddNode(axis.Red);
@@ -175,9 +187,9 @@ void Fr_GL3Window::draw() {
     }
     else {
         Fl_Window::draw();
-        counter++;
+        //counter++;
     }
-    Fl::flush();
+    //Fl::flush();
 }
 
 /**
@@ -188,6 +200,7 @@ void Fr_GL3Window::resizeGlWindow(float ratio)
     //We don't chage _xGl or _hGl
     _wGl = int(float(_wGl) * ratio);
     _hGl = int(float(_hGl) * ratio);
+    damage(FL_DAMAGE_ALL);
     updateGLFWWindow();
 }
 
@@ -394,10 +407,12 @@ void Fr_GL3Window::show() {
             if (s_GladInitialized == true) {
                 //glad_glClearColor(1.0, 0.16, 0.18, 1.0);
                 //glClear(GL_COLOR_BUFFER_BIT);
-                updateGLFWWindow();
+                //updateGLFWWindow();                              TODO: DO WE NEED THIS? I remove it for now
             }
         }
     }
+    damage(FL_DAMAGE_ALL);
+    Fl_Window::draw();
 }
 
 /**
@@ -439,7 +454,6 @@ int Fr_GL3Window::GLFWrun()
     glfwSwapInterval(1);
     glfwMakeContextCurrent(pWindow);
     glViewport(0, 0, _wGl, _hGl);
-
     while (!glfwWindowShouldClose(pWindow))
     {
         //Update FLTK 24 frames/sec
@@ -453,7 +467,6 @@ int Fr_GL3Window::GLFWrun()
         if (fltktimerValue >= redrawFPS) {
             fltktimerValue = 0.0;
             redrawFLTKTimer_cb(this);
-            Fl::flush();
         }
 
         glClear(GL_COLOR_BUFFER_BIT);

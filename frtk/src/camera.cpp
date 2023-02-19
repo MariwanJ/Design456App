@@ -32,6 +32,55 @@
 #include <glad/glad.h>
 #include <Camera.h>
 #include <Manipulator.h>
+/**
+ normal
+     (0.707107, -0.408248, 0.57735, 0),
+    (0.707107, 0.408248, -0.57735, 0),
+    (-3.41002e-07, 0.816497, 0.57735, 0),
+    (0, 0, 0, 1))
+
+top
+Matrix (1,0,0,0),
+        (0,1,0,0),
+        (0,0,1,0),
+        (0,0,0,1)
+
+bottom
+    (1,0,0,0),
+    (0,-1,8.74228e-08,0),
+    (0,-8.74228e-08,-1,0),
+    (0,0,0,1)
+
+front
+    (1,1.26441e-07,4.21468e-08,0),
+    (4.21468e-08,2.44249e-15,-1,0),
+    (-1.26441e-07,1,-2.88658e-15,0),
+    (0,0,0,1)
+
+Rear
+    (-1, -2.95028e-07, 2.52881e-07, 0), 
+    (2.52881e-07, 1.68587e-07, 1, 0), 
+    (-2.95028e-07, 1, -1.68587e-07, 0), 
+    (0, 0, 0, 1)
+
+left 
+    (0,0,-1,0),
+    (-1,0,0,0),
+    (0,1,0,0),
+    (0,0,0,1)
+
+ right
+    (-2.38419e-07,1.19209e-07,1,0),
+    (1,-2.38419e-07,2.38419e-07,0),
+    (2.38419e-07,1,-1.19209e-07,0),
+    (0,0,0,1)
+
+
+
+
+
+
+*/
 
 Camera::Camera() :
     eye_{ 1, 0, 0 },
@@ -95,7 +144,7 @@ bool Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
         SetUp(0, 1, 0);
 
         glGetIntegerv(GL_VIEWPORT, vp);
-                                        //RIGHT                             LEFT                    BOTTOM    TOP
+                                 //RIGHT                             LEFT                    BOTTOM    TOP
         projection = glm::ortho(glm::radians(fovy_), (float)vp[2] / vp[3], znear_, zfar_);
         modelview = glm::lookAt(eye_, center_, up_);
         if (manipulator_)
