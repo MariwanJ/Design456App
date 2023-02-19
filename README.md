@@ -29,6 +29,10 @@ OpenGL is not easy. I am not used to write code for OpenGL. Before starting the 
 
 Don't forget that you need to download preemake5.exe 
 
+
+# FLTK AND GLFW : Failed
+I keep this version in another branch. Using menu fltk dosent get updated. Removing the menu, it works. I cannot dig in to the FLTK library to fix. It is a rabbit hole and I don't have time for that. Maybe someone will take this and fix it in the future? 
+
 # Some Ideas are comming from:
 Some of the code is inspired by TheCherno and Hazel Game Engine. 
 

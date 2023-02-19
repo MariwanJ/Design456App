@@ -42,18 +42,12 @@
 
 static void redrawFLTKTimer_cb(void* window) {
     Fr_GL3Window* win = (Fr_GL3Window*)window;
-   
-    
-    //Fl::do_widget_deletion();
-
-    //Fl::run_checks();
-   // Fl::run_idle();
     win->draw();
 }
 
 GLuint m_QuadVA, m_QuadVB, m_QuadIB;
 bool s_GLFWInitialized;
-#define redrawFPS float(1.0/25.0)// (24 Frames per sec)
+#define redrawFPS float(1.0/10.0)// (24 Frames per sec)
 
 float Fr_GL3Window::fltktimerValue = 0.0;
 
@@ -411,8 +405,8 @@ void Fr_GL3Window::show() {
             }
         }
     }
-    damage(FL_DAMAGE_ALL);
-    Fl_Window::draw();
+    //damage(FL_DAMAGE_ALL);
+    //Fl_Window::draw();
 }
 
 /**
@@ -426,8 +420,8 @@ void Fr_GL3Window::resize(int x, int y, int w, int h)
         if (_ratio != 0)
             resizeGlWindow(_ratio);
     }
-    //damage(FL_DAMAGE_ALL);
-    //Fl_Window::draw();
+    damage(FL_DAMAGE_ALL);
+    Fl_Window::draw();
 }
 
 /**
