@@ -31,8 +31,6 @@
 int main(int argc, char** argv)
 {
     Application* Design456App = new Application();
-    Design456App->show();
-    Design456App->GLFWrun();
+    return Design456App->run(argc,argv);
 
-    //return FakeMain(argc, argv);
 }

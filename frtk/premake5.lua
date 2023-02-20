@@ -58,8 +58,8 @@ project "frtk"
 	{
         "%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
+        "%{IncludeDir.imGui}",
 		"%{IncludeDir.glm}",
-        "$(SolutionDir)frtk/vendor/fltk/",
 		"$(SolutionDir)frtk/vendor/spdlog/include",
 		"src",
 		"$(SolutionDir)frtk/vendor/instrumentation",
@@ -82,8 +82,7 @@ project "frtk"
 		defines "FR_DEBUG"
 		runtime "Debug"
 		symbols "on"
-		libdirs {"$(SolutionDir)frtk/vendor/fltk/build/lib/Debug",
-		links 
+        links 
 		{   
             "opengl32",
             "glu32",
@@ -100,11 +99,7 @@ project "frtk"
             "uuid",
             "comdlg32",
             "advapi32",
-            "fltkd",
 			"Glad",
-			"fltk_imagesd",
-			"fltk_gld",
-			"fltk_formsd",
 			"glu32.lib",
 			"gdiplus.lib",
 		  --"ImGui",
@@ -113,16 +108,13 @@ project "frtk"
 			"GLFW",
 			"Glad",
 		}
-		}
 
 	filter "configurations:Release"
 		defines "FR_RELEASE"
 		runtime "Release"
 		optimize "on"
-        libdirs {"$(SolutionDir)frtk/vendor/fltk/build/lib/Release",
-		links 
+        links 
 		{   "opengl32",
-            "glu32",
             "gdiplus",
             "comctl32",
             "ws2_32",
@@ -138,15 +130,11 @@ project "frtk"
             "advapi32",
             "fltk",
 			"Glad",
-			"fltk_images",
-			"fltk_gl",
-			"fltk_forms",
-			"glu32.lib",
 			"gdiplus.lib",
 		  --"ImGui",
 		  --"yaml-cpp",
 			"opengl32.lib",
 			"GLFW",
 			"Glad",
-		}
+		
     }

@@ -30,7 +30,7 @@
 #define FR_GL3WINDOW_H
 
 #include <frtk.h>
-//#include<fr_core.h>
+#include<fr_core.h>
 #include<Scene.h>
 #include<Camera.h>
 #include<Manipulator.h>
@@ -39,17 +39,15 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <fr_grid.h>
 #include<fr_axis3D.h>
-#include <FL/Fl_Window.H>
+
 /* Cameras */
 class Camera;
-
-
 class Fr_GL3Window;
 
 /**
  *  Fr_GL3Windows class definition and methods.
  */
-class FRTK_API Fr_GL3Window : public Fl_Window {
+class FRTK_API Fr_GL3Window{
 public:
     /**
      * class constructors.
@@ -73,35 +71,12 @@ public:
      */
     virtual int exit();
     /**
-     * Pointer to the FLTK Window used to get different parameters using FLTK methods.
-     */
-    Fl_Window* pfltkWindow;
-    /**
-     * Function to let the GLFW windows becomes a child of FLTK window.
-     * 
-     * \return int value which represent the success/failure of the operation
-     */
-    int embeddGLfwWindow();
-    /**
-     * let GLFW window be seperated from the FLTK window and it wouln't be a child of the Fl_Window any more.
-     * 
-     * \return 
-     */
-    int releaseGLfwWindow();
-    /**
      * Return back a pointer to the current GLFW window.
      * 
      * \return pointer to a GLFW Window
      */
     virtual GLFWwindow* getCurrentGLWindow();
 
-
-    /**
-     * Resize GLFW Window.
-     * 
-     * \param ratio represent the scale of the change (for ex by 1.1 scale)
-     */
-    virtual void resizeGlWindow(float ratio);
     /**
      * Resize and move the GLFWWindow by the parameters givven.
      * 
@@ -142,32 +117,12 @@ public:
      */
     virtual void resize(int x, int y, int w, int h);
     /**
-     * Decides weather the windwo is resizable or not and which child will be also resizable (see FLTK for further info).
-     * 
-     * \param w
-     */
-    virtual void resizable(Fl_Widget* w);
-    /**
-     * Draw function for FLTK. This will draw the window and the childrens (only FLTK)
-     */
-    virtual void draw();           //fltk
-    /**
      * Show the window. This will also create different objects - See implementation 
      */
     virtual void show();           //both
+  
     /**
-     * .
-     */
-    /**
-     * Hanle function (See fltk for further info).
-     * This is only related to FLTK- Glfw window has it's own callbacks
-     */
-    virtual int handle(int event); //FLTK handle
-    /**
-     * .
-     */
-    /**
-     * Hide the window which also close it. both FLTK and GLFW
+     * Hide the window which 
      * 
      */
     virtual void hide();
@@ -180,15 +135,6 @@ public:
      */
     virtual int GLFWrun();
     
-    /**
-     * These timer variables are used to decide the fps of updating the FLTK.
-     * Since we are not using Fl:run, the update must be decided by GLFW render function. 
-     * See the implementation
-     */
-    static float fltktimerValue;
-    static double oldTime;
-    static double newTime;
-
     /**
      * Pointer to link to the scene.
      */
@@ -218,19 +164,11 @@ protected:
      */
     void CreateCameras();
     /**
-     * Create the GLFW Window and embedd it to fltk.
+     * Create the GLFW Window .
      * 
      * \return 
      */
     int createGLFWwindow();
-
-    //TODO : Is it necessary or we can remove this??
-    /**
-     * Low level code to initialize the GLFW and make it a child object.
-     * 
-     * \return 
-     */
-    int updateGLFWWindow();
 
 private:
    
@@ -271,22 +209,6 @@ private:
         static  Fr_GL3Window* s_fr_glfwwindow;
     };
 
-    /**
-     * boolean varialbe to allow fltk to draw on top of GLFW.
-     * TODO: NOT IMPLEMENTED YET
-     */
-    bool overlay;
-    /**
-     * Sets the overlay variable to true .
-     * 
-     */
-    void setOverlay();
-    /**
-     * sets the overlay variable to false .
-     * 
-     */
-    void removeOverlya();
-    
   /*/
     GLuint shaderProgram;
     GLuint vertexArrayObject;
@@ -301,10 +223,7 @@ private:
      */
     int gl_version_major;
     int gl_version_minor;
-    /**
-     * Update immediatly both FLTK and GLFW windows.
-     * see FLTK for further info
-     */
+    
     void flush();
     
     /**
@@ -329,18 +248,14 @@ private:
     /**
      * Private values that keep the dimention of the window.
      */
-    static int _xGl; // It is different than FLTK. But it is depends on  x()
-    static int _yGl; // It is different than FLTK. But it is depends on  y()
-    static int _wGl; // It is different than FLTK. But it is depends on  w()
-    static int _hGl; // It is different than FLTK. But it is depends on h()
+    static int _xGl; 
+    static int _yGl; 
+    static int _wGl; 
+    static int _hGl; 
     /**
      * Keep track of the active camera.
      */
     CameraList active_camera_ ;
-    /**
-     * Variables to keep old dimiention of the window to calculate the resizing ratio.
-     */
-    const int Ox, Oy, Ow, Oh; //origional vlaues. 
 };
 
 #endif

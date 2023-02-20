@@ -1,4 +1,4 @@
-project "spdlog"
+project "imGui"
     kind "StaticLib"
     language "C++"
     staticruntime "on"
@@ -8,12 +8,14 @@ project "spdlog"
 
     files
     {
-        "include/spdlog/**",
-    }
+        "src/*.h",
+        "src/*.c",
+        "src/*.cpp",
+}
 
     includedirs
     {
-        "include"
+        "src"
     }
     
     filter "system:windows"

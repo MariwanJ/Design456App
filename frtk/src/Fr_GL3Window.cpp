@@ -40,35 +40,9 @@
  * \param window
  */
 
-static void redrawFLTKTimer_cb(void* window) {
-    Fr_GL3Window* win = (Fr_GL3Window*)window;
-   
-    
-    //Fl::do_widget_deletion();
-
-    //Fl::run_checks();
-   // Fl::run_idle();
-    win->draw();
-}
 
 GLuint m_QuadVA, m_QuadVB, m_QuadIB;
 bool s_GLFWInitialized;
-#define redrawFPS float(1.0/25.0)// (24 Frames per sec)
-
-float Fr_GL3Window::fltktimerValue = 0.0;
-
-/*********************************************/
-
-double Fr_GL3Window::newTime = 0.0;
-double Fr_GL3Window::oldTime = 0.0;
-
-/***********************/
-void pfltkWindow_close_cb(Fr_GL3Window* w, void* v) {
-    Fr_GL3Window* win = (Fr_GL3Window*)v;
-    win->deinitializeGlad();
-    win->exit();
-    exit(0);
-}
 
 GLFWwindow* Fr_GL3Window::pWindow = nullptr;
 
@@ -94,10 +68,7 @@ static void error_callback(int error, const char* description)
 * FIXME: CLEANUP CODE
 */
 Scene* Fr_GL3Window::scene = nullptr;
-Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, const char* l = "FLTK_GLFW Test") :Fl_Window(x, y, w, h, l), Ox(x), Oy(y), Ow(w), Oh(h),
-overlay(false),
-active_camera_(CameraList::PERSPECTIVE) {
-    //Default size is the size of the FLTK window
+Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, const char* l = "GLFW ImGUI Test"):active_camera_(CameraList::PERSPECTIVE) {
     FR::globalP_pWindow = this;
 
     _xGl = x;
@@ -108,37 +79,26 @@ active_camera_(CameraList::PERSPECTIVE) {
     gl_version_major = 4;
     gl_version_minor = 3;
     glfwSetErrorCallback(error_callback);
-
     if (!s_GLFWInitialized)
     {
         int success = glfwInit();
         //FRTK_CORE_ASSERT(success, "Could not intialize GLFW!");
-        //glfwSetErrorCallback(GLFWErrorCallback);
         s_GLFWInitialized = true;
     }
     //Hint to GLFW  - Window is visible, not decorated and gl version is 3.3
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl_version_major);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_version_minor);
-    glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
     glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    pfltkWindow = this;
-    pfltkWindow->callback((Fl_Callback*)pfltkWindow_close_cb, (void*)this);
 }
 
-/**
-* Force updating both windows
-* TODO:FIXME
-*/
 void Fr_GL3Window::flush() {
     glad_glFlush();
-    Fl::flush();
 }
 
 //FIXME
 Fr_GL3Window::~Fr_GL3Window()
 {
-    //exit();
 }
 
 /**
@@ -148,9 +108,7 @@ int Fr_GL3Window::exit()
 {
     if (pWindow)
         glfwDestroyWindow(pWindow);
-    if (pfltkWindow)
-        pfltkWindow->~Fl_Window();
-    return 1;
+    return 0;
 }
 
 GLFWwindow* Fr_GL3Window::getCurrentGLWindow()
@@ -178,46 +136,13 @@ void Fr_GL3Window::CreateScene()
     scene->AddNode(axis.Blue);
 }
 
-//TODO FIXME
-void Fr_GL3Window::draw() {
-    if (overlay) {
-        Fl_Window::draw();
-        printf("overlay%i\n", counter);
-        counter++;
-    }
-    else {
-        Fl_Window::draw();
-        //counter++;
-    }
-    //Fl::flush();
-}
-
-/**
-*Resize only the GLFW Window.
-*/
-void Fr_GL3Window::resizeGlWindow(float ratio)
-{
-    //We don't chage _xGl or _hGl
-    _wGl = int(float(_wGl) * ratio);
-    _hGl = int(float(_hGl) * ratio);
-    damage(FL_DAMAGE_ALL);
-    updateGLFWWindow();
-}
-
 void Fr_GL3Window::resizeGlWindow(int xGl, int yGl, int wGl, int hGl)
 {
     //Use this to resize the GLFW window regardless the ratio
-    _xGl = x() + xGl;
-    _yGl = y() + yGl;
+    _xGl = xGl;
+    _yGl =  yGl;
     _wGl = wGl;
     _hGl = hGl;
-    updateGLFWWindow();
-}
-
-int Fr_GL3Window::handle(int event) {
-    //gladEvents(event);
-    //gladEvents(event);
-    return Fl_Window::handle(event);
 }
 
 //TODO : FIXME : Maybe it is not correct???
@@ -225,58 +150,12 @@ void Fr_GL3Window::hide()
 {
     glfwMakeContextCurrent(nullptr);
     glfwDestroyWindow(pWindow);
-    Fl_Window::hide();
 }
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
-}
-
-int Fr_GL3Window::embeddGLfwWindow()
-{
-    /*
-   * from https://discourse.glfw.org/t/attach-a-glfwwindow-to-windows-window-client-area/882/5:
-   */
-    HWND glfwHND = glfwGetWin32Window(pWindow);
-    HWND hwParentWindow = fl_win32_xid(pfltkWindow);
-    int result = 0;
-    if (hwParentWindow == 0) {
-        printf("Failed to get HWND of the window please debugme!!\n");
-        return 0;
-    }
-    DWORD style = GetWindowLong(glfwHND, GWL_STYLE); //get the b style
-    style &= ~(WS_POPUP | WS_CAPTION); //reset the caption and popup bits
-    style |= WS_CHILD; //set the child bit
-    style |= WS_OVERLAPPED;
-    SetWindowLong(glfwHND, GWL_STYLE, style); //set the new style of b
-    MoveWindow(glfwHND, _xGl, _yGl, _wGl, _hGl, true); //place b at (x,y,w,h) in a
-    SetParent(glfwHND, hwParentWindow);
-    UpdateWindow(glfwHND);
-    ShowWindow(glfwHND, SW_SHOW);
-    return 1;//everything is OK.
-}
-
-int Fr_GL3Window::releaseGLfwWindow()
-{
-    //todo fixme:
-    HWND glfwHND = glfwGetWin32Window(pWindow);
-    HWND hwParentWindow = fl_win32_xid(pfltkWindow);
-    int result = 0;
-    if (hwParentWindow == 0) {
-        printf("Failed to get HWND of the window please debugme!!\n");
-        return 0;
-    }
-
-    DWORD style = GetWindowLong(glfwHND, GWL_STYLE); //get the b style
-    style |= (WS_POPUP | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_SIZEBOX | WS_SYSMENU | WS_CAPTION); //reset the caption and popup bits
-    SetWindowLong(glfwHND, GWL_STYLE, style); //set the new style of b
-    MoveWindow(glfwHND, _xGl, _yGl, _wGl, _hGl, true); //place b at (x,y,w,h) in a
-    SetParent(glfwHND, nullptr);
-    UpdateWindow(glfwHND);
-    ShowWindow(glfwHND, SW_SHOW);
-    return 1;//everything is OK.
 }
 
 void Fr_GL3Window::deinitializeGlad()
@@ -329,7 +208,6 @@ int Fr_GL3Window::createGLFWwindow()
     // --------------------
     pWindow = glfwCreateWindow(_wGl, _hGl, "LearnOpenGL", NULL, NULL);
 
-    glfwSetWindowUserPointer(pWindow, (void*)pfltkWindow); //allow user data go to the callback //TODO use this with all callbacks
     if (pWindow == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -337,8 +215,6 @@ int Fr_GL3Window::createGLFWwindow()
         return -1;
     }
     glfwMakeContextCurrent(pWindow);
-    glfwSetFramebufferSizeCallback(pWindow, GLFWCallbackWrapper::framebuffer_size_callback);
-
     // glad: load all OpenGL function pointers
     // ---------------------------------------
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -348,17 +224,6 @@ int Fr_GL3Window::createGLFWwindow()
     }
     s_GladInitialized = true;
     FR::s_GladInitialized = true;
-    embeddGLfwWindow();
-
-    //***************************************************
-
-    /**
-        Based on the discussion https://stackoverflow.com/questions/7676971/pointing-to-a-function-that-is-a-class-member-glfw-setkeycallback
-    */
-#define genericCallback(functionName)[](GLFWwindow* window, auto... args) {\
-            auto pointer = static_cast<GLFWwindow*>(glfwGetWindowUserPointer(window));\
-            if (pointer->functionName) pointer->functionName(pointer, args...);}
-
     // GLFW callbacks  https://www.glfw.org/docs/3.3/input_guide.html
     glfwSetFramebufferSizeCallback(pWindow, GLFWCallbackWrapper::framebuffer_size_callback);
     glfwSetKeyCallback(pWindow, GLFWCallbackWrapper::keyboard_callback);
@@ -370,84 +235,19 @@ int Fr_GL3Window::createGLFWwindow()
     return 1;
 }
 
-int Fr_GL3Window::updateGLFWWindow()
-{
-    MoveWindow(glfwHND, _xGl, _yGl, _wGl, _hGl, true); //place b at (x,y,w,h) in a
-    UpdateWindow(glfwHND);
-    RedrawWindow(glfwHND, NULL, NULL, RDW_FRAME | RDW_INTERNALPAINT);
-    if (s_GladInitialized) {
-        glad_glFlush();
-    }
-    return 0;
-}
 
-void Fr_GL3Window::setOverlay()
-{
-    overlay = true;
-}
-
-void Fr_GL3Window::removeOverlya()
-{
-    overlay = false;
-}
-
-/**
-* This will prepare showing the windows.
-* Nothing still be drawn before running the
-* application
-* You need to use Fr_GL3Window::run () to get
-* things running and shown on the screen.
-*/
-
-void Fr_GL3Window::show() {
-    Fl_Window::show();
-    //Create the GLFW Window
-    if (pWindow == nullptr) {
-        if (createGLFWwindow() != 0) {
-            if (s_GladInitialized == true) {
-                //glad_glClearColor(1.0, 0.16, 0.18, 1.0);
-                //glClear(GL_COLOR_BUFFER_BIT);
-                //updateGLFWWindow();                              TODO: DO WE NEED THIS? I remove it for now
-            }
-        }
-    }
-    damage(FL_DAMAGE_ALL);
-    Fl_Window::draw();
-}
-
-/**
-* Resize both windows. FLTK and GLFW. Be aware that you need to set GLFW size before resizing this
-*/
 void Fr_GL3Window::resize(int x, int y, int w, int h)
 {
-    Fl_Window::resize(x, y, w, h);
-    float _ratio = float(w * h) / float(Ow * Oh);  /// Calculate ratio of resized of window
-    if (s_GladInitialized) {
-        if (_ratio != 0)
-            resizeGlWindow(_ratio);
-    }
-    //damage(FL_DAMAGE_ALL);
-    //Fl_Window::draw();
 }
 
-/**
-* Put resizable widget for the whole window
-*   TODO: You need to add some more code to allow GLFW to be resizable
-*/
-void Fr_GL3Window::resizable(Fl_Widget* w)
-{
-    Fl_Window::resizable(w);
+void Fr_GL3Window::show() {
+    if (createGLFWwindow() != 0) {
+            if (s_GladInitialized == true) {
+                //                       TODO: DO WE NEED THIS? I remove it for now
+            }
+        }
 }
 
-/**
-* Run the application . This is a replacer of Fl:run.
-* We need to make our own since FLTK will not be involved
-* in keeping the window visible directly.
-* GLFW will keep the whole window visible
-* to the time any of them hides or terminates
-*
-*/
-static float countert = 0.0;
 int Fr_GL3Window::GLFWrun()
 {
     CreateScene();   //Main drawing process.
@@ -456,22 +256,8 @@ int Fr_GL3Window::GLFWrun()
     glViewport(0, 0, _wGl, _hGl);
     while (!glfwWindowShouldClose(pWindow))
     {
-        //Update FLTK 24 frames/sec
-        newTime = glfwGetTime();
-        if (oldTime == 0) {
-            oldTime = newTime;
-        }
-        double delta = newTime - oldTime;
-        oldTime = newTime;
-        fltktimerValue = fltktimerValue + delta;
-        if (fltktimerValue >= redrawFPS) {
-            fltktimerValue = 0.0;
-            redrawFLTKTimer_cb(this);
-        }
-
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - defualt should be wings3D or FreeCAD
-
         scene->RenderScene();
         if (s_GladInitialized) {
             glCheckFunc(glfwSwapBuffers(pWindow));

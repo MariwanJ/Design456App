@@ -41,32 +41,18 @@
 #include<glad/glad.h>
 #endif
 
+
+
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
-
-#include <FL/Fl.H>
-#include <FL/fl_types.h>
-#include <FL/platform.H>
-
-#include <FL/Fl_Window.H>
-#include <FL/Fl_Menu_Bar.H>
-#include <FL/Fl_Tabs.H>
-#include <FL/Fl_Menu_Bar.H>
-#include <FL/Fl_Group.H>
-#include <FL/Fl_Button.H>
-#include <FL/Fl_Tile.H>
-#include <FL/Fl_Window.H>
-#include <FL/Fl_Tabs.H>
-#include <FL/Fl_Group.H>
-#include <FL/Fl_Button.H>
-#include <FL/Fl_Tile.H>
-
-//#include <FL/Fl_Double_Window.H>
-
 #include <Fr_Log.h>
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
 #include <../instrumentation/Instrumentor.h>
+//imGUI
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 
 #ifdef _WIN32
 #define DEBUG_BREAK __debugbreak()

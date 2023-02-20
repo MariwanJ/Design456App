@@ -1,6 +1,6 @@
 //                                                                      
 // This file is a part of the Open Source Design456App                    
-// IT License
+// MIT License
 // 
 // Copyright (c) 2023
 // 
