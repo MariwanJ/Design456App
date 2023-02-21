@@ -53,10 +53,6 @@ Fr_GL3Window* Fr_GL3Window::GLFWCallbackWrapper::s_fr_glfwwindow = nullptr;
 static int counter = 0;
 
 Fr_GL3Window* FR::globalP_pWindow = nullptr;
-int Fr_GL3Window::_xGl = 0;
-int Fr_GL3Window::_yGl = 0;
-int Fr_GL3Window::_wGl = 0;
-int Fr_GL3Window::_hGl = 0;
 
 static void error_callback(int error, const char* description)
 {
@@ -68,13 +64,15 @@ static void error_callback(int error, const char* description)
 * FIXME: CLEANUP CODE
 */
 Scene* Fr_GL3Window::scene = nullptr;
-Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, const char* l = "GLFW ImGUI Test"):active_camera_(CameraList::PERSPECTIVE) {
+Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::string l = "GLFW ImGUI Test"):
+                                active_camera_(CameraList::PERSPECTIVE), 
+                                _x(x), _y(y), _w(w), _h(h), label_(l) {
     FR::globalP_pWindow = this;
 
-    _xGl = x;
-    _yGl = y;
-    _wGl = w;
-    _hGl = h;
+    _x = x;
+    _y = y;
+    _w = w;
+    _h = h;
 
     gl_version_major = 4;
     gl_version_minor = 3;
@@ -94,6 +92,15 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, const
 
 void Fr_GL3Window::flush() {
     glad_glFlush();
+}
+
+Fr_GL3Window::Fr_GL3Window()
+{
+    _x = 0;
+    _y = 0;
+    _w = 900;
+    _h = 800;
+    label_ = "GLFW ImGUI Test";
 }
 
 //FIXME
@@ -136,13 +143,13 @@ void Fr_GL3Window::CreateScene()
     scene->AddNode(axis.Blue);
 }
 
-void Fr_GL3Window::resizeGlWindow(int xGl, int yGl, int wGl, int hGl)
+void Fr_GL3Window::resizeWindow(int xGl, int yGl, int wGl, int hGl)
 {
     //Use this to resize the GLFW window regardless the ratio
-    _xGl = xGl;
-    _yGl =  yGl;
-    _wGl = wGl;
-    _hGl = hGl;
+    _x = xGl;
+    _y = yGl;
+    _w = wGl;
+    _h = hGl;
 }
 
 //TODO : FIXME : Maybe it is not correct???
@@ -161,6 +168,41 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 void Fr_GL3Window::deinitializeGlad()
 {
     s_GladInitialized = false;
+}
+
+int Fr_GL3Window::x() const
+{
+    return _x;
+}
+
+int Fr_GL3Window::y() const
+{
+    return _y;
+}
+
+int Fr_GL3Window::w() const
+{
+    return _w;
+}
+
+int Fr_GL3Window::h() const
+{
+    return _h;
+}
+
+const char* Fr_GL3Window::label() const
+{
+    return label_.c_str();
+}
+
+void Fr_GL3Window::label(std::string l)
+{
+    label_ = l;
+}
+
+void Fr_GL3Window::label(const char* l)
+{
+    label_ = l;
 }
 
 void Fr_GL3Window::CreateCameras()
@@ -191,44 +233,65 @@ void Fr_GL3Window::CreateCameras()
 int Fr_GL3Window::renderimGUI(){
     // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
  {
+        if(imgui_LeftPanel()<0)
+            return -1;
+        if(imgui_TopPannel()<0)
+            return -1;
+        if(imgui_NavigationBox())
+            return -1;
+        if(imgui_ViewPort())
+           return -1;
 
-    // Start the Dear ImGui frame
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-     static float f = 0.0f;
-     static int counter = 0;
-     bool show_demo_window = true;
-     bool show_another_window = false;
-
-     ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-     ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-     ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-     ImGui::Checkbox("Another Window", &show_another_window);
-
-     ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-     ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-     if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-         counter++;
-     ImGui::SameLine();
-     ImGui::Text("counter = %d", counter);
-
-     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-     ImGui::End();
-
-     ImGui::Render();
-     int display_w, display_h;
-     glfwGetFramebufferSize(pWindow, &display_w, &display_h);
-     //glViewport(0, 0, display_w, display_h);
-     glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
-     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
      //glfwSwapBuffers(pWindow);
 
  }
  return 1;
 
+}
+int Fr_GL3Window::imgui_LeftPanel()
+{
+    return 0;
+}
+int Fr_GL3Window::imgui_TopPannel()
+{
+    ImGui::ShowDemoWindow();
+    return 0;
+}
+int Fr_GL3Window::imgui_NavigationBox()
+{
+        //Demo code fix me
+    
+    static float f = 0.0f;
+    static int counter = 0;
+    bool show_demo_window = true;
+    bool show_another_window = false;
+
+    ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+
+    ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+    ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+    ImGui::Checkbox("Another Window", &show_another_window);
+
+    ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+    ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+
+    if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+        counter++;
+    ImGui::SameLine();
+    ImGui::Text("counter = %d", counter);
+
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    ImGui::End();
+    return 0;
+}
+int Fr_GL3Window::imgui_ViewPort()
+{   //Demo code fix me
+    ImGui::Begin("ViewPort");
+    ImGui::Text("View Port");               // Display some text (you can use a format strings too)
+    //scene->RenderScene();
+    ImGui::End(); 
+
+    return 0;
 }
 int Fr_GL3Window::createGLFWwindow()
 {
@@ -247,7 +310,7 @@ int Fr_GL3Window::createGLFWwindow()
 
     // glfw window creation
     // --------------------
-    pWindow = glfwCreateWindow(_wGl, _hGl, "LearnOpenGL", NULL, NULL);
+    pWindow = glfwCreateWindow(_w, _h, label_.c_str(), NULL, NULL);
 
     if (pWindow == NULL)
     {
@@ -295,7 +358,7 @@ void Fr_GL3Window::resize(int x, int y, int w, int h)
 void Fr_GL3Window::show() {
     if (createGLFWwindow() != 0) {
             if (s_GladInitialized == true) {
-                //                       TODO: DO WE NEED THIS? I remove it for now
+            //                       TODO: DO WE NEED THIS? I remove it for now
             }
         }
 }
@@ -305,14 +368,28 @@ int Fr_GL3Window::GLFWrun()
     CreateScene();   //Main drawing process.
     glfwSwapInterval(1);
     glfwMakeContextCurrent(pWindow);
-    glViewport(0, 0, _wGl, _hGl);
+    glViewport(0, 0, _w, _h);
     clear_color = ImVec4(FR_WINGS3D); //ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     while (!glfwWindowShouldClose(pWindow))
     {
         glClear(GL_COLOR_BUFFER_BIT);
-       //glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - defualt should be wings3D or FreeCAD
-        scene->RenderScene();
+        //glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - defualt should be wings3D or FreeCAD
+        // Start the Dear ImGui frame
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
         renderimGUI();
+
+        // Rendering
+        ImGui::Render();
+        int display_w, display_h;
+        glfwGetFramebufferSize(pWindow, &display_w, &display_h);
+        glViewport(0, 0, display_w, display_h);
+        glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+        glClear(GL_COLOR_BUFFER_BIT);
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
         if (s_GladInitialized) {
             glCheckFunc(glfwSwapBuffers(pWindow));
             glCheckFunc(glfwPollEvents());
@@ -348,15 +425,6 @@ std::shared_ptr<Transform> Fr_GL3Window::CreateSun() {
     sun_height->AddNode(light);
     sun->SetActive(true);   //A must to have or the rabbit mesh will be black.
     return std::shared_ptr<Transform>(sun);
-}
-
-void Fr_GL3Window::setOpenGLWinowSize(int xGL, int yGL, int wGL, int hGL)
-{
-    _xGl = xGL;
-    _yGl = yGL;
-    _wGl = wGL;
-    _hGl = hGL;
-    resizeGlWindow(_xGl, _yGl, _wGl, _hGl);
 }
 
 void Fr_GL3Window::GLFWCallbackWrapper::framebuffer_size_callback(GLFWwindow* window, int width, int height)

@@ -58,8 +58,14 @@ public:
      * \param h hight of the window (mad depends on the resolution of the screen)
      * \param l Windows title bar label
      */
-    Fr_GL3Window(int x, int y, int w, int h, const char* l);
-   /**
+    Fr_GL3Window(int x, int y, int w, int h, std::string l);
+    /**
+     * 
+     * Default constructor.
+     * 
+     */
+    Fr_GL3Window();
+    /**
     * Class destructor.
     *
     */
@@ -85,17 +91,8 @@ public:
      * \param w  width of the screen
      * \param h  height of the screen
      */
-    virtual void resizeGlWindow(int x, int y, int w, int h);
-    /**
-     * Initial setup for the GLFW widow dimension.
-     *
-     * \param xGL left start point
-     * \param yGL top start point
-     * \param wGL width
-     * \param hGL height
-     */
-    void setOpenGLWinowSize(int xGL, int yGL, int wGL, int hGL);
-
+    virtual void resizeWindow(int x, int y, int w, int h);
+  
     /**
      * Create Scene graph.
      */
@@ -157,19 +154,41 @@ public:
      */
     static void deinitializeGlad();
 
+    int  x()const;
+    int  y()const;
+    int  w()const;
+    int  h()const;
+
+    const char* label()const;
+    void label(std::string l);
+    void label(const char*l);
+
 protected:
     /**
      * Function to create all cameras listed in CameraList.
      *
      */
     void CreateCameras();
+    
+    /**
+     * 
+     * Collect all Rendering functions under one function for simplifying the work.
+     * 
+     * \return 
+     */
     int renderimGUI();
+    int imgui_LeftPanel();
+    int imgui_TopPannel();
+    int imgui_NavigationBox();
+    int imgui_ViewPort();
     /**
      * Create the GLFW Window .
      *
      * \return
      */
     int createGLFWwindow();
+
+
 
 private:
 
@@ -196,6 +215,9 @@ private:
         GLFWCallbackWrapper(GLFWCallbackWrapper&&) = delete;
         ~GLFWCallbackWrapper() = delete;
 
+
+
+
         //These are for avoiding error when you call non static functions.
         static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
         static void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -206,6 +228,9 @@ private:
         static void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
         static void joystick_callback(int jid, int events);
         static void setGLFWwindow(Fr_GL3Window* glfwWindow);
+
+
+
     private:
         static  Fr_GL3Window* s_fr_glfwwindow;
     };
@@ -249,10 +274,11 @@ private:
     /**
      * Private values that keep the dimention of the window.
      */
-    static int _xGl;
-    static int _yGl;
-    static int _wGl;
-    static int _hGl;
+    int _x;
+    int _y;
+    int _w;
+    int _h;
+    std::string label_;
     /**
      * Keep track of the active camera.
      */
