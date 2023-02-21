@@ -37,11 +37,9 @@ To use /MTd in premake:
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.imGui}",
         "../frtk/vendor/spdlog/include",
-        "../frtk/vendor/fltk",
 		"../frtk/src",
         "%{IncludeDir.GLFW}",
 		"%{IncludeDir.glm}",
-     ---"../frtk/vendor/%{IncludeDir.ImGui}"
 	}
 	defines{
 		"GLFW_EXPOSE_NATIVE_WIN32",
@@ -59,10 +57,10 @@ To use /MTd in premake:
 		"MultiProcessorCompile",
 	}
 	filter "configurations:Debug"
-		libdirs {"../frtk/vendor/fltk/build/lib/Debug"}
 		links 
 		{   "frtk",
 			"Glad",
+            "imGui",
 			"opengl32.lib",
 			"gdiplus.lib",
 			"GLFW",
@@ -70,16 +68,15 @@ To use /MTd in premake:
 		}
 	
 	filter "configurations:Release"
-		libdirs {"../frtk/vendor/fltk/build/lib/Release"}
 		links 
 		{   "frtk",
 			"Glad",
+            "imGui",
 			"opengl32.lib",
 			"opengl32.lib",
 			"gdiplus.lib",
 			"GLFW",
-			"opengl32.lib",
-			"imGui"
+			"opengl32.lib"
 		}
 	
 

@@ -191,11 +191,16 @@ void Fr_GL3Window::CreateCameras()
 int Fr_GL3Window::renderimGUI(){
     // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
  {
+
+    // Start the Dear ImGui frame
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
      static float f = 0.0f;
      static int counter = 0;
      bool show_demo_window = true;
      bool show_another_window = false;
-     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
      ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
      ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
@@ -212,6 +217,15 @@ int Fr_GL3Window::renderimGUI(){
 
      ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
      ImGui::End();
+
+     ImGui::Render();
+     int display_w, display_h;
+     glfwGetFramebufferSize(pWindow, &display_w, &display_h);
+     //glViewport(0, 0, display_w, display_h);
+     glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+     //glfwSwapBuffers(pWindow);
+
  }
  return 1;
 
@@ -264,14 +278,12 @@ int Fr_GL3Window::createGLFWwindow()
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
-    //ImGui::StyleColorsLight();
+    //ImGui::StyleColorsDark();
+    ImGui::StyleColorsLight();
         // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(pWindow, true);
     const char* glsl_version = "#version 330";
     ImGui_ImplOpenGL3_Init(glsl_version);
-
-
     return 1;
 }
 
@@ -294,11 +306,13 @@ int Fr_GL3Window::GLFWrun()
     glfwSwapInterval(1);
     glfwMakeContextCurrent(pWindow);
     glViewport(0, 0, _wGl, _hGl);
+    clear_color = ImVec4(FR_WINGS3D); //ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     while (!glfwWindowShouldClose(pWindow))
     {
         glClear(GL_COLOR_BUFFER_BIT);
-        glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - defualt should be wings3D or FreeCAD
+       //glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - defualt should be wings3D or FreeCAD
         scene->RenderScene();
+        renderimGUI();
         if (s_GladInitialized) {
             glCheckFunc(glfwSwapBuffers(pWindow));
             glCheckFunc(glfwPollEvents());

@@ -59,7 +59,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLFW_EXPOSE_NATIVE_WIN32;GLFW_INCLUDE_NONE;GLAD_GL_IMPLEMENTATION;FL_INTERNALS;FL_LIBRARY;FRTK_ENABLE_ASSERTS;FRTK_PLATFORM_WINDOWS;FRTK_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\frtk\vendor\Glad\include;..\frtk\vendor\imGui\src;..\frtk\vendor\spdlog\include;..\frtk\vendor\fltk;..\frtk\src;..\frtk\vendor\GLFW\include;..\frtk\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\frtk\vendor\Glad\include;..\frtk\vendor\imGui\src;..\frtk\vendor\spdlog\include;..\frtk\src;..\frtk\vendor\GLFW\include;..\frtk\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -70,19 +70,15 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\bin\Debug-windows-x86_64\frtk\frtk.lib;..\frtk\vendor\Glad\bin\Debug-windows-x86_64\Glad\Glad.lib;..\frtk\vendor\GLFW\bin\Debug-windows-x86_64\GLFW\GLFW.lib;gdiplus.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\frtk\vendor\fltk\build\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>gdiplus.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <ProjectReference>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLFW_EXPOSE_NATIVE_WIN32;GLFW_INCLUDE_NONE;GLAD_GL_IMPLEMENTATION;FL_INTERNALS;FL_LIBRARY;FRTK_ENABLE_ASSERTS;FRTK_PLATFORM_WINDOWS;FRTK_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\frtk\vendor\Glad\include;..\frtk\vendor\imGui\src;..\frtk\vendor\spdlog\include;..\frtk\vendor\fltk;..\frtk\src;..\frtk\vendor\GLFW\include;..\frtk\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\frtk\vendor\Glad\include;..\frtk\vendor\imGui\src;..\frtk\vendor\spdlog\include;..\frtk\src;..\frtk\vendor\GLFW\include;..\frtk\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -97,7 +93,6 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>gdiplus.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\frtk\vendor\fltk\build\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -113,11 +108,11 @@
     <ProjectReference Include="..\frtk\vendor\Glad\Glad.vcxproj">
       <Project>{BDD6857C-A90D-870D-52FA-6C103E10030F}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\frtk\vendor\GLFW\GLFW.vcxproj">
-      <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\frtk\vendor\imGui\imGui.vcxproj">
       <Project>{E00FA80F-4C24-D0C0-15A6-73208179CCF1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\frtk\vendor\GLFW\GLFW.vcxproj">
+      <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -257,6 +257,7 @@ private:
      * Keep track of the active camera.
      */
     CameraList active_camera_ ;
+    ImVec4 clear_color;
 };
 
 #endif

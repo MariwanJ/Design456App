@@ -64,7 +64,6 @@ project "frtk"
 		"src",
 		"$(SolutionDir)frtk/vendor/instrumentation",
 		--"%{IncludeDir.yaml-cpp}",
-        --"%{IncludeDir.ImGui}",
 	}
 	filter "system:windows"
 		systemversion "latest"
@@ -85,7 +84,6 @@ project "frtk"
         links 
 		{   
             "opengl32",
-            "glu32",
             "gdiplus",
             "comctl32",
             "ws2_32",
@@ -100,9 +98,8 @@ project "frtk"
             "comdlg32",
             "advapi32",
 			"Glad",
-			"glu32.lib",
 			"gdiplus.lib",
-		  --"ImGui",
+		  	"imGui",
 		  --"yaml-cpp",
 			"opengl32.lib",
 			"GLFW",
@@ -131,7 +128,7 @@ project "frtk"
             "fltk",
 			"Glad",
 			"gdiplus.lib",
-		  --"ImGui",
+		  	"imGui",
 		  --"yaml-cpp",
 			"opengl32.lib",
 			"GLFW",
