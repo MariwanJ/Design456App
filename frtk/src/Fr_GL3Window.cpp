@@ -33,10 +33,10 @@
 //End remove me later
 
 /**
- * 
+ *
  * Update FLTK callback.
  * This function should replace the need of Fl::run
- * It will be calle 
+ * It will be calle
  * \param window
  */
 
@@ -188,7 +188,34 @@ void Fr_GL3Window::CreateCameras()
         cameras.push_back(camera_trans);  //Transform with a camera child.
     }
 }
+int Fr_GL3Window::renderimGUI(){
+    // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
+ {
+     static float f = 0.0f;
+     static int counter = 0;
+     bool show_demo_window = true;
+     bool show_another_window = false;
+     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+     ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
+     ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+     ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+     ImGui::Checkbox("Another Window", &show_another_window);
+
+     ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+     ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+
+     if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+         counter++;
+     ImGui::SameLine();
+     ImGui::Text("counter = %d", counter);
+
+     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+     ImGui::End();
+ }
+ return 1;
+
+}
 int Fr_GL3Window::createGLFWwindow()
 {
     //***********************************************************************************************
@@ -232,6 +259,19 @@ int Fr_GL3Window::createGLFWwindow()
     glfwSetMouseButtonCallback(pWindow, GLFWCallbackWrapper::mouse_button_callback);
     glfwSetScrollCallback(pWindow, GLFWCallbackWrapper::scroll_callback);
     glfwSetJoystickCallback(GLFWCallbackWrapper::joystick_callback);
+
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
+    //ImGui::StyleColorsLight();
+        // Setup Platform/Renderer backends
+    ImGui_ImplGlfw_InitForOpenGL(pWindow, true);
+    const char* glsl_version = "#version 330";
+    ImGui_ImplOpenGL3_Init(glsl_version);
+
+
     return 1;
 }
 

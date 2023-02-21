@@ -51,7 +51,7 @@ class FRTK_API Fr_GL3Window{
 public:
     /**
      * class constructors.
-     * 
+     *
      * \param x left side of the window ref to the whole screen (System dependen)
      * \param y top side of the window ref to the whole screen (System dependen)
      * \param w width of the window (max depends on the rosolution of the screen)
@@ -61,25 +61,25 @@ public:
     Fr_GL3Window(int x, int y, int w, int h, const char* l);
    /**
     * Class destructor.
-    * 
+    *
     */
     virtual ~Fr_GL3Window();
     /**
      * Exit function used to exit whenever the fltk windows is closed.
-     * 
+     *
      * \return int value dpending on the way the windows exits.
      */
     virtual int exit();
     /**
      * Return back a pointer to the current GLFW window.
-     * 
+     *
      * \return pointer to a GLFW Window
      */
     virtual GLFWwindow* getCurrentGLWindow();
 
     /**
      * Resize and move the GLFWWindow by the parameters givven.
-     * 
+     *
      * \param x  left position ref to the screen
      * \param y  top position ref to the screen
      * \param w  width of the screen
@@ -88,10 +88,10 @@ public:
     virtual void resizeGlWindow(int x, int y, int w, int h);
     /**
      * Initial setup for the GLFW widow dimension.
-     * 
+     *
      * \param xGL left start point
      * \param yGL top start point
-     * \param wGL width 
+     * \param wGL width
      * \param hGL height
      */
     void setOpenGLWinowSize(int xGL, int yGL, int wGL, int hGL);
@@ -102,14 +102,14 @@ public:
     virtual void CreateScene();  //Must be overriden to get the desired results
     /**
      * Create Sun (Light) inside the Scene graph.
-     * 
-     * \return 
+     *
+     * \return
      */
     virtual std::shared_ptr<Transform> CreateSun();
 
     /**
      * Resize Fr_GL3Window size which affects both fltk and glfw windows.
-     * 
+     *
      * \param x left-start position of the window
      * \param y top-start position of the window
      * \param w width of the window
@@ -117,24 +117,24 @@ public:
      */
     virtual void resize(int x, int y, int w, int h);
     /**
-     * Show the window. This will also create different objects - See implementation 
+     * Show the window. This will also create different objects - See implementation
      */
     virtual void show();           //both
-  
+
     /**
-     * Hide the window which 
-     * 
+     * Hide the window which
+     *
      */
     virtual void hide();
 
     /**
      * Windows run function wich replaces the Fl::run() function.
      * This is necessary to avoid problem with the Fl:run
-     * 
+     *
      * \return int value which represents the windows exit code
      */
     virtual int GLFWrun();
-    
+
     /**
      * Pointer to link to the scene.
      */
@@ -145,7 +145,7 @@ public:
      * 6 types of cameras are created by the window
      * see CameraList
      */
-    std::vector<std::shared_ptr<Transform>> cameras; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT, 
+    std::vector<std::shared_ptr<Transform>> cameras; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
     /**
      * Static pointer used to access the GLFW window.
      */
@@ -160,18 +160,19 @@ public:
 protected:
     /**
      * Function to create all cameras listed in CameraList.
-     * 
+     *
      */
     void CreateCameras();
+    int renderimGUI();
     /**
      * Create the GLFW Window .
-     * 
-     * \return 
+     *
+     * \return
      */
     int createGLFWwindow();
 
 private:
-   
+
     /** GLFW Callbacks*/
     void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -183,9 +184,9 @@ private:
 
     /**
      * GLFW callback wrapper calss.
-     * This class is necessary to avoid having static callback functions. 
-     * This allow us to reach Fr_GL3Window variables without using 
-     * other solutions. 
+     * This class is necessary to avoid having static callback functions.
+     * This allow us to reach Fr_GL3Window variables without using
+     * other solutions.
      */
     class GLFWCallbackWrapper
     {
@@ -223,9 +224,9 @@ private:
      */
     int gl_version_major;
     int gl_version_minor;
-    
+
     void flush();
-    
+
     /**
      * Transform pointer used to keep track to the scene graph SUN.
      */
@@ -234,7 +235,7 @@ private:
     /**
     * low level variable to keep the id of the GLFW window
      * HWND .
-     * TODO: Implement the Linxu and other OS 
+     * TODO: Implement the Linxu and other OS
      */
     HWND glfwHND;
     /**
@@ -248,10 +249,10 @@ private:
     /**
      * Private values that keep the dimention of the window.
      */
-    static int _xGl; 
-    static int _yGl; 
-    static int _wGl; 
-    static int _hGl; 
+    static int _xGl;
+    static int _yGl;
+    static int _wGl;
+    static int _hGl;
     /**
      * Keep track of the active camera.
      */
