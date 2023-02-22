@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="imguiFont">
+      <UniqueIdentifier>{57E15C62-C34B-11D9-0C8A-C27E7833EF2D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="widgets">
+      <UniqueIdentifier>{9C4F4BC8-082F-CA63-1147-553A7DA530C5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\imconfig.h" />
+    <ClInclude Include="src\imgui.h" />
+    <ClInclude Include="src\imguiFont\IconsFontAwesome4.h">
+      <Filter>imguiFont</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imguiFont\IconsFontAwesome5.h">
+      <Filter>imguiFont</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imguiFont\IconsFontAwesome5Brands.h">
+      <Filter>imguiFont</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imguiFont\IconsFontAwesome5Pro.h">
+      <Filter>imguiFont</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imguiFont\IconsFontAwesome5ProBrands.h">
+      <Filter>imguiFont</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imguiFont\IconsFontAwesome6.h">
+      <Filter>imguiFont</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imguiFont\IconsFontAwesome6Brands.h">
+      <Filter>imguiFont</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imguiFont\IconsFontaudio.h">
+      <Filter>imguiFont</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imguiFont\IconsForkAwesome.h">
+      <Filter>imguiFont</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imguiFont\IconsKenney.h">
+      <Filter>imguiFont</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imguiFont\IconsMaterialDesign.h">
+      <Filter>imguiFont</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui_impl_glfw.h" />
+    <ClInclude Include="src\imgui_impl_opengl3.h" />
+    <ClInclude Include="src\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="src\imgui_internal.h" />
+    <ClInclude Include="src\imstb_rectpack.h" />
+    <ClInclude Include="src\imstb_textedit.h" />
+    <ClInclude Include="src\imstb_truetype.h" />
+    <ClInclude Include="src\widgets\imgui_toolbars.h">
+      <Filter>widgets</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\imgui.cpp" />
+    <ClCompile Include="src\imgui_demo.cpp" />
+    <ClCompile Include="src\imgui_draw.cpp" />
+    <ClCompile Include="src\imgui_impl_glfw.cpp" />
+    <ClCompile Include="src\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="src\imgui_tables.cpp" />
+    <ClCompile Include="src\imgui_widgets.cpp" />
+  </ItemGroup>
+</Project>

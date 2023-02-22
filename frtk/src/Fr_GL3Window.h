@@ -146,7 +146,7 @@ public:
     /**
      * Static pointer used to access the GLFW window.
      */
-    static GLFWwindow* pWindow;
+    GLFWwindow* pWindow;
     /**
      * Function to change the initialization variable of glad to false.
      * The variable will be used to avoid calling glad functions
@@ -181,6 +181,8 @@ protected:
     int imgui_TopPannel();
     int imgui_NavigationBox();
     int imgui_ViewPort();
+    int imgui_menu();
+    int imgui_toolbars();
     /**
      * Create the GLFW Window .
      *

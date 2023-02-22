@@ -53,6 +53,31 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+#include <widgets/imgui_toolbars.h>
+
+//imGUI fonts 
+
+#include<imguiFont/IconsFontaudio.h>
+#include<imguiFont/IconsFontAwesome4.h>
+#include<imguiFont/IconsFontAwesome5.h>
+#include<imguiFont/IconsFontAwesome5Brands.h>
+#include<imguiFont/IconsFontAwesome5Pro.h>
+#include<imguiFont/IconsFontAwesome5ProBrands.h>
+#include<imguiFont/IconsFontAwesome6.h>
+#include<imguiFont/IconsFontAwesome6Brands.h>
+#include<imguiFont/IconsForkAwesome.h>
+#include<imguiFont/IconsKenney.h>
+#include<imguiFont/IconsMaterialDesign.h>
+
+
+
+
+
+
+
+
+
+
 
 #ifdef _WIN32
 #define DEBUG_BREAK __debugbreak()

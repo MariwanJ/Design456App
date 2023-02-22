@@ -8,9 +8,9 @@ project "imGui"
 
     files
     {
-        "src/*.h",
-        "src/*.c",
-        "src/*.cpp",
+        "src/**.h",
+        "src/**.c",
+        "src/**.cpp",
 }
 
     includedirs

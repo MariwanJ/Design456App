@@ -44,8 +44,6 @@
 GLuint m_QuadVA, m_QuadVB, m_QuadIB;
 bool s_GLFWInitialized;
 
-GLFWwindow* Fr_GL3Window::pWindow = nullptr;
-
 bool Fr_GL3Window::s_GLFWInitialized = false;
 bool Fr_GL3Window::s_GladInitialized = false;
 Fr_GL3Window* Fr_GL3Window::GLFWCallbackWrapper::s_fr_glfwwindow = nullptr;
@@ -233,14 +231,21 @@ void Fr_GL3Window::CreateCameras()
 int Fr_GL3Window::renderimGUI(){
     // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
  {
+        if (imgui_toolbars() < 0)
+            return -1;
+
         if(imgui_LeftPanel()<0)
             return -1;
         if(imgui_TopPannel()<0)
             return -1;
-        if(imgui_NavigationBox())
+        if(imgui_NavigationBox()<0)
             return -1;
-        if(imgui_ViewPort())
+        if(imgui_ViewPort()<0)
            return -1;
+        if (imgui_menu() < 0)
+            return -1;
+        if (imgui_toolbars() < 0)
+            return -1;
 
      //glfwSwapBuffers(pWindow);
 
@@ -254,7 +259,9 @@ int Fr_GL3Window::imgui_LeftPanel()
 }
 int Fr_GL3Window::imgui_TopPannel()
 {
-    ImGui::ShowDemoWindow();
+    bool show_demo_window = true;
+    if (show_demo_window)
+        ImGui::ShowDemoWindow(&show_demo_window);
     return 0;
 }
 int Fr_GL3Window::imgui_NavigationBox()
@@ -288,10 +295,141 @@ int Fr_GL3Window::imgui_ViewPort()
 {   //Demo code fix me
     ImGui::Begin("ViewPort");
     ImGui::Text("View Port");               // Display some text (you can use a format strings too)
-    //scene->RenderScene();
+    scene->RenderScene();
     ImGui::End(); 
 
     return 0;
+}
+int Fr_GL3Window::imgui_menu()
+{
+  
+        if (ImGui::BeginMainMenuBar()) //Start creating Main Window Menu. 
+        {
+            if (ImGui::BeginMenu("File"))
+            {
+
+                //IMGUI_DEMO_MARKER("Examples/Menu");
+                ImGui::MenuItem("(demo menu)", NULL, false, false);
+                if (ImGui::MenuItem("New")) {}
+                if (ImGui::MenuItem("Open", "Ctrl+O")) {}
+                if (ImGui::BeginMenu("Open Recent"))
+                {
+                    ImGui::MenuItem("fish_hat.c");
+                    ImGui::MenuItem("fish_hat.inl");
+                    ImGui::MenuItem("fish_hat.h");
+                    if (ImGui::BeginMenu("More.."))
+                    {
+                        ImGui::MenuItem("Hello");
+                        ImGui::MenuItem("Sailor");
+                        if (ImGui::BeginMenu("Recurse.."))
+                        {
+                            //ShowExampleMenuFile();
+                            ImGui::EndMenu();
+                        }
+                        ImGui::EndMenu();
+                    }
+                    ImGui::EndMenu();
+                }
+                if (ImGui::MenuItem("Save", "Ctrl+S")) {}
+                if (ImGui::MenuItem("Save As..")) {}
+
+                ImGui::Separator();
+                //IMGUI_DEMO_MARKER("Examples/Menu/Options");
+                if (ImGui::BeginMenu("Options"))
+                {
+                    static bool enabled = true;
+                    ImGui::MenuItem("Enabled", "", &enabled);
+                    ImGui::BeginChild("child", ImVec2(0, 60), true);
+                    for (int i = 0; i < 10; i++)
+                        ImGui::Text("Scrolling Text %d", i);
+                    ImGui::EndChild();
+                    static float f = 0.5f;
+                    static int n = 0;
+                    ImGui::SliderFloat("Value", &f, 0.0f, 1.0f);
+                    ImGui::InputFloat("Input", &f, 0.1f);
+                    ImGui::Combo("Combo", &n, "Yes\0No\0Maybe\0\0");
+                    ImGui::EndMenu();
+                }
+
+                //IMGUI_DEMO_MARKER("Examples/Menu/Colors");
+                if (ImGui::BeginMenu("Colors"))
+                {
+                    float sz = ImGui::GetTextLineHeight();
+                    for (int i = 0; i < ImGuiCol_COUNT; i++)
+                    {
+                        const char* name = ImGui::GetStyleColorName((ImGuiCol)i);
+                        ImVec2 p = ImGui::GetCursorScreenPos();
+                        ImGui::GetWindowDrawList()->AddRectFilled(p, ImVec2(p.x + sz, p.y + sz), ImGui::GetColorU32((ImGuiCol)i));
+                        ImGui::Dummy(ImVec2(sz, sz));
+                        ImGui::SameLine();
+                        ImGui::MenuItem(name);
+                    }
+                    ImGui::EndMenu();
+                }
+
+                // Here we demonstrate appending again to the "Options" menu (which we already created above)
+                // Of course in this demo it is a little bit silly that this function calls BeginMenu("Options") twice.
+                // In a real code-base using it would make senses to use this feature from very different code locations.
+                if (ImGui::BeginMenu("Options")) // <-- Append!
+                {
+                    //IMGUI_DEMO_MARKER("Examples/Menu/Append to an existing menu");
+                    static bool b = true;
+                    ImGui::Checkbox("SomeOption", &b);
+                    ImGui::EndMenu();
+                }
+
+                if (ImGui::BeginMenu("Disabled", false)) // Disabled
+                {
+                    IM_ASSERT(0);
+                }
+                if (ImGui::MenuItem("Checked", NULL, true)) {}
+                ImGui::Separator();
+                if (ImGui::MenuItem("Quit", "Alt+F4")) {}
+
+
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("Edit"))
+            {
+                if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
+                if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
+                ImGui::Separator();
+                if (ImGui::MenuItem("Cut", "CTRL+X")) {}
+                if (ImGui::MenuItem("Copy", "CTRL+C")) {}
+                if (ImGui::MenuItem("Paste", "CTRL+V")) {}
+                ImGui::EndMenu();
+            }
+        }
+        ImGui::EndMainMenuBar();
+    return 0;
+}
+
+int Fr_GL3Window::imgui_toolbars()
+{
+    unsigned int myImageTextureId2 = 0;
+    bool show_another_window = true;
+
+            static ImGui::Toolbar toolbar;
+            if (toolbar.getNumButtons() == 0) {
+                char tmp[1024]; ImVec2 uv0(0, 0), uv1(0, 0);
+                for (int i = 0; i < 9; i++) {
+                    strcpy(tmp, "toolbutton ");
+                    sprintf(&tmp[strlen(tmp)], "%d", i + 1);
+                    uv0 = ImVec2((float)(i % 3) / 3.f, (float)(i / 3) / 3.f);
+                    uv1 = ImVec2(uv0.x + 1.f / 3.f, uv0.y + 1.f / 3.f);
+
+                    toolbar.addButton(ImGui::Toolbutton(tmp, (void*)ICON_FA_ANALYTICS, uv0, uv1, ImVec2(32, 32)));
+                }
+                toolbar.addSeparator(16);
+                toolbar.addButton(ImGui::Toolbutton("toolbutton 11", (void*)ICON_FA_ARROW_LEFT, uv0, uv1, ImVec2(16, 16), true, true, ImVec4(0.8, 0.8, 1.0, 1)));  // Note that separator "eats" one toolbutton index as if it was a real button
+                toolbar.addButton(ImGui::Toolbutton("toolbutton 12", (void*)ICON_FA_ARROW_ALT_CIRCLE_RIGHT, uv0, uv1, ImVec2(16, 16), true, false, ImVec4(1.0, 0.8, 0.8, 1)));  // Note that separator "eats" one toolbutton index as if it was a real button
+
+                toolbar.setProperties(true, false, false, ImVec2(0.0f, 0.f), ImVec2(0.25, 1));
+            }
+            const int pressed = toolbar.render();
+            if (pressed >= 0) fprintf(stderr, "Toolbar1: pressed:%d\n", pressed);
+        
+  return 0;
 }
 int Fr_GL3Window::createGLFWwindow()
 {
@@ -319,6 +457,7 @@ int Fr_GL3Window::createGLFWwindow()
         return -1;
     }
     glfwMakeContextCurrent(pWindow);
+    glfwSwapInterval(1);
     // glad: load all OpenGL function pointers
     // ---------------------------------------
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -346,7 +485,20 @@ int Fr_GL3Window::createGLFWwindow()
         // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(pWindow, true);
     const char* glsl_version = "#version 330";
+
     ImGui_ImplOpenGL3_Init(glsl_version);
+    /*
+     ImGuiIO& io = ImGui::GetIO();
+    float fontSize = 18.0f;
+    io.Fonts->AddFontFromFileTTF("resources/font/OpenSans-Bold.ttf", fontSize);
+    io.FontDefault = io.Fonts->AddFontFromFileTTF("resources/font/OpenSans-Regular.ttf", fontSize);
+
+
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+
+    */
     return 1;
 }
 
@@ -365,13 +517,12 @@ void Fr_GL3Window::show() {
 
 int Fr_GL3Window::GLFWrun()
 {
-    CreateScene();   //Main drawing process.
-    glfwSwapInterval(1);
-    glfwMakeContextCurrent(pWindow);
     glViewport(0, 0, _w, _h);
+    CreateScene();   //Main drawing process.
     clear_color = ImVec4(FR_WINGS3D); //ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     while (!glfwWindowShouldClose(pWindow))
     {
+        glCheckFunc(glfwPollEvents());
         glClear(GL_COLOR_BUFFER_BIT);
         //glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - defualt should be wings3D or FreeCAD
         // Start the Dear ImGui frame
@@ -383,17 +534,14 @@ int Fr_GL3Window::GLFWrun()
 
         // Rendering
         ImGui::Render();
+
         int display_w, display_h;
         glfwGetFramebufferSize(pWindow, &display_w, &display_h);
         glViewport(0, 0, display_w, display_h);
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-        if (s_GladInitialized) {
-            glCheckFunc(glfwSwapBuffers(pWindow));
-            glCheckFunc(glfwPollEvents());
-        }
+        glCheckFunc(glfwSwapBuffers(pWindow));
     }
     return 0;
 }
