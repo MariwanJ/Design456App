@@ -33,6 +33,8 @@ static Scene* scene = nullptr;
 
 void Fr_GL3Window::framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
+    this->_w = width;
+    _h = height;
     if (s_GladInitialized && s_GLFWInitialized) {
         glViewport(0, 0, _w, _h);
     }

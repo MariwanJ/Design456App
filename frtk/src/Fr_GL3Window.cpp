@@ -66,7 +66,7 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
                                 active_camera_(CameraList::PERSPECTIVE), 
                                 _x(x), _y(y), _w(w), _h(h), label_(l) {
     FR::globalP_pWindow = this;
-
+    
     _x = x;
     _y = y;
     _w = w;
@@ -86,6 +86,7 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_version_minor);
     glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    Fr_GL3Window::GLFWCallbackWrapper::setGLFWwindow(this);
 }
 
 void Fr_GL3Window::flush() {
@@ -133,7 +134,7 @@ void Fr_GL3Window::CreateScene()
       * Add here the nodes - Grid, and XYZ axis
       */
     scene->AddNode(CreateSun());
-    //scene->AddNode(bunny());
+    scene->AddNode(bunny());
     scene->AddNode(Grid().CreateGrid());
     vert axis = Axis3D().CreateAxis3D();
     scene->AddNode(axis.Red);
@@ -228,31 +229,7 @@ void Fr_GL3Window::CreateCameras()
         cameras.push_back(camera_trans);  //Transform with a camera child.
     }
 }
-int Fr_GL3Window::renderimGUI(){
-    // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
- {
-        if (imgui_toolbars() < 0)
-            return -1;
 
-        if(imgui_LeftPanel()<0)
-            return -1;
-        if(imgui_TopPannel()<0)
-            return -1;
-        if(imgui_NavigationBox()<0)
-            return -1;
-        if(imgui_ViewPort()<0)
-           return -1;
-        if (imgui_menu() < 0)
-            return -1;
-        if (imgui_toolbars() < 0)
-            return -1;
-
-     //glfwSwapBuffers(pWindow);
-
- }
- return 1;
-
-}
 int Fr_GL3Window::imgui_LeftPanel()
 {
     return 0;
@@ -484,7 +461,7 @@ int Fr_GL3Window::createGLFWwindow()
     ImGui::StyleColorsLight();
         // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(pWindow, true);
-    const char* glsl_version = "#version 330";
+    const char* glsl_version = "#version 430";
 
     ImGui_ImplOpenGL3_Init(glsl_version);
     /*
@@ -515,6 +492,30 @@ void Fr_GL3Window::show() {
         }
 }
 
+
+int Fr_GL3Window::renderimGUI() {
+    // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
+    {
+        if (imgui_toolbars() < 0)
+            return -1;
+
+        if (imgui_LeftPanel() < 0)
+            return -1;
+        if (imgui_TopPannel() < 0)
+            return -1;
+        if (imgui_NavigationBox() < 0)
+            return -1;
+        if (imgui_ViewPort() < 0)
+            return -1;
+        if (imgui_menu() < 0)
+            return -1;
+        if (imgui_toolbars() < 0)
+            return -1;
+    }
+    return 1;
+
+}
+
 int Fr_GL3Window::GLFWrun()
 {
     glViewport(0, 0, _w, _h);
@@ -536,8 +537,8 @@ int Fr_GL3Window::GLFWrun()
         ImGui::Render();
 
         int display_w, display_h;
-        glfwGetFramebufferSize(pWindow, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
+        //glfwGetFramebufferSize(pWindow, &display_w, &display_h);
+        //glViewport(0, 0, display_w, display_h);
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
