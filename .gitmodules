@@ -13,3 +13,6 @@
 [submodule "frtk/vendor/yaml-cpp"]
 	path = frtk/vendor/yaml-cpp
 	url = https://github.com/jbeder/yaml-cpp
+[submodule "frtk/vendor/ImGuizmo"]
+	path = frtk/vendor/ImGuizmo
+	url = https://github.com/MariwanJ/ImGuizmo
