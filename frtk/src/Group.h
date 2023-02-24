@@ -61,7 +61,7 @@ public:
      * 
      * \return pointer to the vector nodes even if there is no children (which will be an empty vector
      */
-    std::vector<std::shared_ptr<Node>> getNodes();
+    virtual std::vector<std::shared_ptr<Node>> getNodes();
     /**
      * Sets the camera
      * Returns true if the camera has been set
@@ -90,9 +90,11 @@ public:
      */
     virtual void Render(RenderInfo& info, const glm::mat4& modelview) override;
 
-private:
+protected:
     /** Group's children */
     std::vector<std::shared_ptr<Node>> nodes_;
+
+private:
 };
 
 #endif

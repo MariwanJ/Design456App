@@ -123,6 +123,8 @@ void Transform::Render(RenderInfo& info, const glm::mat4& modelview) {
     Group::Render(info, sub_modelview);
 }
 
+
+
 glm::mat4 Transform::getManupulatorMatrix() const
 {
     if (manipulator_)

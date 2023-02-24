@@ -128,7 +128,6 @@ void Fr_GL3Window::CreateScene()
 {
     scene = new Scene();//Save a link to the windows also.
     scene->linkToglfw = pWindow;
-
     CreateCameras();
     /*
       * Add here the nodes - Grid, and XYZ axis
@@ -487,6 +486,7 @@ int Fr_GL3Window::imguimzo_init()
     ImGuizmo::SetDrawlist();
     float windowsWidth = (float)ImGui::GetWindowWidth();
     float windowsHeight = (float)ImGui::GetWindowHeight();
+    ImGuizmo::BeginFrame();
     ImGuizmo::SetRect(ImGui::GetWindowPos().x,
                         ImGui::GetWindowPos().y,
                         windowsWidth, windowsHeight);
@@ -496,6 +496,11 @@ int Fr_GL3Window::imguimzo_init()
     auto modelview = activeCameraTrans->getManupulatorMatrix();
     auto camera = activeCameraTrans->getNode(0);
     float trans[3] = { 0.0f, 0.0f, 0.0f };
+    auto proje = glm::ortho(-1.f, 1.f, -1.f, 1.f, 1.f, -1.f);
+    ImGuizmo::DrawGrid(&modelview[0][0], &proje[0][0], trans, 100.f);
+    //ImGuizmo::DrawGrid(&modelview[0][0], FR::globalP_pWindow->cameras[(unsigned int)FR::globalP_pWindow->active_camera_]->getPorjection(), trans, 100.f);
+    //ImGuizmo::DrawCubes(modelview, camera->getProjection(), &objectMatrix[0][0], gizmoCount);
+
    /*ImGuizmo::Manipulate(&modelview[0][0],
                          camera->getProjection(),
                          (ImGuizmo::OPERATION)m_Gizmotype,
@@ -504,8 +509,6 @@ int Fr_GL3Window::imguimzo_init()
 
 
    */
-
-
 
     return 0;
 }
