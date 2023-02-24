@@ -126,6 +126,7 @@ public:
 
     CameraList getCameraType();
 
+    glm::mat4 getPorjection();
 private:
     CameraList camType_ ;
     glm::vec3 eye_;
@@ -135,6 +136,7 @@ private:
     float znear_;   //BOTTOM
     float zfar_;   //TOP 
     std::shared_ptr<Manipulator> manipulator_;
+    glm::mat4 projection_;
 };
 
 #endif

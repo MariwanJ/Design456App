@@ -102,6 +102,8 @@ public:
      */
     void Render(RenderInfo& info, const glm::mat4& modelview) override;
 
+    glm::mat4 getManupulatorMatrix()const;
+
 private:
     std::unique_ptr<Manipulator> manipulator_;
     glm::mat4 matrix_;

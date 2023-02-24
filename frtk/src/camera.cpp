@@ -90,6 +90,7 @@ Camera::Camera() :
     znear_{ 1 },
     zfar_{ 100 },
     manipulator_{},
+    projection_(glm::ortho(-1, 1, -1, 1, 1, -1)),
     camType_(CameraList::PERSPECTIVE){
 }
 
@@ -158,6 +159,7 @@ bool Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
     case CameraList::BOTTOM: {
     } break;
     }
+    projection_ = projection;
     return true;
 }
 /**
@@ -173,4 +175,9 @@ void Camera::setCameraType(CameraList camTyp)
 */
 CameraList Camera::getCameraType() {
     return camType_;
+}
+
+glm::mat4 Camera::getPorjection()
+{
+    return glm::mat4();
 }

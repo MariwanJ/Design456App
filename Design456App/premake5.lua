@@ -36,10 +36,13 @@ To use /MTd in premake:
 	{
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.imGui}",
-        "../frtk/vendor/spdlog/include",
-		"../frtk/src",
+		"%{IncludeDir.ImGuizmo}",
         "%{IncludeDir.GLFW}",
 		"%{IncludeDir.glm}",
+        
+        "../frtk/vendor/spdlog/include",
+		"../frtk/src",
+        
 	}
 	defines{
 		"GLFW_EXPOSE_NATIVE_WIN32",
@@ -61,6 +64,7 @@ To use /MTd in premake:
 		{   "frtk",
 			"Glad",
             "imGui",
+            "ImGuizmo",
 			"opengl32.lib",
 			"gdiplus.lib",
 			"GLFW",
@@ -72,6 +76,7 @@ To use /MTd in premake:
 		{   "frtk",
 			"Glad",
             "imGui",
+            "ImGuizmo",
 			"opengl32.lib",
 			"opengl32.lib",
 			"gdiplus.lib",

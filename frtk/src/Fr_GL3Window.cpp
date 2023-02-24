@@ -270,11 +270,10 @@ int Fr_GL3Window::imgui_NavigationBox()
 }
 int Fr_GL3Window::imgui_ViewPort()
 {   //Demo code fix me
-    ImGui::Begin("ViewPort");
-    ImGui::Text("View Port");               // Display some text (you can use a format strings too)
+    //ImGui::Begin("ViewPort");
+   // ImGui::Text("View Port");               // Display some text (you can use a format strings too)
     scene->RenderScene();
-    ImGui::End();
-
+  //  ImGui::End();
     return 0;
 }
 int Fr_GL3Window::imgui_menu()
@@ -404,7 +403,8 @@ int Fr_GL3Window::imgui_toolbars()
                 toolbar.setProperties(true, false, false, ImVec2(0.0f, 0.f), ImVec2(0.25, 1));
             }
             const int pressed = toolbar.render();
-            if (pressed >= 0) fprintf(stderr, "Toolbar1: pressed:%d\n", pressed);
+            if (pressed >= 0) 
+                fprintf(stderr, "Toolbar1: pressed:%d\n", pressed);
 
   return 0;
 }
@@ -455,15 +455,17 @@ int Fr_GL3Window::createGLFWwindow()
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     // Setup Dear ImGui style
     //ImGui::StyleColorsDark();
     ImGui::StyleColorsLight();
         // Setup Platform/Renderer backends
+
     ImGui_ImplGlfw_InitForOpenGL(pWindow, true);
     const char* glsl_version = "#version 430";
-
     ImGui_ImplOpenGL3_Init(glsl_version);
+
     /*
      ImGuiIO& io = ImGui::GetIO();
     float fontSize = 18.0f;
@@ -488,6 +490,20 @@ int Fr_GL3Window::imguimzo_init()
     ImGuizmo::SetRect(ImGui::GetWindowPos().x,
                         ImGui::GetWindowPos().y,
                         windowsWidth, windowsHeight);
+    
+    auto m_Gizmotype = ImGuizmo::OPERATION::TRANSLATE; //translate, scale or rotate
+    auto activeCameraTrans = FR::globalP_pWindow->cameras[(unsigned int)FR::globalP_pWindow->active_camera_];
+    auto modelview = activeCameraTrans->getManupulatorMatrix();
+    auto camera = activeCameraTrans->getNode(0);
+    float trans[3] = { 0.0f, 0.0f, 0.0f };
+   /*ImGuizmo::Manipulate(&modelview[0][0],
+                         camera->getProjection(),
+                         (ImGuizmo::OPERATION)m_Gizmotype,
+                         ImGuizmo::LOCAL, 
+                         glm::value_ptr(*trans));
+
+
+   */
 
 
 
@@ -511,20 +527,21 @@ void Fr_GL3Window::show() {
 int Fr_GL3Window::renderimGUI() {
     // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
     {
+
+        //if (imgui_ViewPort() < 0)
+           // return -1;
         if (imgui_toolbars() < 0)
             return -1;
-
         if (imgui_LeftPanel() < 0)
             return -1;
         if (imgui_TopPannel() < 0)
             return -1;
         if (imgui_NavigationBox() < 0)
             return -1;
-        if (imgui_ViewPort() < 0)
-            return -1;
+
         if (imgui_menu() < 0)
             return -1;
-        if (imgui_toolbars() < 0)
+        if (imguimzo_init() < 0)
             return -1;
     }
     return 1;
@@ -540,24 +557,23 @@ int Fr_GL3Window::GLFWrun()
     {
         glCheckFunc(glfwPollEvents());
         glClear(GL_COLOR_BUFFER_BIT);
+        int display_w, display_h;
+        glfwGetFramebufferSize(pWindow, &display_w, &display_h);
+        glViewport(0, 0, display_w, display_h);
+        glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+
         //glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - defualt should be wings3D or FreeCAD
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-
+        //Render GLFW stuff or Our 3D drawing
+        scene->RenderScene();
         renderimGUI();
-
-        // Rendering
+        // Rendering IMGUI 
         ImGui::Render();
-
-        int display_w, display_h;
-        //glfwGetFramebufferSize(pWindow, &display_w, &display_h);
-        //glViewport(0, 0, display_w, display_h);
-        glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
-        glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        glCheckFunc(glfwSwapBuffers(pWindow));
+       glCheckFunc(glfwSwapBuffers(pWindow));
     }
     return 0;
 }

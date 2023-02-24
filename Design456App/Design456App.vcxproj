@@ -59,7 +59,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLFW_EXPOSE_NATIVE_WIN32;GLFW_INCLUDE_NONE;GLAD_GL_IMPLEMENTATION;FL_INTERNALS;FL_LIBRARY;FRTK_ENABLE_ASSERTS;FRTK_PLATFORM_WINDOWS;FRTK_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\frtk\vendor\Glad\include;..\frtk\vendor\imGui\src;..\frtk\vendor\spdlog\include;..\frtk\src;..\frtk\vendor\GLFW\include;..\frtk\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\frtk\vendor\Glad\include;..\frtk\vendor\imGui\src;..\frtk\vendor\ImGuizmo\src;..\frtk\vendor\GLFW\include;..\frtk\vendor\glm;..\frtk\vendor\spdlog\include;..\frtk\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -78,7 +78,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLFW_EXPOSE_NATIVE_WIN32;GLFW_INCLUDE_NONE;GLAD_GL_IMPLEMENTATION;FL_INTERNALS;FL_LIBRARY;FRTK_ENABLE_ASSERTS;FRTK_PLATFORM_WINDOWS;FRTK_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\frtk\vendor\Glad\include;..\frtk\vendor\imGui\src;..\frtk\vendor\spdlog\include;..\frtk\src;..\frtk\vendor\GLFW\include;..\frtk\vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\frtk\vendor\Glad\include;..\frtk\vendor\imGui\src;..\frtk\vendor\ImGuizmo\src;..\frtk\vendor\GLFW\include;..\frtk\vendor\glm;..\frtk\vendor\spdlog\include;..\frtk\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -110,6 +110,9 @@
     </ProjectReference>
     <ProjectReference Include="..\frtk\vendor\imGui\imGui.vcxproj">
       <Project>{E00FA80F-4C24-D0C0-15A6-73208179CCF1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\frtk\vendor\ImGuizmo\ImGuizmo.vcxproj">
+      <Project>{36FD234F-22CA-7E5A-4BE3-6C02370FB4E8}</Project>
     </ProjectReference>
     <ProjectReference Include="..\frtk\vendor\GLFW\GLFW.vcxproj">
       <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
