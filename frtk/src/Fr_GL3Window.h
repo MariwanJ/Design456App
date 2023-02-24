@@ -39,7 +39,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <fr_grid.h>
 #include<fr_axis3D.h>
-
+#include<ImGuizmo.h>
 /* Cameras */
 class Camera;
 class Fr_GL3Window;
@@ -60,9 +60,9 @@ public:
      */
     Fr_GL3Window(int x, int y, int w, int h, std::string l);
     /**
-     * 
+     *
      * Default constructor.
-     * 
+     *
      */
     Fr_GL3Window();
     /**
@@ -92,7 +92,7 @@ public:
      * \param h  height of the screen
      */
     virtual void resizeWindow(int x, int y, int w, int h);
-  
+
     /**
      * Create Scene graph.
      */
@@ -169,12 +169,12 @@ protected:
      *
      */
     void CreateCameras();
-    
+
     /**
-     * 
+     *
      * Collect all Rendering functions under one function for simplifying the work.
-     * 
-     * \return 
+     *
+     * \return
      */
     int renderimGUI();
     int imgui_LeftPanel();
@@ -190,7 +190,7 @@ protected:
      */
     int createGLFWwindow();
 
-
+    int imguimzo_init();
 
 private:
 

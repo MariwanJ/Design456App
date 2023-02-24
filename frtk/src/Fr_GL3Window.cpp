@@ -63,10 +63,10 @@ static void error_callback(int error, const char* description)
 */
 Scene* Fr_GL3Window::scene = nullptr;
 Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::string l = "GLFW ImGUI Test"):
-                                active_camera_(CameraList::PERSPECTIVE), 
+                                active_camera_(CameraList::PERSPECTIVE),
                                 _x(x), _y(y), _w(w), _h(h), label_(l) {
     FR::globalP_pWindow = this;
-    
+
     _x = x;
     _y = y;
     _w = w;
@@ -244,7 +244,7 @@ int Fr_GL3Window::imgui_TopPannel()
 int Fr_GL3Window::imgui_NavigationBox()
 {
         //Demo code fix me
-    
+
     static float f = 0.0f;
     static int counter = 0;
     bool show_demo_window = true;
@@ -273,14 +273,14 @@ int Fr_GL3Window::imgui_ViewPort()
     ImGui::Begin("ViewPort");
     ImGui::Text("View Port");               // Display some text (you can use a format strings too)
     scene->RenderScene();
-    ImGui::End(); 
+    ImGui::End();
 
     return 0;
 }
 int Fr_GL3Window::imgui_menu()
 {
-  
-        if (ImGui::BeginMainMenuBar()) //Start creating Main Window Menu. 
+
+        if (ImGui::BeginMainMenuBar()) //Start creating Main Window Menu.
         {
             if (ImGui::BeginMenu("File"))
             {
@@ -405,7 +405,7 @@ int Fr_GL3Window::imgui_toolbars()
             }
             const int pressed = toolbar.render();
             if (pressed >= 0) fprintf(stderr, "Toolbar1: pressed:%d\n", pressed);
-        
+
   return 0;
 }
 int Fr_GL3Window::createGLFWwindow()
@@ -477,6 +477,21 @@ int Fr_GL3Window::createGLFWwindow()
 
     */
     return 1;
+}
+
+int Fr_GL3Window::imguimzo_init()
+{
+    ImGuizmo::SetOrthographic(false);
+    ImGuizmo::SetDrawlist();
+    float windowsWidth = (float)ImGui::GetWindowWidth();
+    float windowsHeight = (float)ImGui::GetWindowHeight();
+    ImGuizmo::SetRect(ImGui::GetWindowPos().x,
+                        ImGui::GetWindowPos().y,
+                        windowsWidth, windowsHeight);
+
+
+
+    return 0;
 }
 
 
