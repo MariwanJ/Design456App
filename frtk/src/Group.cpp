@@ -26,7 +26,12 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include "Group.h"
+#include <fr_group.h>
+
+Group::Group()
+{
+    type(NODETYPE::FR_GROUP);
+}
 
 Group::~Group() {
 }

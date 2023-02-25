@@ -26,9 +26,9 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 #include <glm/gtx/transform.hpp>
-#include <Mesh.h>
+#include <fr_mesh.h>
 #include <fr_primatives.h>
-#include <ShaderProgram.h>
+#include <fr_shader_program.h>
 #include <fr_primativeShader.h>
 #include <glad/glad.h>
 
@@ -72,6 +72,7 @@ Fr_PrimaitiveShader::Fr_PrimaitiveShader(unsigned int color, float silhouette) :
         shared_->silhouette_program = new ShaderProgram(f_silhouette_);
         shared_->shadowmap_program = new ShaderProgram(f_shadowmap_);
     }
+    type(NODETYPE::FR_PRIMATIVESHADER);
 }
 Fr_PrimaitiveShader::Fr_PrimaitiveShader(glm::vec4 color, float silhouette) :
     primative_{ nullptr }, silhouette_(silhouette) {
@@ -83,11 +84,13 @@ Fr_PrimaitiveShader::Fr_PrimaitiveShader(glm::vec4 color, float silhouette) :
         shared_->silhouette_program = new ShaderProgram(f_silhouette_);
         shared_->shadowmap_program = new ShaderProgram(f_shadowmap_);
     }
+    type(NODETYPE::FR_PRIMATIVESHADER);
 }
 
 Fr_PrimaitiveShader::Fr_PrimaitiveShader(float color[4], float silhouette):
     primative_{ nullptr }, silhouette_(silhouette) {
     Fr_PrimaitiveShader(glm::vec4(color[0], color[1], color[2], color[3]));
+    type(NODETYPE::FR_PRIMATIVESHADER);
 }
 
 Fr_PrimaitiveShader::~Fr_PrimaitiveShader() {

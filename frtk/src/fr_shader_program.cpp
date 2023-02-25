@@ -1,3 +1,4 @@
+
 //
 // This file is a part of the Open Source Design456App
 // MIT License
@@ -29,7 +30,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include<glad/glad.h>
 #include <fr_core.h>
-#include "ShaderProgram.h"
+#include <fr_shader_program.h>
 
 ShaderProgram::ShaderProgram(const std::string& prefix) :
     program_((glCreateProgram())) {

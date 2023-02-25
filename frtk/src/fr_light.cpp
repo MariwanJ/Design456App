@@ -27,7 +27,7 @@
 //
 
 #include <glm/gtc/matrix_transform.hpp>
-#include "Light.h"
+#include <fr_light.h>
 
 Light::Light() :
     light_id_(0),
@@ -42,6 +42,7 @@ Light::Light() :
     sm_renderbuffer_(0),
     sm_texture_(0),
     sm_enable_(false) {
+    type(NODETYPE::FR_LIGHT);
 }
 
 void Light::SetPosition(float x, float y, float z, float w) {

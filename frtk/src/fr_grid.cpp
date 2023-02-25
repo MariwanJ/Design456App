@@ -27,7 +27,7 @@
 
 #include <fr_grid.h>
 
-#include <ObjectShaderNode.h>
+#include <fr_object_shader_node.h>
 #include <fr_primativeShader.h>
 //Temporary code to have something to show.
 
@@ -66,6 +66,7 @@ std::shared_ptr<Transform>bunny() {
 Grid::Grid()
 {
     setGridParam();//default values. Otherwise you have to use setGridParam
+    type(NODETYPE::FR_GRID);
 }
 /**
  * .

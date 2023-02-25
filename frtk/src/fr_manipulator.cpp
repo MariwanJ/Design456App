@@ -27,7 +27,7 @@
 //
 
 #include <glm/gtx/transform.hpp>
-#include "Manipulator.h"
+#include <fr_manipulator.h>
 #include<glad/glad.h>
 
 //Scroll zooming scale - default is 10.0

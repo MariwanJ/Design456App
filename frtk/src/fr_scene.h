@@ -26,67 +26,42 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef SHADERPROGRAM_H
-#define SHADERPROGRAM_H
-#include<frtk.h>
+#ifndef FR_SCENE_H
+#define FR_SCENE_H
+//#include<frtk.h>
 #include<fr_core.h>
-#include <glm/glm.hpp>
+#include <fr_group.h>
+/**
+ * The scene root
+ */
+typedef struct {
+    float r;
+    float g;
+    float b;
+    float a; //alpha
+} bkgC;
 
-class ShaderProgram {
+class Scene : public Group {
 public:
     /**
-     * Loads, compiles and links the shader program
-     * Expects a prefix (%) for the files: %_vs.glsl and %_fs.glsl
+     * Default Constructor
      */
-    ShaderProgram(const std::string& prefix);
+    Scene();
+    /**
+     * Sets the background color
+     */ 
+    void SetBackgroud(float r, float g, float b);
+    void SetBackgroud(float r, float g, float b, float alfa);
 
     /**
-     * Destructor
+     * Renders the scene
+     * Throws runtime_error if there's no camera
      */
-    ~ShaderProgram();
-
-    /**
-     * Enables or disables the program
-     */
-    void Enable();
-    void Disable();
-
-    /**
-     * Sets an attribute location
-     */
-    void SetAttribLocation(const char *name, unsigned int location);
-
-    /**
-     * Sets an uniform variable
-     */
-    void SetUniformInteger(const std::string& name, int value);
-    void SetUniformFloat(const std::string& name, float value);
-    void SetUniformVec3(const std::string& name, const glm::vec3& value);
-    void SetUniformVec4(const std::string& name, const glm::vec4& value);
-    void SetUniformMat4(const std::string& name, const glm::mat4& value);
-
-    /**
-     * Obtains the shader program handle
-     */
-    unsigned int GetHandle();
+    virtual void RenderScene();
+    static GLFWwindow*linkToglfw;
 
 private:
-    /**
-     * Reads the whole file and returns it as a string
-     */
-    std::string ReadFile(const std::string& path);
-
-    /**
-     * Loads and compiles a shader from a file
-     */
-    void CompileShader(int shader_type, const std::string& path);
-
-    /**
-     * Links the shader program
-     */
-    void LinkShader();
-
-    unsigned int program_;
+    bkgC  background_;
 };
 
 #endif

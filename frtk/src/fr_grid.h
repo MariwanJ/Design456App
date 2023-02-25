@@ -31,10 +31,10 @@
 
 #include<frtk.h>
 #include<fr_core.h>
-#include <Transform.h>
-#include <Mesh.h>
-#include <Node.h>
-#include <Light.h>
+#include <fr_transform.h>
+#include <fr_mesh.h>
+#include <fr_node.h>
+#include <fr_light.h>
 #include <fr_primatives.h>
 
 //Temporary code - just for debuggin

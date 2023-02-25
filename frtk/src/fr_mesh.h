@@ -26,8 +26,8 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef MESH_H
-#define MESH_H
+#ifndef FR_MESH_H
+#define FR_MESH_H
 
 #include<frtk.h>
 #include<fr_core.h>

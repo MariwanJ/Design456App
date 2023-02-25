@@ -26,13 +26,13 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef LIGHT_H
-#define LIGHT_H
+#ifndef FR_LIGHT_H
+#define FR_LIGHT_H
 
 #include<frtk.h>
 #include<fr_core.h>
 
-#include "Node.h"
+#include <fr_node.h>
 
 class Light : public Node {
 public:

@@ -8,7 +8,7 @@
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copipies of the Software, and to permit persons to whom the Software is
+// copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 //
 // The above copyright notice and this permission notice shall be included in all
@@ -25,89 +25,78 @@
 //  Modified to use with this project by :
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-#ifndef TRANSFORM_H
-#define TRANSFORM_H
 
-#include <memory>
+#ifndef FR_GROUP_H
+#define FR_GROUP_H
 
-#include "Group.h"
+#include<frtk.h>
+#include<fr_core.h>
+#include <fr_node.h>
 
-class Manipulator;
+/**
+ * A container for other nodes
+ */
+class Group : public Node {
 
-class Transform : public Group {
 public:
+    Group();
     /**
-     * Constructor
-     * Loads the identity by default
+     * Virtual destructor
      */
-    Transform();
-
-    /**
-     * Loads the identity matrix
-     */
-    void LoadIndentity();
+    ~Group();
 
     /**
-     * Multiply the current matrix by a rotation matrix
+     * Adds a node to the group
      */
-    void Rotate(float x, float y, float z, float angle);
+    void AddNode(std::shared_ptr<Node> node);
 
     /**
-     * Multiply the current matrix by a rotation matrix
+     * Retrive a pointer to the desired Node given by id number.
+     * 
+     * \param id    Node number
+     * \return pointer to the node if exists. or nullpntr
      */
-    void Rotate(glm::vec3 axis, float angle);
+    std::shared_ptr<Node> getNode(int id);
 
     /**
-     * Multiply the current matrix by a translation matrix
+     * Return a pointer to the vector nodes (all of them).
+     * 
+     * \return pointer to the vector nodes even if there is no children (which will be an empty vector
      */
-    void Translate(float x, float y, float z);
-
-    /**
-     * Multiply the current matrix by a translation matrix
-     */
-    void Scale(float x, float y, float z);
-
-    /**
-     * Sets the manipulator
-     */
-    void SetManipulator(std::unique_ptr<Manipulator> manipulator);
-
-    bool SetupCamera(glm::mat4& projection, glm::mat4& modelview);
-
+    virtual std::vector<std::shared_ptr<Node>> getNodes();
     /**
      * Sets the camera
      * Returns true if the camera has been set
      * Returns the camera info by reference
      */
-    //bool SetupCamera(glm::mat4& projection, glm::mat4& modelview) override;
+    virtual bool SetupCamera(glm::mat4& projection, glm::mat4& modelview) override;
 
     /**
      * Sets the lights
      * Returns the light info by reference
      */
-    void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights);
+    virtual void SetupLight(const glm::mat4& modelview,  std::vector<LightInfo>& lights) override;
 
     /**
      * Sets the shadow map
      */
-    bool SetupShadowMap(ShadowMapInfo& info) override;
+    virtual bool SetupShadowMap(ShadowMapInfo& info) override;
 
     /**
      * Renders the shadow map
      */
-    void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) override;
+    virtual void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) override;
 
     /**
      * Renders the node
      */
-    void Render(RenderInfo& info, const glm::mat4& modelview) override;
+    virtual void Render(RenderInfo& info, const glm::mat4& modelview) override;
 
-    glm::mat4 getManupulatorMatrix()const;
+protected:
+    /** Group's children */
+    std::vector<std::shared_ptr<Node>> nodes_;
 
 private:
-    std::unique_ptr<Manipulator> manipulator_;
-    glm::mat4 matrix_;
-    glm::mat4 inverse_;
 };
 
 #endif

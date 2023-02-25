@@ -31,11 +31,11 @@
 
 #include <frtk.h>
 #include<fr_core.h>
-#include<Scene.h>
-#include<Camera.h>
-#include<Manipulator.h>
-//#include<Transform.h>
-#include<Light.h>
+#include<fr_scene.h>
+#include<fr_camera.h>
+#include<fr_manipulator.h>
+//#include<fr_transform.h>
+#include<fr_light.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <fr_grid.h>

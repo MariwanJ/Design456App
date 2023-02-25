@@ -27,11 +27,12 @@
 //
 
 
-#include <Scene.h>
+#include <fr_scene.h>
 GLFWwindow* Scene::linkToglfw=nullptr;
 
 Scene::Scene() :
     background_{ 0.9, 0.9, 0.9,1.0 }{
+    type(NODETYPE::FR_SCENE);
 }
 
 void Scene::SetBackgroud(float r, float g, float b) {

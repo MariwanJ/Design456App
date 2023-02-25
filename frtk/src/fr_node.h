@@ -26,12 +26,27 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef NODE_H
-#define NODE_H
+#ifndef FR_NODE_H
+#define FR_NODE_H
 
 #include <frtk.h>
 #include <fr_core.h>
 #include <glm/glm.hpp>
+
+
+enum class NODETYPE {
+    FR_NODE                      =  0,
+    FR_GROUP                     =  1,
+    FR_TRANSFORM                 =  2,
+    FR_MANIPULATOR               =  3,
+    FR_PRIMATIVESHADER           =  4,
+    FR_LIGHT                     =  5,
+    FR_CAMERA                    =  6,
+    FR_OBJECTSHADERNODE          =  7,
+    FR_SCENE                     =  8,
+    FR_MESH                      =  9,
+    FR_GRID                      = 10,
+};
 
 /**
  * A generic node that can be attached to the graph
@@ -39,6 +54,7 @@
  * Will be sub-classed by several other classes like (Group, Light, ..etc)
  */
 class Node {
+
 public:
 
     /**
@@ -131,8 +147,19 @@ public:
      */
     bool GetActive();
 
+    NODETYPE type();
+    void type(NODETYPE newVal);
+
 protected:
     bool active_;
+    NODETYPE type_;
+
+    /**
+     *  Object type name use the Enum values to hold the type. Must be given.
+     */
+private:
+
+
 };
 
 #endif

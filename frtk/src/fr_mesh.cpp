@@ -26,13 +26,14 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include <Mesh.h>
+#include <fr_mesh.h>
 
 Mesh::Mesh(const std::string& path) :
     vbo_{0, 0, 0},
     vao_(0) {
     ReadFile(path, vertices_, normals_, indices_);
     InitializeVBO(vertices_, normals_, indices_);
+
 }
 Mesh::Mesh(): vbo_{ 0, 0, 0 }, vao_(0){
 }

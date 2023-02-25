@@ -27,7 +27,7 @@
 #define FR_PRIMATIVESHADER_H
 
 #include <memory>
-#include <Node.h>
+#include <fr_node.h>
 
 class Fr_Primatives;
 class ShaderProgram;

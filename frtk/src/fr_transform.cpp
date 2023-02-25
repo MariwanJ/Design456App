@@ -27,12 +27,13 @@
 //
 #include <cmath>
 #include <glm/gtx/transform.hpp>
-#include <Manipulator.h>
-#include <Transform.h>
+#include <fr_manipulator.h>
+#include <fr_transform.h>
 
 Transform::Transform() :
     manipulator_{nullptr} {
     LoadIndentity();
+    type(NODETYPE::FR_TRANSFORM);
 }
 
 void Transform::LoadIndentity() {
@@ -122,8 +123,6 @@ void Transform::Render(RenderInfo& info, const glm::mat4& modelview) {
     sub_modelview *= matrix_;
     Group::Render(info, sub_modelview);
 }
-
-
 
 glm::mat4 Transform::getManupulatorMatrix() const
 {

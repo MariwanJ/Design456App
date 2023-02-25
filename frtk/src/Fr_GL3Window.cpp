@@ -28,8 +28,8 @@
 #include<Fr_GL3Window.h>
 
 //Remove me later : TODO
-#include<Mesh.h>
-#include<ObjectShaderNode.h>
+#include<fr_mesh.h>
+#include<fr_object_shader_node.h>
 //End remove me later
 
 /**
@@ -133,7 +133,7 @@ void Fr_GL3Window::CreateScene()
       * Add here the nodes - Grid, and XYZ axis
       */
     scene->AddNode(CreateSun());
-    scene->AddNode(bunny());
+    //scene->AddNode(bunny());
     scene->AddNode(Grid().CreateGrid());
     vert axis = Axis3D().CreateAxis3D();
     scene->AddNode(axis.Red);

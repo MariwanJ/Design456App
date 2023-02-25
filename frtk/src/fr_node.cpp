@@ -25,9 +25,9 @@
 //  Modified to use with this project by :
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-#include <Node.h>
+#include <fr_node.h>
 
-Node::Node() :
+Node::Node() :type_(NODETYPE::FR_NODE),
     active_{true} {
 }
 
@@ -71,5 +71,15 @@ void Node::SetActive(bool active) {
 
 bool Node::GetActive() {
     return active_;
+}
+
+NODETYPE Node::type()
+{
+    return type_;
+}
+
+void Node::type(NODETYPE newVal)
+{
+    type_ = newVal;
 }
 

@@ -30,8 +30,8 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glad/glad.h>
-#include <Camera.h>
-#include <Manipulator.h>
+#include <fr_camera.h>
+#include <fr_manipulator.h>
 /**
  normal
      (0.707107, -0.408248, 0.57735, 0),
@@ -92,6 +92,7 @@ Camera::Camera() :
     manipulator_{},
     projection_(glm::ortho(-1, 1, -1, 1, 1, -1)),
     camType_(CameraList::PERSPECTIVE){
+    type(NODETYPE::FR_CAMERA);
 }
 
 void Camera::SetEye(float x, float y, float z) {

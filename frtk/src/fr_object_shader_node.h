@@ -25,11 +25,11 @@
 //  Modified to use with this project by :
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-#ifndef OBJECTSHADERNODE_H
-#define OBJECTSHADERNODE_H
+#ifndef FR_OBJECTSHADERNODE_H
+#define FR_OBJECTSHADERNODE_H
 
 #include <memory>
-#include <Node.h>
+#include <fr_node.h>
 #include <fr_core.h>
 
 class Mesh;

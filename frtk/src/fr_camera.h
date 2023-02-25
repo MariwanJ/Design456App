@@ -26,13 +26,13 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef CAMERA_H
-#define CAMERA_H
+#ifndef FR_CAMERA_H
+#define FR_CAMERA_H
 
 #include<frtk.h>
 #include<fr_core.h>
 
-#include <Node.h>
+#include <fr_node.h>
 
 /*
     R= Righ Vector 

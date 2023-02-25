@@ -26,9 +26,9 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 #include <glm/gtx/transform.hpp>
-#include <Mesh.h>
-#include <ShaderProgram.h>
-#include <ObjectShaderNode.h>
+#include <fr_mesh.h>
+#include <fr_shader_program.h>
+#include <fr_object_shader_node.h>
 #include <glad/glad.h>
 #include<fr_primatives.h>
 
@@ -50,6 +50,7 @@ ObjectShaderNode::ObjectShaderNode(unsigned int color, float silhouette) :
         shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
         shared_->shadowmap_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/shadowmap");
     }
+    type(NODETYPE::FR_OBJECTSHADERNODE);
 }
 
 ObjectShaderNode::ObjectShaderNode(glm::vec4 color, float silhouette):mesh_{ nullptr },
@@ -61,6 +62,7 @@ ObjectShaderNode::ObjectShaderNode(glm::vec4 color, float silhouette):mesh_{ nul
             shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
             shared_->shadowmap_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/shadowmap");
         }
+        type(NODETYPE::FR_OBJECTSHADERNODE);
 }
 
 ObjectShaderNode::~ObjectShaderNode() {

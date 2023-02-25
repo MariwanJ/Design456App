@@ -25,76 +25,79 @@
 //  Modified to use with this project by :
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-
-#ifndef GROUP_H
-#define GROUP_H
+#ifndef FR_MANIPULATOR_H
+#define FR_MANIPULATOR_H
 
 #include<frtk.h>
 #include<fr_core.h>
-#include <Node.h>
 
-/**
- * A container for other nodes
- */
-class Group : public Node {
+#include <glm/glm.hpp>
+
+class Manipulator {
 public:
     /**
-     * Virtual destructor
+     * Constructor
      */
-    ~Group();
+    Manipulator();
+    
+    /**
+     * Accumulates the manipulator matrix
+     */
+    glm::mat4 GetMatrix(const glm::vec3& look_dir = glm::vec3(0, 0, -1));
 
     /**
-     * Adds a node to the group
+     * Accumulates the inverse of the manipulator matrix
      */
-    void AddNode(std::shared_ptr<Node> node);
+    glm::mat4 GetInverse();
 
     /**
-     * Retrive a pointer to the desired Node given by id number.
-     * 
-     * \param id    Node number
-     * \return pointer to the node if exists. or nullpntr
+     * Sets the reference point (world center)
      */
-    std::shared_ptr<Node> getNode(int id);
+    void SetReferencePoint(float x, float y, float z);
 
     /**
-     * Return a pointer to the vector nodes (all of them).
-     * 
-     * \return pointer to the vector nodes even if there is no children (which will be an empty vector
+     * Sets whether each axis is inverted or not
      */
-    virtual std::vector<std::shared_ptr<Node>> getNodes();
-    /**
-     * Sets the camera
-     * Returns true if the camera has been set
-     * Returns the camera info by reference
-     */
-    virtual bool SetupCamera(glm::mat4& projection, glm::mat4& modelview) override;
+    void SetInvertAxis(bool invertX, bool invertY = false);
 
     /**
-     * Sets the lights
-     * Returns the light info by reference
+     * Mouse button function
      */
-    virtual void SetupLight(const glm::mat4& modelview,  std::vector<LightInfo>& lights) override;
+    void GLFWMouse(int button, int state, double x, double y);
 
     /**
-     * Sets the shadow map
+     * Mouse motion function
      */
-    virtual bool SetupShadowMap(ShadowMapInfo& info) override;
+    void GLFWMotion(int x, int y);
+    void GLFWScroll(int x, int y);
 
-    /**
-     * Renders the shadow map
-     */
-    virtual void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) override;
-
-    /**
-     * Renders the node
-     */
-    virtual void Render(RenderInfo& info, const glm::mat4& modelview) override;
-
-protected:
-    /** Group's children */
-    std::vector<std::shared_ptr<Node>> nodes_;
+    double get_X()const;
+    double get_Y()const;
+    void setZommingScale(float scale);
 
 private:
+    enum class Operation {
+        kRotation,  //Mouse click and drag
+        kZoom,       //Left mouse and drag
+        kNone       //nothing
+    };
+
+    static float kZoomScale;
+
+    /** Verifies the k_button state and sets the k_operation */
+    template<int k_button, Operation k_operation>
+    void SetOperation(int button, int state, double x,double y);
+
+    /** Computes the sphere vector for rotation */
+    glm::vec3 computeSphereCoordinates(double x, double y);
+
+    glm::vec3 reference_;
+    glm::mat4 matrix_;
+    glm::mat4 inv_;
+    Operation operation_;
+    double x_, y_;
+    glm::vec3 v_;
+    bool invertX_, invertY_;
 };
 
 #endif

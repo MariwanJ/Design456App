@@ -37,7 +37,6 @@ public:
     Fr_Primatives();
     ~Fr_Primatives();
     
-
     void Draw();
 
     void setDrawType(int type);
