@@ -80,7 +80,7 @@ public:
      * Sets the eye coordinates
      * Default = (1, 0, 0)
      */
-    void SetEye(float x, float y, float z);
+    void SetCamPosition(float x, float y, float z);
 
     /**
      * Sets the center coordinates
@@ -129,14 +129,15 @@ public:
     glm::mat4 getPorjection();
 private:
     CameraList camType_ ;
-    glm::vec3 eye_;
+    glm::vec3 camPosition_;
     glm::vec3 center_;
     glm::vec3 up_;  //RIGHT
     float fovy_;    //LEFT
     float znear_;   //BOTTOM
     float zfar_;   //TOP 
     std::shared_ptr<Manipulator> manipulator_;
-    glm::mat4 projection_;
+    glm::mat4 projectionMatrix_;
+
 };
 
 #endif

@@ -27,6 +27,11 @@
 
 #ifndef FRTK_H
 #define FRTK_H
+/**
+ *  PUT HERE ONLY HEADER FILES THAT ARE PRE-COMPILED HEADER FIELS
+ * 
+ * .
+ */
 #include <array>
 
 #include <algorithm>

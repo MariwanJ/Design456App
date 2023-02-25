@@ -34,13 +34,13 @@
 #include<fr_scene.h>
 #include<fr_camera.h>
 #include<fr_manipulator.h>
-//#include<fr_transform.h>
 #include<fr_light.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <fr_grid.h>
 #include<fr_axis3D.h>
-#include<ImGuizmo.h>
+
+
 /* Cameras */
 class Camera;
 class Fr_GL3Window;
