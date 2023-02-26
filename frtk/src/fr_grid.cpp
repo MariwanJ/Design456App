@@ -138,7 +138,7 @@ std::shared_ptr<Transform> Grid::CreateGrid()
         for (int j = 0; j <= sections_; j += sections_) {
             x = (float)i * gridSize_;
             y = (float)j * gridSize_;
-            float z = 0.0;
+            z = 0.0;
             vertices.push_back(x);
             vertices.push_back(y);
             vertices.push_back(z);
@@ -149,7 +149,7 @@ std::shared_ptr<Transform> Grid::CreateGrid()
         for (int j = 0; j <= sections_; j += sections_) {
             x = (float)j * gridSize_;
             y = (float)i * gridSize_;
-            float z = 0.0;
+            z = 0.0;
             vertices.push_back(x);
             vertices.push_back(y);
             vertices.push_back(z);
@@ -157,7 +157,6 @@ std::shared_ptr<Transform> Grid::CreateGrid()
     }
 
     std::vector<unsigned int> indices;
-    int noOfVerticies = (int)vertices.size();
     for (int i = 0; i <= sections_ * 2; i++) {
         indices.push_back(i);
     }

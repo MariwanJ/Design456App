@@ -129,11 +129,13 @@ void Fr_GL3Window::CreateScene()
     scene = new Scene();//Save a link to the windows also.
     scene->linkToglfw = pWindow;
     CreateCameras();
+    setCameraType(CameraList::PERSPECTIVE);
+
     /*
       * Add here the nodes - Grid, and XYZ axis
       */
     scene->AddNode(CreateSun());
-    //scene->AddNode(bunny());
+    scene->AddNode(bunny());
     scene->AddNode(Grid().CreateGrid());
     vert axis = Axis3D().CreateAxis3D();
     scene->AddNode(axis.Red);
@@ -202,30 +204,49 @@ void Fr_GL3Window::label(const char* l)
 {
     label_ = l;
 }
+/**
+ * Set active camera which affext how setup works.
+ * 
+ * \param _type Camera type which is written in CameraList enum
+ */
+void Fr_GL3Window::setCameraType(CameraList _type)
+{
+    active_camera_ = _type;
+    for (int i = 0; i < MAX_CAMERAS; i++) {
+        (cameras[i]).camera->SetActive(false);
+    }
+    (cameras[(int)active_camera_]).camera->SetActive(true);
+}
 
+CameraList Fr_GL3Window::getCameraType()
+{
+    return active_camera_;
+}
+
+/**
+ * 
+ * Create a list of cameras that will be later used using GUI buttons.
+ * 
+ */
 void Fr_GL3Window::CreateCameras()
 {
-    for (int i = 0; i < 6; i++) {
-        std::shared_ptr camera_ = std::make_shared<Camera>();   //Shared pointer to the camera,
-        //We need to have the transform object to control the camera. Only one child should be allowed TODO FIXME:
-        auto camera_trans = std::make_shared<Transform>();
-        if (i == 0) {
-            camera_trans->AddNode(camera_);
-            camera_->SetActive(true);   //Only one camera is defined by default.
-                                       //You should activate other cameras if you want another view and deactivate the default.
-            camera_trans->Translate(0.6, 0.5, 1.7);
-            camera_trans->Rotate(glm::vec3(1, 0,0 ), 180);
-
-        }
-        else {
-            camera_->SetActive(false);
-        }
-        camera_trans->AddNode(camera_);
+    for (int i = 0; i < MAX_CAMERAS; i++) {
+        auto camera_ = std::make_shared < Camera>();   //Shared pointer to the created camera,
+        auto camera_trans = std::make_shared<Transform>();      //Shared pointer to the Transform that holds the camera as a child
+        //By default no camera is active, developer MUST define one after creating cameras
+        camera_->SetActive(false);
+        camera_->SetPerspective(40, 0.5, 50);
+        camera_trans->Translate(0.6, 0.5, 1.7);
+        camera_trans->Rotate(glm::vec3(1, 0, 0), 180);
         scene->AddNode(camera_trans);  //Add it to the scene graph, but only active one will render.
-        camera_->setCameraType((CameraList)i);   //Depending on the list it should be as the enum defined
+        camera_->setType((CameraList)i);   //Depending on the list it should be as the enum defined
         auto manipulator = new Manipulator(); //manipulation for the camera.
-        camera_->SetManipulator(std::unique_ptr<Manipulator>(manipulator));
-        cameras.push_back(camera_trans);  //Transform with a camera child.
+        camera_->SetManipulator(std::unique_ptr<Manipulator>(manipulator)); //A child to the camera that can manipulate it
+        camera_trans->AddNode(camera_);
+        camtype pCam;
+        pCam.camera = camera_.get();
+        pCam.manipulator = manipulator;
+        cameras.push_back(pCam);  //Transform with a camera child.
     }
 }
 

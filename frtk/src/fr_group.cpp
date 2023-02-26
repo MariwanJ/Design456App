@@ -40,7 +40,6 @@ void Group::AddNode(std::shared_ptr<Node> node) {
     nodes_.push_back(node);
 }
 
-
 bool Group::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
     int ww = 0;
     if (active_)

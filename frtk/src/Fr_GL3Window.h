@@ -41,6 +41,15 @@
 #include<fr_axis3D.h>
 
 
+#define MAX_CAMERAS 6  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING CameraList enu
+
+typedef struct {
+    Camera* camera;
+    Manipulator* manipulator;
+} camtype;
+
+
+
 /* Cameras */
 class Camera;
 class Fr_GL3Window;
@@ -143,7 +152,8 @@ public:
      * 6 types of cameras are created by the window
      * see CameraList
      */
-    std::vector<std::shared_ptr<Transform>> cameras; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
+    std::vector<camtype> cameras; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
+
     /**
      * Static pointer used to access the GLFW window.
      */
@@ -163,6 +173,10 @@ public:
     const char* label()const;
     void label(std::string l);
     void label(const char*l);
+
+    void setCameraType(CameraList typOfCamera);
+    CameraList getCameraType();
+
 
 protected:
     /**
@@ -218,9 +232,6 @@ private:
         GLFWCallbackWrapper(GLFWCallbackWrapper&&) = delete;
         ~GLFWCallbackWrapper() = delete;
 
-
-
-
         //These are for avoiding error when you call non static functions.
         static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
         static void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -231,8 +242,6 @@ private:
         static void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
         static void joystick_callback(int jid, int events);
         static void setGLFWwindow(Fr_GL3Window* glfwWindow);
-
-
 
     private:
         static  Fr_GL3Window* s_fr_glfwwindow;
@@ -288,5 +297,22 @@ private:
     CameraList active_camera_ ;
     ImVec4 clear_color;
 };
+
+
+
+//CALLBACKS 
+
+void mnuFileNew_cb(void* widget, void* Data);
+void mnuFileOpen_cb(void* widget, void* Data);
+void mnuFileClose_cb(void* widget, void* Data);
+void mnuFileSave_cb(void* widget, void* Data);
+
+
+void mnuFileSave_cb(void* widget, void* Data);
+void mnuFileSaveAs_cb(void* widget, void* Data);
+
+void mnuFileExport_cb(void* widget, void* Data);
+void mnuFileImport_cb(void* widget, void* Data);
+
 
 #endif

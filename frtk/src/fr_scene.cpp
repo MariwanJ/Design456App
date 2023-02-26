@@ -58,7 +58,7 @@ void Scene::RenderScene() {
 
     RenderInfo render_info;
     if (!SetupCamera(render_info.projection, render_info.modelview))
-        throw std::runtime_error("Scene::Render(): Camera not found");
+        ;//throw std::runtime_error("Scene::Render(): Camera not found");
     SetupLight(render_info.modelview, render_info.lights);
 
     int draw_framebuffer = 0;

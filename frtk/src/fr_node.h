@@ -34,7 +34,7 @@
 #include <glm/glm.hpp>
 
 
-enum class NODETYPE {
+typedef enum class NODETYPE {
     FR_NODE                      =  0,
     FR_GROUP                     =  1,
     FR_TRANSFORM                 =  2,
@@ -45,7 +45,7 @@ enum class NODETYPE {
     FR_OBJECTSHADERNODE          =  7,
     FR_SCENE                     =  8,
     FR_MESH                      =  9,
-    FR_GRID                      = 10,
+    FR_GRID                      = 10
 };
 
 /**
@@ -54,7 +54,6 @@ enum class NODETYPE {
  * Will be sub-classed by several other classes like (Group, Light, ..etc)
  */
 class Node {
-
 public:
 
     /**
@@ -148,18 +147,16 @@ public:
     bool GetActive();
 
     NODETYPE type();
+
     void type(NODETYPE newVal);
 
 protected:
-    bool active_;
-    NODETYPE type_;
 
     /**
      *  Object type name use the Enum values to hold the type. Must be given.
      */
-private:
-
-
+    NODETYPE type_;
+    bool active_;
 };
 
 #endif

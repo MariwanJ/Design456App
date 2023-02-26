@@ -31,8 +31,8 @@
 
 #include<frtk.h>
 #include<fr_core.h>
-
 #include <fr_node.h>
+#include <glm/glm.hpp>
 
 /*
     R= Righ Vector 
@@ -53,7 +53,7 @@
 
 
 //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT, 
-typedef enum class CameraList {
+enum class CameraList {
     PERSPECTIVE = 0, //This is not fixed and can be moved , others are not.
     ORTHOGRAPHIC,
     TOP,
@@ -63,6 +63,7 @@ typedef enum class CameraList {
     FRONT,
     BACK,
 };
+
 class Manipulator;
 
 
@@ -122,11 +123,14 @@ public:
     /**
     *   Setup camera type , default perspective
     */
-    void setCameraType(CameraList camTyp = CameraList::PERSPECTIVE);
+    void setType(CameraList camTyp = CameraList::PERSPECTIVE);
+
+    CameraList  getType() const;
 
     CameraList getCameraType();
 
     glm::mat4 getPorjection();
+
 private:
     CameraList camType_ ;
     glm::vec3 camPosition_;
@@ -137,7 +141,6 @@ private:
     float zfar_;   //TOP 
     std::shared_ptr<Manipulator> manipulator_;
     glm::mat4 projectionMatrix_;
-
 };
 
 #endif

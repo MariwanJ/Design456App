@@ -34,7 +34,7 @@
 #include "fr_axis3D.h"
 
 
-Axis3D::Axis3D()
+Axis3D::Axis3D():axis3DSize_(10)
 {
 }
 
@@ -56,7 +56,7 @@ vert Axis3D::CreateAxis3D()
     float x, y, z;
     x = y = z = 0;
 
-    glColor3f(1.0, 0.0, 0.0); // red x
+    glm::vec3 lightColorX(1.0, 0.0, 0.0); // red x
 
     verticesRed = {
          end,    0.0f,     0.0f,
@@ -68,7 +68,7 @@ vert Axis3D::CreateAxis3D()
          arrow1, -arrow2,  0.0f
     };
 
-    glColor3f(0.0, 1.0, 0.0); // green y
+    glm::vec3 lightColorY(0.0, 1.0, 0.0); // green y
 
     verticesGreen = {
         0.0f,   end,     0.0f,
@@ -81,7 +81,7 @@ vert Axis3D::CreateAxis3D()
     };
 
     // z 
-    glColor3f(0.0, 0.0, 1.0); // blue z
+    glm::vec3 lightColorZ(0.0, 0.0, 1.0); // blue z
 
     verticesBlue = {
         0.0f,  0.0f,    end,
@@ -94,17 +94,17 @@ vert Axis3D::CreateAxis3D()
     };
 
     std::vector<unsigned int> indicesRed;
-    int noOfVerticies = (int)verticesRed.size();
+
     for (int i = 0; i <= verticesRed.size(); i++) {
         indicesRed.push_back(i);
     }
     std::vector<unsigned int> indicesGreen;
-    noOfVerticies = (int)verticesGreen.size();
+
     for (int i = 0; i <= verticesGreen.size(); i++) {
         indicesGreen.push_back(i);
     }
     std::vector<unsigned int> indicesBlue;
-    noOfVerticies = (int)verticesBlue.size();
+
     for (int i = 0; i <= verticesBlue.size(); i++) {
         indicesBlue.push_back(i);
     }

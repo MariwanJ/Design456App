@@ -128,12 +128,12 @@ bool Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
     int vp[4];
     switch (camType_) {
     case CameraList::PERSPECTIVE: {
-        SetCamPosition(0, 1, -3);
-        SetCenter(0, 0, 0);
-        SetUp(0, 0, 1);
+        SetCamPosition(-6, 2, -30);
+        SetCenter(0, 0, 100);
+        SetUp(0, 1, 0);
         glGetIntegerv(GL_VIEWPORT, vp);
-                                                //RIGHT                     LEFT                    BOTTOM    TOP
-        projection = glm::perspective(glm::radians(fovy_ ), (float)vp[2] / vp[3], znear_, zfar_);
+                                        //RIGHT               LEFT                    BOTTOM    TOP
+        projection = glm::perspective(glm::radians(fovy_), (float)vp[2] / vp[3], znear_, zfar_);
         modelview = glm::lookAt(camPosition_, center_, up_);
         if (manipulator_)
             modelview *= manipulator_->GetMatrix(glm::normalize(center_ - camPosition_));
@@ -141,8 +141,8 @@ bool Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
         } break;
     case CameraList::ORTHOGRAPHIC: {
         //TODO FIXME
-        SetCamPosition(0, 800, 0);
-        SetCenter(600, -500, 5000);
+        SetCamPosition(-6, 2, -20);
+        SetCenter(0, 0, 100);
         SetUp(0, 1, 0);
 
         glGetIntegerv(GL_VIEWPORT, vp);
@@ -158,7 +158,11 @@ bool Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
         SetUp(0, 1, 0);
         } break;
     case CameraList::BOTTOM: {
+        SetCamPosition(10, 2, -20);
+        SetCenter(0, 0, 0);
+        SetUp(1, 0, 0);
     } break;
+
     }
     projectionMatrix_ = projection;
     return true;
@@ -166,9 +170,18 @@ bool Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
 /**
 *   Set camera type
 */
-void Camera::setCameraType(CameraList camTyp)
+void Camera::setType(CameraList camTyp)
 {
     camType_ = camTyp;
+}
+/**
+ * 
+ * Set camera type which affects the setup function.
+ * \return 
+ */
+CameraList  Camera::getType() const
+{
+    return camType_ ;
 }
 
 /**

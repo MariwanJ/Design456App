@@ -27,7 +27,6 @@
 
 #include <imgui.h>
 #include <ImGuizmo.h>
-
 #include <Fr_GL3Window.h>
 
 
@@ -46,9 +45,8 @@ int Fr_GL3Window::imguimzo_init()
         windowsWidth, windowsHeight);
 
     auto m_Gizmotype = ImGuizmo::OPERATION::TRANSLATE; //translate, scale or rotate
-    auto activeCameraTrans = FR::globalP_pWindow->cameras[(unsigned int)FR::globalP_pWindow->active_camera_];
-    auto modelview = activeCameraTrans->getManupulatorMatrix();
-    auto camera = activeCameraTrans->getNode(0);
+    auto activeCamera= FR::globalP_pWindow->cameras[(unsigned int)FR::globalP_pWindow->active_camera_];
+    auto modelview = activeCamera.manipulator->GetMatrix();
     float trans[3] = { 0.0f, 0.0f, 0.0f };
     auto proje = glm::ortho(-1.f, 1.f, -1.f, 1.f, 1.f, -1.f);
     ImGuizmo::DrawGrid(&modelview[0][0], &proje[0][0], trans, 100.f);
@@ -151,6 +149,7 @@ int Fr_GL3Window::imgui_ViewPort()
     //  ImGui::End();
     return 0;
 }
+
 int Fr_GL3Window::imgui_menu()
 {
 
@@ -161,7 +160,7 @@ int Fr_GL3Window::imgui_menu()
 
             //IMGUI_DEMO_MARKER("Examples/Menu");
             ImGui::MenuItem("(demo menu)", NULL, false, false);
-            if (ImGui::MenuItem("New")) {}
+            if (ImGui::MenuItem("New")) { mnuFileNew_cb(this, nullptr); }
             if (ImGui::MenuItem("Open", "Ctrl+O")) {}
             if (ImGui::BeginMenu("Open Recent"))
             {

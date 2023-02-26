@@ -226,7 +226,6 @@ namespace COLOR {
 #define FR_WINGS3D				 0.3800f,  0.3800f,  0.3800f,  0.5000f
 };
 
-#include<fr_callbacks.h>
 class Fr_GL3Window; // compiler should define that later. 
 
 class FR {
