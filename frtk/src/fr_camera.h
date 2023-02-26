@@ -51,7 +51,6 @@
 
 
 
-
 //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT, 
 enum class CameraList {
     PERSPECTIVE = 0, //This is not fixed and can be moved , others are not.
@@ -139,6 +138,7 @@ private:
     float fovy_;    //LEFT
     float znear_;   //BOTTOM
     float zfar_;   //TOP 
+    float aspectRatio_;
     std::shared_ptr<Manipulator> manipulator_;
     glm::mat4 projectionMatrix_;
 };

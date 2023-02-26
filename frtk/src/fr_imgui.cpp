@@ -81,7 +81,7 @@ int Fr_GL3Window::imguimzo_init()
 int Fr_GL3Window::renderimGUI() {
     // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
     {
-
+        auto camera = cameras[(int)active_camera_];
         //if (imgui_ViewPort() < 0)
            // return -1;
         if (imgui_toolbars() < 0)
@@ -90,7 +90,7 @@ int Fr_GL3Window::renderimGUI() {
             return -1;
         if (imgui_TopPannel() < 0)
             return -1;
-        if (imgui_NavigationBox() < 0)
+        if (imgui_NavigationBox(data) < 0)
             return -1;
 
         if (imgui_menu() < 0)
@@ -114,7 +114,7 @@ int Fr_GL3Window::imgui_TopPannel()
         ImGui::ShowDemoWindow(&show_demo_window);
     return 0;
 }
-int Fr_GL3Window::imgui_NavigationBox()
+int Fr_GL3Window::imgui_NavigationBox(userData_ &data)
 {
     //Demo code fix me
 
@@ -123,8 +123,29 @@ int Fr_GL3Window::imgui_NavigationBox()
     bool show_demo_window = true;
     bool show_another_window = false;
 
-    ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+    ImGui::Begin("Hello, Navigation!");                          // Create a window called "Hello, world!" and append into it.
 
+    ImGui::SliderFloat("pos_x", &data.camPosition_[0], 0.0f, 100.0f);
+    ImGui::SliderFloat("pos_y", &data.camPosition_[1], 0.0f, 100.0f);
+    ImGui::SliderFloat("pos_z", &data.camPosition_[2], 0.0f, 100.0f);
+
+    ImGui::SliderFloat("pos_x", &data.center_[0], 0.0f, 100.0f);
+    ImGui::SliderFloat("pos_y", &data.center_[1], 0.0f, 100.0f);
+    ImGui::SliderFloat("pos_z", &data.center_[2], 0.0f, 100.0f);
+    static int type;
+    ImGui::SliderFloat("aspectratio", &data.aspectRatio_, 0.0f, 100.0f);
+    ImGui::SliderInt("Cameratype", &type, 0, 5);
+    data.camType_ = (CameraList)type;
+    ImGui::SliderFloat("FOVY", &data.fovy_, 0.0f, 359.0f);
+
+    ImGui::SliderFloat("UP_x", &data.up_[0], 0.0f, 100.0f);
+    ImGui::SliderFloat("UP_y", &data.up_[1], 0.0f, 100.0f);
+    ImGui::SliderFloat("UP_z", &data.up_[2], 0.0f, 100.0f);
+
+    ImGui::SliderFloat("Far", &data.zfar_, 0.0f, 100.0f);
+    ImGui::SliderFloat("Near", &data.znear_, 0.0f, 100.0f);
+
+/*
     ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
     ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
     ImGui::Checkbox("Another Window", &show_another_window);
@@ -136,6 +157,9 @@ int Fr_GL3Window::imgui_NavigationBox()
         counter++;
     ImGui::SameLine();
     ImGui::Text("counter = %d", counter);
+    */
+
+
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     ImGui::End();
@@ -195,7 +219,9 @@ int Fr_GL3Window::imgui_menu()
                 ImGui::EndChild();
                 static float f = 0.5f;
                 static int n = 0;
-                ImGui::SliderFloat("Value", &f, 0.0f, 1.0f);
+                if (ImGui::SliderFloat("Value", &f, 0.0f, 1.0f)) {
+                    printf("wrong slide\n");
+                }
                 ImGui::InputFloat("Input", &f, 0.1f);
                 ImGui::Combo("Combo", &n, "Yes\0No\0Maybe\0\0");
                 ImGui::EndMenu();
@@ -254,11 +280,12 @@ int Fr_GL3Window::imgui_menu()
     return 0;
 }
 
+
+
 int Fr_GL3Window::imgui_toolbars()
 {
     unsigned int myImageTextureId2 = 0;
     bool show_another_window = true;
-
     static ImGui::Toolbar toolbar;
     if (toolbar.getNumButtons() == 0) {
         char tmp[1024]; ImVec2 uv0(0, 0), uv1(0, 0);
@@ -267,18 +294,20 @@ int Fr_GL3Window::imgui_toolbars()
             sprintf(&tmp[strlen(tmp)], "%d", i + 1);
             uv0 = ImVec2((float)(i % 3) / 3.f, (float)(i / 3) / 3.f);
             uv1 = ImVec2(uv0.x + 1.f / 3.f, uv0.y + 1.f / 3.f);
-
-            toolbar.addButton(ImGui::Toolbutton(tmp, (void*)ICON_FA_ANALYTICS, uv0, uv1, ImVec2(32, 32)));
+            toolbar.addButton(ImGui::Toolbutton(tmp, (void*)NULL, uv0, uv1, ImVec2(32, 32)));
         }
         toolbar.addSeparator(16);
-        toolbar.addButton(ImGui::Toolbutton("toolbutton 11", (void*)ICON_FA_ARROW_LEFT, uv0, uv1, ImVec2(16, 16), true, true, ImVec4(0.8, 0.8, 1.0, 1)));  // Note that separator "eats" one toolbutton index as if it was a real button
-        toolbar.addButton(ImGui::Toolbutton("toolbutton 12", (void*)ICON_FA_ARROW_ALT_CIRCLE_RIGHT, uv0, uv1, ImVec2(16, 16), true, false, ImVec4(1.0, 0.8, 0.8, 1)));  // Note that separator "eats" one toolbutton index as if it was a real button
+        toolbar.addButton(ImGui::Toolbutton("toolbutton 11" ICON_FA_ARROW_LEFT, (void*)NULL, uv0, uv1, ImVec2(16, 16), true, true, ImVec4(0.8, 0.8, 1.0, 1)));  // Note that separator "eats" one toolbutton index as if it was a real button
+        toolbar.addButton(ImGui::Toolbutton("toolbutton 12" ICON_FA_ARROW_ALT_CIRCLE_RIGHT, (void*)NULL, uv0, uv1, ImVec2(16, 16), true, false, ImVec4(1.0, 0.8, 0.8, 1)));  // Note that separator "eats" one toolbutton index as if it was a real button
 
         toolbar.setProperties(true, false, false, ImVec2(0.0f, 0.f), ImVec2(0.25, 1));
     }
     const int pressed = toolbar.render();
     if (pressed >= 0)
         fprintf(stderr, "Toolbar1: pressed:%d\n", pressed);
-
+    if (ImGui::Button(ICON_FAD_ZOOMOUT)) {
+        printf("button pressed\n");
+    }
+    
     return 0;
 }

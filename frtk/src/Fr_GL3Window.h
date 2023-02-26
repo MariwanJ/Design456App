@@ -40,6 +40,9 @@
 #include <fr_grid.h>
 #include<fr_axis3D.h>
 
+//fonts for Imgui icons
+#include <imguiFont/IconsFontAwesome5.h>
+
 
 #define MAX_CAMERAS 6  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING CameraList enu
 
@@ -48,6 +51,19 @@ typedef struct {
     Manipulator* manipulator;
 } camtype;
 
+struct userData_ {
+    glm::vec3& camPosition_;
+    glm::vec3& center_;
+    glm::vec3& up_;
+    float& fovy_;
+    float& znear_;
+    float& zfar_;
+    float& aspectRatio_;
+    //        projectionMatrix_(glm::ortho(-600, 600, -600, 600, -1, 1)),
+    CameraList& camType_;
+};
+
+    struct userData_ data;
 
 
 /* Cameras */
@@ -194,7 +210,7 @@ protected:
     int renderimGUI();
     int imgui_LeftPanel();
     int imgui_TopPannel();
-    int imgui_NavigationBox();
+    int imgui_NavigationBox(userData_ &data);
     int imgui_ViewPort();
     int imgui_menu();
     int imgui_toolbars();

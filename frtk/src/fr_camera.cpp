@@ -83,16 +83,18 @@ left
 */
 
 Camera::Camera() :
-    camPosition_{ 1, 0, 0 },
+    camPosition_{ 10, 10, -20 },
     center_{ 0, 0, 0 },
     up_{ 0, 1, 0 },
-    fovy_{ 500 },
-    znear_{ 1 },
-    zfar_{ 100 },
+    fovy_{ 45 },
+    znear_{ 0.1f },
+    zfar_{ 1000.0f },
+    aspectRatio_{ 1.778f },
     manipulator_{},
-    projectionMatrix_(glm::ortho(-1, 1, -1, 1, 1, -1)),
+    projectionMatrix_(glm::ortho(-600, 600, -600, 600, -1, 1)),
     camType_(CameraList::PERSPECTIVE){
     type(NODETYPE::FR_CAMERA);
+
 }
 
 void Camera::SetCamPosition(float x, float y, float z) {
@@ -126,14 +128,16 @@ bool Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
     if (!active_)
         return false;
     int vp[4];
+    glGetIntegerv(GL_VIEWPORT, vp);
+    aspectRatio_ = (float)vp[2] / vp[3];
+
     switch (camType_) {
     case CameraList::PERSPECTIVE: {
         SetCamPosition(-6, 2, -30);
         SetCenter(0, 0, 100);
         SetUp(0, 1, 0);
-        glGetIntegerv(GL_VIEWPORT, vp);
-                                        //RIGHT               LEFT                    BOTTOM    TOP
-        projection = glm::perspective(glm::radians(fovy_), (float)vp[2] / vp[3], znear_, zfar_);
+                                                                        //RIGHT           LEFT   BOTTOM    TOP
+        projection = glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_);
         modelview = glm::lookAt(camPosition_, center_, up_);
         if (manipulator_)
             modelview *= manipulator_->GetMatrix(glm::normalize(center_ - camPosition_));
@@ -147,7 +151,7 @@ bool Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
 
         glGetIntegerv(GL_VIEWPORT, vp);
                                  //RIGHT                             LEFT                    BOTTOM    TOP
-        projection = glm::ortho(glm::radians(fovy_), (float)vp[2] / vp[3], znear_, zfar_);
+        projection = glm::ortho(glm::radians(fovy_), aspectRatio_, znear_, zfar_);
         modelview = glm::lookAt(camPosition_, center_, up_);
         if (manipulator_)
             modelview *= manipulator_->GetMatrix(glm::normalize(center_ - camPosition_));

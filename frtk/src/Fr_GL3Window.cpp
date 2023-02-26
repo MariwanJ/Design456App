@@ -41,6 +41,7 @@
  */
 
 
+
 GLuint m_QuadVA, m_QuadVB, m_QuadIB;
 bool s_GLFWInitialized;
 
@@ -135,7 +136,7 @@ void Fr_GL3Window::CreateScene()
       * Add here the nodes - Grid, and XYZ axis
       */
     scene->AddNode(CreateSun());
-    scene->AddNode(bunny());
+    //scene->AddNode(bunny());
     scene->AddNode(Grid().CreateGrid());
     vert axis = Axis3D().CreateAxis3D();
     scene->AddNode(axis.Red);
@@ -299,6 +300,20 @@ int Fr_GL3Window::createGLFWwindow()
     ImGui::CreateContext();
 
     ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.Fonts->AddFontDefault();
+    float baseFontSize = 18.0f; // 13.0f is the size of the default font. Change to the font size you use.
+    float iconFontSize = baseFontSize * 2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
+
+    // merge in icons from Font Awesome
+    static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
+    ImFontConfig icons_config;
+    icons_config.MergeMode = true;
+    icons_config.PixelSnapH = true;
+    icons_config.GlyphMinAdvanceX = iconFontSize;
+    //TODO FIXME:
+    std::string fontPath = "E:\\Projects\\Design456App\\frtk\\vendor\\imGui\\src\\imguiFont\\" + std::string(FONT_ICON_FILE_NAME_FAS);
+    io.Fonts->AddFontFromFileTTF(fontPath.c_str(), iconFontSize, &icons_config, icons_ranges);
+
     // Setup Dear ImGui style
     //ImGui::StyleColorsDark();
     ImGui::StyleColorsLight();
@@ -364,6 +379,14 @@ int Fr_GL3Window::GLFWrun()
         // Rendering IMGUI 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        auto camm = cameras[(int)active_camera_];
+        
+        camm.camera->setType(data.camType_);
+        camm.camera->SetUp(data.up_[0], data.up_[1], data.up_[2]);
+        camm.camera->SetCenter(data.center_[0], data.center_[1], data.center_[2]);
+        camm.camera->SetCamPosition(data.camPosition_[0], data.camPosition_[1], data.camPosition_[2]);
+
+
        glCheckFunc(glfwSwapBuffers(pWindow));
     }
     return 0;
