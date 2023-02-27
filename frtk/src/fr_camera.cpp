@@ -83,7 +83,7 @@ left
 */
 
 Camera::Camera() :
-    camPosition_{ 10, 10, -20 },
+    camPosition_{ 0, 0, 3 },
     center_{ 0, 0, 0 },
     up_{ 0, 1, 0 },
     fovy_{ 45 },
@@ -127,6 +127,18 @@ void Camera::getUserData(userData_& data)
     data.znear_ = znear_;
 }
 
+void Camera::setUserData(userData_& data)
+{
+    aspectRatio_  =data.aspectRatio_   ; 
+    camPosition_  =data.camPosition_   ; 
+    camType_      =data.camType_       ; 
+    center_       =data.center_        ; 
+    fovy_         =data.fovy_          ; 
+    up_           =data.up_            ; 
+    zfar_         =data.zfar_          ; 
+    znear_        =data.znear_         ; 
+}
+
 void Camera::SetManipulator(std::shared_ptr<Manipulator> manipulator) {
     manipulator_ = std::move(manipulator); //Move ownership to this class
 }
@@ -145,14 +157,14 @@ bool Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
 
     switch (camType_) {
     case CameraList::PERSPECTIVE: {
-        SetCamPosition(-6, 2, -30);
+        SetCamPosition(-10, 0, -30);
         SetCenter(0, 0, 100);
         SetUp(0, 1, 0);
                                                                         //RIGHT           LEFT   BOTTOM    TOP
         projection = glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_);
         modelview = glm::lookAt(camPosition_, center_, up_);
         if (manipulator_)
-            modelview *= manipulator_->GetMatrix(glm::normalize(center_ - camPosition_));
+            modelview *= manipulator_->GetMatrix(glm::normalize(-center_ +camPosition_));
         //These might change - TODO FIXEME
         } break;
     case CameraList::ORTHOGRAPHIC: {

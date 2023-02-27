@@ -51,17 +51,7 @@
 
 
 
-//PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT, 
-enum class CameraList {
-    PERSPECTIVE = 0, //This is not fixed and can be moved , others are not.
-    ORTHOGRAPHIC,
-    TOP,
-    BOTTOM,
-    RIGHT,
-    LEFT,
-    FRONT,
-    BACK,
-};
+
 
 class Manipulator;
 
@@ -101,6 +91,7 @@ public:
     void SetPerspective(float fovy, float znear, float zfar);
 
     void getUserData(userData_& data);
+    void setUserData(userData_& data);
     /**
      * Sets the manipulator
      */

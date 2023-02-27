@@ -53,7 +53,6 @@ typedef struct {
 
 
 
-
 /* Cameras */
 class Camera;
 class Fr_GL3Window;
@@ -195,7 +194,7 @@ protected:
      *
      * \return
      */
-    int renderimGUI();
+    int renderimGUI(userData_ &data);
     int imgui_LeftPanel();
     int imgui_TopPannel();
     int imgui_NavigationBox(userData_ &data);

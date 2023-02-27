@@ -69,6 +69,18 @@
 #include<imguiFont/IconsKenney.h>
 #include<imguiFont/IconsMaterialDesign.h>
 
+#include<glm/glm.hpp>
+//PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT, 
+enum class CameraList {
+    PERSPECTIVE = 0, //This is not fixed and can be moved , others are not.
+    ORTHOGRAPHIC,
+    TOP,
+    BOTTOM,
+    RIGHT,
+    LEFT,
+    FRONT,
+    BACK,
+};
 typedef struct userData_ {
     glm::vec3 camPosition_;
     glm::vec3 center_;

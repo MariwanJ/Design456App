@@ -70,6 +70,7 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
     glfwGetCursorPos(win, &cposx, &cposy);
     FR::glfw_e_x = cposx;
     FR::glfw_e_y = cposy;
+    return;//temp code
     if (button == 0 || button == 1)
         if (win != nullptr) {
             auto activeCamera = FR::globalP_pWindow->cameras[(unsigned int)FR::globalP_pWindow->active_camera_];
@@ -105,7 +106,7 @@ void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffs
     y = manipulator_->get_Y();
     if (win != nullptr) {
         manipulator_->GLFWScroll(xoffset, yoffset);
-        //FR::globalP_pWindow->scene->RenderScene();
+        FR::globalP_pWindow->scene->RenderScene();
     }
 }
 

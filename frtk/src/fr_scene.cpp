@@ -76,7 +76,7 @@ void Scene::RenderScene() {
     render_info.render_transparent = false;
     Render(render_info, render_info.modelview);
     render_info.id = 0;
-    render_info.render_transparent = true;
+    render_info.render_transparent = false;
     Render(render_info, render_info.modelview);
 
 }

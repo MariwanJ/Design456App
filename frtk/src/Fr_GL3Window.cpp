@@ -137,7 +137,7 @@ void Fr_GL3Window::CreateScene()
       * Add here the nodes - Grid, and XYZ axis
       */
     scene->AddNode(CreateSun());
-    //scene->AddNode(bunny());
+    scene->AddNode(bunny());
     scene->AddNode(Grid().CreateGrid());
     vert axis = Axis3D().CreateAxis3D();
     scene->AddNode(axis.Red);
@@ -239,7 +239,7 @@ void Fr_GL3Window::CreateCameras()
         camera_->SetActive(false);
         camera_->SetPerspective(40, 0.5, 50);
         camera_trans->Translate(0.6, 0.5, 1.7);
-        camera_trans->Rotate(glm::vec3(1, 0, 0), 180);
+        camera_trans->Rotate(glm::vec3(1, 0, 0),0);
         scene->AddNode(camera_trans);  //Add it to the scene graph, but only active one will render.
         camera_->setType((CameraList)i);   //Depending on the list it should be as the enum defined
         auto manipulator = new Manipulator(); //manipulation for the camera.
@@ -360,6 +360,8 @@ int Fr_GL3Window::GLFWrun()
     glViewport(0, 0, _w, _h);
     CreateScene();   //Main drawing process.
     clear_color = ImVec4(FR_WINGS3D); //ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    auto camm = cameras[(int)active_camera_];
+    camm.camera->getUserData(data);
     while (!glfwWindowShouldClose(pWindow))
     {
         glCheckFunc(glfwPollEvents());
@@ -374,19 +376,21 @@ int Fr_GL3Window::GLFWrun()
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
         //Render GLFW stuff or Our 3D drawing
         scene->RenderScene();
-        renderimGUI();
+        renderimGUI(data);
         // Rendering IMGUI 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        auto camm = cameras[(int)active_camera_];
-        
-        camm.camera->getUserData(data);
+        camm = cameras[(int)active_camera_];
+        camm.camera->setUserData(data);
+
         camm.camera->setType(data.camType_);
         camm.camera->SetUp(data.up_[0], data.up_[1], data.up_[2]);
         camm.camera->SetCenter(data.center_[0],data.center_[1], data.center_[2]);
         camm.camera->SetCamPosition(data.camPosition_[0], data.camPosition_[1], data.camPosition_[2]);
+        active_camera_ = data.camType_;
 
 
        glCheckFunc(glfwSwapBuffers(pWindow));

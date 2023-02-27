@@ -28,7 +28,7 @@
 #include <imgui.h>
 #include <ImGuizmo.h>
 #include <Fr_GL3Window.h>
-
+#include <fr_core.h>
 
 
 
@@ -78,7 +78,7 @@ int Fr_GL3Window::imguimzo_init()
 /************************
 *   Contains all ImGUI and ImGuimzo functions
 */
-int Fr_GL3Window::renderimGUI() {
+int Fr_GL3Window::renderimGUI(userData_ &data) {
     // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
     {
         auto camera = cameras[(int)active_camera_];
@@ -125,39 +125,39 @@ int Fr_GL3Window::imgui_NavigationBox(userData_ &data)
 
     ImGui::Begin("Hello, Navigation!");                          // Create a window called "Hello, world!" and append into it.
 
-    ImGui::SliderFloat("pos_x", &data.camPosition_[0], 0.0f, 100.0f);
-    ImGui::SliderFloat("pos_y", &data.camPosition_[1], 0.0f, 100.0f);
-    ImGui::SliderFloat("pos_z", &data.camPosition_[2], 0.0f, 100.0f);
+    ImGui::SliderFloat("Posipos_x", &data.camPosition_[0], -1000.0f, 1000.0f);
+    ImGui::SliderFloat("Posipos_y", &data.camPosition_[1], -1000.0f, 1000.0f);
+    ImGui::SliderFloat("Posipos_z", &data.camPosition_[2], -1000.0f, 1000.0f);
 
-    ImGui::SliderFloat("pos_x", &data.center_[0], 0.0f, 100.0f);
-    ImGui::SliderFloat("pos_y", &data.center_[1], 0.0f, 100.0f);
-    ImGui::SliderFloat("pos_z", &data.center_[2], 0.0f, 100.0f);
+    ImGui::SliderFloat("Centerpos_x", &data.center_[0], -1000.0f, 1000.0f);
+    ImGui::SliderFloat("Centerpos_y", &data.center_[1], -1000.0f, 1000.0f);
+    ImGui::SliderFloat("Centerpos_z", &data.center_[2], -1000.0f, 1000.0f);
     static int type;
     ImGui::SliderFloat("aspectratio", &data.aspectRatio_, 0.0f, 100.0f);
     ImGui::SliderInt("Cameratype", &type, 0, 5);
-    *data.camType_ = (CameraList)type;
+    data.camType_ = (CameraList)type;
     ImGui::SliderFloat("FOVY", &data.fovy_, 0.0f, 359.0f);
 
-    ImGui::SliderFloat("UP_x", &data.up_[0], 0.0f, 100.0f);
-    ImGui::SliderFloat("UP_y", &data.up_[1], 0.0f, 100.0f);
-    ImGui::SliderFloat("UP_z", &data.up_[2], 0.0f, 100.0f);
+    ImGui::SliderFloat("UP_x", &data.up_[0], -1000.0f, 1000.0f);
+    ImGui::SliderFloat("UP_y", &data.up_[1],-1000.0f, 1000.0f);
+    ImGui::SliderFloat("UP_z", &data.up_[2], -1000.0f, 1000.0f);
 
-    ImGui::SliderFloat("Far", &data.zfar_, 0.0f, 100.0f);
-    ImGui::SliderFloat("Near", &data.znear_, 0.0f, 100.0f);
+    ImGui::SliderFloat("Far", &data.zfar_, -1000.0f, 1000.0f);
+    ImGui::SliderFloat("Near", &data.znear_, -10.0f, 10.0f);
 
-/*
+
     ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
     ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
     ImGui::Checkbox("Another Window", &show_another_window);
 
-    ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+    //ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
     ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
 
     if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
         counter++;
     ImGui::SameLine();
     ImGui::Text("counter = %d", counter);
-    */
+    
 
 
 
@@ -294,10 +294,10 @@ int Fr_GL3Window::imgui_toolbars()
             sprintf(&tmp[strlen(tmp)], "%d", i + 1);
             uv0 = ImVec2((float)(i % 3) / 3.f, (float)(i / 3) / 3.f);
             uv1 = ImVec2(uv0.x + 1.f / 3.f, uv0.y + 1.f / 3.f);
-            toolbar.addButton(ImGui::Toolbutton(tmp, (void*)NULL, uv0, uv1, ImVec2(32, 32)));
+            toolbar.addButton(ImGui::Toolbutton(ICON_FA_ARROW_LEFT, (void*)NULL, uv0, uv1, ImVec2(32, 32)));
         }
         toolbar.addSeparator(16);
-        toolbar.addButton(ImGui::Toolbutton("toolbutton 11" ICON_FA_ARROW_LEFT, (void*)NULL, uv0, uv1, ImVec2(16, 16), true, true, ImVec4(0.8, 0.8, 1.0, 1)));  // Note that separator "eats" one toolbutton index as if it was a real button
+        toolbar.addButton(ImGui::Toolbutton("toolbutton 11" ICON_FAD_ZOOMOUT, (void*)NULL, uv0, uv1, ImVec2(16, 16), true, true, ImVec4(0.8, 0.8, 1.0, 1)));  // Note that separator "eats" one toolbutton index as if it was a real button
         toolbar.addButton(ImGui::Toolbutton("toolbutton 12" ICON_FA_ARROW_ALT_CIRCLE_RIGHT, (void*)NULL, uv0, uv1, ImVec2(16, 16), true, false, ImVec4(1.0, 0.8, 0.8, 1)));  // Note that separator "eats" one toolbutton index as if it was a real button
 
         toolbar.setProperties(true, false, false, ImVec2(0.0f, 0.f), ImVec2(0.25, 1));
