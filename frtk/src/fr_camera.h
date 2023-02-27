@@ -100,6 +100,7 @@ public:
      */
     void SetPerspective(float fovy, float znear, float zfar);
 
+    void getUserData(userData_& data);
     /**
      * Sets the manipulator
      */
@@ -129,7 +130,6 @@ public:
     CameraList getCameraType();
 
     glm::mat4 getPorjection();
-
 private:
     CameraList camType_ ;
     glm::vec3 camPosition_;

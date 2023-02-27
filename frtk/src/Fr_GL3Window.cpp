@@ -31,6 +31,7 @@
 #include<fr_mesh.h>
 #include<fr_object_shader_node.h>
 //End remove me later
+userData_ data;
 
 /**
  *
@@ -381,9 +382,10 @@ int Fr_GL3Window::GLFWrun()
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         auto camm = cameras[(int)active_camera_];
         
+        camm.camera->getUserData(data);
         camm.camera->setType(data.camType_);
         camm.camera->SetUp(data.up_[0], data.up_[1], data.up_[2]);
-        camm.camera->SetCenter(data.center_[0], data.center_[1], data.center_[2]);
+        camm.camera->SetCenter(data.center_[0],data.center_[1], data.center_[2]);
         camm.camera->SetCamPosition(data.camPosition_[0], data.camPosition_[1], data.camPosition_[2]);
 
 

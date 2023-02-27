@@ -115,6 +115,18 @@ void Camera::SetPerspective(float fovy, float znear, float zfar) {
     zfar_ = zfar;    //TOP
 }
 
+void Camera::getUserData(userData_& data)
+{
+    data.aspectRatio_ = aspectRatio_;
+    data.camPosition_ = camPosition_;
+    data.camType_ = camType_;
+    data.center_ = center_;
+    data.fovy_ = fovy_;
+    data.up_ = up_;
+    data.zfar_ = zfar_;
+    data.znear_ = znear_;
+}
+
 void Camera::SetManipulator(std::shared_ptr<Manipulator> manipulator) {
     manipulator_ = std::move(manipulator); //Move ownership to this class
 }

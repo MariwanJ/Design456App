@@ -135,7 +135,7 @@ int Fr_GL3Window::imgui_NavigationBox(userData_ &data)
     static int type;
     ImGui::SliderFloat("aspectratio", &data.aspectRatio_, 0.0f, 100.0f);
     ImGui::SliderInt("Cameratype", &type, 0, 5);
-    data.camType_ = (CameraList)type;
+    *data.camType_ = (CameraList)type;
     ImGui::SliderFloat("FOVY", &data.fovy_, 0.0f, 359.0f);
 
     ImGui::SliderFloat("UP_x", &data.up_[0], 0.0f, 100.0f);

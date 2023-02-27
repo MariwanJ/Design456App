@@ -51,19 +51,7 @@ typedef struct {
     Manipulator* manipulator;
 } camtype;
 
-struct userData_ {
-    glm::vec3& camPosition_;
-    glm::vec3& center_;
-    glm::vec3& up_;
-    float& fovy_;
-    float& znear_;
-    float& zfar_;
-    float& aspectRatio_;
-    //        projectionMatrix_(glm::ortho(-600, 600, -600, 600, -1, 1)),
-    CameraList& camType_;
-};
 
-    struct userData_ data;
 
 
 /* Cameras */
