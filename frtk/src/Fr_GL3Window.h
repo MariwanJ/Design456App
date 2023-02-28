@@ -197,7 +197,7 @@ protected:
     int renderimGUI(userData_ &data);
     int imgui_LeftPanel();
     int imgui_TopPannel();
-    int imgui_NavigationBox(userData_ &data);
+    int imgui_CameraConfiguration(userData_ &data);
     int imgui_ViewPort();
     int imgui_menu();
     int imgui_toolbars();

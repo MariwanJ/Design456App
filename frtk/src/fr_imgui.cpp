@@ -90,7 +90,7 @@ int Fr_GL3Window::renderimGUI(userData_ &data) {
             return -1;
         if (imgui_TopPannel() < 0)
             return -1;
-        if (imgui_NavigationBox(data) < 0)
+        if (imgui_CameraConfiguration(data) < 0)
             return -1;
 
         if (imgui_menu() < 0)
@@ -114,7 +114,7 @@ int Fr_GL3Window::imgui_TopPannel()
         ImGui::ShowDemoWindow(&show_demo_window);
     return 0;
 }
-int Fr_GL3Window::imgui_NavigationBox(userData_ &data)
+int Fr_GL3Window::imgui_CameraConfiguration(userData_ &data)
 {
     //Demo code fix me
 
@@ -123,44 +123,70 @@ int Fr_GL3Window::imgui_NavigationBox(userData_ &data)
     bool show_demo_window = true;
     bool show_another_window = false;
 
-    ImGui::Begin("Hello, Navigation!");                          // Create a window called "Hello, world!" and append into it.
+    ImGui::Begin("Camera Configuration!");                          // Create a window called "Hello, world!" and append into it.
+    
+    f = data.camPosition_[0];
+    ImGui::SliderFloat("Position_x", &f, -10.0f, 10.0f);
+    data.camPosition_[0] = f;
+    f = data.camPosition_[1];
+    ImGui::SliderFloat("Position_y", &f, -10.0f, 10.0f);
+    data.camPosition_[1] = f;
+    f = data.camPosition_[2];
+    ImGui::SliderFloat("Position_z", &f, -10.0f, 10.0f);
+    data.camPosition_[2] = f;
 
-    ImGui::SliderFloat("Posipos_x", &data.camPosition_[0], -1000.0f, 1000.0f);
-    ImGui::SliderFloat("Posipos_y", &data.camPosition_[1], -1000.0f, 1000.0f);
-    ImGui::SliderFloat("Posipos_z", &data.camPosition_[2], -1000.0f, 1000.0f);
-
-    ImGui::SliderFloat("Centerpos_x", &data.center_[0], -1000.0f, 1000.0f);
-    ImGui::SliderFloat("Centerpos_y", &data.center_[1], -1000.0f, 1000.0f);
-    ImGui::SliderFloat("Centerpos_z", &data.center_[2], -1000.0f, 1000.0f);
+    f = data.direction_[0];
+    ImGui::SliderFloat("Target_x", &f, -10.0f, 10.0f);
+    data.direction_[0] = f;
+    f = data.direction_[1];
+    ImGui::SliderFloat("Target_y", &f, -10.0f, 10.0f);
+    data.direction_[1] = f;
+    f = data.direction_[2];
+    ImGui::SliderFloat("Target_z", &data.direction_[2], -10.0f, 10.0f);
+    data.direction_[2] = f;
+    
     static int type;
-    ImGui::SliderFloat("aspectratio", &data.aspectRatio_, 0.0f, 100.0f);
+    f = data.aspectRatio_;
+    ImGui::SliderFloat("aspectratio", &f, 0.0f, 100.0f);
+    data.aspectRatio_ = f;
+    
     ImGui::SliderInt("Cameratype", &type, 0, 5);
     data.camType_ = (CameraList)type;
-    ImGui::SliderFloat("FOVY", &data.fovy_, 0.0f, 359.0f);
 
-    ImGui::SliderFloat("UP_x", &data.up_[0], -1000.0f, 1000.0f);
-    ImGui::SliderFloat("UP_y", &data.up_[1],-1000.0f, 1000.0f);
-    ImGui::SliderFloat("UP_z", &data.up_[2], -1000.0f, 1000.0f);
+    f = data.fovy_;
+    ImGui::SliderFloat("FOVY", &f, 0.0f, 359.0f);
+    data.fovy_ = f;
+    
+    f = data.up_[0];
+    ImGui::SliderFloat("UP_x", &f, -1000.0f, 1000.0f);
+    data.up_[0] = f;
+    f = data.up_[1];
+    ImGui::SliderFloat("UP_y", &f,-1000.0f, 1000.0f);
+    data.up_[1] = f;
+    f = data.up_[2];
+    ImGui::SliderFloat("UP_z", &f, -1000.0f, 1000.0f);
+    data.up_[2] = f;
+    
+    f = data.zfar_;
+    ImGui::SliderFloat("Far", &f, -1000.0f, 1000.0f);
+    data.zfar_ = f;
+    f = data.znear_;
+    ImGui::SliderFloat("Near", &f, -10.0f, 10.0f);
+    data.znear_ = f;
 
-    ImGui::SliderFloat("Far", &data.zfar_, -1000.0f, 1000.0f);
-    ImGui::SliderFloat("Near", &data.znear_, -10.0f, 10.0f);
+    ImGui::Text("Use the sliders to configure the camera");               // Display some text (you can use a format strings too)
+    ImGui::ColorEdit3("bkg color", (float*)&clear_color); // Edit 3 floats representing a color
 
-
-    ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-    ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-    ImGui::Checkbox("Another Window", &show_another_window);
-
-    //ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-    ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-    if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+    if (ImGui::Button("Reset Camera to defaults")) {                            // Buttons return true when clicked (most widgets return true when edited/activated)
         counter++;
+        auto camm = cameras[(int)active_camera_];
+        camm.camera->setupCameraHomeValues();
+        struct userData_ newdata;
+        camm.camera->getUserData(newdata);
+        data = newdata;
+    }
     ImGui::SameLine();
     ImGui::Text("counter = %d", counter);
-    
-
-
-
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     ImGui::End();
     return 0;

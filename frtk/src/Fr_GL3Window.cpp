@@ -137,7 +137,7 @@ void Fr_GL3Window::CreateScene()
       * Add here the nodes - Grid, and XYZ axis
       */
     scene->AddNode(CreateSun());
-    scene->AddNode(bunny());
+    //scene->AddNode(bunny());
     scene->AddNode(Grid().CreateGrid());
     vert axis = Axis3D().CreateAxis3D();
     scene->AddNode(axis.Red);
@@ -388,7 +388,7 @@ int Fr_GL3Window::GLFWrun()
 
         camm.camera->setType(data.camType_);
         camm.camera->SetUp(data.up_[0], data.up_[1], data.up_[2]);
-        camm.camera->SetCenter(data.center_[0],data.center_[1], data.center_[2]);
+        camm.camera->SetCenter(data.direction_[0],data.direction_[1], data.direction_[2]);
         camm.camera->SetCamPosition(data.camPosition_[0], data.camPosition_[1], data.camPosition_[2]);
         active_camera_ = data.camType_;
 

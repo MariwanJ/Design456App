@@ -84,14 +84,16 @@ left
 
 Camera::Camera() :
     camPosition_{ 0, 0, 3 },
-    center_{ 0, 0, 0 },
+    direction_{ 0, 0, 0 },
     up_{ 0, 1, 0 },
     fovy_{ 45 },
     znear_{ 0.1f },
-    zfar_{ 1000.0f },
+    zfar_{ 150.0f },
     aspectRatio_{ 1.778f },
     manipulator_{},
-    projectionMatrix_(glm::ortho(-600, 600, -600, 600, -1, 1)),
+    //projectionMatrix_(glm::ortho(-800, 800, -600, 600, -1000, 1000)),
+
+    projectionMatrix_(glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_)),
     camType_(CameraList::PERSPECTIVE){
     type(NODETYPE::FR_CAMERA);
 
@@ -101,8 +103,31 @@ void Camera::SetCamPosition(float x, float y, float z) {
     camPosition_ = glm::vec3(x, y, z);
 }
 
+bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
+{
+    if (!active_)
+        return false;
+
+    int vp[4];
+    glGetIntegerv(GL_VIEWPORT, vp);
+    switch ((int)camType_) {
+    case (int)CameraList::PERSPECTIVE: {
+        //RIGHT           LEFT   BOTTOM    TOP
+        projection = glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_);
+    } break;
+    case (int)CameraList::ORTHOGRAPHIC: {
+        projection = glm::ortho(camPosition_.x - 30, camPosition_.x + 30, camPosition_.y - 30, camPosition_.y + 30, znear_, zfar_);
+    }break;
+    
+    }
+        modelview = glm::lookAt(camPosition_, direction_, up_);
+    if (manipulator_)
+        modelview *= manipulator_->GetMatrix(glm::normalize(direction_  -camPosition_));
+    return true;
+}
+
 void Camera::SetCenter(float x, float y, float z) {
-    center_ = glm::vec3(x, y, z);
+    direction_ = glm::vec3(x, y, z);
 }
 
 void Camera::SetUp(float x, float y, float z) {
@@ -114,13 +139,17 @@ void Camera::SetPerspective(float fovy, float znear, float zfar) {
     znear_ = znear;  //BOTTOM
     zfar_ = zfar;    //TOP
 }
-
+/**
+ * Get camera configurations and saved in data.
+ * 
+ * \param data ref variable keeps the configuration
+ */
 void Camera::getUserData(userData_& data)
 {
     data.aspectRatio_ = aspectRatio_;
     data.camPosition_ = camPosition_;
     data.camType_ = camType_;
-    data.center_ = center_;
+    data.direction_ = direction_;
     data.fovy_ = fovy_;
     data.up_ = up_;
     data.zfar_ = zfar_;
@@ -132,7 +161,7 @@ void Camera::setUserData(userData_& data)
     aspectRatio_  =data.aspectRatio_   ; 
     camPosition_  =data.camPosition_   ; 
     camType_      =data.camType_       ; 
-    center_       =data.center_        ; 
+    direction_    =data.direction_        ; 
     fovy_         =data.fovy_          ; 
     up_           =data.up_            ; 
     zfar_         =data.zfar_          ; 
@@ -147,10 +176,14 @@ std::shared_ptr<Manipulator> Camera::getManipulator()
 {
     return manipulator_;
 }
-
-bool Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
+/**
+ * 
+ * Home values.
+ * 
+ */
+void Camera::setupCameraHomeValues(){
     if (!active_)
-        return false;
+        return; //do nothing
     int vp[4];
     glGetIntegerv(GL_VIEWPORT, vp);
     aspectRatio_ = (float)vp[2] / vp[3];
@@ -160,25 +193,12 @@ bool Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
         SetCamPosition(-10, 0, -30);
         SetCenter(0, 0, 100);
         SetUp(0, 1, 0);
-                                                                        //RIGHT           LEFT   BOTTOM    TOP
-        projection = glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_);
-        modelview = glm::lookAt(camPosition_, center_, up_);
-        if (manipulator_)
-            modelview *= manipulator_->GetMatrix(glm::normalize(-center_ +camPosition_));
-        //These might change - TODO FIXEME
         } break;
     case CameraList::ORTHOGRAPHIC: {
         //TODO FIXME
         SetCamPosition(-6, 2, -20);
         SetCenter(0, 0, 100);
         SetUp(0, 1, 0);
-
-        glGetIntegerv(GL_VIEWPORT, vp);
-                                 //RIGHT                             LEFT                    BOTTOM    TOP
-        projection = glm::ortho(glm::radians(fovy_), aspectRatio_, znear_, zfar_);
-        modelview = glm::lookAt(camPosition_, center_, up_);
-        if (manipulator_)
-            modelview *= manipulator_->GetMatrix(glm::normalize(center_ - camPosition_));
         } break;
     case CameraList::TOP: {
         SetCamPosition(0, 2, -20);
@@ -192,8 +212,6 @@ bool Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
     } break;
 
     }
-    projectionMatrix_ = projection;
-    return true;
 }
 /**
 *   Set camera type

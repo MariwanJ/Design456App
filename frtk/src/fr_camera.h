@@ -71,7 +71,7 @@ public:
      * Default = (1, 0, 0)
      */
     void SetCamPosition(float x, float y, float z);
-
+    void setupCameraHomeValues();
     /**
      * Sets the center coordinates
      * Default = (0, 0, 0)
@@ -124,7 +124,7 @@ public:
 private:
     CameraList camType_ ;
     glm::vec3 camPosition_;
-    glm::vec3 center_;
+    glm::vec3 direction_;
     glm::vec3 up_;  //RIGHT
     float fovy_;    //LEFT
     float znear_;   //BOTTOM

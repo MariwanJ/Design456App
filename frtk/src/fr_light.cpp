@@ -74,7 +74,7 @@ void Light::SetupSpot(float x, float y, float z, float cutoff, float exponent) {
 
 void Light::EnableShadowMap(const glm::vec3& center, const glm::vec3& up, const glm::mat4& projection) {
     sm_enable_ = true;
-    sm_center_ = center;
+    sm_direction_ = center;
     sm_up_ = up;
     sm_projection_ = projection;
 
@@ -136,7 +136,7 @@ bool Light::SetupShadowMap(ShadowMapInfo& info) {
         return false;
 
     info.projection = sm_projection_;
-    info.modelview = glm::lookAt(glm::vec3(position_), sm_center_, sm_up_);
+    info.modelview = glm::lookAt(glm::vec3(position_), sm_direction_, sm_up_);
     info.light_id = light_id_;
     info.framebuffer = sm_framebuffer_;
     info.texture = sm_texture_;

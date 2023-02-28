@@ -109,7 +109,7 @@ private:
     float spot_cutoff_;
     float spot_exponent_;
     bool sm_enable_;
-    glm::vec3 sm_center_;
+    glm::vec3 sm_direction_;
     glm::vec3 sm_up_;
     glm::mat4 sm_projection_;
     unsigned int sm_framebuffer_;

@@ -83,7 +83,7 @@ enum class CameraList {
 };
 typedef struct userData_ {
     glm::vec3 camPosition_;
-    glm::vec3 center_;
+    glm::vec3 direction_;
     glm::vec3 up_;
     float fovy_;
     float znear_;
