@@ -239,7 +239,7 @@ void Fr_GL3Window::CreateCameras()
         camera_->SetActive(false);
         camera_->SetPerspective(40, 0.5, 50);
         camera_trans->Translate(0.6, 0.5, 1.7);
-        camera_trans->Rotate(glm::vec3(1, 0, 0),0);
+        camera_trans->Rotate(glm::vec3(1, 0, 0),90);
         scene->AddNode(camera_trans);  //Add it to the scene graph, but only active one will render.
         camera_->setType((CameraList)i);   //Depending on the list it should be as the enum defined
         auto manipulator = new Manipulator(); //manipulation for the camera.
@@ -304,6 +304,9 @@ int Fr_GL3Window::createGLFWwindow()
     io.Fonts->AddFontDefault();
     float baseFontSize = 18.0f; // 13.0f is the size of the default font. Change to the font size you use.
     float iconFontSize = baseFontSize * 2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
+    
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+    //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
 
     // merge in icons from Font Awesome
     static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
@@ -364,12 +367,7 @@ int Fr_GL3Window::GLFWrun()
     camm.camera->getUserData(data);
     while (!glfwWindowShouldClose(pWindow))
     {
-        glCheckFunc(glfwPollEvents());
-        glClear(GL_COLOR_BUFFER_BIT);
-        int display_w, display_h;
-        glfwGetFramebufferSize(pWindow, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
-        glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+
 
         //glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - defualt should be wings3D or FreeCAD
         // Start the Dear ImGui frame
@@ -377,22 +375,26 @@ int Fr_GL3Window::GLFWrun()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+        glCheckFunc(glfwPollEvents());
+        glClear(GL_COLOR_BUFFER_BIT);
+        int display_w, display_h;
+        glfwGetFramebufferSize(pWindow, &display_w, &display_h);
+        glViewport(0, 0, display_w, display_h);
+        glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+
         //Render GLFW stuff or Our 3D drawing
-        scene->RenderScene();
+        //scene->RenderScene();
         renderimGUI(data);
         // Rendering IMGUI 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         camm = cameras[(int)active_camera_];
         camm.camera->setUserData(data);
-
         camm.camera->setType(data.camType_);
         camm.camera->SetUp(data.up_[0], data.up_[1], data.up_[2]);
         camm.camera->SetCenter(data.direction_[0],data.direction_[1], data.direction_[2]);
         camm.camera->SetCamPosition(data.camPosition_[0], data.camPosition_[1], data.camPosition_[2]);
         active_camera_ = data.camType_;
-
-
        glCheckFunc(glfwSwapBuffers(pWindow));
     }
     return 0;

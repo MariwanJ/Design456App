@@ -11,21 +11,6 @@
   <ItemGroup>
     <ClInclude Include="src\imconfig.h" />
     <ClInclude Include="src\imgui.h" />
-    <ClInclude Include="src\imguiFont\IconsFontAwesome4.h">
-      <Filter>imguiFont</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imguiFont\IconsFontAwesome5.h">
-      <Filter>imguiFont</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imguiFont\IconsFontAwesome5Brands.h">
-      <Filter>imguiFont</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imguiFont\IconsFontAwesome5Pro.h">
-      <Filter>imguiFont</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imguiFont\IconsFontAwesome5ProBrands.h">
-      <Filter>imguiFont</Filter>
-    </ClInclude>
     <ClInclude Include="src\imguiFont\IconsFontAwesome6.h">
       <Filter>imguiFont</Filter>
     </ClInclude>

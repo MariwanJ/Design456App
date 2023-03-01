@@ -50,7 +50,7 @@ public:
 	 */
 	Grid();
 
-	void setGridParam(unsigned int sections = 1000, unsigned int gridSize = 10, glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 scale = glm::vec3(0.0f, 0.0f, 0.0f));
+	void setGridParam(unsigned int sections = 1000, unsigned int gridWidth = 10, glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 scale = glm::vec3(0.0f, 0.0f, 0.0f));
 	/**
 	 * Class destructor.
 	 *
@@ -91,13 +91,13 @@ public:
 	/**
 	 * Sets grid size. This is the distance between each line in both axis
 	 */
-	void setGridSize(unsigned int sizeINmm);
+	void setgridWidth(unsigned int sizeINmm);
 	/**
 	 * Returns the grid size.
 	 *
 	 * \return gird size defined previously
 	 */
-	unsigned int getGridSize(void) const;
+	unsigned int getgridWidth(void) const;
 
 	/**
 	 * Create the Grid verticies.
@@ -108,7 +108,7 @@ public:
 private:
 
 	int sections_; //No of lines in both directions
-	int gridSize_; //Distance between each line in mm. This will be affected by the scale
+	int gridWidth_; //Distance between each line in mm. This will be affected by the scale
 	glm::vec3 scale_; //Scale the whole grid - Be careful this affects the distance value.
 	glm::vec3 centerPos_;//Center of the grid
 	glm::vec4 gridRotation_; //(Axis, angle) 4 float values

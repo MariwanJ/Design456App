@@ -72,17 +72,17 @@ Grid::Grid()
  * .
  *
  * \param sections No of line sections. default = 50
- * \param gridSize Distance between each line. default = 1mm
+ * \param gridWidth Distance between each line. default = 1mm
  * \param pos Center of the grid. Defualt is the origin (0,0,0)
  * \param scale Scale of the grid - defualt is (1.0f,1.0f,1.0f)
  */
 
 void Grid::setGridParam(unsigned int sections,
-    unsigned int gridSize,
+    unsigned int gridWidth,
     glm::vec3 pos,
     glm::vec3 scale) {
     sections_ = sections;
-    gridSize_ = gridSize;
+    gridWidth_ = gridWidth;
     scale_ = scale;
     centerPos_ = pos;
     gridColor_ = (glm::vec4)FR_RED;
@@ -116,14 +116,14 @@ void Grid::setVisible(bool status)
     active_ = status;
 }
 
-void Grid::setGridSize(unsigned int sizeINmm)
+void Grid::setgridWidth(unsigned int sizeINmm)
 {
-    gridSize_ = sizeINmm;
+    gridWidth_ = sizeINmm;
 }
 
-unsigned int Grid::getGridSize(void) const
+unsigned int Grid::getgridWidth(void) const
 {
-    return gridSize_;
+    return gridWidth_;
 }
 
 std::shared_ptr<Transform> Grid::CreateGrid()
@@ -132,24 +132,26 @@ std::shared_ptr<Transform> Grid::CreateGrid()
     std::vector<float> vertices;
     float x, y, z;
     x = y = z = 0;
-
+    float totalLength = gridWidth_ * sections_;
+    glm::vec3 limmitValue = glm::vec3(centerPos_[0] -(totalLength / 2), centerPos_[1] - (totalLength / 2), centerPos_[2]);
     //First lines
-    for (int i = 0; i <= sections_; i += gridSize_) {
+    for (int i = 0; i <= sections_; i += gridWidth_) {
         for (int j = 0; j <= sections_; j += sections_) {
-            x = (float)i * gridSize_;
-            y = (float)j * gridSize_;
-            z = 0.0;
+            x = limmitValue[0]+(float)i * gridWidth_;
+            y = limmitValue[1]+(float)j * gridWidth_;
+            z = limmitValue[2];
+            
             vertices.push_back(x);
             vertices.push_back(y);
             vertices.push_back(z);
         }
     }
     //Second lines to create the squre plane
-    for (int i = 0; i <= sections_; i += gridSize_) {
+    for (int i = 0; i <= sections_; i += gridWidth_) {
         for (int j = 0; j <= sections_; j += sections_) {
-            x = (float)j * gridSize_;
-            y = (float)i * gridSize_;
-            z = 0.0;
+            x = limmitValue[0]+(float)j * gridWidth_;
+            y = limmitValue[1]+(float)i * gridWidth_;
+            z = limmitValue[2];
             vertices.push_back(x);
             vertices.push_back(y);
             vertices.push_back(z);

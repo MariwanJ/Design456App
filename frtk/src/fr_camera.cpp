@@ -83,15 +83,14 @@ left
 */
 
 Camera::Camera() :
-    camPosition_{ 0, 0, 3 },
-    direction_{ 0, 0, 0 },
-    up_{ 0, 1, 0 },
-    fovy_{ 45 },
-    znear_{ 0.1f },
-    zfar_{ 150.0f },
-    aspectRatio_{ 1.778f },
+    camPosition_{ 1.37f, 2.8f, -2.05f },
+    direction_{ -.098f, -1.372f, 0.0f },
+    up_{ -58.84f, 628.451f, 29.412f },
+    fovy_{ 7.04f },
+    znear_{ 1.284f },
+    zfar_{ 40.196f },
+    aspectRatio_{ 0.980f },
     manipulator_{},
-    //projectionMatrix_(glm::ortho(-800, 800, -600, 600, -1000, 1000)),
 
     projectionMatrix_(glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_)),
     camType_(CameraList::PERSPECTIVE){
@@ -116,9 +115,8 @@ bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
         projection = glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_);
     } break;
     case (int)CameraList::ORTHOGRAPHIC: {
-        projection = glm::ortho(camPosition_.x - 30, camPosition_.x + 30, camPosition_.y - 30, camPosition_.y + 30, znear_, zfar_);
+        projection = glm::ortho(camPosition_.x -2, camPosition_.x+2 , camPosition_.y-2 , camPosition_.y +2, znear_, zfar_);
     }break;
-    
     }
         modelview = glm::lookAt(camPosition_, direction_, up_);
     if (manipulator_)
@@ -191,13 +189,13 @@ void Camera::setupCameraHomeValues(){
     switch (camType_) {
     case CameraList::PERSPECTIVE: {
         SetCamPosition(-10, 0, -30);
-        SetCenter(0, 0, 100);
+        SetCenter(0, 0, 10);
         SetUp(0, 1, 0);
         } break;
     case CameraList::ORTHOGRAPHIC: {
         //TODO FIXME
-        SetCamPosition(-6, 2, -20);
-        SetCenter(0, 0, 100);
+        SetCamPosition(0, 0, -2);
+        SetCenter(0, 0, 1);
         SetUp(0, 1, 0);
         } break;
     case CameraList::TOP: {

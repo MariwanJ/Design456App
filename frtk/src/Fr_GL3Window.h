@@ -41,7 +41,7 @@
 #include<fr_axis3D.h>
 
 //fonts for Imgui icons
-#include <imguiFont/IconsFontAwesome5.h>
+#include <imguiFont/IconsFontAwesome6.h>
 
 
 #define MAX_CAMERAS 6  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING CameraList enu

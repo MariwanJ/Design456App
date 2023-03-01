@@ -58,11 +58,6 @@
 //imGUI fonts 
 
 #include<imguiFont/IconsFontaudio.h>
-#include<imguiFont/IconsFontAwesome4.h>
-#include<imguiFont/IconsFontAwesome5.h>
-#include<imguiFont/IconsFontAwesome5Brands.h>
-#include<imguiFont/IconsFontAwesome5Pro.h>
-#include<imguiFont/IconsFontAwesome5ProBrands.h>
 #include<imguiFont/IconsFontAwesome6.h>
 #include<imguiFont/IconsFontAwesome6Brands.h>
 #include<imguiFont/IconsForkAwesome.h>
