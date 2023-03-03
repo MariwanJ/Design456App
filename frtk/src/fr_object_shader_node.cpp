@@ -178,7 +178,7 @@ void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
 
 GLuint ObjectShaderNode::getCurrentTexturer(void)
 {
-    return _texture();
+    return _texture;
 }
 
 void ObjectShaderNode::RenderSilhouette(const glm::mat4& mvp) {
