@@ -76,6 +76,8 @@ public:
     void setObjectshader(const char* newValue);
     void setSilhouette(const char* newValue);
     void setShadowmap(const char* newValue);
+
+    GLuint getCurrentTexturer(void);
 private:
     /**
      * Sets the uniform light data
@@ -106,6 +108,8 @@ private:
     std::string f_objectshader_;
     std::string f_silhouette_;
     std::string f_shadowmap_;
+
+    GLuint _texture; //used to return the texture for imgui rendering inside window.
 };
 
 #endif

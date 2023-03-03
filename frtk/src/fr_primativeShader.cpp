@@ -62,6 +62,11 @@ void Fr_PrimaitiveShader::setShadowmap(const char* newValue)
     f_shadowmap_ = newValue;
 }
 
+GLuint Fr_PrimaitiveShader::getCurrentTexturer(void)
+{
+    return _texture;
+}
+
 Fr_PrimaitiveShader::Fr_PrimaitiveShader(unsigned int color, float silhouette) :
     primative_{ nullptr }, silhouette_(silhouette) {
     SetColor(color);
@@ -188,6 +193,9 @@ void Fr_PrimaitiveShader::Render(RenderInfo& info, const glm::mat4& modelview) {
     glGenTextures(1, &info.shadowmap.texture);
     glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));           //     THIS CAUSE ISSUE FIXME!!!!!!!!!!!!!!!!!!!
     shared_->primative_program->SetUniformInteger("sm_texture", 0);
+
+    //for returning the texture keep the id
+    _texture = info.shadowmap.texture;
 
     primative_->Draw();
     program->Enable();

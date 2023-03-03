@@ -167,10 +167,18 @@ void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));           //     THIS CAUSE ISSUE FIXME!!!!!!!!!!!!!!!!!!!
     shared_->object_program->SetUniformInteger("sm_texture", 0);
 
+    //for returning the texture keep the id
+    _texture = info.shadowmap.texture;
+
     mesh_->Draw();
     program->Enable();
     program->Disable();
     info.id++;
+}
+
+GLuint ObjectShaderNode::getCurrentTexturer(void)
+{
+    return _texture();
 }
 
 void ObjectShaderNode::RenderSilhouette(const glm::mat4& mvp) {

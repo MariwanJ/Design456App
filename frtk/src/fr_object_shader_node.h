@@ -86,6 +86,7 @@ public:
      */
     void Render(RenderInfo& info, const glm::mat4& modelview) override;
 
+    GLuint getCurrentTexturer(void);
 private:
     /**
      * Sets the uniform light data
@@ -112,6 +113,7 @@ private:
     std::shared_ptr<Mesh> mesh_;
     glm::vec4 color_;
     float silhouette_;
+    GLuint _texture; //used to return the texture for imgui rendering inside window.
 };
 
 #endif
