@@ -43,6 +43,69 @@ userData_ data;
 
 
 
+FrameBuffer::FrameBuffer( int width,  int height)
+{
+    glGenFramebuffers(1, &fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+    rbo = 0;
+    glGenRenderbuffers(1, &rbo);
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+}
+
+FrameBuffer::~FrameBuffer()
+{
+    glDeleteFramebuffers(1, &fbo);
+    glDeleteTextures(1, &texture);
+    glDeleteRenderbuffers(1, &rbo);
+}
+
+unsigned int FrameBuffer::getFrameTexture()
+{
+    return texture;
+}
+
+
+void FrameBuffer::RescaleFrameBuffer(float width, float height)
+{
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+}
+
+void FrameBuffer::Bind() const
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+}
+
+void FrameBuffer::Unbind() const
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+
 GLuint m_QuadVA, m_QuadVB, m_QuadIB;
 bool s_GLFWInitialized;
 
@@ -137,7 +200,7 @@ void Fr_GL3Window::CreateScene()
       * Add here the nodes - Grid, and XYZ axis
       */
     scene->AddNode(CreateSun());
-    //scene->AddNode(bunny());
+    scene->AddNode(bunny());
     scene->AddNode(Grid().CreateGrid());
     vert axis = Axis3D().CreateAxis3D();
     scene->AddNode(axis.Red);
@@ -327,18 +390,6 @@ int Fr_GL3Window::createGLFWwindow()
     const char* glsl_version = "#version 430";
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-    /*
-     ImGuiIO& io = ImGui::GetIO();
-    float fontSize = 18.0f;
-    io.Fonts->AddFontFromFileTTF("resources/font/OpenSans-Bold.ttf", fontSize);
-    io.FontDefault = io.Fonts->AddFontFromFileTTF("resources/font/OpenSans-Regular.ttf", fontSize);
-
-
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
-        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
-
-    */
     return 1;
 }
 
@@ -365,6 +416,7 @@ int Fr_GL3Window::GLFWrun()
     clear_color = ImVec4(FR_WINGS3D); //ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     auto camm = cameras[(int)active_camera_];
     camm.camera->getUserData(data);
+    sceneBuffer = std::make_shared<FrameBuffer>(w(),h());
     while (!glfwWindowShouldClose(pWindow))
     {
 
@@ -382,7 +434,7 @@ int Fr_GL3Window::GLFWrun()
         glViewport(0, 0, display_w, display_h);
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
 
-        //Render GLFW stuff or Our 3D drawing
+         //Render GLFW stuff or Our 3D drawing
         //scene->RenderScene();
         renderimGUI(data);
         // Rendering IMGUI 
@@ -395,6 +447,8 @@ int Fr_GL3Window::GLFWrun()
         camm.camera->SetCenter(data.direction_[0],data.direction_[1], data.direction_[2]);
         camm.camera->SetCamPosition(data.camPosition_[0], data.camPosition_[1], data.camPosition_[2]);
         active_camera_ = data.camType_;
+
+
        glCheckFunc(glfwSwapBuffers(pWindow));
     }
     return 0;

@@ -156,13 +156,12 @@ int Fr_GL3Window::renderimGUI(userData_ &data) {
                 ImGui::Separator();
                 ImGui::EndMenu();
             }
-            scene->RenderScene();
 
             ImGui::EndMenuBar();
         }
 
-        //if (imgui_ViewPort() < 0)
-           // return -1;
+        if (imgui_ViewPort() < 0)
+            return -1;
         if (imgui_toolbars() < 0)
             return -1;
         if (imgui_LeftPanel() < 0)
@@ -177,6 +176,8 @@ int Fr_GL3Window::renderimGUI(userData_ &data) {
         if (imguimzo_init() < 0)
             return -1;
     }
+//    scene->RenderScene();
+
 
     ImGui::End();
 
@@ -275,8 +276,17 @@ int Fr_GL3Window::imgui_CameraConfiguration(userData_ &data)
 }
 int Fr_GL3Window::imgui_ViewPort()
 {   
-    
-    
+    ImGui::Begin("View Port");
+    sceneBuffer->Bind();
+     scene->RenderScene();
+    ImGui::Image(
+        (ImTextureID)sceneBuffer->getFrameTexture(),
+        ImGui::GetContentRegionAvail(),
+        ImVec2(0, 1),
+        ImVec2(1, 0)
+    );
+    ImGui::End();
+    sceneBuffer->Unbind();
 
     return 0;
 }

@@ -53,6 +53,24 @@ typedef struct {
 
 
 
+
+
+class FrameBuffer
+{
+public:
+    FrameBuffer( int width,  int height);
+    ~FrameBuffer();
+    unsigned int getFrameTexture();
+    void RescaleFrameBuffer(float width, float height);
+    void Bind() const;
+    void Unbind() const;
+private:
+    unsigned int fbo;
+    unsigned int texture;
+    unsigned int rbo;
+};
+
+
 /* Cameras */
 class Camera;
 class Fr_GL3Window;
@@ -167,6 +185,8 @@ public:
      * while it is not initialized.
      */
     static void deinitializeGlad();
+
+    std::shared_ptr<FrameBuffer> sceneBuffer;
 
     int  x()const;
     int  y()const;
