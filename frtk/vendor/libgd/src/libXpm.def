@@ -1,0 +1,6 @@
+LIBRARY "libXpm"
+EXPORTS
+ XpmFreeAttributes
+ XpmCreateImageFromBuffer
+ XpmReadFileToImage
+ XImageFree

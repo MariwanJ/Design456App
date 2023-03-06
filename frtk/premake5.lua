@@ -51,7 +51,8 @@ project "frtk"
 		"FL_INTERNALS",
 		"FL_LIBRARY",
 		"_USE_MATH_DEFINES",	--MS MATH reauire this M_PI for example
-		"FRTK_ENABLE_ASSERTS"  ---debug break enable
+		"FRTK_ENABLE_ASSERTS",  ---debug break enable
+        "HAVE_LIBXPM",               ---xpm support
 	}
 
 	includedirs
@@ -61,7 +62,8 @@ project "frtk"
         "%{IncludeDir.imGui}",
         "%{IncludeDir.ImGuizmo}",
 		"%{IncludeDir.glm}",
-		"$(SolutionDir)frtk/vendor/spdlog/include",
+		"%{IncludeDir.libgd}",
+        "$(SolutionDir)frtk/vendor/spdlog/include",
 		"$(SolutionDir)frtk/vendor/instrumentation",
         "src",
 		--"%{IncludeDir.yaml-cpp}",
@@ -102,6 +104,7 @@ project "frtk"
             "ImGuizmo",
 			"gdiplus.lib",
 		  	"imGui",
+            "libgd",
 		  --"yaml-cpp",
 			"opengl32.lib",
 			"GLFW",
@@ -131,6 +134,7 @@ project "frtk"
 			"Glad",
             "ImGuizmo",
 		  	"imGui",
+            "libgd",
 		  --"yaml-cpp",
 			"opengl32.lib",
 			"GLFW",

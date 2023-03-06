@@ -65,6 +65,12 @@
 #include<imguiFont/IconsMaterialDesign.h>
 #include<fr_texture_buffer.h>
 #include<glm/glm.hpp>
+
+#include<fr_convertImg.h>
+
+
+
+
 //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT, 
 enum class CameraList {
     PERSPECTIVE = 0, //This is not fixed and can be moved , others are not.
