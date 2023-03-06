@@ -63,7 +63,7 @@
 #include<imguiFont/IconsForkAwesome.h>
 #include<imguiFont/IconsKenney.h>
 #include<imguiFont/IconsMaterialDesign.h>
-
+#include<fr_texture_buffer.h>
 #include<glm/glm.hpp>
 //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT, 
 enum class CameraList {
