@@ -365,7 +365,7 @@ int Fr_GL3Window::createGLFWwindow()
 
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.Fonts->AddFontDefault();
-    float baseFontSize = 18.0f; // 13.0f is the size of the default font. Change to the font size you use.
+    float baseFontSize = 36.0f; // 13.0f is the size of the default font. Change to the font size you use.
     float iconFontSize = baseFontSize * 2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
     
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
@@ -406,9 +406,6 @@ void Fr_GL3Window::show() {
         }
 }
 
-
-
-
 int Fr_GL3Window::GLFWrun()
 {
     glViewport(0, 0, _w, _h);
@@ -416,10 +413,9 @@ int Fr_GL3Window::GLFWrun()
     clear_color = ImVec4(FR_WINGS3D); //ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     auto camm = cameras[(int)active_camera_];
     camm.camera->getUserData(data);
-    sceneBuffer = std::make_shared<FrameBuffer>(w(),h());
+    sceneBuffer = std::make_shared<Fr_TextureFrameBuffer>(w(),h());
     while (!glfwWindowShouldClose(pWindow))
     {
-
 
         //glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - defualt should be wings3D or FreeCAD
         // Start the Dear ImGui frame

@@ -39,7 +39,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <fr_grid.h>
 #include<fr_axis3D.h>
-
+#include<fr_texture_buffer.h>  //used to render to texture - imgui
 //fonts for Imgui icons
 #include <imguiFont/IconsFontAwesome6.h>
 
@@ -52,23 +52,6 @@ typedef struct {
 } camtype;
 
 
-
-
-
-class FrameBuffer
-{
-public:
-    FrameBuffer( int width,  int height);
-    ~FrameBuffer();
-    unsigned int getFrameTexture();
-    void RescaleFrameBuffer(float width, float height);
-    void Bind() const;
-    void Unbind() const;
-private:
-    unsigned int fbo;
-    unsigned int texture;
-    unsigned int rbo;
-};
 
 
 /* Cameras */
@@ -186,7 +169,7 @@ public:
      */
     static void deinitializeGlad();
 
-    std::shared_ptr<FrameBuffer> sceneBuffer;
+    std::shared_ptr<Fr_TextureFrameBuffer> sceneBuffer;
 
     int  x()const;
     int  y()const;

@@ -32,6 +32,7 @@
 
 
 
+
 int Fr_GL3Window::imguimzo_init()
 {
     ImGuizmo::SetOrthographic(false);
@@ -52,24 +53,6 @@ int Fr_GL3Window::imguimzo_init()
     ImGuizmo::DrawGrid(&modelview[0][0], &proje[0][0], trans, 100.f);
     int gizmoCount = 1;
     ImGuizmo::DrawCubes(&modelview[0][0], &proje[0][0], trans, gizmoCount);
-    //ImGuizmo::Manipulate(cameraView, cameraProjection, mCurrentGizmoOperation, mCurrentGizmoMode, matrix, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
-    //ImGuizmo::ViewManipulate(cameraView, camDistance, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);
-
-
-
-
-    //ImGuizmo::DrawGrid(&modelview[0][0], FR::globalP_pWindow->cameras[(unsigned int)FR::globalP_pWindow->active_camera_]->getPorjection(), trans, 100.f);
-    //ImGuizmo::DrawCubes(modelview, camera->getProjection(), &objectMatrix[0][0], gizmoCount);
-
-   /*ImGuizmo::Manipulate(&modelview[0][0],
-                         camera->getProjection(),
-                         (ImGuizmo::OPERATION)m_Gizmotype,
-                         ImGuizmo::LOCAL,
-                         glm::value_ptr(*trans));
-
-
-   */
-
     return 0;
 }
 
@@ -83,8 +66,6 @@ int Fr_GL3Window::renderimGUI(userData_ &data) {
     {
         auto camera = cameras[(int)active_camera_];
 
-
-
         static bool opt_fullscreen = true;
         static bool opt_padding = false;
         static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
@@ -92,8 +73,8 @@ int Fr_GL3Window::renderimGUI(userData_ &data) {
         // We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
         // because it would be confusing to have two docking targets within each others.
         ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-        if (opt_fullscreen)
-        {
+//        if (opt_fullscreen)
+        
             const ImGuiViewport* viewport = ImGui::GetMainViewport();
             ImGui::SetNextWindowPos(viewport->WorkPos);
             ImGui::SetNextWindowSize(viewport->WorkSize);
@@ -102,12 +83,12 @@ int Fr_GL3Window::renderimGUI(userData_ &data) {
             ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
             window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
             window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-        }
-        else
+        
+  /*      else
         {
             dockspace_flags &= ~ImGuiDockNodeFlags_PassthruCentralNode;
         }
-
+        */
         // When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background
         // and handle the pass-thru hole, so we ask Begin() to not render a background.
         if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
@@ -120,7 +101,8 @@ int Fr_GL3Window::renderimGUI(userData_ &data) {
         // any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
         if (!opt_padding)
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-        ImGui::Begin("DockSpace Demo", nullptr, window_flags);
+       ImGui::Begin("DockSpace Demo", nullptr, window_flags);
+       
         if (!opt_padding)
             ImGui::PopStyleVar();
 
@@ -138,32 +120,13 @@ int Fr_GL3Window::renderimGUI(userData_ &data) {
         {
             printf("Error\n");
         }
-
-        if (ImGui::BeginMenuBar())
-        {
-            if (ImGui::BeginMenu("Options"))
-            {
-                // Disabling fullscreen would allow the window to be moved to the front of other windows,
-                // which we can't undo at the moment without finer window depth/z control.
-                ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen);
-                ImGui::MenuItem("Padding", NULL, &opt_padding);
-                ImGui::Separator();
-                if (ImGui::MenuItem("Flag: NoSplit", "", (dockspace_flags & ImGuiDockNodeFlags_NoSplit) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoSplit; }
-                if (ImGui::MenuItem("Flag: NoResize", "", (dockspace_flags & ImGuiDockNodeFlags_NoResize) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoResize; }
-                if (ImGui::MenuItem("Flag: NoDockingInCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_NoDockingInCentralNode) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoDockingInCentralNode; }
-                if (ImGui::MenuItem("Flag: AutoHideTabBar", "", (dockspace_flags & ImGuiDockNodeFlags_AutoHideTabBar) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_AutoHideTabBar; }
-                if (ImGui::MenuItem("Flag: PassthruCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode) != 0, opt_fullscreen)) { dockspace_flags ^= ImGuiDockNodeFlags_PassthruCentralNode; }
-                ImGui::Separator();
-                ImGui::EndMenu();
-            }
-
-            ImGui::EndMenuBar();
-        }
-
         if (imgui_ViewPort() < 0)
             return -1;
-        if (imgui_toolbars() < 0)
-            return -1;
+       //ToolbarUI();
+
+
+        //if (imgui_toolbars() < 0)
+           // return -1;
         if (imgui_LeftPanel() < 0)
             return -1;
         if (imgui_TopPannel() < 0)
@@ -176,9 +139,9 @@ int Fr_GL3Window::renderimGUI(userData_ &data) {
         if (imguimzo_init() < 0)
             return -1;
     }
-//    scene->RenderScene();
+   scene->RenderScene();
 
-
+    scene->RenderScene();
     ImGui::End();
 
     return 1;
@@ -401,30 +364,39 @@ int Fr_GL3Window::imgui_menu()
 
 int Fr_GL3Window::imgui_toolbars()
 {
+    ImGui::Begin("toolbar");
     unsigned int myImageTextureId2 = 0;
     bool show_another_window = true;
+    /*
     static ImGui::Toolbar toolbar;
+    ImGui::Button("Baby " ICON_FA_BABY,ImVec2(64,64));
+    char tmp[1024]; ImVec2 uv0(0, 0), uv1(0, 0);
+    toolbar.addButton(ImGui::Toolbutton("toolbutton 11" ICON_FAD_ZOOMOUT, (void*)NULL, uv0, uv1, ImVec2(64, 64), true, true, ImVec4(0.8, 0.8, 1.0, 1)));  // Note that separator "eats" one toolbutton index as if it was a real button
+    toolbar.addSeparator(16);
+    toolbar.addButton(ImGui::Toolbutton("toolbutton 12" ICON_FA_ARROW_LEFT, (void*)NULL, uv0, uv1, ImVec2(64, 64), true, false, ImVec4(0.8, 0.20, 0.8, 1)));  // Note that separator "eats" one toolbutton index as if it was a real button
+    toolbar.addSeparator(16);
+    toolbar.setProperties(true, false, false, ImVec2(0.0f, 0.f), ImVec2(0.25, 1));
     if (toolbar.getNumButtons() == 0) {
-        char tmp[1024]; ImVec2 uv0(0, 0), uv1(0, 0);
+        char tmp[1024]; 
+        ImVec2 uv0(0, 0);
+        ImVec2 uv1(0, 0);
         for (int i = 0; i < 9; i++) {
             strcpy(tmp, "toolbutton ");
             sprintf(&tmp[strlen(tmp)], "%d", i + 1);
             uv0 = ImVec2((float)(i % 3) / 3.f, (float)(i / 3) / 3.f);
             uv1 = ImVec2(uv0.x + 1.f / 3.f, uv0.y + 1.f / 3.f);
-            toolbar.addButton(ImGui::Toolbutton(ICON_FA_ARROW_LEFT, (void*)NULL, uv0, uv1, ImVec2(32, 32)));
+            toolbar.addButton(ImGui::Toolbutton(tmp, ICON_FAD_ZOOMOUT, uv0, uv1, ImVec2(16, 16)));
         }
         toolbar.addSeparator(16);
-        toolbar.addButton(ImGui::Toolbutton("toolbutton 11" ICON_FAD_ZOOMOUT, (void*)NULL, uv0, uv1, ImVec2(16, 16), true, true, ImVec4(0.8, 0.8, 1.0, 1)));  // Note that separator "eats" one toolbutton index as if it was a real button
-        toolbar.addButton(ImGui::Toolbutton("toolbutton 12" ICON_FA_ARROW_LEFT, (void*)NULL, uv0, uv1, ImVec2(16, 16), true, false, ImVec4(1.0, 0.8, 0.8, 1)));  // Note that separator "eats" one toolbutton index as if it was a real button
-
+        toolbar.addButton(ImGui::Toolbutton("toolbutton 11", (void*)myImageTextureId2, uv0, uv1, ImVec2(16, 16), true, true, ImVec4(0.8, 0.8, 1.0, 1)));  // Note that separator "eats" one toolbutton index as if it was a real button
+        toolbar.addButton(ImGui::Toolbutton("toolbutton 12", (void*)myImageTextureId2, uv0, uv1, ImVec2(16, 16), true, false, ImVec4(1.0, 0.8, 0.8, 1)));  // Note that separator "eats" one toolbutton index as if it was a real button
         toolbar.setProperties(true, false, false, ImVec2(0.0f, 0.f), ImVec2(0.25, 1));
-    }
-    const int pressed = toolbar.render();
-    if (pressed >= 0)
-        fprintf(stderr, "Toolbar1: pressed:%d\n", pressed);
-    if (ImGui::Button(ICON_FAD_ZOOMOUT)) {
+        }
+        const int pressed = toolbar.render();
+    if (ImGui::Button("Press me " ICON_FAD_BLUETOOTH,ImVec2(64,64))) {
         printf("button pressed\n");
     }
-    
+    */
+    ImGui::End();
     return 0;
 }
