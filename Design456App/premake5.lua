@@ -39,7 +39,8 @@ To use /MTd in premake:
 		"%{IncludeDir.ImGuizmo}",
         "%{IncludeDir.GLFW}",
 		"%{IncludeDir.glm}",
-        
+        "%{IncludeDir.libgd}",
+        "%{IncludeDir.stb_image}",
         "../frtk/vendor/spdlog/include",
 		"../frtk/src",
         
@@ -68,6 +69,8 @@ To use /MTd in premake:
 			"opengl32.lib",
 			"gdiplus.lib",
 			"GLFW",
+            "libgd",
+            "stb_image",
 			"opengl32.lib"
 		}
 	
@@ -80,6 +83,8 @@ To use /MTd in premake:
 			"opengl32.lib",
 			"opengl32.lib",
 			"gdiplus.lib",
+            "stb_image",
+            "libgd",
 			"GLFW",
 			"opengl32.lib"
 		}

@@ -11,9 +11,11 @@ project "stb_image"
         "src/*.h",
         "src/*.c",
         "src/*.cpp",
-}
-
-   
+}	
+    defines
+	{
+        STB_IMAGE_IMPLEMENTATION
+    }	
     filter "system:windows"
         systemversion "latest"
 

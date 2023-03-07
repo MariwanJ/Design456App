@@ -37,10 +37,6 @@ loadImage::loadImage(std::string fName) :_fName(fName)
 {
 }
 
-loadImage::loadImage()
-{
-}
-
 loadImage::~loadImage()
 {
 }

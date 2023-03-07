@@ -22,11 +22,9 @@ project "libgd"
         "_WIN32",
         "MSWIN32",
         "BGDWIN32",
-        "WINVER=0x0500",
-        "_WIN32_WINNT=0x0500",
-        "_WIN32_IE=0x0600",
+
         "_CRT_SECURE_NO_DEPRECATE",
-        "libgd_EXPORTS",
+        "NONDLL",
         "HAVE_LIBXPM", --- XPM SUPPORT for libgd
     }
         

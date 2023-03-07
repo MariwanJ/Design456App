@@ -34,11 +34,6 @@ project "frtk"
 		"src/**.h",
 		"src/**.cpp",
 		"src/**.cxx",
-        
-		--"vendor/glm/glm/**.hpp",
-		--"vendor/glm/glm/**.inl",
-      ---  "vendor/stb_image/**.h",
-		---"vendor/stb_image/**.cpp",
 	}
 
 	defines
@@ -46,13 +41,10 @@ project "frtk"
 		"_CRT_SECURE_NO_WARNINGS",
         "GLFW_INCLUDE_NONE",
 		"GLFW_EXPOSE_NATIVE_WIN32",
-		"FRTK_ENABLE_ASSERTS",
 		"GLAD_GL_IMPLEMENTATION",
-		"FL_INTERNALS",
-		"FL_LIBRARY",
-		"_USE_MATH_DEFINES",	--MS MATH reauire this M_PI for example
+		"_USE_MATH_DEFINES",	---MS MATH reauire this M_PI for example
 		"FRTK_ENABLE_ASSERTS",  ---debug break enable
-        "HAVE_LIBXPM",               ---xpm support
+        "HAVE_LIBXPM",          ---xpm support
 	}
 
 	includedirs
@@ -102,7 +94,6 @@ project "frtk"
             "advapi32",
 			"Glad",
             "ImGuizmo",
-			"gdiplus.lib",
 		  	"imGui",
             "libgd",
 		  --"yaml-cpp",
@@ -116,7 +107,8 @@ project "frtk"
 		runtime "Release"
 		optimize "on"
         links 
-		{   "opengl32",
+		{  
+            "opengl32",
             "gdiplus",
             "comctl32",
             "ws2_32",
@@ -130,7 +122,6 @@ project "frtk"
             "uuid",
             "comdlg32",
             "advapi32",
-            "fltk",
 			"Glad",
             "ImGuizmo",
 		  	"imGui",
@@ -139,5 +130,4 @@ project "frtk"
 			"opengl32.lib",
 			"GLFW",
 			"Glad",
-		
     }

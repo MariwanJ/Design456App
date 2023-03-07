@@ -42,7 +42,6 @@ public:
      * \param image file name - and path
      */
     loadImage(std::string  image="");
-    loadImage(); //default constructor
     ~loadImage();
     /**
      * Load XPM Image.

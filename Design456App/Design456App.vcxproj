@@ -59,7 +59,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLFW_EXPOSE_NATIVE_WIN32;GLFW_INCLUDE_NONE;GLAD_GL_IMPLEMENTATION;FL_INTERNALS;FL_LIBRARY;FRTK_ENABLE_ASSERTS;FRTK_PLATFORM_WINDOWS;FRTK_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\frtk\vendor\Glad\include;..\frtk\vendor\imGui\src;..\frtk\vendor\ImGuizmo\src;..\frtk\vendor\GLFW\include;..\frtk\vendor\glm;..\frtk\vendor\spdlog\include;..\frtk\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\frtk\vendor\Glad\include;..\frtk\vendor\imGui\src;..\frtk\vendor\ImGuizmo\src;..\frtk\vendor\GLFW\include;..\frtk\vendor\glm;..\frtk\vendor\libgd;..\frtk\vendor\stb_image\src;..\frtk\vendor\spdlog\include;..\frtk\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -78,7 +78,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLFW_EXPOSE_NATIVE_WIN32;GLFW_INCLUDE_NONE;GLAD_GL_IMPLEMENTATION;FL_INTERNALS;FL_LIBRARY;FRTK_ENABLE_ASSERTS;FRTK_PLATFORM_WINDOWS;FRTK_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\frtk\vendor\Glad\include;..\frtk\vendor\imGui\src;..\frtk\vendor\ImGuizmo\src;..\frtk\vendor\GLFW\include;..\frtk\vendor\glm;..\frtk\vendor\spdlog\include;..\frtk\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\frtk\vendor\Glad\include;..\frtk\vendor\imGui\src;..\frtk\vendor\ImGuizmo\src;..\frtk\vendor\GLFW\include;..\frtk\vendor\glm;..\frtk\vendor\libgd;..\frtk\vendor\stb_image\src;..\frtk\vendor\spdlog\include;..\frtk\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -116,6 +116,12 @@
     </ProjectReference>
     <ProjectReference Include="..\frtk\vendor\GLFW\GLFW.vcxproj">
       <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\frtk\vendor\libgd\libgd.vcxproj">
+      <Project>{E798DC0F-53AD-04C1-1C2F-A820880201F2}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\frtk\vendor\stb_image\stb_image.vcxproj">
+      <Project>{3096E6B0-9C00-9B27-E53E-4CCD51E8787C}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
