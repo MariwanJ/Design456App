@@ -161,11 +161,10 @@ int main(int argc, char** argv)
     int desired_no_channels = 3;
     auto myimage = loadImage();
     
-    auto imgdata = myimage.LoadXPM_T(*idata_test);
-    unsigned char* img = stbi_load("E:/Projects/Design456App/test.xpm", &width, &height, &original_no_channels, desired_no_channels);
-    if (img == NULL) {
-            printf("Error in loading the image\n");
-            exit(1);
-    }
+    //unsigned char* img = freeImge("E:/Projects/Design456App/test.xpm", &width, &height, &original_no_channels, desired_no_channels);
+    //if (img == NULL) {
+    //        printf("Error in loading the image\n");
+  //          exit(1);
+    //}
     return Design456App->run(argc,argv);
 }

@@ -2,7 +2,7 @@ project "frtk"
 	kind "StaticLib"--kind "SharedLib" 
 	language "C++"
 	cppdialect "C++17"
-	staticruntime "off"
+	staticruntime "on"
 	--runtime "Debug"
 	
 	
@@ -44,9 +44,10 @@ project "frtk"
 		"GLAD_GL_IMPLEMENTATION",
 		"_USE_MATH_DEFINES",	---MS MATH reauire this M_PI for example
 		"FRTK_ENABLE_ASSERTS",  ---debug break enable
-        "HAVE_LIBXPM",          ---xpm support
 	}
-
+    libdirs {
+            "$(SolutionDir)frtk/vendor/freeImage"
+    }
 	includedirs
 	{
         "%{IncludeDir.GLFW}",
@@ -54,9 +55,9 @@ project "frtk"
         "%{IncludeDir.imGui}",
         "%{IncludeDir.ImGuizmo}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.libgd}",
         "$(SolutionDir)frtk/vendor/spdlog/include",
 		"$(SolutionDir)frtk/vendor/instrumentation",
+        "$(SolutionDir)frtk/vendor/freeImage",
         "src",
 		--"%{IncludeDir.yaml-cpp}",
 	}
@@ -95,7 +96,7 @@ project "frtk"
 			"Glad",
             "ImGuizmo",
 		  	"imGui",
-            "libgd",
+            "FreeImaged",
 		  --"yaml-cpp",
 			"opengl32.lib",
 			"GLFW",
@@ -125,7 +126,7 @@ project "frtk"
 			"Glad",
             "ImGuizmo",
 		  	"imGui",
-            "libgd",
+            "FreeImage",
 		  --"yaml-cpp",
 			"opengl32.lib",
 			"GLFW",

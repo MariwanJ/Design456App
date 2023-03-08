@@ -14,7 +14,7 @@ project "stb_image"
 }	
     defines
 	{
-        STB_IMAGE_IMPLEMENTATION
+        "STB_IMAGE_IMPLEMENTATION=1"
     }	
     filter "system:windows"
         systemversion "latest"

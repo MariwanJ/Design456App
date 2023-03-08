@@ -59,18 +59,19 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLFW_EXPOSE_NATIVE_WIN32;GLFW_INCLUDE_NONE;GLAD_GL_IMPLEMENTATION;FL_INTERNALS;FL_LIBRARY;FRTK_ENABLE_ASSERTS;FRTK_PLATFORM_WINDOWS;FRTK_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\frtk\vendor\Glad\include;..\frtk\vendor\imGui\src;..\frtk\vendor\ImGuizmo\src;..\frtk\vendor\GLFW\include;..\frtk\vendor\glm;..\frtk\vendor\libgd;..\frtk\vendor\stb_image\src;..\frtk\vendor\spdlog\include;..\frtk\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\frtk\vendor\Glad\include;..\frtk\vendor\imGui\src;..\frtk\vendor\ImGuizmo\src;..\frtk\vendor\GLFW\include;..\frtk\vendor\glm;.;..\frtk\vendor\stb_image\src;..\frtk\vendor\spdlog\include;..\frtk\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>gdiplus.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gdiplus.lib;freeImaged.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)frtk\vendor\freeImage;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -78,13 +79,13 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GLFW_EXPOSE_NATIVE_WIN32;GLFW_INCLUDE_NONE;GLAD_GL_IMPLEMENTATION;FL_INTERNALS;FL_LIBRARY;FRTK_ENABLE_ASSERTS;FRTK_PLATFORM_WINDOWS;FRTK_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\frtk\vendor\Glad\include;..\frtk\vendor\imGui\src;..\frtk\vendor\ImGuizmo\src;..\frtk\vendor\GLFW\include;..\frtk\vendor\glm;..\frtk\vendor\libgd;..\frtk\vendor\stb_image\src;..\frtk\vendor\spdlog\include;..\frtk\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\frtk\vendor\Glad\include;..\frtk\vendor\imGui\src;..\frtk\vendor\ImGuizmo\src;..\frtk\vendor\GLFW\include;..\frtk\vendor\glm;.;..\frtk\vendor\stb_image\src;..\frtk\vendor\spdlog\include;..\frtk\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -92,7 +93,8 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>gdiplus.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gdiplus.lib;freeImage.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)frtk\vendor\freeImage;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -116,9 +118,6 @@
     </ProjectReference>
     <ProjectReference Include="..\frtk\vendor\GLFW\GLFW.vcxproj">
       <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\frtk\vendor\libgd\libgd.vcxproj">
-      <Project>{E798DC0F-53AD-04C1-1C2F-A820880201F2}</Project>
     </ProjectReference>
     <ProjectReference Include="..\frtk\vendor\stb_image\stb_image.vcxproj">
       <Project>{3096E6B0-9C00-9B27-E53E-4CCD51E8787C}</Project>

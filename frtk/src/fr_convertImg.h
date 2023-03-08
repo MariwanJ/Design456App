@@ -29,7 +29,7 @@
 #define FR_CONVERTIMAGE_H
 
 #include <../vendor/stb_image/src/stb_image.h>
-#include<../vendor/libgd/src/gd.h>
+#include<../vendor/freeImage/FreeImage.h>
 
 #include<frtk.h>
 
@@ -43,67 +43,7 @@ public:
      */
     loadImage(std::string  image="");
     ~loadImage();
-    /**
-     * Load XPM Image.
-     * 
-     * \param filename  File name and path 
-     * \return libgd image format  
-     */
-    std::shared_ptr<gdImagePtr> LoadXPM_F(char* filename);
-    
-    /**
-     * Load XPM image from a string.
-     * 
-     * \param xpmData String represent the image. Useful if 
-     *  you include xpm files (for ex. icons) inside one file
-     * \return libgd image format 
-     */
-    std::shared_ptr<gdImagePtr> LoadXPM_T(std::string xpmData);
-
-    /**
-     * Load GIF image .
-     * 
-     * \param filename file name and path
-     * \return libgd image format  
-     */
-    std::shared_ptr<gdImagePtr> LoadGIF(char* filename);
-
-    /**
-     * Load XBM image .
-     * 
-     * \param filename file name and path
-     * \return  libgd image format 
-     */
-    std::shared_ptr<gdImagePtr> LoadXBM(char* filename);
-    /**
-     * Load png image.
-     * 
-     * \param filename file name and path
-     * \return 
-     */
-    std::shared_ptr<gdImagePtr> LoadPng(char* filename);
-
-    /**
-     * Save lbgd imaege to png format.
-     * 
-     * \param FName File name to save the image
-     * \param im libgd image format 
-     */
-    void SavePng(char* FName, gdImagePtr im);
-    /**
-     * Save libgd image to jpg format.
-     * 
-     * \param FName file name and path to save the image
-     */
-    void SaveJpg(char* FName, gdImagePtr im);
-
-    /**
-     * Save libgd image format to gif.
-     * 
-     * \param FName  file name and path to save image
-     * \param im
-     */
-    void SaveGif(char* FName, gdImagePtr im);
+ 
 
 //Maybe we don't use it? 
 private:

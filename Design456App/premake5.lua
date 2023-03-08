@@ -2,7 +2,7 @@ project "Design456App"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"
-    staticruntime "off"
+    staticruntime "on"
 	runtime "Debug"
 	
 	--[[
@@ -39,7 +39,7 @@ To use /MTd in premake:
 		"%{IncludeDir.ImGuizmo}",
         "%{IncludeDir.GLFW}",
 		"%{IncludeDir.glm}",
-        "%{IncludeDir.libgd}",
+        "%{IncludeDir.freeImage}",
         "%{IncludeDir.stb_image}",
         "../frtk/vendor/spdlog/include",
 		"../frtk/src",
@@ -54,7 +54,9 @@ To use /MTd in premake:
 		"FL_LIBRARY",
 		"FRTK_ENABLE_ASSERTS"  ---debug break enable  
 	}
-
+    libdirs {
+            "$(SolutionDir)frtk/vendor/freeImage"
+    }
 
 	flags
 	{
@@ -69,7 +71,7 @@ To use /MTd in premake:
 			"opengl32.lib",
 			"gdiplus.lib",
 			"GLFW",
-            "libgd",
+            "freeImaged",
             "stb_image",
 			"opengl32.lib"
 		}
@@ -84,7 +86,7 @@ To use /MTd in premake:
 			"opengl32.lib",
 			"gdiplus.lib",
             "stb_image",
-            "libgd",
+            "freeImage",
 			"GLFW",
 			"opengl32.lib"
 		}
