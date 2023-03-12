@@ -6,43 +6,39 @@
 
 void mnuFileNew_cb(void* widget, void* Data)
 {
-    //Temporary code just for debugging
-    CameraList camtype = FR::globalP_pWindow->getCameraType();
-    if (camtype == CameraList::BACK)
-        camtype = CameraList::PERSPECTIVE;
-    else
-        camtype = (CameraList)((int)(camtype) + 1);
-    if (int(camtype) >= 6)
-        camtype = CameraList::PERSPECTIVE;
-    FR::globalP_pWindow->setCameraType(camtype);
-    printf("camera changed\n");
+    std::cout << "File new callback\n";
 }
 
 void mnuFileOpen_cb(void* widget, void* Data)
 {
+    std::cout << "File open callback\n";
 }
 
 void mnuFileClose_cb(void* widget, void* Data)
 {
+    std::cout << "File close callback\n";
 }
 
 void mnuFileSave_cb(void* widget, void* Data)
 {
+    std::cout << "File save callback\n";
 }
 
 void mnuFileSaveAs_cb(void* widget, void* Data)
 {
+    std::cout << "File save as callback\n";
 }
 
 void mnuFileExport_cb(void* widget, void* Data)
 {
+    std::cout << "File export callback\n";
 }
 
 void mnuFileImport_cb(void* widget, void* Data)
 {
+    std::cout << "File import callback\n";
 }
 
 void mnuFileExit_cb(void*widget, void* Data){
     FR::globalP_pWindow->Exit();
-
 }

@@ -104,7 +104,6 @@ void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffs
     y = manipulator_->get_Y();
     if (win != nullptr) {
         manipulator_->GLFWScroll(xoffset, yoffset);
-        FR::globalP_pWindow->scene->RenderScene();
     }
 }
 

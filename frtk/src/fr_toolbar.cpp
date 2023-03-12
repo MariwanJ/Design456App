@@ -9,8 +9,8 @@ void ToolbarUI()
 {
     static bool use_work_area = false;
     ImGuiViewport* viewport = ImGui::GetMainViewport();
-    ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y + 30));
-    ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, 36));
+    ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y + 20));
+    ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, 48));
     ImGui::SetNextWindowViewport(viewport->ID);
 
     ImGuiWindowFlags window_flags = 0
@@ -25,16 +25,20 @@ void ToolbarUI()
     ImGui::Begin("TOOLBAR", NULL, window_flags);
     ImGui::PopStyleVar();
 
-
-
+    ImVec4 dummy_col = ImVec4(FR_LIGHTGRAY);
     //All TOOLBARS ARE HERE !!
-    //ImGui::BeginGroup(); // Lock X position
-    //ImGui::Dummy(ImVec2(0.0f, 20.0f)); space -- Vertically 
-    //ImGui::SameLine();
+    //ImGui::BeginGroup();                        // Lock X position
+    ImVec4 pressedCol = ImVec4(FR_BEIGE);
+    ImVec4 normalCol = ImVec4(FR_LIGHTGRAY);
+
+    ImGui::Dummy(ImVec2(0.0f, 20.0f));           //space -- Vertically 
+    ImGui::SameLine();
     if (ImGui::Button(ICON_FA_FILE, ImVec2(ICON_SIZE)))   mnuFileNew_cb(nullptr, nullptr);                                  //FILE NEW
-    ImGui::Dummy(ImVec2(36.0f, 0.0f));
-                                                                                                                            //ImGui::SameLine();
-    if (ImGui::Button(ICON_MD_FILE_OPEN, ImVec2(ICON_SIZE)))   mnuFileOpen_cb(nullptr, nullptr);                            //FILE OPEN
+   // ImGui::Dummy(ImVec2(36.0f, 0.0f));
+    ImGui::SameLine();
+
+    if (ImGui::Button(ICON_FA_FILE_ARROW_UP, ImVec2(ICON_SIZE)))              mnuFileOpen_cb(nullptr, nullptr);                     //FILE OPEN
+
     ImGui::SameLine();
     if (ImGui::Button(ICON_FA_FLOPPY_DISK, ImVec2(ICON_SIZE)))   mnuFileSave_cb(nullptr, nullptr);                          //FILE SAVE
     ImGui::SameLine();
@@ -42,10 +46,8 @@ void ToolbarUI()
     ImGui::SameLine();
     if (ImGui::Button(ICON_FA_CIRCLE_XMARK, ImVec2(ICON_SIZE)))   mnuFileNew_cb(nullptr, nullptr);                          //FILE CLOSE                                  
     ImGui::SameLine();
-    if (ImGui::Button(ICON_FA_ARROW_LEFT, ImVec2(ICON_SIZE)))   mnuFileImport_cb(nullptr, nullptr);                         //FILE IMPORT
+    if (ImGui::Button(ICON_FA_ARROW_DOWN, ImVec2(ICON_SIZE)))   mnuFileImport_cb(nullptr, nullptr);                         //FILE IMPORT
     ImGui::SameLine();
-    if (ImGui::Button(ICON_FA_ARROW_RIGHT, ImVec2(ICON_SIZE)))   mnuFileExport_cb(nullptr, nullptr);                        //FILE EXPORT
-    ImGui::SameLine();
-    if (ImGui::Button(ICON_FA_FILE, ImVec2(ICON_SIZE)))   mnuFileNew_cb(nullptr, nullptr);
+    if (ImGui::Button(ICON_FA_ARROW_UP, ImVec2(ICON_SIZE)))   mnuFileExport_cb(nullptr, nullptr);                        //FILE EXPORT
     ImGui::End();
 }

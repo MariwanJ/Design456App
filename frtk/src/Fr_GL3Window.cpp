@@ -376,7 +376,7 @@ int Fr_GL3Window::GLFWrun()
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
 
          //Render GLFW stuff or Our 3D drawing
-        //scene->RenderScene();
+  
         renderimGUI(data);
         // Rendering IMGUI 
         ImGui::Render();
