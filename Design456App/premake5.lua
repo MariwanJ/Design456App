@@ -71,7 +71,6 @@ To use /MTd in premake:
 			"opengl32.lib",
 			"gdiplus.lib",
 			"GLFW",
-            "freeImaged",
             "stb_image",
 			"opengl32.lib"
 		}
@@ -86,7 +85,6 @@ To use /MTd in premake:
 			"opengl32.lib",
 			"gdiplus.lib",
             "stb_image",
-            "freeImage",
 			"GLFW",
 			"opengl32.lib"
 		}

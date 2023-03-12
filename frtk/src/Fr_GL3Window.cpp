@@ -112,10 +112,18 @@ Fr_GL3Window::~Fr_GL3Window()
 /**
 * Exit application and destroy both windows.
 */
-int Fr_GL3Window::exit()
+int Fr_GL3Window::Exit()
 {
     if (pWindow)
-        glfwDestroyWindow(pWindow);
+    {
+
+        glfwSetWindowShouldClose(pWindow, true);
+
+        glfwPollEvents();
+
+
+        return 0;
+    }
     return 0;
 }
 
@@ -360,7 +368,7 @@ int Fr_GL3Window::GLFWrun()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        glCheckFunc(glfwPollEvents());
+        
         glClear(GL_COLOR_BUFFER_BIT);
         int display_w, display_h;
         glfwGetFramebufferSize(pWindow, &display_w, &display_h);
@@ -381,9 +389,13 @@ int Fr_GL3Window::GLFWrun()
         camm.camera->SetCamPosition(data.camPosition_[0], data.camPosition_[1], data.camPosition_[2]);
         active_camera_ = data.camType_;
 
-
+       glCheckFunc(glfwPollEvents());
        glCheckFunc(glfwSwapBuffers(pWindow));
     }
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+    glfwDestroyWindow(pWindow);
     return 0;
 }
 /**

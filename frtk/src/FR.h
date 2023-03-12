@@ -56,6 +56,10 @@
 #define FR_VERSION      ( (double)FL_MAJOR_VERSION + \
                           (double)FL_MINOR_VERSION * 0.01 + \
                           (double)FL_PATCH_VERSION * 0.0001 )
+
+
+
+#define ICON_SIZE  36,36
 	// Transparency - No color will be applied
 
  /* [Color definition used in all widgets consist of

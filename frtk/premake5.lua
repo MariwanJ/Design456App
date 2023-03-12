@@ -46,7 +46,6 @@ project "frtk"
 		"FRTK_ENABLE_ASSERTS",  ---debug break enable
 	}
     libdirs {
-            "$(SolutionDir)frtk/vendor/freeImage"
     }
 	includedirs
 	{
@@ -57,7 +56,6 @@ project "frtk"
 		"%{IncludeDir.glm}",
         "$(SolutionDir)frtk/vendor/spdlog/include",
 		"$(SolutionDir)frtk/vendor/instrumentation",
-        "$(SolutionDir)frtk/vendor/freeImage",
         "src",
 		--"%{IncludeDir.yaml-cpp}",
 	}
@@ -96,7 +94,6 @@ project "frtk"
 			"Glad",
             "ImGuizmo",
 		  	"imGui",
-            "FreeImaged",
 		  --"yaml-cpp",
 			"opengl32.lib",
 			"GLFW",
@@ -126,7 +123,6 @@ project "frtk"
 			"Glad",
             "ImGuizmo",
 		  	"imGui",
-            "FreeImage",
 		  --"yaml-cpp",
 			"opengl32.lib",
 			"GLFW",

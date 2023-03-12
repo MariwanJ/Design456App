@@ -89,7 +89,7 @@ public:
      *
      * \return int value dpending on the way the windows exits.
      */
-    virtual int exit();
+    virtual int Exit();
     /**
      * Return back a pointer to the current GLFW window.
      *
@@ -306,19 +306,7 @@ private:
 
 
 
-//CALLBACKS 
 
-void mnuFileNew_cb(void* widget, void* Data);
-void mnuFileOpen_cb(void* widget, void* Data);
-void mnuFileClose_cb(void* widget, void* Data);
-void mnuFileSave_cb(void* widget, void* Data);
-
-
-void mnuFileSave_cb(void* widget, void* Data);
-void mnuFileSaveAs_cb(void* widget, void* Data);
-
-void mnuFileExport_cb(void* widget, void* Data);
-void mnuFileImport_cb(void* widget, void* Data);
 
 
 #endif

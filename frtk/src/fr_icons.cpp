@@ -21,14 +21,33 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//
+//  Original Author : Gabriel de Quadros  https://github.com/gligneul
+//  Modified to use with this project by :
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
+// This class is based on the manual https://libgd.github.io/manuals/2.3.0
+//
 
+#include <fr_icons.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdlib.h>
+#include <Fr_Core.h>
 
-#include<Application.h>
-int main(int argc, char** argv)
+loadImage::loadImage(std::string fName) :_fName(fName)
 {
-    Application* Design456App = new Application();
-    return Design456App->run(argc,argv);
+}
+
+std::shared_ptr < unsigned char> loadImage::getImage(std::string img) {
+    int width, height, channels;
+    unsigned char* imgg = stbi_load("../resources/48/home.png", &width, &height, &channels, 0);
+       if (imgg == NULL) {
+            printf("Error in loading the image\n");
+                exit(1);
+      
+    }
+       return ((std::shared_ptr<unsigned char>)imgg);
+}
+loadImage::~loadImage()
+{
 }

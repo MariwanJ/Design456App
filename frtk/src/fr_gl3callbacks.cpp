@@ -2,6 +2,7 @@
 #include <FR.h>
 
 #include <Fr_GL3Window.h>
+#include "fr_gl3callbacks.h"
 
 void mnuFileNew_cb(void* widget, void* Data)
 {
@@ -39,4 +40,9 @@ void mnuFileExport_cb(void* widget, void* Data)
 
 void mnuFileImport_cb(void* widget, void* Data)
 {
+}
+
+void mnuFileExit_cb(void*widget, void* Data){
+    FR::globalP_pWindow->Exit();
+
 }
