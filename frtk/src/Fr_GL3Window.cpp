@@ -31,7 +31,7 @@
 #include<fr_mesh.h>
 #include<fr_object_shader_node.h>
 //End remove me later
-userData_ data;
+
 
 /**
  *
@@ -52,7 +52,7 @@ Fr_GL3Window* Fr_GL3Window::GLFWCallbackWrapper::s_fr_glfwwindow = nullptr;
 
 static int counter = 0;
 
-Fr_GL3Window* FR::globalP_pWindow = nullptr;
+Fr_GL3Window* Fr_GL3Window::s_Fr_GLFWwindow = nullptr;
 
 static void error_callback(int error, const char* description)
 {
@@ -67,8 +67,8 @@ Scene* Fr_GL3Window::scene = nullptr;
 Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::string l = "GLFW ImGUI Test"):
                                 active_camera_(CameraList::PERSPECTIVE),
                                 _x(x), _y(y), _w(w), _h(h), label_(l) {
-    FR::globalP_pWindow = this;
-
+    
+    s_Fr_GLFWwindow = this;
     _x = x;
     _y = y;
     _w = w;
@@ -102,6 +102,14 @@ Fr_GL3Window::Fr_GL3Window()
     _w = 900;
     _h = 800;
     label_ = "GLFW ImGUI Test";
+    s_Fr_GLFWwindow = this;
+}
+
+
+
+Fr_GL3Window* Fr_GL3Window::getfr_Gl3Window()
+{
+    return s_Fr_GLFWwindow;
 }
 
 //FIXME
@@ -323,8 +331,8 @@ int Fr_GL3Window::createGLFWwindow()
     icons_config.PixelSnapH = true;
     icons_config.GlyphMinAdvanceX = iconFontSize;
     //TODO FIXME:
-    std::string fontPath = "E:\\Projects\\Design456App\\frtk\\vendor\\imGui\\src\\imguiFont\\" + std::string(FONT_ICON_FILE_NAME_FAS);
-    io.Fonts->AddFontFromFileTTF(fontPath.c_str(), iconFontSize, &icons_config, icons_ranges);
+    std::string Path = fontPath + std::string(FONT_ICON_FILE_NAME_FAS);
+    io.Fonts->AddFontFromFileTTF(Path.c_str(), iconFontSize, &icons_config, icons_ranges);
 
     // Setup Dear ImGui style
     //ImGui::StyleColorsDark();
@@ -353,6 +361,7 @@ void Fr_GL3Window::show() {
 
 int Fr_GL3Window::GLFWrun()
 {
+    userData_ data;
     glViewport(0, 0, _w, _h);
     CreateScene();   //Main drawing process.
     clear_color = ImVec4(FR_WINGS3D); //ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -362,11 +371,7 @@ int Fr_GL3Window::GLFWrun()
     while (!glfwWindowShouldClose(pWindow))
     {
 
-        //glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - defualt should be wings3D or FreeCAD
-        // Start the Dear ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
+        glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - defualt should be wings3D or FreeCAD
 
         
         glClear(GL_COLOR_BUFFER_BIT);
@@ -426,44 +431,4 @@ std::shared_ptr<Transform> Fr_GL3Window::CreateSun() {
     sun_height->AddNode(light);
     sun->SetActive(true);   //A must to have or the rabbit mesh will be black.
     return std::shared_ptr<Transform>(sun);
-}
-
-void Fr_GL3Window::GLFWCallbackWrapper::framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    s_fr_glfwwindow->framebuffer_size_callback(window, width, height);
-}
-
-void Fr_GL3Window::GLFWCallbackWrapper::keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    s_fr_glfwwindow->keyboard_callback(window, key, scancode, action, mods);
-}
-
-void Fr_GL3Window::GLFWCallbackWrapper::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
-{
-    s_fr_glfwwindow->cursor_position_callback(window, xpos, ypos);
-}
-
-void Fr_GL3Window::GLFWCallbackWrapper::cursor_enter_callback(GLFWwindow* window, int entered)
-{
-    s_fr_glfwwindow->cursor_enter_callback(window, entered);
-}
-
-void Fr_GL3Window::GLFWCallbackWrapper::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
-{
-    s_fr_glfwwindow->mouse_button_callback(window, button, action, mods);
-}
-
-void Fr_GL3Window::GLFWCallbackWrapper::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
-    s_fr_glfwwindow->scroll_callback(window, xoffset, yoffset);
-}
-
-void Fr_GL3Window::GLFWCallbackWrapper::joystick_callback(int jid, int events)
-{
-    s_fr_glfwwindow->joystick_callback(jid, events);
-}
-
-void Fr_GL3Window::GLFWCallbackWrapper::setGLFWwindow(Fr_GL3Window* glfwWindow)
-{
-    GLFWCallbackWrapper::s_fr_glfwwindow = glfwWindow;
 }

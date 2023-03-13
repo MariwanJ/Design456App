@@ -25,8 +25,7 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include <imgui.h>
-#include <ImGuizmo.h>
+
 #include <Fr_GL3Window.h>
 #include<fr_menu.h>
 #include<fr_toolbar.h>
@@ -46,7 +45,7 @@ int Fr_GL3Window::imguimzo_init()
         windowsWidth, windowsHeight);
 
     auto m_Gizmotype = ImGuizmo::OPERATION::TRANSLATE; //translate, scale or rotate
-    auto activeCamera = FR::globalP_pWindow->cameras[(unsigned int)FR::globalP_pWindow->active_camera_];
+    auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameras[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
     auto modelview = activeCamera.manipulator->GetMatrix();
     float trans[3] = { 0.0f, 0.0f, 0.0f };
     auto proje = glm::ortho(-1.f, 1.f, -1.f, 1.f, 1.f, -1.f);
@@ -120,16 +119,12 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
         }
         if (imgui_ViewPort() < 0)
             return -1;
-         ToolbarUI();
         if (imgui_toolbars() < 0)
             return -1;
         if (imgui_LeftPanel() < 0)
             return -1;
         if (imgui_TopPannel() < 0)
             return -1;
-        if (imgui_CameraConfiguration(data) < 0)
-            return -1;
-
         if (imgui_menu() < 0)
             return -1;
         if (imguimzo_init() < 0)
@@ -252,8 +247,8 @@ int Fr_GL3Window::imgui_menu()
         if (ImGui::BeginMenu("File"))
         {
             //IMGUI_DEMO_MARKER("Examples/Menu");
-            if (ImGui::MenuItem("New")) { mnuFileNew_cb(this, nullptr); }
-            if (ImGui::MenuItem("Open", "Ctrl+O")) { mnuFileOpen_cb(this, nullptr); }
+            if (ImGui::MenuItem("New")) { mnuFileNew_cb( nullptr); }
+            if (ImGui::MenuItem("Open", "Ctrl+O")) { mnuFileOpen_cb( nullptr); }
             if (ImGui::BeginMenu("Open Recent"))
             {
                 ImGui::MenuItem("---");
@@ -272,23 +267,32 @@ int Fr_GL3Window::imgui_menu()
                 }*/
                 ImGui::EndMenu();
             }
-            if (ImGui::MenuItem("Save", "Ctrl+S")) { mnuFileSave_cb(this, nullptr); }
-            if (ImGui::MenuItem("Save As..")) { mnuFileSaveAs_cb(this, nullptr); }
+            if (ImGui::MenuItem("Save", "Ctrl+S")) { GLFWCallbackWrapper::mnuFileSave_cb( nullptr); }
+            if (ImGui::MenuItem("Save As..")) { GLFWCallbackWrapper::mnuFileSaveAs_cb( nullptr); }
             ImGui::Separator();
-            if (ImGui::MenuItem("Import")) { mnuFileImport_cb(this, nullptr); }
-            if (ImGui::MenuItem("Export")) { mnuFileImport_cb(this, nullptr); }
+            if (ImGui::MenuItem("Import")) { GLFWCallbackWrapper::mnuFileImport_cb( nullptr); }
+            if (ImGui::MenuItem("Export")) { GLFWCallbackWrapper::mnuFileImport_cb( nullptr); }
             ImGui::Separator();
-            if (ImGui::MenuItem("Exit", "Alt+F4")) { mnuFileExit_cb(this, nullptr);  }
+            if (ImGui::MenuItem("Exit", "Alt+F4")) { GLFWCallbackWrapper::mnuFileExit_cb( nullptr);  }
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Edit"))
         {
-            if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
-            if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
+            if (ImGui::MenuItem("Undo", "CTRL+Z")) { GLFWCallbackWrapper::mnuEditUndo(nullptr); }
+            if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) { GLFWCallbackWrapper::mnuEditRedo(nullptr); }  // Disabled item
             ImGui::Separator();
-            if (ImGui::MenuItem("Cut", "CTRL+X")) {}
-            if (ImGui::MenuItem("Copy", "CTRL+C")) {}
-            if (ImGui::MenuItem("Paste", "CTRL+V")) {}
+            if (ImGui::MenuItem("Copy", "CTRL+C")) { GLFWCallbackWrapper::mnuEditCopy(nullptr); }
+            if (ImGui::MenuItem("Cut", "CTRL+X")) { GLFWCallbackWrapper::mnuEditCut(nullptr); }
+            if (ImGui::MenuItem("Paste", "CTRL+V")) { GLFWCallbackWrapper::mnuEditPaste(nullptr); }
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Tools"))
+        {
+            userData_ camData;
+            if (ImGui::MenuItem("Option")) { 
+                mnuToolsOptionCamera_cb(camData);
+            
+            }
             ImGui::EndMenu();
         }
     }

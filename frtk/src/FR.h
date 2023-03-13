@@ -233,8 +233,8 @@ namespace COLOR {
 class Fr_GL3Window; // compiler should define that later. 
 
 class FR {
-	FR() {}; //NO need for a constructor.
 public:
+	FR(); // todo remove me
 	//static variables used for mouse events inside fgwl.
 	static int glfw_e_x;  //SAVE X AND Y OF LAST CLICK INSIDE GLFW
 	static int glfw_e_y;
@@ -247,11 +247,10 @@ public:
 	static bool s_GLFWInitialized;
 	static bool s_GladInitialized;
 
-	static Fr_GL3Window* globalP_pWindow;
-
+	
 };
 
-
+const char fontPath[] = "../frtk/vendor/imGui/src/imguiFont/";
 
 
 

@@ -54,6 +54,8 @@ typedef struct {
 
 
 
+
+
 /* Cameras */
 class Camera;
 class Fr_GL3Window;
@@ -83,6 +85,11 @@ public:
     * Class destructor.
     *
     */
+
+
+    static Fr_GL3Window* getfr_Gl3Window();
+
+
     virtual ~Fr_GL3Window();
     /**
      * Exit function used to exit whenever the fltk windows is closed.
@@ -182,6 +189,7 @@ public:
 
     void setCameraType(CameraList typOfCamera);
     CameraList getCameraType();
+    int imgui_CameraConfiguration(userData_& data);
 
 
 protected:
@@ -200,7 +208,7 @@ protected:
     int renderimGUI(userData_ &data);
     int imgui_LeftPanel();
     int imgui_TopPannel();
-    int imgui_CameraConfiguration(userData_ &data);
+
     int imgui_ViewPort();
     int imgui_menu();
     int imgui_toolbars();
@@ -215,6 +223,8 @@ protected:
 
 private:
 
+    void CreateToolbarUI();
+
     /** GLFW Callbacks*/
     void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -223,6 +233,34 @@ private:
     void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
     void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
     void joystick_callback(int jid, int events);
+    
+    //Menu and toolbar callbacks 
+    void mnuFileNew_cb   ( void* Data);
+    void mnuFileOpen_cb  ( void* Data);
+    void mnuFileClose_cb ( void* Data);
+    void mnuFileSave_cb  ( void* Data);
+    void mnuFileSaveAs_cb( void* Data);
+    void mnuFileExport_cb( void* Data);
+    void mnuFileImport_cb( void* Data);
+    void mnuFileExit_cb( void* Data);
+    void mnuToolsOptionCamera_cb(userData_& data);
+
+    void mnuEditUndo(void* Data);
+    void mnuEditRedo(void* Data);
+    void mnuEditCopy(void* Data);
+    void mnuEditCut(void* Data);
+    void mnuEditPaste(void* Data);
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * GLFW callback wrapper calss.
@@ -249,18 +287,30 @@ private:
         static void joystick_callback(int jid, int events);
         static void setGLFWwindow(Fr_GL3Window* glfwWindow);
 
+        //Menu callback rappers 
+        static void mnuFileNew_cb(void* Data);
+        static void mnuFileOpen_cb(void* Data);
+        static void mnuFileClose_cb(void* Data);
+        static void mnuFileSave_cb(void* Data);
+        static void mnuFileSaveAs_cb(void* Data);
+        static void mnuFileExport_cb(void* Data);
+        static void mnuFileImport_cb(void* Data);
+        static void mnuFileExit_cb(void* Data);
+        static void mnuToolsOptionCamera_cb(userData_& Data);
+
+        static void GLFWCallbackWrapper::mnuEditUndo(void* Data);
+        static void GLFWCallbackWrapper::mnuEditRedo(void* Data);
+        static void GLFWCallbackWrapper::mnuEditCopy(void* Data);
+        static void GLFWCallbackWrapper::mnuEditCut(void* Data);
+        static void GLFWCallbackWrapper::mnuEditPaste(void* Data);
+
+
     private:
         static  Fr_GL3Window* s_fr_glfwwindow;
+
+
     };
 
-  /*/
-    GLuint shaderProgram;
-    GLuint vertexArrayObject;
-    GLuint vertexBuffer;
-    GLint positionUniform;
-    GLint colourAttribute;
-    GLint positionAttribute;
-    */
     /**
      * GLAD VERSION DEFINITION
      * Currently it is 4.3.
@@ -302,6 +352,7 @@ private:
      */
     CameraList active_camera_ ;
     ImVec4 clear_color;
+    static Fr_GL3Window* s_Fr_GLFWwindow;
 };
 
 

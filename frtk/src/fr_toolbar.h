@@ -4,8 +4,6 @@
 #include<fr_camera.h>
 #include <fr_gl3callbacks.h>
 
-void ToolbarUI();
-
 #endif
 
 

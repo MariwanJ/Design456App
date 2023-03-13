@@ -71,11 +71,11 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
     return;//temp code
     if (button == 0 || button == 1)
         if (win != nullptr) {
-            auto activeCamera = FR::globalP_pWindow->cameras[(unsigned int)FR::globalP_pWindow->active_camera_];
+            auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameras[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
             auto manipulator_ = activeCamera.manipulator;
             manipulator_->GLFWMouse(button, FR::glfw_MouseClicked, cposx, cposy);
             manipulator_->GLFWMotion(cposx, cposy);
-            //FR::globalP_pWindow->scene->RenderScene();
+            Fr_GL3Window::getfr_Gl3Window()->scene->RenderScene();
             button = -1;
         }
 }
@@ -98,7 +98,7 @@ void Fr_GL3Window::mouse_button_callback(GLFWwindow* win, int button, int action
 void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
 {
     double x, y;
-    auto activeCamera = FR::globalP_pWindow->cameras[(unsigned int)FR::globalP_pWindow->active_camera_];
+    auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameras[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
     auto manipulator_ = activeCamera.manipulator;
     x = manipulator_->get_X();
     y = manipulator_->get_Y();
