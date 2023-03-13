@@ -370,10 +370,13 @@ int Fr_GL3Window::GLFWrun()
     sceneBuffer = std::make_shared<Fr_TextureFrameBuffer>(w(),h());
     while (!glfwWindowShouldClose(pWindow))
     {
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+        ImGuizmo::BeginFrame();
 
         glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - defualt should be wings3D or FreeCAD
 
-        
         glClear(GL_COLOR_BUFFER_BIT);
         int display_w, display_h;
         glfwGetFramebufferSize(pWindow, &display_w, &display_h);
