@@ -61,8 +61,6 @@ int Fr_GL3Window::imguimzo_init()
 int Fr_GL3Window::renderimGUI(userData_& data) {
     // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
     {
-        auto camera = cameras[(int)active_camera_];
-
         static bool opt_fullscreen = true;
         static bool opt_padding = false;
         static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
@@ -117,15 +115,16 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
         {
             printf("Error\n");
         }
-        if (imgui_ViewPort() < 0)
+        if (imgui_menu() < 0)
             return -1;
         if (imgui_toolbars() < 0)
             return -1;
-        if (imgui_LeftPanel() < 0)
-            return -1;
         if (imgui_TopPannel() < 0)
             return -1;
-        if (imgui_menu() < 0)
+
+        if (imgui_ViewPort() < 0)
+            return -1;
+        if (imgui_LeftPanel() < 0)
             return -1;
         if (imguimzo_init() < 0)
             return -1;

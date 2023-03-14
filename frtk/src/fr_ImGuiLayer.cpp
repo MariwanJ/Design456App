@@ -25,9 +25,9 @@ void Fr_ImGuiLayer::createLayer()
 	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
 	float fontSize = 18.0f;
-	std::string path = "../frtk/vendor/imGui/src/imguiFont/" + std::string("OpenSans-Bold.ttf");
+	std::string path = "../frtk/vendor/imGui/src/imguiFont/OpenSans-Bold.ttf";
 	io.Fonts->AddFontFromFileTTF(path.c_str(), fontSize);
-	path = "../frtk/vendor/imGui/src/imguiFont/" + std::string("OpenSans-Regular.ttf");
+	path = "../frtk/vendor/imGui/src/imguiFont/Open Sans Regular.ttf";
 	io.FontDefault = io.Fonts->AddFontFromFileTTF(path.c_str(), fontSize);
 
 	// Setup Dear ImGui style

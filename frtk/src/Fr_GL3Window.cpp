@@ -117,6 +117,16 @@ Fr_GL3Window::~Fr_GL3Window()
 {
 }
 
+void Fr_GL3Window::addLayer(std::shared_ptr<Fr_ImGuiLayer> layer)
+{
+    layers_.push_back(layer);
+}
+
+void Fr_GL3Window::removeLayer(std::shared_ptr<Fr_ImGuiLayer> layer)
+{
+    layers_.erase(find(layers_.begin(), layers_.end(), layer));
+}
+
 /**
 * Exit application and destroy both windows.
 */
@@ -313,7 +323,7 @@ int Fr_GL3Window::createGLFWwindow()
     glfwSetScrollCallback(pWindow, GLFWCallbackWrapper::scroll_callback);
     glfwSetJoystickCallback(GLFWCallbackWrapper::joystick_callback);
 
-    IMGUI_CHECKVERSION();
+   /* IMGUI_CHECKVERSION();
     ImGui::CreateContext();
 
     ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -323,6 +333,7 @@ int Fr_GL3Window::createGLFWwindow()
     
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
     //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+    
 
     // merge in icons from Font Awesome
     static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
@@ -333,7 +344,7 @@ int Fr_GL3Window::createGLFWwindow()
     //TODO FIXME:
     std::string Path = fontPath + std::string(FONT_ICON_FILE_NAME_FAS);
     io.Fonts->AddFontFromFileTTF(Path.c_str(), iconFontSize, &icons_config, icons_ranges);
-
+    
     // Setup Dear ImGui style
     //ImGui::StyleColorsDark();
     ImGui::StyleColorsLight();
@@ -342,7 +353,7 @@ int Fr_GL3Window::createGLFWwindow()
     ImGui_ImplGlfw_InitForOpenGL(pWindow, true);
     const char* glsl_version = "#version 430";
     ImGui_ImplOpenGL3_Init(glsl_version);
-
+    */
     return 1;
 }
 
@@ -365,18 +376,33 @@ int Fr_GL3Window::GLFWrun()
     glViewport(0, 0, _w, _h);
     CreateScene();   //Main drawing process.
     clear_color = ImVec4(FR_WINGS3D); //ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-    auto camm = cameras[(int)active_camera_];
-    camm.camera->getUserData(data);
     sceneBuffer = std::make_shared<Fr_TextureFrameBuffer>(w(),h());
+
+    /**
+     * 
+     * For the layers, We will make :
+     * 1-Main layer which has the dockspace and menus
+     * 2-Top bar (toolbars having tab)
+     * 3-Left panel - Toolbar, properity ..etc (tabs)
+     * 4-View Port (main opengl drawing inside imgui
+     */
+    for (int i = 0; i < 4; i++) {
+        std::shared_ptr<Fr_ImGuiLayer> mlayer = std::shared_ptr<Fr_ImGuiLayer>();
+        layers_.push_back(mlayer);
+     }
+    layers_[0]->createLayer();
     while (!glfwWindowShouldClose(pWindow))
     {
-        ImGui_ImplOpenGL3_NewFrame();
+/*        ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
         ImGuizmo::BeginFrame();
+        */
+
+
+        layers_[0]->StartLayer();
 
         glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - defualt should be wings3D or FreeCAD
-
         glClear(GL_COLOR_BUFFER_BIT);
         int display_w, display_h;
         glfwGetFramebufferSize(pWindow, &display_w, &display_h);
@@ -384,19 +410,11 @@ int Fr_GL3Window::GLFWrun()
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
 
          //Render GLFW stuff or Our 3D drawing
-  
         renderimGUI(data);
         // Rendering IMGUI 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        camm = cameras[(int)active_camera_];
-        camm.camera->setUserData(data);
-        camm.camera->setType(data.camType_);
-        camm.camera->SetUp(data.up_[0], data.up_[1], data.up_[2]);
-        camm.camera->SetCenter(data.direction_[0],data.direction_[1], data.direction_[2]);
-        camm.camera->SetCamPosition(data.camPosition_[0], data.camPosition_[1], data.camPosition_[2]);
-        active_camera_ = data.camType_;
-
+        layers_[0]->EndLayer();
        glCheckFunc(glfwPollEvents());
        glCheckFunc(glfwSwapBuffers(pWindow));
     }
