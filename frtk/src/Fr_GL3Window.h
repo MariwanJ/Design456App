@@ -96,6 +96,15 @@ public:
      *
      * \return int value dpending on the way the windows exits.
      */
+
+    /**
+     * Add imgui layer to current view port
+     * @param layer : shared pointer to Fr_ImGuiLyer object
+    */
+    virtual void addLayer(std::shared_ptr<Fr_ImGuiLayer> layer);
+    virtual void removeLayer(std::shared_ptr<Fr_ImGuiLayer> layers);
+
+
     virtual int Exit();
     /**
      * Return back a pointer to the current GLFW window.
@@ -233,8 +242,8 @@ private:
     void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
     void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
     void joystick_callback(int jid, int events);
-    
-    //Menu and toolbar callbacks 
+
+    //Menu and toolbar callbacks
     void mnuFileNew_cb   ( void* Data);
     void mnuFileOpen_cb  ( void* Data);
     void mnuFileClose_cb ( void* Data);
@@ -287,7 +296,7 @@ private:
         static void joystick_callback(int jid, int events);
         static void setGLFWwindow(Fr_GL3Window* glfwWindow);
 
-        //Menu callback rappers 
+        //Menu callback rappers
         static void mnuFileNew_cb(void* Data);
         static void mnuFileOpen_cb(void* Data);
         static void mnuFileClose_cb(void* Data);
@@ -307,8 +316,6 @@ private:
 
     private:
         static  Fr_GL3Window* s_fr_glfwwindow;
-
-
     };
 
     /**
@@ -317,6 +324,9 @@ private:
      */
     int gl_version_major;
     int gl_version_minor;
+
+    //Keep ImGui layers saved and removed
+    std::vector<std::shared_ptr<Fr_ImGuiLayer>> layers_;
 
     void flush();
 
