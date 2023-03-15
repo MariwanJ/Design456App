@@ -1,4 +1,4 @@
-project "imGui"
+project "ImGuizmo"
     kind "StaticLib"
     language "C"
     staticruntime "on"
@@ -8,14 +8,17 @@ project "imGui"
 
     files
     {
-        "src/**.h",
-        "src/**.c",
-        "src/**.cpp",
-}
+        "src/*.h",
+        "src/*.c",
+        "src/*.cpp",
+     }
 
     includedirs
     {
-        "../../vendor/glfw/include"
+        "../../vendor/glfw/include",
+        "../../vendor/Glad/include",
+        "../../vendor/imGui/src",
+        "src"
     }
     
     filter "system:windows"

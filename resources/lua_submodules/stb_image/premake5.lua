@@ -1,4 +1,4 @@
-project "imGui"
+project "stb_image"
     kind "StaticLib"
     language "C"
     staticruntime "on"
@@ -8,16 +8,14 @@ project "imGui"
 
     files
     {
-        "src/**.h",
-        "src/**.c",
-        "src/**.cpp",
-}
-
-    includedirs
-    {
-        "../../vendor/glfw/include"
-    }
-    
+        "src/*.h",
+        "src/*.c",
+        "src/*.cpp",
+}	
+    defines
+	{
+        "STB_IMAGE_IMPLEMENTATION=1"
+    }	
     filter "system:windows"
         systemversion "latest"
 
