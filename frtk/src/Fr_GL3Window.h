@@ -92,9 +92,9 @@ public:
 
     virtual ~Fr_GL3Window();
     /**
-     * Exit function used to exit whenever the fltk windows is closed.
+     * Exit function used to exit
      *
-     * \return int value dpending on the way the windows exits.
+     * \return int value depending on the way the windows exits.
      */
 
     /**
@@ -114,7 +114,7 @@ public:
     virtual GLFWwindow* getCurrentGLWindow();
 
     /**
-     * Resize and move the GLFWWindow by the parameters givven.
+     * Resize and move the GLFWWindow by the parameters given.
      *
      * \param x  left position ref to the screen
      * \param y  top position ref to the screen
@@ -220,7 +220,7 @@ protected:
 
     int imgui_ViewPort();
     int imgui_menu();
-    int imgui_toolbars();
+ 
     /**
      * Create the GLFW Window .
      *

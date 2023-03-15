@@ -117,8 +117,7 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
         }
         if (imgui_menu() < 0)
             return -1;
-        if (imgui_toolbars() < 0)
-            return -1;
+ 
         if (imgui_TopPannel() < 0)
             return -1;
 
@@ -129,7 +128,7 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
         if (imguimzo_init() < 0)
             return -1;
     }
-    scene->RenderScene();
+
     ImGui::End();
 
     return 1;
@@ -141,9 +140,10 @@ int Fr_GL3Window::imgui_LeftPanel()
 }
 int Fr_GL3Window::imgui_TopPannel()
 {
+    ImGui::Begin("TOPpanel");
     bool show_demo_window = true;
-    if (show_demo_window)
-        ImGui::ShowDemoWindow(&show_demo_window);
+    CreateToolbarUI();
+    ImGui::End();
     return 0;
 }
 int Fr_GL3Window::imgui_CameraConfiguration(userData_& data)
@@ -288,9 +288,9 @@ int Fr_GL3Window::imgui_menu()
         if (ImGui::BeginMenu("Tools"))
         {
             userData_ camData;
-            if (ImGui::MenuItem("Option")) { 
+            if (ImGui::MenuItem("Option")) {
                 mnuToolsOptionCamera_cb(camData);
-            
+
             }
             ImGui::EndMenu();
         }
@@ -299,18 +299,3 @@ int Fr_GL3Window::imgui_menu()
     return 0;
 }
 
-int Fr_GL3Window::imgui_toolbars()
-{
-    /*
-    ImGui::Begin("toolbar");
-    unsigned int myImageTextureId2 = 0;
-    bool show_another_window = true;
-    if (ImGui::Button(ICON_FA_FILE, ImVec2(ICON_SIZE))) {
-        mnuFileNew_cb(nullptr, nullptr);
-   }
-
-
-    ImGui::End();
-    */
-    return 0;
-}

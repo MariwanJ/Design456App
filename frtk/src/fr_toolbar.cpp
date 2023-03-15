@@ -7,13 +7,13 @@
 
 void Fr_GL3Window::CreateToolbarUI()
 {
-    static bool use_work_area = false;
-    ImGuiViewport* viewport = ImGui::GetMainViewport();
-    ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y + 20));
-    ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, 48));
-    ImGui::SetNextWindowViewport(viewport->ID);
+  //  static bool use_work_area = false;
+   // ImGuiViewport* viewport = ImGui::GetMainViewport();
+  //  ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y + 20));
+  //  ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, 48));
+  //  ImGui::SetNextWindowViewport(viewport->ID);
 
-    ImGuiWindowFlags window_flags = 0
+   /* ImGuiWindowFlags window_flags = 0
         | ImGuiWindowFlags_NoDocking
         | ImGuiWindowFlags_NoTitleBar
         | ImGuiWindowFlags_NoResize
@@ -24,7 +24,7 @@ void Fr_GL3Window::CreateToolbarUI()
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0);
     ImGui::Begin("TOOLBAR", NULL, window_flags);
     ImGui::PopStyleVar();
-
+    */
     ImVec4 dummy_col = ImVec4(FR_LIGHTGRAY);
     //All TOOLBARS ARE HERE !!
     //ImGui::BeginGroup();                        // Lock X position
@@ -49,5 +49,5 @@ void Fr_GL3Window::CreateToolbarUI()
     if (ImGui::Button(ICON_FA_ARROW_DOWN, ImVec2(ICON_SIZE)))   mnuFileImport_cb( nullptr);                         //FILE IMPORT
     ImGui::SameLine();
     if (ImGui::Button(ICON_FA_ARROW_UP, ImVec2(ICON_SIZE)))   mnuFileExport_cb( nullptr);                        //FILE EXPORT
-    ImGui::End();
+   // ImGui::End();
 }
