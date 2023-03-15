@@ -232,8 +232,6 @@ protected:
 
 private:
 
-    void CreateToolbarUI();
-
     /** GLFW Callbacks*/
     void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -252,7 +250,7 @@ private:
     void mnuFileExport_cb( void* Data);
     void mnuFileImport_cb( void* Data);
     void mnuFileExit_cb( void* Data);
-    void mnuToolsOptionCamera_cb(userData_& data);
+    void CameraOptions(void);
 
     void mnuEditUndo(void* Data);
     void mnuEditRedo(void* Data);
@@ -305,7 +303,6 @@ private:
         static void mnuFileExport_cb(void* Data);
         static void mnuFileImport_cb(void* Data);
         static void mnuFileExit_cb(void* Data);
-        static void mnuToolsOptionCamera_cb(userData_& Data);
 
         static void GLFWCallbackWrapper::mnuEditUndo(void* Data);
         static void GLFWCallbackWrapper::mnuEditRedo(void* Data);

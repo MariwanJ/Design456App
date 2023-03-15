@@ -244,9 +244,7 @@ public:
 	static int glfw_MouseClicked;
 	static int glfw_MouseButton;
 	
-	//Avoid running GLFW OR GLAD CODE whiel GLFW is not created
-	static bool s_GLFWInitialized;
-	static bool s_GladInitialized;
+	static bool CamerOptionVisible;
 
 	
 };

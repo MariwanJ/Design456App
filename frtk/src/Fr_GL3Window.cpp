@@ -44,7 +44,9 @@
 
 
 GLuint m_QuadVA, m_QuadVB, m_QuadIB;
-bool s_GLFWInitialized;
+
+
+
 
 bool Fr_GL3Window::s_GLFWInitialized = false;
 bool Fr_GL3Window::s_GladInitialized = false;

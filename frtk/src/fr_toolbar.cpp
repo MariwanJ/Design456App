@@ -8,13 +8,13 @@ int Fr_GL3Window::imgui_TopPannel()
 {
     static bool use_work_area = false;
     ImGuiViewport* viewport = ImGui::GetMainViewport();
-     ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y+25));
-     ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, 100));
+  //   ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y+25));
+    // ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, 100));
    //ImGui::SetNextWindowViewport(viewport->ID);
 
     ImGuiWindowFlags window_flags = 0
         //   | ImGuiWindowFlags_NoDocking
-            | ImGuiWindowFlags_NoTitleBar
+         //   | ImGuiWindowFlags_NoTitleBar
             //| ImGuiWindowFlags_NoResize
         //   | ImGuiWindowFlags_NoMove
            //| ImGuiWindowFlags_NoScrollbar

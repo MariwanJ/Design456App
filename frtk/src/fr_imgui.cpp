@@ -125,6 +125,10 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
             return -1;
         if (imgui_LeftPanel() < 0)
             return -1;
+        if (FR::CamerOptionVisible) {
+            // IF the menu checked, render the camera option window
+            CameraOptions();
+        }
         if (imguimzo_init() < 0)
             return -1;
     }
@@ -283,11 +287,8 @@ int Fr_GL3Window::imgui_menu()
         }
         if (ImGui::BeginMenu("Tools"))
         {
-            userData_ camData;
-            if (ImGui::MenuItem("Option")) {
-                mnuToolsOptionCamera_cb(camData);
-
-            }
+            
+            ImGui::MenuItem("Show/Hide Camera Options", "", &FR::CamerOptionVisible);
             ImGui::EndMenu();
         }
     }
@@ -295,3 +296,29 @@ int Fr_GL3Window::imgui_menu()
     return 0;
 }
 
+
+void Fr_GL3Window::CameraOptions (){
+    userData_ data;
+
+    ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGuiWindowFlags window_flags = 0
+        | ImGuiWindowFlags_NoDocking
+        //| ImGuiWindowFlags_NoTitleBar
+       //| ImGuiWindowFlags_NoResize
+   //   | ImGuiWindowFlags_NoMove
+      //| ImGuiWindowFlags_NoScrollbar
+      //| ImGuiWindowFlags_NoSavedSettings
+        ;
+ 
+    auto camm = cameras[(int)active_camera_];
+    camm.camera->getUserData(data);
+    imgui_CameraConfiguration(data);
+    camm = cameras[(int)active_camera_];
+    camm.camera->setUserData(data);
+    camm.camera->setType(data.camType_);
+    camm.camera->SetUp(data.up_[0], data.up_[1], data.up_[2]);
+    camm.camera->SetCenter(data.direction_[0], data.direction_[1], data.direction_[2]);
+    camm.camera->SetCamPosition(data.camPosition_[0], data.camPosition_[1], data.camPosition_[2]);
+    active_camera_ = data.camType_;
+ 
+}

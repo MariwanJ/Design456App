@@ -36,6 +36,4 @@ int FR::glfw_double_click = 0; // 0 no, 1 yes
 int FR::glfw_MouseClicked = -1; //no mouse click
 int FR::glfw_MouseButton  = -1; //no mouse button
 
-//Avoid running GLFW OR GLAD CODE whiel GLFW is not created
-bool FR::s_GLFWInitialized = false;
-bool FR::s_GladInitialized = false;
+bool FR::CamerOptionVisible = false; //Defualt we don't show the camera options
