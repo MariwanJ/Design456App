@@ -141,14 +141,7 @@ int Fr_GL3Window::imgui_LeftPanel()
     ImGui::End();
     return 0;
 }
-int Fr_GL3Window::imgui_TopPannel()
-{
-    ImGui::Begin("TOPpanel");
-    bool show_demo_window = true;
-    CreateToolbarUI();
-    ImGui::End();
-    return 0;
-}
+
 int Fr_GL3Window::imgui_CameraConfiguration(userData_& data)
 {
     //Demo code fix me

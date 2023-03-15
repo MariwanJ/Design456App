@@ -60,6 +60,7 @@
 
 
 #define ICON_SIZE  36,36
+#define ICON_FONT_SIZE 24
 	// Transparency - No color will be applied
 
  /* [Color definition used in all widgets consist of

@@ -88,10 +88,6 @@ void Fr_GL3Window::GLFWCallbackWrapper::mnuFileExit_cb(void* Data)
     s_fr_glfwwindow->mnuFileExit_cb(Data);
 }
 
-void Fr_GL3Window::GLFWCallbackWrapper::mnuToolsOptionCamera_cb(userData_& Data)
-{
-    s_fr_glfwwindow->mnuToolsOptionCamera_cb(Data);
-}
 
 void Fr_GL3Window::GLFWCallbackWrapper::mnuEditUndo(void* Data)
 {
@@ -166,6 +162,7 @@ void Fr_GL3Window::mnuFileExit_cb(void* Data){
 }
 
 void Fr_GL3Window::mnuToolsOptionCamera_cb(userData_ &data){
+    ImGui::Begin("Camera Options");
     auto camm = cameras[(int)active_camera_];
     camm.camera->getUserData(data);
     imgui_CameraConfiguration(data);
@@ -176,6 +173,7 @@ void Fr_GL3Window::mnuToolsOptionCamera_cb(userData_ &data){
     camm.camera->SetCenter(data.direction_[0], data.direction_[1], data.direction_[2]);
     camm.camera->SetCamPosition(data.camPosition_[0], data.camPosition_[1], data.camPosition_[2]);
     active_camera_ = data.camType_;
+    ImGui::End();
 }
 
 void Fr_GL3Window::mnuEditUndo(void* Data){
@@ -196,4 +194,13 @@ void Fr_GL3Window::mnuEditCut(void* Data){
 
 void Fr_GL3Window::mnuEditPaste(void* Data){
     std::cout << "Paste\n";
+}
+
+
+
+
+
+void Fr_GL3Window::GLFWCallbackWrapper::mnuToolsOptionCamera_cb(userData_& Data)
+{
+    s_fr_glfwwindow->mnuToolsOptionCamera_cb(Data);
 }

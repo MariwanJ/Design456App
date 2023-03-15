@@ -313,7 +313,6 @@ int Fr_GL3Window::createGLFWwindow()
         return -1;
     }
     s_GladInitialized = true;
-    FR::s_GladInitialized = true;
     // GLFW callbacks  https://www.glfw.org/docs/3.3/input_guide.html
     glfwSetFramebufferSizeCallback(pWindow, GLFWCallbackWrapper::framebuffer_size_callback);
     glfwSetKeyCallback(pWindow, GLFWCallbackWrapper::keyboard_callback);

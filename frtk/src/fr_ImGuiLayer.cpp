@@ -29,11 +29,20 @@ void Fr_ImGuiLayer::createLayer()
 	io.Fonts->AddFontFromFileTTF(path.c_str(), fontSize);
 	path = "../frtk/vendor/imGui/src/imguiFont/Open Sans Regular.ttf";
 	io.FontDefault = io.Fonts->AddFontFromFileTTF(path.c_str(), fontSize);
+ 
+	std::string PathICON = fontPath + std::string(FONT_ICON_FILE_NAME_FAS);
+	ImFontConfig icons_config;
+	icons_config.MergeMode = true;
+	icons_config.PixelSnapH = true;
+	static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
+
+	io.Fonts->AddFontFromFileTTF(PathICON.c_str(), ICON_FONT_SIZE, &icons_config, icons_ranges);
 
 	// Setup Dear ImGui style
-	ImGui::StyleColorsDark();
+	//ImGui::StyleColorsDark();
 	//ImGui::StyleColorsClassic();
 
+	ImGui::StyleColorsLight();
 	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
 	ImGuiStyle& style = ImGui::GetStyle();
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
