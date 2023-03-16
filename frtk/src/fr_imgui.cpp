@@ -31,27 +31,28 @@
 #include<fr_toolbar.h>
 
 
-
+//TODO FIX ME DOSENT WORK DON'T KNOW WHY
 int Fr_GL3Window::imguimzo_init()
 {
     ImGuizmo::SetOrthographic(false);
     ImGuizmo::SetDrawlist();
     float windowsWidth = (float)ImGui::GetWindowWidth();
     float windowsHeight = (float)ImGui::GetWindowHeight();
-    ImGuizmo::BeginFrame();
+
     ImGuizmo::SetDrawlist();
-    ImGuizmo::SetRect(ImGui::GetWindowPos().x,
-        ImGui::GetWindowPos().y,
-        windowsWidth, windowsHeight);
+    ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowsWidth, windowsHeight);
 
     auto m_Gizmotype = ImGuizmo::OPERATION::TRANSLATE; //translate, scale or rotate
-    auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameras[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
+    auto activeCamera = cameras[(unsigned int)active_camera_];
     auto modelview = activeCamera.manipulator->GetMatrix();
     float trans[3] = { 0.0f, 0.0f, 0.0f };
+    glm::mat4  delta;
     auto proje = glm::ortho(-1.f, 1.f, -1.f, 1.f, 1.f, -1.f);
     ImGuizmo::DrawGrid(&modelview[0][0], &proje[0][0], trans, 100.f);
     int gizmoCount = 1;
     ImGuizmo::DrawCubes(&modelview[0][0], &proje[0][0], trans, gizmoCount);
+    ImGuizmo::DrawGrid(&modelview[0][0], &proje[0][0], &delta[0][0], 100.f);
+    ImGuizmo::ViewManipulate(&modelview[0][0], 8.f, ImVec2( 128, 30), ImVec2(128, 128), 0x10101010);
     return 0;
 }
 
@@ -120,7 +121,8 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
  
         if (imgui_TopPannel() < 0)
             return -1;
-
+        if (imguimzo_init() < 0)
+            return -1;
         if (imgui_ViewPort() < 0)
             return -1;
         if (imgui_LeftPanel() < 0)
@@ -131,6 +133,8 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
         }
         if (imguimzo_init() < 0)
             return -1;
+        SunOptions();
+      
     }
 
     ImGui::End();
@@ -321,4 +325,40 @@ void Fr_GL3Window::CameraOptions (){
     camm.camera->SetCamPosition(data.camPosition_[0], data.camPosition_[1], data.camPosition_[2]);
     active_camera_ = data.camType_;
  
+}
+
+void Fr_GL3Window::SunOptions() {
+    ImGui::Begin("Sun Options");
+    ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGuiWindowFlags window_flags = 0
+        | ImGuiWindowFlags_NoDocking
+        //| ImGuiWindowFlags_NoTitleBar
+       //| ImGuiWindowFlags_NoResize
+   //   | ImGuiWindowFlags_NoMove
+      //| ImGuiWindowFlags_NoScrollbar
+      //| ImGuiWindowFlags_NoSavedSettings
+        ;
+
+    glm::vec4 pos=sun->getPosition();
+
+    float f;
+    f = pos[0];
+    ImGui::SliderFloat("Translate x", &f,-1000.f,1000.f);
+    pos[0] = f;
+    f = pos[1];
+    ImGui::SliderFloat("Translate y", &f, -1000.f, 1000.f);
+    pos[1] = f;
+    f = pos[2];
+    ImGui::SliderFloat("Translate z", &f, -1000.f, 1000.f);
+    pos[2] = f;
+    f = pos[3];
+    ImGui::SliderFloat("Translate w", &f, -1000.f, 1000.f);
+    pos[3] = f;
+    sun->SetPosition(pos);
+    ImGui::End();
+
+
+
+
+
 }

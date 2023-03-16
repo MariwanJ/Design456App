@@ -111,12 +111,12 @@ void Manipulator::GLFWScroll(int x, int y) {
     y_ += y;
 }
 
-double Manipulator::get_X() const
+float Manipulator::get_X() const
 {
     return x_;
 }
 
-double Manipulator::get_Y() const
+float Manipulator::get_Y() const
 {
     return y_;
 }

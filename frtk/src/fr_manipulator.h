@@ -71,8 +71,8 @@ public:
     void GLFWMotion(int x, int y);
     void GLFWScroll(int x, int y);
 
-    double get_X()const;
-    double get_Y()const;
+    float get_X()const;
+    float get_Y()const;
     void setZommingScale(float scale);
 
 private:
@@ -95,7 +95,7 @@ private:
     glm::mat4 matrix_;
     glm::mat4 inv_;
     Operation operation_;
-    double x_, y_;
+    float x_, y_;
     glm::vec3 v_;
     bool invertX_, invertY_;
 };

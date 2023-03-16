@@ -41,6 +41,8 @@ public:
      */
     Light();
 
+    void SetPosition(glm::vec4 pos);
+
     /**
      * Sets the light position
      * Default = 0, 0, 0
@@ -91,6 +93,17 @@ public:
      * Sets the shadow map
      */
     bool SetupShadowMap(ShadowMapInfo& info) override;
+
+
+
+public:
+    int getLightID();
+    glm::vec4 getPosition();
+    glm::vec4 gtAmbient();
+    glm::vec4 getDiffuse();
+    glm::vec4 getSpecular();
+    glm::vec3 getAttenuation();
+
 
 private:
     // Constants

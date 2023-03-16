@@ -251,6 +251,7 @@ private:
     void mnuFileImport_cb( void* Data);
     void mnuFileExit_cb( void* Data);
     void CameraOptions(void);
+    void SunOptions(void);
 
     void mnuEditUndo(void* Data);
     void mnuEditRedo(void* Data);
@@ -328,9 +329,10 @@ private:
     void flush();
 
     /**
-     * Transform pointer used to keep track to the scene graph SUN.
+     * Transform pointer used to keep track to the scene graph SUN
+     * .
      */
-    Transform *sun;
+    std::shared_ptr<Light> sun;
 
     /**
     * low level variable to keep the id of the GLFW window

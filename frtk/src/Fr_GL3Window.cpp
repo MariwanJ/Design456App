@@ -45,9 +45,6 @@
 
 GLuint m_QuadVA, m_QuadVB, m_QuadIB;
 
-
-
-
 bool Fr_GL3Window::s_GLFWInitialized = false;
 bool Fr_GL3Window::s_GladInitialized = false;
 Fr_GL3Window* Fr_GL3Window::GLFWCallbackWrapper::s_fr_glfwwindow = nullptr;
@@ -136,12 +133,8 @@ int Fr_GL3Window::Exit()
 {
     if (pWindow)
     {
-
         glfwSetWindowShouldClose(pWindow, true);
-
         glfwPollEvents();
-
-
         return 0;
     }
     return 0;
@@ -151,8 +144,6 @@ GLFWwindow* Fr_GL3Window::getCurrentGLWindow()
 {
     return pWindow;
 }
-
-static Transform* sun = nullptr;
 
 void Fr_GL3Window::CreateScene()
 {
@@ -164,7 +155,8 @@ void Fr_GL3Window::CreateScene()
     /*
       * Add here the nodes - Grid, and XYZ axis
       */
-    scene->AddNode(CreateSun());
+    CreateSun();
+    scene->AddNode(sun);
     scene->AddNode(bunny());
     scene->AddNode(Grid().CreateGrid());
     vert axis = Axis3D().CreateAxis3D();
@@ -440,17 +432,14 @@ PerspectiveCamera
 
 std::shared_ptr<Transform> Fr_GL3Window::CreateSun() {
     //TODO: FIXME:
-    sun = new Transform();
-    auto sun_height = std::make_shared<Transform>();
-    sun_height->Translate(30, 30, 30);
-    sun->AddNode(sun_height);
-
-    auto light = std::make_shared<Light>();
-    light->SetPosition(0, 0, 0);
-    light->SetDiffuse(0.5, 0.5, 0.5);
-    light->SetAmbient(1.0f, 1.0f, 1.0f);
-    light->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
-    sun_height->AddNode(light);
-    sun->SetActive(true);   //A must to have or the rabbit mesh will be black.
-    return std::shared_ptr<Transform>(sun);
+    auto sun_ = std::make_shared<Transform>();
+    sun_->Translate(30, 30, 30);
+    sun= std::make_shared<Light>();
+    sun->SetPosition(0, 0, 0);
+    sun->SetDiffuse(0.5, 0.5, 0.5);
+    sun->SetAmbient(1.0f, 1.0f, 1.0f);
+    sun->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
+    sun_->AddNode(sun);
+    sun_->SetActive(true);   //A must to have or the rabbit mesh will be black.
+    return sun_;
 }

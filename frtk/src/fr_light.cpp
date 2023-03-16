@@ -45,6 +45,10 @@ Light::Light() :
     type(NODETYPE::FR_LIGHT);
 }
 
+void Light::SetPosition(glm::vec4 pos) {
+    position_ = pos;
+}
+
 void Light::SetPosition(float x, float y, float z, float w) {
     position_ = glm::vec4(x, y, z, w);
 }
@@ -143,4 +147,34 @@ bool Light::SetupShadowMap(ShadowMapInfo& info) {
     info.width = kShadowmapWidth;
     info.height = kShadowmapHeight;
     return true;
+}
+
+int Light::getLightID()
+{
+    return light_id_;
+}
+
+glm::vec4 Light::getPosition()
+{
+    return position_;
+}
+
+glm::vec4 Light::gtAmbient()
+{
+    return ambient_;
+}
+
+glm::vec4 Light::getDiffuse()
+{
+    return diffuse_;
+}
+
+glm::vec4 Light::getSpecular()
+{
+    return specular_;
+}
+
+glm::vec3 Light::getAttenuation()
+{
+    return attenuation_;
 }
