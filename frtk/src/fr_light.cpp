@@ -69,13 +69,22 @@ void Light::SetAttenuation(float c, float l, float q) {
     attenuation_ = glm::vec3(c, l, q);
 }
 
-void Light::SetupSpot(float x, float y, float z, float cutoff, float exponent) {
-    spot_enabled_ = true;
-    spot_direction_ = glm::vec4(glm::normalize(glm::vec3(x, y, z)), 1);
-    spot_cutoff_ = cos(glm::radians(cutoff));
-    spot_exponent_ = exponent;
+void Light::SetupSpot(_spot newSpot) {
+    spot_.spot_enabled_ = newSpot.spot_enabled_;
+    spot_.spot_direction_ = newSpot.spot_direction_;
+    spot_.spot_cutoff_Ang = newSpot.spot_cutoff_Ang;
+    spot_.spot_exponent_= newSpot.exponent;
 }
 
+void Light::SetupSpot(float x, float y, float z, float cutoff, float exponent) {
+    spot_.spot_enabled_ = true;
+    spot_.spot_direction_ = glm::vec4(glm::normalize(glm::vec3(x, y, z)), 1);
+    spot_.spot_cutoff_Ang = cos(glm::radians(cutoff));
+    spot_.spot_exponent_ = exponent;
+}
+_spot Light::getSpot(void) {
+    return spot_;
+}
 void Light::EnableShadowMap(const glm::vec3& center, const glm::vec3& up, const glm::mat4& projection) {
     sm_enable_ = true;
     sm_direction_ = center;
@@ -127,10 +136,10 @@ void Light::SetupLight(const glm::mat4& modelview,
     info.specular = specular_;
     info.ambient = ambient_;
     info.attenuation = attenuation_;
-    info.is_spot = spot_enabled_;
-    info.direction = glm::normalize(glm::vec3(normalmatrix * spot_direction_));
-    info.cutoff = spot_cutoff_;
-    info.exponent = spot_exponent_;
+    info.is_spot = spot_.spot_enabled_;
+    info.direction = glm::normalize(glm::vec3(normalmatrix * spot_.spot_direction_));
+    info.cutoff = spot_.spot_cutoff_Ang;
+    info.exponent = spot_.spot_exponent_;
     lights.push_back(info);
     light_id_ = lights.size() - 1;
 }

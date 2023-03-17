@@ -118,7 +118,7 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
         }
         if (imgui_menu() < 0)
             return -1;
- 
+
         if (imgui_TopPannel() < 0)
             return -1;
         if (imguimzo_init() < 0)
@@ -134,7 +134,7 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
         if (imguimzo_init() < 0)
             return -1;
         SunOptions();
-      
+
     }
 
     ImGui::End();
@@ -291,7 +291,7 @@ int Fr_GL3Window::imgui_menu()
         }
         if (ImGui::BeginMenu("Tools"))
         {
-            
+
             ImGui::MenuItem("Show/Hide Camera Options", "", &FR::CamerOptionVisible);
             ImGui::EndMenu();
         }
@@ -313,7 +313,7 @@ void Fr_GL3Window::CameraOptions (){
       //| ImGuiWindowFlags_NoScrollbar
       //| ImGuiWindowFlags_NoSavedSettings
         ;
- 
+
     auto camm = cameras[(int)active_camera_];
     camm.camera->getUserData(data);
     imgui_CameraConfiguration(data);
@@ -324,7 +324,7 @@ void Fr_GL3Window::CameraOptions (){
     camm.camera->SetCenter(data.direction_[0], data.direction_[1], data.direction_[2]);
     camm.camera->SetCamPosition(data.camPosition_[0], data.camPosition_[1], data.camPosition_[2]);
     active_camera_ = data.camType_;
- 
+
 }
 
 void Fr_GL3Window::SunOptions() {
@@ -356,6 +356,19 @@ void Fr_GL3Window::SunOptions() {
     pos[3] = f;
     sun->SetPosition(pos);
     ImGui::End();
+
+    _spot old=sun->getSpot();
+    f = old.spot_cutoff_Ang;
+    ImGui::SliderFloat("Spot Cutoff Ang", &f, 0.f, 360.f);
+    old.spot_cutoff_Ang = f;
+
+    f = old.spot_direction_.a;
+    ImGui::SliderFloat("Spot direction.a", &f, -1000.f, 1000.f);
+    old.spot_direction_.a = f;
+
+    f = old.spot_direction_.b;
+    ImGui::SliderFloat("Spot direction.a", &f, -1000.f, 1000.f);
+    old.spot_direction_.b = f;
 
 
 

@@ -33,6 +33,12 @@
 #include<fr_core.h>
 
 #include <fr_node.h>
+typedef struct {
+    bool spot_enabled_;
+    glm::vec4 spot_direction_;
+    float spot_cutoff_Ang;
+    float spot_exponent_;
+}_spot;
 
 class Light : public Node {
 public:
@@ -73,10 +79,14 @@ public:
      */
     void SetAttenuation(float c, float l, float q);
 
+    void SetupSpot(_spot newSpot);
+
     /**
      * Setup spot
      */
     void SetupSpot(float x, float y, float z, float cutoff, float exponent);
+
+    _spot getSpot(void);
 
     /**
      * Enables the shadow map
@@ -117,10 +127,11 @@ private:
     glm::vec4 diffuse_;
     glm::vec4 specular_;
     glm::vec3 attenuation_;
-    bool spot_enabled_;
-    glm::vec4 spot_direction_;
-    float spot_cutoff_;
-    float spot_exponent_;
+    //bool spot_enabled_;
+    //glm::vec4 spot_direction_;
+    //float spot_cutoff_;
+    //float spot_exponent_;
+    _spot spot_;
     bool sm_enable_;
     glm::vec3 sm_direction_;
     glm::vec3 sm_up_;
