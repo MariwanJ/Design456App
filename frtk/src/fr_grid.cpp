@@ -147,8 +147,8 @@ std::shared_ptr<Transform> Grid::CreateGrid()
         }
     }
     //Second lines to create the squre plane
-    for (int i = 0; i <= sections_; i += gridWidth_) {
-        for (int j = 0; j <= sections_; j += sections_) {
+    for (int i = sections_/2; i <= sections_/2; i += gridWidth_) {
+        for (int j = -sections_/2; j <= sections_; j += sections_) {
             x = limmitValue[0]+(float)j * gridWidth_;
             y = limmitValue[1]+(float)i * gridWidth_;
             z = limmitValue[2];
