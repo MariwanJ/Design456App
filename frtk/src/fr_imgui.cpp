@@ -355,22 +355,48 @@ void Fr_GL3Window::SunOptions() {
     ImGui::SliderFloat("Translate w", &f, -1000.f, 1000.f);
     pos[3] = f;
     sun->SetPosition(pos);
-    ImGui::End();
 
+
+    
     _spot old=sun->getSpot();
-    f = old.spot_cutoff_Ang;
-    ImGui::SliderFloat("Spot Cutoff Ang", &f, 0.f, 360.f);
-    old.spot_cutoff_Ang = f;
+    bool t;
+    t = old.spot_enabled_;
+    ImGui::Checkbox("Spot Enable ",&t);
+    old.spot_enabled_ = t;
+
+    f = glm::degrees(old.spot_cutoff_Ang);
+    ImGui::SliderFloat("Spot Cutoff Ang", &f, -360.f, 360.f);
+    old.spot_cutoff_Ang = glm::radians(f);
 
     f = old.spot_direction_.a;
     ImGui::SliderFloat("Spot direction.a", &f, -1000.f, 1000.f);
     old.spot_direction_.a = f;
 
     f = old.spot_direction_.b;
-    ImGui::SliderFloat("Spot direction.a", &f, -1000.f, 1000.f);
+    ImGui::SliderFloat("Spot direction.b", &f, -1000.f, 1000.f);
     old.spot_direction_.b = f;
 
+    f = old.spot_direction_.g;
+    ImGui::SliderFloat("Spot direction.g", &f, -1000.f, 1000.f);
+    old.spot_direction_.g = f;
+    sun->SetupSpot(old);
+    auto amb= sun->gtAmbient();
+    f = amb.r;
+    ImGui::SliderFloat("Ambient r", &f, 0.f, 1.f);
+    amb.r = f;
+    f = amb.g;
+    ImGui::SliderFloat("Ambient g", &f, 0.f, 1.f);
+    amb.g=f;
+    f = amb.b;
+    ImGui::SliderFloat("Ambient b", &f, 0.f, 1.f);
+    amb.b = f;
+    f = amb.a;
+    ImGui::SliderFloat("Ambient a", &f, 0.f, 1.f);
+    amb.a = f;
+    sun->SetAmbient(amb.r, amb.g, amb.b, amb.a);
 
+
+    ImGui::End();
 
 
 

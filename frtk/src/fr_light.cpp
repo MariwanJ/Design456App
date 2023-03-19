@@ -36,13 +36,16 @@ Light::Light() :
     diffuse_(0.4, 0.4, 0.4, 1),
     specular_(0.4, 0.4, 0.4, 1),
     attenuation_(1, 0, 0),
-    spot_enabled_(false),
     sm_projection_(0),
     sm_framebuffer_(0),
     sm_renderbuffer_(0),
     sm_texture_(0),
     sm_enable_(false) {
     type(NODETYPE::FR_LIGHT);
+    spot_.spot_enabled_ = false;
+    spot_.spot_cutoff_Ang=0.f;
+    spot_.spot_direction_ = glm::vec4(0, 0, 0, 0);
+    spot_.spot_exponent_ = 0.0f;
 }
 
 void Light::SetPosition(glm::vec4 pos) {
@@ -73,7 +76,7 @@ void Light::SetupSpot(_spot newSpot) {
     spot_.spot_enabled_ = newSpot.spot_enabled_;
     spot_.spot_direction_ = newSpot.spot_direction_;
     spot_.spot_cutoff_Ang = newSpot.spot_cutoff_Ang;
-    spot_.spot_exponent_= newSpot.exponent;
+    spot_.spot_exponent_= newSpot.spot_exponent_;
 }
 
 void Light::SetupSpot(float x, float y, float z, float cutoff, float exponent) {
