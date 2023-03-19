@@ -50,7 +50,7 @@ public:
 	 */
 	Grid();
 
-	void setGridParam(unsigned int sections = 1000, unsigned int gridWidth = 10, glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 scale = glm::vec3(0.0f, 0.0f, 0.0f));
+	void setGridParam(unsigned int sections = 100, unsigned int gridWidth = 1, glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 scale = glm::vec3(0.0f, 0.0f, 0.0f));
 	/**
 	 * Class destructor.
 	 *

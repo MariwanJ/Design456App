@@ -83,8 +83,8 @@ void Mesh::ReadFile(const std::string& path, std::vector<float>& vertices,
     std::string extension = path.substr(path.rfind('.'));
     if (extension == ".off") {
         ReadOFF(path, vertices, indices);
-        CalculateNormals(vertices, indices, normals);
-        NormalizeVertices(vertices_);
+        //CalculateNormals(vertices, indices, normals);
+        //NormalizeVertices(vertices_);
     } else if (extension == ".msh") {
         ReadMSH(path, vertices, normals, indices);
     } else {

@@ -68,7 +68,7 @@ void Fr_Primatives::SetVertexes(std::vector<float>& vertices, std::vector<unsign
     indices_ = indices;
 
     //CalculateNormals(vertices, indices, normals_);
-    NormalizeVertices(vertices_);
+    //NormalizeVertices(vertices_);
     InitializeVBO(vertices_, normals_, indices_);
 }
 
