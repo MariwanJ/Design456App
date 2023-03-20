@@ -97,11 +97,11 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
         // any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
         if (!opt_padding)
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-        ImGui::Begin("DockSpace Demo", nullptr, window_flags);
+        ImGui::Begin("MainWindow", nullptr, window_flags);
 
         if (!opt_padding)
             ImGui::PopStyleVar();
-
+       
         if (opt_fullscreen)
             ImGui::PopStyleVar(2);
 
@@ -109,7 +109,7 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
         ImGuiIO& io = ImGui::GetIO();
         if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
         {
-            ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+            ImGuiID dockspace_id = ImGui::GetID("MainWindow");
             ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
         }
         else
@@ -118,7 +118,7 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
         }
         if (imgui_menu() < 0)
             return -1;
-
+      //  ImGui::ShowDemoWindow();
         if (imgui_TopPannel() < 0)
             return -1;
         if (imguimzo_init() < 0)
@@ -156,41 +156,40 @@ int Fr_GL3Window::imgui_CameraConfiguration(userData_& data)
 
     static float f = 0.0f;
     static int counter = 0;
-    bool show_demo_window = true;
-    bool show_another_window = false;
+ 
 
     ImGui::Begin("Camera Configuration!");                          // Create a window called "Hello, world!" and append into it.
 
     f = data.camPosition_[0];
-    ImGui::SliderFloat("Position_x", &f, -10.0f, 10.0f);
+    ImGui::SliderFloat("Position_x", &f, -10000.0f, 10000.0f);
     data.camPosition_[0] = f;
     f = data.camPosition_[1];
-    ImGui::SliderFloat("Position_y", &f, -10.0f, 10.0f);
+    ImGui::SliderFloat("Position_y", &f, -10000.0f, 10000.0f);
     data.camPosition_[1] = f;
     f = data.camPosition_[2];
-    ImGui::SliderFloat("Position_z", &f, -10.0f, 10.0f);
+    ImGui::SliderFloat("Position_z", &f, -10000.0f, 10000.0f);
     data.camPosition_[2] = f;
 
     f = data.direction_[0];
-    ImGui::SliderFloat("Target_x", &f, -10.0f, 10.0f);
+    ImGui::SliderFloat("Target_x", &f, -10000.0f, 10000.0f);
     data.direction_[0] = f;
     f = data.direction_[1];
-    ImGui::SliderFloat("Target_y", &f, -10.0f, 10.0f);
+    ImGui::SliderFloat("Target_y", &f, -10000.0f, 10000.0f);
     data.direction_[1] = f;
     f = data.direction_[2];
-    ImGui::SliderFloat("Target_z", &f, -10.0f, 10.0f);
+    ImGui::SliderFloat("Target_z", &f, -10000.0f, 10000.0f);
     data.direction_[2] = f;
 
     static int type;
     f = data.aspectRatio_;
-    ImGui::SliderFloat("aspectratio", &f, 0.0f, 100.0f);
+    ImGui::SliderFloat("aspectratio", &f, 0.0f, 5.0f);
     data.aspectRatio_ = f;
 
     ImGui::SliderInt("Cameratype", &type, 0, 5);
     data.camType_ = (CameraList)type;
 
     f = data.fovy_;
-    ImGui::SliderFloat("FOVY", &f, 0.0f, 359.0f);
+    ImGui::SliderFloat("FOVY", &f, -90.0f, 90.0f);
     data.fovy_ = f;
 
     f = data.up_[0];
@@ -207,7 +206,7 @@ int Fr_GL3Window::imgui_CameraConfiguration(userData_& data)
     ImGui::SliderFloat("Far", &f, -1000.0f, 1000.0f);
     data.zfar_ = f;
     f = data.znear_;
-    ImGui::SliderFloat("Near", &f, -10.0f, 10.0f);
+    ImGui::SliderFloat("Near", &f, -10.0f, 1000.0f);
     data.znear_ = f;
 
     ImGui::Text("Use the sliders to configure the camera");               // Display some text (you can use a format strings too)

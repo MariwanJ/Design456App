@@ -257,9 +257,7 @@ void Fr_GL3Window::CreateCameras()
         auto camera_trans = std::make_shared<Transform>();      //Shared pointer to the Transform that holds the camera as a child
         //By default no camera is active, developer MUST define one after creating cameras
         camera_->SetActive(false);
-        camera_->SetPerspective(40, 0.5, 50);
         camera_trans->Rotate(glm::vec3(1, 0, 0), 90);
-        camera_trans->Translate(10, 10, -10);
         scene->AddNode(camera_trans);  //Add it to the scene graph, but only active one will render.
         camera_->setType((CameraList)i);   //Depending on the list it should be as the enum defined
         auto manipulator = new Manipulator(); //manipulation for the camera.
@@ -315,38 +313,6 @@ int Fr_GL3Window::createGLFWwindow()
     glfwSetMouseButtonCallback(pWindow, GLFWCallbackWrapper::mouse_button_callback);
     glfwSetScrollCallback(pWindow, GLFWCallbackWrapper::scroll_callback);
     glfwSetJoystickCallback(GLFWCallbackWrapper::joystick_callback);
-
-   /* IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    io.Fonts->AddFontDefault();
-    float baseFontSize = 36.0f; // 13.0f is the size of the default font. Change to the font size you use.
-    float iconFontSize = baseFontSize * 2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
-    
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-    //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
-    
-
-    // merge in icons from Font Awesome
-    static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
-    ImFontConfig icons_config;
-    icons_config.MergeMode = true;
-    icons_config.PixelSnapH = true;
-    icons_config.GlyphMinAdvanceX = iconFontSize;
-    //TODO FIXME:
-    std::string Path = fontPath + std::string(FONT_ICON_FILE_NAME_FAS);
-    io.Fonts->AddFontFromFileTTF(Path.c_str(), iconFontSize, &icons_config, icons_ranges);
-    
-    // Setup Dear ImGui style
-    //ImGui::StyleColorsDark();
-    ImGui::StyleColorsLight();
-        // Setup Platform/Renderer backends
-
-    ImGui_ImplGlfw_InitForOpenGL(pWindow, true);
-    const char* glsl_version = "#version 430";
-    ImGui_ImplOpenGL3_Init(glsl_version);
-    */
     return 1;
 }
 
@@ -386,13 +352,6 @@ int Fr_GL3Window::GLFWrun()
     layers_[0]->createLayer();
     while (!glfwWindowShouldClose(pWindow))
     {
-/*        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-        ImGuizmo::BeginFrame();
-        */
-
-
         layers_[0]->StartLayer();
 
         glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - defualt should be wings3D or FreeCAD

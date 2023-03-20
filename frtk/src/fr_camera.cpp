@@ -82,14 +82,16 @@ left
 
 */
 
+
+
 Camera::Camera() :
-    camPosition_{ 1.37f, 2.8f, -2.05f },
+    camPosition_{ 1.37f, 2.8f, -200.05f },
     direction_{ -.098f, -1.372f, 0.0f },
     up_{ -58.84f, 628.451f, 29.412f },
-    fovy_{ 7.04f },
-    znear_{ 1.284f },
-    zfar_{ 40.196f },
-    aspectRatio_{ 0.980f },
+    fovy_{ 45.0f},
+    znear_{ 0.01},
+    zfar_{ 100000},
+    aspectRatio_{ 1.2 },
     manipulator_{},
 
     projectionMatrix_(glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_)),
