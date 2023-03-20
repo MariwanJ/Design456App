@@ -357,7 +357,6 @@ void Fr_GL3Window::SunOptions() {
     sun->SetPosition(pos);
 
 
-    
     _spot old=sun->getSpot();
     bool t;
     t = old.spot_enabled_;

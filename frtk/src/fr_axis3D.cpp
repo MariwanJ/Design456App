@@ -44,8 +44,8 @@ Axis3D::~Axis3D()
 
 vert Axis3D::CreateAxis3D()
 {
-    float start = 100.0f;
-    float end = -100.0f;
+    float start = 2000.0f;
+    float end = -2000.0f;
     float arrow1 = start-5.0;
     float arrow2 = 5.0;
 
