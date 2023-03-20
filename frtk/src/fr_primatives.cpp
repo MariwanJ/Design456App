@@ -1,19 +1,19 @@
-//                                                                      
-// This file is a part of the Open Source Design456App                    
+//
+// This file is a part of the Open Source Design456App
 // MIT License
-// 
+//
 // Copyright (c) 2023
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,7 +23,7 @@
 // SOFTWARE.
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
-// 
+//
 #include <fr_primatives.h>
 
 Fr_Primatives::Fr_Primatives() :vbo_{ 0, 0, 0 }, vao_(0), drawType(GL_LINES){
@@ -66,9 +66,6 @@ void Fr_Primatives::GetPrimatives(std::vector<float>& vertices, std::vector<floa
 void Fr_Primatives::SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices) {
     vertices_ = vertices;
     indices_ = indices;
-
-    //CalculateNormals(vertices, indices, normals_);
-    //NormalizeVertices(vertices_);
     InitializeVBO(vertices_, normals_, indices_);
 }
 
@@ -84,73 +81,6 @@ void Fr_Primatives::SetVertex(unsigned int index, float vertices[], const glm::v
     vertices[index * 3] = vertex[0];
     vertices[index * 3 + 1] = vertex[1];
     vertices[index * 3 + 2] = vertex[2];
-}
-
-void Fr_Primatives::CalculateNormals(const std::vector<float>& vertices,
-    const std::vector<unsigned int>& indices,
-    std::vector<float>& normals) {
-    // Initialize the normals
-    std::vector<glm::vec3> pre_normals(vertices.size() / 3);
-    for (size_t i = 0; i < pre_normals.size(); ++i) {
-        pre_normals[i] = { 0, 0, 0 };
-    }
-
-    // Calculate the normals for each triangle vertex
-    for (size_t i = 0; i < indices.size() - 3; i += 3) {
-        // Triangle vertices' indices
-        unsigned int v[3] = { indices[i], indices[i + 1], indices[i + 2] };
-
-        // Triangle's vertices
-        glm::vec3 triangle[3] = {
-            GetVertex(v[0], vertices.data()),
-            GetVertex(v[1], vertices.data()),
-            GetVertex(v[2], vertices.data())
-        };
-
-        // Vectors created by the triangle's vertexes
-        glm::vec3 v0_to_v1 = triangle[1] - triangle[0];
-        glm::vec3 v0_to_v2 = triangle[2] - triangle[0];
-        glm::vec3 v1_to_v2 = triangle[2] - triangle[1];
-
-        auto angleBetween = [](const glm::vec3& u, const glm::vec3& v) {
-            return acos(glm::dot(u, v) / (glm::length(u) * glm::length(v)));
-        };
-
-        // Angle between the vectors
-        float angle[3];
-        angle[0] = angleBetween(v0_to_v1, v0_to_v2);
-        angle[1] = angleBetween(v1_to_v2, -v0_to_v1);
-        angle[2] = M_PI - angle[0] - angle[1];
-
-        // Triangle's normal
-        glm::vec3 t_normal = glm::normalize(glm::cross(v0_to_v1, v0_to_v2));
-
-        // Vertex normal += triangle normal * vertex angle in the triangle
-        for (size_t j = 0; j < 3; ++j)
-            pre_normals[v[j]] = pre_normals[v[j]] + t_normal * angle[j];
-    }
-
-    normals.resize(vertices.size());
-    for (size_t i = 0; i < pre_normals.size(); ++i)
-        SetVertex(i, normals.data(), glm::normalize(pre_normals[i]));
-}
-
-void Fr_Primatives::NormalizeVertices(std::vector<float>& vertices) {
-    glm::vec3 min(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
-    float max = std::numeric_limits<float>::min();
-
-    for (size_t i = 0; i < vertices.size(); i += 3) {
-        for (size_t j = 0; j < 3; ++j) {
-            min[j] = std::min(min[j], vertices[i + j]);
-            max = std::max(max, vertices[i + j] - min[j]);
-        }
-    }
-
-    for (size_t i = 0; i < vertices.size() / 3; ++i) {
-        glm::vec3 vertex = GetVertex(i, vertices.data());
-        glm::vec3 normalized = (vertex - min) / max - 0.5f;
-        SetVertex(i, vertices.data(), normalized);
-    }
 }
 
 void Fr_Primatives::InitializeVBO(const std::vector<float>& vertices,

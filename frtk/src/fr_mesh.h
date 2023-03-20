@@ -43,7 +43,7 @@ public:
     Mesh(const std::string& path);
 
     /**
-    *   This will be used to create an instance of the mesh without a file. 
+    *   This will be used to create an instance of the mesh without a file.
     *  Data should be entered to the class using SetVertex
     */
     Mesh();
@@ -62,12 +62,15 @@ public:
      * Obtains the mesh information
      */
     void GetMesh(std::vector<float>& vertices, std::vector<float>& normals,
-            std::vector<unsigned int>& indices);
+        std::vector<unsigned int>& indices);
 
     /**
     *   Set the mesh information
     */
     void Mesh::SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices);
+
+    void SetNormalizeMesh(bool value);
+    bool getNormalizeMesh();
 
 private:
     /**
@@ -79,25 +82,25 @@ private:
      * Receives an index and sets the vertice
      */
     void SetVertex(unsigned int index, float vertices[],
-            const glm::vec3& vertex);
+        const glm::vec3& vertex);
 
     /**
      * Reads the vertex information and the point information from file
      */
     void ReadFile(const std::string& path, std::vector<float>& vertices,
-            std::vector<float>& normals, std::vector<unsigned int>& indices);
+        std::vector<float>& normals, std::vector<unsigned int>& indices);
 
     /**
      * Reads a .off file
      */
     void ReadOFF(const std::string& path, std::vector<float>& vertices,
-            std::vector<unsigned int>& indices);
+        std::vector<unsigned int>& indices);
 
     /**
      * Reads a .msh file
      */
     void ReadMSH(const std::string& path, std::vector<float>& vertices,
-            std::vector<float>& normals, std::vector<unsigned int>& indices);
+        std::vector<float>& normals, std::vector<unsigned int>& indices);
 
     /**
      * Normalize the mesh in the range -0.5, 0.5 and center it in 0, 0, 0
@@ -108,22 +111,22 @@ private:
      * Calculate the normals based on the triangles
      */
     void CalculateNormals(const std::vector<float>& vertices,
-            const std::vector<unsigned int>& indices,
-            std::vector<float>& normals);
+        const std::vector<unsigned int>& indices,
+        std::vector<float>& normals);
 
     /**
      * Creates the vertex buffer object
      */
     void InitializeVBO(const std::vector<float>& vertices,
-            const std::vector<float>& normals,
-            const std::vector<unsigned int> indices);
+        const std::vector<float>& normals,
+        const std::vector<unsigned int> indices);
 
     std::vector<float> vertices_;
     std::vector<float> normals_;
     std::vector<unsigned int> indices_;
     unsigned int vbo_[3];
     unsigned int vao_;
+    bool normalized_;
 };
 
 #endif
-

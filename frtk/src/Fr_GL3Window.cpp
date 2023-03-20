@@ -258,8 +258,8 @@ void Fr_GL3Window::CreateCameras()
         //By default no camera is active, developer MUST define one after creating cameras
         camera_->SetActive(false);
         camera_->SetPerspective(40, 0.5, 50);
-        camera_trans->Translate(0.6, 0.5, 1.7);
-        camera_trans->Rotate(glm::vec3(1, 0, 0),90);
+        camera_trans->Rotate(glm::vec3(1, 0, 0), 90);
+        camera_trans->Translate(10, 10, -10);
         scene->AddNode(camera_trans);  //Add it to the scene graph, but only active one will render.
         camera_->setType((CameraList)i);   //Depending on the list it should be as the enum defined
         auto manipulator = new Manipulator(); //manipulation for the camera.

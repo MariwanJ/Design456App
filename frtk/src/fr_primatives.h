@@ -51,14 +51,11 @@ private:
 
     void SetVertex(unsigned int index, float vertices[], const glm::vec3& vertex);
 
-    void CalculateNormals(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, std::vector<float>& normals);
 
     void InitializeVBO(const std::vector<float>& vertices, 
                                         const std::vector<float>& normals,
                                         const std::vector<unsigned int> indices);
     
-    void NormalizeVertices(std::vector<float>& vertices);
-
     int drawType;
     std::vector<float> vertices_;
     std::vector<float> normals_;

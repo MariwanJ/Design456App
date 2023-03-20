@@ -30,7 +30,7 @@
 
 Mesh::Mesh(const std::string& path) :
     vbo_{0, 0, 0},
-    vao_(0) {
+    vao_(0),normalized_(false) {
     ReadFile(path, vertices_, normals_, indices_);
     InitializeVBO(vertices_, normals_, indices_);
 
@@ -62,6 +62,21 @@ void Mesh::SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& 
     vertices_ = vertices;
     indices_ = indices;
 }
+/**
+ * Change verticies size to be inbetween -1 and 1.
+ * This is left as an option might not be used. 
+ * Call this before reading the mesh.
+ * \param value
+ */
+void Mesh::SetNormalizeMesh(bool value)
+{
+    normalized_ = true;
+}
+
+bool Mesh::getNormalizeMesh()
+{
+    return normalized_;
+}
 
 
 glm::vec3 Mesh::GetVertex(unsigned int index, const float vertices[]) {
@@ -83,8 +98,10 @@ void Mesh::ReadFile(const std::string& path, std::vector<float>& vertices,
     std::string extension = path.substr(path.rfind('.'));
     if (extension == ".off") {
         ReadOFF(path, vertices, indices);
-        //CalculateNormals(vertices, indices, normals);
-        //NormalizeVertices(vertices_);
+        if (normalized_){
+        CalculateNormals(vertices, indices, normals);
+        NormalizeVertices(vertices_);
+        }
     } else if (extension == ".msh") {
         ReadMSH(path, vertices, normals, indices);
     } else {

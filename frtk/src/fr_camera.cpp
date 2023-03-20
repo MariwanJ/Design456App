@@ -188,14 +188,14 @@ void Camera::setupCameraHomeValues(){
 
     switch (camType_) {
     case CameraList::PERSPECTIVE: {
-        SetCamPosition(-10, 0, -30);
+        SetCamPosition(-10, 0, -100);
         SetCenter(0, 0, 10);
         SetUp(0, 1, 0);
         } break;
     case CameraList::ORTHOGRAPHIC: {
         //TODO FIXME
-        SetCamPosition(0, 0, -2);
-        SetCenter(0, 0, 1);
+        SetCamPosition(0, 0, -100);
+        SetCenter(0, 0, 0);
         SetUp(0, 1, 0);
         } break;
     case CameraList::TOP: {

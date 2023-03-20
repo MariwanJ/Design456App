@@ -178,7 +178,7 @@ int Fr_GL3Window::imgui_CameraConfiguration(userData_& data)
     ImGui::SliderFloat("Target_y", &f, -10.0f, 10.0f);
     data.direction_[1] = f;
     f = data.direction_[2];
-    ImGui::SliderFloat("Target_z", &data.direction_[2], -10.0f, 10.0f);
+    ImGui::SliderFloat("Target_z", &f, -10.0f, 10.0f);
     data.direction_[2] = f;
 
     static int type;
