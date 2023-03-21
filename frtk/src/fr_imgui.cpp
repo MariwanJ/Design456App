@@ -365,6 +365,9 @@ void Fr_GL3Window::SunOptions() {
     f = glm::degrees(old.spot_cutoff_Ang);
     ImGui::SliderFloat("Spot Cutoff Ang", &f, -360.f, 360.f);
     old.spot_cutoff_Ang = glm::radians(f);
+    f = old.spot_exponent_;
+    ImGui::SliderFloat("Spot exponent", &f, -50.f, 50.f);
+    old.spot_exponent_=f ;
 
     f = old.spot_direction_.a;
     ImGui::SliderFloat("Spot direction.a", &f, -1000.f, 1000.f);
