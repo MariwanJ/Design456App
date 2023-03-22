@@ -67,7 +67,7 @@ public:
     /**
     *   Set the mesh information
     */
-    void Mesh::SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices);
+    void SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices);
 
     void SetNormalizeMesh(bool value);
     bool getNormalizeMesh();

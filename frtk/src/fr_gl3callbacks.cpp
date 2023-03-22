@@ -134,6 +134,36 @@ void Fr_GL3Window::mnuFileNew_cb(void* Data){
 }
 
 void Fr_GL3Window::mnuFileOpen_cb( void* Data){
+
+
+
+
+
+    // create a file browser instance
+    ImGui::FileBrowser fileDialog;
+
+    // (optional) set browser properties
+    fileDialog.SetTitle("Open file");
+    fileDialog.SetTypeFilters({ ".obj", ".off" });
+        fileDialog.Open();
+        fileDialog.Display();
+
+        if (fileDialog.HasSelected())
+        {
+            scene->add3DObject(fileDialog.GetSelected().string());
+            std::cout << "Selected filename" << fileDialog.GetSelected().string() << std::endl;
+            fileDialog.ClearSelected();
+        }
+
+
+
+
+
+
+
+
+
+
     std::cout << "File open callback\n";
 }
 

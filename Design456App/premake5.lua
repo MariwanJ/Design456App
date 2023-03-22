@@ -41,6 +41,7 @@ To use /MTd in premake:
 		"%{IncludeDir.glm}",
         "%{IncludeDir.freeImage}",
         "%{IncludeDir.stb_image}",
+        "%{IncludeDir.objloader}",
         "../frtk/vendor/spdlog/include",
 		"../frtk/src",
         
@@ -72,7 +73,8 @@ To use /MTd in premake:
 			"gdiplus.lib",
 			"GLFW",
             "stb_image",
-			"opengl32.lib"
+			"opengl32.lib",
+            "objloader"
 		}
 	
 	filter "configurations:Release"
@@ -86,7 +88,8 @@ To use /MTd in premake:
 			"gdiplus.lib",
             "stb_image",
 			"GLFW",
-			"opengl32.lib"
+			"opengl32.lib",
+            "objloader",
 		}
 	
 

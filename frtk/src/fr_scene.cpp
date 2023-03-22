@@ -48,6 +48,37 @@ void Scene::SetBackgroud(float r, float g, float b,float alfa) {
     background_.a = alfa;
 }
 
+void Scene::add3DObject(std::string fName)
+{
+    
+    auto newObj_t = std::make_shared<Transform>();
+    newObj_t->Translate(0, 0, 0);
+    newObj_t->Scale(1, 1, 1);
+    newObj_t->Rotate(0, 1, 0, 90); //TODO CHECK ME 
+    auto newObj = std::make_shared<ObjectShaderNode>(0x667AFF, 0.005f); //  color and
+    if (fName.find(".off") != std::string::npos) {
+        newObj->SetMesh(std::make_shared<Mesh>(fName));
+    }
+    else {
+        //Not implemented yet  - here .obj should be treated. 
+    }
+    auto rightlight_spot = std::make_shared<Light>();
+
+    rightlight_spot->SetActive(true);
+    rightlight_spot->SetPosition(2.956f, -0.514f, 1.074f);
+    rightlight_spot->SetupSpot(1.0f, 0.0f, -0.1f, 45.0f, 16.0f);
+    rightlight_spot->SetDiffuse(0.0f, 0.0f, 0.0f);
+    rightlight_spot->SetAmbient(0.42f, 0.42f, 0.42f);
+    rightlight_spot->SetAttenuation(1.0f, 0.002f, 0.0f);
+    newObj_t->AddNode(rightlight_spot);
+    newObj_t->AddNode(newObj);
+    this->AddNode(newObj_t);
+}
+
+void Scene::delete3DObject(std::shared_ptr<Transform>& obj)
+{
+}
+
 /**
 * This is a general process  for drawing camera, shadow map, render shape /faces ..etc
 */

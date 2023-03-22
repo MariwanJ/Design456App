@@ -31,6 +31,14 @@
 //#include<frtk.h>
 #include<fr_core.h>
 #include <fr_group.h>
+#include<fr_transform.h>
+#include <fr_primatives.h>
+#include <fr_primativeShader.h>
+#include <fr_object_shader_node.h>
+#include <fr_light.h>
+
+
+
 /**
  * The scene root
  */
@@ -54,6 +62,9 @@ public:
      */ 
     void SetBackgroud(float r, float g, float b);
     void SetBackgroud(float r, float g, float b, float alfa);
+
+    void add3DObject(std::string fName);
+    void delete3DObject(std::shared_ptr<Transform>& obj);
 
     /**
      * Renders the scene

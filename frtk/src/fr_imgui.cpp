@@ -118,7 +118,7 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
         }
         if (imgui_menu() < 0)
             return -1;
-      //  ImGui::ShowDemoWindow();
+        ImGui::ShowDemoWindow();
         if (imgui_TopPannel() < 0)
             return -1;
         if (imguimzo_init() < 0)
@@ -133,6 +133,7 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
         }
         if (imguimzo_init() < 0)
             return -1;
+        bool m;      
         SunOptions();
 
     }
