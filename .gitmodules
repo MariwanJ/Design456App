@@ -10,3 +10,6 @@
 [submodule "frtk/vendor/ImGuizmo"]
 	path = frtk/vendor/ImGuizmo
 	url = https://github.com/MariwanJ/ImGuizmo
+[submodule "frtk/vendor/objloader"]
+	path = frtk/vendor/objloader
+	url = https://github.com/MariwanJ/OBJ-Loader

@@ -54,6 +54,7 @@ project "frtk"
         "%{IncludeDir.imGui}",
         "%{IncludeDir.ImGuizmo}",
 		"%{IncludeDir.glm}",
+        "%{IncludeDir.objloader}",
         "$(SolutionDir)frtk/vendor/spdlog/include",
 		"$(SolutionDir)frtk/vendor/instrumentation",
         "src",
@@ -98,6 +99,7 @@ project "frtk"
 			"opengl32.lib",
 			"GLFW",
 			"Glad",
+            "objloader",
 		}
 
 	filter "configurations:Release"
@@ -127,4 +129,5 @@ project "frtk"
 			"opengl32.lib",
 			"GLFW",
 			"Glad",
+            "objloader",
     }
