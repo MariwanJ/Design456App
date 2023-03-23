@@ -46,7 +46,7 @@ typedef enum class NODETYPE {
     FR_SCENE                     =  8,
     FR_MESH                      =  9,
     FR_GRID                      = 10
-};
+}NODETYPE;
 
 /**
  * A generic node that can be attached to the graph

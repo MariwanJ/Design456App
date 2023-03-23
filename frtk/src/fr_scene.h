@@ -36,6 +36,8 @@
 #include <fr_primativeShader.h>
 #include <fr_object_shader_node.h>
 #include <fr_light.h>
+#include <fr_mesh.h>
+
 
 
 

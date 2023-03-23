@@ -136,35 +136,7 @@ void Fr_GL3Window::mnuFileNew_cb(void* Data){
 void Fr_GL3Window::mnuFileOpen_cb( void* Data){
 
 
-
-
-
-    // create a file browser instance
-    ImGui::FileBrowser fileDialog;
-
-    // (optional) set browser properties
-    fileDialog.SetTitle("Open file");
-    fileDialog.SetTypeFilters({ ".obj", ".off" });
-        fileDialog.Open();
-        fileDialog.Display();
-
-        if (fileDialog.HasSelected())
-        {
-            scene->add3DObject(fileDialog.GetSelected().string());
-            std::cout << "Selected filename" << fileDialog.GetSelected().string() << std::endl;
-            fileDialog.ClearSelected();
-        }
-
-
-
-
-
-
-
-
-
-
-    std::cout << "File open callback\n";
+    showOpenDialog = true;
 }
 
 void Fr_GL3Window::mnuFileClose_cb( void* Data){
@@ -209,4 +181,31 @@ void Fr_GL3Window::mnuEditCut(void* Data){
 
 void Fr_GL3Window::mnuEditPaste(void* Data){
     std::cout << "Paste\n";
+}
+
+void Fr_GL3Window::createOpenDialog(void)
+{
+    ImGuiWindowFlags window_flags = 0
+        | ImGuiWindowFlags_NoDocking
+        //| ImGuiWindowFlags_NoTitleBar
+       | ImGuiWindowFlags_NoResize
+   //   | ImGuiWindowFlags_NoMove
+      | ImGuiWindowFlags_NoScrollbar
+      //| ImGuiWindowFlags_NoSavedSettings
+        ;
+    ImGui::Begin("File Browser", nullptr, ImGuiWindowFlags_NoDocking);
+    // (optional) set browser properties
+    this->fileDialog.SetTitle("Open file");
+    fileDialog.SetTypeFilters({ ".obj", ".off" });
+    fileDialog.Open();
+    fileDialog.Display();
+
+    if (fileDialog.HasSelected())
+    {
+        std::string fileName = fileDialog.GetSelected().string();
+       scene->add3DObject(fileName);
+       fileDialog.ClearSelected();
+       showOpenDialog = false;
+    }
+    ImGui::End();
 }

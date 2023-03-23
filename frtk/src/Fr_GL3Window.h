@@ -260,7 +260,7 @@ private:
     void mnuEditPaste(void* Data);
 
 
-
+    void createOpenDialog(void);
 
 
 
@@ -314,6 +314,7 @@ private:
 
     private:
         static  Fr_GL3Window* s_fr_glfwwindow;
+  
     };
 
     /**
@@ -362,6 +363,9 @@ private:
     CameraList active_camera_ ;
     ImVec4 clear_color;
     static Fr_GL3Window* s_Fr_GLFWwindow;
+    ImGui::FileBrowser fileDialog;
+
+    bool showOpenDialog;
 };
 
 

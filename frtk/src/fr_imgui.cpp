@@ -135,7 +135,9 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
             return -1;
         bool m;      
         SunOptions();
-
+        if (showOpenDialog) {
+            createOpenDialog();
+        }
     }
 
     ImGui::End();
