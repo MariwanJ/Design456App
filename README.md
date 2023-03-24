@@ -23,7 +23,7 @@ Only Windows is supported at the moment. Glad is 4.3. My laptop dosen't support 
 
 6-Always devbranch is the active development brnach .. But from time to time I merge what I think are good to have them in main. 
 
-7-After making a stable cameras (6 cameras), I will release this version as a base code for any other project you might need such a setup. But for now the development is continuing. 
+7-After making stable cameras (6 cameras), I will release this version as a base code for any other project you might need such a setup. But for now the development is continuing. 
 
 Don't forget that you need to download preemake5.exe 
 
