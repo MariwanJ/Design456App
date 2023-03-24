@@ -192,7 +192,7 @@ int Fr_GL3Window::imgui_CameraConfiguration(userData_& data)
     data.camType_ = (CameraList)type;
 
     f = data.fovy_;
-    ImGui::SliderFloat("FOVY", &f, -90.0f, 90.0f);
+    ImGui::SliderFloat("FOVY", &f, -120.0f, 120.0f);
     data.fovy_ = f;
 
     f = data.up_[0];
@@ -322,9 +322,6 @@ void Fr_GL3Window::CameraOptions (){
     camm = cameras[(int)active_camera_];
     camm.camera->setUserData(data);
     camm.camera->setType(data.camType_);
-    camm.camera->SetUp(data.up_[0], data.up_[1], data.up_[2]);
-    camm.camera->SetCenter(data.direction_[0], data.direction_[1], data.direction_[2]);
-    camm.camera->SetCamPosition(data.camPosition_[0], data.camPosition_[1], data.camPosition_[2]);
     active_camera_ = data.camType_;
 
 }

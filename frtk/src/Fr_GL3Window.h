@@ -44,7 +44,7 @@
 #include <imguiFont/IconsFontAwesome6.h>
 
 
-#define MAX_CAMERAS 6  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING CameraList enu
+#define MAX_CAMERAS 8  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING CameraList enu
 
 typedef struct {
     Camera* camera;

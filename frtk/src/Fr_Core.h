@@ -76,12 +76,13 @@
 enum class CameraList {
     PERSPECTIVE = 0, //This is not fixed and can be moved , others are not.
     ORTHOGRAPHIC,
+
     TOP,
     BOTTOM,
-    RIGHT,
-    LEFT,
     FRONT,
     BACK,
+    RIGHT,
+    LEFT,
 };
 typedef struct userData_ {
     glm::vec3 camPosition_;

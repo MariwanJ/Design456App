@@ -267,7 +267,104 @@ void Fr_GL3Window::CreateCameras()
         pCam.camera = camera_.get();
         pCam.manipulator = manipulator;
         cameras.push_back(pCam);  //Transform with a camera child.
+        pCam.camera->setupCameraHomeValues();
+        switch (i) {
+            //TODO: FIXME: If you create more than 6, you should add it here
+        case 0: {
+            /*Normal view PERSPECTIVE, HOME
+                    position 17.463835 -17.463825 13.463827\n  
+                    orientation 0.74290609 0.30772209 0.59447283  1.2171158\n  
+                    nearDistance 0.42925534\n  
+                    farDistance 1761.75\n  
+                    aspectRatio 1\n  
+                    focalDistance 30.248238\n  
+                    heightAngle 0.78539819\n\n}\n'
+            */
+            camera_trans->Rotate(glm::vec3(0.7429f, 0.307f, 0.594f), 69.7f);
+        }break;
+        case 1: {
+            //ORTHOGRAPHIC
+            camera_trans->Rotate(glm::vec3(0.74290609f, 0.30772209f, 0.59447283f), 69.7f);
+        }break;
+        case 2: {
+            /*TOP
+             position 15.337841 10.960548 102.60384\n
+             orientation 0 0 1  0\n
+             nearDistance 102.50124\n
+             farDistance 102.70644\n
+             aspectRatio 1\n
+             focalDistance 100\n
+             height 44.932899\n\n}\n'
+            */
+            camera_trans->Rotate(glm::vec3(0.0f,0.0,1.0f), 0);
+        }break;
+        case 3: {
+            /*Bottom
+             position 10.531155 7.5401545 -97.396126\n
+             orientation -0.99999994 1.4210855e-014 9.4830476e-008  3.1415935\n
+             nearDistance 97.298668\n
+             farDistance 97.493576\n
+             aspectRatio 1\n
+             focalDistance 100\n
+             height 44.932903\n\n}\n'
+            */
+            camera_trans->Rotate(glm::vec3(-1.0f,0.0f, 0.0f), 180);
+        }break;
+        case 4: {
+        /**
+         *  FRONT
+          position 28.817665 -89.039444 2.6038942\n
+          orientation -1 4.214686e-007 8.4293717e-008  4.7123895\n
+          nearDistance 34.005363\n
+          farDistance 144.1835\n
+          aspectRatio 1\n
+          focalDistance 100\n
+          height 44.932899\n\n}\n'
+                 * 
+         */
+            camera_trans->Rotate(glm::vec3(-1.0f,0,0 ),  270.0f);
+        }break;
+        case 5: {
+            /*REAR
+                position 15.337867 110.96054 2.6038241\n
+                orientation 1.4901161e-008 - 0.70710683 - 0.70710671  3.141593\n
+                nearDistance 55.904575\n
+                farDistance 166.1265\n
+                aspectRatio 1\n
+                focalDistance 100\n
+                height 44.932899\n\n}\n'
+                */
+            camera_trans->Rotate(glm::vec3(0.f,-0.70710683,-0.70710671f), 270.0f);
+        }break;
+        case 6: {
+            /*
+            RIGHT
+                position 115.33784 10.960509 2.6038659\n
+                orientation - 0.57735032 - 0.57735026 - 0.5773502  4.1887908\n
+                nearDistance 60.277466\n
+                farDistance 170.50819\n
+                aspectRatio 1\n
+                focalDistance 100\n
+                height 44.932899\n\n
+                */
+            camera_trans->Rotate(glm::vec3(-0.577f, -0.577f, -0.577f),  240.f);
+        }break;
+
+        case 7: {
+            /*LEFT
+                position - 71.182274 10.960546 2.6038406\n
+                orientation 0.57735014 - 0.5773505 - 0.5773502  2.0943947\n
+                nearDistance 16.166088\n
+                farDistance 126.30847\n
+                aspectRatio 1\n
+                focalDistance 100\n
+                height 44.932899\n\n}\n'
+                */
+            camera_trans->Rotate(glm::vec3(0.57f,-0.57f, -0.57f), 270.0f);
+        }break;
+        }
     }
+    
 }
 
 int Fr_GL3Window::createGLFWwindow()

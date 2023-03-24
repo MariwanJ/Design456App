@@ -39,9 +39,9 @@ std::shared_ptr<Transform>bunny() {
     auto bunny_t = std::make_shared<Transform>();
     bunny_t->Translate(0, 0, 0);
     bunny_t->Scale(1, 1, 1);
-    bunny_t->Rotate(0, 1, 0, 0);
+    //bunny_t->Rotate(0, 1, 0, 0);
     //bunny_t->Rotate(0, 0, 0, 1);
-    bunny_t->Rotate(90, 0, 0, 1);
+    //bunny_t->Rotate(90, 0, 0, 1);
     auto bunny = std::make_shared<ObjectShaderNode>(0x667AFF, 0.005f); //  color and
 
     //bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/xy_plane.off"));
