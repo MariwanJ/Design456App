@@ -257,7 +257,6 @@ void Fr_GL3Window::CreateCameras()
         auto camera_trans = std::make_shared<Transform>();      //Shared pointer to the Transform that holds the camera as a child
         //By default no camera is active, developer MUST define one after creating cameras
         camera_->SetActive(false);
-        camera_trans->Rotate(glm::vec3(1, 0, 0), 90);
         scene->AddNode(camera_trans);  //Add it to the scene graph, but only active one will render.
         camera_->setType((CameraList)i);   //Depending on the list it should be as the enum defined
         auto manipulator = new Manipulator(); //manipulation for the camera.

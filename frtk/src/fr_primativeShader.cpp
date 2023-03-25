@@ -34,12 +34,16 @@
 
 Fr_PrimaitiveShader::Shared* Fr_PrimaitiveShader::shared_ = nullptr;
 
-static const glm::mat4 kShadowMapBiasMatrix(
+//static const glm::mat4 kShadowMapBiasMatrix(
+//    0.5, 0.0, 0.0, 0.0,
+//    0.0, 0.5, 0.0, 0.0,
+//    0.0, 0.0, 0.5, 0.0,
+//    0.5, 0.5, 0.5, 1.0);
+static const glm::mat4 kShadowMapBiasMatrix( 
     0.5, 0.0, 0.0, 0.0,
-    0.0, 0.5, 0.0, 0.0,
-    0.0, 0.0, 0.5, 0.0,
-    0.5, 0.5, 0.5, 1.0);
-
+        0.0, 0.5, 0.0, 0.0,
+        0.0, 0.0, 0.5, 0.0,
+        0.5, 0.5, 0.5, 1.0);
 void Fr_PrimaitiveShader::defaultShaders()
 {
     f_objectshader_ = "E:/Projects/Design456App/frtk/src/shaders/objectshader";

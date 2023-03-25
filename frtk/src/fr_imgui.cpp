@@ -185,10 +185,10 @@ int Fr_GL3Window::imgui_CameraConfiguration(userData_& data)
 
     static int type;
     f = data.aspectRatio_;
-    ImGui::SliderFloat("aspectratio", &f, 0.0f, 5.0f);
+    ImGui::SliderFloat("aspectratio", &f, 0.0f, 5);
     data.aspectRatio_ = f;
 
-    ImGui::SliderInt("Cameratype", &type, 0, 5);
+    ImGui::SliderInt("Cameratype", &type, 0, MAX_CAMERAS-1);
     data.camType_ = (CameraList)type;
 
     f = data.fovy_;
@@ -196,20 +196,20 @@ int Fr_GL3Window::imgui_CameraConfiguration(userData_& data)
     data.fovy_ = f;
 
     f = data.up_[0];
-    ImGui::SliderFloat("UP_x", &f, -1000.0f, 1000.0f);
+    ImGui::SliderFloat("UP_x", &f, -100000.0f, 100000.0f);
     data.up_[0] = f;
     f = data.up_[1];
-    ImGui::SliderFloat("UP_y", &f, -1000.0f, 1000.0f);
+    ImGui::SliderFloat("UP_y", &f, -100000.0f, 100000.0f);
     data.up_[1] = f;
     f = data.up_[2];
-    ImGui::SliderFloat("UP_z", &f, -1000.0f, 1000.0f);
+    ImGui::SliderFloat("UP_z", &f, -100000.0f, 100000.0f);
     data.up_[2] = f;
 
     f = data.zfar_;
-    ImGui::SliderFloat("Far", &f, -1000.0f, 1000.0f);
+    ImGui::SliderFloat("Far", &f, -100000.0f, 100000.0f);
     data.zfar_ = f;
     f = data.znear_;
-    ImGui::SliderFloat("Near", &f, -10.0f, 1000.0f);
+    ImGui::SliderFloat("Near", &f, -10.0f, 100000.0f);
     data.znear_ = f;
 
     ImGui::Text("Use the sliders to configure the camera");               // Display some text (you can use a format strings too)
@@ -319,11 +319,13 @@ void Fr_GL3Window::CameraOptions (){
     auto camm = cameras[(int)active_camera_];
     camm.camera->getUserData(data);
     imgui_CameraConfiguration(data);
-    camm = cameras[(int)active_camera_];
+    if (active_camera_ != data.camType_) {
+        camm.camera->SetActive(false);
+        active_camera_ = data.camType_;
+        camm = cameras[(int)active_camera_];
+    }
     camm.camera->setUserData(data);
-    camm.camera->setType(data.camType_);
-    active_camera_ = data.camType_;
-
+    camm.camera->SetActive(true);
 }
 
 void Fr_GL3Window::SunOptions() {
@@ -369,17 +371,17 @@ void Fr_GL3Window::SunOptions() {
     ImGui::SliderFloat("Spot exponent", &f, -50.f, 50.f);
     old.spot_exponent_=f ;
 
-    f = old.spot_direction_.a;
-    ImGui::SliderFloat("Spot direction.a", &f, -1000.f, 1000.f);
-    old.spot_direction_.a = f;
+    f = old.spot_direction_.x;
+    ImGui::SliderFloat("Spot direction.x", &f, -1000.f, 1000.f);
+    old.spot_direction_.x = f;
 
-    f = old.spot_direction_.b;
-    ImGui::SliderFloat("Spot direction.b", &f, -1000.f, 1000.f);
-    old.spot_direction_.b = f;
+    f = old.spot_direction_.y;
+    ImGui::SliderFloat("Spot direction.y", &f, -1000.f, 1000.f);
+    old.spot_direction_.y = f;
 
-    f = old.spot_direction_.g;
-    ImGui::SliderFloat("Spot direction.g", &f, -1000.f, 1000.f);
-    old.spot_direction_.g = f;
+    f = old.spot_direction_.z;
+    ImGui::SliderFloat("Spot direction.z", &f, -1000.f, 1000.f);
+    old.spot_direction_.z = f;
     sun->SetupSpot(old);
     auto amb= sun->gtAmbient();
     f = amb.r;

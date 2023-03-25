@@ -124,16 +124,16 @@ bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
         return false;
 
     int vp[4];
+    std::cout << camPosition_.x << " " << camPosition_.y << " " << camPosition_.z << std::endl;
     glGetIntegerv(GL_VIEWPORT, vp);
-    switch ((int)camType_) {
-    case (int)CameraList::ORTHOGRAPHIC: {
-        projection = glm::ortho(camPosition_.x -2, camPosition_.x+2 , camPosition_.y-2 , camPosition_.z +2, znear_, zfar_);
-    }break;
-    default: {
-        //RIGHT           LEFT   BOTTOM    TOP
-        projection = glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_);
-    } break;
 
+    if (camType_ ==CameraList::ORTHOGRAPHIC) {
+        projection = glm::ortho(camPosition_.x -2, camPosition_.x+2 , camPosition_.y-2 , camPosition_.z +2, znear_, zfar_);
+    }
+    else {
+        //RIGHT           LEFT   BOTTOM    TOP
+
+        projection = glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_);
     }
         modelview = glm::lookAt(camPosition_, direction_, up_);
     if (manipulator_)
@@ -220,8 +220,6 @@ std::shared_ptr<Manipulator> Camera::getManipulator()
 
 
 void Camera::setupCameraHomeValues() {
-    if (!active_)
-        return; //do nothing
     int vp[4];
     glGetIntegerv(GL_VIEWPORT, vp);
     aspectRatio_ = (float)vp[2] / vp[3];
@@ -237,7 +235,7 @@ void Camera::setupCameraHomeValues() {
                     focalDistance 30.248238\n
                     heightAngle 0.78539819\n\n}\n'
             */
-            SetCamPosition(17.46f, -17.46f, 13.46f);
+            SetCamPosition(17.46f, -17.46f, 135.0f);
             SetCenter(0.0f, 0.0f, 0.0f);
             SetPerspective(30.248f, 0.429f, 1765.f);
         }break;
@@ -346,6 +344,7 @@ void Camera::setupCameraHomeValues() {
 void Camera::setType(CameraList camTyp)
 {
     camType_ = camTyp;
+    active_ = true;
 }
 /**
  * 
