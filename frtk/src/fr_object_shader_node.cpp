@@ -160,8 +160,6 @@ void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     program->SetUniformInteger("sm_light", info.shadowmap.light_id);
 
     glActiveTexture(GL_TEXTURE0);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture);
     shared_->object_program->SetUniformInteger("sm_texture", 0);
     mesh_->Draw();

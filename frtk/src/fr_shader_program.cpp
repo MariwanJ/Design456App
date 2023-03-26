@@ -98,8 +98,6 @@ void ShaderProgram::SetUniformMat4(const std::string& name,
 
 void ShaderProgram::SetAttribLocation(const char *name, unsigned int location) {
     glCheckFunc(glBindAttribLocation(program_, location, name));
-
-    //printf("location=%i name=%s  \n", location, name);
 }
 
 void ShaderProgram::CompileShader(int shader_type, const std::string& path) {
