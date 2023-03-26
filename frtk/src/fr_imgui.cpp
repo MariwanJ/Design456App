@@ -399,6 +399,37 @@ void Fr_GL3Window::SunOptions() {
     sun->SetAmbient(amb.r, amb.g, amb.b, amb.a);
 
 
+    auto spec = sun->getSpecular();
+    f = spec.r;
+    ImGui::SliderFloat("specular r", &f, 0.f, 1.f);
+    spec.r = f;
+    f = spec.g;
+    ImGui::SliderFloat("specular g", &f, 0.f, 1.f);
+    spec.g = f;
+    f = spec.b;
+    ImGui::SliderFloat("specular b", &f, 0.f, 1.f);
+    spec.b = f;
+    f = spec.a;
+    ImGui::SliderFloat("specular a", &f, 0.f, 1.f);
+    spec.a = f;
+    sun->SetSpecular(spec.r, spec.g, spec.b, spec.a);
+
+
+    auto att = sun->getAttenuation();
+    f = att.r;
+    ImGui::SliderFloat("att r", &f, 0.f, 1.f);
+    att.r = f;
+    f = att.g;
+    ImGui::SliderFloat("attv g", &f, 0.f, 1.f);
+    att.g = f;
+    f = att.b;
+    ImGui::SliderFloat("att b", &f, 0.f, 1.f);
+    att.b = f;
+    sun->SetAttenuation(att.r, att.g, att.b);
+
+
+
+
     ImGui::End();
 
 

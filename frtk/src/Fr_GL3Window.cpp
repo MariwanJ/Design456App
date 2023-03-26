@@ -472,29 +472,17 @@ int Fr_GL3Window::GLFWrun()
     glfwDestroyWindow(pWindow);
     return 0;
 }
-/**
-PerspectiveCamera
-
-  position 17.463835 -17.463825 13.463827\n
-  orientation 0.74290609 0.30772209 0.59447283  1.2171158\n
-  nearDistance 0.42925534\n
-  farDistance 1761.75\n
-  aspectRatio 1\n
-  focalDistance 30.248238\n
-  heightAngle 0.78539819
-
-  */
 
 std::shared_ptr<Transform> Fr_GL3Window::CreateSun() {
     //TODO: FIXME:
     auto sun_ = std::make_shared<Transform>();
-    sun_->Translate(30, 30, 30);
+    sun_->Translate(0.0f, 0.f, 0.f);
     sun= std::make_shared<Light>();
-    sun->SetPosition(0, 0, 0);
-    sun->SetDiffuse(0.5, 0.5, 0.5);
+    sun->SetPosition(100.0f, 100.0f, 100.0f);
+    sun->SetDiffuse(0.5f, 0.5f, 0.5f);
     sun->SetAmbient(1.0f, 1.0f, 1.0f);
-    sun->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
+    sun->EnableShadowMap(glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(1.f, 0.0f, 0.0f), glm::ortho(-100.0f, 100.0f, -1000.0f, 1000.0f, 0.10f, 100.0f));
     sun_->AddNode(sun);
-    sun_->SetActive(true);   //A must to have or the rabbit mesh will be black.
+    sun_->SetActive(true);   //A must to have otherwise everything is black.
     return sun_;
 }

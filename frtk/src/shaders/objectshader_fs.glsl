@@ -1,6 +1,6 @@
 /**
  * objectShader FS
- *PUC-Rio 2015.2
+ * PUC-Rio 2015.2
  * INF1339 - Computação Gráfica Tridimensional
  * Professor: Waldemar Celes
  * Gabriel de Quadros Ligneul 1212560
@@ -40,15 +40,14 @@ layout (location=0) out vec4 frag_color;
 bool is_shadow()
 {
     float face = texture(sm_texture, frag_sm_position.xy).z + 0.0001;
-    return face < frag_sm_position.z;
+    return face < frag_sm_position.y;
 }
 
 vec3 compute_light_intensity(LightInfo light, int id, vec3 frag_normal)
 {
     vec3 light_position = light.position.xyz / light.position.w;
     float dist = length(light_position - frag_position);
-    float att = 1 / (light.attenuation.x + light.attenuation.y * dist
-                     + light.attenuation.y * dist * dist);
+    float att = 1 / (light.attenuation.x + light.attenuation.y * dist  + light.attenuation.y * dist * dist);
 
     if (id == sm_light && is_shadow())
         return att * vec3(light.ambient);
@@ -65,7 +64,6 @@ vec3 compute_light_intensity(LightInfo light, int id, vec3 frag_normal)
         }
         return vec3(0, 0, 0); 
     }
-
     return intensity;
 }
 
@@ -80,4 +78,3 @@ void main ()
     frag_light = floor(frag_light * NUM_COLORS) / NUM_COLORS;
     frag_color = vec4(color.rgb * frag_light, color.a);
 }
-

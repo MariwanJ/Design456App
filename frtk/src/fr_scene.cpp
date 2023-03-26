@@ -50,7 +50,6 @@ void Scene::SetBackgroud(float r, float g, float b,float alfa) {
 
 void Scene::add3DObject(std::string fName)
 {
-    
     auto newObj_t = std::make_shared<Transform>();
     newObj_t->Translate(0, 0, 0);
     newObj_t->Scale(1, 1, 1);
@@ -63,7 +62,6 @@ void Scene::add3DObject(std::string fName)
         //Not implemented yet  - here .obj should be treated. 
     }
     auto rightlight_spot = std::make_shared<Light>();
-
     rightlight_spot->SetActive(true);
     rightlight_spot->SetPosition(2.956f, -0.514f, 1.074f);
     rightlight_spot->SetupSpot(1.0f, 0.0f, -0.1f, 45.0f, 16.0f);
@@ -109,6 +107,5 @@ void Scene::RenderScene() {
     render_info.id = 0;
     render_info.render_transparent = false;
     Render(render_info, render_info.modelview);
-
 }
 

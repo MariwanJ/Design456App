@@ -140,40 +140,35 @@ void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
 
     auto mvp = info.projection * modelview;
     auto normalmatrix = glm::transpose(glm::inverse(modelview));
+    auto sm_mvp = color_.a == 1 ? info.shadowmap.mvp[info.id] :
+        info.shadowmap.mvp_transparent[info.id];
+
+    if (color_.a == 1)
+        RenderSilhouette(mvp);
+
     ShaderProgram* program = shared_->object_program;
-
-    //Avoid segmentation fault - Mariwan
-    if (info.shadowmap.mvp.size() > 0 && info.id < info.shadowmap.mvp.size() && info.shadowmap.mvp_transparent.size()>0) {
-        auto sm_mvp = color_.a == 1 ? info.shadowmap.mvp[info.id] : info.shadowmap.mvp_transparent[info.id];
-        program->SetUniformMat4("sm_mvp", kShadowMapBiasMatrix * sm_mvp);
-    }
-    /*if (color_.a == 1)
-        RenderSilhouette(mvp);*/
-
     program->Enable();
-    LoadLights(program, info.lights);
 
+    LoadLights(program, info.lights);
     program->SetAttribLocation("position", 0);
     program->SetAttribLocation("normal", 1);
     program->SetUniformMat4("modelview", modelview);
     program->SetUniformMat4("normalmatrix", normalmatrix);
     program->SetUniformMat4("mvp", mvp);
     program->SetUniformVec4("color", color_);
+    program->SetUniformMat4("sm_mvp", kShadowMapBiasMatrix * sm_mvp);
     program->SetUniformInteger("sm_light", info.shadowmap.light_id);
 
-    //****************************************************************************************FIXME
-    //TODO FIXME -- THIS IS OLD OPENGL - DOSENT WORK FO RNEW OPENGL
-    glGenTextures(1, &info.shadowmap.texture);
-    glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));           //     THIS CAUSE ISSUE FIXME!!!!!!!!!!!!!!!!!!!
+    glActiveTexture(GL_TEXTURE0);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture);
     shared_->object_program->SetUniformInteger("sm_texture", 0);
-
-    //for returning the texture keep the id
-    _texture = info.shadowmap.texture;
-
     mesh_->Draw();
-    program->Enable();
     program->Disable();
+
     info.id++;
+
 }
 
 GLuint ObjectShaderNode::getCurrentTexturer(void)

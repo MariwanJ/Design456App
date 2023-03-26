@@ -42,17 +42,17 @@ std::shared_ptr<Transform>bunny() {
     //bunny_t->Rotate(0, 1, 0, 0);
     //bunny_t->Rotate(0, 0, 0, 1);
     //bunny_t->Rotate(90, 0, 0, 1);
-    auto bunny = std::make_shared<ObjectShaderNode>(0x667AFF, 0.005f); //  color and
+    auto bunny = std::make_shared<ObjectShaderNode>(0x667AFF, 0.5f); //  color and
 
     //bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/xy_plane.off"));
      bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/Pyramid.off"));
     //bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/Cube.off"));
 
     auto rightlight_spot = std::make_shared<Light>();
-    rightlight_spot->SetActive(true);
-    rightlight_spot->SetPosition(2.956f, -0.514f, 1.074f);
+    rightlight_spot->SetActive(false);
+    rightlight_spot->SetPosition(2.956f, -10.514f, 10.074f);
     rightlight_spot->SetupSpot(1.0f, 0.0f, -0.1f, 45.0f, 16.0f);
-    rightlight_spot->SetDiffuse(0.0f, 0.0f, 0.0f);
+    rightlight_spot->SetDiffuse(0.5f, 0.5f, 0.5f);
     rightlight_spot->SetAmbient(0.42f, 0.42f, 0.42f);
     rightlight_spot->SetAttenuation(1.0f, 0.002f, 0.0f);
     bunny_t->AddNode(rightlight_spot);

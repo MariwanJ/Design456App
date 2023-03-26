@@ -178,8 +178,8 @@ void Fr_PrimaitiveShader::Render(RenderInfo& info, const glm::mat4& modelview) {
         auto sm_mvp = color_.a == 1 ? info.shadowmap.mvp[info.id] : info.shadowmap.mvp_transparent[info.id];
         program->SetUniformMat4("sm_mvp", kShadowMapBiasMatrix * sm_mvp);
     }
-    /*if (color_.a == 1)
-        RenderSilhouette(mvp);*/
+    if (color_.a == 1)
+        RenderSilhouette(mvp);
 
     program->Enable();
     LoadLights(program, info.lights);
