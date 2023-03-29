@@ -35,7 +35,7 @@ uniform LightInfo lights[MAX_LIGHTS];
 uniform int sm_light;
 uniform sampler2D sm_texture;
 
-layout (location=0) out vec4 frag_color;
+out vec4 frag_color;
 
 bool is_shadow()
 {

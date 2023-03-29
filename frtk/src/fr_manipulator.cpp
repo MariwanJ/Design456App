@@ -95,21 +95,6 @@ void Manipulator::GLFWMotion(int x, int y) {
     x_ = x;
     y_ = y;
 }
-/**
-*   Mouse scroll - Zomming
-*/
-void Manipulator::GLFWScroll(int x, int y) {
-
-    int vp[4];
-    glGetIntegerv(GL_VIEWPORT, vp);
-    float dy = y;
-    float f = dy / vp[3];
-    float scale = 1 + kZoomScale * f;
-    matrix_ = glm::scale(glm::vec3(scale, scale, scale)) * matrix_;
-    inv_ = glm::inverse(matrix_);
-    x_ += x;
-    y_ += y;
-}
 
 float Manipulator::get_X() const
 {

@@ -69,7 +69,6 @@ public:
      * Mouse motion function
      */
     void GLFWMotion(int x, int y);
-    void GLFWScroll(int x, int y);
 
     float get_X()const;
     float get_Y()const;

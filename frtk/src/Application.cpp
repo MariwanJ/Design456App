@@ -97,14 +97,18 @@ void Fr_GL3Window::mouse_button_callback(GLFWwindow* win, int button, int action
 
 void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
 {
-    double x, y;
     auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameras[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
-    auto manipulator_ = activeCamera.manipulator;
-    x = manipulator_->get_X();
-    y = manipulator_->get_Y();
-    if (win != nullptr) {
-        manipulator_->GLFWScroll(xoffset, yoffset);
-    }
+    float fov;
+    userData_ data;
+    activeCamera.camera->getUserData(data);
+    fov = data.fovy_;
+    fov = fov - yoffset;
+    if (fov < 1.0f)
+        fov = 1.0f;
+    if (fov > MAX_FOV_ZOOM)
+        fov = MAX_FOV_ZOOM;
+    data.fovy_ = fov;
+    activeCamera.camera->setUserData(data);
 }
 
 void Fr_GL3Window::joystick_callback(int jid, int events)
