@@ -63,6 +63,7 @@ static void error_callback(int error, const char* description)
 * FIXME: CLEANUP CODE
 */
 Scene* Fr_GL3Window::scene = nullptr;
+bool Fr_GL3Window::MouseOnce = true;
 Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::string l = "GLFW ImGUI Test"):
                                 active_camera_(CameraList::PERSPECTIVE),
                                 _x(x), _y(y), _w(w), _h(h), label_(l) , showOpenDialog(false){
@@ -72,7 +73,8 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     _y = y;
     _w = w;
     _h = h;
-
+    yaw = 0;
+    pitch = 0;
     gl_version_major = 4;
     gl_version_minor = 3;
     glfwSetErrorCallback(error_callback);

@@ -242,7 +242,7 @@ private:
     
     void cameraPAN(double xoffset, double yoffset);
     void cameraRotate(double xoffset, double yoffset);
-    void cameraMove(double xoffset, double yoffset);
+
     void LeftMouseClick(double xoffset, double yoffset);
     void RightMouseClick(double xoffset, double yoffset);
 
@@ -322,7 +322,7 @@ private:
 
     private:
         static  Fr_GL3Window* s_fr_glfwwindow;
-  
+
     };
 
     /**
@@ -374,7 +374,11 @@ private:
     ImGui::FileBrowser fileDialog;
 
     bool showOpenDialog;
+    //will be true if rotate/pan starts.
+    static bool MouseOnce;
+    float yaw, pitch;
 };
+
 
 
 

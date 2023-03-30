@@ -1,19 +1,19 @@
-//                                                                      
-// This file is a part of the Open Source Design456App                    
+//
+// This file is a part of the Open Source Design456App
 // MIT License
-// 
+//
 // Copyright (c) 2023
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,7 +23,7 @@
 // SOFTWARE.
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
-// 
+//
 #include "Application.h"
 
 /* Scene and engine*/
@@ -40,7 +40,6 @@ void Fr_GL3Window::framebuffer_size_callback(GLFWwindow* window, int width, int 
 
 void Fr_GL3Window::keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-
 }
 
 void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double ypos)
@@ -51,33 +50,29 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
             return;
         }
      */
-    int button;
+    auto shftL = glfwGetKey(win, GLFW_KEY_LEFT_SHIFT);
+    auto shftR = glfwGetKey(win, GLFW_KEY_RIGHT_SHIFT);
+
     if (FR::glfw_MouseButton == GLFW_MOUSE_BUTTON_LEFT) {
         LeftMouseClick(xpos, ypos);
     }
-    if (FR::glfw_MouseButton == GLFW_MOUSE_BUTTON_MIDDLE) {
-
+    else if (FR::glfw_MouseButton == GLFW_MOUSE_BUTTON_MIDDLE) {
+        if (shftL == GLFW_PRESS || shftR == GLFW_PRESS) {
+            cameraPAN(xpos, ypos);
+        }
+        else if (FR::glfw_MouseButton !=GLFW_RELEASE){
+            cameraRotate(xpos, ypos);
+        }
     }
     else if (FR::glfw_MouseButton == GLFW_MOUSE_BUTTON_RIGHT)
     {
+        FR::glfw_e_x = xpos;
+        FR::glfw_e_y = ypos;
     }
     else {
-        button = -1;
-        FR::glfw_MouseButton = -1;
-    }
-    double cposx, cposy;
-    glfwGetCursorPos(win, &cposx, &cposy);
-    FR::glfw_e_x = cposx;
-    FR::glfw_e_y = cposy;
-    return;//temp code
-    if (button == 0 || button == 1)
-        if (win != nullptr) {
-            auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameras[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
-            auto manipulator_ = activeCamera.manipulator;
-            manipulator_->GLFWMouse(button, FR::glfw_MouseClicked, cposx, cposy);
-            manipulator_->GLFWMotion(cposx, cposy);
-            Fr_GL3Window::getfr_Gl3Window()->scene->RenderScene();
-            button = -1;
+            FR::glfw_MouseButton = -1;
+            FR::glfw_e_x = xpos;
+            FR::glfw_e_y = ypos;
         }
 }
 
@@ -91,7 +86,6 @@ void Fr_GL3Window::mouse_button_callback(GLFWwindow* win, int button, int action
         FR::glfw_MouseClicked = 0; //Pressed
     }
     else if (GLFW_RELEASE == action) {
-
         FR::glfw_MouseClicked = 1; //Released
     }
     FR::glfw_MouseButton = button;
@@ -117,12 +111,43 @@ void Fr_GL3Window::cameraPAN(double xoffset, double yoffset)
 {
 }
 
-void Fr_GL3Window::cameraRotate(double xoffset, double yoffset)
+void Fr_GL3Window::cameraRotate(double xpos, double ypos)
 {
-}
+    if (MouseOnce)
+    {
+        FR::glfw_e_x = xpos;
+        FR::glfw_e_y = ypos;
+        MouseOnce = false;
+    }
 
-void Fr_GL3Window::cameraMove(double xoffset, double yoffset)
-{
+    float xoffset = xpos - FR::glfw_e_x;
+    float yoffset = FR::glfw_e_y - ypos;
+    FR::glfw_e_x = xpos;
+    FR::glfw_e_y = ypos;
+
+    float sensitivity = 0.1f;
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    yaw += xoffset;
+    pitch += yoffset;
+
+    if (pitch > 89.0f)
+        pitch = 89.0f;
+    if (pitch < -89.0f)
+        pitch = -89.0f;
+
+    glm::vec3 direction;
+    
+    std::cout << pitch << " " << yaw << std::endl;
+    auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameras[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
+    userData_ data;
+    activeCamera.camera->getUserData(data);
+    data.direction_.x = data.direction_.x * cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    data.direction_.y = data.direction_.y * sin(glm::radians(pitch));
+    data.direction_.z = data.direction_.z * sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    //data.direction_ = glm::normalize(data.direction_);
+    activeCamera.camera->setUserData(data);
 }
 
 void Fr_GL3Window::LeftMouseClick(double xoffset, double yoffset)
@@ -135,13 +160,10 @@ void Fr_GL3Window::RightMouseClick(double xoffset, double yoffset)
 
 void Fr_GL3Window::joystick_callback(int jid, int events)
 {
-
 }
 
-
-Application::Application(int x, int y, int w, int h, const char* l):Fr_GL3Window(x,y,w,h,l)
+Application::Application(int x, int y, int w, int h, const char* l) :Fr_GL3Window(x, y, w, h, l)
 {
-    
 }
 
 Application::~Application()
@@ -155,7 +177,6 @@ int Application::run(int argc, char** argv)
     auto n = loadImage();
     std::shared_ptr<BYTE> IMG = n.getImage("nofile");
     createGLFWwindow();
-
 
     return GLFWrun();
 }
