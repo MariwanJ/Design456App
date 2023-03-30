@@ -239,6 +239,14 @@ private:
     void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cursor entered the window's client area, or GL_FALSE if it left it.
     void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
     void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
+    
+    void cameraPAN(double xoffset, double yoffset);
+    void cameraRotate(double xoffset, double yoffset);
+    void cameraMove(double xoffset, double yoffset);
+    void LeftMouseClick(double xoffset, double yoffset);
+    void RightMouseClick(double xoffset, double yoffset);
+
+
     void joystick_callback(int jid, int events);
 
     //Menu and toolbar callbacks

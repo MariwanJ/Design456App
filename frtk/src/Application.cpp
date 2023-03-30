@@ -53,12 +53,13 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
      */
     int button;
     if (FR::glfw_MouseButton == GLFW_MOUSE_BUTTON_LEFT) {
-        button = 0;//TODO FIDME
+        LeftMouseClick(xpos, ypos);
+    }
+    if (FR::glfw_MouseButton == GLFW_MOUSE_BUTTON_MIDDLE) {
+
     }
     else if (FR::glfw_MouseButton == GLFW_MOUSE_BUTTON_RIGHT)
     {
-        button = 1;//TODO FIDME
-        FR::glfw_MouseButton = -1;
     }
     else {
         button = -1;
@@ -90,6 +91,7 @@ void Fr_GL3Window::mouse_button_callback(GLFWwindow* win, int button, int action
         FR::glfw_MouseClicked = 0; //Pressed
     }
     else if (GLFW_RELEASE == action) {
+
         FR::glfw_MouseClicked = 1; //Released
     }
     FR::glfw_MouseButton = button;
@@ -109,6 +111,26 @@ void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffs
         fov = MAX_FOV_ZOOM;
     data.fovy_ = fov;
     activeCamera.camera->setUserData(data);
+}
+
+void Fr_GL3Window::cameraPAN(double xoffset, double yoffset)
+{
+}
+
+void Fr_GL3Window::cameraRotate(double xoffset, double yoffset)
+{
+}
+
+void Fr_GL3Window::cameraMove(double xoffset, double yoffset)
+{
+}
+
+void Fr_GL3Window::LeftMouseClick(double xoffset, double yoffset)
+{
+}
+
+void Fr_GL3Window::RightMouseClick(double xoffset, double yoffset)
+{
 }
 
 void Fr_GL3Window::joystick_callback(int jid, int events)
