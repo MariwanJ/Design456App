@@ -138,15 +138,15 @@ void Fr_GL3Window::cameraRotate(double xpos, double ypos)
         pitch = -89.0f;
 
     glm::vec3 direction;
-    
-    std::cout << pitch << " " << yaw << std::endl;
+
+    //std::cout << pitch << "pitch yaw " << yaw << std::endl;
     auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameras[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
     userData_ data;
     activeCamera.camera->getUserData(data);
-    data.direction_.x = data.direction_.x * cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    data.direction_.y = data.direction_.y * sin(glm::radians(pitch));
-    data.direction_.z = data.direction_.z * sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    //data.direction_ = glm::normalize(data.direction_);
+    data.direction_.x = 1000*cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    data.direction_.y =1000*  sin(glm::radians(pitch));
+    data.direction_.z =1000*  sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+   // data.direction_ = glm::normalize(data.direction_);
     activeCamera.camera->setUserData(data);
 }
 
