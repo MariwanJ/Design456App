@@ -73,7 +73,7 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     _y = y;
     _w = w;
     _h = h;
-    yaw = 0;
+    yaw = -90;
     pitch = 0;
     gl_version_major = 4;
     gl_version_minor = 3;

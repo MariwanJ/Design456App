@@ -33,7 +33,7 @@ int FR::glfw_e_y = 0;
 
 int FR::glfw_click = 0;     // 0 no, 1 yes
 int FR::glfw_double_click = 0; // 0 no, 1 yes
-int FR::glfw_MouseClicked = -1; //no mouse click
+bool FR::glfw_MouseClicked = false; //no mouse click
 int FR::glfw_MouseButton  = -1; //no mouse button
 
 bool FR::CamerOptionVisible = false; //Defualt we don't show the camera options
