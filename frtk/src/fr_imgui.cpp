@@ -206,7 +206,7 @@ int Fr_GL3Window::imgui_CameraConfiguration(userData_& data)
     data.up_[2] = f;
 
     f = data.zfar_;
-    ImGui::DragFloat("Far", &f, 0.2, -100000.0f, 100000.0f);
+    ImGui::DragFloat("Far", &f, 0.2, -10000.0f, 100000.0f);
     data.zfar_ = f;
     f = data.znear_;
     ImGui::DragFloat("Near", &f, 0.2, -10.0f, 100000.0f);
@@ -390,45 +390,45 @@ void Fr_GL3Window::SunOptions() {
     sun->SetupSpot(old);
     auto amb= sun->gtAmbient();
     f = amb.r;
-    ImGui::DragFloat("Ambient r", &f, 0.02, 0.f, 1.f);
+    ImGui::DragFloat("Ambient r", &f, 0.02, -100.0f, 100.f);
     amb.r = f;
     f = amb.g;
-    ImGui::DragFloat("Ambient g", &f, 0.02, 0.f, 1.f);
+    ImGui::DragFloat("Ambient g", &f, 0.02, -100.f, 1.000f);
     amb.g=f;
     f = amb.b;
-    ImGui::DragFloat("Ambient b", &f, 0.02, 0.f, 1.f);
+    ImGui::DragFloat("Ambient b", &f, 0.02, -100.f, 100.f);
     amb.b = f;
     f = amb.a;
-    ImGui::DragFloat("Ambient a", &f, 0.020, 0.f, 1.f);
+    ImGui::DragFloat("Ambient a", &f, 0.020, -100.f, 100.f);
     amb.a = f;
     sun->SetAmbient(amb.r, amb.g, amb.b, amb.a);
 
 
     auto spec = sun->getSpecular();
     f = spec.r;
-    ImGui::DragFloat("specular r", &f, 0.02, 0.f, 1.f);
+    ImGui::DragFloat("specular r", &f, 0.02, -100.f, 100.f);
     spec.r = f;
     f = spec.g;
-    ImGui::DragFloat("specular g", &f, 0.02, 0.f, 1.f);
+    ImGui::DragFloat("specular g", &f, 0.02, -100.f, 100.f);
     spec.g = f;
     f = spec.b;
-    ImGui::DragFloat("specular b", &f, 0.02, 0.f, 1.f);
+    ImGui::DragFloat("specular b", &f, 0.02, -100.f, 100.f);
     spec.b = f;
     f = spec.a;
-    ImGui::DragFloat("specular a", &f, 0.02, 0.f, 1.f);
+    ImGui::DragFloat("specular a", &f, 0.02, -100.f, 100.f);
     spec.a = f;
     sun->SetSpecular(spec.r, spec.g, spec.b, spec.a);
 
 
     auto att = sun->getAttenuation();
     f = att.r;
-    ImGui::DragFloat("att r", &f, 0.2, 0.f, 1.f);
+    ImGui::DragFloat("att r", &f, 0.2,-100.f, 100.f);
     att.r = f;
     f = att.g;
-    ImGui::DragFloat("attv g", &f, 0.2, 0.f, 1.f);
+    ImGui::DragFloat("attv g", &f, 0.2, -100.f, 100.f);
     att.g = f;
     f = att.b;
-    ImGui::DragFloat("att b", &f, 0.2, 0.f, 1.f);
+    ImGui::DragFloat("att b", &f, 0.2, -100.f, 100.0f);
     att.b = f;
     sun->SetAttenuation(att.r, att.g, att.b);
 
