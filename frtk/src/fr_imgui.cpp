@@ -36,23 +36,10 @@ int Fr_GL3Window::imguimzo_init()
 {
     ImGuizmo::SetOrthographic(false);
     ImGuizmo::SetDrawlist();
-    float windowsWidth = (float)ImGui::GetWindowWidth();
-    float windowsHeight = (float)ImGui::GetWindowHeight();
-
-    ImGuizmo::SetDrawlist();
-    ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowsWidth, windowsHeight);
-
-    auto m_Gizmotype = ImGuizmo::OPERATION::TRANSLATE; //translate, scale or rotate
+    ImGuizmo::SetRect(PortViewDimensions.x, PortViewDimensions.y, PortViewDimensions.z, PortViewDimensions.w);
     auto activeCamera = cameras[(unsigned int)active_camera_];
     auto modelview = activeCamera.manipulator->GetMatrix();
-    float trans[3] = { 0.0f, 0.0f, 0.0f };
-    glm::mat4  delta;
-    auto proje = glm::ortho(-1.f, 1.f, -1.f, 1.f, 1.f, -1.f);
-    ImGuizmo::DrawGrid(&modelview[0][0], &proje[0][0], trans, 100.f);
-    int gizmoCount = 1;
-    ImGuizmo::DrawCubes(&modelview[0][0], &proje[0][0], trans, gizmoCount);
-    ImGuizmo::DrawGrid(&modelview[0][0], &proje[0][0], &delta[0][0], 100.f);
-    ImGuizmo::ViewManipulate(&modelview[0][0], 8.f, ImVec2( 128, 30), ImVec2(128, 128), 0x10101010);
+    ImGuizmo::IsUsing();
     return 0;
 }
 
@@ -377,23 +364,23 @@ void Fr_GL3Window::SunOptions() {
     old.spot_exponent_=f ;
 
     f = old.spot_direction_.x;
-    ImGui::DragFloat("Spot direction.x", &f, 0.2, -1000.f, 1000.f);
+    ImGui::DragFloat("Spot direction.x", &f, 0.2, -100.0f, 1000.0f);
     old.spot_direction_.x = f;
 
     f = old.spot_direction_.y;
-    ImGui::DragFloat("Spot direction.y", &f, 0.2, -1000.f, 1000.f);
+    ImGui::DragFloat("Spot direction.y", &f, 0.2, -1000.0f, 1000.0f);
     old.spot_direction_.y = f;
 
     f = old.spot_direction_.z;
-    ImGui::DragFloat("Spot direction.z", &f, 0.2, -1000.f, 1000.f);
+    ImGui::DragFloat("Spot direction.z", &f, 0.2, -1000.0f, 1000.0f);
     old.spot_direction_.z = f;
     sun->SetupSpot(old);
     auto amb= sun->gtAmbient();
     f = amb.r;
-    ImGui::DragFloat("Ambient r", &f, 0.02, -100.0f, 100.f);
+    ImGui::DragFloat("Ambient r", &f, 0.02, -100.0f, 100.0f);
     amb.r = f;
     f = amb.g;
-    ImGui::DragFloat("Ambient g", &f, 0.02, -100.f, 1.000f);
+    ImGui::DragFloat("Ambient g", &f, 0.02, -100.0f, 100.0f);
     amb.g=f;
     f = amb.b;
     ImGui::DragFloat("Ambient b", &f, 0.02, -100.f, 100.f);
@@ -431,10 +418,6 @@ void Fr_GL3Window::SunOptions() {
     ImGui::DragFloat("att b", &f, 0.2, -100.f, 100.0f);
     att.b = f;
     sun->SetAttenuation(att.r, att.g, att.b);
-
-
-
-
     ImGui::End();
 
 
