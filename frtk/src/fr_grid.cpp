@@ -140,7 +140,12 @@ std::shared_ptr<Transform> Grid::CreateGrid()
             x = limmitValue[0]+i* gridWidth_;
             y = limmitValue[1]+(float)j * gridWidth_;
             z = limmitValue[2];
-            
+            if ((x == 0 && y == 0) ||
+                (x == 0 && z == 0) ||
+                (y == 0 && z == 0)) {
+                //We don't draw the axis line as we draw them seperatly 
+                continue;
+            }
             vertices.push_back(x);
             vertices.push_back(y);
             vertices.push_back(z);
@@ -152,6 +157,12 @@ std::shared_ptr<Transform> Grid::CreateGrid()
             x = limmitValue[0]+(float)j * gridWidth_;
             y = limmitValue[1]+(float)i * gridWidth_;
             z = limmitValue[2];
+            if ( (x == 0 && y == 0) ||
+                 (x == 0 && z == 0) ||
+                 (y == 0 && z == 0)) {
+                //We don't draw the axis line as we draw them seperatly 
+                continue;
+            }
             vertices.push_back(x);
             vertices.push_back(y);
             vertices.push_back(z);
@@ -159,7 +170,7 @@ std::shared_ptr<Transform> Grid::CreateGrid()
     }
 
     std::vector<unsigned int> indices;
-    for (int i = 0; i <= sections_ * 2; i++) {
+    for (int i = 0; i <= vertices.size(); i++) {
         indices.push_back(i);
     }
     grid_t->Scale(1, 1, 1);

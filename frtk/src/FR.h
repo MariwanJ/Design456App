@@ -245,7 +245,6 @@ public:
 	static int glfw_double_click;
 	static bool glfw_MouseClicked;
 	static int glfw_MouseButton;
-	
 	static bool CamerOptionVisible;
 
 	

@@ -139,8 +139,8 @@ void Fr_GL3Window::cameraPAN(double xpos, double ypos)
     auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameras[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
     userData_ data;
     activeCamera.camera->getUserData(data);
-    data.direction_.x = 0.2*cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    data.direction_.y = 0.2*sin(glm::radians(pitch));
+    data.direction_.x = 10*cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    data.direction_.y = 10*sin(glm::radians(pitch));
     data.direction_.z =  sin(glm::radians(yaw)) * cos(glm::radians(pitch));
    // data.direction_ = glm::normalize(data.direction_);
     activeCamera.camera->setUserData(data);
@@ -148,39 +148,41 @@ void Fr_GL3Window::cameraPAN(double xpos, double ypos)
 
 void Fr_GL3Window::cameraRotate(double xpos, double ypos)
 {
+    userData_ data;
+    auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameras[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
+    activeCamera.camera->getUserData(data);
+
     if (MouseOnce)
     {
         FR::glfw_e_x = xpos;
         FR::glfw_e_y = ypos;
         MouseOnce = false;
+        radiusXYZ = sqrt(data.camPosition_.x * data.camPosition_.x +
+                        data.camPosition_.y * data.camPosition_.y+
+                        data.camPosition_.z * data.camPosition_.z);
+ 
     }
 
-    float xoffset = xpos - FR::glfw_e_x;
-    float yoffset = FR::glfw_e_y - ypos;
+    float delta_X = xpos - FR::glfw_e_x;
+    float delta_Y = FR::glfw_e_y - ypos;
     FR::glfw_e_x = xpos;
     FR::glfw_e_y = ypos;
-
-    //float sensitivity = 0.2f;
-    //xoffset *= sensitivity;
-    //yoffset *= sensitivity;
-    //
-    yaw += xoffset;
-    pitch += yoffset;
-
+    float sensitivity = 0.2f;
+  
+    yaw += delta_X * sensitivity;
+    pitch += delta_Y * sensitivity;
+    
     if (pitch > 89.999990f)
         pitch = 89.999990f;
     if (pitch < -89.999990f)
         pitch = -89.999990f;
+        
 
     glm::vec3 direction;
-
     //std::cout << pitch << "pitch yaw " << yaw << std::endl;
-    auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameras[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
-    userData_ data;
-    activeCamera.camera->getUserData(data);
-    data.camPosition_.x -= 5 *cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    data.camPosition_.y -= 5* sin(glm::radians(pitch));
- //   data.camPosition_.z += 10* sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    data.camPosition_.x =radiusXYZ *cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    data.camPosition_.y = radiusXYZ *cos(glm::radians(yaw)) * sin(glm::radians(pitch));
+    data.camPosition_.z = radiusXYZ* sin(glm::radians(yaw)) ;
     activeCamera.camera->setUserData(data);
 }
 

@@ -73,8 +73,9 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     _y = y;
     _w = w;
     _h = h;
-    yaw = -90;
-    pitch = 0;
+    yaw = -90.0f;
+    pitch = 0.0f;  //
+    roll = 0.0f;  //Z axis
     gl_version_major = 4;
     gl_version_minor = 3;
     glfwSetErrorCallback(error_callback);
@@ -90,6 +91,7 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     Fr_GL3Window::GLFWCallbackWrapper::setGLFWwindow(this);
+    radiusXYZ =  0;
 }
 
 void Fr_GL3Window::flush() {
@@ -212,6 +214,11 @@ int Fr_GL3Window::w() const
 int Fr_GL3Window::h() const
 {
     return _h;
+}
+
+ImVec4 Fr_GL3Window::getPortViewDimensions()
+{
+    return  PortViewDimensions;
 }
 
 const char* Fr_GL3Window::label() const

@@ -192,6 +192,7 @@ public:
     int  w()const;
     int  h()const;
 
+    ImVec4 getPortViewDimensions();
     const char* label()const;
     void label(std::string l);
     void label(const char*l);
@@ -269,9 +270,6 @@ private:
 
 
     void createOpenDialog(void);
-
-
-
 
 
 
@@ -376,7 +374,14 @@ private:
     bool showOpenDialog;
     //will be true if rotate/pan starts.
     static bool MouseOnce;
-    float yaw, pitch;
+    float yaw, pitch,roll;
+
+    //Camera rotation - mouse callback
+    float radiusXYZ;
+
+    ImVec4 PortViewDimensions;
+
+
 };
 
 

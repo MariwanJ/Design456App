@@ -32,7 +32,7 @@
 #include <glad/glad.h>
 #include <fr_camera.h>
 #include <fr_manipulator.h>
-
+#include <Fr_GL3Window.h>
 /*
 Normal view - home FreeCAD
 ,top
@@ -124,15 +124,20 @@ bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
         return false;
 
     int vp[4];
-    std::cout << camPosition_.x << " " << camPosition_.y << " " << camPosition_.z << std::endl;
     glGetIntegerv(GL_VIEWPORT, vp);
-
+    
     if (camType_ ==CameraList::ORTHOGRAPHIC) {
-        projection = glm::ortho(camPosition_.x -2, camPosition_.x+2 , camPosition_.y-2 , camPosition_.z +2, znear_, zfar_);
+        //glm::ortho(-aspect, aspect, -1.0f, 1.0f, zNear, zFar);
+        ImVec4 winDim = Fr_GL3Window::getfr_Gl3Window()->getPortViewDimensions();
+        float aspect = (float)winDim.z / winDim.w;
+
+        projection = glm::ortho(float(-winDim.z/fovy_), float(winDim.z / fovy_),
+            -winDim.w / fovy_, -winDim.w / fovy_,
+                                znear_, zfar_);
+        //projection = glm::ortho(-80.0f, 80.0f, -60.0f, 60.0f, -0.1f, 1000.0f);
     }
     else {
-        //RIGHT           LEFT   BOTTOM    TOP
-
+                                //RIGHT           LEFT   BOTTOM    TOP
         projection = glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_);
     }
         modelview = glm::lookAt(camPosition_, direction_, up_);
@@ -242,7 +247,7 @@ void Camera::setupCameraHomeValues() {
         case 1: {
             //ORTHOGRAPHIC
 
-            SetCamPosition(17.46f, -17.46f, 13.46f);
+            SetCamPosition(17.46f, -149.46f, 135.46f);
             SetCenter(0.0f, 0.0f, 0.0f);
             SetPerspective(30.248f, 0.429f, 1765.f);
         }break;
@@ -256,9 +261,10 @@ void Camera::setupCameraHomeValues() {
              focalDistance 100\n
              height 44.932899\n\n}\n'
             */
-            SetCamPosition(15.33f, 10.96f, 102.6f);
+            SetCamPosition(-74.f, -74.f, -718.6f);
             SetCenter(0.0f, 0.0f, 0.0f);
-            SetPerspective(100.0f, 102.5f, 102.7f);
+            SetUp(10.f, 10.f, 10.f);
+            SetPerspective(2.0f, -102.5f, 102.7f);
         }break;
         case 3: {
             /*Bottom

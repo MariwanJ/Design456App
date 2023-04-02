@@ -164,52 +164,52 @@ int Fr_GL3Window::imgui_CameraConfiguration(userData_& data)
     ImGui::Begin("Camera Configuration!");                          // Create a window called "Hello, world!" and append into it.
 
     f = data.camPosition_[0];
-    ImGui::SliderFloat("Position_x", &f, -10000.0f, 10000.0f);
+    ImGui::DragFloat("Position_x", &f, 0.2, -10000.0f, 1000.0f);
     data.camPosition_[0] = f;
     f = data.camPosition_[1];
-    ImGui::SliderFloat("Position_y", &f, -10000.0f, 10000.0f);
+    ImGui::DragFloat("Position_y", &f, 0.2, -1000.0f, 1000.0f);
     data.camPosition_[1] = f;
     f = data.camPosition_[2];
-    ImGui::SliderFloat("Position_z", &f, -10000.0f, 10000.0f);
+    ImGui::DragFloat("Position_z", &f, 0.2, -1000.0f, 1000.0f);
     data.camPosition_[2] = f;
 
     f = data.direction_[0];
-    ImGui::SliderFloat("Target_x", &f, -10000.0f, 10000.0f);
+    ImGui::DragFloat("Target_x", &f, 0.2, -1000.0f, 1000.0f);
     data.direction_[0] = f;
     f = data.direction_[1];
-    ImGui::SliderFloat("Target_y", &f, -10000.0f, 10000.0f);
+    ImGui::DragFloat("Target_y", &f, 0.2, -1000.0f, 1000.0f);
     data.direction_[1] = f;
     f = data.direction_[2];
-    ImGui::SliderFloat("Target_z", &f, -10000.0f, 10000.0f);
+    ImGui::DragFloat("Target_z", &f, 0.2, -1000.0f, 1000.0f);
     data.direction_[2] = f;
 
     static int type;
     f = data.aspectRatio_;
-    ImGui::SliderFloat("aspectratio", &f, 0.0f, 5);
+    ImGui::DragFloat("aspectratio", &f, 0.2, 0.0f, 5);
     data.aspectRatio_ = f;
 
     ImGui::SliderInt("Cameratype", &type, 0, MAX_CAMERAS-1);
     data.camType_ = (CameraList)type;
 
     f = data.fovy_;
-    ImGui::SliderFloat("FOVY", &f, -120.0f, 120.0f);
+    ImGui::DragFloat("FOVY", &f, 0.2, -120.0f, 120.0f);
     data.fovy_ = f;
 
     f = data.up_[0];
-    ImGui::SliderFloat("UP_x", &f, -100000.0f, 100000.0f);
+    ImGui::DragFloat("UP_x", &f, 0.2, -100000.0f, 100000.0f);
     data.up_[0] = f;
     f = data.up_[1];
-    ImGui::SliderFloat("UP_y", &f, -100000.0f, 100000.0f);
+    ImGui::DragFloat("UP_y", &f, 0.2, -100000.0f, 100000.0f);
     data.up_[1] = f;
     f = data.up_[2];
-    ImGui::SliderFloat("UP_z", &f, -100000.0f, 100000.0f);
+    ImGui::DragFloat("UP_z", &f, 0.2, -100000.0f, 100000.0f);
     data.up_[2] = f;
 
     f = data.zfar_;
-    ImGui::SliderFloat("Far", &f, -100000.0f, 100000.0f);
+    ImGui::DragFloat("Far", &f, 0.2, -100000.0f, 100000.0f);
     data.zfar_ = f;
     f = data.znear_;
-    ImGui::SliderFloat("Near", &f, -10.0f, 100000.0f);
+    ImGui::DragFloat("Near", &f, 0.2, -10.0f, 100000.0f);
     data.znear_ = f;
 
     ImGui::Text("Use the sliders to configure the camera");               // Display some text (you can use a format strings too)
@@ -240,6 +240,10 @@ int Fr_GL3Window::imgui_ViewPort()
         ImVec2(0, 1),
         ImVec2(1, 0)
     );
+
+    //Keep size of the window for further usage at other places.
+    PortViewDimensions = ImVec4(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y,ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
+    
     ImGui::End();
     sceneBuffer->Unbind();
     return 0;
@@ -323,6 +327,7 @@ void Fr_GL3Window::CameraOptions (){
         camm.camera->SetActive(false);
         active_camera_ = data.camType_;
         camm = cameras[(int)active_camera_];
+        camm.camera->getUserData(data);
     }
     camm.camera->setUserData(data);
     camm.camera->SetActive(true);
@@ -344,16 +349,16 @@ void Fr_GL3Window::SunOptions() {
 
     float f;
     f = pos[0];
-    ImGui::SliderFloat("Translate x", &f,-1000.f,1000.f);
+    ImGui::DragFloat("Translate x", &f, 0.2,-1000.f,1000.f);
     pos[0] = f;
     f = pos[1];
-    ImGui::SliderFloat("Translate y", &f, -1000.f, 1000.f);
+    ImGui::DragFloat("Translate y", &f, 0.2, -1000.f, 1000.f);
     pos[1] = f;
     f = pos[2];
-    ImGui::SliderFloat("Translate z", &f, -1000.f, 1000.f);
+    ImGui::DragFloat("Translate z", &f, 0.2, -1000.f, 1000.f);
     pos[2] = f;
     f = pos[3];
-    ImGui::SliderFloat("Translate w", &f, -1000.f, 1000.f);
+    ImGui::DragFloat("Translate w", &f, 0.2, -1000.f, 1000.f);
     pos[3] = f;
     sun->SetPosition(pos);
 
@@ -365,65 +370,65 @@ void Fr_GL3Window::SunOptions() {
     old.spot_enabled_ = t;
 
     f = glm::degrees(old.spot_cutoff_Ang);
-    ImGui::SliderFloat("Spot Cutoff Ang", &f, -360.f, 360.f);
+    ImGui::DragFloat("Spot Cutoff Ang", &f, 0.2, -360.f, 360.f);
     old.spot_cutoff_Ang = glm::radians(f);
     f = old.spot_exponent_;
-    ImGui::SliderFloat("Spot exponent", &f, -50.f, 50.f);
+    ImGui::DragFloat("Spot exponent", &f, 0.2, -50.f, 50.f);
     old.spot_exponent_=f ;
 
     f = old.spot_direction_.x;
-    ImGui::SliderFloat("Spot direction.x", &f, -1000.f, 1000.f);
+    ImGui::DragFloat("Spot direction.x", &f, 0.2, -1000.f, 1000.f);
     old.spot_direction_.x = f;
 
     f = old.spot_direction_.y;
-    ImGui::SliderFloat("Spot direction.y", &f, -1000.f, 1000.f);
+    ImGui::DragFloat("Spot direction.y", &f, 0.2, -1000.f, 1000.f);
     old.spot_direction_.y = f;
 
     f = old.spot_direction_.z;
-    ImGui::SliderFloat("Spot direction.z", &f, -1000.f, 1000.f);
+    ImGui::DragFloat("Spot direction.z", &f, 0.2, -1000.f, 1000.f);
     old.spot_direction_.z = f;
     sun->SetupSpot(old);
     auto amb= sun->gtAmbient();
     f = amb.r;
-    ImGui::SliderFloat("Ambient r", &f, 0.f, 1.f);
+    ImGui::DragFloat("Ambient r", &f, 0.02, 0.f, 1.f);
     amb.r = f;
     f = amb.g;
-    ImGui::SliderFloat("Ambient g", &f, 0.f, 1.f);
+    ImGui::DragFloat("Ambient g", &f, 0.02, 0.f, 1.f);
     amb.g=f;
     f = amb.b;
-    ImGui::SliderFloat("Ambient b", &f, 0.f, 1.f);
+    ImGui::DragFloat("Ambient b", &f, 0.02, 0.f, 1.f);
     amb.b = f;
     f = amb.a;
-    ImGui::SliderFloat("Ambient a", &f, 0.f, 1.f);
+    ImGui::DragFloat("Ambient a", &f, 0.020, 0.f, 1.f);
     amb.a = f;
     sun->SetAmbient(amb.r, amb.g, amb.b, amb.a);
 
 
     auto spec = sun->getSpecular();
     f = spec.r;
-    ImGui::SliderFloat("specular r", &f, 0.f, 1.f);
+    ImGui::DragFloat("specular r", &f, 0.02, 0.f, 1.f);
     spec.r = f;
     f = spec.g;
-    ImGui::SliderFloat("specular g", &f, 0.f, 1.f);
+    ImGui::DragFloat("specular g", &f, 0.02, 0.f, 1.f);
     spec.g = f;
     f = spec.b;
-    ImGui::SliderFloat("specular b", &f, 0.f, 1.f);
+    ImGui::DragFloat("specular b", &f, 0.02, 0.f, 1.f);
     spec.b = f;
     f = spec.a;
-    ImGui::SliderFloat("specular a", &f, 0.f, 1.f);
+    ImGui::DragFloat("specular a", &f, 0.02, 0.f, 1.f);
     spec.a = f;
     sun->SetSpecular(spec.r, spec.g, spec.b, spec.a);
 
 
     auto att = sun->getAttenuation();
     f = att.r;
-    ImGui::SliderFloat("att r", &f, 0.f, 1.f);
+    ImGui::DragFloat("att r", &f, 0.2, 0.f, 1.f);
     att.r = f;
     f = att.g;
-    ImGui::SliderFloat("attv g", &f, 0.f, 1.f);
+    ImGui::DragFloat("attv g", &f, 0.2, 0.f, 1.f);
     att.g = f;
     f = att.b;
-    ImGui::SliderFloat("att b", &f, 0.f, 1.f);
+    ImGui::DragFloat("att b", &f, 0.2, 0.f, 1.f);
     att.b = f;
     sun->SetAttenuation(att.r, att.g, att.b);
 
