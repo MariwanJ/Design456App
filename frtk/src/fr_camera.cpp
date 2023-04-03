@@ -37,62 +37,62 @@
 Normal view - home FreeCAD
 ,top
 
-position 15.337841 10.960548 102.60384\n 
-orientation 0 0 1  0\n  
-nearDistance 102.50124\n 
-farDistance 102.70644\n  
-aspectRatio 1\n 
-focalDistance 100\n 
+position 15.337841 10.960548 102.60384\n
+orientation 0 0 1  0\n
+nearDistance 102.50124\n
+farDistance 102.70644\n
+aspectRatio 1\n
+focalDistance 100\n
 height 44.932899\n\n}\n'
 
  bottom
  BOTTOM
-position 10.531155 7.5401545 -97.396126\n  
-orientation -0.99999994 1.4210855e-014 9.4830476e-008  3.1415935\n  
-nearDistance 97.298668\n  
-farDistance 97.493576\n  
-aspectRatio 1\n  
-focalDistance 100\n  
+position 10.531155 7.5401545 -97.396126\n
+orientation -0.99999994 1.4210855e-014 9.4830476e-008  3.1415935\n
+nearDistance 97.298668\n
+farDistance 97.493576\n
+aspectRatio 1\n
+focalDistance 100\n
 height 44.932903\n\n}\n'
 
 front
 FRONT
- position 28.817665 -89.039444 2.6038942\n 
- orientation -1 4.214686e-007 8.4293717e-008  4.7123895\n 
- nearDistance 34.005363\n  
- farDistance 144.1835\n  
- aspectRatio 1\n  
- focalDistance 100\n 
+ position 28.817665 -89.039444 2.6038942\n
+ orientation -1 4.214686e-007 8.4293717e-008  4.7123895\n
+ nearDistance 34.005363\n
+ farDistance 144.1835\n
+ aspectRatio 1\n
+ focalDistance 100\n
  height 44.932899\n\n}\n'
 
 Rear
 REAR
-position 15.337867 110.96054 2.6038241\n 
-orientation 1.4901161e-008 -0.70710683 -0.70710671  3.141593\n  
-nearDistance 55.904575\n  
-farDistance 166.1265\n 
-aspectRatio 1\n  
-focalDistance 100\n  
+position 15.337867 110.96054 2.6038241\n
+orientation 1.4901161e-008 -0.70710683 -0.70710671  3.141593\n
+nearDistance 55.904575\n
+farDistance 166.1265\n
+aspectRatio 1\n
+focalDistance 100\n
 height 44.932899\n\n}\n'
 
-left 
+left
  LEFT
- position -71.182274 10.960546 2.6038406\n 
- orientation 0.57735014 -0.5773505 -0.5773502  2.0943947\n 
- nearDistance 16.166088\n  
- farDistance 126.30847\n 
- aspectRatio 1\n  
- focalDistance 100\n 
+ position -71.182274 10.960546 2.6038406\n
+ orientation 0.57735014 -0.5773505 -0.5773502  2.0943947\n
+ nearDistance 16.166088\n
+ farDistance 126.30847\n
+ aspectRatio 1\n
+ focalDistance 100\n
  height 44.932899\n\n}\n'
 
  right
 RIGHT
- position 115.33784 10.960509 2.6038659\n  
- orientation -0.57735032 -0.57735026 -0.5773502  4.1887908\n  
- nearDistance 60.277466\n 
- farDistance 170.50819\n 
- aspectRatio 1\n 
- focalDistance 100\n 
+ position 115.33784 10.960509 2.6038659\n
+ orientation -0.57735032 -0.57735026 -0.5773502  4.1887908\n
+ nearDistance 60.277466\n
+ farDistance 170.50819\n
+ aspectRatio 1\n
+ focalDistance 100\n
  height 44.932899\n\n}\n'
 */
 
@@ -125,7 +125,7 @@ bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
 
     int vp[4];
     glGetIntegerv(GL_VIEWPORT, vp);
-    
+
     if (camType_ ==CameraList::ORTHOGRAPHIC) {
         //glm::ortho(-aspect, aspect, -1.0f, 1.0f, zNear, zFar);
         ImVec4 winDim = Fr_GL3Window::getfr_Gl3Window()->getPortViewDimensions();
@@ -148,7 +148,7 @@ bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
 
 /**
  * Direct center of the camera.
- * 
+ *
  * \param x : x axis location
  * \param y : y axis location
  * \param z : z axis location
@@ -159,7 +159,7 @@ void Camera::SetCenter(float x, float y, float z) {
 
 /**
  * Up value of the camera.
- *   
+ *
  * \param x : x axis location
  * \param y : y axis location
  * \param z : z axis location
@@ -169,8 +169,8 @@ void Camera::SetUp(float x, float y, float z) {
 }
 /**
  * Set fovy, znear and z far values.
- * 
- * \param fovy : Focal of view value 
+ *
+ * \param fovy : Focal of view value
  * \param znear :  Z - Near value
  * \param zfar : z - Far value
  */
@@ -181,7 +181,7 @@ void Camera::SetPerspective(float fovy, float znear, float zfar) {
 }
 /**
  * Get camera configurations and saved in data.
- * 
+ *
  * \param data ref variable keeps the configuration
  */
 void Camera::getUserData(userData_& data)
@@ -198,14 +198,14 @@ void Camera::getUserData(userData_& data)
 
 void Camera::setUserData(userData_& data)
 {
-    aspectRatio_  =data.aspectRatio_   ; 
-    camPosition_  =data.camPosition_   ; 
-    camType_      =data.camType_       ; 
-    direction_    =data.direction_        ; 
-    fovy_         =data.fovy_          ; 
-    up_           =data.up_            ; 
-    zfar_         =data.zfar_          ; 
-    znear_        =data.znear_         ; 
+    aspectRatio_  =data.aspectRatio_   ;
+    camPosition_  =data.camPosition_   ;
+    camType_      =data.camType_       ;
+    direction_    =data.direction_        ;
+    fovy_         =data.fovy_          ;
+    up_           =data.up_            ;
+    zfar_         =data.zfar_          ;
+    znear_        =data.znear_         ;
 }
 
 void Camera::SetManipulator(std::shared_ptr<Manipulator> manipulator) {
@@ -217,9 +217,9 @@ std::shared_ptr<Manipulator> Camera::getManipulator()
     return manipulator_;
 }
 /**
- * 
+ *
  * Home values.
- * 
+ *
  */
 
 
@@ -227,7 +227,13 @@ std::shared_ptr<Manipulator> Camera::getManipulator()
 void Camera::setupCameraHomeValues() {
     int vp[4];
     glGetIntegerv(GL_VIEWPORT, vp);
-    aspectRatio_ = (float)vp[2] / vp[3];
+    auto win = Fr_GL3Window::getfr_Gl3Window();
+    if (win == nullptr)
+        return;
+    auto portview = win->getPortViewDimensions();
+
+    aspectRatio_ = float(portview.y / portview.w);
+   // aspectRatio_ = (float)vp[2] / vp[3];
         switch (int(camType_)) {
             //TODO: FIXME: If you create more than 6, you should add it here
         case 0: {
@@ -341,7 +347,7 @@ void Camera::setupCameraHomeValues() {
             SetPerspective(100.0f, 55.9f, 166.12f);
         }break;
         }
-    
+
 
 }
 /**
@@ -353,9 +359,9 @@ void Camera::setType(CameraList camTyp)
     active_ = true;
 }
 /**
- * 
+ *
  * Set camera type which affects the setup function.
- * \return 
+ * \return
  */
 CameraList  Camera::getType() const
 {
