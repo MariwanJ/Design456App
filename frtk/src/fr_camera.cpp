@@ -228,12 +228,15 @@ void Camera::setupCameraHomeValues() {
     int vp[4];
     glGetIntegerv(GL_VIEWPORT, vp);
     auto win = Fr_GL3Window::getfr_Gl3Window();
-    if (win == nullptr)
-        return;
-    auto portview = win->getPortViewDimensions();
-
+    if (win == nullptr){
+     auto portview = win->getPortViewDimensions();
     aspectRatio_ = float(portview.y / portview.w);
-   // aspectRatio_ = (float)vp[2] / vp[3];
+    }
+    else{
+        aspectRatio_ = (float)vp[2] / vp[3];
+    }
+
+
         switch (int(camType_)) {
             //TODO: FIXME: If you create more than 6, you should add it here
         case 0: {
