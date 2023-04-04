@@ -48,15 +48,17 @@ std::shared_ptr<Transform>bunny() {
     // bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/Pyramid.off"));
     bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/Cube.off"));
 
-    auto rightlight_spot = std::make_shared<Light>();
-    rightlight_spot->SetActive(false);
-    rightlight_spot->SetPosition(2.956f, -10.514f, 10.074f);
-    rightlight_spot->SetupSpot(1.0f, 0.0f, -0.1f, 45.0f, 16.0f);
-    rightlight_spot->SetDiffuse(0.5f, 0.5f, 0.5f);
-    rightlight_spot->SetAmbient(0.42f, 0.42f, 0.42f);
-    rightlight_spot->SetAttenuation(1.0f, 0.002f, 0.0f);
-    bunny_t->AddNode(rightlight_spot);
+    auto Bunny_spot = std::make_shared<Light>();
+    Bunny_spot->SetActive(true);
+    Bunny_spot->SetPosition(10.f, 10.f, -10.f);
+    Bunny_spot->SetupSpot(-2.0f, -2.0f, 10.0f, 152.0f, 16.0f);
+    Bunny_spot->SetDiffuse(1.0f, 0.5f, 0.31f);
+    Bunny_spot->SetAmbient(1.0f, 0.5f, 0.31f);
+    Bunny_spot->SetAttenuation(1.0f, 0.002f, 0.50f);
+    Bunny_spot->SetSpecular(0.5f, 0.5f, 0.f);
+
     bunny_t->AddNode(bunny);
+    bunny_t->AddNode(Bunny_spot);
     return bunny_t;
 }
 /**
@@ -143,7 +145,7 @@ std::shared_ptr<Transform> Grid::CreateGrid()
             if ((x == 0 && y == 0) ||
                 (x == 0 && z == 0) ||
                 (y == 0 && z == 0)) {
-                //We don't draw the axis line as we draw them seperatly 
+                //We don't draw the axis line as we draw them seperatly
                 continue;
             }
             vertices.push_back(x);
@@ -160,7 +162,7 @@ std::shared_ptr<Transform> Grid::CreateGrid()
             if ( (x == 0 && y == 0) ||
                  (x == 0 && z == 0) ||
                  (y == 0 && z == 0)) {
-                //We don't draw the axis line as we draw them seperatly 
+                //We don't draw the axis line as we draw them seperatly
                 continue;
             }
             vertices.push_back(x);
