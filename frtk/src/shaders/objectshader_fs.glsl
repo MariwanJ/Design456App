@@ -13,7 +13,7 @@ struct LightInfo {
     vec4 position;         //
     vec4 diffuse;          //
     vec4 specular;         //
-    vec4 ambient;          //Light intensity 
+    vec4 ambient;          //Light intensity
     vec3 attenuation;      //
     bool is_spot;          //
     vec3 direction;        //
@@ -62,7 +62,7 @@ vec3 compute_light_intensity(LightInfo light, int id, vec3 frag_normal)
             kspot = pow(kspot, light.exponent);
             return kspot * intensity;
         }
-        return vec3(0, 0, 0); 
+        return vec3(0, 0, 0);
     }
     return intensity;
 }
