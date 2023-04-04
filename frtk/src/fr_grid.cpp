@@ -51,7 +51,7 @@ std::shared_ptr<Transform>bunny() {
     auto Bunny_spot = std::make_shared<Light>();
     Bunny_spot->SetActive(true);
     Bunny_spot->SetPosition(10.f, 10.f, -10.f);
-    //Bunny_spot->SetupSpot(1.0f, 0.0f, -0.1f, 45.0f, 16.0f);
+    Bunny_spot->SetupSpot(-2.0f, -2.0f, 10.0f, 152.0f, 16.0f);
     Bunny_spot->SetDiffuse(1.0f, 0.5f, 0.31f);
     Bunny_spot->SetAmbient(1.0f, 0.5f, 0.31f);
     Bunny_spot->SetAttenuation(1.0f, 0.002f, 0.50f);
