@@ -45,8 +45,8 @@ std::shared_ptr<Transform>bunny() {
     auto bunny = std::make_shared<ObjectShaderNode>(0x667AFF, 0.5f); //  color and
 
     //bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/xy_plane.off"));
-     bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/Pyramid.off"));
-    //bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/Cube.off"));
+    // bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/Pyramid.off"));
+    bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/Cube.off"));
 
     auto rightlight_spot = std::make_shared<Light>();
     rightlight_spot->SetActive(false);

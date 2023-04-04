@@ -72,10 +72,10 @@ void Light::SetAttenuation(float c, float l, float q) {
     attenuation_ = glm::vec3(c, l, q);
 }
 
-void Light::SetupSpot(_spot newSpot) {
+void Light::SetupSpot(_spot &newSpot) {
     spot_.spot_enabled_ = newSpot.spot_enabled_;
     spot_.spot_direction_ = newSpot.spot_direction_;
-    spot_.spot_cutoff_Ang = newSpot.spot_cutoff_Ang;
+    spot_.spot_cutoff_Ang = cos(glm::radians(newSpot.spot_cutoff_Ang));
     spot_.spot_exponent_= newSpot.spot_exponent_;
 }
 

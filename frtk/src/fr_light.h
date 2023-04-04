@@ -79,7 +79,7 @@ public:
      */
     void SetAttenuation(float c, float l, float q);
 
-    void SetupSpot(_spot newSpot);
+    void SetupSpot(_spot &newSpot);
 
     /**
      * Setup spot

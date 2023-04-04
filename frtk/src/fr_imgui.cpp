@@ -356,9 +356,9 @@ void Fr_GL3Window::SunOptions() {
     ImGui::Checkbox("Spot Enable ",&t);
     old.spot_enabled_ = t;
 
-    f = glm::degrees(old.spot_cutoff_Ang);
+    f = glm::degrees(acos(old.spot_cutoff_Ang));
     ImGui::DragFloat("Spot Cutoff Ang", &f, 0.2, -360.f, 360.f);
-    old.spot_cutoff_Ang = glm::radians(f);
+    old.spot_cutoff_Ang = cos(glm::radians(f));
     f = old.spot_exponent_;
     ImGui::DragFloat("Spot exponent", &f, 0.2, -50.f, 50.f);
     old.spot_exponent_=f ;
