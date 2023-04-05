@@ -357,7 +357,9 @@ void Fr_GL3Window::SunOptions() {
     old.spot_enabled_ = t;
 
     f = glm::degrees(acos(old.spot_cutoff_Ang));
+    std::cout << "value -->" << f << std::endl;
     ImGui::DragFloat("Spot Cutoff Ang", &f, 0.2, -360.f, 360.f);
+    std::cout << "value -->" << f << std::endl;
     old.spot_cutoff_Ang = cos(glm::radians(f));
     f = old.spot_exponent_;
     ImGui::DragFloat("Spot exponent", &f, 0.2, -50.f, 50.f);
@@ -409,13 +411,13 @@ void Fr_GL3Window::SunOptions() {
 
     auto att = sun->getAttenuation();
     f = att.r;
-    ImGui::DragFloat("att r", &f, 0.2,-100.f, 100.f);
+    ImGui::DragFloat("Attenuation r", &f, 0.01,-1.f, 1.f);
     att.r = f;
     f = att.g;
-    ImGui::DragFloat("attv g", &f, 0.2, -100.f, 100.f);
+    ImGui::DragFloat("attv g", &f, 0.01, -1.f, 1.f);
     att.g = f;
     f = att.b;
-    ImGui::DragFloat("att b", &f, 0.2, -100.f, 100.0f);
+    ImGui::DragFloat("att b", &f, 0.01, -1.f, 1.0f);
     att.b = f;
     sun->SetAttenuation(att.r, att.g, att.b);
     ImGui::End();

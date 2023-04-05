@@ -43,7 +43,7 @@ Light::Light() :
     sm_enable_(false) {
     type(NODETYPE::FR_LIGHT);
     spot_.spot_enabled_ = false;
-    spot_.spot_cutoff_Ang=0.f;
+    spot_.spot_cutoff_Ang=0.0f;
     spot_.spot_direction_ = glm::vec4(0, 0, 0, 0);
     spot_.spot_exponent_ = 0.0f;
 }
@@ -75,7 +75,7 @@ void Light::SetAttenuation(float c, float l, float q) {
 void Light::SetupSpot(_spot &newSpot) {
     spot_.spot_enabled_ = newSpot.spot_enabled_;
     spot_.spot_direction_ = newSpot.spot_direction_;
-    spot_.spot_cutoff_Ang = cos(glm::radians(newSpot.spot_cutoff_Ang));
+    spot_.spot_cutoff_Ang = newSpot.spot_cutoff_Ang;
     spot_.spot_exponent_= newSpot.spot_exponent_;
 }
 
