@@ -44,6 +44,7 @@ typedef struct vert{
 	std::shared_ptr<Transform> Red;
 	std::shared_ptr<Transform> Green;
 	std::shared_ptr<Transform> Blue;
+	std::shared_ptr<Transform> ZBlue; //small lines
 };
 
 class Axis3D :public Node
@@ -53,13 +54,13 @@ public:
  * class constructor.
  *
  */
-	Axis3D();
+	Axis3D(float sectionSize);
 
 	~Axis3D();
 	/**
 	 * .
 	 */
-	
+
 	vert CreateAxis3D();
 
 	/**
@@ -80,6 +81,11 @@ public:
 	unsigned int getAxis3DSize(void) const;
 
 	/**
+	* Set Section size , affects Z axis only
+	*/
+ 	void setSectionSize(float sec);
+
+	/**
 	 * Create the Grid verticies.
 	 *
 	 * \return pointer to the created grid
@@ -87,7 +93,7 @@ public:
 
 private:
 
-	int axis3DSize_; 
+	int axis3DSize_;
 	glm::vec4 axis3DColor_;
 };
 
