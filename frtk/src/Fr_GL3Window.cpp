@@ -160,7 +160,7 @@ void Fr_GL3Window::CreateScene()
       * Add here the nodes - Grid, and XYZ axis
       */
     CreateSun();
-    scene->AddNode(sun);
+    //scene->AddNode(sun);
     scene->AddNode(bunny());
     scene->AddNode(Grid().CreateGrid());
     vert axis = Axis3D().CreateAxis3D();
@@ -485,9 +485,9 @@ int Fr_GL3Window::GLFWrun()
 std::shared_ptr<Transform> Fr_GL3Window::CreateSun() {
     //TODO: FIXME:
     auto sun_ = std::make_shared<Transform>();
-    sun_->Translate(0.0f, 0.f, 0.f);
+    sun_->Translate(100.0f, 100.f, 100.f);
     sun= std::make_shared<Light>();
-    sun->SetPosition(100.0f, 100.0f, 100.0f);
+    sun->SetPosition(1000.0f, 1000.0f, 1000.0f);
     sun->SetDiffuse(0.5f, 0.5f, 0.5f);
     sun->SetAmbient(1.0f, 1.0f, 1.0f);
     sun->EnableShadowMap(glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(1.f, 0.0f, 0.0f), glm::ortho(-100.0f, 100.0f, -1000.0f, 1000.0f, 0.10f, 100.0f));

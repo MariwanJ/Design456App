@@ -272,8 +272,8 @@ void Camera::setupCameraHomeValues() {
             */
             SetCamPosition(-74.f, -74.f, -718.6f);
             SetCenter(0.0f, 0.0f, 0.0f);
-            SetUp(10.f, 10.f, 10.f);
-            SetPerspective(2.0f, -102.5f, 102.7f);
+            SetUp(0.8f, 10.f, 10.f);
+            SetPerspective(6.8f, -102.5f, 102.7f);
         }break;
         case 3: {
             /*Bottom
