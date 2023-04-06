@@ -44,6 +44,7 @@ typedef struct vert{
 	std::shared_ptr<Transform> Red;
 	std::shared_ptr<Transform> Green;
 	std::shared_ptr<Transform> Blue;
+	std::shared_ptr<Transform> ZBlue; //small lines
 };
 
 class Axis3D :public Node
@@ -53,13 +54,14 @@ public:
  * class constructor.
  *
  */
+
 	Axis3D();
 
 	~Axis3D();
 	/**
 	 * .
 	 */
-	
+
 	vert CreateAxis3D();
 
 	/**
@@ -71,13 +73,12 @@ public:
 	/**
 	 * Sets grid size. This is the distance between each line in both axis
 	 */
-	void setAxis3DSize( unsigned int sizeINmm);
-	/**
-	 * Returns the grid size.
-	 *
-	 * \return gird size defined previously
-	 */
-	unsigned int getAxis3DSize(void) const;
+	void setAxisZstepSize( float sizeINmm);
+	float getAxisZstepSize(void) const;
+
+
+	void setStepWidth(float sec);
+	float getStepWidth(void) const;
 
 	/**
 	 * Create the Grid verticies.
@@ -87,8 +88,9 @@ public:
 
 private:
 
-	int axis3DSize_; 
+	float ZstepSize_;
 	glm::vec4 axis3DColor_;
+	float stepWidth_;
 };
 
 #endif
