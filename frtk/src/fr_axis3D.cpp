@@ -111,14 +111,22 @@ vert Axis3D::CreateAxis3D()
 
     std::vector<unsigned int> indicesZBlue;
     for (int i = -500; i <= 500; i = i + ZstepSize_) {
-        verticesZBlue.push_back((0.0f, float(-zBlueSize / 2), float(i)));
-        verticesZBlue.push_back((0.0f, float(zBlueSize / 2), float(i)));
+        verticesZBlue.push_back(0.0f);
+        verticesZBlue.push_back(float(-zBlueSize / 2));
+        verticesZBlue.push_back(float(i));
+        verticesZBlue.push_back(0.0f);
+        verticesZBlue.push_back(float(zBlueSize / 2));
+        verticesZBlue.push_back(float(i));
     }
 
 
     for (int i = 0; i <= verticesBlue.size(); i++) {
         indicesBlue.push_back(i);
     }
+    for (int i = 0; i <= verticesZBlue.size(); i++) {
+        indicesZBlue.push_back(i);
+    }
+
 
     auto primativeR= std::make_shared<Fr_Primatives>();
     primativeR->SetVertexes(verticesRed, indicesRed);
@@ -144,8 +152,15 @@ vert Axis3D::CreateAxis3D()
     axis_t.Green->Scale(1, 1, 1);
     axis_t.Blue->Scale(1, 1, 1);
 
-
-
+    auto primativeZB = std::make_shared<Fr_Primatives>();
+    primativeB->SetVertexes(verticesZBlue, indicesZBlue);
+    auto axZBlue = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_BLUE), 0.005); //  color and
+    axZBlue->SetPrimative(primativeB);
+    axis_t.Blue = std::make_shared<Transform>();
+    axis_t.Blue->AddNode(axZBlue);
+    axis_t.Red->Scale(1, 1, 1);
+    axis_t.Green->Scale(1, 1, 1);
+    axis_t.Blue->Scale(1, 1, 1);
     return axis_t;
 }
 

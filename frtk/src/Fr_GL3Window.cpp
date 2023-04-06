@@ -160,7 +160,7 @@ void Fr_GL3Window::CreateScene()
       * Add here the nodes - Grid, and XYZ axis
       */
     CreateSun();
-    //scene->AddNode(sun);
+    scene->AddNode(sun);
     scene->AddNode(bunny());
     scene->AddNode(Grid().CreateGrid());
     vert axis = Axis3D().CreateAxis3D();
@@ -292,6 +292,7 @@ void Fr_GL3Window::CreateCameras()
         }break;
         case 1: {
             //ORTHOGRAPHIC
+
             camera_trans->Rotate(glm::vec3(0.74290609f, 0.30772209f, 0.59447283f), 69.7f);
         }break;
         case 2: {

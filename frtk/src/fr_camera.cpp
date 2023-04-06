@@ -131,9 +131,9 @@ bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
         ImVec4 winDim = Fr_GL3Window::getfr_Gl3Window()->getPortViewDimensions();
         float aspect = (float)winDim.z / winDim.w;
 
-        projection = glm::ortho(float(-winDim.z/fovy_), float(winDim.z / fovy_),
-            -winDim.w / fovy_, -winDim.w / fovy_,
-                                znear_, zfar_);
+       projection = glm::ortho(float(-winDim.z/fovy_), float(winDim.z / fovy_),-winDim.w / fovy_, winDim.w / fovy_, znear_, zfar_);
+       // projection = glm::ortho(float(-winDim.z / fovy_), float(winDim.z / fovy_), -80.0f,80.f, -znear_, zfar_);
+
         //projection = glm::ortho(-80.0f, 80.0f, -60.0f, 60.0f, -0.1f, 1000.0f);
     }
     else {

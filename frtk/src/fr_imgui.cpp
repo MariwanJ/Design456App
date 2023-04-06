@@ -105,7 +105,7 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
         }
         if (imgui_menu() < 0)
             return -1;
-        ImGui::ShowDemoWindow();
+        //ImGui::ShowDemoWindow();
         if (imgui_TopPannel() < 0)
             return -1;
         if (imguimzo_init() < 0)
@@ -151,7 +151,7 @@ int Fr_GL3Window::imgui_CameraConfiguration(userData_& data)
     ImGui::Begin("Camera Configuration!");                          // Create a window called "Hello, world!" and append into it.
 
     f = data.camPosition_[0];
-    ImGui::DragFloat("Position_x", &f, 0.2, -10000.0f, 1000.0f);
+    ImGui::DragFloat("Position_x", &f, 0.2, -1000.0f, 1000.0f);
     data.camPosition_[0] = f;
     f = data.camPosition_[1];
     ImGui::DragFloat("Position_y", &f, 0.2, -1000.0f, 1000.0f);
