@@ -93,39 +93,7 @@ def convertDefine(Lines,i):
     line=line.replace(".","")
     nAnswers.append(line)
     return (nAnswers,i)
-            
-def convertFunction(Lines,i):
-    line=Lines[i]
-    nAnswers=[]
-    nAnswers.append("\nvoid ") #all functions will be void for simplicity
-    line=line.replace("->","",1)
-    line=line.replace("%","//")
-    nAnswers.append(line.split()) #function name  
-    nAnswers.append("{")  
-    nAnswers.append("\n")
-    i=i+1
-    line=Lines[i]
-    while (line.find( ";")==-1 and line.find( ".")==-1):
-        line=line.replace("%","//")
-        line=line.replace("end).","",1)
-        line=line.replace("of","")
-        line=line.replace("ok","",1)
-        line=line.replace ("ok -> ok","",1)
-        if(line.find("\case")!=-1):
-            nAnswers.append("\nswitch(")
-            nAnswers.append(line)
-            nAnswers.append(") {\n")
-            nAnswers.append("case "),
-            nAnswers.append(line.split()[0])
-        nAnswers.append(line)
-        i=i+1
-        line=Lines[i]
 
-    line=line.replace("end).","",1) 
-    line=line.replace("end.","",1)    
-    nAnswers.append(line)                 
-    nAnswers.append("}")
-    return (nAnswers,i)
 
 def convertImport(Lines,i):
     nAnswers=[]
@@ -150,4 +118,38 @@ def convertIfDef(Lines,i):
     line=line.replace(".","")
     nAnswers.append(line)
     nAnswers.append(" ")
+    return (nAnswers,i)
+
+
+            
+def convertFunction(Lines,i):
+    line=Lines[i]
+    nAnswers=[]
+    nAnswers.append("\nvoid ") #all functions will be void for simplicity
+    line=line.replace("->","",1)
+    line=line.replace("%","//")
+    nAnswers.append(line.split()) #function name  
+    nAnswers.append("{")  
+    nAnswers.append("\n")
+    i=i+1
+    line=Lines[i]
+    while (line.find( ";")==-1 and line.find( ".")==-1):
+        line=line.replace("%","//")
+        line=line.replace("end).","",1)
+        line=line.replace("of","")
+        line=line.replace("ok","",1)
+        line=line.replace ("ok -> ok","",1)
+        if(line.find("case")!=-1):
+            nAnswers.append("\nswitch(")
+            nAnswers.append(line)
+            nAnswers.append(") {\n")
+            nAnswers.append("case "),
+            nAnswers.append(line.split()[0])
+        nAnswers.append(line)
+        i=i+1
+        line=Lines[i]
+    line=line.replace("end).","",1) 
+    line=line.replace("end.","",1)    
+    nAnswers.append(line)                 
+    nAnswers.append("}")
     return (nAnswers,i)
