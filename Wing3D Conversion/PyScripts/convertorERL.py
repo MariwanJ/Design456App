@@ -28,69 +28,11 @@
 
 import sys,os
 import io
+from conversions import *
 
 module = False #Check if it was a module, if so define it as spacename
 answers=[]
 
-def convertDefine(Lines,i):
-    line=Lines[i]
-    nAnswers=[]
-    nAnswers.append("#define ")
-    line=line.replace("-define","",1)
-    line=line.replace("("," ",1) #only once
-    line=line.replace(")"," ",1) #only once
-    line=line.replace(","," ",1) #only once
-    line=line.replace(".","")
-    nAnswers.append(line)
-    return (nAnswers,i)
-            
-def convertFunction(Lines,i):
-    line=Lines[i]
-    nAnswers=[]
-    nAnswers.append("\nvoid ") #all functions will be void for simplicity
-    line=line.replace("->","",1)
-    line=line.replace("%","//")
-    nAnswers.append(line.split()) #function name  
-    nAnswers.append("{")  
-    nAnswers.append("\n")
-    i=i+1
-    line=Lines[i]
-    while (line.find( ";")==-1 and line.find( ".")==-1):
-        line=line.replace("%","//")
-        line=line.replace("end).","",1)
-        line=line.replace("of","")
-        line=line.replace("ok","",1)
-        line=line.replace ("ok -> ok","",1)
-        if(line.find("\case")!=-1):
-            nAnswers.append("\nswitch(")
-            nAnswers.append(line)
-            nAnswers.append(") {\n")
-            nAnswers.append("case "),
-            nAnswers.append(line.split()[0])
-        nAnswers.append(line)
-        i=i+1
-        line=Lines[i]
-
-    line=line.replace("end).","",1) 
-    line=line.replace("end.","",1)    
-    nAnswers.append(line)                 
-    nAnswers.append("}")
-    return (nAnswers,i)
-
-def convertImport(Lines,i):
-    nAnswers=[]
-    line=Lines[i]
-    line=line.replace ('\n', " ")
-    line=line.replace ('-', " ")
-    line=line.replace ('.', " ")
-    line=line.replace ('(', " ")
-    line=line.replace (')', " ")
-    line=line.replace ('-import', "")
-    nAnswers.append("\n#include ")
-    nAnswers.append(line.split()[0])
-    nAnswers.append("//")  #just to make it clear
-    nAnswers.append(line)
-    return (nAnswers,i)
 
 def convertAFileERL(fn,wfile):
     if not os.access(fn, os.R_OK):
@@ -127,37 +69,16 @@ def convertAFileERL(fn,wfile):
             
         #-ifdef
         elif (line.find("-ifdef")!=-1):
-                answer.append("#ifdef ")
-                line=line.replace("-ifdef","",1)
-                line=line.replace(".","")
-                answer.append(line)
-                answer.append(" ")
+            answer,i=convertIfDef(Lines,i)
+            
         #-include_lib
         elif (line.find("-include_lib")!=-1):
-            line=line.replace ('\n', " ")
-            line=line.replace ('-', " ")
-            line=line.replace ('.', " ")
-            line=line.replace ('(', " ")
-            line=line.replace (')', " ")
-        
-            answer.append("\n#include ")
-            line=line.replace(".hrl",".h",1)
-            line=line.replace ("include_lib","",1)
-            answer.append(line)
-        
+            answer,i= convertIncludeLib(Lines,i)
+            
         #-include(xxxx)
         elif (line.find("-include")!=-1):
-            line=line.replace ('\n', " ")
-            line=line.replace ('-', " ")
-            line=line.replace ('.', " ")
-            line=line.replace ('(', " ")
-            line=line.replace (')', " ")
-                 
-            answer.append("\n#include ")
-            line=line.replace(".hrl",".h",1)
-            line=line.replace ("-include","",1)
-            answer.append(line)
-            answer.append("\n")
+            answer,i=convertInclude(Lines,i)
+
         #-endif. 
         elif (line.find("-endif.")!=-1):
             answer.append("#endif")
@@ -171,28 +92,7 @@ def convertAFileERL(fn,wfile):
             answer,i= convertDefine(Lines,i)
         #-record
         elif(line.find("-record")!=-1):
-            line=line.replace("-record","",1 )
-            line=line.replace("(","",1) #record end
-            line=line.replace(",","",1) #record end
-            line=line.replace("\n","")
-            answer.append("\nstruct ")
-            answer.append(line)
-            answer.append(" {\n")
-            
-            i=i+1
-            while(Lines[i].find("}).")==-1):
-                #record which is a struct definition
-                line=Lines[i]
-           
-                line=line.replace("%", "//")
-                line=line.replace("{", " ")
-                line=line.replace("}", " ")
-                line=line.replace("(","",1) #record end
-                line=line.replace(",",";",1)
-                answer.append("auto ")
-                answer.append(line)
-                i=i+1
-            answer.append("};\n")
+            answer,i=convertRecord(Lines,i)
 
         #functions
         elif(line.find("->")!=-1):

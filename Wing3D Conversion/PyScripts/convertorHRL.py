@@ -28,6 +28,7 @@
 
 import sys,os
 import io
+from conversions import *
 
 def convertAFileHRL(fn , wfile):
     isModule=False
@@ -65,37 +66,15 @@ def convertAFileHRL(fn , wfile):
             isModule = True
         #-ifdef
         elif (line.find("-ifdef")!=-1):
-                answer.append("#ifdef ")
-                line=line.replace("-ifdef","",1)
-                line=line.replace(".","")
-                answer.append(line)
-                answer.append(" ")
+            answer,i=convertIfDef(Lines,i)
+            
         #-include_lib
         elif (line.find("-include_lib")!=-1):
-            line=line.replace ('\n', " ")
-            line=line.replace ('-', " ")
-            line=line.replace ('.', " ")
-            line=line.replace ('(', " ")
-            line=line.replace (')', " ")
-        
-            answer.append("\n#include ")
-            line=line.replace(".hrl",".h",1)
-            line=line.replace ("include_lib","",1)
-            answer.append(line)
-        
+            answer,i= convertIncludeLib(Lines,i)
                 
         #-include(xxxx)
         elif (line.find("-include")!=-1):
-            line=line.replace ('\n', " ")
-            line=line.replace ('-', " ")
-            line=line.replace ('.', " ")
-            line=line.replace ('(', " ")
-            line=line.replace (')', " ")
-                 
-            answer.append("\n#include ")
-            line=line.replace(".hrl",".h",1)
-            line=line.replace ("include_lib","",1)
-            answer.append(line)
+            answer,i=convertInclude(Lines,i)
 
         #-endif. 
         elif (line.find("-endif.")!=-1):
@@ -103,44 +82,18 @@ def convertAFileHRL(fn , wfile):
         
         #-define
         elif(line.find("-define")!=-1):
-            answer.append("#define ")
-            line=line.replace("-define","",1)
-            line=line.replace("("," ",1) #only once
-            line=line.replace(")"," ",1) #only once
-            line=line.replace(","," ",1) #only once
-            line=line.replace(".","")
-            line=line.replace("bor","|")
-            line=line.replace("bnot", "~")       
-            answer.append(line)
+            answer,i= convertDefine(Lines,i)
            
         #-record
         elif(line.find("-record")!=-1):
-            line=line.replace("-record","",1 )
-            line=line.replace("(","",1) #record end
-            line=line.replace(",","",1) #record end
-            line=line.replace("\n","")
-            answer.append("\nstruct ")
-            answer.append(line)
-            answer.append(" {\n")
-            
-            i=i+1
-            while(Lines[i].find("}).")==-1):
-                #record which is a struct definition
-                line=Lines[i]
-                line=line.replace("%", "//")
-                line=line.replace("{", " ")
-                line=line.replace("}", " ")
-                line=line.replace("(","",1) #record end
-                line=line.replace(",",";",1)
-                answer.append("auto ")
-                answer.append(line)
-                i=i+1
-            answer.append("};\n")
+            answer,i=convertRecord(Lines,i)
         
         answers.append(answer)
     
     for ans in answers:
         wfileOpen.write(''.join(ans))
+    if (isModule is True):
+        wfileOpen.write(''.join("}"))
     wfileOpen.close()
      
         
