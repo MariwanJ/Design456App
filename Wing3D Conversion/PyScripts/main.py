@@ -47,13 +47,10 @@ Wings3DCppSrc = "e:/TEMP/PROJECT_CONVERT3D/"
 
 def detectFileType(fn):
     """Detect file type based on filename
-
     Args:
         fn (function): Target file name 
-
     Raises:
         Exception: If file is not accessible
-
     Returns:
         _type_: two results, first is file type (HRL OR ERL), 
                              second is the new file name with 

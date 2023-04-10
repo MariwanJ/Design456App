@@ -30,6 +30,67 @@ import sys,os
 import io
 
 module = False #Check if it was a module, if so define it as spacename
+answers=[]
+
+def convertDefine(Lines,i):
+    line=Lines[i]
+    nAnswers=[]
+    nAnswers.append("#define ")
+    line=line.replace("-define","",1)
+    line=line.replace("("," ",1) #only once
+    line=line.replace(")"," ",1) #only once
+    line=line.replace(","," ",1) #only once
+    line=line.replace(".","")
+    nAnswers.append(line)
+    return (nAnswers,i)
+            
+def convertFunction(Lines,i):
+    line=Lines[i]
+    nAnswers=[]
+    nAnswers.append("\nvoid ") #all functions will be void for simplicity
+    line=line.replace("->","",1)
+    line=line.replace("%","//")
+    nAnswers.append(line.split()) #function name  
+    nAnswers.append("{")  
+    nAnswers.append("\n")
+    i=i+1
+    line=Lines[i]
+    while (line.find( ";")==-1 and line.find( ".")==-1):
+        line=line.replace("%","//")
+        line=line.replace("end).","",1)
+        line=line.replace("of","")
+        line=line.replace("ok","",1)
+        line=line.replace ("ok -> ok","",1)
+        if(line.find("\case")!=-1):
+            nAnswers.append("\nswitch(")
+            nAnswers.append(line)
+            nAnswers.append(") {\n")
+            nAnswers.append("case "),
+            nAnswers.append(line.split()[0])
+        nAnswers.append(line)
+        i=i+1
+        line=Lines[i]
+
+    line=line.replace("end).","",1) 
+    line=line.replace("end.","",1)    
+    nAnswers.append(line)                 
+    nAnswers.append("}")
+    return (nAnswers,i)
+
+def convertImport(Lines,i):
+    nAnswers=[]
+    line=Lines[i]
+    line=line.replace ('\n', " ")
+    line=line.replace ('-', " ")
+    line=line.replace ('.', " ")
+    line=line.replace ('(', " ")
+    line=line.replace (')', " ")
+    line=line.replace ('-import', "")
+    nAnswers.append("\n#include ")
+    nAnswers.append(line.split()[0])
+    nAnswers.append("//")  #just to make it clear
+    nAnswers.append(line)
+    return (nAnswers,i)
 
 def convertAFileERL(fn,wfile):
     if not os.access(fn, os.R_OK):
@@ -49,7 +110,6 @@ def convertAFileERL(fn,wfile):
       
     wfileOpen=io.open(wfile, mode="w+", encoding="utf-8")
     answers=[]
-
     try:
         Lines=ofile.readlines()
     except Exception as e: #Should be replaceable with IOError, doesn't hurt to not 
@@ -95,35 +155,20 @@ def convertAFileERL(fn,wfile):
                  
             answer.append("\n#include ")
             line=line.replace(".hrl",".h",1)
-            line=line.replace ("include_lib","",1)
+            line=line.replace ("-include","",1)
             answer.append(line)
-
+            answer.append("\n")
         #-endif. 
         elif (line.find("-endif.")!=-1):
             answer.append("#endif")
             
         #import
         elif (line.find("-import")!=-1):
-            line=line.replace ('\n', " ")
-            line=line.replace ('-', " ")
-            line=line.replace ('.', " ")
-            line=line.replace ('(', " ")
-            line=line.replace (')', " ")
-        
-            answer.append("\n#include ")
-            answer.append(line.split()[0])
-            answer.append("//")  #just to make it clear
-            answer.append(line)
-        
+            answer,i=convertImport(Lines,i)  
+            
         #-define
         elif(line.find("-define")!=-1):
-            answer.append("#define ")
-            line=line.replace("-define","",1)
-            line=line.replace("("," ",1) #only once
-            line=line.replace(")"," ",1) #only once
-            line=line.replace(","," ",1) #only once
-            line=line.replace(".","")
-            answer.append(line)
+            answer,i= convertDefine(Lines,i)
         #-record
         elif(line.find("-record")!=-1):
             line=line.replace("-record","",1 )
@@ -138,6 +183,7 @@ def convertAFileERL(fn,wfile):
             while(Lines[i].find("}).")==-1):
                 #record which is a struct definition
                 line=Lines[i]
+           
                 line=line.replace("%", "//")
                 line=line.replace("{", " ")
                 line=line.replace("}", " ")
@@ -150,36 +196,10 @@ def convertAFileERL(fn,wfile):
 
         #functions
         elif(line.find("->")!=-1):
-            answers.append("\nvoid ") #all functions will be void for simplicity
-            line=line.replace("->","",1)
-            line=line.replace("%","//")
-            answers.append(line.split()) #function name  
-            answers.append("{")  
-            answers.append("\n")
-            line=Lines[i]
-            i=i+1
-            while (line.find( ";")==-1 and line.find( ".")==-1):
-                line=Lines[i]
-                line=line.replace("%","//")
-                line=line.replace("end).","",1)
-                line=line.replace("of","")
-                line=line.replace("ok","",1)
-                line=line.replace ("ok -> ok","",1)
-                if(line.find("\case")!=-1):
-                    answers.append("\nswitch(")
-                    answers.append(line)
-                    answers.append(") {\n")
-                    answers.append("case "),
-                    answers.append(line.split()[0])
-                i=i+1
-                line=line.replace("ok -> ok","",1)
-                answers.append(line)
-            line=line.replace("end).","",1) 
-            line=line.replace("end.","",1)                     
-            answers.append("}")    
-            answer=""   
-        answers.append(answer)
-    
+            answer,i=convertFunction(Lines,i)
+        for anss in answer: 
+            answers.append(anss)
+        answer=""
     for ans in answers:
         wfileOpen.write(''.join(ans))
     wfileOpen.close()
