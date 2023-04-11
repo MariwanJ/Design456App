@@ -66,7 +66,9 @@ def convertAFileERL(fn,wfile):
             #skip comments
             line=line.replace("%%", "//",2)
             answer.append(line)
-            
+        #-spec
+        elif(line.find("-spec")!=-1):
+            answer,i=convertSpec(Lines,i)
         #-ifdef
         elif (line.find("-ifdef")!=-1):
             answer,i=convertIfDef(Lines,i)

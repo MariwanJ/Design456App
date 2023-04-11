@@ -40,7 +40,19 @@ def convertIncludeLib(Lines,i):
     line=line.replace ("include_lib","",1)
     nAnswers.append(line)
     return (nAnswers,i)
-    
+
+def convertSpec(Lines,i):
+    nAnswers=[]
+    line=Lines[i]
+    nAnswers.append("\nvoid ")
+    line=line.replace("-spec ","",1)
+    nAnswers.append(line.split()[0]) #add function name
+    line=line.replace("->","{\n")
+    line=line.replace(line.split()[0],"")
+    nAnswers.append(line)
+    nAnswers.append("}")
+    return (nAnswers,i)
+
 def convertRecord(Lines,i):
     nAnswer=[i]
     line=line.replace("-record","",1 )
@@ -139,13 +151,16 @@ def convertFunction(Lines,i):
         line=line.replace("of","")
         line=line.replace("ok","",1)
         line=line.replace ("ok -> ok","",1)
+        if (line[-1]==","):
+            line[-1]=";"  #endlin change to semicolon 
         if(line.find("case")!=-1):
             nAnswers.append("\nswitch(")
             nAnswers.append(line)
             nAnswers.append(") {\n")
             nAnswers.append("case "),
             nAnswers.append(line.split()[0])
-        nAnswers.append(line)
+        else:
+            nAnswers.append(line)
         i=i+1
         line=Lines[i]
     line=line.replace("end).","",1) 
