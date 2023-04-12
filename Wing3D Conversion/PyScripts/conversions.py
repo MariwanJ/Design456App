@@ -115,10 +115,11 @@ def convertImport(Lines,i):
     line=line.replace ('.', " ")
     line=line.replace ('(', " ")
     line=line.replace (')', " ")
-    line=line.replace ('-import', "")
+    line=line.replace ("import", "",1)
     nAnswers.append("\n#include ")
     nAnswers.append(line.split()[0])
     nAnswers.append("//")  #just to make it clear
+    line=line.replace(line.split()[0],"")
     nAnswers.append(line)
     return (nAnswers,i)
 
@@ -145,7 +146,11 @@ def convertFunction(Lines,i):
     nAnswers.append("\n")
     i=i+1
     line=Lines[i]
-    while (line.find( ";")==-1 and line.find( ".")==-1):
+    while (1 ):
+        if (line.find( ".")!=-1):
+            if(line.find("%")==-1):
+                break
+            
         line=line.replace("%","//")
         line=line.replace("end).","",1)
         line=line.replace("of","")
