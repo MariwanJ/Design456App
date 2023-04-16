@@ -37,18 +37,18 @@ Group::Group()
 Group::~Group() {
 }
 
-nodes* Group::InsertNode(nodes*root, nodes* newNode) {
+nodes* Group::InsertNode(nodes* root, nodes* newNode) {
     if (root == nullptr) {
         //We have no items in the tree
         return newNode;
     }
     if (root->data->NodeID() > newNode->data->NodeID()) {
-        root->right = InsertNode(root,newNode);
+        root->right = InsertNode(root, newNode);
         root->right->parent = newNode;
         return newNode; //return higher value nodes
     }
     else if (root->data->NodeID() < newNode->data->NodeID()) {
-        root->left = InsertNode(root,newNode);
+        root->left = InsertNode(root, newNode);
         root->left->parent = root;
         return root; //return the same node
     }
@@ -59,7 +59,6 @@ nodes* Group::InsertNode(nodes*root, nodes* newNode) {
         auto updateNode = FINDnodesRecursive(root, root->data->NodeID());//Search for the node to update
         updateNode->data = newNode->data;
     }
-
 }
 void Group::AddNode(std::shared_ptr<Node> node) {
     nodes* item = new nodes();
@@ -68,7 +67,7 @@ void Group::AddNode(std::shared_ptr<Node> node) {
     item->left = nullptr;
     item->right = nullptr;
     item->parent = nullptr;
-    root = InsertNode(root,item);
+    root = InsertNode(root, item);
     lastAddedNodeID++;
 }
 
@@ -80,53 +79,96 @@ nodes* Group::deleteNode(nodes* root, nodes* nd)
 
     if (nd->data->NodeID() < root->data->NodeID()) {
         root->left = deleteNode(root->left, nd);
-    }else
-        if (nd->data->NodeID() > root->data->NodeID()){
+    }
+    else
+        if (nd->data->NodeID() > root->data->NodeID()) {
             root->right = deleteNode(root->right, nd);
         }
         else {
+            //root->data->NodeID()==nd->data->NordID()
+            if (root->right == nullptr) {
+                root->left->parent = nd->parent;
+                return root->left;
+            }
 
-
-
+            if (root->left == nullptr) {
+                root->right->parent = nd->parent;
+                return root->right;
+            }
+            auto temp = root->right;
+            while (temp->left != nullptr)
+                temp = temp->left;
+            root->data = temp->data;
+            root->right = deleteNode(root->right, temp);
+            return root;
         }
 }
 
-
 bool Group::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
     int ww = 0;
-    if (active_)
-        for (auto& node : nodes_)
+    if (active_) {
+        nodes* nd = getFirst();
+        if (nd == nullptr)
+            return false;//Nothing to do- just in case
+        while (nd != nullptr) {
             //If the node is not subclassed and it is only a node, this will always return false.
-            if (node->SetupCamera(projection, modelview))
+            if (nd->data->SetupCamera(projection, modelview))
                 return true;
-    return false;
+            nd = getNext(nd);
+        }
+        return false;
+    }
 }
 
 void Group::SetupLight(const glm::mat4& modelview,
     std::vector<LightInfo>& lights) {
-    if (active_)
-        for (auto& node : nodes_)
-            node->SetupLight(modelview, lights);
+    if (active_) {
+        nodes* nd = getFirst();
+        if (nd == nullptr)
+            return;//Nothing to do - just in case
+        while (nd != nullptr) {
+            nd->data->SetupLight(modelview, lights);
+            nd = getNext(nd);
+        }
+    }
 }
 
 bool Group::SetupShadowMap(ShadowMapInfo& info) {
-    if (active_)
-        for (auto& node : nodes_)
-            if (node->SetupShadowMap(info))
+    if (active_) {
+        nodes* nd = getFirst();
+        if (nd == nullptr)
+            return false;//Nothing to do - just in case
+        while (nd != nullptr) {
+            if (nd->data->SetupShadowMap(info))
                 return true;
-    return false;
+            nd = getNext(nd);
+        }
+        return false;
+    }
 }
 
 void Group::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) {
-    if (active_)
-        for (auto& node : nodes_)
-            node->RenderShadowMap(info, modelview);
+    if (active_) {
+        nodes* nd = getFirst();
+        if (nd == nullptr)
+            return;//Nothing to render - just in case
+        while (nd != nullptr) {
+            nd->data->RenderShadowMap(info, modelview);
+            nd = getNext(nd);
+        }
+    }
 }
 
 void Group::Render(RenderInfo& info, const glm::mat4& modelview) {
-    if (active_)
-        for (auto& node : nodes_)
-            node->Render(info, modelview);
+    if (active_) {
+        nodes* nd = getFirst();
+        if (nd == nullptr)
+            return;//Nothing to render - just in case
+        while (nd != nullptr) {
+            nd->data->Render(info, modelview);
+            nd = getNext(nd);
+        }
+    }
 }
 /**
  * Find the node that has the given id.
@@ -172,6 +214,38 @@ nodes* Group::FINDnodesRecursive(nodes* nd, unsigned int id) {
     if (left != nullptr)
         return left;
     return nullptr;
+}
+/**
+ * Find the lowest value.
+ *
+ * \return found node or nullpntr
+ */
+nodes* Group::getFirst()
+{
+    if (root == nullptr)
+        return nullptr;
+    else
+        //This could be a nullptr be aware
+        return getLeftMost(root);
+}
+
+nodes* Group::getNext(nodes* nd)
+{
+    return nullptr;
+}
+/**
+ * Find the lowest node in the tree.
+ *
+ * \param nd: start node
+ * \return found node or nullptr
+ */
+nodes* Group::getLeftMost(nodes* nd)
+{
+    if (nd == nullptr)
+        return nullptr;
+    while (nd->left != nullptr)
+        nd = nd->left;
+    return nd;
 }
 
 std::shared_ptr<Node> Group::getNode(unsigned int id)

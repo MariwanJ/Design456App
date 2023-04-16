@@ -116,6 +116,10 @@ public:
     
     nodes* FINDnodesRecursive(nodes* nd, unsigned int id);
     
+    nodes* getFirst();
+    nodes* getNext(nodes* nd);
+    nodes* getLeftMost(nodes* nd);
+    
 
 protected:
     /** Group's children */
