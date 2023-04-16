@@ -149,7 +149,8 @@ public:
     NODETYPE type();
 
     void type(NODETYPE newVal);
-
+    unsigned int NodeID();
+    void setNodeID(unsigned int id);
 protected:
 
     /**
@@ -157,6 +158,8 @@ protected:
      */
     NODETYPE type_;
     bool active_;
+    unsigned int _nodeID;
+
 };
 
 #endif

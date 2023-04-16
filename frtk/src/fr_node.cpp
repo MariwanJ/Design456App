@@ -27,7 +27,7 @@
 //
 #include <fr_node.h>
 
-Node::Node() :type_(NODETYPE::FR_NODE),
+Node::Node() :_nodeID(0),type_(NODETYPE::FR_NODE),
     active_{true} {
 }
 
@@ -81,5 +81,15 @@ NODETYPE Node::type()
 void Node::type(NODETYPE newVal)
 {
     type_ = newVal;
+}
+
+unsigned int Node::NodeID()
+{
+    return _nodeID;
+}
+
+void Node::setNodeID(unsigned int id)
+{
+    _nodeID = id;
 }
 

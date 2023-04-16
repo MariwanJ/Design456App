@@ -33,6 +33,13 @@
 #include<fr_core.h>
 #include <fr_node.h>
 
+typedef struct nodes {
+    std::shared_ptr<Node> data;
+    nodes* left;
+    nodes* right;
+    nodes* parent;
+};
+
 /**
  * A container for other nodes
  */
@@ -45,10 +52,23 @@ public:
      */
     ~Group();
 
+    
+    nodes* InsertNode(nodes* root, nodes *nd);
+
     /**
      * Adds a node to the group
      */
     void AddNode(std::shared_ptr<Node> node);
+
+    /**
+     * Delete the node from the tree given by the parameters.
+     * 
+     * \param root : Recrusive root nodes, this changes during the execution
+     * \param nd : node targeted for deletion
+     * \return      new root node after deletion
+     */
+    nodes* deleteNode(nodes* root, nodes* nd);
+
 
     /**
      * Retrive a pointer to the desired Node given by id number.
@@ -56,14 +76,14 @@ public:
      * \param id    Node number
      * \return pointer to the node if exists. or nullpntr
      */
-    std::shared_ptr<Node> getNode(int id);
+    std::shared_ptr<Node> getNode(unsigned int id);
 
     /**
      * Return a pointer to the vector nodes (all of them).
      * 
      * \return pointer to the vector nodes even if there is no children (which will be an empty vector
      */
-    virtual std::vector<std::shared_ptr<Node>> getNodes();
+    virtual nodes *getNodes();
     /**
      * Sets the camera
      * Returns true if the camera has been set
@@ -91,13 +111,26 @@ public:
      * Renders the node
      */
     virtual void Render(RenderInfo& info, const glm::mat4& modelview) override;
+    
+    std::shared_ptr<Node> getNodeRecursive(nodes* nd, unsigned int id);
+    
+    nodes* FINDnodesRecursive(nodes* nd, unsigned int id);
+    
 
 protected:
     /** Group's children */
-    std::vector<std::shared_ptr<Node>> nodes_;
-
-private:
+    nodes *root;
+    static unsigned lastAddedNodeID;
 };
 
 #endif
+/**
+ * Return the base node (nodes struct) or Node class object in the tree by giving the ID.
+ * @param nd  : type nodes struct the tree node to search for the id
+ *  @param id : node id that is required to find
+ * @param baseNode: Base node object which is the Node class or the nodes struct object : default is Nodes class object
+ */
+
+
+
 

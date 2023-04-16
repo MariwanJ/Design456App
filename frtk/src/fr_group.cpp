@@ -27,31 +27,83 @@
 //
 
 #include <fr_group.h>
-
+unsigned int Group::lastAddedNodeID = 0;//Keep the last node number
 Group::Group()
 {
     type(NODETYPE::FR_GROUP);
+    root = nullptr;
 }
 
 Group::~Group() {
 }
 
-void Group::AddNode(std::shared_ptr<Node> node) {
-    nodes_.push_back(node);
+nodes* Group::InsertNode(nodes*root, nodes* newNode) {
+    if (root == nullptr) {
+        //We have no items in the tree
+        return newNode;
+    }
+    if (root->data->NodeID() > newNode->data->NodeID()) {
+        root->right = InsertNode(root,newNode);
+        root->right->parent = newNode;
+        return newNode; //return higher value nodes
+    }
+    else if (root->data->NodeID() < newNode->data->NodeID()) {
+        root->left = InsertNode(root,newNode);
+        root->left->parent = root;
+        return root; //return the same node
+    }
+    else {
+        //This shouldn't happen, but we don't allow mistkes
+        //Update the current id         nd->data->NodeID==id
+        Fr_Log::GetFRTKLogger()->warn("Warning!: Node already exists, update it");
+        auto updateNode = FINDnodesRecursive(root, root->data->NodeID());//Search for the node to update
+        updateNode->data = newNode->data;
+    }
+
 }
+void Group::AddNode(std::shared_ptr<Node> node) {
+    nodes* item = new nodes();
+    item->data = node;
+    item->data->setNodeID(lastAddedNodeID++);
+    item->left = nullptr;
+    item->right = nullptr;
+    item->parent = nullptr;
+    root = InsertNode(root,item);
+    lastAddedNodeID++;
+}
+
+nodes* Group::deleteNode(nodes* root, nodes* nd)
+{
+    if (nd == nullptr) {
+        return nullptr; //nothing to delete
+    }
+
+    if (nd->data->NodeID() < root->data->NodeID()) {
+        root->left = deleteNode(root->left, nd);
+    }else
+        if (nd->data->NodeID() > root->data->NodeID()){
+            root->right = deleteNode(root->right, nd);
+        }
+        else {
+
+
+
+        }
+}
+
 
 bool Group::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
     int ww = 0;
     if (active_)
         for (auto& node : nodes_)
-            //If the node is not subclassed and it is only a node, this will always return false. 
+            //If the node is not subclassed and it is only a node, this will always return false.
             if (node->SetupCamera(projection, modelview))
                 return true;
     return false;
 }
 
-void Group::SetupLight(const glm::mat4& modelview, 
-        std::vector<LightInfo>& lights) {
+void Group::SetupLight(const glm::mat4& modelview,
+    std::vector<LightInfo>& lights) {
     if (active_)
         for (auto& node : nodes_)
             node->SetupLight(modelview, lights);
@@ -76,18 +128,61 @@ void Group::Render(RenderInfo& info, const glm::mat4& modelview) {
         for (auto& node : nodes_)
             node->Render(info, modelview);
 }
-
-std::shared_ptr<Node> Group::getNode(int id)
-{
-    if (nodes_.size() > 0)
-        return nodes_[id];
-    else
-        return nullptr;
+/**
+ * Find the node that has the given id.
+ *
+ * \param nd : Node class object that have the required id
+ * \param id  : id of the node that is required
+ * \return  a Node class object that has that id
+ */
+std::shared_ptr<Node> Group::getNodeRecursive(nodes* nd, unsigned int id) {
+    std::shared_ptr<Node> result = nullptr;
+    if (nd == nullptr || nd->data->NodeID() == id) {
+        //end of the tree-branch
+        return nd->data;
+    }
+    auto right = getNodeRecursive(nd->right, id);
+    if (right != nullptr) {
+        return right;
+    }
+    auto left = getNodeRecursive(nd->left, id);
+    if (left != nullptr)
+        return left;
+    return nullptr;
+}
+/**
+ *
+ * Find nodes struct represengint the node ID needed.
+ *
+ * \param nd : root node - searching start
+ * \param id : ID of the node that is required
+ * \return  : return the nodes struct object having the id
+ */
+nodes* Group::FINDnodesRecursive(nodes* nd, unsigned int id) {
+    std::shared_ptr<Node> result = nullptr;
+    if (nd == nullptr || nd->data->NodeID() == id) {
+        //end of the tree-branch
+        return nd;
+    }
+    auto right = FINDnodesRecursive(nd->right, id);
+    if (right != nullptr) {
+        return right;
+    }
+    auto left = FINDnodesRecursive(nd->left, id);
+    if (left != nullptr)
+        return left;
+    return nullptr;
 }
 
-std::vector<std::shared_ptr<Node>> Group::getNodes()
+std::shared_ptr<Node> Group::getNode(unsigned int id)
+{
+    if (root->data == nullptr)
+        return nullptr;
+    getNodeRecursive(root, id);
+}
+
+nodes* Group::getNodes()
 {
     //We don't care if nodes doesn't contain any children. Developer must know to deal with that.
-        return nodes_;
+    return root;
 }
-
