@@ -33,12 +33,7 @@
 #include<fr_core.h>
 #include <fr_node.h>
 
-typedef struct nodes {
-    std::shared_ptr<Node> data;
-    nodes* left;
-    nodes* right;
-    nodes* parent;
-};
+
 
 /**
  * A container for other nodes
@@ -123,7 +118,6 @@ public:
 
 protected:
     /** Group's children */
-    nodes *root;
     static unsigned lastAddedNodeID;
 };
 

@@ -28,10 +28,12 @@
 
 #include <fr_group.h>
 unsigned int Group::lastAddedNodeID = 0;//Keep the last node number
+
+#include <Fr_GL3Window.h>
+
 Group::Group()
 {
     type(NODETYPE::FR_GROUP);
-    root = nullptr;
 }
 
 Group::~Group() {
@@ -43,12 +45,12 @@ nodes* Group::InsertNode(nodes* root, nodes* newNode) {
         return newNode;
     }
     if (root->data->NodeID() > newNode->data->NodeID()) {
-        root->right = InsertNode(root, newNode);
+        root->right = InsertNode(root->right, newNode);
         root->right->parent = newNode;
-        return newNode; //return higher value nodes
+        return root; //return higher value nodes
     }
     else if (root->data->NodeID() < newNode->data->NodeID()) {
-        root->left = InsertNode(root, newNode);
+        root->left = InsertNode(root->left, newNode);
         root->left->parent = root;
         return root; //return the same node
     }
@@ -56,51 +58,55 @@ nodes* Group::InsertNode(nodes* root, nodes* newNode) {
         //This shouldn't happen, but we don't allow mistkes
         //Update the current id         nd->data->NodeID==id
         Fr_Log::GetFRTKLogger()->warn("Warning!: Node already exists, update it");
-        auto updateNode = FINDnodesRecursive(root, root->data->NodeID());//Search for the node to update
-        updateNode->data = newNode->data;
+        if(root!=nullptr)
+            root->data = newNode->data;
+        return root;
     }
 }
 void Group::AddNode(std::shared_ptr<Node> node) {
+
+    nodes* root_ = Fr_GL3Window::getfr_Gl3Window()->getRoot();
     nodes* item = new nodes();
     item->data = node;
     item->data->setNodeID(lastAddedNodeID++);
     item->left = nullptr;
     item->right = nullptr;
     item->parent = nullptr;
-    root = InsertNode(root, item);
+    root_ = InsertNode(root_, item);
+    Fr_GL3Window::getfr_Gl3Window()->setRoot(root_);
     lastAddedNodeID++;
 }
 
-nodes* Group::deleteNode(nodes* root, nodes* nd)
+nodes* Group::deleteNode(nodes* root_, nodes* nd)
 {
     if (nd == nullptr) {
         return nullptr; //nothing to delete
     }
 
-    if (nd->data->NodeID() < root->data->NodeID()) {
-        root->left = deleteNode(root->left, nd);
+    if (nd->data->NodeID() < root_->data->NodeID()) {
+        root_->left = deleteNode(root_->left, nd);
     }
     else
-        if (nd->data->NodeID() > root->data->NodeID()) {
-            root->right = deleteNode(root->right, nd);
+        if (nd->data->NodeID() > root_->data->NodeID()) {
+            root_->right = deleteNode(root_->right, nd);
         }
         else {
             //root->data->NodeID()==nd->data->NordID()
-            if (root->right == nullptr) {
-                root->left->parent = nd->parent;
-                return root->left;
+            if (root_->right == nullptr) {
+                root_->left->parent = nd->parent;
+                return root_->left;
             }
 
-            if (root->left == nullptr) {
-                root->right->parent = nd->parent;
-                return root->right;
+            if (root_->left == nullptr) {
+                root_->right->parent = nd->parent;
+                return root_->right;
             }
-            auto temp = root->right;
+            auto temp = root_->right;
             while (temp->left != nullptr)
                 temp = temp->left;
-            root->data = temp->data;
-            root->right = deleteNode(root->right, temp);
-            return root;
+            root_->data = temp->data;
+            root_->right = deleteNode(root_->right, temp);
+            return root_;
         }
 }
 
@@ -179,9 +185,14 @@ void Group::Render(RenderInfo& info, const glm::mat4& modelview) {
  */
 std::shared_ptr<Node> Group::getNodeRecursive(nodes* nd, unsigned int id) {
     std::shared_ptr<Node> result = nullptr;
-    if (nd == nullptr || nd->data->NodeID() == id) {
+    if (nd == nullptr)
+        return nullptr;
+    if (nd->data == nullptr) {
+        return nullptr;
+    }
+    if(nd->data->NodeID() == id) {
         //end of the tree-branch
-        return nd->data;
+        return (nd->data);
     }
     auto right = getNodeRecursive(nd->right, id);
     if (right != nullptr) {
@@ -222,17 +233,27 @@ nodes* Group::FINDnodesRecursive(nodes* nd, unsigned int id) {
  */
 nodes* Group::getFirst()
 {
-    if (root == nullptr)
+    nodes * root_ = Fr_GL3Window::getfr_Gl3Window()->getRoot();
+    if (root_ == nullptr)
         return nullptr;
     else
         //This could be a nullptr be aware
-        return getLeftMost(root);
+        return getLeftMost(root_);
 }
 
 nodes* Group::getNext(nodes* nd)
 {
-    return nullptr;
-}
+
+    if (nd->right != nullptr)
+    {
+        return getLeftMost(nd->right);
+    }
+    else{
+        while (nd->parent != nullptr && nd == nd->parent->right)
+            nd = nd->parent;
+        return nd->parent;
+    }
+  }
 /**
  * Find the lowest node in the tree.
  *
@@ -250,13 +271,15 @@ nodes* Group::getLeftMost(nodes* nd)
 
 std::shared_ptr<Node> Group::getNode(unsigned int id)
 {
-    if (root->data == nullptr)
+    nodes* root_ = Fr_GL3Window::getfr_Gl3Window()->getRoot();
+    if (root_->data == nullptr)
         return nullptr;
-    getNodeRecursive(root, id);
+    getNodeRecursive(root_, id);
 }
 
 nodes* Group::getNodes()
 {
     //We don't care if nodes doesn't contain any children. Developer must know to deal with that.
-    return root;
+    nodes* root_ = Fr_GL3Window::getfr_Gl3Window()->getRoot();
+    return root_;
 }

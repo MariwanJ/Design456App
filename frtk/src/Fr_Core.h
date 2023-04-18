@@ -70,7 +70,7 @@
 #include<fr_icons.h>
 #include<fr_ImGuiLayer.h>
 #include<fr_filebrowser.h>
-
+#include<fr_node.h>
 
 //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT, 
 enum class CameraList {
@@ -94,9 +94,6 @@ typedef struct userData_ {
     float aspectRatio_;
     CameraList camType_;
 };
-
-
-
 
 
 

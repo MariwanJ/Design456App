@@ -64,8 +64,18 @@ static void error_callback(int error, const char* description)
 */
 Scene* Fr_GL3Window::scene = nullptr;
 bool Fr_GL3Window::MouseOnce = true;
+
+nodes* Fr_GL3Window::getRoot()
+{
+    return  root;
+}
+void Fr_GL3Window::setRoot(nodes* rt)
+{
+    root = rt;
+}
+
 Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::string l = "GLFW ImGUI Test"):
-                                active_camera_(CameraList::PERSPECTIVE),
+                                active_camera_(CameraList::PERSPECTIVE),root(nullptr),
                                 _x(x), _y(y), _w(w), _h(h), label_(l) , showOpenDialog(false){
     
     s_Fr_GLFWwindow = this;

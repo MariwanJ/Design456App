@@ -27,15 +27,11 @@
 
 
 /** \file
-    FR static variable/classes.
+	FR static variable/classes.
  */
 
 #ifndef FR_H
 #define FR_H
-
-
-
-
 
  /**
 	The major release version
@@ -54,8 +50,8 @@
 #define FR_PATCH_VERSION        1
 
 #define FR_VERSION      ( (double)FL_MAJOR_VERSION + \
-                          (double)FL_MINOR_VERSION * 0.01 + \
-                          (double)FL_PATCH_VERSION * 0.0001 )
+						  (double)FL_MINOR_VERSION * 0.01 + \
+						  (double)FL_PATCH_VERSION * 0.0001 )
 
 
 

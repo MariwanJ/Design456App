@@ -216,6 +216,7 @@ int Fr_GL3Window::imgui_CameraConfiguration(userData_& data)
     ImGui::End();
     return 0;
 }
+
 int Fr_GL3Window::imgui_ViewPort()
 {
     ImGui::Begin("View Port");

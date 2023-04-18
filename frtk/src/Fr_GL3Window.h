@@ -200,7 +200,8 @@ public:
     void setCameraType(CameraList typOfCamera);
     CameraList getCameraType();
     int imgui_CameraConfiguration(userData_& data);
-
+    nodes* getRoot();
+    void setRoot(nodes* rt);
 
 protected:
     /**
@@ -381,6 +382,7 @@ private:
 
     ImVec4 PortViewDimensions;
 
+    nodes* root;
 
 };
 

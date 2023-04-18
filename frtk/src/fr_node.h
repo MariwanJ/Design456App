@@ -33,6 +33,19 @@
 #include <fr_core.h>
 #include <glm/glm.hpp>
 
+class Node;
+
+/**
+ * Nodes structure used to keep all node objects in the window tree.
+ */
+typedef struct nodes {
+    std::shared_ptr<Node> data;
+    nodes* left;
+    nodes* right;
+    nodes* parent;
+};
+
+
 
 typedef enum class NODETYPE {
     FR_NODE                      =  0,
