@@ -42,7 +42,7 @@ class fileType(Enum):
     ERLfile = 1
     notDefined = 2
 
-Wings3DSrc='e:/TEMP/wings_08/src'
+Wings3DSrc='e:/TEMP/wings_08/src/'
 Wings3DCppSrc = "e:/TEMP/PROJECT_CONVERT3D/"
 
 def detectFileType(fn):
@@ -62,12 +62,13 @@ def detectFileType(fn):
     ext = os.path.splitext(fn)[1]
     fname = pathOfFile(os.path.splitext(fn)[0])
 
-    if not os.access(fn, os.R_OK):
+    if not os.access((Wings3DSrc+fn), os.R_OK):
         print ("Failure opening file: No read access for %s" % fn)
         return result
     try:                                                                                                                                                      
-        oFile = io.open(fn, mode="r", encoding="utf-8")
+        oFile = io.open((Wings3DSrc+fn), mode="r", encoding="utf-8")
         print ("Success opening file")
+        oFile.close()
     except IOError:
         print ("Failed to access the file")
         return result, ""
@@ -89,20 +90,22 @@ def getAllFiles():
             #skips files that are not .erl or .hrl
             if (os.path.splitext(entry)[1]==".hrl" or os.path.splitext(entry)[1]==".erl" ):
                 allFiles.append(entry)
+    return allFiles
                 
 def main():
-    convertorERL.convertAFileERL("E:\\TEMP\\wings_08\\src\\wings.erl","E:\\TEMP\\wings_08\\src\\wings.cpp")
-    return
+    #convertorERL.convertAFileERL("E:\\TEMP\\wings_08\\src\\wings.erl","E:\\TEMP\\wings_08\\src\\wings.cpp")
+    #return
     currentFile=fileType.notDefined
     print("convert files")
     allFiles=getAllFiles()
     fWriteName=""
+
     for file in allFiles:
         currentFile,fWriteName=detectFileType(file)
         if currentFile==fileType.ERLfile:
-            convertorERL.convertAFileERL(file,fWriteName)
+            convertorERL.convertAFileERL((Wings3DSrc+file),((Wings3DCppSrc+fWriteName)))
         elif currentFile==fileType.HRLfile:
-            convertorHRL.convertAFileHRL(file,fWriteName)
+            convertorHRL.convertAFileHRL((Wings3DSrc+file),((Wings3DCppSrc+fWriteName)))
         else:
             print("Error, filename is wrong or not accessible ",file)
 

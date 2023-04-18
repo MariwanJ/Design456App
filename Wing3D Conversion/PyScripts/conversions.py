@@ -54,7 +54,8 @@ def convertSpec(Lines,i):
     return (nAnswers,i)
 
 def convertRecord(Lines,i):
-    nAnswer=[i]
+    line=Lines[i]
+    nAnswer=[]
     line=line.replace("-record","",1 )
     line=line.replace("(","",1) #record end
     line=line.replace(",","",1) #record end
@@ -145,6 +146,9 @@ def convertFunction(Lines,i):
     nAnswers.append("{")  
     nAnswers.append("\n")
     i=i+1
+    if (i>= len(Lines)):
+        nAnswers.append("}")
+        return (nAnswers,i-1)
     line=Lines[i]
     while (1 ):
         if (line.find( ".")!=-1):
@@ -160,6 +164,7 @@ def convertFunction(Lines,i):
             line[-1]=";"  #endlin change to semicolon 
         if(line.find("case")!=-1):
             nAnswers.append("\nswitch(")
+            line=line.replace("\n","")
             nAnswers.append(line)
             nAnswers.append(") {\n")
             nAnswers.append("case "),
