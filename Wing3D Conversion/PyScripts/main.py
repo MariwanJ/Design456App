@@ -42,7 +42,7 @@ class fileType(Enum):
     ERLfile = 1
     notDefined = 2
 
-Wings3DSrc='e:/TEMP/wings_08/src/'
+Wings3DSrc='e:/TEMP/wings_08/e3d/'
 Wings3DCppSrc = "e:/TEMP/PROJECT_CONVERT3D/"
 
 def detectFileType(fn):
