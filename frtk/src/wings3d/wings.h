@@ -44,10 +44,11 @@ struct body;
 struct we;
 struct drag;
 struct camera;
+struct shape;
 
 typedef enum stateEnum {
     undo = 0,
-redo = 1,
+    redo = 1,
 };
 
 struct undo {
@@ -56,25 +57,29 @@ struct undo {
     unsigned int 	 top;					//Top of stack.
     unsigned int 	 bottom;				//Bottom of stack.
     stateEnum 	 next_is_undo;				//State of undo/redo toggle.
-    stateEnum 	 undone					//States that were undone.
+    stateEnum 	 undone;				//States that were undone.
 };
 
-// The essential part of the state record.
-struct est {
-    shape 	 shapes;
-    selMODE 	 selmode;
-    auto 	 sel;
-
-
-};
 typedef enum selMODE {
-
     vertex = 0,
     edge = 1,
     face = 2,
     body = 3
 };
 
+struct shape {
+    unsigned int 	 id;					//Shape id
+    std::string  name;					//Shape name
+    glm::mat4 matrix;     // = e3d_mat:identity;		//Transformation matrix
+    std::shared_ptr<we> 	 sh;		//The shape itself:                          // record
+};
+
+// The essential part of the state record.
+struct est {
+    struct shape shapes;
+    selMODE 	 selmode;
+    std::string 	 sel;
+};
 
 typedef struct opt {
     bool wire = false;				//Wireframe model true/false).
@@ -84,17 +89,9 @@ typedef struct opt {
     bool smooth = false;			//Smooth preview.
 };
 
-typedef struct shape {
-    unsigned int 	 id;					//Shape id
-    std::string  name;					//Shape name
-    glm::mat4 matrix;     // = e3d_mat:identity;		//Transformation matrix
-    std::shared_ptr<we> 	 sh;		//The shape itself:                          // record
-};
-
-
 /*default st
 
-   St0 = #st{   shapes=Empty, 
+   St0 = #st{   shapes=Empty,
                 hidden=Empty,
                 selmode=face,
                 sel=[],
@@ -136,7 +133,7 @@ typedef struct vtx {
 typedef union OBJTYPE {
     struct vtx vertex_;
     struct edge edge_;
-    struct body body_;
+    Transform body_;  //Let us assume that body is a Transform
     struct face face_;
 };
 typedef struct SSEL {
@@ -159,7 +156,6 @@ typedef struct dl {
     std::shared_ptr<struct face> dragging = nullptr;				//WE faces being dragged.
     std::vector<std::shared_ptr<struct face>> drag_faces;			//GbSet containing faces.
     void* pick = nullptr;	   //not sure what it should be             //For picking.
-
 };
 
 typedef struct st {
@@ -172,31 +168,27 @@ typedef struct st {
     SSEL 	 ssel;					//Saved selection.
     std::vector<Material> mat;	     //Defined materials GbTree).
     unsigned int next_tx = 100;		 //Next OpenGL texture ID.
-    auto 	 drag;					//Current drag information or 'undefined' if no drag in progress.
-    auto 	 camera;				//Camera information or'undefined'.
-    dl 	 dl_ = none;				//Cached display lists.
+    std::string 	 drag;					//Current drag information or 'undefined' if no drag in progress.
+    std::string 	 camera;				//Camera information or'undefined'.
+    std::shared_ptr<dl> dl_ = nullptr;				//Cached display lists.
     std::shared_ptr<opt> 	 opts;					//Options record.
     std::string file;					//Current filename.
     bool 	 saved;					//True if model has been saved.
     unsigned int 	 onext;					//Next object id to use.
-    auto 	 hit_buf;				//Hit buffer for hit testing.
+    std::string 	 hit_buf;				//Hit buffer for hit testing.
     float 	 inf_r;					//Radius of influence for magnet).
-    auto 	 last_command;			//Last command.
-    auto 	 bb = none;				//Saved bounding box.
-    
+    std::string	 last_command;			//Last command.
+    std::string 	 bb;				//Saved bounding box.
+
     //// The current view.
-    auto 	 origo;
+    //auto 	 origo;
     glm::vec3 	 distance;				// From origo
-    auto 	 azimuth;
-    auto 	 elevation;
+    //auto 	 azimuth;
+    //auto 	 elevation;
     unsigned int 	 pan_x;					//Panning in X direction.
-    unsigned int 	 pan_y					//Panning in Y direction
+    unsigned int 	 pan_y;					//Panning in Y direction
 };
 // Shape (or object) which can be implemented in different ways.
 
 // The Winged-Edge data structure.
 // See http://www.cs.mtu.edu/~shene/COURSES/cs3621/NOTES/model/winged-e.html
-
-
-
-
