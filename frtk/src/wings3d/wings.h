@@ -24,9 +24,8 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-#include <frtk.h>
-#include <Fr_Core.h>
 #include <fr_transform.h>
+#include <wings3d/fr_genID.h>  //will bring also frtk.h and fr_core.h to here
 
 #define  CHAR_HEIGHT  14
 #define  CHAR_WIDTH  7
@@ -141,7 +140,8 @@ typedef struct SSEL {
     std::vector <OBJTYPE> ssel;
 };
 
-typedef struct we {
+
+typedef struct WE {
     std::vector<std::shared_ptr<struct edge>> 	 es;					//gb_tree containing edges
     std::vector<std::shared_ptr<glm::vec3>> 	 vs;		    //gb_tree containing vertices
     std::vector<std::shared_ptr<struct face>> 	 fs;					//gb_tree containing faces
@@ -151,6 +151,14 @@ typedef struct we {
     unsigned int next_id;				//Next free ID for vertices; edges; and faces
 };
 
+
+class Shape {
+public:
+    WE wingedObj;
+
+};
+
+/*
 typedef struct dl {
     std::shared_ptr<we> we_ = nullptr;				        //Winged edge objects.
     std::shared_ptr<struct face> dragging = nullptr;				//WE faces being dragged.
@@ -188,6 +196,8 @@ typedef struct st {
     unsigned int 	 pan_x;					//Panning in X direction.
     unsigned int 	 pan_y;					//Panning in Y direction
 };
+
+*/
 // Shape (or object) which can be implemented in different ways.
 
 // The Winged-Edge data structure.

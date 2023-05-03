@@ -1,5 +1,7 @@
 //
 // This file is a part of the Open Source Design456App
+//
+// This file is a part of the Open Source Design456App
 // MIT License
 //
 // Copyright (c) 2023
@@ -24,22 +26,4 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-#ifndef FR_GENID_H
-#define FR_GENID_H
-#include <frtk.h>
-#include<Fr_Core.h>
-
-#define SEGMENT_SIZE 1024
-
-class genID {
-public:
-	genID();
-	unsigned int getID();
-	bool isUsed(unsigned int id);
-	void freeID(unsigned int id);
-private:
-	std::vector<bool> used;
-	static unsigned int lastID; //This is a sequential 
-	static unsigned int usedSize; //No of use ID:s
-};
-#endif
+#include <wings3d/wings.h>

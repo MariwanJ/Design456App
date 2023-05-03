@@ -29,8 +29,7 @@
 #ifndef FR_GL3WINDOW_H
 #define FR_GL3WINDOW_H
 
-#include <frtk.h>
-#include<fr_core.h>
+#include<wings3d/wings.h> //This will bring frtk.h and fr_core.h also
 #include<fr_scene.h>
 #include<fr_camera.h>
 #include<fr_manipulator.h>
