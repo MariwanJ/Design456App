@@ -92,7 +92,7 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     Fr_GL3Window::GLFWCallbackWrapper::setGLFWwindow(this);
     radiusXYZ =  0;
-    idGen_ = std::shared_ptr<genID>(); //Create object holds the gen ID class
+    idGen_ = std::make_shared<genID>(); //Create object holds the gen ID class
 }
 
 void Fr_GL3Window::flush() {

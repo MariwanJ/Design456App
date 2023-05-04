@@ -30,70 +30,71 @@ unsigned int genID::usedSize=0; //No of use ID:s
 
 genID::genID()
 {
-	used.reserve(SEGMENT_SIZE); //At the beginning
+    used_.reserve(SEGMENT_SIZE); //At the beginning
     for (int i = 0; i < 100; i++) {
-		used[i] = false;
-	}
+        used_.push_back(false);
+    }
 }
 
 unsigned int genID::getID()
 {
-	used.push_back(true);
-	if (usedSize < used.size()) {
-		//We have fragmentation. search for not used id
-		unsigned int x = 0;
-		while (used[x] != false) {
-			x++;
-			if (x >= (used.size() - 1))
-				break; //not found all is used. Here we have a problem.
-		}
-		if (used[x] == false) {
-			used[x] = true;
-			usedSize++;
-			return x;
-		}
-	}
-	if (lastID >= (used.size()-1)) {		//should never be grater but just in case
-		//resize and create new item we reached the last item
-		used.resize(used.size() + SEGMENT_SIZE);//add 1k values
-		for (int i = used.size(); i < (used.size() + SEGMENT_SIZE);i++) {
-			used[i] = false;
-		}
-		used[lastID] = true;
-		lastID++;
-		usedSize++;
-		return (lastID-1);
-	}
-	else {
-		//This should work if other conditions fails
-		used[lastID] = true;
-		usedSize++;
-		lastID++;
-		return(lastID - 1);
-	}
+ 
+ 
+    if (usedSize < used_.size()) {
+        //We have fragmentation. search for not used id
+        unsigned int x = 0;
+        while (used_[x] != false) {
+            x++;
+            if (x >= (used_.size() - 1))
+                break; //not found all is used_. Here we have a problem.
+        }
+        if (used_[x] == false) {
+            used_[x] = true;
+            usedSize++;
+            return x;
+        }
+    }
+    if (lastID >= (used_.size()-1)) {		//should never be grater but just in case
+        //resize and create new item we reached the last item
+        used_.resize(used_.size() + SEGMENT_SIZE);//add 1k values
+        for (int i = used_.size(); i < (used_.size() + SEGMENT_SIZE);i++) {
+            used_[i] = false;
+        }
+        used_[lastID] = true;
+        lastID++;
+        usedSize++;
+        return (lastID-1);
+    }
+    else {
+        //This should work if other conditions fails
+        used_[lastID] = true;
+        usedSize++;
+        lastID++;
+        return(lastID - 1);
+    }
 }
 
 bool genID::isUsed(unsigned int id)
 {
-	return used[id]; //True if it is used, false if it is not used by any object
+    return used_[id]; //True if it is used, false if it is not used by any object
 }
 
 void genID::freeID(unsigned int id)
 {
-	if (id > used.size()) {
-		throw ("ID not found");
-		return;
-	}
-	usedSize--; //always decrease
-	if (id== lastID){
-		lastID--;
-	}
-	else {
-		/*We cannot change lastID since the removed id is not the last item in the vector.
-			This will cause fragmentation which genID should take care of it
-		*/
+    if (id > used_.size()) {
+        throw ("ID not found");
+        return;
+    }
+    usedSize--; //always decrease
+    if (id== lastID){
+        lastID--;
+    }
+    else {
+        /*We cannot change lastID since the removed id is not the last item in the vector.
+            This will cause fragmentation which genID should take care of it
+        */
 
-		usedSize--;
-	}
-	used[id] = false;
+        usedSize--;
+    }
+    used_[id] = false;
 }

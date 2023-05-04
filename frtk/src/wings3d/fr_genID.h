@@ -38,7 +38,7 @@ public:
 	bool isUsed(unsigned int id);
 	void freeID(unsigned int id);
 private:
-	std::vector<bool> used;
+	std::vector <bool> used_;
 	static unsigned int lastID; //This is a sequential 
 	static unsigned int usedSize; //No of use ID:s
 };
