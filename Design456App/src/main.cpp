@@ -32,6 +32,11 @@ int main(int argc, char** argv)
     Application* Design456App = new Application();
     Fr_Log::Init();
     Fr_Log::GetAPPLogger()->info("App Started!");
+    for (int i = 0; i < 1000; i++) {
+        std::cout<<"i="<<i<<Design456App->idGen_->getID() << std::endl;
+    }
+
+
     return Design456App->run(argc,argv);
 }
 

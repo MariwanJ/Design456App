@@ -25,7 +25,7 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-unsigned int genID::lastID=0; //This is a sequential 
+unsigned int genID::lastID=0; //This is a sequential
 unsigned int genID::usedSize=0; //No of use ID:s
 
 genID::genID()
@@ -38,13 +38,14 @@ genID::genID()
 
 unsigned int genID::getID()
 {
+	used.push_back(true);
 	if (usedSize < used.size()) {
-		//We have fragmantation. search for not used id
+		//We have fragmentation. search for not used id
 		unsigned int x = 0;
 		while (used[x] != false) {
 			x++;
 			if (x >= (used.size() - 1))
-				break; //not found all is used. Here we have a problem. 
+				break; //not found all is used. Here we have a problem.
 		}
 		if (used[x] == false) {
 			used[x] = true;
@@ -83,7 +84,7 @@ void genID::freeID(unsigned int id)
 		throw ("ID not found");
 		return;
 	}
-	usedSize--; //always decrease 
+	usedSize--; //always decrease
 	if (id== lastID){
 		lastID--;
 	}
@@ -91,7 +92,7 @@ void genID::freeID(unsigned int id)
 		/*We cannot change lastID since the removed id is not the last item in the vector.
 			This will cause fragmentation which genID should take care of it
 		*/
-		
+
 		usedSize--;
 	}
 	used[id] = false;

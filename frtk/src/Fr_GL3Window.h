@@ -125,7 +125,7 @@ public:
     /**
      * Create Scene graph.
      */
-    virtual void CreateScene();  //Must be overriden to get the desired results
+    virtual void CreateScene();  //Must be overridden to get the desired results
     /**
      * Create Sun (Light) inside the Scene graph.
      *
@@ -134,7 +134,7 @@ public:
     virtual std::shared_ptr<Transform> CreateSun();
 
     /**
-     * Resize Fr_GL3Window size which affects both fltk and glfw windows.
+     * Resize Fr_GL3Window size which affects glfw windows.
      *
      * \param x left-start position of the window
      * \param y top-start position of the window
@@ -161,6 +161,7 @@ public:
      */
     virtual int GLFWrun();
 
+public:
     /**
      * Pointer to link to the scene.
      */
@@ -199,7 +200,7 @@ public:
     void setCameraType(CameraList typOfCamera);
     CameraList getCameraType();
     int imgui_CameraConfiguration(userData_& data);
-
+    std::shared_ptr<genID> idGen_; //Keeps the id generator - used to generate shape/objects unique ID
 
 protected:
     /**
@@ -220,7 +221,7 @@ protected:
 
     int imgui_ViewPort();
     int imgui_menu();
- 
+
     /**
      * Create the GLFW Window .
      *
@@ -239,7 +240,7 @@ private:
     void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cursor entered the window's client area, or GL_FALSE if it left it.
     void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
     void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
-    
+
     void cameraPAN(double xoffset, double yoffset);
     void cameraRotate(double xoffset, double yoffset);
 
@@ -326,6 +327,7 @@ private:
      * GLAD VERSION DEFINITION
      * Currently it is 4.3.
      */
+private:
     int gl_version_major;
     int gl_version_minor;
 
@@ -379,8 +381,6 @@ private:
     float radiusXYZ;
 
     ImVec4 PortViewDimensions;
-
-
 };
 
 

@@ -67,7 +67,7 @@ bool Fr_GL3Window::MouseOnce = true;
 Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::string l = "GLFW ImGUI Test"):
                                 active_camera_(CameraList::PERSPECTIVE),
                                 _x(x), _y(y), _w(w), _h(h), label_(l) , showOpenDialog(false){
-    
+
     s_Fr_GLFWwindow = this;
     _x = x;
     _y = y;
@@ -92,6 +92,7 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     Fr_GL3Window::GLFWCallbackWrapper::setGLFWwindow(this);
     radiusXYZ =  0;
+    idGen_ = std::shared_ptr<genID>(); //Create object holds the gen ID class
 }
 
 void Fr_GL3Window::flush() {
@@ -106,6 +107,7 @@ Fr_GL3Window::Fr_GL3Window()
     _h = 800;
     label_ = "GLFW ImGUI Test";
     s_Fr_GLFWwindow = this;
+    idGen_ = std::shared_ptr<genID>(); //Create object holds the gen ID class
 }
 
 
@@ -237,7 +239,7 @@ void Fr_GL3Window::label(const char* l)
 }
 /**
  * Set active camera which affext how setup works.
- * 
+ *
  * \param _type Camera type which is written in CameraList enum
  */
 void Fr_GL3Window::setCameraType(CameraList _type)
@@ -255,9 +257,9 @@ CameraList Fr_GL3Window::getCameraType()
 }
 
 /**
- * 
+ *
  * Create a list of cameras that will be later used using GUI buttons.
- * 
+ *
  */
 void Fr_GL3Window::CreateCameras()
 {
@@ -280,12 +282,12 @@ void Fr_GL3Window::CreateCameras()
             //TODO: FIXME: If you create more than 6, you should add it here
         case 0: {
             /*Normal view PERSPECTIVE, HOME
-                    position 17.463835 -17.463825 13.463827\n  
-                    orientation 0.74290609 0.30772209 0.59447283  1.2171158\n  
-                    nearDistance 0.42925534\n  
-                    farDistance 1761.75\n  
-                    aspectRatio 1\n  
-                    focalDistance 30.248238\n  
+                    position 17.463835 -17.463825 13.463827\n
+                    orientation 0.74290609 0.30772209 0.59447283  1.2171158\n
+                    nearDistance 0.42925534\n
+                    farDistance 1761.75\n
+                    aspectRatio 1\n
+                    focalDistance 30.248238\n
                     heightAngle 0.78539819\n\n}\n'
             */
             camera_trans->Rotate(glm::vec3(0.7429f, 0.307f, 0.594f), 69.7f);
@@ -329,7 +331,7 @@ void Fr_GL3Window::CreateCameras()
           aspectRatio 1\n
           focalDistance 100\n
           height 44.932899\n\n}\n'
-                 * 
+                 *
          */
             camera_trans->Rotate(glm::vec3(-1.0f,0,0 ),  270.0f);
         }break;
@@ -373,7 +375,7 @@ void Fr_GL3Window::CreateCameras()
         }break;
         }
     }
-    
+
 }
 
 int Fr_GL3Window::createGLFWwindow()
@@ -444,7 +446,7 @@ int Fr_GL3Window::GLFWrun()
     sceneBuffer = std::make_shared<Fr_TextureFrameBuffer>(w(),h());
 
     /**
-     * 
+     *
      * For the layers, We will make :
      * 1-Main layer which has the dockspace and menus
      * 2-Top bar (toolbars having tab)
@@ -469,7 +471,7 @@ int Fr_GL3Window::GLFWrun()
 
          //Render GLFW stuff or Our 3D drawing
         renderimGUI(data);
-        // Rendering IMGUI 
+        // Rendering IMGUI
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         layers_[0]->EndLayer();
