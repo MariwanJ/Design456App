@@ -38,8 +38,8 @@ genID::genID()
 
 unsigned int genID::getID()
 {
- 
- 
+
+
     if (usedSize < used_.size()) {
         //We have fragmentation. search for not used id
         unsigned int x = 0;
@@ -54,11 +54,11 @@ unsigned int genID::getID()
             return x;
         }
     }
-    if (lastID >= (used_.size()-1)) {		//should never be grater but just in case
+    if (lastID > (used_.size()-1)) {		//should never be grater but just in case
         //resize and create new item we reached the last item
         used_.resize(used_.size() + SEGMENT_SIZE);//add 1k values
-        for (int i = used_.size(); i < (used_.size() + SEGMENT_SIZE);i++) {
-            used_[i] = false;
+        for (int i = used_.size(); i < (used_.size() + SEGMENT_SIZE)-1;i++) {
+            used_.push_back (false);
         }
         used_[lastID] = true;
         lastID++;
