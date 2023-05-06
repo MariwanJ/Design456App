@@ -31,7 +31,7 @@ unsigned int genID::usedSize=0; //No of use ID:s
 genID::genID()
 {
     used_.reserve(SEGMENT_SIZE); //At the beginning
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < SEGMENT_SIZE; i++) {
         used_.push_back(false);
     }
 }
@@ -45,24 +45,28 @@ unsigned int genID::getID()
         unsigned int x = 0;
         while (used_[x] != false) {
             x++;
-            if (x >= (used_.size() - 1))
+            if (x > (used_.size()))
                 break; //not found all is used_. Here we have a problem.
         }
         if (used_[x] == false) {
             used_[x] = true;
             usedSize++;
+            lastID++;
             return x;
         }
-    }
-    if (lastID > (used_.size()-1)) {		//should never be grater but just in case
+    }if (lastID > (used_.size()-1)) {	
+    	//should never be grater but just in case
         //resize and create new item we reached the last item
-        used_.resize(used_.size() + SEGMENT_SIZE);//add 1k values
-        for (int i = used_.size(); i < (used_.size() + SEGMENT_SIZE)-1;i++) {
+        unsigned int oldSize = used_.size();
+        used_.resize(oldSize+ SEGMENT_SIZE);//add 1k values
+        /*for (int i = used_.size(); i < (used_.size() + SEGMENT_SIZE) - 1; i++) {
             used_.push_back (false);
-        }
+        }*/
+        std::fill(used_.begin() + oldSize, used_.end(), false);
         used_[lastID] = true;
         lastID++;
         usedSize++;
+        printf("size of %i\n", used_.size());
         return (lastID-1);
     }
     else {
