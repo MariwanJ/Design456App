@@ -107,6 +107,7 @@ typedef struct opt {
 // Edge in a winged-edge shape.
 
 struct edge {
+    unsigned int id;        //Edge ID
     glm::vec3 	 vs;					//Start vertex for edge
     glm::vec3 	 ve;					//End vertex for edge
     std::shared_ptr<struct face> 	   lf;					//Left face
@@ -119,6 +120,7 @@ struct edge {
 // A face in a winged-edge shape.
 
 struct face {
+    unsigned int id;
     std::shared_ptr<struct edge> 	 edge_;					//Incident edge
     std::vector<std::shared_ptr<Material>> 	 mat;// = default				//Material for face
 };
@@ -142,19 +144,19 @@ typedef struct SSEL {
 
 
 typedef struct WE {
+    std::vector<std::shared_ptr<struct face>> 	 fs;					//gb_tree containing faces
     std::vector<std::shared_ptr<struct edge>> 	 es;					//gb_tree containing edges
     std::vector<std::shared_ptr<glm::vec3>> 	 vs;		    //gb_tree containing vertices
-    std::vector<std::shared_ptr<struct face>> 	 fs;					//gb_tree containing faces
     std::vector < std::shared_ptr<struct edge>> he;					//gb_sets containing hard edges
-
-    unsigned int  first_id;				//First ID used
-    unsigned int next_id;				//Next free ID for vertices; edges; and faces
 };
 
 
 class Shape {
 public:
-    WE wingedObj;
+    unsigned int id;
+    std::vector<std::shared_ptr<WE>> wingedObj; //Hold all winged objects in a table that has all elements
+    int buildFromMesh(std::string fn);
+    int buildFromOff(std::string fn);
 
 };
 

@@ -59,14 +59,10 @@ unsigned int genID::getID()
         //resize and create new item we reached the last item
         unsigned int oldSize = used_.size();
         used_.resize(oldSize+ SEGMENT_SIZE);//add 1k values
-        /*for (int i = used_.size(); i < (used_.size() + SEGMENT_SIZE) - 1; i++) {
-            used_.push_back (false);
-        }*/
         std::fill(used_.begin() + oldSize, used_.end(), false);
         used_[lastID] = true;
         lastID++;
         usedSize++;
-        printf("size of %i\n", used_.size());
         return (lastID-1);
     }
     else {
