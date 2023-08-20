@@ -35,7 +35,7 @@ Shape::Shape(const std::string& path) :
     InitializeVBO(vertices_, normals_, indices_);
 
 }
-Shape::Shape(): vbo_{ 0, 0, 0 }, vao_(0){
+Shape::Shape(): vbo_{ 0, 0, 0 }, vao_(0),id(0), normalized_(false){
 }
 
 Shape::~Shape() {
@@ -47,15 +47,32 @@ Shape::~Shape() {
 
 int Shape::build()
 {
-    std::vector<std::shared_ptr<struct face>> 	 fs;					//gb_tree containing faces
-    std::vector<std::shared_ptr<struct edge>> 	 es;					//gb_tree containing edges
-    std::vector<std::shared_ptr<glm::vec3>> 	 vs;		    //gb_tree containing vertices
-    std::vector < std::shared_ptr<struct edge>> he;					//gb_sets containing hard edges
-
-    for (unsigned i = 0; i < vertices_.size(); i=i+3) {
-        std::shared_ptr<struct edge> ed= std::make_shared <struct edge>();
-            ed->vs = glm::vec3(vertices_[i], vertices_[i + 1], vertices_[i + 2]);
+    std::vector<std::shared_ptr<struct face>> 	 fs;				 //gb_tree containing faces
+    std::vector<std::shared_ptr<struct edge>> 	 es;				 //gb_tree containing edges
+    std::vector<std::shared_ptr<glm::vec3>> 	 vs;		         //gb_tree containing vertices
+    std::vector < std::shared_ptr<struct edge>> he;					 //gb_sets containing hard edges
+    unsigned int totalVert= vertices_.size();
+    //Verticies
+    for (unsigned i = 0; i < totalVert; i++) {
+        std::shared_ptr<glm::vec3> vstemp=std::make_shared<glm::vec3>(glm::vec3(vertices_[i], vertices_[i + 1], vertices_[i + 2]));
+        vs.push_back(vstemp);
     }
+
+    //Edges    
+    for (unsigned i = 0; i < totalVert -3; i = i + 3) {
+            std::shared_ptr<struct edge> ed = std::make_shared <struct edge>();
+            ed->vs = glm::vec3(vertices_[i], vertices_[i + 1], vertices_[i + 2]);       //start
+            ed->ve = glm::vec3(vertices_[i + 3], vertices_[i + 4], vertices_[i + 5]);   //end
+            es.push_back(ed);
+        }
+        //add last verticies
+        std::shared_ptr<struct edge> ed = std::make_shared <struct edge>();
+        ed->vs = glm::vec3(vertices_[totalVert-3], vertices_[totalVert-2], vertices_[totalVert-1]);       //start
+        ed->ve = glm::vec3(vertices_[0], vertices_[1], vertices_[2]);   //end
+        es.push_back(ed);
+
+
+    
     return 0;// TODO:FIXME: check this return if it should be somehting else
 }
 
