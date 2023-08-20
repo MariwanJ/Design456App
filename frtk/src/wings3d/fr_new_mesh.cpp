@@ -54,10 +54,9 @@ int Shape::build()
 
     for (unsigned i = 0; i < vertices_.size(); i=i+3) {
         std::shared_ptr<struct edge> ed= std::make_shared <struct edge>();
-        ed->vs = glm::vec3(vertices_[i], vertices_[i + 1], 
-            ed->vs = glm::vec3(vertices_[i], vertices_[i + 1], vertices_[i + 2]));
-
+            ed->vs = glm::vec3(vertices_[i], vertices_[i + 1], vertices_[i + 2]);
     }
+    return 0;// TODO:FIXME: check this return if it should be somehting else
 }
 
 void Shape::Draw() {
