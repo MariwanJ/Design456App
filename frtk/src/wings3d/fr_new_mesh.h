@@ -32,26 +32,143 @@
 #include<frtk.h>
 #include<fr_core.h>
 #include <glm/glm.hpp>
+#include<fr_transform.h>
 
-class Mesh {
+
+#define  CHAR_HEIGHT  14
+#define  CHAR_WIDTH  7
+#define  LINE_HEIGHT  CHAR_HEIGHT+3
+#define  GROUND_GRID_SIZE  10
+#define  CAMERA_DIST  8*GROUND_GRID_SIZE
+#define  MOUSE_DIVIDER  500
+#define  UNDO_LEVELS  32
+#define  HIT_BUF_SIZE  2048
+
+//class Transform;
+struct vtx;
+struct edge;
+struct face;
+struct body;
+struct we;
+struct drag;
+struct camera;
+struct shape;
+
+typedef enum stateEnum {
+    undo = 0,
+    redo = 1,
+};
+
+struct undo {
+    int max;					//Max levels of undo.
+    int 	 levels;				//Current number of levels.
+    unsigned int 	 top;					//Top of stack.
+    unsigned int 	 bottom;				//Bottom of stack.
+    stateEnum 	 next_is_undo;				//State of undo/redo toggle.
+    stateEnum 	 undone;				//States that were undone.
+};
+
+typedef enum selMODE {
+    vertex = 0,
+    edge = 1,
+    face = 2,
+    body = 3
+};
+
+struct shape {
+    unsigned int 	 id;					//Shape id
+    std::string  name;					//Shape name
+    glm::mat4 matrix;     // = e3d_mat:identity;		//Transformation matrix
+    std::shared_ptr<we> 	 sh;		//The shape itself:                          // record
+};
+
+// The essential part of the state record.
+struct est {
+    struct shape shapes;
+    selMODE 	 selmode;
+    std::string 	 sel;
+};
+
+typedef struct opt {
+    bool wire = false;				//Wireframe model true/false).
+    bool ground = true;				//Show ground plane true/false).
+    bool axes = true;				//Show axes.
+    bool ortho = false;				//Orthogonal view.
+    bool smooth = false;			//Smooth preview.
+};
+
+// Edge in a winged-edge shape.
+
+struct edge {
+    unsigned int id;        //Edge ID
+    glm::vec3 	 vs;					//Start vertex for edge
+    glm::vec3 	 ve;					//End vertex for edge
+    std::shared_ptr<struct face> 	   lf;					//Left face
+    std::shared_ptr<struct face> 	   rf;					//Right face
+    std::shared_ptr<edge>    ltpr;					//Left traversal predecessor
+    std::shared_ptr<edge> 	 ltsu;					//Left traversal successor
+    std::shared_ptr<edge> 	 rtpr;					//Right traversal predecessor
+    std::shared_ptr<edge> 	 rtsu;				//Right traversal successor
+};
+// A face in a winged-edge shape.
+
+struct face {
+    unsigned int id;
+    std::shared_ptr<struct edge> 	 edge_;					//Incident edge
+    std::vector<std::shared_ptr<Material>> 	 mat;// = default				//Material for face
+};
+// A vertex in a winged-edge shape.
+
+typedef struct vtx {
+    std::shared_ptr<struct edge> 	 edge_;					//Incident edge
+    glm::vec3 pos;					//Position  X;Y,Z )
+};
+
+typedef union OBJTYPE {
+    struct vtx vertex_;
+    struct edge edge_;
+    Transform body_;  //Let us assume that body is a Transform
+    struct face face_;
+};
+typedef struct SSEL {
+    selMODE mode;
+    std::vector <OBJTYPE> ssel;
+};
+
+typedef struct WE {
+    std::vector<std::shared_ptr<struct face>> 	 fs;					//gb_tree containing faces
+    std::vector<std::shared_ptr<struct edge>> 	 es;					//gb_tree containing edges
+    std::vector<std::shared_ptr<glm::vec3>> 	 vs;		    //gb_tree containing vertices
+    std::vector < std::shared_ptr<struct edge>> he;					//gb_sets containing hard edges
+};
+
+
+
+class Shape {
 public:
     /**
      * Default Constructor
      * Receives the path to the .off file
      * throws runtime_error if there is any io error or opengl error
      */
-    Mesh(const std::string& path);
+    Shape(const std::string& path);
 
     /**
     *   This will be used to create an instance of the mesh without a file.
     *  Data should be entered to the class using SetVertex
     */
-    Mesh();
+    Shape();
 
     /**
      * Destructor
      */
-    ~Mesh();
+    ~Shape();
+
+    int build();
+
+
+
+
 
     /**
      * Draws the shape
@@ -120,7 +237,11 @@ private:
     void InitializeVBO(const std::vector<float>& vertices,
         const std::vector<float>& normals,
         const std::vector<unsigned int> indices);
+public: 
+    unsigned int id;
+    std::vector<std::shared_ptr<WE>> wingedObj; //Hold all winged objects in a table that has all elements
 
+private:
     std::vector<float> vertices_;
     std::vector<float> normals_;
     std::vector<unsigned int> indices_;

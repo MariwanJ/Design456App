@@ -26,6 +26,9 @@
 //
 #include <fr_transform.h>
 #include <wings3d/fr_genID.h>  //will bring also frtk.h and fr_core.h to here
+#include <fr_mesh.h>
+
+
 
 #define  CHAR_HEIGHT  14
 #define  CHAR_WIDTH  7
@@ -88,22 +91,6 @@ typedef struct opt {
     bool smooth = false;			//Smooth preview.
 };
 
-/*default st
-
-   St0 = #st{   shapes=Empty,
-                hidden=Empty,
-                selmode=face,
-                sel=[],
-                hsel=Empty,
-                ssel={face,[]},
-                mat=wings_material:default(),
-                saved=true,
-                opts=#opt{},
-                onext=0,
-                last_command=ignore,
-                hit_buf=sdl_util:malloc(?HIT_BUF_SIZE, ?GL_UNSIGNED_INT)},
-*/
-
 // Edge in a winged-edge shape.
 
 struct edge {
@@ -142,7 +129,6 @@ typedef struct SSEL {
     std::vector <OBJTYPE> ssel;
 };
 
-
 typedef struct WE {
     std::vector<std::shared_ptr<struct face>> 	 fs;					//gb_tree containing faces
     std::vector<std::shared_ptr<struct edge>> 	 es;					//gb_tree containing edges
@@ -150,15 +136,87 @@ typedef struct WE {
     std::vector < std::shared_ptr<struct edge>> he;					//gb_sets containing hard edges
 };
 
-
 class Shape {
+
+public:
+    Shape(std::string fn);
+    int buildFromMesh();
+    int buildFromOff();
+
 public:
     unsigned int id;
+    Mesh meshObj;
     std::vector<std::shared_ptr<WE>> wingedObj; //Hold all winged objects in a table that has all elements
-    int buildFromMesh(std::string fn);
-    int buildFromOff(std::string fn);
 
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*default st
+
+   St0 = #st{   shapes=Empty,
+                hidden=Empty,
+                selmode=face,
+                sel=[],
+                hsel=Empty,
+                ssel={face,[]},
+                mat=wings_material:default(),
+                saved=true,
+                opts=#opt{},
+                onext=0,
+                last_command=ignore,
+                hit_buf=sdl_util:malloc(?HIT_BUF_SIZE, ?GL_UNSIGNED_INT)},
+*/
+
+
+
+
+
 
 /*
 typedef struct dl {

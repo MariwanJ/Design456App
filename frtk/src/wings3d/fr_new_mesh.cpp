@@ -26,39 +26,54 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include <fr_mesh.h>
+#include <wings3d/fr_new_mesh.h>
 
-Mesh::Mesh(const std::string& path) :
+Shape::Shape(const std::string& path) :
     vbo_{0, 0, 0},
     vao_(0),normalized_(false) {
     ReadFile(path, vertices_, normals_, indices_);
     InitializeVBO(vertices_, normals_, indices_);
 
 }
-Mesh::Mesh(): vbo_{ 0, 0, 0 }, vao_(0){
+Shape::Shape(): vbo_{ 0, 0, 0 }, vao_(0){
 }
 
-Mesh::~Mesh() {
+Shape::~Shape() {
     if (vao_ != 0) {
         glCheckFunc(glDeleteVertexArrays(1, &vao_));
         glCheckFunc(glDeleteBuffers(3, vbo_));
     }
 }
 
-void Mesh::Draw() {
+int Shape::build()
+{
+    std::vector<std::shared_ptr<struct face>> 	 fs;					//gb_tree containing faces
+    std::vector<std::shared_ptr<struct edge>> 	 es;					//gb_tree containing edges
+    std::vector<std::shared_ptr<glm::vec3>> 	 vs;		    //gb_tree containing vertices
+    std::vector < std::shared_ptr<struct edge>> he;					//gb_sets containing hard edges
+
+    for (unsigned i = 0; i < vertices_.size(); i=i+3) {
+        std::shared_ptr<struct edge> ed= std::make_shared <struct edge>();
+        ed->vs = glm::vec3(vertices_[i], vertices_[i + 1], 
+            ed->vs = glm::vec3(vertices_[i], vertices_[i + 1], vertices_[i + 2]));
+
+    }
+}
+
+void Shape::Draw() {
     glCheckFunc(glBindVertexArray(vao_));
     glCheckFunc(glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0));
     glCheckFunc(glBindVertexArray(0));
 }
 
-void Mesh::GetMesh(std::vector<float>& vertices, std::vector<float>& normals, std::vector<unsigned int>& indices) {
+void Shape::GetMesh(std::vector<float>& vertices, std::vector<float>& normals, std::vector<unsigned int>& indices) {
     vertices = vertices_;
     normals = normals_;
     indices = indices_;
 
 }
 
-void Mesh::SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices) {  
+void Shape::SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices) {  
     vertices_ = vertices;
     indices_ = indices;
 }
@@ -68,18 +83,18 @@ void Mesh::SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& 
  * Call this before reading the mesh.
  * \param value
  */
-void Mesh::SetNormalizeMesh(bool value)
+void Shape::SetNormalizeMesh(bool value)
 {
     normalized_ = true;
 }
 
-bool Mesh::getNormalizeMesh()
+bool Shape::getNormalizeMesh()
 {
     return normalized_;
 }
 
 
-glm::vec3 Mesh::GetVertex(unsigned int index, const float vertices[]) {
+glm::vec3 Shape::GetVertex(unsigned int index, const float vertices[]) {
     return glm::vec3(
         vertices[index * 3],
         vertices[index * 3 + 1],
@@ -87,13 +102,13 @@ glm::vec3 Mesh::GetVertex(unsigned int index, const float vertices[]) {
     );
 }
 
-void Mesh::SetVertex(unsigned int index, float vertices[], const glm::vec3& vertex) {
+void Shape::SetVertex(unsigned int index, float vertices[], const glm::vec3& vertex) {
     vertices[index * 3] = vertex[0];
     vertices[index * 3 + 1] = vertex[1];
     vertices[index * 3 + 2] = vertex[2];
 }
 
-void Mesh::ReadFile(const std::string& path, std::vector<float>& vertices,
+void Shape::ReadFile(const std::string& path, std::vector<float>& vertices,
         std::vector<float>& normals, std::vector<unsigned int>& indices) {
     std::string extension = path.substr(path.rfind('.'));
     if (extension == ".off") {
@@ -109,7 +124,7 @@ void Mesh::ReadFile(const std::string& path, std::vector<float>& vertices,
     }
 }
 
-void Mesh::ReadOFF(const std::string& path, std::vector<float>& vertices,
+void Shape::ReadOFF(const std::string& path, std::vector<float>& vertices,
         std::vector<unsigned int>& indices) {
     std::ifstream input;
     input.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -146,7 +161,7 @@ void Mesh::ReadOFF(const std::string& path, std::vector<float>& vertices,
     }
 }
 
-void Mesh::ReadMSH(const std::string& path, std::vector<float>& vertices,
+void Shape::ReadMSH(const std::string& path, std::vector<float>& vertices,
         std::vector<float>& normals, std::vector<unsigned int>& indices) {
     std::ifstream input;
     input.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -178,7 +193,7 @@ void Mesh::ReadMSH(const std::string& path, std::vector<float>& vertices,
     }
 }
 
-void Mesh::NormalizeVertices(std::vector<float>& vertices) {
+void Shape::NormalizeVertices(std::vector<float>& vertices) {
     glm::vec3 min(std::numeric_limits<float>::max(),
         std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
     float max = std::numeric_limits<float>::min();
@@ -197,7 +212,7 @@ void Mesh::NormalizeVertices(std::vector<float>& vertices) {
     }
 }
 
-void Mesh::CalculateNormals(const std::vector<float>& vertices, 
+void Shape::CalculateNormals(const std::vector<float>& vertices, 
                             const std::vector<unsigned int>& indices, 
                             std::vector<float>& normals) {
 
@@ -247,7 +262,7 @@ void Mesh::CalculateNormals(const std::vector<float>& vertices,
         SetVertex(i, normals.data(), glm::normalize(pre_normals[i]));
 }
 
-void Mesh::InitializeVBO(const std::vector<float>& vertices,
+void Shape::InitializeVBO(const std::vector<float>& vertices,
                             const std::vector<float>& normals,
                             const std::vector<unsigned int> indices) {
 

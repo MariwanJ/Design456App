@@ -357,9 +357,7 @@ void Fr_GL3Window::SunOptions() {
     old.spot_enabled_ = t;
 
     f = glm::degrees(acos(old.spot_cutoff_Ang));
-    std::cout << "value -->" << f << std::endl;
     ImGui::DragFloat("Spot Cutoff Ang", &f, 0.2, -360.f, 360.f);
-    std::cout << "value -->" << f << std::endl;
     old.spot_cutoff_Ang = cos(glm::radians(f));
     f = old.spot_exponent_;
     ImGui::DragFloat("Spot exponent", &f, 0.2, -50.f, 50.f);

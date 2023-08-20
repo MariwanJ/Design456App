@@ -27,3 +27,18 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 #include <wings3d/wings.h>
+
+Shape::Shape(std::string fn)
+{
+    
+}
+
+int Shape::buildFromMesh()
+{
+    return 0;
+}
+
+int Shape::buildFromOff()
+{
+    return 0;
+}
