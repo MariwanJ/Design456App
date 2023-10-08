@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "mesh.h"
+#include<../../../frtk/vendor/halfEdge/src/halfedge.h>
 
 Edge* EdgeNew(Edge** edges) {
     Edge* e;

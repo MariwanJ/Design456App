@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "mesh.h"
-#include "funcs.h"
+
+#include<../../../frtk/vendor/halfEdge/src/halfedge.h>
 
 HalfEdge* HalfEdgeNew(HalfEdge** halfedges) {
     HalfEdge* h;

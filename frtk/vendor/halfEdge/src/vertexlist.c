@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "mesh.h"
-#include "funcs.h"
+
+#include<../../../frtk/vendor/halfEdge/src/halfedge.h>
 
 void  VertexListConstruct(Solid** solid, int vertex_number, FILE* fp)
 {

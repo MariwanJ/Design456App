@@ -47,38 +47,7 @@ Shape::~Shape() {
 
 int Shape::build()
 {
-    std::vector<std::shared_ptr<struct face>> 	 fs;				 //gb_tree containing faces
-    std::vector<std::shared_ptr<struct edge>> 	 es;				 //gb_tree containing edges
-    std::vector<std::shared_ptr<glm::vec3>> 	 vs;		         //gb_tree containing vertices
-    std::vector < std::shared_ptr<struct edge>> he;					 //gb_sets containing hard edges
-    unsigned int totalVert= vertices_.size();
-    //Verticies
-    for (unsigned i = 0; i < totalVert; i++) {
-        std::shared_ptr<glm::vec3> vstemp=std::make_shared<glm::vec3>(glm::vec3(vertices_[i], vertices_[i + 1], vertices_[i + 2]));
-        vs.push_back(vstemp);
-    }
-
-    //Edges
-    for (unsigned i = 0; i < vs.size()-1; i = i + 3) {
-        std::shared_ptr<struct edge> ed = std::make_shared <struct edge>();
-
-        ed->vs = *vs[i];  //glm::vec3(vertices_[i], vertices_[i + 1], vertices_[i + 2]);       //start
-            ed->ve = *vs[i + 1]; //glm::vec3(vertices_[i + 3], vertices_[i + 4], vertices_[i + 5]);   //end
-            es.push_back(ed);
-        }
-    //last item
-    std::shared_ptr<struct edge> ed = std::make_shared <struct edge>();
-
-    ed->vs = *vs[vs.size()-1];  //glm::vec3(vertices_[i], vertices_[i + 1], vertices_[i + 2]);       //start
-        ed->ve = *vs[0]; //glm::vec3(vertices_[i + 3], vertices_[i + 4], vertices_[i + 5]);   //end
-        es.push_back(ed);
-    //Facses        //TODO : Is this correct?
-        for (unsigned int i = 0; i < es.size() - 3; i++) {
-            std::shared_ptr<struct face> face_ = std::make_shared <struct face>();
-            face_->edge_.push_back(es[i]);
-            face_->edge_.push_back(es[i+1]);
-            face_->edge_.push_back(es[i+2]);
-        }
+    
     return 0;// TODO:FIXME: check this return if it should be somehting else
 }
 

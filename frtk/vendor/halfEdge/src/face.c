@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <math.h>
-#include "mesh.h"
-#include "funcs.h"
+
+#include<../../../frtk/vendor/halfEdge/src/halfedge.h>
+
 
 Face* FaceNew(Face** faces) {
     static Id ID = 0;
