@@ -1,39 +1,19 @@
-project "frtk"
+project "halfEdge"
 	kind "StaticLib"--kind "SharedLib" 
 	language "C++"
 	cppdialect "C++17"
 	staticruntime "on"
 	--runtime "Debug"
 	
-	
---[[  			-- To use /MT in premake:
-			staticruntime "on"
-			runtime "Release"
-
-			--To use /MTd in premake:
-			staticruntime "on"
-			runtime "Debug"
-
-			--To use /MD in premake:
-			staticruntime "off"
-			runtime "Release"
-
-			--To use /MDd in premake:
-			staticruntime "off"
-			runtime "Debug"  ]]
-	
 	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
 	
-	--- dosen't work for now .. fix it later
-	---pchheader "frtk.h"             --preheader
-	---pchsource "src/frtk.cpp"
 
 	files
 	{
 		"src/**.h",
 		"src/**.cpp",
-		"src/**.cxx",
+		"src/**.c",
 	}
 
 	defines
@@ -49,17 +29,8 @@ project "frtk"
     }
 	includedirs
 	{
-        "%{IncludeDir.GLFW}",
-		"%{IncludeDir.Glad}",
-        "%{IncludeDir.imGui}",
-        "%{IncludeDir.ImGuizmo}",
-		"%{IncludeDir.glm}",
-        "%{IncludeDir.objloader}",
-        "$(SolutionDir)frtk/vendor/spdlog/include",
-		"$(SolutionDir)frtk/vendor/instrumentation",
-		"$(SolutionDir)frtk/vendor/openmesh",
-        "src",
-		--"%{IncludeDir.yaml-cpp}",
+        "%{IncludeDir.freeglut}",
+		---"C:/freeglut/include"
 	}
 	filter "system:windows"
 		systemversion "latest"
@@ -93,14 +64,7 @@ project "frtk"
             "uuid",
             "comdlg32",
             "advapi32",
-			"Glad",
-            "ImGuizmo",
-		  	"imGui",
-		  --"yaml-cpp",
-			"opengl32.lib",
-			"GLFW",
-			"Glad",
-            "objloader",
+			"freeglut_static"
 		}
 
 	filter "configurations:Release"
@@ -123,13 +87,7 @@ project "frtk"
             "uuid",
             "comdlg32",
             "advapi32",
-			"Glad",
-            "ImGuizmo",
-		  	"imGui",
-		  --"yaml-cpp",
-			"opengl32.lib",
 			"GLFW",
 			"Glad",
-            "objloader",
-			"openmesh",
+			"freeglut_static"
     }

@@ -33,7 +33,7 @@
 #include<fr_core.h>
 #include <glm/glm.hpp>
 #include<fr_transform.h>
-
+#include<halfEdge/fr_genID.h>
 
 #define  CHAR_HEIGHT  14
 #define  CHAR_WIDTH  7
@@ -53,20 +53,20 @@ struct we;
 struct drag;
 struct camera;
 struct shape;
+//
+//typedef enum stateEnum {
+//    undo = 0,
+//    redo = 1,
+//};
 
-typedef enum stateEnum {
-    undo = 0,
-    redo = 1,
-};
-
-struct undo {
-    int max;					//Max levels of undo.
-    int 	 levels;				//Current number of levels.
-    unsigned int 	 top;					//Top of stack.
-    unsigned int 	 bottom;				//Bottom of stack.
-    stateEnum 	 next_is_undo;				//State of undo/redo toggle.
-    stateEnum 	 undone;				//States that were undone.
-};
+//struct undo {
+//    int max;					//Max levels of undo.
+//    int 	 levels;				//Current number of levels.
+//    unsigned int 	 top;					//Top of stack.
+//    unsigned int 	 bottom;				//Bottom of stack.
+//    stateEnum 	 next_is_undo;				//State of undo/redo toggle.
+//    stateEnum 	 undone;				//States that were undone.
+//};
 
 typedef enum selMODE {
     vertex = 0,
@@ -76,10 +76,10 @@ typedef enum selMODE {
 };
 
 struct shape {
-    unsigned int 	 id;					//Shape id
+    unsigned int 	 id;				//Shape id
     std::string  name;					//Shape name
-    glm::mat4 matrix;     // = e3d_mat:identity;		//Transformation matrix
-    std::shared_ptr<we> 	 sh;		//The shape itself:                          // record
+    glm::mat4 matrix;                   // = e3d_mat:identity;		//Transformation matrix
+    std::shared_ptr<we> 	 sh;		//The shape itself:              // record
 };
 
 // The essential part of the state record.
@@ -89,13 +89,13 @@ struct est {
     std::string 	 sel;
 };
 
-typedef struct opt {
-    bool wire = false;				//Wireframe model true/false).
-    bool ground = true;				//Show ground plane true/false).
-    bool axes = true;				//Show axes.
-    bool ortho = false;				//Orthogonal view.
-    bool smooth = false;			//Smooth preview.
-};
+//typedef struct opt {
+//    bool wire = false;				//Wireframe model true/false).
+//    bool ground = true;				//Show ground plane true/false).
+//    bool axes = true;				//Show axes.
+//    bool ortho = false;				//Orthogonal view.
+//    bool smooth = false;			//Smooth preview.
+//};
 
 // Edge in a winged-edge shape.
 
@@ -114,7 +114,7 @@ struct edge {
 
 struct face {
     unsigned int id;
-    std::shared_ptr<struct edge> 	 edge_;					//Incident edge
+    std::vector<std::shared_ptr<struct edge>> edge_;					//Incident edge
     std::vector<std::shared_ptr<Material>> 	 mat;// = default				//Material for face
 };
 // A vertex in a winged-edge shape.
@@ -136,13 +136,11 @@ typedef struct SSEL {
 };
 
 typedef struct WE {
-    std::vector<std::shared_ptr<struct face>> 	 fs;					//gb_tree containing faces
-    std::vector<std::shared_ptr<struct edge>> 	 es;					//gb_tree containing edges
-    std::vector<std::shared_ptr<glm::vec3>> 	 vs;		    //gb_tree containing vertices
-    std::vector < std::shared_ptr<struct edge>> he;					//gb_sets containing hard edges
+    std::vector<std::shared_ptr<struct face>> 	 fs;		//gb_tree containing faces
+    std::vector<std::shared_ptr<struct edge>> 	 es;		//gb_tree containing edges
+    std::vector<std::shared_ptr<glm::vec3>> 	 vs;	    //gb_tree containing vertices
+    std::vector < std::shared_ptr<struct edge>>  he;		//gb_sets containing hard edges
 };
-
-
 
 class Shape {
 public:
@@ -165,10 +163,6 @@ public:
     ~Shape();
 
     int build();
-
-
-
-
 
     /**
      * Draws the shape
@@ -237,7 +231,7 @@ private:
     void InitializeVBO(const std::vector<float>& vertices,
         const std::vector<float>& normals,
         const std::vector<unsigned int> indices);
-public: 
+public:
     unsigned int id;
     std::vector<std::shared_ptr<WE>> wingedObj; //Hold all winged objects in a table that has all elements
 

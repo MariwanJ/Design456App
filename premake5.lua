@@ -27,8 +27,7 @@ IncludeDir["yaml-cpp"] = "../frtk/vendor/yaml-cpp"
 IncludeDir["GLFW"] = "../frtk/vendor/GLFW/include"
 IncludeDir["stb_image"] = "../frtk/vendor/stb_image/src"
 IncludeDir["objloader"] = "../frtk/vendor/objloader"
-
-
+IncludeDir["halfEdge"] = "../frtk/vendor/halfEdge"
 
 --Projects
 --Include other lua scripts and group them as dependecies
@@ -40,7 +39,8 @@ group "Dependencies"
 	  include "frtk/vendor/spdlog"
 	  include "frtk/vendor/yaml-cpp"
 	  include "frtk/vendor/stb_image"
-      include "frtk/vendor/objloader"
+      include "frtk/vendor/objloader"  
+	  include "frtk/vendor/halfEdge"
 
 -- Don't remove below line. Without this, the following names will be grouped as dependecies.
 group ""

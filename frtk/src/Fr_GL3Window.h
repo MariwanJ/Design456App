@@ -29,7 +29,6 @@
 #ifndef FR_GL3WINDOW_H
 #define FR_GL3WINDOW_H
 
-#include<wings3d/wings.h> //This will bring frtk.h and fr_core.h also
 #include<fr_scene.h>
 #include<fr_camera.h>
 #include<fr_manipulator.h>
@@ -39,8 +38,10 @@
 #include <fr_grid.h>
 #include<fr_axis3D.h>
 #include<fr_texture_buffer.h>  //used to render to texture - imgui
+#include<halfEdge/fr_genID.h>
 //fonts for Imgui icons
 #include <imguiFont/IconsFontAwesome6.h>
+
 
 
 #define MAX_CAMERAS 8  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING CameraList enu

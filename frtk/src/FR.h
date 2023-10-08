@@ -1,19 +1,19 @@
-//                                                                      
-// This file is a part of the Open Source Design456App                    
+//
+// This file is a part of the Open Source Design456App
 // MIT License
-// 
+//
 // Copyright (c) 2023
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,8 +23,7 @@
 // SOFTWARE.
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
-// 
-
+//
 
 /** \file
     FR static variable/classes.
@@ -33,46 +32,40 @@
 #ifndef FR_H
 #define FR_H
 
-
-
-
-
  /**
-	The major release version
+    The major release version
   */
 
 #define FR_MAJOR_VERSION        0
 
   /**
-	 The minor release version for this library.
+     The minor release version for this library.
    */
 #define FR_MINOR_VERSION        0
 
    /**
-	  The patch version for this library.
-	*/
+      The patch version for this library.
+    */
 #define FR_PATCH_VERSION        1
 
 #define FR_VERSION      ( (double)FL_MAJOR_VERSION + \
                           (double)FL_MINOR_VERSION * 0.01 + \
                           (double)FL_PATCH_VERSION * 0.0001 )
 
-
-
 #define ICON_SIZE  36,36
 #define ICON_FONT_SIZE 24
 #define MAX_FOV_ZOOM 165
 
-	// Transparency - No color will be applied
+    // Transparency - No color will be applied
 
  /* [Color definition used in all widgets consist of
-	 a tuple of three float values between 0.0 and 1.0]
+     a tuple of three float values between 0.0 and 1.0]
  */
 struct T {
-	float R = 1.0;
-	float G = 1.0;
-	float B = 1.0;
-	float A = 1.0;
+    float R = 1.0;
+    float G = 1.0;
+    float B = 1.0;
+    float A = 1.0;
 };
 
 typedef T FR_COLOR;
@@ -233,50 +226,43 @@ namespace COLOR {
 #define FR_WINGS3D				 0.3800f,  0.3800f,  0.3800f,  0.5000f
 };
 
-class Fr_GL3Window; // compiler should define that later. 
+class Fr_GL3Window; // compiler should define that later.
 
 class FR {
 public:
-	FR(); // todo remove me
-	//static variables used for mouse events inside fgwl.
-	static int glfw_e_x;  //SAVE X AND Y OF LAST CLICK INSIDE GLFW
-	static int glfw_e_y;
-	static int glfw_click;
-	static int glfw_double_click;
-	static bool glfw_MouseClicked;
-	static int glfw_MouseButton;
-	static bool CamerOptionVisible;
-
-	
+    FR(); // todo remove me
+    //static variables used for mouse events inside fgwl.
+    static int glfw_e_x;  //SAVE X AND Y OF LAST CLICK INSIDE GLFW
+    static int glfw_e_y;
+    static int glfw_click;
+    static int glfw_double_click;
+    static bool glfw_MouseClicked;
+    static int glfw_MouseButton;
+    static bool CamerOptionVisible;
 };
 
 const char fontPath[] = "../frtk/vendor/imGui/src/imguiFont/";
 
-
-
 enum {
+    GLFW_WINDOW_CLOSE,
+    GLFW_WINDOW_RESIZE,
+    GLFW_FOCUSE,
+    GLFW_APP_RENDER,
+    GLFW_KEY_PRESSED,
+    GLFW_KEY_RELEASED,
+    GLFW_KEY_TYPED,
 
-	GLFW_WINDOW_CLOSE,
-	GLFW_WINDOW_RESIZE,
-	GLFW_FOCUSE,
-	GLFW_APP_RENDER,
-	GLFW_KEY_PRESSED,
-	GLFW_KEY_RELEASED,
-	GLFW_KEY_TYPED,
-	
-	//MOUSE
-	GLFW_MOUSE_LEFT_PUSH,
-	GLFW_MOUSE_RIGHT_PUSH,
-	GLFW_MOUSE_LEFT_RELEASE,
-	GLFW_MOUSE_RIGHT_RELEASE,
-	GLFW_MOUSE_MIDDLE_PUSH,
-	GLFW_MOUSE_MIDDLE_RELEASE,
-	GLFW_MOUSE_DOUBLE_CLICK,   //ONE CLICK IS JUST PUSH
-	
-	GLFW_MOUSE_MOVE,
-	GLFW_MOUSE_SCROLL,
+    //MOUSE
+    GLFW_MOUSE_LEFT_PUSH,
+    GLFW_MOUSE_RIGHT_PUSH,
+    GLFW_MOUSE_LEFT_RELEASE,
+    GLFW_MOUSE_RIGHT_RELEASE,
+    GLFW_MOUSE_MIDDLE_PUSH,
+    GLFW_MOUSE_MIDDLE_RELEASE,
+    GLFW_MOUSE_DOUBLE_CLICK,   //ONE CLICK IS JUST PUSH
 
-
+    GLFW_MOUSE_MOVE,
+    GLFW_MOUSE_SCROLL,
 };
 
 #endif // !FR_H

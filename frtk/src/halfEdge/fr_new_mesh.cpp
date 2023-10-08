@@ -26,7 +26,7 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include <wings3d/fr_new_mesh.h>
+#include <halfEdge/fr_new_mesh.h>
 
 Shape::Shape(const std::string& path) :
     vbo_{0, 0, 0},
@@ -58,21 +58,27 @@ int Shape::build()
         vs.push_back(vstemp);
     }
 
-    //Edges    
-    for (unsigned i = 0; i < totalVert -3; i = i + 3) {
-            std::shared_ptr<struct edge> ed = std::make_shared <struct edge>();
-            ed->vs = glm::vec3(vertices_[i], vertices_[i + 1], vertices_[i + 2]);       //start
-            ed->ve = glm::vec3(vertices_[i + 3], vertices_[i + 4], vertices_[i + 5]);   //end
+    //Edges
+    for (unsigned i = 0; i < vs.size()-1; i = i + 3) {
+        std::shared_ptr<struct edge> ed = std::make_shared <struct edge>();
+
+        ed->vs = *vs[i];  //glm::vec3(vertices_[i], vertices_[i + 1], vertices_[i + 2]);       //start
+            ed->ve = *vs[i + 1]; //glm::vec3(vertices_[i + 3], vertices_[i + 4], vertices_[i + 5]);   //end
             es.push_back(ed);
         }
-        //add last verticies
-        std::shared_ptr<struct edge> ed = std::make_shared <struct edge>();
-        ed->vs = glm::vec3(vertices_[totalVert-3], vertices_[totalVert-2], vertices_[totalVert-1]);       //start
-        ed->ve = glm::vec3(vertices_[0], vertices_[1], vertices_[2]);   //end
+    //last item
+    std::shared_ptr<struct edge> ed = std::make_shared <struct edge>();
+
+    ed->vs = *vs[vs.size()-1];  //glm::vec3(vertices_[i], vertices_[i + 1], vertices_[i + 2]);       //start
+        ed->ve = *vs[0]; //glm::vec3(vertices_[i + 3], vertices_[i + 4], vertices_[i + 5]);   //end
         es.push_back(ed);
-
-
-    
+    //Facses        //TODO : Is this correct?
+        for (unsigned int i = 0; i < es.size() - 3; i++) {
+            std::shared_ptr<struct face> face_ = std::make_shared <struct face>();
+            face_->edge_.push_back(es[i]);
+            face_->edge_.push_back(es[i+1]);
+            face_->edge_.push_back(es[i+2]);
+        }
     return 0;// TODO:FIXME: check this return if it should be somehting else
 }
 
