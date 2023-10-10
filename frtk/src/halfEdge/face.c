@@ -3,7 +3,8 @@
 #include <assert.h>
 #include <math.h>
 
-#include<../../../frtk/vendor/halfEdge/src/halfedge.h>
+#include <halfedge/fr_new_mesh.h>
+
 
 
 Face* FaceNew(Face** faces) {

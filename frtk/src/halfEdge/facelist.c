@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "mesh.h"
-#include "funcs.h"
+#include <halfedge/fr_new_mesh.h>
 
 void  FaceListConstruct(Solid** solid, int face_number, FILE* fp)
 {

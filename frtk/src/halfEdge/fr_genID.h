@@ -26,15 +26,16 @@
 //
 #ifndef FR_GENID_H
 #define FR_GENID_H
-#include <frtk.h>
-#include<Fr_Core.h>
+#include <../src/frtk.h>
+#include< ../src/Fr_Core.h>
 
 #define SEGMENT_SIZE 1024
 
 class genID {
 public:
 	genID();
-	unsigned int getID();
+	~genID();
+	unsigned long int getID();
 	bool isUsed(unsigned int id);
 	void freeID(unsigned int id);
 private:

@@ -26,7 +26,8 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include <halfEdge/fr_new_mesh.h>
+#include <../src/halfEdge/fr_new_mesh.h>
+
 
 Shape::Shape(const std::string& path) :
     vbo_{0, 0, 0},

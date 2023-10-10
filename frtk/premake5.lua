@@ -34,6 +34,7 @@ project "frtk"
 		"src/**.h",
 		"src/**.cpp",
 		"src/**.cxx",
+		"src/**.c",
 	}
 
 	defines
@@ -57,7 +58,6 @@ project "frtk"
         "%{IncludeDir.objloader}",
         "$(SolutionDir)frtk/vendor/spdlog/include",
 		"$(SolutionDir)frtk/vendor/instrumentation",
-		"$(SolutionDir)frtk/vendor/openmesh",
         "src",
 		--"%{IncludeDir.yaml-cpp}",
 	}
@@ -131,5 +131,4 @@ project "frtk"
 			"GLFW",
 			"Glad",
             "objloader",
-			"openmesh",
     }

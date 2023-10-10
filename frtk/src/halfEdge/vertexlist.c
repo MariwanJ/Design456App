@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include<../../../frtk/vendor/halfEdge/src/halfedge.h>
+#include <halfedge/fr_new_mesh.h>
+
 
 void  VertexListConstruct(Solid** solid, int vertex_number, FILE* fp)
 {

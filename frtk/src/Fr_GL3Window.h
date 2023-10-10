@@ -38,7 +38,7 @@
 #include <fr_grid.h>
 #include<fr_axis3D.h>
 #include<fr_texture_buffer.h>  //used to render to texture - imgui
-#include<halfEdge/fr_genID.h>
+#include<../src/halfedge/fr_genID.h>
 //fonts for Imgui icons
 #include <imguiFont/IconsFontAwesome6.h>
 

@@ -26,15 +26,82 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef FR_MESH_H
-#define FR_MESH_H
+#ifndef FR_NEW_MESH_H
+#define FR_NEW_MESH_H
 
-#include<frtk.h>
-#include<fr_core.h>
-#include <glm/glm.hpp>
-#include<fr_transform.h>
-#include<halfEdge/fr_genID.h>
-#include<../../frtk/vendor/halfEdge/src/halfedge.h>
+#include<../src/frtk.h>
+#include<../src/fr_core.h>
+#include<../vendor/glm/glm/glm.hpp>
+#include<../src/fr_transform.h>
+#include<../src/halfedge/fr_genID.h>
+#include<../src/halfEdge/fr_new_mesh.h>
+
+
+
+
+
+struct mesh_face;
+struct mesh_edge;
+struct mesh_halfedge;
+struct mesh_vertex;
+struct mesh_loop;
+struct mesh_solid;  //replace this later with shape
+
+struct mesh_face {
+    int          faceno;
+    struct mesh_loop* floop;
+    struct mesh_solid* fsolid;
+    double      normal[3];
+    bool       alivef;
+
+    struct mesh_face* next;
+    struct mesh_face* prev;
+};
+
+struct mesh_edge {
+    struct mesh_halfEdge* he1;
+    struct mesh_halfEdge* he2;
+    struct mesh_solid* esolid;
+    bool      alive;
+
+    struct mesh_edge* next;
+    struct mesh_edge* prev;
+};
+
+struct mesh_halfedge {
+    struct mesh_edge* hedge;
+    struct mesh_loop* hloop;
+    struct mesh_vertex* hvert;
+    bool     aliveh;
+    struct mesh_halfedge* next;
+    struct mesh_halfedge* prev;
+
+};
+
+struct mesh_vertex {
+    int        vertexno;
+    struct halfEdge* vedge;
+//    double    gauss_cur;
+    double    vcoord[3];
+    double    ncoord[3];
+    bool      alivev;
+
+    struct mesh_vertex* next;
+    struct mesh_vertex* prev;
+};
+
+struct loop {
+    struct mesh_halfedge* ledges;
+    struct mesh_face* lface;
+    bool      alivel;// TODO: WHAT IS THIS FOR?? NOT USED AT ALL AND HAS WRONG DECLARATION!!! /Mariwan
+};
+
+
+typedef struct mesh_face    mesh_Face;
+typedef struct mesh_edge    mesh_Edge;
+typedef struct mesh_vertex  mesh_Vertex;
+typedef struct mesh_solid mesh_Solid;
+
 
 class Shape {
 public:
@@ -126,8 +193,8 @@ private:
         const std::vector<float>& normals,
         const std::vector<unsigned int> indices);
 public:
-    unsigned int id;
-    std::vector<std::shared_ptr<Solid>> wingedObj; //Hold all winged objects in a table that has all elements
+    unsigned int id;        //Each shape has a unique ID
+    std::vector<std::shared_ptr<mesh_Solid>> wingedObj; //Hold all winged objects in a table that has all elements
 
 private:
     std::vector<float> vertices_;
@@ -136,6 +203,16 @@ private:
     unsigned int vbo_[3];
     unsigned int vao_;
     bool normalized_;
+
+//From Meshlib
+public:
+
+    std::shared_ptr<mesh_Face> sfaces;
+    std::shared_ptr<mesh_Edge> sedges;
+    std::shared_ptr<mesh_Vertex> sverts;
+    glm::vec3 center;
+
+
 };
 
 #endif

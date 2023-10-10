@@ -35,8 +35,11 @@ genID::genID()
         used_.push_back(false);
     }
 }
+genID::~genID()
+{
 
-unsigned int genID::getID()
+}
+unsigned long int genID::getID()
 {
 
 

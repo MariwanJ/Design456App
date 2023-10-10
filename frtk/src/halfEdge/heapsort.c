@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include<../../../frtk/vendor/halfEdge/src/halfedge.h>
+#include <halfedge/fr_new_mesh.h>
+
 
 static  Node* a[65535];
 static  int N;
