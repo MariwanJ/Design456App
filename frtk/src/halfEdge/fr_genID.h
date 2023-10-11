@@ -35,12 +35,12 @@ class genID {
 public:
 	genID();
 	~genID();
-	unsigned long int getID();
-	bool isUsed(unsigned int id);
-	void freeID(unsigned int id);
+	unsigned long getID();
+	bool isUsed(unsigned long id);
+	void freeID(unsigned long id);
 private:
 	std::vector <bool> used_;
-	static unsigned int lastID; //This is a sequential 
-	static unsigned int usedSize; //No of use ID:s
+	static unsigned long  lastID; //This is a sequential 
+	static unsigned long   usedSize; //No of use ID:s
 };
 #endif

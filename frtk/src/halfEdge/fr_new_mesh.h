@@ -44,64 +44,44 @@ struct mesh_face;
 struct mesh_edge;
 struct mesh_halfedge;
 struct mesh_vertex;
-struct mesh_loop;
-struct mesh_solid;  //replace this later with shape
+
+class Shape;  //Object container for any 2D or 3D shape
 
 struct mesh_face {
-    int          faceno;
-    struct mesh_loop* floop;
-    struct mesh_solid* fsolid;
-    double      normal[3];
-    bool       alivef;
+    unsigned long     ID;  //face ID
+    struct Shape* fsolid=NULL;
+    bool       visible;
+    bool       selected;
 
-    struct mesh_face* next;
-    struct mesh_face* prev;
+    struct mesh_face* next =NULL;
+    struct mesh_face* prev =NULL;
 };
 
 struct mesh_edge {
-    struct mesh_halfEdge* he1;
-    struct mesh_halfEdge* he2;
-    struct mesh_solid* esolid;
-    bool      alive;
-
-    struct mesh_edge* next;
-    struct mesh_edge* prev;
+    unsigned long ID;   //edge ID
+    struct mesh_halfEdge* he1=NULL;
+    bool visible;
+    bool selected;
 };
 
 struct mesh_halfedge {
-    struct mesh_edge* hedge;
-    struct mesh_loop* hloop;
-    struct mesh_vertex* hvert;
-    bool     aliveh;
-    struct mesh_halfedge* next;
-    struct mesh_halfedge* prev;
 
+    struct mesh_halfedge* twin=NULL; //Reverse half edge
+    struct mesh_vertex* vertex=NULL;
+    struct mesh_face* face = NULL;
+
+    struct mesh_halfedge* next=NULL;
+    struct mesh_halfedge* prev=NULL;
 };
 
 struct mesh_vertex {
-    int        vertexno;
-    struct halfEdge* vedge;
-//    double    gauss_cur;
-    double    vcoord[3];
-    double    ncoord[3];
-    bool      alivev;
-
-    struct mesh_vertex* next;
-    struct mesh_vertex* prev;
+    struct mesh_halfEdge* vedge = NULL;
+    glm::vec3 vertex=glm::vec3(0.0,0.0,0.0);
+    bool      visible = NULL;
+    
 };
 
-struct loop {
-    struct mesh_halfedge* ledges;
-    struct mesh_face* lface;
-    bool      alivel;// TODO: WHAT IS THIS FOR?? NOT USED AT ALL AND HAS WRONG DECLARATION!!! /Mariwan
-};
-
-
-typedef struct mesh_face    mesh_Face;
-typedef struct mesh_edge    mesh_Edge;
-typedef struct mesh_vertex  mesh_Vertex;
-typedef struct mesh_solid mesh_Solid;
-
+  
 
 class Shape {
 public:
@@ -122,7 +102,10 @@ public:
      * Destructor
      */
     ~Shape();
-
+    /**
+    *   Construct the helf-edged data structre for the shape
+    
+    */
     int build();
 
     /**
@@ -194,7 +177,15 @@ private:
         const std::vector<unsigned int> indices);
 public:
     unsigned int id;        //Each shape has a unique ID
-    std::vector<std::shared_ptr<mesh_Solid>> wingedObj; //Hold all winged objects in a table that has all elements
+    std::vector<std::shared_ptr<struct mesh_face>> FaceObjects; //Hold all faces for the shape and all other elements
+
+
+public: 
+    /**
+    *   Use this to update the verticies that will be drawn by OpenGL.
+    *   This must be done after any manupulation.
+    */
+    int updateVerticies(void);
 
 private:
     std::vector<float> vertices_;
@@ -203,15 +194,6 @@ private:
     unsigned int vbo_[3];
     unsigned int vao_;
     bool normalized_;
-
-//From Meshlib
-public:
-
-    std::shared_ptr<mesh_Face> sfaces;
-    std::shared_ptr<mesh_Edge> sedges;
-    std::shared_ptr<mesh_Vertex> sverts;
-    glm::vec3 center;
-
 
 };
 

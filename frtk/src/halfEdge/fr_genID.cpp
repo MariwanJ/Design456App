@@ -25,13 +25,13 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-unsigned int genID::lastID=0; //This is a sequential
-unsigned int genID::usedSize=0; //No of use ID:s
+unsigned long int genID::lastID=0; //This is a sequential
+unsigned long int genID::usedSize=0; //No of use ID:s
 
 genID::genID()
 {
     used_.reserve(SEGMENT_SIZE); //At the beginning
-    for (int i = 0; i < SEGMENT_SIZE; i++) {
+    for (unsigned long i = 0; i < SEGMENT_SIZE; i++) {
         used_.push_back(false);
     }
 }
@@ -39,7 +39,7 @@ genID::~genID()
 {
 
 }
-unsigned long int genID::getID()
+unsigned long   genID::getID()
 {
 
 
@@ -77,12 +77,12 @@ unsigned long int genID::getID()
     }
 }
 
-bool genID::isUsed(unsigned int id)
+bool genID::isUsed(unsigned long id)
 {
     return used_[id]; //True if it is used, false if it is not used by any object
 }
 
-void genID::freeID(unsigned int id)
+void genID::freeID(unsigned long id)
 {
     if (id > used_.size()) {
         throw ("ID not found");
