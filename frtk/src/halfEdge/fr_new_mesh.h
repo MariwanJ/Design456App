@@ -38,31 +38,31 @@
 
 
 
-
-
+class Shape;  //Object container for any 2D or 3D shape
+struct mesh_halfedge;
 struct mesh_face;
 struct mesh_edge;
-struct mesh_halfedge;
 struct mesh_vertex;
 
-class Shape;  //Object container for any 2D or 3D shape
+
 
 struct mesh_face {
     unsigned long     ID;  //face ID
     struct Shape* fsolid=NULL;
+    struct mesh_halfedge* hedge=NULL;    //first half edge in the face
     bool       visible;
     bool       selected;
 
     struct mesh_face* next =NULL;
     struct mesh_face* prev =NULL;
 };
-
-struct mesh_edge {
-    unsigned long ID;   //edge ID
-    struct mesh_halfEdge* he1=NULL;
-    bool visible;
-    bool selected;
-};
+//Not sure if we need this 2023-10-11
+//struct mesh_edge {
+//    unsigned long ID;   //edge ID
+//    struct mesh_halfEdge* he1=NULL;
+//    bool visible;
+//    bool selected;
+//};
 
 struct mesh_halfedge {
 
@@ -75,10 +75,9 @@ struct mesh_halfedge {
 };
 
 struct mesh_vertex {
-    struct mesh_halfEdge* vedge = NULL;
+    struct mesh_halfedge* vedge = NULL;
     glm::vec3 vertex=glm::vec3(0.0,0.0,0.0);
     bool      visible = NULL;
-    
 };
 
   

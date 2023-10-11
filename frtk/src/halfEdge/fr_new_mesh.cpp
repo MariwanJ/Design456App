@@ -46,6 +46,34 @@ Shape::~Shape() {
 
 int Shape::build()
 {
+    //TODO : FIXME : NOT FINISHED 
+    for (unsigned int i = 0; i < vertices_.size()/3; i++) {
+
+        std::shared_ptr<struct mesh_face> tempFace = std::make_shared<struct mesh_face>();
+        tempFace->fsolid = this;
+        tempFace->hedge = new(struct mesh_halfedge);
+        if(FaceObjects.size() < 1 ){
+            
+            tempFace->prev = tempFace.get(); 
+        }
+        else {
+            tempFace->prev = FaceObjects[i-1].get();
+        }
+        FaceObjects.push_back(tempFace);
+
+
+
+
+        //CONTINUE TO DEVELOP THIS.
+
+
+
+
+
+    }
+
+
+
     return 0;// TODO:FIXME: check this return if it should be somehting else
 }
 
@@ -272,4 +300,9 @@ void Shape::InitializeVBO(const std::vector<float>& vertices,
     glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW));
 
     glCheckFunc(glBindVertexArray(0));
+}
+
+int Shape::updateVerticies(void)
+{
+    return 0;
 }
