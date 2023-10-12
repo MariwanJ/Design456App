@@ -25,8 +25,10 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-unsigned long int genID::lastID=0; //This is a sequential
-unsigned long int genID::usedSize=0; //No of use ID:s
+unsigned int  genID::lastID=0; //This is a sequential
+unsigned int  genID::usedSize=0; //No of use ID:s
+#include <Fr_GL3Window.h>
+
 
 genID::genID()
 {
@@ -39,10 +41,8 @@ genID::~genID()
 {
 
 }
-unsigned long   genID::getID()
+unsigned int   genID::getID()
 {
-
-
     if (usedSize < used_.size()) {
         //We have fragmentation. search for not used id
         unsigned int x = 0;
@@ -77,12 +77,12 @@ unsigned long   genID::getID()
     }
 }
 
-bool genID::isUsed(unsigned long id)
+bool genID::isUsed(unsigned int id)
 {
     return used_[id]; //True if it is used, false if it is not used by any object
 }
 
-void genID::freeID(unsigned long id)
+void genID::freeID(unsigned int id)
 {
     if (id > used_.size()) {
         throw ("ID not found");

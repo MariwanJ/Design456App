@@ -27,12 +27,14 @@
 //
 
 #include <../src/halfEdge/fr_new_mesh.h>
+#include <../src/Fr_GL3Window.h>
 
 Shape::Shape(const std::string& path) :
     vbo_{ 0, 0, 0 },
     vao_(0), normalized_(false) {
     ReadFile(path, vertices_, normals_, indices_);
     InitializeVBO(vertices_, normals_, indices_);
+    linktoMainWindow = Fr_GL3Window::getfr_Gl3Window();
 }
 Shape::Shape() : vbo_{ 0, 0, 0 }, vao_(0), id(0), normalized_(false) {
 }
@@ -47,21 +49,27 @@ Shape::~Shape() {
 int Shape::build()
 {
     //TODO : FIXME : NOT FINISHED 
-    for (unsigned int i = 0; i < vertices_.size()/3; i++) {
+    for (unsigned int i = 0; i < vertices_.size()/3; i=i+3) {
 
-        std::shared_ptr<struct mesh_face> tempFace = std::make_shared<struct mesh_face>();
+        mesh_face*tempFace = new (mesh_face);
         tempFace->fsolid = this;
+        tempFace->ID = linktoMainWindow->idGen_.getID(); //Get ID for the shape
         tempFace->hedge = new(struct mesh_halfedge);
-        if(FaceObjects.size() < 1 ){
-            
-            tempFace->prev = tempFace.get(); 
+        //Creae faces
+        if(FaceObjects==NULL){
+            //First face
+            FaceObjects=tempFace; // first FACE no previous yet
         }
         else {
-            tempFace->prev = FaceObjects[i-1].get();
-        }
-        FaceObjects.push_back(tempFace);
-
-
+            tempFace->prev = FaceObjects->prev;
+                FaceObjects->next=tempFace;
+       }
+        //Quite complicated :( 
+        tempFace->hedge = new( mesh_halfedge);
+        tempFace->hedge->face = tempFace;
+        tempFace->hedge->vertex = new(mesh_vertex);
+        tempFace->hedge->vertex->vertexValue = glm::vec3(vertices_[i, i + 1, i + 2]);
+        tempFace->hedge->vertex->vedge = tempFace->hedge;
 
 
         //CONTINUE TO DEVELOP THIS.
@@ -305,4 +313,28 @@ void Shape::InitializeVBO(const std::vector<float>& vertices,
 int Shape::updateVerticies(void)
 {
     return 0;
+}
+
+mesh_vertex::mesh_vertex()
+{
+}
+
+mesh_vertex::~mesh_vertex()
+{
+}
+
+mesh_halfedge::mesh_halfedge()
+{
+}
+
+mesh_halfedge::~mesh_halfedge()
+{
+}
+
+mesh_face::mesh_face()
+{
+}
+
+mesh_face::~mesh_face()
+{
 }

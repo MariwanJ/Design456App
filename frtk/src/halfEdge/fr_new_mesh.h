@@ -34,9 +34,6 @@
 #include<../vendor/glm/glm/glm.hpp>
 #include<../src/fr_transform.h>
 #include<../src/halfedge/fr_genID.h>
-#include<../src/halfEdge/fr_new_mesh.h>
-
-
 
 class Shape;  //Object container for any 2D or 3D shape
 struct mesh_halfedge;
@@ -44,43 +41,48 @@ struct mesh_face;
 struct mesh_edge;
 struct mesh_vertex;
 
+class mesh_face {
+public:
+    mesh_face();
+    ~mesh_face();
 
-
-struct mesh_face {
-    unsigned long     ID;  //face ID
-    struct Shape* fsolid=NULL;
-    struct mesh_halfedge* hedge=NULL;    //first half edge in the face
+    unsigned int     ID;  //face ID
+    Shape* fsolid = NULL;
+    mesh_halfedge* hedge = NULL;    //first half edge in the face
     bool       visible;
     bool       selected;
 
-    struct mesh_face* next =NULL;
-    struct mesh_face* prev =NULL;
+    struct mesh_face* next = NULL;
+    struct mesh_face* prev = NULL;
 };
 //Not sure if we need this 2023-10-11
 //struct mesh_edge {
-//    unsigned long ID;   //edge ID
+//    unsigned int ID;   //edge ID
 //    struct mesh_halfEdge* he1=NULL;
 //    bool visible;
 //    bool selected;
 //};
 
-struct mesh_halfedge {
+class mesh_halfedge {
+public:
+    mesh_halfedge();
+    ~mesh_halfedge();
+    mesh_halfedge* twin = NULL; //Reverse half edge
+    mesh_vertex* vertex = NULL;
+    mesh_face* face = NULL;
 
-    struct mesh_halfedge* twin=NULL; //Reverse half edge
-    struct mesh_vertex* vertex=NULL;
-    struct mesh_face* face = NULL;
-
-    struct mesh_halfedge* next=NULL;
-    struct mesh_halfedge* prev=NULL;
+    mesh_halfedge* next = NULL;
+    mesh_halfedge* prev = NULL;
 };
 
-struct mesh_vertex {
-    struct mesh_halfedge* vedge = NULL;
-    glm::vec3 vertex=glm::vec3(0.0,0.0,0.0);
+class mesh_vertex {
+public:
+    mesh_vertex();
+    ~mesh_vertex();
+    mesh_halfedge* vedge = NULL;
+    glm::vec3 vertexValue = glm::vec3(0.0, 0.0, 0.0);
     bool      visible = NULL;
 };
-
-  
 
 class Shape {
 public:
@@ -103,7 +105,7 @@ public:
     ~Shape();
     /**
     *   Construct the helf-edged data structre for the shape
-    
+
     */
     int build();
 
@@ -176,10 +178,9 @@ private:
         const std::vector<unsigned int> indices);
 public:
     unsigned int id;        //Each shape has a unique ID
-    std::vector<std::shared_ptr<struct mesh_face>> FaceObjects; //Hold all faces for the shape and all other elements
+    mesh_face*FaceObjects; //Hold all faces for the shape and all other elements
 
-
-public: 
+public:
     /**
     *   Use this to update the verticies that will be drawn by OpenGL.
     *   This must be done after any manupulation.
@@ -194,6 +195,8 @@ private:
     unsigned int vao_;
     bool normalized_;
 
+private:
+    Fr_GL3Window* linktoMainWindow;
 };
 
 #endif

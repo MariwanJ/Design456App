@@ -38,7 +38,7 @@
 #include <fr_grid.h>
 #include<fr_axis3D.h>
 #include<fr_texture_buffer.h>  //used to render to texture - imgui
-#include<../src/halfedge/fr_genID.h>
+#include<../src/halfedge/fr_new_mesh.h>
 //fonts for Imgui icons
 #include <imguiFont/IconsFontAwesome6.h>
 
@@ -201,7 +201,7 @@ public:
     void setCameraType(CameraList typOfCamera);
     CameraList getCameraType();
     int imgui_CameraConfiguration(userData_& data);
-    std::shared_ptr<genID> idGen_; //Keeps the id generator - used to generate shape/objects unique ID
+    genID idGen_; //Keeps the id generator - used to generate shape/objects unique ID
 
 protected:
     /**
