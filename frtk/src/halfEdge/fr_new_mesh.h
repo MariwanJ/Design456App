@@ -36,10 +36,12 @@
 #include<../src/halfedge/fr_genID.h>
 
 class Shape;  //Object container for any 2D or 3D shape
-struct mesh_halfedge;
-struct mesh_face;
-struct mesh_edge;
-struct mesh_vertex;
+class mesh_halfedge;
+class mesh_face;
+class mesh_edge;
+class mesh_vertex;
+class mesh_loop;
+
 
 class mesh_face {
 public:
@@ -47,41 +49,34 @@ public:
     ~mesh_face();
 
     unsigned int     ID;  //face ID
-    Shape* fsolid = NULL;
-    mesh_halfedge* hedge = NULL;    //first half edge in the face
+    Shape* fshape ;
+    mesh_halfedge* hedge ;    //first half edge in the face
     bool       visible;
     bool       selected;
-
-    struct mesh_face* next = NULL;
-    struct mesh_face* prev = NULL;
+    glm::vec3  normal;
+    mesh_face* next;
+    mesh_face* prev;
 };
-//Not sure if we need this 2023-10-11
-//struct mesh_edge {
-//    unsigned int ID;   //edge ID
-//    struct mesh_halfEdge* he1=NULL;
-//    bool visible;
-//    bool selected;
-//};
 
 class mesh_halfedge {
 public:
     mesh_halfedge();
     ~mesh_halfedge();
-    mesh_halfedge* twin = NULL; //Reverse half edge
-    mesh_vertex* vertex = NULL;
-    mesh_face* face = NULL;
+    mesh_halfedge* twin ; //Reverse half edge
+    mesh_vertex* vertex;
+    mesh_face* face ;
 
-    mesh_halfedge* next = NULL;
-    mesh_halfedge* prev = NULL;
+    mesh_halfedge* next ;
+    mesh_halfedge* prev;
 };
 
 class mesh_vertex {
 public:
     mesh_vertex();
     ~mesh_vertex();
-    mesh_halfedge* vedge = NULL;
-    glm::vec3 vertexValue = glm::vec3(0.0, 0.0, 0.0);
-    bool      visible = NULL;
+    mesh_halfedge* vedge ;
+    glm::vec3 vertexValue;
+    bool      visible ;
 };
 
 class Shape {
@@ -108,6 +103,9 @@ public:
 
     */
     int build();
+  
+
+
 
     /**
      * Draws the shape
@@ -178,7 +176,7 @@ private:
         const std::vector<unsigned int> indices);
 public:
     unsigned int id;        //Each shape has a unique ID
-    mesh_face*FaceObjects; //Hold all faces for the shape and all other elements
+    std::vector<mesh_face> FaceObjects; //Hold all faces for the shape and all other elements
 
 public:
     /**
