@@ -46,8 +46,7 @@ std::shared_ptr<Transform>bunny() {
 
     //bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/xy_plane.off"));
     // bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/Pyramid.off"));
-    bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/Cube.off"));
-
+    bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Cube.off"));
     auto Bunny_spot = std::make_shared<Light>();
     Bunny_spot->SetActive(true);
     Bunny_spot->SetPosition(10.f, 10.f, -10.f);

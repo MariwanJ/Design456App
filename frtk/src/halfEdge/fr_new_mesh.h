@@ -49,32 +49,32 @@ public:
     ~mesh_face();
 
     unsigned int     ID;  //face ID
-    Shape* fshape ;
-    mesh_halfedge* hedge ;    //first half edge in the face
+    std::shared_ptr<Shape> fshape ;
+    std::shared_ptr<mesh_halfedge> hedge ;    //first half edge in the face
     bool       visible;
     bool       selected;
     glm::vec3  normal;
-    mesh_face* next;
-    mesh_face* prev;
+    std::shared_ptr < mesh_face> next;
+    std::shared_ptr < mesh_face> prev;
 };
 
 class mesh_halfedge {
 public:
     mesh_halfedge();
     ~mesh_halfedge();
-    mesh_halfedge* twin ; //Reverse half edge
-    mesh_vertex* vertex;
-    mesh_face* face ;
+    std::shared_ptr < mesh_halfedge> twin ; //Reverse half edge
+    std::shared_ptr < mesh_vertex> vertex;
+    std::shared_ptr < mesh_face> face ;
 
-    mesh_halfedge* next ;
-    mesh_halfedge* prev;
+    std::shared_ptr < mesh_halfedge> next ;
+    std::shared_ptr < mesh_halfedge> prev;
 };
 
 class mesh_vertex {
 public:
     mesh_vertex();
     ~mesh_vertex();
-    mesh_halfedge* vedge ;
+    std::shared_ptr<mesh_halfedge> vedge ;
     glm::vec3 vertexValue;
     bool      visible ;
 };
@@ -176,7 +176,7 @@ private:
         const std::vector<unsigned int> indices);
 public:
     unsigned int id;        //Each shape has a unique ID
-    std::vector<mesh_face> FaceObjects; //Hold all faces for the shape and all other elements
+    std::vector<std::shared_ptr<mesh_face>> FaceObjects; //Hold all faces for the shape and all other elements
 
 public:
     /**

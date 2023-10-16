@@ -55,61 +55,63 @@ int Shape::build()
     unsigned int vertexNumbers = vertices_.size() / 3;
     unsigned int faceNumbers = indices_.size()/3;  // 3 vertices per each face
 
-    mesh_face* faces = new (mesh_face[faceNumbers]);
-    mesh_halfedge* hedg = new (mesh_halfedge[faceNumbers*3 * 2]);   //This is not alwasy true ..:(
-    mesh_vertex* vert_e = new (mesh_vertex[vertexNumbers]); 
+    std::vector<std::shared_ptr<mesh_face>> faces;
+    std::vector < std::shared_ptr < mesh_halfedge>> hedg;
+    std::vector < std::shared_ptr < mesh_vertex>> vert_e;
 
-
-    //make a loop of the faces
-    faces[faceNumbers - 1].next = &faces[0];
-    faces[0].prev = &faces[faceNumbers - 1];
-    
-    for (unsigned int i = 1; i < faceNumbers - 1; i++) {
-        faces[i].next = &faces[i + 1];
-        faces[i + 1].prev = &faces[i];
+    for(unsigned int i=0;i<faceNumbers;i++){
+        faces.push_back(std::make_shared <mesh_face>());
+    }
+    for (unsigned int i = 0; i < faceNumbers*3; i++) {
+        hedg.push_back(std::make_shared <mesh_halfedge>());
+    }
+    for (unsigned int i = 0; i < vertexNumbers; i++) {
+        vert_e.push_back(std::make_shared <mesh_vertex>());
     }
 
+    //make a loop of the faces
+    faces[faceNumbers - 1]->next = faces[0];
+    faces[0]->prev = faces[faceNumbers - 1];
+    
     //create the vertexes in the same order as the verticies
     unsigned int faceNo = 0;
     for (unsigned int i = 0; i < vertexNumbers; i++) {
-        vert_e[i].vertexValue = glm::vec3(vertices_[i*3 + 1], vertices_[i*3 + 1], vertices_[i*3 + 2]);
+        vert_e[i]->vertexValue = glm::vec3(vertices_[i*3 + 1], vertices_[i*3 + 1], vertices_[i*3 + 2]);
     }
     //half edges build
     for (unsigned int i = 0; i < faceNumbers*3; i=i+3) {
         //half edges connection to vertexes
-        hedg[i].vertex = &vert_e[i];
-        hedg[i+1].vertex = &vert_e[i+1];
-        hedg[i+2].vertex = &vert_e[i+2];
+        hedg[i]->face =  faces[i/3];
+        hedg[i+1]->face = faces[i / 3];
+        hedg[i+2]->face = faces[i / 3];
+
+        hedg[i]->vertex =  vert_e[i];           //TODO THIS IS WRONG!!!!!
+        hedg[i+1]->vertex =  vert_e[i+1];       //TODO THIS IS WRONG!!!!!
+        hedg[i+2]->vertex = vert_e[i+2];        //TODO THIS IS WRONG!!!!!
         
         //half-edge loop inside each face
-        hedg[i].next = &hedg[i + 1];
-        hedg[i+1].next = &hedg[i + 2];
-        hedg[i + 2].next = &hedg[i];
+        hedg[i]->next = hedg[i + 1];
+        hedg[i+1]->next = hedg[i + 2];
+        hedg[i + 2]->next = hedg[i];
 
         //half-edge loop in reverse for each face
-        hedg[i].prev = &hedg[i + 2];
-        hedg[i+1].prev = &hedg[i ];
-        hedg[i+2].prev = &hedg[i + 1];
+        hedg[i]->prev = hedg[i + 2];
+        hedg[i+1]->prev = hedg[i ];
+        hedg[i+2]->prev = hedg[i + 1];
     }
 
     //half-edge twin build - the most difficult
 
-    for (unsigned int i = 0; i < faceNumbers * 3; i = i + 3) {
-         
-    
-    
+    for (unsigned int i = 0; i < faceNumbers * 3; i++) {
+        for (unsigned int j = i + 1; j < faceNumbers * 3; j++) {
+            if ((hedg[i]->vertex->vertexValue == hedg[j]->next->vertex->vertexValue) && hedg[i]->face != hedg[j]->face)
+            {
+                hedg[i]->twin = hedg[j];
+                break;
+            }
+        }
+        //CONTINUE TO DEVELOP THIS.
     }
-
-
-
-
-
-
-
-
-
-    //CONTINUE TO DEVELOP THIS.
-
     return 0;// TODO:FIXME: check this return if it should be somehting else
 }
  
@@ -347,8 +349,7 @@ int Shape::updateVerticies(void)
     return 0;
 }
 
-mesh_vertex::mesh_vertex():vedge(NULL), vFace(NULL),
-                            vertexValue(glm::vec3(0.0, 0.0, 0.0)),
+mesh_vertex::mesh_vertex():vertexValue(glm::vec3(0.0, 0.0, 0.0)),
                             visible(true)
 {
 }
@@ -357,11 +358,7 @@ mesh_vertex::~mesh_vertex()
 {
 }
 
-mesh_halfedge::mesh_halfedge() :twin(NULL),
-vertex(NULL),
-face(NULL),
-next(NULL),
-prev(NULL)
+mesh_halfedge::mesh_halfedge() 
 {
 }
 
@@ -371,21 +368,13 @@ mesh_halfedge::~mesh_halfedge()
 }
 
 mesh_face::mesh_face() :ID(0),
-fshape(NULL),
-hedge(NULL),
 visible(true),
 selected(false),
-normal(glm::vec3(0.0, 0.0, 0.0)),
-next(NULL),
-prev(NULL)
+normal(glm::vec3(0.0, 0.0, 0.0))
 {
 }
 
 mesh_face::~mesh_face()
 {
-    fshape = NULL;    //Shape creates the face, not the revers
-    free(hedge);
-    next = NULL;     //This is done by the object itself.
-    prev = NULL;    //This is done by the object itself.
 }
  

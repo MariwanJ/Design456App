@@ -29,6 +29,7 @@
 
 //Remove me later : TODO
 #include<fr_mesh.h>
+#include<halfEdge/fr_new_mesh.h>
 #include<fr_object_shader_node.h>
 //End remove me later
 

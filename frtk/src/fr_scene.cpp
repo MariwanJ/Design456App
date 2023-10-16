@@ -56,7 +56,7 @@ void Scene::add3DObject(std::string fName)
     newObj_t->Rotate(0, 1, 0, 90); //TODO CHECK ME 
     auto newObj = std::make_shared<ObjectShaderNode>(0x667AFF, 0.005f); //  color and
     if (fName.find(".off") != std::string::npos) {
-        newObj->SetMesh(std::make_shared<Mesh>(fName));
+        newObj->SetMesh(std::make_shared<Shape>(fName));
     }
     else {
         //Not implemented yet  - here .obj should be treated. 

@@ -27,6 +27,7 @@
 //
 
 #include <fr_mesh.h>
+ 
 
 Mesh::Mesh(const std::string& path) :
     vbo_{0, 0, 0},

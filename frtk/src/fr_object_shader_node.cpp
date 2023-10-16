@@ -26,7 +26,6 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 #include <glm/gtx/transform.hpp>
-#include <fr_mesh.h>
 #include <fr_shader_program.h>
 #include <fr_object_shader_node.h>
 #include <glad/glad.h>
@@ -87,12 +86,14 @@ void ObjectShaderNode::SetOpacity(float alpha) {
     color_.a = alpha;
 }
 
-void ObjectShaderNode::SetMesh(std::shared_ptr<Mesh> mesh) {
+void ObjectShaderNode::SetMesh(std::shared_ptr<Shape> mesh) {
     mesh_ = mesh;
+    mesh_->build();
 }
 
 void ObjectShaderNode::SetMesh(const std::string& mesh) {
-    mesh_ = std::make_shared<Mesh>(mesh);
+    mesh_ = std::make_shared<Shape>(mesh);
+    mesh_->build();
 }
 
 void ObjectShaderNode::LoadLights(ShaderProgram* program, const std::vector<LightInfo>& lights) {

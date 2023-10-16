@@ -31,7 +31,8 @@
 #include <memory>
 #include <fr_node.h>
 #include <fr_core.h>
-
+#include <fr_mesh.h>
+#include<halfEdge/fr_new_mesh.h>
 class Mesh;
 class ShaderProgram;
 
@@ -69,7 +70,7 @@ public:
     /**
      * Sets the mesh
      */
-    void SetMesh(std::shared_ptr<Mesh> mesh);
+    void SetMesh(std::shared_ptr<Shape> mesh);
 
     /**
      * Sets the mesh
@@ -110,7 +111,7 @@ private:
     static Shared *shared_;
 
     // Attributes
-    std::shared_ptr<Mesh> mesh_;
+    std::shared_ptr<Shape> mesh_;
     glm::vec4 color_;
     float silhouette_;
     GLuint _texture; //used to return the texture for imgui rendering inside window.
