@@ -49,7 +49,7 @@ public:
     ~mesh_face();
 
     unsigned int     ID;  //face ID
-    std::shared_ptr<Shape> fshape ;
+    Shape* fshape ;
     std::shared_ptr<mesh_halfedge> hedge ;    //first half edge in the face
     bool       visible;
     bool       selected;
@@ -189,6 +189,9 @@ private:
     std::vector<float> vertices_;
     std::vector<float> normals_;
     std::vector<unsigned int> indices_;
+
+    size_t nVertexes, nTriangles, nQuads;
+
     unsigned int vbo_[3];
     unsigned int vao_;
     bool normalized_;

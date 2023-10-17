@@ -51,59 +51,75 @@ int Shape::build()
 {
     //TODO : FIXME : NOT FINISHED
 
-    // We must assume that we have triangles .. not anything else.
-    unsigned int vertexNumbers = vertices_.size() / 3;
-    unsigned int faceNumbers = indices_.size()/3;  // 3 vertices per each face
-
     std::vector<std::shared_ptr<mesh_face>> faces;
     std::vector < std::shared_ptr < mesh_halfedge>> hedg;
     std::vector < std::shared_ptr < mesh_vertex>> vert_e;
-
-    for(unsigned int i=0;i<faceNumbers;i++){
-        faces.push_back(std::make_shared <mesh_face>());
+    for(unsigned int i=0;i<nTriangles;i++){
+        std::shared_ptr <mesh_face>tempSh= std::make_shared <mesh_face>();
+        tempSh->fshape = this;
+        faces.push_back(tempSh);
     }
-    for (unsigned int i = 0; i < faceNumbers*3; i++) {
+    for (unsigned int i = 0; i < nTriangles-1; i++) {
+        faces[i]->next= faces[i+1];
+    }
+    faces[nTriangles - 1]->next = faces[0];
+
+    for (unsigned int i = 1; i < nTriangles; i++) {
+        faces[i]->prev = faces[i- 1];
+    }
+    faces[0]->prev = faces[nTriangles-1];
+    for (unsigned int i = 0; i < nTriangles *3; i++) {
         hedg.push_back(std::make_shared <mesh_halfedge>());
     }
-    for (unsigned int i = 0; i < vertexNumbers; i++) {
+    for (unsigned int i = 0; i < nVertexes; i++) {
         vert_e.push_back(std::make_shared <mesh_vertex>());
     }
 
     //make a loop of the faces
-    faces[faceNumbers - 1]->next = faces[0];
-    faces[0]->prev = faces[faceNumbers - 1];
+    faces[nTriangles - 1]->next = faces[0];
+    faces[0]->prev = faces[nTriangles - 1];
     
     //create the vertexes in the same order as the verticies
     unsigned int faceNo = 0;
-    for (unsigned int i = 0; i < vertexNumbers; i++) {
+    for (unsigned int i = 0; i < nVertexes; i++) {
         vert_e[i]->vertexValue = glm::vec3(vertices_[i*3 + 1], vertices_[i*3 + 1], vertices_[i*3 + 2]);
     }
+    for (unsigned int i = 0; i < nTriangles; i++) {
+        for (unsigned int j = 0; j < 3; j++) {
+            hedg[3*i+j]->vertex = vert_e[indices_[i + j]];
+        }
+    }
+
     //half edges build
-    for (unsigned int i = 0; i < faceNumbers*3; i=i+3) {
-        //half edges connection to vertexes
-        hedg[i]->face =  faces[i/3];
-        hedg[i+1]->face = faces[i / 3];
-        hedg[i+2]->face = faces[i / 3];
+    for (unsigned int i = 0; i < nTriangles; i++) {
+        for (unsigned int j = 0; j < 3; j++) {
 
-        hedg[i]->vertex =  vert_e[i];           //TODO THIS IS WRONG!!!!!
-        hedg[i+1]->vertex =  vert_e[i+1];       //TODO THIS IS WRONG!!!!!
-        hedg[i+2]->vertex = vert_e[i+2];        //TODO THIS IS WRONG!!!!!
-        
-        //half-edge loop inside each face
-        hedg[i]->next = hedg[i + 1];
-        hedg[i+1]->next = hedg[i + 2];
-        hedg[i + 2]->next = hedg[i];
-
+            //half edges connection to vertexes
+            hedg[i + j]->face = faces[i];
+            hedg[i + j]->face = faces[i];
+            hedg[i + j]->face = faces[i];
+        }
+    }
+    for (unsigned int i = 0; i < nTriangles*3; i=i+3) {
+            //half-edge loop inside each face
+            hedg[i]->next = hedg[i + 1];
+            hedg[i + 1]->next = hedg[i + 2];
+            hedg[i + 2]->next = hedg[i];
+        }
+    
+    for (unsigned int i = 0; i < nTriangles*3;i= i + 3) {
         //half-edge loop in reverse for each face
         hedg[i]->prev = hedg[i + 2];
         hedg[i+1]->prev = hedg[i ];
         hedg[i+2]->prev = hedg[i + 1];
     }
 
+
+
     //half-edge twin build - the most difficult
 
-    for (unsigned int i = 0; i < faceNumbers * 3; i++) {
-        for (unsigned int j = i + 1; j < faceNumbers * 3; j++) {
+    for (unsigned int i = 0; i < nTriangles * 3; i++) {
+        for (unsigned int j = i + 1; j < nTriangles * 3; j++) {
             if ((hedg[i]->vertex->vertexValue == hedg[j]->next->vertex->vertexValue) && hedg[i]->face != hedg[j]->face)
             {
                 hedg[i]->twin = hedg[j];
@@ -189,11 +205,10 @@ void Shape::ReadOFF(const std::string& path, std::vector<float>& vertices,
     input.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     input.open(path);
 
-    size_t nVertices, nTriangles, nQuads;
-    input.ignore(3);
-    input >> nVertices >> nTriangles >> nQuads;
+    input.ignore(3);  
+    input >> nVertexes >> nTriangles >> nQuads;
 
-    vertices.resize(nVertices * 3);
+    vertices.resize(nVertexes * 3);
     for (size_t i = 0; i < vertices.size(); ++i)
         input >> vertices[i];
 
