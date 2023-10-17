@@ -34,12 +34,18 @@
 //TODO FIX ME DOSENT WORK DON'T KNOW WHY
 int Fr_GL3Window::imguimzo_init()
 {
+
     ImGuizmo::SetOrthographic(false);
+
     ImGuizmo::SetDrawlist();
+    PortViewDimensions = ImVec4(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
     ImGuizmo::SetRect(PortViewDimensions.x, PortViewDimensions.y, PortViewDimensions.z, PortViewDimensions.w);
     auto activeCamera = cameras[(unsigned int)active_camera_];
     auto modelview = activeCamera.manipulator->GetMatrix();
     ImGuizmo::IsUsing();
+    ImGuizmo::Enable(true);
+    ImGuizmo::BeginFrame();
+
     return 0;
 }
 
@@ -118,8 +124,7 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
             // IF the menu checked, render the camera option window
             CameraOptions();
         }
-        if (imguimzo_init() < 0)
-            return -1;
+
         bool m;      
         SunOptions();
         if (showOpenDialog) {
