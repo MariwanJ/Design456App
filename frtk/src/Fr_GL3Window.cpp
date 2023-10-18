@@ -163,7 +163,8 @@ void Fr_GL3Window::CreateScene()
       */
     CreateSun();
     scene->AddNode(sun);
-    scene->AddNode(bunny());
+      tempBu = bunny();
+    scene->AddNode(tempBu);
     scene->AddNode(Grid().CreateGrid());
     vert axis = Axis3D().CreateAxis3D();
     scene->AddNode(axis.Red);

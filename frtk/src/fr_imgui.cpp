@@ -34,18 +34,38 @@
 //TODO FIX ME DOSENT WORK DON'T KNOW WHY
 int Fr_GL3Window::imguimzo_init()
 {
-
-    ImGuizmo::SetOrthographic(false);
-
-    ImGuizmo::SetDrawlist();
-    PortViewDimensions = ImVec4(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
-    ImGuizmo::SetRect(PortViewDimensions.x, PortViewDimensions.y, PortViewDimensions.z, PortViewDimensions.w);
-    auto activeCamera = cameras[(unsigned int)active_camera_];
-    auto modelview = activeCamera.manipulator->GetMatrix();
-    ImGuizmo::IsUsing();
-    ImGuizmo::Enable(true);
     ImGuizmo::BeginFrame();
 
+    ImGuizmo::SetOrthographic(false);
+    ImGuizmo::SetDrawlist();
+    
+    ImGuizmo::Enable(true);
+
+    PortViewDimensions = ImVec4(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
+    float width_= ImGui::GetWindowWidth();
+    float height_ = ImGui::GetWindowHeight();
+
+    ImGuizmo::SetRect(PortViewDimensions.x, PortViewDimensions.y, width_, height_);
+    auto activeCamera = cameras[(unsigned int)active_camera_];
+
+
+    auto getbu = Fr_GL3Window::getfr_Gl3Window()->tempBu;
+    auto modelview = glm::inverse(activeCamera.camera->getManipulator()->GetMatrix());
+    //auto modelview = activeCamera.manipulator->GetMatrix();
+
+
+    if (getbu != NULL)
+    {
+        auto tranform = getbu->getManupulatorMatrix();
+        auto proj = activeCamera.camera->getPorjection();
+        
+        ImGuizmo::Manipulate(glm::value_ptr(modelview), glm::value_ptr(proj), ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(tranform));
+    } 
+
+    if(ImGuizmo::IsUsing()) {
+       // DEBUG_BREAK;
+
+    }
     return 0;
 }
 
@@ -114,8 +134,8 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
         //ImGui::ShowDemoWindow();
         if (imgui_TopPannel() < 0)
             return -1;
-        if (imguimzo_init() < 0)
-            return -1;
+       // if (imguimzo_init() < 0)              //Must be inside the view port
+        //    return -1;
         if (imgui_ViewPort() < 0)
             return -1;
         if (imgui_LeftPanel() < 0)
@@ -236,6 +256,7 @@ int Fr_GL3Window::imgui_ViewPort()
     //Keep size of the window for further usage at other places.
     PortViewDimensions = ImVec4(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y,ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
     
+    imguimzo_init();
     ImGui::End();
     sceneBuffer->Unbind();
     return 0;

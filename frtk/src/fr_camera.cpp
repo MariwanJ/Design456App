@@ -375,5 +375,5 @@ CameraList Camera::getCameraType() {
 
 glm::mat4 Camera::getPorjection()
 {
-    return glm::mat4();
+    return projectionMatrix_;
 }
