@@ -94,8 +94,6 @@ void Light::EnableShadowMap(const glm::vec3& center, const glm::vec3& up, const 
     sm_up_ = up;
     sm_projection_ = projection;
 
-    int width = kShadowmapWidth;
-    int height = kShadowmapHeight;
 
     // Create Framebuffer
     glCheckFunc(glGenFramebuffers(1, &sm_framebuffer_));
@@ -104,13 +102,13 @@ void Light::EnableShadowMap(const glm::vec3& center, const glm::vec3& up, const 
     // Create Renderbuffer
     glCheckFunc(glGenRenderbuffers(1, &sm_renderbuffer_));
     glCheckFunc(glBindRenderbuffer(GL_RENDERBUFFER, sm_renderbuffer_));
-    glCheckFunc(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height));
+    glCheckFunc(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, kShadowmapWidth, kShadowmapHeight));
     glCheckFunc(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, sm_renderbuffer_));
 
     // Create texture
     glCheckFunc(glGenTextures(1, &sm_texture_));
     glCheckFunc(glBindTexture(GL_TEXTURE_2D, sm_texture_));
-    glCheckFunc(glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0));
+    glCheckFunc(glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, kShadowmapWidth, kShadowmapHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL));
     glCheckFunc(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
     glCheckFunc(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
     glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));

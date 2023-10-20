@@ -57,7 +57,7 @@ int Fr_GL3Window::imguimzo_init()
     {
         tranform = getbu->GetMatrix();
         auto proj = activeCamera->getPorjection();
-        ImGuizmo::Manipulate(glm::value_ptr(modelview1), glm::value_ptr(proj), ImGuizmo::SCALE, ImGuizmo::LOCAL, glm::value_ptr(tranform));
+        ImGuizmo::Manipulate(glm::value_ptr(modelview1), glm::value_ptr(proj), ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(tranform));
     } 
 
     if(ImGuizmo::IsUsing()) {

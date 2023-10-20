@@ -171,7 +171,7 @@ namespace COLOR {
 #define FR_MEDIUMVIOLETRED       0.7804f,  0.0824f,  0.5216f,  1.0000f
 #define FR_DARKVIOLET            0.5804f,  0.0000f,  0.8275f,  1.0000f
 #define FR_DARKGRAY              0.6627f,  0.6627f,  0.6627f,  1.0000f
-#define FR_SECIAL_GRAY           0.9101f,  0.9101f,  0.9101f,  1.0000f
+#define FR_SPECIAL_GRA           0.9101f,  0.9101f,  0.9101f,  1.0000f
 #define FR_SALMON                0.9804f,  0.5020f,  0.4471f,  1.0000f
 #define FR_DARKMAGENTA           0.5451f,  0.0000f,  0.5451f,  1.0000f
 #define FR_TOMATO                1.0000f,  0.3882f,  0.2784f,  1.0000f

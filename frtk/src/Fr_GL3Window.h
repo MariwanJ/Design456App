@@ -332,7 +332,7 @@ private:
      * .
      */
     std::shared_ptr<Light> sun;
-
+    std::shared_ptr<Transform> sunT;
     /**
     * low level variable to keep the id of the GLFW window
      * HWND .

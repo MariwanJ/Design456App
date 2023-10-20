@@ -53,8 +53,8 @@ void Scene::add3DObject(std::string fName)
     auto newObj_t = std::make_shared<Transform>();
     newObj_t->Translate(0, 0, 0);
     newObj_t->Scale(1, 1, 1);
-    newObj_t->Rotate(0, 1, 0, 90); //TODO CHECK ME 
-    auto newObj = std::make_shared<ObjectShaderNode>(0x667AFF, 0.005f); //  color and
+    newObj_t->Rotate(0, 1, 0, 0); //TODO CHECK ME 
+    auto newObj = std::make_shared<ObjectShaderNode>(glm::vec4(FR_BISQUE), 0.0005f); //  color and
     if (fName.find(".off") != std::string::npos) {
         newObj->SetMesh(std::make_shared<Shape>(fName));
     }

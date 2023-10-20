@@ -161,15 +161,16 @@ void Fr_GL3Window::CreateScene()
     /*
       * Add here the nodes - Grid, and XYZ axis
       */
-    CreateSun();
-    scene->AddNode(sun);
-      tempBu = bunny();
-    scene->AddNode(tempBu);
+    std::shared_ptr<Transform> ssss = CreateSun();
+    scene->AddNode(ssss);
+    tempBu = bunny();
+
     scene->AddNode(Grid().CreateGrid());
     vert axis = Axis3D().CreateAxis3D();
     scene->AddNode(axis.Red);
     scene->AddNode(axis.Green);
     scene->AddNode(axis.Blue);
+    scene->AddNode(tempBu);
 }
 
 void Fr_GL3Window::resizeWindow(int xGl, int yGl, int wGl, int hGl)
@@ -482,13 +483,14 @@ int Fr_GL3Window::GLFWrun()
 std::shared_ptr<Transform> Fr_GL3Window::CreateSun() {
     //TODO: FIXME:
     auto sun_ = std::make_shared<Transform>();
-    sun_->Translate(100.0f, 100.f, 100.f);
+    sun_->Translate(30.0f, 500.0f, 30.0f);
     sun= std::make_shared<Light>();
-    sun->SetPosition(1000.0f, 1000.0f, 1000.0f);
+    sun->SetPosition(0.0f, 0.0f, 0.0f);
     sun->SetDiffuse(0.5f, 0.5f, 0.5f);
-    sun->SetAmbient(1.0f, 1.0f, 1.0f);
-    sun->EnableShadowMap(glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(1.f, 0.0f, 0.0f), glm::ortho(-100.0f, 100.0f, -1000.0f, 1000.0f, 0.10f, 100.0f));
+    sun->SetAmbient(0.4f, 0.4f, 0.4f);
+    sun->EnableShadowMap(glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(1.f, 0.0f, 0.0f), glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, 400.0f, 600.0f));
     sun_->AddNode(sun);
     sun_->SetActive(true);   //A must to have otherwise everything is black.
-    return sun_;
+    sunT = std::move(sun_);
+    return sunT;
 }
