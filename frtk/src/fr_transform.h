@@ -31,8 +31,6 @@
 #include <memory>
 #include <fr_group.h>
 
-class Manipulator;
-
 class Transform : public Group {
 public:
     /**
@@ -56,6 +54,8 @@ public:
      */
     void Rotate(glm::vec3 axis, float angle);
 
+    void Translate(glm::vec3 v);
+
     /**
      * Multiply the current matrix by a translation matrix
      */
@@ -65,11 +65,6 @@ public:
      * Multiply the current matrix by a translation matrix
      */
     void Scale(float x, float y, float z);
-
-    /**
-     * Sets the manipulator
-     */
-    void SetManipulator(std::unique_ptr<Manipulator> manipulator);
 
     bool SetupCamera(glm::mat4& projection, glm::mat4& modelview);
 
@@ -101,12 +96,75 @@ public:
      */
     void Render(RenderInfo& info, const glm::mat4& modelview) override;
 
-    glm::mat4 getManupulatorMatrix()const;
+   // glm::mat4 getTransformMatrix()const;
 
 private:
-    std::unique_ptr<Manipulator> manipulator_;
+    std::unique_ptr<Transform> transform_;
     glm::mat4 matrix_;
     glm::mat4 inverse_;
+
+    //From maniupulator 
+
+
+public:
+
+     /**
+     * Accumulates the manipulator matrix
+     */
+    glm::mat4 GetMatrix(const glm::vec3& look_dir = glm::vec3(0, 0, -1));
+
+    /**
+     * Accumulates the inverse of the manipulator matrix
+     */
+    glm::mat4 GetInverse();
+
+    /**
+     * Sets the reference point (world center)
+     */
+    void SetReferencePoint(float x, float y, float z);
+
+    /**
+     * Sets whether each axis is inverted or not
+     */
+    void SetInvertAxis(bool invertX, bool invertY = false);
+
+    /**
+     * Mouse button function
+     */
+    void GLFWMouse(int button, int state, double x, double y);
+
+    /**
+     * Mouse motion function
+     */
+    void GLFWMotion(int x, int y);
+
+    float get_X()const;
+    float get_Y()const;
+    void setZommingScale(float scale);
+
+private:
+    enum class Operation {
+        kRotation,  //Mouse click and drag
+        kZoom,       //Left mouse and drag
+        kNone       //nothing
+    };
+
+    static float kZoomScale;
+
+    /** Verifies the k_button state and sets the k_operation */
+    template<int k_button, Operation k_operation>
+    void SetOperation(int button, int state, double x, double y);
+
+    /** Computes the sphere vector for rotation */
+    glm::vec3 computeSphereCoordinates(double x, double y);
+
+    glm::vec3 reference_;
+    glm::mat4 inv_;
+    Operation operation_;
+    float x_, y_;
+    glm::vec3 v_;
+    bool invertX_, invertY_;
+
 };
 
 #endif

@@ -93,10 +93,10 @@ void Fr_GL3Window::mouse_button_callback(GLFWwindow* win, int button, int action
 
 void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
 {
-    auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameras[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
+    auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
     float fov;
     userData_ data;
-    activeCamera.camera->getUserData(data);
+    activeCamera->getUserData(data);
     fov = data.fovy_;
     fov = fov - yoffset;
     if (fov < 1.0f)
@@ -104,7 +104,7 @@ void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffs
     if (fov > MAX_FOV_ZOOM)
         fov = MAX_FOV_ZOOM;
     data.fovy_ = fov;
-    activeCamera.camera->setUserData(data);
+    activeCamera->setUserData(data);
 }
 
 void Fr_GL3Window::cameraPAN(double xpos, double ypos)
@@ -117,9 +117,9 @@ void Fr_GL3Window::cameraPAN(double xpos, double ypos)
     }
     userData_ data;
     //std::cout << pitch << "pitch yaw " << yaw << std::endl;
-    auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameras[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
+    auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
 
-    activeCamera.camera->getUserData(data);
+    activeCamera->getUserData(data);
     radiusXYZ = sqrt(data.camPosition_.x * data.camPosition_.x +
         data.camPosition_.y * data.camPosition_.y +
         data.camPosition_.z * data.camPosition_.z);
@@ -149,14 +149,14 @@ void Fr_GL3Window::cameraPAN(double xpos, double ypos)
     data.direction_.y = radiusXYZ * cos(glm::radians(yaw)) * sin(glm::radians(pitch));
    //data.direction_.z =  sin(glm::radians(yaw)) * cos(glm::radians(pitch));
    // data.direction_ = glm::normalize(data.direction_);
-    activeCamera.camera->setUserData(data);
+    activeCamera->setUserData(data);
 }
 
 void Fr_GL3Window::cameraRotate(double xpos, double ypos)
 {
     userData_ data;
-    auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameras[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
-    activeCamera.camera->getUserData(data);
+    auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
+    activeCamera->getUserData(data);
 
     if (MouseOnce)
     {
@@ -189,7 +189,7 @@ void Fr_GL3Window::cameraRotate(double xpos, double ypos)
     data.camPosition_.x =radiusXYZ *cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     data.camPosition_.y = radiusXYZ *cos(glm::radians(yaw)) * sin(glm::radians(pitch));
     data.camPosition_.z = radiusXYZ* sin(glm::radians(yaw)) ;
-    activeCamera.camera->setUserData(data);
+    activeCamera->setUserData(data);
 }
 
 void Fr_GL3Window::LeftMouseClick(double xoffset, double yoffset)

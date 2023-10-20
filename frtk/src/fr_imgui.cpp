@@ -46,25 +46,23 @@ int Fr_GL3Window::imguimzo_init()
     float height_ = ImGui::GetWindowHeight();
 
     ImGuizmo::SetRect(PortViewDimensions.x, PortViewDimensions.y, width_, height_);
-    auto activeCamera = cameras[(unsigned int)active_camera_];
+    auto activeCamera = cameraList[(unsigned int)active_camera_];
 
 
     auto getbu = Fr_GL3Window::getfr_Gl3Window()->tempBu;
-    auto modelview = glm::inverse(activeCamera.camera->getManipulator()->GetMatrix());
-    //auto modelview = activeCamera.manipulator->GetMatrix();
-
-
+    auto modelview1 = glm::inverse(activeCamera->GetMatrix());
+   
+    glm::mat4 tranform;
     if (getbu != NULL)
     {
-        auto tranform = getbu->getManupulatorMatrix();
-        auto proj = activeCamera.camera->getPorjection();
-        
-        ImGuizmo::Manipulate(glm::value_ptr(modelview), glm::value_ptr(proj), ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(tranform));
+        tranform = getbu->GetMatrix();
+        auto proj = activeCamera->getPorjection();
+        ImGuizmo::Manipulate(glm::value_ptr(modelview1), glm::value_ptr(proj), ImGuizmo::SCALE, ImGuizmo::LOCAL, glm::value_ptr(tranform));
     } 
 
     if(ImGuizmo::IsUsing()) {
        // DEBUG_BREAK;
-
+        tempBu->Translate(glm::vec3(tranform[3]));
     }
     return 0;
 }
@@ -229,10 +227,10 @@ int Fr_GL3Window::imgui_CameraConfiguration(userData_& data)
 
     if (ImGui::Button("Reset Camera to defaults")) {                            // Buttons return true when clicked (most widgets return true when edited/activated)
         counter++;
-        auto camm = cameras[(int)active_camera_];
-        camm.camera->setupCameraHomeValues();
+        auto camm = cameraList[(int)active_camera_];
+        camm->setupCameraHomeValues();
         struct userData_ newdata;
-        camm.camera->getUserData(newdata);
+        camm->getUserData(newdata);
         data = newdata;
     }
     ImGui::SameLine();
@@ -333,17 +331,17 @@ void Fr_GL3Window::CameraOptions (){
       //| ImGuiWindowFlags_NoSavedSettings
         ;
 
-    auto camm = cameras[(int)active_camera_];
-    camm.camera->getUserData(data);
+    auto camm = cameraList[(int)active_camera_];
+    camm->getUserData(data);
     imgui_CameraConfiguration(data);
     if (active_camera_ != data.camType_) {
-        camm.camera->SetActive(false);
+        camm->SetActive(false);
         active_camera_ = data.camType_;
-        camm = cameras[(int)active_camera_];
-        camm.camera->getUserData(data);
+        camm = cameraList[(int)active_camera_];
+        camm->getUserData(data);
     }
-    camm.camera->setUserData(data);
-    camm.camera->SetActive(true);
+    camm->setUserData(data);
+    camm->SetActive(true);
 }
 
 void Fr_GL3Window::SunOptions() {

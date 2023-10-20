@@ -31,7 +31,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glad/glad.h>
 #include <fr_camera.h>
-#include <fr_manipulator.h>
 #include <Fr_GL3Window.h>
 /*
 Normal view - home FreeCAD
@@ -106,7 +105,7 @@ Camera::Camera() :
     znear_{ 0.01},
     zfar_{ 100000},
     aspectRatio_{ 1.2 },
-    manipulator_{},
+    transform_{},
 
     projectionMatrix_(glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_)),
     camType_(CameraList::PERSPECTIVE){
@@ -136,8 +135,6 @@ bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
         projection = glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_);
     }
         modelview = glm::lookAt(camPosition_, direction_, up_);
-    if (manipulator_)
-        modelview *= manipulator_->GetMatrix(glm::normalize(direction_  -camPosition_));
     return true;
 }
 
@@ -203,13 +200,13 @@ void Camera::setUserData(userData_& data)
     znear_        =data.znear_         ;
 }
 
-void Camera::SetManipulator(std::shared_ptr<Manipulator> manipulator) {
-    manipulator_ = std::move(manipulator); //Move ownership to this class
+void Camera::SetTransform(std::shared_ptr<Transform> transform) {
+   transform_ = std::move(transform); //Move ownership to this class
 }
 
-std::shared_ptr<Manipulator> Camera::getManipulator()
+std::shared_ptr<Transform> Camera::getTransform()
 {
-    return manipulator_;
+    return transform_;
 }
 /**
  *

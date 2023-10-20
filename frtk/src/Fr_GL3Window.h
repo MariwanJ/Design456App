@@ -31,7 +31,6 @@
 
 #include<fr_scene.h>
 #include<fr_camera.h>
-#include<fr_manipulator.h>
 #include<fr_light.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -45,15 +44,6 @@
 
 
 #define MAX_CAMERAS 8  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING CameraList enu
-
-typedef struct {
-    Camera* camera;
-    Manipulator* manipulator;
-} camtype;
-
-
-
-
 
 
 /* Cameras */
@@ -173,7 +163,7 @@ public:
      * 6 types of cameras are created by the window
      * see CameraList
      */
-    std::vector<camtype> cameras; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
+    std::vector<std::shared_ptr<Camera>> cameraList; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
 
     /**
      * Static pointer used to access the GLFW window.

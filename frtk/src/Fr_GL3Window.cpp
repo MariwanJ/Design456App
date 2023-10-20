@@ -247,9 +247,9 @@ void Fr_GL3Window::setCameraType(CameraList _type)
 {
     active_camera_ = _type;
     for (int i = 0; i < MAX_CAMERAS; i++) {
-        (cameras[i]).camera->SetActive(false);
+        (cameraList[i])->SetActive(false);
     }
-    (cameras[(int)active_camera_]).camera->SetActive(true);
+    (cameraList[(int)active_camera_])->SetActive(true);
 }
 
 CameraList Fr_GL3Window::getCameraType()
@@ -266,19 +266,12 @@ void Fr_GL3Window::CreateCameras()
 {
     for (int i = 0; i < MAX_CAMERAS; i++) {
         auto camera_ = std::make_shared < Camera>();   //Shared pointer to the created camera,
-        auto camera_trans = std::make_shared<Transform>();      //Shared pointer to the Transform that holds the camera as a child
         //By default no camera is active, developer MUST define one after creating cameras
         camera_->SetActive(false);
-        scene->AddNode(camera_trans);  //Add it to the scene graph, but only active one will render.
+        cameraList.push_back(camera_);
+        scene->AddNode(camera_);  //Add it to the scene graph, but only active one will render.
         camera_->setType((CameraList)i);   //Depending on the list it should be as the enum defined
-        auto manipulator = new Manipulator(); //manipulation for the camera.
-        camera_->SetManipulator(std::unique_ptr<Manipulator>(manipulator)); //A child to the camera that can manipulate it
-        camera_trans->AddNode(camera_);
-        camtype pCam;
-        pCam.camera = camera_.get();
-        pCam.manipulator = manipulator;
-        cameras.push_back(pCam);  //Transform with a camera child.
-        pCam.camera->setupCameraHomeValues();
+        camera_->setupCameraHomeValues();
         switch (i) {
             //TODO: FIXME: If you create more than 6, you should add it here
         case 0: {
@@ -291,12 +284,12 @@ void Fr_GL3Window::CreateCameras()
                     focalDistance 30.248238\n
                     heightAngle 0.78539819\n\n}\n'
             */
-            camera_trans->Rotate(glm::vec3(0.7429f, 0.307f, 0.594f), 69.7f);
+            camera_->Rotate(glm::vec3(0.7429f, 0.307f, 0.594f), 69.7f);
         }break;
         case 1: {
             //ORTHOGRAPHIC
 
-            camera_trans->Rotate(glm::vec3(0.74290609f, 0.30772209f, 0.59447283f), 69.7f);
+            camera_->Rotate(glm::vec3(0.74290609f, 0.30772209f, 0.59447283f), 69.7f);
         }break;
         case 2: {
             /*TOP
@@ -308,7 +301,7 @@ void Fr_GL3Window::CreateCameras()
              focalDistance 100\n
              height 44.932899\n\n}\n'
             */
-            camera_trans->Rotate(glm::vec3(0.0f,0.0,1.0f), 0);
+            camera_->Rotate(glm::vec3(0.0f,0.0,1.0f), 0);
         }break;
         case 3: {
             /*Bottom
@@ -320,7 +313,7 @@ void Fr_GL3Window::CreateCameras()
              focalDistance 100\n
              height 44.932903\n\n}\n'
             */
-            camera_trans->Rotate(glm::vec3(-1.0f,0.0f, 0.0f), 180);
+            camera_->Rotate(glm::vec3(-1.0f,0.0f, 0.0f), 180);
         }break;
         case 4: {
         /**
@@ -334,7 +327,7 @@ void Fr_GL3Window::CreateCameras()
           height 44.932899\n\n}\n'
                  *
          */
-            camera_trans->Rotate(glm::vec3(-1.0f,0,0 ),  270.0f);
+            camera_->Rotate(glm::vec3(-1.0f,0,0 ),  270.0f);
         }break;
         case 5: {
             /*REAR
@@ -346,7 +339,7 @@ void Fr_GL3Window::CreateCameras()
                 focalDistance 100\n
                 height 44.932899\n\n}\n'
                 */
-            camera_trans->Rotate(glm::vec3(0.f,-0.70710683,-0.70710671f), 270.0f);
+            camera_->Rotate(glm::vec3(0.f,-0.70710683,-0.70710671f), 270.0f);
         }break;
         case 6: {
             /*
@@ -359,7 +352,7 @@ void Fr_GL3Window::CreateCameras()
                 focalDistance 100\n
                 height 44.932899\n\n
                 */
-            camera_trans->Rotate(glm::vec3(-0.577f, -0.577f, -0.577f),  240.f);
+            camera_->Rotate(glm::vec3(-0.577f, -0.577f, -0.577f),  240.f);
         }break;
 
         case 7: {
@@ -372,7 +365,7 @@ void Fr_GL3Window::CreateCameras()
                 focalDistance 100\n
                 height 44.932899\n\n}\n'
                 */
-            camera_trans->Rotate(glm::vec3(0.57f,-0.57f, -0.57f), 270.0f);
+            camera_->Rotate(glm::vec3(0.57f,-0.57f, -0.57f), 270.0f);
         }break;
         }
     }

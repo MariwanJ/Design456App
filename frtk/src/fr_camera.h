@@ -31,6 +31,7 @@
 
 #include<frtk.h>
 #include<fr_core.h>
+#include<fr_transform.h>
 #include <fr_node.h>
 #include <glm/glm.hpp>
 
@@ -59,7 +60,7 @@ class Manipulator;
 /**
  * Scene's camera- Must be a subclass of Transform to achive translation
  */
-class Camera : public Node {
+class Camera : public Transform {
 public:
     /**
      * Constructor
@@ -95,14 +96,14 @@ public:
     /**
      * Sets the manipulator
      */
-    void SetManipulator(std::shared_ptr<Manipulator> manipulator);
+    void SetTransform(std::shared_ptr<Transform> transform);
 
     /**
      * Get the manipulator that is associated with the camera.
      * 
      * \return pointer to manipulator associated with the camera
      */
-    std::shared_ptr<Manipulator> getManipulator();
+    std::shared_ptr<Transform> getTransform();
 
     /**
      * Sets the camera
@@ -130,7 +131,7 @@ private:
     float znear_;   //BOTTOM
     float zfar_;   //TOP 
     float aspectRatio_;
-    std::shared_ptr<Manipulator> manipulator_;
+    std::shared_ptr<Transform> transform_;
     glm::mat4 projectionMatrix_;
 };
 
