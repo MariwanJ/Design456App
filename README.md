@@ -7,7 +7,7 @@ Turn Design456 Workbench to more powerful software. Combine GLFW, Imgui ImGuimzo
 This is an expermental pieces of code. Please don't use it in any serious application. 
 It is still in very earliy development phase and I need more time to make it useful. 
 Only Windows is supported at the moment. 
-#IMPORTANT !!:
+# IMPORTANT !!:
 Please notice that the main will not be updated until I get a working scene, with some good results of the half-edge data structure. If you wish to see my progress, switch your branch to devbranch. It is the only branch that has my latest dev. 
 
 
