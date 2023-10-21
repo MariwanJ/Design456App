@@ -483,7 +483,9 @@ int Fr_GL3Window::GLFWrun()
 std::shared_ptr<Transform> Fr_GL3Window::CreateSun() {
     //TODO: FIXME:
     auto sun_ = std::make_shared<Transform>();
-    sun_->Translate(30.0f, 500.0f, 30.0f);
+    sun_->Translate(0.0f, 0, 130.0f);
+   
+
     sun= std::make_shared<Light>();
     sun->SetPosition(0.0f, 0.0f, 0.0f);
     sun->SetDiffuse(0.5f, 0.5f, 0.5f);

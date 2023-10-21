@@ -35,6 +35,7 @@ Transform::Transform() :
     operation_{ Operation::kNone },
     x_{ 0 },
     y_{ 0 },
+    z_{0},
     v_(0, 0, 0), 
     invertX_{ false },
     invertY_{ false }
@@ -60,12 +61,13 @@ void Transform::Rotate(glm::vec3 axis, float angle)
     inverse_ = glm::inverse(matrix_);
 }
 
-void Transform::Translate(glm::vec3 v) {
-    matrix_ = glm::translate(matrix_, v);
+void Transform::Translate(glm::vec3 value) {
+    matrix_ = glm::translate(matrix_, value);
     inverse_ = glm::inverse(matrix_);
 }
 
 void Transform::Translate(float x, float y, float z) {
+    x_ = x; y_ = y_; z = z_;
     matrix_ = glm::translate(matrix_, glm::vec3(x, y, z));
     inverse_ = glm::inverse(matrix_);
 }
@@ -74,6 +76,12 @@ void Transform::Scale(float x, float y, float z) {
     matrix_ = glm::scale(matrix_, glm::vec3(x, y, z));
     inverse_ = glm::inverse(matrix_);
 }
+
+void Transform::Scale(glm::vec3 value ) {
+    matrix_ = glm::scale(matrix_, value);
+    inverse_ = glm::inverse(matrix_);
+}
+
 
 bool Transform::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
     if (!active_)
@@ -191,7 +199,10 @@ float Transform::get_Y() const
 {
     return y_;
 }
-
+float Transform::get_Z() const
+{
+    return z_;
+}
 void Transform::setZommingScale(float _scale)
 {
     kZoomScale = _scale;

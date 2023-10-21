@@ -21,8 +21,8 @@ struct LightInfo {
     float exponent;        //
 };
 
-const int MAX_LIGHTS = 8;
-const int NUM_COLORS = 5;
+const int MAX_LIGHTS = 8;  //only 8 lights are allowed as a node in the application,change it if you need more
+const int NUM_COLORS = 2; //check this value
 const vec3 GLOBAL_AMBIENT = vec3(0.2, 0.2, 0.2);
 
 layout (location=0) in vec3 frag_position;
@@ -35,12 +35,12 @@ uniform LightInfo lights[MAX_LIGHTS];
 uniform int sm_light;
 uniform sampler2D sm_texture;
 
-out vec4 frag_color;
+layout (location=0) out vec4 frag_color;
 
 bool is_shadow()
 {
     float face = texture(sm_texture, frag_sm_position.xy).z + 0.0001;
-    return face < frag_sm_position.y;
+    return face < frag_sm_position.z;
 }
 
 vec3 compute_light_intensity(LightInfo light, int id, vec3 frag_normal)

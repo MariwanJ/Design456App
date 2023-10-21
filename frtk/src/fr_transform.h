@@ -66,6 +66,8 @@ public:
      */
     void Scale(float x, float y, float z);
 
+    void Scale(glm::vec3 value);
+
     bool SetupCamera(glm::mat4& projection, glm::mat4& modelview);
 
     /**
@@ -140,6 +142,7 @@ public:
 
     float get_X()const;
     float get_Y()const;
+    float get_Z() const;
     void setZommingScale(float scale);
 
 private:
@@ -161,7 +164,7 @@ private:
     glm::vec3 reference_;
     glm::mat4 inv_;
     Operation operation_;
-    float x_, y_;
+    float x_, y_,z_;
     glm::vec3 v_;
     bool invertX_, invertY_;
 

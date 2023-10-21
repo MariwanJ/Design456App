@@ -38,13 +38,13 @@ std::shared_ptr<Transform>bunny() {
     auto bunny_t = std::make_shared<Transform>();
     bunny_t->Translate(0, 0, 0);
     bunny_t->Scale(1, 1, 1);
-    auto bunny = std::make_shared<ObjectShaderNode>(0x667AFF, 0.5f); //  color and
+    auto bunny = std::make_shared<ObjectShaderNode>(0x667AFF, 0.013f); //  color and
 
     //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/xy_plane.off"));
-     bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Pyramid.off"));
-    //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Wedge.off"));
+     //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Pyramid.off"));
+    bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Wedge.off"));
     auto Bunny_spot = std::make_shared<Light>();
-    Bunny_spot->SetActive(true);
+    Bunny_spot->SetActive(false);
     Bunny_spot->SetPosition(0.f, 0.f, -0.f);
     Bunny_spot->SetupSpot(-2.0f, -2.0f, 10.0f, 152.0f, 16.0f);
     Bunny_spot->SetDiffuse(1.0f, 0.5f, 0.31f);

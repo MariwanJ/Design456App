@@ -100,7 +100,7 @@ private:
     void RenderSilhouette(const glm::mat4& mvp);
 
     // Constants
-    const size_t kMaxLights = 8;
+    const size_t kMaxLights = 8;        //This is important to concider. This is also defined in the   objectshader_fs.glsl as MAX_LIGHTS
 
     // Shared between instances
     struct Shared {

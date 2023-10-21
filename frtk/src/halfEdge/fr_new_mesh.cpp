@@ -348,8 +348,8 @@ void Shape::InitializeVBO(const std::vector<float>& vertices,
     glCheckFunc(glEnableVertexAttribArray(0));
     glCheckFunc(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL));
 
-    glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]));
-    glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * normals.size(), normals.data(), GL_STATIC_DRAW));
+    glCheckFunc(glBindBuffer(GL_UNIFORM_BUFFER, vbo_[1]));
+    glCheckFunc(glBufferData(GL_UNIFORM_BUFFER, sizeof(float) * normals.size(), normals.data(), GL_STATIC_DRAW));
     glCheckFunc(glEnableVertexAttribArray(1));
     glCheckFunc(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL));
 

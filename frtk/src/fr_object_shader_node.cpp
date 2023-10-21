@@ -101,7 +101,7 @@ void ObjectShaderNode::LoadLights(ShaderProgram* program, const std::vector<Ligh
     program->SetUniformInteger("nlights", nlights);
     for (size_t i = 0; i < nlights; ++i) {
         auto id = "lights[" + std::to_string(i) + "].";
-        program->SetUniformVec4(id + "position", lights[i].position);
+        program->SetUniformVec4(id + "position", lights[i].position);       //Here we send the name of the variable as "lights[xxx=number]." wher xxx= a number from 0 to nlights
         program->SetUniformVec4(id + "diffuse", lights[i].diffuse);
         program->SetUniformVec4(id + "specular", lights[i].specular);
         program->SetUniformVec4(id + "ambient", lights[i].ambient);
@@ -127,7 +127,7 @@ void ObjectShaderNode::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& mod
     info.mvp.push_back(mvp);
     ShaderProgram* program = shared_->shadowmap_program;
     program->Enable();
-    program->SetAttribLocation("position", 0);
+    program->SetAttribLocation("position", 0);      //Position variable has (layout(location =0) inside objectshader_vs.glsl
     program->SetUniformMat4("mvp", mvp);
     mesh_->Draw();
     program->Disable();
@@ -151,8 +151,8 @@ void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     program->Enable();
 
     LoadLights(program, info.lights);
-    program->SetAttribLocation("position", 0);
-    program->SetAttribLocation("normal", 1);
+    program->SetAttribLocation("position", 0);  //Position variable has (layout(location =0) inside objectshader_vs.glsl
+    program->SetAttribLocation("normal", 1);    //normal variable has (layout(location =1) inside objectshader_vs.glsl
     program->SetUniformMat4("modelview", modelview);
     program->SetUniformMat4("normalmatrix", normalmatrix);
     program->SetUniformMat4("mvp", mvp);

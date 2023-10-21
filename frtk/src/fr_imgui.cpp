@@ -359,6 +359,11 @@ void Fr_GL3Window::SunOptions() {
     glm::vec4 pos=sun->getPosition();
 
     float f;
+    float f1, f2, f3;
+    f1 = sunT->get_X();
+    f2 = sunT->get_Y();
+    f3 = sunT->get_Y();
+
     f = pos[0];
     ImGui::DragFloat("Translate x", &f, 0.2,-1000.f,1000.f);
     pos[0] = f;
@@ -367,13 +372,17 @@ void Fr_GL3Window::SunOptions() {
     pos[1] = f;
     f = pos[2];
     ImGui::DragFloat("Translate z", &f, 0.2, -1000.f, 1000.f);
+    sunT->Translate(f1, f2, f3);
     pos[2] = f;
+    
     f = pos[3];
     ImGui::DragFloat("Translate w", &f, 0.2, -1000.f, 1000.f);
     pos[3] = f;
     sun->SetPosition(pos);
 
-
+    pos[0] = f1;
+    pos[1] = f2;
+    pos[2] = f3;
     _spot old=sun->getSpot();
     bool t;
     t = old.spot_enabled_;
