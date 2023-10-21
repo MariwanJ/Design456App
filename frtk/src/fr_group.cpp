@@ -50,8 +50,7 @@ bool Group::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
     return false;
 }
 
-void Group::SetupLight(const glm::mat4& modelview, 
-        std::vector<LightInfo>& lights) {
+void Group::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) {
     if (active_)
         for (auto& node : nodes_)
             node->SetupLight(modelview, lights);

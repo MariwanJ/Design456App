@@ -45,7 +45,7 @@ std::shared_ptr<Transform>bunny() {
     //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Wedge.off"));
     auto Bunny_spot = std::make_shared<Light>();
     Bunny_spot->SetActive(true);
-    Bunny_spot->SetPosition(0.f, 10.f, -10.f);
+    Bunny_spot->SetPosition(0.f, 0.f, -0.f);
     Bunny_spot->SetupSpot(-2.0f, -2.0f, 10.0f, 152.0f, 16.0f);
     Bunny_spot->SetDiffuse(1.0f, 0.5f, 0.31f);
     Bunny_spot->SetAmbient(1.0f, 0.5f, 0.31f);
@@ -53,6 +53,7 @@ std::shared_ptr<Transform>bunny() {
     Bunny_spot->SetSpecular(0.5f, 0.5f, 0.f);
     bunny_t->AddNode(Bunny_spot);
     bunny_t->AddNode(bunny);
+    
     return bunny_t;
 }
 /**

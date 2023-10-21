@@ -81,13 +81,14 @@ void Scene::delete3DObject(std::shared_ptr<Transform>& obj)
 * This is a general process  for drawing camera, shadow map, render shape /faces ..etc
 */
 void Scene::RenderScene() {
+    glEnable(GL_TEXTURE_2D);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     RenderInfo render_info;
     if (!SetupCamera(render_info.projection, render_info.modelview))
-        ;//throw std::runtime_error("Scene::Render(): Camera not found");
+        throw std::runtime_error("Scene::Render(): Camera not found");
     SetupLight(render_info.modelview, render_info.lights);
 
     int draw_framebuffer = 0;
@@ -105,7 +106,7 @@ void Scene::RenderScene() {
     render_info.render_transparent = false;
     Render(render_info, render_info.modelview);
     render_info.id = 0;
-    render_info.render_transparent = false;
+    render_info.render_transparent = true;
     Render(render_info, render_info.modelview);
 }
 
