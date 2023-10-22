@@ -72,6 +72,7 @@ void Light::SetAttenuation(float c, float l, float q) {
     attenuation_ = glm::vec3(c, l, q);
 }
 
+//Temporar code - just to fix the issues I  have here. 
 void Light::SetupSpot(_spot &newSpot) {
     spot_.spot_enabled_ = newSpot.spot_enabled_;
     spot_.spot_direction_ = newSpot.spot_direction_;

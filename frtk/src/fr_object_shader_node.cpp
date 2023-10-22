@@ -129,7 +129,7 @@ void ObjectShaderNode::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& mod
     program->Enable();
     program->SetAttribLocation("position", 0);      //Position variable has (layout(location =0) inside objectshader_vs.glsl
     program->SetUniformMat4("mvp", mvp);
-    mesh_->Draw();
+    //mesh_->Draw();
     program->Disable();
 }
 
@@ -165,9 +165,7 @@ void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     shared_->object_program->SetUniformInteger("sm_texture", 0);
     mesh_->Draw();
     program->Disable();
-
     info.id++;
-
 }
 
 GLuint ObjectShaderNode::getCurrentTexturer(void)

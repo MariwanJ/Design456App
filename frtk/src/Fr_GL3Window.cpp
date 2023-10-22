@@ -78,7 +78,7 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     pitch = 0.0f;  //
     roll = 0.0f;  //Z axis
     gl_version_major = 4;
-    gl_version_minor = 3;
+    gl_version_minor = 5;
     glfwSetErrorCallback(error_callback);
     if (!s_GLFWInitialized)
     {
@@ -483,14 +483,14 @@ int Fr_GL3Window::GLFWrun()
 std::shared_ptr<Transform> Fr_GL3Window::CreateSun() {
     //TODO: FIXME:
     auto sun_ = std::make_shared<Transform>();
-    sun_->Translate(0.0f, 0, 130.0f);
+    sun_->Translate(30.0f, 500.f, 30.0f);
    
 
     sun= std::make_shared<Light>();
     sun->SetPosition(0.0f, 0.0f, 0.0f);
     sun->SetDiffuse(0.5f, 0.5f, 0.5f);
     sun->SetAmbient(0.4f, 0.4f, 0.4f);
-    sun->EnableShadowMap(glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(1.f, 0.0f, 0.0f), glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, 400.0f, 600.0f));
+    sun->EnableShadowMap(glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(1.f, 0.0f, 0.0f), glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, -600.0f, 600.0f));
     sun_->AddNode(sun);
     sun_->SetActive(true);   //A must to have otherwise everything is black.
     sunT = std::move(sun_);

@@ -22,7 +22,7 @@ struct LightInfo {
 };
 
 const int MAX_LIGHTS = 8;  //only 8 lights are allowed as a node in the application,change it if you need more
-const int NUM_COLORS = 2; //check this value
+const int NUM_COLORS = 8; //check this value
 const vec3 GLOBAL_AMBIENT = vec3(0.2, 0.2, 0.2);
 
 layout (location=0) in vec3 frag_position;

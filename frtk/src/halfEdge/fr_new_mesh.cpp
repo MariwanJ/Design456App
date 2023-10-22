@@ -347,9 +347,17 @@ void Shape::InitializeVBO(const std::vector<float>& vertices,
     glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW));
     glCheckFunc(glEnableVertexAttribArray(0));
     glCheckFunc(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL));
+    
+    //this is the object shader - look at the shader, it uses uniform. so the binding MUST be uniform
+        //Original code 
+    //glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]));          //Using GL_UNIFORM_BUFFER draw the line around the object but now nothing? why?
+    //glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * normals.size(), normals.data(), GL_STATIC_DRAW));
 
-    glCheckFunc(glBindBuffer(GL_UNIFORM_BUFFER, vbo_[1]));
+    //this is the object shader - look at the shader, it uses uniform. so the binding MUST be uniform
+    glCheckFunc(glBindBuffer(GL_UNIFORM_BUFFER, vbo_[1]));          //Using GL_UNIFORM_BUFFER draw the line around the object but now nothing? why?
     glCheckFunc(glBufferData(GL_UNIFORM_BUFFER, sizeof(float) * normals.size(), normals.data(), GL_STATIC_DRAW));
+
+
     glCheckFunc(glEnableVertexAttribArray(1));
     glCheckFunc(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL));
 
