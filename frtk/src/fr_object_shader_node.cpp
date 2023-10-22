@@ -129,7 +129,7 @@ void ObjectShaderNode::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& mod
     program->Enable();
     program->SetAttribLocation("position", 0);      //Position variable has (layout(location =0) inside objectshader_vs.glsl
     program->SetUniformMat4("mvp", mvp);
-    //mesh_->Draw();
+    mesh_->Draw();
     program->Disable();
 }
 
@@ -160,10 +160,11 @@ void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     program->SetUniformMat4("sm_mvp", kShadowMapBiasMatrix * sm_mvp);
     program->SetUniformInteger("sm_light", info.shadowmap.light_id);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture);
-    shared_->object_program->SetUniformInteger("sm_texture", 0);
+    glCheckFunc(glActiveTexture(GL_TEXTURE0));
+    glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));
+    
     mesh_->Draw();
+    shared_->object_program->SetUniformInteger("sm_texture", 0);
     program->Disable();
     info.id++;
 }

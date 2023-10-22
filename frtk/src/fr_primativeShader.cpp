@@ -193,9 +193,10 @@ void Fr_PrimaitiveShader::Render(RenderInfo& info, const glm::mat4& modelview) {
     program->SetUniformInteger("sm_light", info.shadowmap.light_id);
 
     //****************************************************************************************FIXME
-    //TODO FIXME -- THIS IS OLD OPENGL - DOSENT WORK FO RNEW OPENGL
+    //TODO FIXME -- THIS IS OLD OPENGL - DOSENT WORK FOR NEW OPENGL
     glGenTextures(1, &info.shadowmap.texture);
     glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));           //     THIS CAUSE ISSUE FIXME!!!!!!!!!!!!!!!!!!!
+
     shared_->primative_program->SetUniformInteger("sm_texture", 0);
 
     //for returning the texture keep the id

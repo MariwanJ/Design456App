@@ -33,7 +33,6 @@
 #include<fr_object_shader_node.h>
 //End remove me later
 
-
 /**
  *
  * Update FLTK callback.
@@ -41,8 +40,6 @@
  * It will be calle
  * \param window
  */
-
-
 
 GLuint m_QuadVA, m_QuadVB, m_QuadIB;
 
@@ -65,10 +62,9 @@ static void error_callback(int error, const char* description)
 */
 Scene* Fr_GL3Window::scene = nullptr;
 bool Fr_GL3Window::MouseOnce = true;
-Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::string l = "GLFW ImGUI Test"):
-                                active_camera_(CameraList::PERSPECTIVE),
-                                _x(x), _y(y), _w(w), _h(h), label_(l) , showOpenDialog(false){
-
+Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::string l = "GLFW ImGUI Test") :
+    active_camera_(CameraList::PERSPECTIVE),
+    _x(x), _y(y), _w(w), _h(h), label_(l), showOpenDialog(false) {
     s_Fr_GLFWwindow = this;
     _x = x;
     _y = y;
@@ -92,8 +88,7 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     Fr_GL3Window::GLFWCallbackWrapper::setGLFWwindow(this);
-    radiusXYZ =  0;
-
+    radiusXYZ = 0;
 }
 
 void Fr_GL3Window::flush() {
@@ -109,8 +104,6 @@ Fr_GL3Window::Fr_GL3Window()
     label_ = "GLFW ImGUI Test";
     s_Fr_GLFWwindow = this;
 }
-
-
 
 Fr_GL3Window* Fr_GL3Window::getfr_Gl3Window()
 {
@@ -161,10 +154,8 @@ void Fr_GL3Window::CreateScene()
     /*
       * Add here the nodes - Grid, and XYZ axis
       */
-    std::shared_ptr<Transform> ssss = CreateSun();
-    scene->AddNode(ssss);
+    scene->AddNode(CreateSun());
     tempBu = bunny();
-
     scene->AddNode(Grid().CreateGrid());
     vert axis = Axis3D().CreateAxis3D();
     scene->AddNode(axis.Red);
@@ -302,7 +293,7 @@ void Fr_GL3Window::CreateCameras()
              focalDistance 100\n
              height 44.932899\n\n}\n'
             */
-            camera_->Rotate(glm::vec3(0.0f,0.0,1.0f), 0);
+            camera_->Rotate(glm::vec3(0.0f, 0.0, 1.0f), 0);
         }break;
         case 3: {
             /*Bottom
@@ -314,21 +305,21 @@ void Fr_GL3Window::CreateCameras()
              focalDistance 100\n
              height 44.932903\n\n}\n'
             */
-            camera_->Rotate(glm::vec3(-1.0f,0.0f, 0.0f), 180);
+            camera_->Rotate(glm::vec3(-1.0f, 0.0f, 0.0f), 180);
         }break;
         case 4: {
-        /**
-         *  FRONT
-          position 28.817665 -89.039444 2.6038942\n
-          orientation -1 4.214686e-007 8.4293717e-008  4.7123895\n
-          nearDistance 34.005363\n
-          farDistance 144.1835\n
-          aspectRatio 1\n
-          focalDistance 100\n
-          height 44.932899\n\n}\n'
-                 *
-         */
-            camera_->Rotate(glm::vec3(-1.0f,0,0 ),  270.0f);
+            /**
+             *  FRONT
+              position 28.817665 -89.039444 2.6038942\n
+              orientation -1 4.214686e-007 8.4293717e-008  4.7123895\n
+              nearDistance 34.005363\n
+              farDistance 144.1835\n
+              aspectRatio 1\n
+              focalDistance 100\n
+              height 44.932899\n\n}\n'
+                     *
+             */
+            camera_->Rotate(glm::vec3(-1.0f, 0, 0), 270.0f);
         }break;
         case 5: {
             /*REAR
@@ -340,7 +331,7 @@ void Fr_GL3Window::CreateCameras()
                 focalDistance 100\n
                 height 44.932899\n\n}\n'
                 */
-            camera_->Rotate(glm::vec3(0.f,-0.70710683,-0.70710671f), 270.0f);
+            camera_->Rotate(glm::vec3(0.f, -0.70710683, -0.70710671f), 270.0f);
         }break;
         case 6: {
             /*
@@ -353,7 +344,7 @@ void Fr_GL3Window::CreateCameras()
                 focalDistance 100\n
                 height 44.932899\n\n
                 */
-            camera_->Rotate(glm::vec3(-0.577f, -0.577f, -0.577f),  240.f);
+            camera_->Rotate(glm::vec3(-0.577f, -0.577f, -0.577f), 240.f);
         }break;
 
         case 7: {
@@ -366,11 +357,10 @@ void Fr_GL3Window::CreateCameras()
                 focalDistance 100\n
                 height 44.932899\n\n}\n'
                 */
-            camera_->Rotate(glm::vec3(0.57f,-0.57f, -0.57f), 270.0f);
+            camera_->Rotate(glm::vec3(0.57f, -0.57f, -0.57f), 270.0f);
         }break;
         }
     }
-
 }
 
 int Fr_GL3Window::createGLFWwindow()
@@ -419,17 +409,16 @@ int Fr_GL3Window::createGLFWwindow()
     return 1;
 }
 
-
 void Fr_GL3Window::resize(int x, int y, int w, int h)
 {
 }
 
 void Fr_GL3Window::show() {
     if (createGLFWwindow() != 0) {
-            if (s_GladInitialized == true) {
+        if (s_GladInitialized == true) {
             //                       TODO: DO WE NEED THIS? I remove it for now
-            }
         }
+    }
 }
 
 int Fr_GL3Window::GLFWrun()
@@ -438,7 +427,7 @@ int Fr_GL3Window::GLFWrun()
     glViewport(0, 0, _w, _h);
     CreateScene();   //Main drawing process.
     clear_color = ImVec4(FR_WINGS3D); //ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-    sceneBuffer = std::make_shared<Fr_TextureFrameBuffer>(w(),h());
+    sceneBuffer = std::make_shared<Fr_TextureFrameBuffer>(w(), h());
 
     /**
      *
@@ -451,7 +440,7 @@ int Fr_GL3Window::GLFWrun()
     for (int i = 0; i < 4; i++) {
         std::shared_ptr<Fr_ImGuiLayer> mlayer = std::shared_ptr<Fr_ImGuiLayer>();
         layers_.push_back(mlayer);
-     }
+    }
     layers_[0]->createLayer();
     while (!glfwWindowShouldClose(pWindow))
     {
@@ -464,14 +453,14 @@ int Fr_GL3Window::GLFWrun()
         glViewport(0, 0, display_w, display_h);
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
 
-         //Render GLFW stuff or Our 3D drawing
+        //Render GLFW stuff or Our 3D drawing
         renderimGUI(data);
         // Rendering IMGUI
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         layers_[0]->EndLayer();
-       glCheckFunc(glfwPollEvents());
-       glCheckFunc(glfwSwapBuffers(pWindow));
+        glCheckFunc(glfwPollEvents());
+        glCheckFunc(glfwSwapBuffers(pWindow));
     }
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -484,15 +473,13 @@ std::shared_ptr<Transform> Fr_GL3Window::CreateSun() {
     //TODO: FIXME:
     auto sun_ = std::make_shared<Transform>();
     sun_->Translate(30.0f, 500.f, 30.0f);
-   
-
-    sun= std::make_shared<Light>();
+    sun = std::make_shared<Light>();
     sun->SetPosition(0.0f, 0.0f, 0.0f);
     sun->SetDiffuse(0.5f, 0.5f, 0.5f);
     sun->SetAmbient(0.4f, 0.4f, 0.4f);
-    sun->EnableShadowMap(glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(1.f, 0.0f, 0.0f), glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, -600.0f, 600.0f));
+    sun->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
     sun_->AddNode(sun);
-    sun_->SetActive(true);   //A must to have otherwise everything is black.
+    sun->SetActive(true);   //A must to have otherwise everything is black.
     sunT = std::move(sun_);
     return sunT;
 }

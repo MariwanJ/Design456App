@@ -123,7 +123,7 @@ bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
         return false;
 
     int vp[4];
-   // glGetIntegerv(GL_VIEWPORT, vp);
+    glGetIntegerv(GL_VIEWPORT, vp);
 
     if (camType_ ==CameraList::ORTHOGRAPHIC) {
         ImVec4 winDim = Fr_GL3Window::getfr_Gl3Window()->getPortViewDimensions();
