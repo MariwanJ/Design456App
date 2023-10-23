@@ -60,6 +60,7 @@ public:
      * Holds the light information
      */
     struct LightInfo {
+        glm::vec4 lightcolor;
         glm::vec4 position;
         glm::vec4 diffuse;
         glm::vec4 specular;

@@ -21,6 +21,8 @@ uniform mat4 sm_mvp;
 layout (location = 0) out vec3 frag_position;
 layout (location = 1) out vec3 frag_normal;
 layout (location = 2) out vec3 frag_sm_position;
+layout (location = 4) out vec4 gl_Position ;
+layout (location = 3) out vec4 sm_position;
 
 void main () {
     frag_position = vec3(modelview * vec4(position, 1.0));

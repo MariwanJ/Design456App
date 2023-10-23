@@ -29,7 +29,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <fr_light.h>
 
-Light::Light() :
+Light::Light(glm::vec4 lightColor_) :
+    lightColor_(lightColor_),
     light_id_(0),
     position_(0, 0, 0, 1),
     ambient_(0.2, 0.2, 0.2, 1),
@@ -48,6 +49,11 @@ Light::Light() :
     spot_direction_ = glm::vec4(0, 0, 0, 0);
     spot_exponent_ = 0.0f;
 }
+
+void Light::SetLightColor(glm::vec4 lightColor) {
+    lightColor_ = lightColor;
+}
+
 
 void Light::SetPosition(glm::vec4 pos) {
     position_ = pos;

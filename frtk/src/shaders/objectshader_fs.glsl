@@ -10,6 +10,7 @@
 #version 430 core
 
 struct LightInfo {
+    vec4 color;
     vec4 position;         //
     vec4 diffuse;          //
     vec4 specular;         //
@@ -22,12 +23,13 @@ struct LightInfo {
 };
 
 const int MAX_LIGHTS = 8;  //only 8 lights are allowed as a node in the application,change it if you need more
-const int NUM_COLORS = 8; //check this value
+const int NUM_COLORS = 2; //check this value
 const vec3 GLOBAL_AMBIENT = vec3(0.2, 0.2, 0.2);
 
 layout (location=0) in vec3 frag_position;
 layout (location=1) in vec3 frag_normal;
 layout (location=2) in vec3 frag_sm_position;
+
 
 uniform vec4 color;
 uniform int nlights;
@@ -43,9 +45,9 @@ bool is_shadow()
     return face < frag_sm_position.z;
 }
 
-vec3 compute_light_intensity(LightInfo light, int id, vec3 frag_normal)
+vec3 compute_light_intensity(LightInfo light, int id, vec3 frag_normal_)
 {
-    vec3 light_position = light.position.xyz / light.position.w;
+    vec3 light_position = light.position.xyz ;// light.position.w;
     float dist = length(light_position - frag_position);
     float att = 1 / (light.attenuation.x + light.attenuation.y * dist  + light.attenuation.y * dist * dist);
 
@@ -53,7 +55,7 @@ vec3 compute_light_intensity(LightInfo light, int id, vec3 frag_normal)
         return att * vec3(light.ambient);
 
     vec3 frag2light = normalize(light_position - frag_position);
-    float diff = max(dot(frag_normal, frag2light), 0);
+    float diff = max(dot(frag_normal_, frag2light), 0);
     vec3 intensity = att * vec3(light.ambient + diff * light.diffuse);
 
     if (light.is_spot) {

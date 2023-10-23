@@ -38,8 +38,15 @@ public:
     /**
      * Default constructor
      */
-    Light();
+    Light(glm::vec4 lightcolor=glm::vec4(1,1,1,1));
+    /**
+    * Light color 
+    */
+    void SetLightColor(glm::vec4 lightColor);
 
+    /**
+    * Sets the light position
+    */
     void SetPosition(glm::vec4 pos);
 
     /**
@@ -110,6 +117,7 @@ private:
     const int kShadowmapHeight = kShadowmapWidth;
 
     // Attributes
+    glm::vec4 lightColor_;
     int light_id_;
     glm::vec4 position_;
     glm::vec4 ambient_;

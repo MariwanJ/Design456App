@@ -100,16 +100,17 @@ void ObjectShaderNode::LoadLights(ShaderProgram* program, const std::vector<Ligh
     unsigned int nlights = std::min(lights.size(), kMaxLights);
     program->SetUniformInteger("nlights", nlights);
     for (size_t i = 0; i < nlights; ++i) {
-        auto id = "lights[" + std::to_string(i) + "].";
-        program->SetUniformVec4(id + "position", lights[i].position);       //Here we send the name of the variable as "lights[xxx=number]." wher xxx= a number from 0 to nlights
-        program->SetUniformVec4(id + "diffuse", lights[i].diffuse);
-        program->SetUniformVec4(id + "specular", lights[i].specular);
-        program->SetUniformVec4(id + "ambient", lights[i].ambient);
-        program->SetUniformVec3(id + "attenuation", lights[i].attenuation);
-        program->SetUniformInteger(id + "is_spot", lights[i].is_spot);
-        program->SetUniformVec3(id + "direction", lights[i].direction);
-        program->SetUniformFloat(id + "cutoff", lights[i].cutoff);
-        program->SetUniformFloat(id + "exponent", lights[i].exponent);
+        auto uniformVarNameInObjShader = "lights[" + std::to_string(i) + "].";
+        program->SetUniformVec4(uniformVarNameInObjShader + "color", lights[i].lightcolor);
+        program->SetUniformVec4(uniformVarNameInObjShader + "position", lights[i].position);       //Here we send the name of the variable as "lights[xxx=number]." wher xxx= a number from 0 to nlights
+        program->SetUniformVec4(uniformVarNameInObjShader + "diffuse", lights[i].diffuse);
+        program->SetUniformVec4(uniformVarNameInObjShader + "specular", lights[i].specular);
+        program->SetUniformVec4(uniformVarNameInObjShader + "ambient", lights[i].ambient);
+        program->SetUniformVec3(uniformVarNameInObjShader + "attenuation", lights[i].attenuation);
+        program->SetUniformInteger(uniformVarNameInObjShader + "is_spot", lights[i].is_spot);
+        program->SetUniformVec3(   uniformVarNameInObjShader + "direction", lights[i].direction);
+        program->SetUniformFloat(  uniformVarNameInObjShader + "cutoff", lights[i].cutoff);
+        program->SetUniformFloat(  uniformVarNameInObjShader + "exponent", lights[i].exponent);
     }
 }
 
@@ -156,7 +157,7 @@ void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     program->SetUniformMat4("modelview", modelview);
     program->SetUniformMat4("normalmatrix", normalmatrix);
     program->SetUniformMat4("mvp", mvp);
-    program->SetUniformVec4("color", color_);
+    program->SetUniformVec4("color", color_);       //Object color - not light color
     program->SetUniformMat4("sm_mvp", kShadowMapBiasMatrix * sm_mvp);
     program->SetUniformInteger("sm_light", info.shadowmap.light_id);
 
