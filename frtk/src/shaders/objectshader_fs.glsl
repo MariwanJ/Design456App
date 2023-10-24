@@ -29,6 +29,7 @@ const vec3 GLOBAL_AMBIENT = vec3(0.2, 0.2, 0.2);
 layout (location=0) in vec3 frag_position;
 layout (location=1) in vec3 frag_normal;
 layout (location=2) in vec3 frag_sm_position;
+ 
 
 
 uniform vec4 color;

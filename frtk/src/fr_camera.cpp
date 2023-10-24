@@ -106,7 +106,7 @@ Camera::Camera() :
     zfar_{ 100000},
     aspectRatio_{ 1.2 },
     transform_{},
-
+    modelview_{},
     projectionMatrix_(glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_)),
     camType_(CameraList::PERSPECTIVE){
     type(NODETYPE::FR_CAMERA);
@@ -136,7 +136,8 @@ bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
     else {
         projection = glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_);
     }
-        modelview = glm::lookAt(camPosition_, direction_, up_);
+    modelview = glm::lookAt(camPosition_, direction_, up_);
+    modelview_ = modelview;
     return true;
 }
 
@@ -374,5 +375,10 @@ CameraList Camera::getCameraType() {
 
 glm::mat4 Camera::getPorjection()
 {
+    projectionMatrix_=(glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_)); //update the value before returning it
     return projectionMatrix_;
+}
+glm::mat4 Camera::getModelView() {
+    modelview_ = glm::lookAt(camPosition_, direction_, up_);
+    return modelview_;
 }

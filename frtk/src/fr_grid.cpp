@@ -36,7 +36,7 @@
 
 std::shared_ptr<Transform>bunny() {
     auto bunny_t = std::make_shared<Transform>();
-    bunny_t->Translate(10, 10, 10);
+    bunny_t->Translate(0, 0, 0);
     bunny_t->Scale(1, 1, 1);
     auto bunny = std::make_shared<ObjectShaderNode>(0x667AFF, 0.013f); //  color and
 

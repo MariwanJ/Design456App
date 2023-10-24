@@ -13,51 +13,50 @@ Fr_ImGuiLayer::~Fr_ImGuiLayer()
 
 void Fr_ImGuiLayer::createLayer()
 {
-	// Setup Dear ImGui context
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
-	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
-	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+    //io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
+    //io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
-	float fontSize = 18.0f;
-	std::string path = "../frtk/vendor/imGui/src/imguiFont/OpenSans-Bold.ttf";
-	io.Fonts->AddFontFromFileTTF(path.c_str(), fontSize);
-	path = "../frtk/vendor/imGui/src/imguiFont/Open Sans Regular.ttf";
-	io.FontDefault = io.Fonts->AddFontFromFileTTF(path.c_str(), fontSize);
- 
-	std::string PathICON = fontPath + std::string(FONT_ICON_FILE_NAME_FAS);
-	ImFontConfig icons_config;
-	icons_config.MergeMode = true;
-	icons_config.PixelSnapH = true;
-	static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
+    float fontSize = 18.0f;
+    std::string path = "../frtk/vendor/imGui/src/imguiFont/OpenSans-Bold.ttf";
+    io.Fonts->AddFontFromFileTTF(path.c_str(), fontSize);
+    path = "../frtk/vendor/imGui/src/imguiFont/Open Sans Regular.ttf";
+    io.FontDefault = io.Fonts->AddFontFromFileTTF(path.c_str(), fontSize);
 
-	io.Fonts->AddFontFromFileTTF(PathICON.c_str(), ICON_FONT_SIZE, &icons_config, icons_ranges);
+    std::string PathICON = fontPath + std::string(FONT_ICON_FILE_NAME_FAS);
+    ImFontConfig icons_config;
+    icons_config.MergeMode = true;
+    icons_config.PixelSnapH = true;
+    static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
 
-	// Setup Dear ImGui style
-	//ImGui::StyleColorsDark();
-	//ImGui::StyleColorsClassic();
+    io.Fonts->AddFontFromFileTTF(PathICON.c_str(), ICON_FONT_SIZE, &icons_config, icons_ranges);
 
-	ImGui::StyleColorsLight();
-	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
-	ImGuiStyle& style = ImGui::GetStyle();
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		style.WindowRounding = 0.0f;
-		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-	}
+    // Setup Dear ImGui style
+    //ImGui::StyleColorsDark();
+    //ImGui::StyleColorsClassic();
 
-	//put theme here if you want !!
+    ImGui::StyleColorsLight();
+    // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+    ImGuiStyle& style = ImGui::GetStyle();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        style.WindowRounding = 0.0f;
+        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    }
 
-	GLFWwindow* window = (GLFWwindow*)(Fr_GL3Window::getfr_Gl3Window()->pWindow);
-	// Setup Platform/Renderer bindings
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init("#version 410");
+    //put theme here if you want !!
 
+    GLFWwindow* window = (GLFWwindow*)(Fr_GL3Window::getfr_Gl3Window()->pWindow);
+    // Setup Platform/Renderer bindings
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 410");
 }
 
 void Fr_ImGuiLayer::destroyLayer()
@@ -74,15 +73,15 @@ void Fr_ImGuiLayer::StartLayer()
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
-	ImGuizmo::BeginFrame();
+    ImGuizmo::BeginFrame();
 }
 
 void Fr_ImGuiLayer::EndLayer()
 {
     ImGuiIO io = ImGui::GetIO();
-    if(Fr_GL3Window::getfr_Gl3Window()!=nullptr){
+    if (Fr_GL3Window::getfr_Gl3Window() != nullptr) {
         io.DisplaySize = ImVec2(float(Fr_GL3Window::getfr_Gl3Window()->w()), float(Fr_GL3Window::getfr_Gl3Window()->h()));
-    
+
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {

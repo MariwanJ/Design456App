@@ -122,7 +122,9 @@ public:
     CameraList getCameraType();
 
     glm::mat4 getPorjection();
+    glm::mat4 getModelView();
 private:
+    glm::mat4 modelview_;
     CameraList camType_ ;
     glm::vec3 camPosition_;
     glm::vec3 direction_;

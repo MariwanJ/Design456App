@@ -45,12 +45,12 @@ int Fr_GL3Window::imguimzo_init()
     float width_= ImGui::GetWindowWidth();
     float height_ = ImGui::GetWindowHeight();
 
-    ImGuizmo::SetRect(PortViewDimensions.x, PortViewDimensions.y, width_, height_);
+    ImGuizmo::SetRect(0,0, width_, height_);
     auto activeCamera = cameraList[(unsigned int)active_camera_];
 
 
     auto getbu = Fr_GL3Window::getfr_Gl3Window()->tempBu;
-    auto modelview1 = glm::inverse(activeCamera->GetMatrix());
+    auto modelview1 = activeCamera->getModelView();
    
     glm::mat4 tranform;
     if (getbu != NULL)
@@ -62,7 +62,7 @@ int Fr_GL3Window::imguimzo_init()
 
     if(ImGuizmo::IsUsing()) {
        // DEBUG_BREAK;
-        tempBu->Translate(glm::vec3(tranform[3]));
+        tempBu->Scale(glm::vec3(tranform[3]));
     }
     return 0;
 }
