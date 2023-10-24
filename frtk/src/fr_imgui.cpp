@@ -36,16 +36,16 @@ int Fr_GL3Window::imguimzo_init()
 {
     ImGuizmo::BeginFrame();
 
-    ImGuizmo::SetOrthographic(false);
+    ImGuizmo::SetOrthographic(true);
     ImGuizmo::SetDrawlist();
     
     ImGuizmo::Enable(true);
-
+    auto view_ = ImGui::GetMainViewport();
     PortViewDimensions = ImVec4(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
     float width_= ImGui::GetWindowWidth();
     float height_ = ImGui::GetWindowHeight();
 
-    ImGuizmo::SetRect(0,0, width_, height_);
+    ImGuizmo::SetRect(PortViewDimensions.x, PortViewDimensions.y, width_, height_);
     auto activeCamera = cameraList[(unsigned int)active_camera_];
 
 
@@ -55,14 +55,15 @@ int Fr_GL3Window::imguimzo_init()
     glm::mat4 tranform;
     if (getbu != NULL)
     {
-        tranform = getbu->GetMatrix();
+        tranform = glm::inverse(getbu->GetMatrix());
         auto proj = activeCamera->getPorjection();
         ImGuizmo::Manipulate(glm::value_ptr(modelview1), glm::value_ptr(proj), ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(tranform));
     } 
+    auto ddd = glm::vec3((tranform[3]));
 
     if(ImGuizmo::IsUsing()) {
        // DEBUG_BREAK;
-        tempBu->Scale(glm::vec3(tranform[3]));
+        tempBu->Translate(glm::vec3(normalize(tranform[3])));
     }
     return 0;
 }
@@ -129,11 +130,9 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
         }
         if (imgui_menu() < 0)
             return -1;
-        //ImGui::ShowDemoWindow();
+        //ImGui::ShowDemoWindow();          //demo window if you want to learn how imgui works. 
         if (imgui_TopPannel() < 0)
             return -1;
-       // if (imguimzo_init() < 0)              //Must be inside the view port
-        //    return -1;
         if (imgui_ViewPort() < 0)
             return -1;
         if (imgui_LeftPanel() < 0)
@@ -330,7 +329,7 @@ void Fr_GL3Window::CameraOptions (){
       //| ImGuiWindowFlags_NoScrollbar
       //| ImGuiWindowFlags_NoSavedSettings
         ;
-
+ 
     auto camm = cameraList[(int)active_camera_];
     camm->getUserData(data);
     imgui_CameraConfiguration(data);
