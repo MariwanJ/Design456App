@@ -96,14 +96,8 @@ public:
     /**
      * Sets the manipulator
      */
-    void SetTransform(std::shared_ptr<Transform> transform);
-
-    /**
-     * Get the manipulator that is associated with the camera.
-     * 
-     * \return pointer to manipulator associated with the camera
-     */
-    std::shared_ptr<Transform> getTransform();
+    //void SetTransform(std::shared_ptr<Transform> transform);
+    glm::mat4 getModelView() const;
 
     /**
      * Sets the camera
@@ -122,9 +116,9 @@ public:
     CameraList getCameraType();
 
     glm::mat4 getPorjection();
-    glm::mat4 getModelView();
+    glm::mat4 getViewMatrix()  ;
 private:
-    glm::mat4 modelview_;
+    glm::mat4 m_ViewMatrix;  //viewmodel_
     CameraList camType_ ;
     glm::vec3 camPosition_;
     glm::vec3 direction_;
@@ -133,8 +127,7 @@ private:
     float znear_;   //BOTTOM
     float zfar_;   //TOP 
     float aspectRatio_;
-    std::shared_ptr<Transform> transform_;
-    glm::mat4 projectionMatrix_;
+    glm::mat4 m_ProjectionMatrix;
 };
 
 #endif

@@ -25,45 +25,48 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-
 #include <Fr_GL3Window.h>
 #include<fr_menu.h>
 #include<fr_toolbar.h>
-
-
+#include <glm/gtx/string_cast.hpp>
 //TODO FIX ME DOSENT WORK DON'T KNOW WHY
 int Fr_GL3Window::imguimzo_init()
 {
     ImGuizmo::BeginFrame();
-
     ImGuizmo::SetOrthographic(true);
     ImGuizmo::SetDrawlist();
-    
     ImGuizmo::Enable(true);
+
     auto view_ = ImGui::GetMainViewport();
-    PortViewDimensions = ImVec4(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
-    float width_= ImGui::GetWindowWidth();
+    PortViewDimensions = ImVec4(PortViewDimensions.x, PortViewDimensions.y, PortViewDimensions.w, PortViewDimensions.z);
+
+    if ((PortViewDimensions.w / PortViewDimensions.z) != getAspectRation()) {
+        DebugBreak;
+    }
+    float width_ = ImGui::GetWindowWidth();
     float height_ = ImGui::GetWindowHeight();
 
-    ImGuizmo::SetRect(PortViewDimensions.x, PortViewDimensions.y, width_, height_);
+   // ImGuizmo::SetRect(PortViewDimensions.x, PortViewDimensions.y, width_, height_);
+   ImGuizmo::SetRect(PortViewDimensions.x, PortViewDimensions.y, PortViewDimensions.w, PortViewDimensions.z);
+
     auto activeCamera = cameraList[(unsigned int)active_camera_];
 
-
     auto getbu = Fr_GL3Window::getfr_Gl3Window()->tempBu;
-    auto modelview1 = activeCamera->getModelView();
-   
-    glm::mat4 tranform;
+    auto modelview1 = glm::inverse(activeCamera->getModelView());
+
+    glm::mat4 tranform{ 1 };
     if (getbu != NULL)
     {
-        tranform = glm::inverse(getbu->GetMatrix());
         auto proj = activeCamera->getPorjection();
-        ImGuizmo::Manipulate(glm::value_ptr(modelview1), glm::value_ptr(proj), ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(tranform));
-    } 
+        ImGuizmo::Manipulate(glm::value_ptr(modelview1), glm::value_ptr(proj),ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(tranform));
+    }
+    
     auto ddd = glm::vec3((tranform[3]));
 
-    if(ImGuizmo::IsUsing()) {
-       // DEBUG_BREAK;
-        tempBu->Translate(glm::vec3(normalize(tranform[3])));
+    if (ImGuizmo::IsUsing()) {
+        // DEBUG_BREAK;
+        std::cout << ddd.x<<" " << ddd.y << " " << ddd.z << std::endl;
+        tempBu->Translate(ddd);
     }
     return 0;
 }
@@ -113,7 +116,7 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
 
         if (!opt_padding)
             ImGui::PopStyleVar();
-       
+
         if (opt_fullscreen)
             ImGui::PopStyleVar(2);
 
@@ -130,7 +133,7 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
         }
         if (imgui_menu() < 0)
             return -1;
-        //ImGui::ShowDemoWindow();          //demo window if you want to learn how imgui works. 
+        //ImGui::ShowDemoWindow();          //demo window if you want to learn how imgui works.
         if (imgui_TopPannel() < 0)
             return -1;
         if (imgui_ViewPort() < 0)
@@ -142,7 +145,7 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
             CameraOptions();
         }
 
-        bool m;      
+        bool m;
         SunOptions();
         if (showOpenDialog) {
             createOpenDialog();
@@ -168,7 +171,6 @@ int Fr_GL3Window::imgui_CameraConfiguration(userData_& data)
 
     static float f = 0.0f;
     static int counter = 0;
- 
 
     ImGui::Begin("Camera Configuration!");                          // Create a window called "Hello, world!" and append into it.
 
@@ -197,7 +199,7 @@ int Fr_GL3Window::imgui_CameraConfiguration(userData_& data)
     ImGui::DragFloat("aspectratio", &f, 0.2, 0.0f, 5);
     data.aspectRatio_ = f;
 
-    ImGui::SliderInt("Cameratype", &type, 0, MAX_CAMERAS-1);
+    ImGui::SliderInt("Cameratype", &type, 0, MAX_CAMERAS - 1);
     data.camType_ = (CameraList)type;
 
     f = data.fovy_;
@@ -228,15 +230,20 @@ int Fr_GL3Window::imgui_CameraConfiguration(userData_& data)
         counter++;
         auto camm = cameraList[(int)active_camera_];
         camm->setupCameraHomeValues();
-        struct userData_ newdata;
-        camm->getUserData(newdata);
-        data = newdata;
     }
     ImGui::SameLine();
     ImGui::Text("counter = %d", counter);
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     ImGui::End();
     return 0;
+}
+float Fr_GL3Window::getAspectRation() const
+{
+    int vp[4];
+    glCheckFunc(glGetIntegerv(GL_VIEWPORT, vp));
+    float ra = (float)vp[2] / vp[3];
+    return ra;
+
 }
 int Fr_GL3Window::imgui_ViewPort()
 {
@@ -251,8 +258,8 @@ int Fr_GL3Window::imgui_ViewPort()
     );
 
     //Keep size of the window for further usage at other places.
-    PortViewDimensions = ImVec4(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y,ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
-    
+    PortViewDimensions = ImVec4(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
+
     imguimzo_init();
     ImGui::End();
     sceneBuffer->Unbind();
@@ -266,33 +273,33 @@ int Fr_GL3Window::imgui_menu()
         if (ImGui::BeginMenu("File"))
         {
             //IMGUI_DEMO_MARKER("Examples/Menu");
-            if (ImGui::MenuItem("New")) { mnuFileNew_cb( nullptr); }
-            if (ImGui::MenuItem("Open", "Ctrl+O")) { mnuFileOpen_cb( nullptr); }
+            if (ImGui::MenuItem("New")) { mnuFileNew_cb(nullptr); }
+            if (ImGui::MenuItem("Open", "Ctrl+O")) { mnuFileOpen_cb(nullptr); }
             if (ImGui::BeginMenu("Open Recent"))
             {
                 ImGui::MenuItem("---");
-             /*   ImGui::MenuItem("fish_hat.inl");
-                ImGui::MenuItem("fish_hat.h");
-                if (ImGui::BeginMenu("More.."))
-                {
-                    ImGui::MenuItem("Hello");
-                    ImGui::MenuItem("Sailor");
-                    if (ImGui::BeginMenu("Recurse.."))
-                    {
-                        //ShowExampleMenuFile();
-                        ImGui::EndMenu();
-                    }
-                    ImGui::EndMenu();
-                }*/
+                /*   ImGui::MenuItem("fish_hat.inl");
+                   ImGui::MenuItem("fish_hat.h");
+                   if (ImGui::BeginMenu("More.."))
+                   {
+                       ImGui::MenuItem("Hello");
+                       ImGui::MenuItem("Sailor");
+                       if (ImGui::BeginMenu("Recurse.."))
+                       {
+                           //ShowExampleMenuFile();
+                           ImGui::EndMenu();
+                       }
+                       ImGui::EndMenu();
+                   }*/
                 ImGui::EndMenu();
             }
-            if (ImGui::MenuItem("Save", "Ctrl+S")) { GLFWCallbackWrapper::mnuFileSave_cb( nullptr); }
-            if (ImGui::MenuItem("Save As..")) { GLFWCallbackWrapper::mnuFileSaveAs_cb( nullptr); }
+            if (ImGui::MenuItem("Save", "Ctrl+S")) { GLFWCallbackWrapper::mnuFileSave_cb(nullptr); }
+            if (ImGui::MenuItem("Save As..")) { GLFWCallbackWrapper::mnuFileSaveAs_cb(nullptr); }
             ImGui::Separator();
-            if (ImGui::MenuItem("Import")) { GLFWCallbackWrapper::mnuFileImport_cb( nullptr); }
-            if (ImGui::MenuItem("Export")) { GLFWCallbackWrapper::mnuFileImport_cb( nullptr); }
+            if (ImGui::MenuItem("Import")) { GLFWCallbackWrapper::mnuFileImport_cb(nullptr); }
+            if (ImGui::MenuItem("Export")) { GLFWCallbackWrapper::mnuFileImport_cb(nullptr); }
             ImGui::Separator();
-            if (ImGui::MenuItem("Exit", "Alt+F4")) { GLFWCallbackWrapper::mnuFileExit_cb( nullptr);  }
+            if (ImGui::MenuItem("Exit", "Alt+F4")) { GLFWCallbackWrapper::mnuFileExit_cb(nullptr); }
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Edit"))
@@ -307,7 +314,6 @@ int Fr_GL3Window::imgui_menu()
         }
         if (ImGui::BeginMenu("Tools"))
         {
-
             ImGui::MenuItem("Show/Hide Camera Options", "", &FR::CamerOptionVisible);
             ImGui::EndMenu();
         }
@@ -316,8 +322,7 @@ int Fr_GL3Window::imgui_menu()
     return 0;
 }
 
-
-void Fr_GL3Window::CameraOptions (){
+void Fr_GL3Window::CameraOptions() {
     userData_ data;
 
     ImGuiViewport* viewport = ImGui::GetMainViewport();
@@ -329,7 +334,7 @@ void Fr_GL3Window::CameraOptions (){
       //| ImGuiWindowFlags_NoScrollbar
       //| ImGuiWindowFlags_NoSavedSettings
         ;
- 
+
     auto camm = cameraList[(int)active_camera_];
     camm->getUserData(data);
     imgui_CameraConfiguration(data);
@@ -344,112 +349,106 @@ void Fr_GL3Window::CameraOptions (){
 }
 
 void Fr_GL3Window::SunOptions() {
-   // ImGui::Begin("Sun Options");
-   // ImGuiViewport* viewport = ImGui::GetMainViewport();
-   // ImGuiWindowFlags window_flags = 0
-   //     | ImGuiWindowFlags_NoDocking
-   //     //| ImGuiWindowFlags_NoTitleBar
-   //    //| ImGuiWindowFlags_NoResize
-   ////   | ImGuiWindowFlags_NoMove
-   //   //| ImGuiWindowFlags_NoScrollbar
-   //   //| ImGuiWindowFlags_NoSavedSettings
-   //     ;
+    // ImGui::Begin("Sun Options");
+    // ImGuiViewport* viewport = ImGui::GetMainViewport();
+    // ImGuiWindowFlags window_flags = 0
+    //     | ImGuiWindowFlags_NoDocking
+    //     //| ImGuiWindowFlags_NoTitleBar
+    //    //| ImGuiWindowFlags_NoResize
+    ////   | ImGuiWindowFlags_NoMove
+    //   //| ImGuiWindowFlags_NoScrollbar
+    //   //| ImGuiWindowFlags_NoSavedSettings
+    //     ;
 
-   // glm::vec4 pos=sun->getPosition();
+    // glm::vec4 pos=sun->getPosition();
 
-   // float f;
-   // float f1, f2, f3;
-   // f1 = sunT->get_X();
-   // f2 = sunT->get_Y();
-   // f3 = sunT->get_Y();
+    // float f;
+    // float f1, f2, f3;
+    // f1 = sunT->get_X();
+    // f2 = sunT->get_Y();
+    // f3 = sunT->get_Y();
 
-   // f = pos[0];
-   // ImGui::DragFloat("Translate x", &f, 0.2,-1000.f,1000.f);
-   // pos[0] = f;
-   // f = pos[1];
-   // ImGui::DragFloat("Translate y", &f, 0.2, -1000.f, 1000.f);
-   // pos[1] = f;
-   // f = pos[2];
-   // ImGui::DragFloat("Translate z", &f, 0.2, -1000.f, 1000.f);
-   // sunT->Translate(f1, f2, f3);
-   // pos[2] = f;
-   // 
-   // f = pos[3];
-   // ImGui::DragFloat("Translate w", &f, 0.02, -1.f, 1.f);
-   // pos[3] = f;
-   // sun->SetPosition(pos);
+    // f = pos[0];
+    // ImGui::DragFloat("Translate x", &f, 0.2,-1000.f,1000.f);
+    // pos[0] = f;
+    // f = pos[1];
+    // ImGui::DragFloat("Translate y", &f, 0.2, -1000.f, 1000.f);
+    // pos[1] = f;
+    // f = pos[2];
+    // ImGui::DragFloat("Translate z", &f, 0.2, -1000.f, 1000.f);
+    // sunT->Translate(f1, f2, f3);
+    // pos[2] = f;
+    //
+    // f = pos[3];
+    // ImGui::DragFloat("Translate w", &f, 0.02, -1.f, 1.f);
+    // pos[3] = f;
+    // sun->SetPosition(pos);
 
- 
-   // _spot old=sun->getSpot();
-   // bool t;
-   // t = old.spot_enabled_;
-   // ImGui::Checkbox("Spot Enable ",&t);
-   // old.spot_enabled_ = t;
+    // _spot old=sun->getSpot();
+    // bool t;
+    // t = old.spot_enabled_;
+    // ImGui::Checkbox("Spot Enable ",&t);
+    // old.spot_enabled_ = t;
 
-   // f = glm::degrees(acos(old.spot_cutoff_Ang));
-   // ImGui::DragFloat("Spot Cutoff Ang", &f, 0.2, -360.f, 360.f);
-   // old.spot_cutoff_Ang = cos(glm::radians(f));
-   // f = old.spot_exponent_;
-   // ImGui::DragFloat("Spot exponent", &f, 0.02, -1.f, 1.f);
-   // old.spot_exponent_=f ;
+    // f = glm::degrees(acos(old.spot_cutoff_Ang));
+    // ImGui::DragFloat("Spot Cutoff Ang", &f, 0.2, -360.f, 360.f);
+    // old.spot_cutoff_Ang = cos(glm::radians(f));
+    // f = old.spot_exponent_;
+    // ImGui::DragFloat("Spot exponent", &f, 0.02, -1.f, 1.f);
+    // old.spot_exponent_=f ;
 
-   // f = old.spot_direction_.x;
-   // ImGui::DragFloat("Spot direction.x", &f, 0.2, -1000.0f, 1000.0f);
-   // old.spot_direction_.x = f;
+    // f = old.spot_direction_.x;
+    // ImGui::DragFloat("Spot direction.x", &f, 0.2, -1000.0f, 1000.0f);
+    // old.spot_direction_.x = f;
 
-   // f = old.spot_direction_.y;
-   // ImGui::DragFloat("Spot direction.y", &f, 0.2, -1000.0f, 1000.0f);
-   // old.spot_direction_.y = f;
+    // f = old.spot_direction_.y;
+    // ImGui::DragFloat("Spot direction.y", &f, 0.2, -1000.0f, 1000.0f);
+    // old.spot_direction_.y = f;
 
-   // f = old.spot_direction_.z;
-   // ImGui::DragFloat("Spot direction.z", &f, 0.2, -1000.0f, 1000.0f);
-   // old.spot_direction_.z = f;
-   // sun->SetupSpot(old);
-   // auto amb= sun->gtAmbient();
-   // f = amb.r;
-   // ImGui::DragFloat("Ambient r", &f, 0.002, 0.0f, 1.0f);
-   // amb.r = f;
-   // f = amb.g;
-   // ImGui::DragFloat("Ambient g", &f, 0.002, 0.0f, 1.0f);
-   // amb.g=f;
-   // f = amb.b;
-   // ImGui::DragFloat("Ambient b", &f, 0.002, 0.f, 1.f);
-   // amb.b = f;
-   // f = amb.a;
-   // ImGui::DragFloat("Ambient a", &f, 0.020, 0.f, 1.f);
-   // amb.a = f;
-   // sun->SetAmbient(amb.r, amb.g, amb.b, amb.a);
+    // f = old.spot_direction_.z;
+    // ImGui::DragFloat("Spot direction.z", &f, 0.2, -1000.0f, 1000.0f);
+    // old.spot_direction_.z = f;
+    // sun->SetupSpot(old);
+    // auto amb= sun->gtAmbient();
+    // f = amb.r;
+    // ImGui::DragFloat("Ambient r", &f, 0.002, 0.0f, 1.0f);
+    // amb.r = f;
+    // f = amb.g;
+    // ImGui::DragFloat("Ambient g", &f, 0.002, 0.0f, 1.0f);
+    // amb.g=f;
+    // f = amb.b;
+    // ImGui::DragFloat("Ambient b", &f, 0.002, 0.f, 1.f);
+    // amb.b = f;
+    // f = amb.a;
+    // ImGui::DragFloat("Ambient a", &f, 0.020, 0.f, 1.f);
+    // amb.a = f;
+    // sun->SetAmbient(amb.r, amb.g, amb.b, amb.a);
 
+    // auto spec = sun->getSpecular();
+    // f = spec.r;
+    // ImGui::DragFloat("specular r", &f, 0.002, 0.f, 1.f);
+    // spec.r = f;
+    // f = spec.g;
+    // ImGui::DragFloat("specular g", &f, 0.002, 0.f, 1.f);
+    // spec.g = f;
+    // f = spec.b;
+    // ImGui::DragFloat("specular b", &f, 0.002, 0.f, 1.f);
+    // spec.b = f;
+    // f = spec.a;
+    // ImGui::DragFloat("specular a", &f, 0.002, 0.f, 1.f);
+    // spec.a = f;
+    // sun->SetSpecular(spec.r, spec.g, spec.b, spec.a);
 
-   // auto spec = sun->getSpecular();
-   // f = spec.r;
-   // ImGui::DragFloat("specular r", &f, 0.002, 0.f, 1.f);
-   // spec.r = f;
-   // f = spec.g;
-   // ImGui::DragFloat("specular g", &f, 0.002, 0.f, 1.f);
-   // spec.g = f;
-   // f = spec.b;
-   // ImGui::DragFloat("specular b", &f, 0.002, 0.f, 1.f);
-   // spec.b = f;
-   // f = spec.a;
-   // ImGui::DragFloat("specular a", &f, 0.002, 0.f, 1.f);
-   // spec.a = f;
-   // sun->SetSpecular(spec.r, spec.g, spec.b, spec.a);
-
-
-   // auto att = sun->getAttenuation();
-   // f = att.r;
-   // ImGui::DragFloat("Attenuation r", &f, 0.001,0.f, 1.f);
-   // att.r = f;
-   // f = att.g;
-   // ImGui::DragFloat("attv g", &f, 0.001, 0.f, 1.f);
-   // att.g = f;
-   // f = att.b;
-   // ImGui::DragFloat("att b", &f, 0.001, 0.f, 1.0f);
-   // att.b = f;
-   // sun->SetAttenuation(att.r, att.g, att.b);
-   // ImGui::End();
-
-
-
+    // auto att = sun->getAttenuation();
+    // f = att.r;
+    // ImGui::DragFloat("Attenuation r", &f, 0.001,0.f, 1.f);
+    // att.r = f;
+    // f = att.g;
+    // ImGui::DragFloat("attv g", &f, 0.001, 0.f, 1.f);
+    // att.g = f;
+    // f = att.b;
+    // ImGui::DragFloat("att b", &f, 0.001, 0.f, 1.0f);
+    // att.b = f;
+    // sun->SetAttenuation(att.r, att.g, att.b);
+    // ImGui::End();
 }

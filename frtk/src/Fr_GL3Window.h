@@ -192,7 +192,7 @@ public:
     CameraList getCameraType();
     int imgui_CameraConfiguration(userData_& data);
     genID idGen_; //Keeps the id generator - used to generate shape/objects unique ID
-
+    float getAspectRation() const ;
 protected:
     /**
      * Function to create all cameras listed in CameraList.

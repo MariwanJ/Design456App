@@ -30,8 +30,7 @@
 #include <fr_transform.h>
 
 Transform::Transform() :
-    reference_(0, 0, 0),
-    inv_(1.0),
+    m_Position(0, 0, 0),
     operation_{ Operation::kNone },
     x_{ 0 },
     y_{ 0 },
@@ -40,127 +39,62 @@ Transform::Transform() :
     invertX_{ false },
     invertY_{ false }
 {
-    LoadIndentity();
+    m_Matrix = glm::mat4(1.0f);
+    m_Inverse = glm::inverse(m_Matrix);
     type(NODETYPE::FR_TRANSFORM);
-
-}
-
-void Transform::LoadIndentity() {
-    matrix_ = glm::mat4(1.0f);
-    inverse_ = glm::mat4(1.0f);
 }
 
 void Transform::Rotate(float x, float y, float z, float angle ) {
-    matrix_ = glm::rotate(matrix_, glm::radians(angle), glm::vec3(x, y, z));
-    inverse_ = glm::inverse(matrix_);
+    m_Matrix = glm::rotate(m_Matrix, angle, glm::vec3(x, y, z));
+    m_Inverse = glm::inverse(m_Matrix);
 }
 
 void Transform::Rotate(glm::vec3 axis, float angle)
 {
-    matrix_ = glm::rotate(matrix_, glm::radians(angle), axis);
-    inverse_ = glm::inverse(matrix_);
+    m_Matrix = glm::rotate(m_Matrix, glm::radians(angle), axis);
+    m_Inverse = glm::inverse(m_Matrix);
 }
 
 void Transform::Translate(glm::vec3 value) {
-    matrix_ = glm::translate(matrix_, value);
-    inverse_ = glm::inverse(matrix_);
+    m_Matrix = glm::translate(m_Matrix, value);
+    m_Inverse = glm::inverse(m_Matrix);
 }
 
 void Transform::Translate(float x, float y, float z) {
     x_ = x; y_ = y_; z = z_;
-    matrix_ = glm::translate(matrix_, glm::vec3(x, y, z));
-    inverse_ = glm::inverse(matrix_);
+    m_Matrix = glm::translate(m_Matrix, glm::vec3(x, y, z));
+    m_Inverse = glm::inverse(m_Matrix);
 }
 
 void Transform::Scale(float x, float y, float z) {
-    matrix_ = glm::scale(matrix_, glm::vec3(x, y, z));
-    inverse_ = glm::inverse(matrix_);
+    m_Matrix = glm::scale(m_Matrix, glm::vec3(x, y, z));
+    m_Inverse = glm::inverse(m_Matrix);
 }
 
 void Transform::Scale(glm::vec3 value ) {
-    matrix_ = glm::scale(matrix_, value);
-    inverse_ = glm::inverse(matrix_);
+    m_Matrix = glm::scale(m_Matrix, value);
+    m_Inverse = glm::inverse(m_Matrix);
 }
-
-
-bool Transform::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
-    if (!active_)
-        return false;
-
-    if (Group::SetupCamera(projection, modelview)) {
-        modelview *= inverse_;
-        return true;
-    }
-    return false;
-}
-
-void Transform::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) {
-    if (!active_)
-        return;
-
-    glm::mat4 sub_mv = modelview;
-    Group::SetupLight( matrix_, lights);
-}
-
-bool Transform::SetupShadowMap(ShadowMapInfo& info) {
-    if (!active_)
-        return false;
-
-    if (Group::SetupShadowMap(info)) {
-        info.modelview *= inverse_;
-        return true;
-    }
-    return false;
-}
-
-void Transform::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) {
-    if (!active_)
-        return;
-
-    glm::mat4 sub_modelview = modelview;
-    sub_modelview *= matrix_;
-    Group::RenderShadowMap(info, sub_modelview);
-}
-
-void Transform::Render(RenderInfo& info, const glm::mat4& modelview) {
-    if (!active_)
-        return;
-
-    glm::mat4 sub_modelview = modelview;
-    sub_modelview *= matrix_;
-    Group::Render(info, sub_modelview);
-}
-
-
-//From Manipulator 
-
 
 //Scroll zooming scale - default is 10.0
 float Transform::kZoomScale = 50.0f;
 
-
 glm::mat4 Transform::GetMatrix(const glm::vec3& look_dir) {
     glm::vec3 manip_dir = glm::vec3(0, 0, -1);
     if (glm::length(look_dir - manip_dir) < 0.01)
-        return glm::translate(reference_)
-        * matrix_
-        * glm::translate(-reference_);
+        return (glm::translate(m_Position) * m_Matrix * glm::translate(-m_Position));
 
     glm::vec3 w = glm::cross(look_dir, manip_dir);
     float theta = asin(glm::length(w));
-    return glm::translate(reference_)
-        * glm::rotate(-theta, w)
-        * matrix_
-        * glm::rotate(theta, w)
-        * glm::translate(-reference_);
+    return (glm::translate(m_Position) * glm::rotate(-theta, w)* m_Matrix * glm::rotate(theta, w)* glm::translate(-m_Position));
 }
 
 glm::mat4 Transform::GetInverse() {
-    return glm::translate(-reference_) * matrix_ * glm::translate(reference_);
+    return m_Inverse;
 }
 
-void Transform::SetReferencePoint(float x, float y, float z) {
-    reference_ = glm::vec3(x, y, z);
+void Transform::SetPosition(float x, float y, float z) {
+    m_Position = glm::vec3(x, y, z);
 }
 
 void Transform::GLFWMouse(int button, int state, double x, double y) {
@@ -182,10 +116,10 @@ void Transform::GLFWMotion(int x, int y) {
         glm::vec3 w = glm::cross(v_, v);
         float theta = asin(glm::length(w));
         if (theta != 0)
-            matrix_ = glm::rotate(theta, w) * matrix_;
+            m_Matrix = glm::rotate(theta, w) * m_Matrix;
         v_ = v;
     }
-    inv_ = glm::inverse(matrix_);
+    m_Inverse = glm::inverse(m_Matrix);
     x_ = x;
     y_ = y;
 }
@@ -245,7 +179,6 @@ glm::vec3 Transform::computeSphereCoordinates(double x, double y) {
     else {
         vz = sqrt(1 - vx * vx - vy * vy);
     }
-
     return glm::vec3(vx, vy, vz);
 }
 

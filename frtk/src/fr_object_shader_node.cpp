@@ -34,10 +34,15 @@
 ObjectShaderNode::Shared* ObjectShaderNode::shared_ = nullptr;
 
 static const glm::mat4 kShadowMapBiasMatrix(
+  0.5, 0.0, 0.0, 0.0,
+  0.0, 0.5, 0.0, 0.0,
+  0.0, 0.0, 0.5, 0.0,
+  0.5, 0.5, 0.5, 1.0);
+/*(
     0.5, 0.0, 0.0, 0.0,
     0.0, 0.5, 0.0, 0.0,
     0.0, 0.0, 0.5, 0.0,
-    0.5, 0.5, 0.5, 1.0);
+    0.5, 0.5, 0.5, 1.0);*/
 
 ObjectShaderNode::ObjectShaderNode(unsigned int color, float silhouette) :
     mesh_{ nullptr },

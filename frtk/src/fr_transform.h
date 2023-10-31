@@ -40,11 +40,6 @@ public:
     Transform();
 
     /**
-     * Loads the identity matrix
-     */
-    void LoadIndentity();
-
-    /**
      * Multiply the current matrix by a rotation matrix
      */
     void Rotate(float x, float y, float z, float angle);
@@ -68,45 +63,12 @@ public:
 
     void Scale(glm::vec3 value);
 
-    bool SetupCamera(glm::mat4& projection, glm::mat4& modelview);
-
-    /**
-     * Sets the camera
-     * Returns true if the camera has been set
-     * Returns the camera info by reference
-     */
-    //bool SetupCamera(glm::mat4& projection, glm::mat4& modelview) override;
-
-    /**
-     * Sets the lights
-     * Returns the light info by reference
-     */
-    void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights);
-
-    /**
-     * Sets the shadow map
-     */
-    bool SetupShadowMap(ShadowMapInfo& info) override;
-
-    /**
-     * Renders the shadow map
-     */
-    void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) override;
-
-    /**
-     * Renders the node
-     */
-    void Render(RenderInfo& info, const glm::mat4& modelview) override;
-
-   // glm::mat4 getTransformMatrix()const;
-
 private:
-    std::unique_ptr<Transform> transform_;
-    glm::mat4 matrix_;
-    glm::mat4 inverse_;
+
+    glm::mat4 m_Matrix;
+    glm::mat4 m_Inverse;
 
     //From maniupulator 
-
 
 public:
 
@@ -114,7 +76,7 @@ public:
      * Accumulates the manipulator matrix
      */
     glm::mat4 GetMatrix(const glm::vec3& look_dir = glm::vec3(0, 0, -1));
-
+    
     /**
      * Accumulates the inverse of the manipulator matrix
      */
@@ -123,24 +85,21 @@ public:
     /**
      * Sets the reference point (world center)
      */
-    void SetReferencePoint(float x, float y, float z);
+    void SetPosition(float x, float y, float z);
 
     /**
      * Sets whether each axis is inverted or not
      */
     void SetInvertAxis(bool invertX, bool invertY = false);
 
+    void GLFWMotion(int x, int y);
+
     /**
      * Mouse button function
      */
     void GLFWMouse(int button, int state, double x, double y);
 
-    /**
-     * Mouse motion function
-     */
-    void GLFWMotion(int x, int y);
-
-    float get_X()const;
+     float get_X()const;
     float get_Y()const;
     float get_Z() const;
     void setZommingScale(float scale);
@@ -161,8 +120,7 @@ private:
     /** Computes the sphere vector for rotation */
     glm::vec3 computeSphereCoordinates(double x, double y);
 
-    glm::vec3 reference_;
-    glm::mat4 inv_;
+    glm::vec3 m_Position;
     Operation operation_;
     float x_, y_,z_;
     glm::vec3 v_;

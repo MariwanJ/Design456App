@@ -148,6 +148,8 @@ void Fr_GL3Window::CreateScene()
 {
     scene = new Scene();//Save a link to the windows also.
     scene->linkToglfw = pWindow;
+
+
     CreateCameras();
     setCameraType(CameraList::PERSPECTIVE);
 
@@ -264,6 +266,7 @@ void Fr_GL3Window::CreateCameras()
         scene->AddNode(camera_);  //Add it to the scene graph, but only active one will render.
         camera_->setType((CameraList)i);   //Depending on the list it should be as the enum defined
         camera_->setupCameraHomeValues();
+
         switch (i) {
             //TODO: FIXME: If you create more than 6, you should add it here
         case 0: {
@@ -276,7 +279,7 @@ void Fr_GL3Window::CreateCameras()
                     focalDistance 30.248238\n
                     heightAngle 0.78539819\n\n}\n'
             */
-            camera_->Rotate(glm::vec3(0.7429f, 0.307f, 0.594f), 69.7f);
+            camera_->Rotate(glm::vec3(0.7429f, 0.307f, 0.594f),-69.7f);
         }break;
         case 1: {
             //ORTHOGRAPHIC
@@ -425,7 +428,7 @@ int Fr_GL3Window::GLFWrun()
 {
     userData_ data;
     glViewport(0, 0, _w, _h);
-    CreateScene();   //Main drawing process.
+
     clear_color = ImVec4(FR_WINGS3D); //ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     sceneBuffer = std::make_shared<Fr_TextureFrameBuffer>(w(), h());
 
@@ -442,6 +445,7 @@ int Fr_GL3Window::GLFWrun()
         layers_.push_back(mlayer);
     }
     layers_[0]->createLayer();
+    CreateScene();   //Main drawing process.
     while (!glfwWindowShouldClose(pWindow))
     {
         layers_[0]->StartLayer();

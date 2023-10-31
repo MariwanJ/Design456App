@@ -70,7 +70,7 @@ void Scene::add3DObject(std::string fName)
     rightlight_spot->SetAttenuation(1.0f, 0.002f, 0.0f);
     newObj_t->AddNode(rightlight_spot);
     newObj_t->AddNode(newObj);
-    this->AddNode(newObj_t);
+    AddNode(newObj_t);
 }
 
 void Scene::delete3DObject(std::shared_ptr<Transform>& obj)
@@ -81,10 +81,10 @@ void Scene::delete3DObject(std::shared_ptr<Transform>& obj)
 * This is a general process  for drawing camera, shadow map, render shape /faces ..etc
 */
 void Scene::RenderScene() {
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glCheckFunc(glEnable(GL_DEPTH_TEST));
+    glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+    glCheckFunc(glEnable(GL_BLEND));
+    glCheckFunc(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
     RenderInfo render_info;
     if (!SetupCamera(render_info.projection, render_info.modelview))
@@ -92,15 +92,15 @@ void Scene::RenderScene() {
     SetupLight(render_info.modelview, render_info.lights);
 
     int draw_framebuffer = 0;
-    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &draw_framebuffer);
+    glCheckFunc(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &draw_framebuffer));
 
     SetupShadowMap(render_info.shadowmap);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, render_info.shadowmap.framebuffer);
-    glClear(GL_DEPTH_BUFFER_BIT);
+    glCheckFunc(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, render_info.shadowmap.framebuffer));
+    glCheckFunc(glClear(GL_DEPTH_BUFFER_BIT));
     RenderShadowMap(render_info.shadowmap, render_info.shadowmap.modelview);
 
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_framebuffer);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glCheckFunc(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_framebuffer));
+    glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
     render_info.id = 0;
     render_info.render_transparent = false;
