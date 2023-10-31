@@ -110,7 +110,7 @@ public:
 
 private:
     // Constants
-    const int kShadowmapWidth = 8192;
+    const int kShadowmapWidth = 1024;
     const int kShadowmapHeight = kShadowmapWidth;
 
     // Attributes

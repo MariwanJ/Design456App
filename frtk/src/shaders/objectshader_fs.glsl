@@ -24,7 +24,7 @@ struct LightInfo {
 
 const int MAX_LIGHTS = 8;  //only 8 lights are allowed as a node in the application,change it if you need more
 const int NUM_COLORS = 2; //check this value
-const vec3 GLOBAL_AMBIENT = vec3(0.2, 0.2, 0.2);
+const vec3 GLOBAL_AMBIENT = vec3(0.1, 0.1, 0.1);
 
 layout (location=0) in vec3 frag_position;
 layout (location=1) in vec3 frag_normal;
@@ -57,7 +57,7 @@ vec3 compute_light_intensity(LightInfo light, int id, vec3 frag_normal_)
 
     vec3 frag2light = normalize(light_position - frag_position);
     float diff = max(dot(frag_normal_, frag2light), 0);
-    vec3 intensity = att * vec3(light.ambient + diff * light.diffuse);
+    vec3 intensity = att * vec3(light.ambient + diff * light.diffuse +light.specular);
 
     if (light.is_spot) {
         float kspot = max(dot(-frag2light, light.direction), 0);
@@ -67,7 +67,8 @@ vec3 compute_light_intensity(LightInfo light, int id, vec3 frag_normal_)
         }
         return vec3(0, 0, 0);
     }
-    return intensity;
+	
+    return (intensity);
 }
 
 void main ()
@@ -78,6 +79,6 @@ void main ()
         frag_light += compute_light_intensity(lights[i], i, frag_normal_n);
     }
     frag_light += GLOBAL_AMBIENT;
-    frag_light = floor(frag_light * NUM_COLORS) / NUM_COLORS;
+   // frag_light = floor(frag_light * NUM_COLORS) / NUM_COLORS;
     frag_color = vec4(color.rgb * frag_light, color.a);
 }

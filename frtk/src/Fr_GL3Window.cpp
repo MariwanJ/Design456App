@@ -475,11 +475,11 @@ int Fr_GL3Window::GLFWrun()
 std::shared_ptr<Transform> Fr_GL3Window::CreateSun() {
     //TODO: FIXME:
     auto sun_ = std::make_shared<Transform>();
-    sun_->Translate(30.0f, 500.f, 30.0f);
+    sun_->Translate(30.0f, 500.f, -30.0f);
     sun = std::make_shared<Light>();
     sun->SetPosition(0.0f, 0.0f, 0.0f);
     sun->SetDiffuse(0.5f, 0.5f, 0.5f);
-    sun->SetAmbient(0.4f, 0.4f, 0.4f);
+    sun->SetAmbient(0.2f, 0.2f, 0.2f);
     sun->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
     sun_->AddNode(sun);
     sun->SetActive(true);   //A must to have otherwise everything is black.
