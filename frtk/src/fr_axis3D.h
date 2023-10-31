@@ -41,57 +41,56 @@
 std::shared_ptr<Transform>bunny();
 //End Temporary code
 
-typedef struct vert{
-	std::shared_ptr<Transform> Red;
-	std::shared_ptr<Transform> Green;
-	std::shared_ptr<Transform> Blue;
-	std::shared_ptr<Transform> ZBlue; //small lines
+typedef struct vert {
+    std::shared_ptr<Transform> Red;
+    std::shared_ptr<Transform> Green;
+    std::shared_ptr<Transform> Blue;
+    std::shared_ptr<Transform> ZBlue; //small lines
 };
 
 class Axis3D :public Node
 {
 public:
-/**
- * class constructor.
- *
- */
+    /**
+     * class constructor.
+     *
+     */
 
-	Axis3D();
+    Axis3D();
 
-	~Axis3D();
-	/**
-	 * .
-	 */
+    ~Axis3D();
+    /**
+     * .
+     */
 
-	vert CreateAxis3D();
+    vert CreateAxis3D();
 
-	/**
-	 * Sets the grid visibility.
-	 *
-	 * \param status boolean variable. If true: Grids shown, if false: Grid is not visible
-	 */
-	void setVisible(bool status);
-	/**
-	 * Sets grid size. This is the distance between each line in both axis
-	 */
-	void setAxisZstepSize( float sizeINmm);
-	float getAxisZstepSize(void) const;
+    /**
+     * Sets the grid visibility.
+     *
+     * \param status boolean variable. If true: Grids shown, if false: Grid is not visible
+     */
+    void setVisible(bool status);
+    /**
+     * Sets grid size. This is the distance between each line in both axis
+     */
+    void setAxisZstepSize(float sizeINmm);
+    float getAxisZstepSize(void) const;
 
+    void setStepWidth(float sec);
+    float getStepWidth(void) const;
 
-	void setStepWidth(float sec);
-	float getStepWidth(void) const;
-
-	/**
-	 * Create the Grid verticies.
-	 *
-	 * \return pointer to the created grid
-	 */
+    /**
+     * Create the Grid verticies.
+     *
+     * \return pointer to the created grid
+     */
 
 private:
 
-	float ZstepSize_;
-	glm::vec4 axis3DColor_;
-	float stepWidth_;
+    float ZstepSize_;
+    glm::vec4 axis3DColor_;
+    float stepWidth_;
 };
 
 #endif

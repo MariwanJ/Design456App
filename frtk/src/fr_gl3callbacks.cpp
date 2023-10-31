@@ -4,8 +4,6 @@
 #include <Fr_GL3Window.h>
 #include "fr_gl3callbacks.h"
 
-
-
 //Wrapper Callbacks
 
 void Fr_GL3Window::GLFWCallbackWrapper::framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -88,7 +86,6 @@ void Fr_GL3Window::GLFWCallbackWrapper::mnuFileExit_cb(void* Data)
     s_fr_glfwwindow->mnuFileExit_cb(Data);
 }
 
-
 void Fr_GL3Window::GLFWCallbackWrapper::mnuEditUndo(void* Data)
 {
     s_fr_glfwwindow->mnuEditUndo(Data);
@@ -114,72 +111,55 @@ void Fr_GL3Window::GLFWCallbackWrapper::mnuEditPaste(void* Data)
     s_fr_glfwwindow->mnuEditPaste(Data);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void Fr_GL3Window::mnuFileNew_cb(void* Data){
+void Fr_GL3Window::mnuFileNew_cb(void* Data) {
     std::cout << "File new callback\n";
 }
 
-void Fr_GL3Window::mnuFileOpen_cb( void* Data){
-
-
+void Fr_GL3Window::mnuFileOpen_cb(void* Data) {
     showOpenDialog = true;
 }
 
-void Fr_GL3Window::mnuFileClose_cb( void* Data){
+void Fr_GL3Window::mnuFileClose_cb(void* Data) {
     std::cout << "File close callback\n";
 }
 
-void Fr_GL3Window::mnuFileSave_cb(void* Data){
+void Fr_GL3Window::mnuFileSave_cb(void* Data) {
     std::cout << "File save callback\n";
 }
 
-void Fr_GL3Window::mnuFileSaveAs_cb(void* Data){
+void Fr_GL3Window::mnuFileSaveAs_cb(void* Data) {
     std::cout << "File save as callback\n";
 }
 
-void Fr_GL3Window::mnuFileExport_cb( void* Data){
+void Fr_GL3Window::mnuFileExport_cb(void* Data) {
     std::cout << "File export callback\n";
 }
 
-void Fr_GL3Window::mnuFileImport_cb( void* Data){
+void Fr_GL3Window::mnuFileImport_cb(void* Data) {
     std::cout << "File import callback\n";
 }
 
-void Fr_GL3Window::mnuFileExit_cb(void* Data){
+void Fr_GL3Window::mnuFileExit_cb(void* Data) {
     Fr_GL3Window::getfr_Gl3Window()->Exit();
 }
 
-void Fr_GL3Window::mnuEditUndo(void* Data){
+void Fr_GL3Window::mnuEditUndo(void* Data) {
     std::cout << "undo\n";
 }
 
-void Fr_GL3Window::mnuEditRedo(void* Data){
+void Fr_GL3Window::mnuEditRedo(void* Data) {
     std::cout << "Redo\n";
 }
 
-void Fr_GL3Window::mnuEditCopy(void* Data){
+void Fr_GL3Window::mnuEditCopy(void* Data) {
     std::cout << "Copy\n";
 }
 
-void Fr_GL3Window::mnuEditCut(void* Data){
+void Fr_GL3Window::mnuEditCut(void* Data) {
     std::cout << "Cut\n";
 }
 
-void Fr_GL3Window::mnuEditPaste(void* Data){
+void Fr_GL3Window::mnuEditPaste(void* Data) {
     std::cout << "Paste\n";
 }
 
@@ -188,10 +168,10 @@ void Fr_GL3Window::createOpenDialog(void)
     ImGuiWindowFlags window_flags = 0
         | ImGuiWindowFlags_NoDocking
         //| ImGuiWindowFlags_NoTitleBar
-       | ImGuiWindowFlags_NoResize
-   //   | ImGuiWindowFlags_NoMove
-      | ImGuiWindowFlags_NoScrollbar
-      //| ImGuiWindowFlags_NoSavedSettings
+        | ImGuiWindowFlags_NoResize
+        //   | ImGuiWindowFlags_NoMove
+        | ImGuiWindowFlags_NoScrollbar
+        //| ImGuiWindowFlags_NoSavedSettings
         ;
     ImGui::Begin("File Browser", nullptr, ImGuiWindowFlags_NoDocking);
     // (optional) set browser properties
@@ -203,9 +183,9 @@ void Fr_GL3Window::createOpenDialog(void)
     if (fileDialog.HasSelected())
     {
         std::string fileName = fileDialog.GetSelected().string();
-       scene->add3DObject(fileName);
-       fileDialog.ClearSelected();
-       showOpenDialog = false;
+        scene->add3DObject(fileName);
+        fileDialog.ClearSelected();
+        showOpenDialog = false;
     }
     ImGui::End();
 }

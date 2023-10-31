@@ -68,15 +68,15 @@ private:
     glm::mat4 m_Matrix;
     glm::mat4 m_Inverse;
 
-    //From maniupulator 
+    //From maniupulator
 
 public:
 
-     /**
-     * Accumulates the manipulator matrix
-     */
+    /**
+    * Accumulates the manipulator matrix
+    */
     glm::mat4 GetMatrix(const glm::vec3& look_dir = glm::vec3(0, 0, -1));
-    
+
     /**
      * Accumulates the inverse of the manipulator matrix
      */
@@ -99,7 +99,7 @@ public:
      */
     void GLFWMouse(int button, int state, double x, double y);
 
-     float get_X()const;
+    float get_X()const;
     float get_Y()const;
     float get_Z() const;
     void setZommingScale(float scale);
@@ -122,11 +122,9 @@ private:
 
     glm::vec3 m_Position;
     Operation operation_;
-    float x_, y_,z_;
+    float x_, y_, z_;
     glm::vec3 v_;
     bool invertX_, invertY_;
-
 };
 
 #endif
-

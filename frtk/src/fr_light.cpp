@@ -54,7 +54,6 @@ void Light::SetLightColor(glm::vec4 lightColor) {
     lightColor_ = lightColor;
 }
 
-
 void Light::SetPosition(glm::vec4 pos) {
     position_ = pos;
 }

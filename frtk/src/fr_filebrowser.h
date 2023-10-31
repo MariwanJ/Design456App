@@ -1,9 +1,9 @@
 #ifndef FR_FILEBROWSWER_H
 #define FR_FILEBROWSWER_H
 /**
- * 
+ *
  *  https://github.com/AirGuanZ/imgui-filebrowser
- * 
+ *
  */
 #include <imgui.h>
 

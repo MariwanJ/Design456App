@@ -46,8 +46,8 @@ int Fr_GL3Window::imguimzo_init()
     float width_ = ImGui::GetWindowWidth();
     float height_ = ImGui::GetWindowHeight();
 
-   // ImGuizmo::SetRect(PortViewDimensions.x, PortViewDimensions.y, width_, height_);
-   ImGuizmo::SetRect(PortViewDimensions.x, PortViewDimensions.y, PortViewDimensions.w, PortViewDimensions.z);
+    // ImGuizmo::SetRect(PortViewDimensions.x, PortViewDimensions.y, width_, height_);
+    ImGuizmo::SetRect(PortViewDimensions.x, PortViewDimensions.y, PortViewDimensions.w, PortViewDimensions.z);
 
     auto activeCamera = cameraList[(unsigned int)active_camera_];
 
@@ -58,14 +58,14 @@ int Fr_GL3Window::imguimzo_init()
     if (getbu != NULL)
     {
         auto proj = activeCamera->getPorjection();
-        ImGuizmo::Manipulate(glm::value_ptr(modelview1), glm::value_ptr(proj),ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(tranform));
+        ImGuizmo::Manipulate(glm::value_ptr(modelview1), glm::value_ptr(proj), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(tranform));
     }
-    
+
     auto ddd = glm::vec3((tranform[3]));
 
     if (ImGuizmo::IsUsing()) {
         // DEBUG_BREAK;
-        std::cout << ddd.x<<" " << ddd.y << " " << ddd.z << std::endl;
+        std::cout << ddd.x << " " << ddd.y << " " << ddd.z << std::endl;
         tempBu->Translate(ddd);
     }
     return 0;
@@ -243,7 +243,6 @@ float Fr_GL3Window::getAspectRation() const
     glCheckFunc(glGetIntegerv(GL_VIEWPORT, vp));
     float ra = (float)vp[2] / vp[3];
     return ra;
-
 }
 int Fr_GL3Window::imgui_ViewPort()
 {

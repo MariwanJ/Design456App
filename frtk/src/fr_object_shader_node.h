@@ -42,8 +42,7 @@ public:
      * Constructor
      */
     ObjectShaderNode(unsigned int color = 0x111111, float silhouette = 0.005);
-    ObjectShaderNode(glm::vec4 color=glm::vec4(FR_WHITE), float silhouette = 0.005);
-
+    ObjectShaderNode(glm::vec4 color = glm::vec4(FR_WHITE), float silhouette = 0.005);
 
     /**
      * Destructor
@@ -55,12 +54,10 @@ public:
      */
     void SetColor(unsigned int color, float alpha = 1.0f);
 
-
     /**
      * Sets the color
      */
     void SetColor(glm::vec4, float alpha = 1.0f);
-
 
     /**
      * Sets the opacity
@@ -92,7 +89,7 @@ private:
     /**
      * Sets the uniform light data
      */
-    void LoadLights(ShaderProgram *program, const std::vector<LightInfo>& lights);
+    void LoadLights(ShaderProgram* program, const std::vector<LightInfo>& lights);
 
     /**
      * Renders the silhouette
@@ -104,11 +101,11 @@ private:
 
     // Shared between instances
     struct Shared {
-        ShaderProgram *object_program;
-        ShaderProgram *silhouette_program;          //the dark shape and outline of object
-        ShaderProgram *shadowmap_program;
+        ShaderProgram* object_program;
+        ShaderProgram* silhouette_program;          //the dark shape and outline of object
+        ShaderProgram* shadowmap_program;
     };
-    static Shared *shared_;
+    static Shared* shared_;
 
     // Attributes
     std::shared_ptr<Shape> mesh_;
@@ -118,4 +115,3 @@ private:
 };
 
 #endif
-

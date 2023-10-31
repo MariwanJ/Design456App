@@ -37,7 +37,6 @@
  * A container for other nodes
  */
 class Group : public Node {
-
 public:
     Group();
     /**
@@ -52,7 +51,7 @@ public:
 
     /**
      * Retrive a pointer to the desired Node given by id number.
-     * 
+     *
      * \param id    Node number
      * \return pointer to the node if exists. or nullpntr
      */
@@ -60,7 +59,7 @@ public:
 
     /**
      * Return a pointer to the vector nodes (all of them).
-     * 
+     *
      * \return pointer to the vector nodes even if there is no children (which will be an empty vector
      */
     virtual std::vector<std::shared_ptr<Node>> getNodes();
@@ -75,7 +74,7 @@ public:
      * Sets the lights
      * Returns the light info by reference
      */
-    virtual void SetupLight(const glm::mat4& modelview,  std::vector<LightInfo>& lights) override;
+    virtual void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) override;
 
     /**
      * Sets the shadow map
@@ -100,4 +99,3 @@ private:
 };
 
 #endif
-

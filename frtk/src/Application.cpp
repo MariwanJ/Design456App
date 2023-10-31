@@ -70,10 +70,10 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
         FR::glfw_e_y = ypos;
     }
     else {
-            FR::glfw_MouseButton = false;
-            FR::glfw_e_x = xpos;
-            FR::glfw_e_y = ypos;
-        }
+        FR::glfw_MouseButton = false;
+        FR::glfw_e_x = xpos;
+        FR::glfw_e_y = ypos;
+    }
 }
 
 void Fr_GL3Window::cursor_enter_callback(GLFWwindow*, int entered)
@@ -99,8 +99,8 @@ void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffs
     activeCamera->getUserData(data);
     fov = data.fovy_;
     fov = fov - yoffset;
-    if (fov < 1.0f)
-        fov = 1.0f;
+    if (fov < 0.01f)
+        fov = 0.01f;
     if (fov > MAX_FOV_ZOOM)
         fov = MAX_FOV_ZOOM;
     data.fovy_ = fov;
@@ -121,8 +121,8 @@ void Fr_GL3Window::cameraPAN(double xpos, double ypos)
 
     activeCamera->getUserData(data);
     radiusXYZ = sqrt(data.camPosition_.x * data.camPosition_.x +
-        data.camPosition_.y * data.camPosition_.y +
-        data.camPosition_.z * data.camPosition_.z);
+                     data.camPosition_.y * data.camPosition_.y +
+                     data.camPosition_.z * data.camPosition_.z);
 
     float xoffset = xpos - FR::glfw_e_x;
     float yoffset = FR::glfw_e_y - ypos;
@@ -142,13 +142,17 @@ void Fr_GL3Window::cameraPAN(double xpos, double ypos)
         pitch = -89.999990f;
 
     glm::vec3 direction;
+    //TODO : CHECK ME .. DO WE SHOULD HAVE BOTH OR ONE OF THEM??
 
+     data.direction_.x = radiusXYZ * cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+     data.direction_.y = radiusXYZ * cos(glm::radians(yaw)) * sin(glm::radians(pitch));
 
+   // data.camPosition_.x = radiusXYZ * cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+   // data.camPosition_.y = radiusXYZ * cos(glm::radians(yaw)) * sin(glm::radians(pitch));
 
-    data.direction_.x = radiusXYZ *cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    data.direction_.y = radiusXYZ * cos(glm::radians(yaw)) * sin(glm::radians(pitch));
-   //data.direction_.z =  sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-   // data.direction_ = glm::normalize(data.direction_);
+    
+    //data.direction_.z =  sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    // data.direction_ = glm::normalize(data.direction_);
     activeCamera->setUserData(data);
 }
 
@@ -164,9 +168,8 @@ void Fr_GL3Window::cameraRotate(double xpos, double ypos)
         FR::glfw_e_y = ypos;
         MouseOnce = false;
         radiusXYZ = sqrt(data.camPosition_.x * data.camPosition_.x +
-                        data.camPosition_.y * data.camPosition_.y+
-                        data.camPosition_.z * data.camPosition_.z);
- 
+            data.camPosition_.y * data.camPosition_.y +
+            data.camPosition_.z * data.camPosition_.z);
     }
 
     float delta_X = xpos - FR::glfw_e_x;
@@ -174,21 +177,20 @@ void Fr_GL3Window::cameraRotate(double xpos, double ypos)
     FR::glfw_e_x = xpos;
     FR::glfw_e_y = ypos;
     float sensitivity = 0.2f;
-  
+
     yaw += delta_X * sensitivity;
     pitch += delta_Y * sensitivity;
-    
+
     if (pitch > 89.999990f)
         pitch = 89.999990f;
     if (pitch < -89.999990f)
         pitch = -89.999990f;
-        
 
     glm::vec3 direction;
     //std::cout << pitch << "pitch yaw " << yaw << std::endl;
-    data.camPosition_.x =radiusXYZ *cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    data.camPosition_.y = radiusXYZ *cos(glm::radians(yaw)) * sin(glm::radians(pitch));
-    data.camPosition_.z = radiusXYZ* sin(glm::radians(yaw)) ;
+    data.camPosition_.x = radiusXYZ * cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    data.camPosition_.y = radiusXYZ * cos(glm::radians(yaw)) * sin(glm::radians(pitch));
+    //data.camPosition_.z = radiusXYZ * sin(glm::radians(yaw));
     activeCamera->setUserData(data);
 }
 

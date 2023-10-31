@@ -121,7 +121,7 @@ bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
     if (camType_ == CameraList::ORTHOGRAPHIC) {
         float aspect = Fr_GL3Window::getfr_Gl3Window()->getAspectRation();
         ImVec4 winDim = Fr_GL3Window::getfr_Gl3Window()->getPortViewDimensions();
-        projection = glm::ortho(float(-winDim.w / fovy_), float(winDim.w / fovy_),  -float(winDim.z / fovy_), float(winDim.z / fovy_), znear_, zfar_);
+        projection = glm::ortho(float(-winDim.w / fovy_), float(winDim.w / fovy_), -float(winDim.z / fovy_), float(winDim.z / fovy_), znear_, zfar_);
     }
     else {
         projection = glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_);
@@ -351,7 +351,7 @@ glm::mat4 Camera::getPorjection()
 {
     return m_ProjectionMatrix;
 }
-glm::mat4 Camera::getViewMatrix()   {
+glm::mat4 Camera::getViewMatrix() {
     m_ViewMatrix = glm::lookAt(camPosition_, direction_, up_);
     return m_ViewMatrix;
 }

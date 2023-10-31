@@ -26,7 +26,7 @@
 //
 #include <fr_primatives.h>
 
-Fr_Primatives::Fr_Primatives() :vbo_{ 0, 0, 0 }, vao_(0), drawType(GL_LINES){
+Fr_Primatives::Fr_Primatives() :vbo_{ 0, 0, 0 }, vao_(0), drawType(GL_LINES) {
 }
 
 Fr_Primatives::~Fr_Primatives() {

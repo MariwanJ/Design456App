@@ -27,16 +27,14 @@
 //
 
 #include <fr_mesh.h>
- 
 
 Mesh::Mesh(const std::string& path) :
-    vbo_{0, 0, 0},
-    vao_(0),normalized_(false) {
+    vbo_{ 0, 0, 0 },
+    vao_(0), normalized_(false) {
     ReadFile(path, vertices_, normals_, indices_);
     InitializeVBO(vertices_, normals_, indices_);
-
 }
-Mesh::Mesh(): vbo_{ 0, 0, 0 }, vao_(0){
+Mesh::Mesh() : vbo_{ 0, 0, 0 }, vao_(0) {
 }
 
 Mesh::~Mesh() {
@@ -56,16 +54,15 @@ void Mesh::GetMesh(std::vector<float>& vertices, std::vector<float>& normals, st
     vertices = vertices_;
     normals = normals_;
     indices = indices_;
-
 }
 
-void Mesh::SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices) {  
+void Mesh::SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices) {
     vertices_ = vertices;
     indices_ = indices;
 }
 /**
  * Change verticies size to be inbetween -1 and 1.
- * This is left as an option might not be used. 
+ * This is left as an option might not be used.
  * Call this before reading the mesh.
  * \param value
  */
@@ -78,7 +75,6 @@ bool Mesh::getNormalizeMesh()
 {
     return normalized_;
 }
-
 
 glm::vec3 Mesh::GetVertex(unsigned int index, const float vertices[]) {
     return glm::vec3(
@@ -95,23 +91,25 @@ void Mesh::SetVertex(unsigned int index, float vertices[], const glm::vec3& vert
 }
 
 void Mesh::ReadFile(const std::string& path, std::vector<float>& vertices,
-        std::vector<float>& normals, std::vector<unsigned int>& indices) {
+    std::vector<float>& normals, std::vector<unsigned int>& indices) {
     std::string extension = path.substr(path.rfind('.'));
     if (extension == ".off") {
         ReadOFF(path, vertices, indices);
-        if (normalized_){
-        CalculateNormals(vertices, indices, normals);
-        NormalizeVertices(vertices_);
+        if (normalized_) {
+            CalculateNormals(vertices, indices, normals);
+            NormalizeVertices(vertices_);
         }
-    } else if (extension == ".msh") {
+    }
+    else if (extension == ".msh") {
         ReadMSH(path, vertices, normals, indices);
-    } else {
+    }
+    else {
         throw std::runtime_error("Unknown mesh extension: " + extension);
     }
 }
 
 void Mesh::ReadOFF(const std::string& path, std::vector<float>& vertices,
-        std::vector<unsigned int>& indices) {
+    std::vector<unsigned int>& indices) {
     std::ifstream input;
     input.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     input.open(path);
@@ -123,8 +121,8 @@ void Mesh::ReadOFF(const std::string& path, std::vector<float>& vertices,
     vertices.resize(nVertices * 3);
     for (size_t i = 0; i < vertices.size(); ++i)
         input >> vertices[i];
-    
-    indices.resize( (nTriangles + 2 * nQuads) * 3 );
+
+    indices.resize((nTriangles + 2 * nQuads) * 3);
     size_t idx = 0;
     for (size_t i = 0; i < nTriangles + nQuads; ++i) {
         int polygon;
@@ -134,7 +132,8 @@ void Mesh::ReadOFF(const std::string& path, std::vector<float>& vertices,
             input >> indices[idx++];
             input >> indices[idx++];
             input >> indices[idx++];
-        } else {
+        }
+        else {
             float quad[4];
             input >> quad[0] >> quad[1] >> quad[2] >> quad[3];
             indices[idx++] = quad[0];
@@ -148,7 +147,7 @@ void Mesh::ReadOFF(const std::string& path, std::vector<float>& vertices,
 }
 
 void Mesh::ReadMSH(const std::string& path, std::vector<float>& vertices,
-        std::vector<float>& normals, std::vector<unsigned int>& indices) {
+    std::vector<float>& normals, std::vector<unsigned int>& indices) {
     std::ifstream input;
     input.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     input.open(path);
@@ -162,11 +161,11 @@ void Mesh::ReadMSH(const std::string& path, std::vector<float>& vertices,
         int id;
         input >> id;
         input >> vertices[3 * i]
-              >> vertices[3 * i + 1]
-              >> vertices[3 * i + 2];
+            >> vertices[3 * i + 1]
+            >> vertices[3 * i + 2];
         input >> normals[3 * i]
-              >> normals[3 * i + 1]
-              >> normals[3 * i + 2];
+            >> normals[3 * i + 1]
+            >> normals[3 * i + 2];
     }
 
     indices.resize(nTriangles * 3);
@@ -174,8 +173,8 @@ void Mesh::ReadMSH(const std::string& path, std::vector<float>& vertices,
         int id;
         input >> id;
         input >> indices[3 * i]
-              >> indices[3 * i + 1]
-              >> indices[3 * i + 2];
+            >> indices[3 * i + 1]
+            >> indices[3 * i + 2];
     }
 }
 
@@ -198,20 +197,19 @@ void Mesh::NormalizeVertices(std::vector<float>& vertices) {
     }
 }
 
-void Mesh::CalculateNormals(const std::vector<float>& vertices, 
-                            const std::vector<unsigned int>& indices, 
-                            std::vector<float>& normals) {
-
+void Mesh::CalculateNormals(const std::vector<float>& vertices,
+    const std::vector<unsigned int>& indices,
+    std::vector<float>& normals) {
     // Initialize the normals
     std::vector<glm::vec3> pre_normals(vertices.size() / 3);
     for (size_t i = 0; i < pre_normals.size(); ++i) {
-        pre_normals[i] = {0, 0, 0};
+        pre_normals[i] = { 0, 0, 0 };
     }
 
     // Calculate the normals for each triangle vertex
-    for (size_t i = 0; i < indices.size()-3; i += 3) {
+    for (size_t i = 0; i < indices.size() - 3; i += 3) {
         // Triangle vertices' indices
-        unsigned int v[3] = {indices[i], indices[i + 1], indices[i + 2]};
+        unsigned int v[3] = { indices[i], indices[i + 1], indices[i + 2] };
 
         // Triangle's vertices
         glm::vec3 triangle[3] = {
@@ -227,7 +225,7 @@ void Mesh::CalculateNormals(const std::vector<float>& vertices,
 
         auto angleBetween = [](const glm::vec3& u, const glm::vec3& v) {
             return acos(glm::dot(u, v) / (glm::length(u) * glm::length(v)));
-        };
+            };
 
         // Angle between the vectors
         float angle[3];
@@ -249,18 +247,17 @@ void Mesh::CalculateNormals(const std::vector<float>& vertices,
 }
 
 void Mesh::InitializeVBO(const std::vector<float>& vertices,
-                            const std::vector<float>& normals,
-                            const std::vector<unsigned int> indices) {
-
+    const std::vector<float>& normals,
+    const std::vector<unsigned int> indices) {
     glCheckFunc(glGenBuffers(3, vbo_));
     glCheckFunc(glGenVertexArrays(1, &vao_));
     glCheckFunc(glBindVertexArray(vao_));
-    
+
     glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]));
     glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW));
     glCheckFunc(glEnableVertexAttribArray(0));
     glCheckFunc(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL));
-    
+
     glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]));
     glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * normals.size(), normals.data(), GL_STATIC_DRAW));
     glCheckFunc(glEnableVertexAttribArray(1));
@@ -268,7 +265,6 @@ void Mesh::InitializeVBO(const std::vector<float>& vertices,
 
     glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[2]));
     glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW));
-    
+
     glCheckFunc(glBindVertexArray(0));
 }
-

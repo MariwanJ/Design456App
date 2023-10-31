@@ -39,8 +39,6 @@
 #include<glad/glad.h>
 #endif
 
-
-
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
 #include <Fr_Log.h>
@@ -54,7 +52,7 @@
 #include <widgets/imgui_toolbars.h>
 #include <ImGuizmo.h>
 
-//imGUI fonts 
+//imGUI fonts
 
 #include<imguiFont/IconsFontaudio.h>
 #include<imguiFont/IconsFontAwesome6.h>
@@ -69,8 +67,7 @@
 #include<fr_ImGuiLayer.h>
 #include<fr_filebrowser.h>
 
-
-//PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT, 
+//PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
 enum class CameraList {
     PERSPECTIVE = 0, //This is not fixed and can be moved , others are not.
     ORTHOGRAPHIC,
@@ -93,16 +90,6 @@ typedef struct userData_ {
     //        projectionm_Matrix(glm::ortho(-600, 600, -600, 600, -1, 1)),
     CameraList camType_;
 };
-
-
-
-
-
-
-
-
-
-
 
 #ifdef _WIN32
 #define DEBUG_BREAK __debugbreak()

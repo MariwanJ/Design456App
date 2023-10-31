@@ -34,10 +34,10 @@
 ObjectShaderNode::Shared* ObjectShaderNode::shared_ = nullptr;
 
 static const glm::mat4 kShadowMapBiasMatrix(
-  0.5, 0.0, 0.0, 0.0,
-  0.0, 0.5, 0.0, 0.0,
-  0.0, 0.0, 0.5, 0.0,
-  0.5, 0.5, 0.5, 1.0);
+    0.5, 0.0, 0.0, 0.0,
+    0.0, 0.5, 0.0, 0.0,
+    0.0, 0.0, 0.5, 0.0,
+    0.5, 0.5, 0.5, 1.0);
 /*(
     0.5, 0.0, 0.0, 0.0,
     0.0, 0.5, 0.0, 0.0,
@@ -57,16 +57,16 @@ ObjectShaderNode::ObjectShaderNode(unsigned int color, float silhouette) :
     type(NODETYPE::FR_OBJECTSHADERNODE);
 }
 
-ObjectShaderNode::ObjectShaderNode(glm::vec4 color, float silhouette):mesh_{ nullptr },
-        silhouette_(silhouette) {
-        SetColor(color);
-        if (!shared_) {
-            shared_ = new Shared;
-            shared_->object_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/objectshader");
-            shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
-            shared_->shadowmap_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/shadowmap");
-        }
-        type(NODETYPE::FR_OBJECTSHADERNODE);
+ObjectShaderNode::ObjectShaderNode(glm::vec4 color, float silhouette) :mesh_{ nullptr },
+silhouette_(silhouette) {
+    SetColor(color);
+    if (!shared_) {
+        shared_ = new Shared;
+        shared_->object_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/objectshader");
+        shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
+        shared_->shadowmap_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/shadowmap");
+    }
+    type(NODETYPE::FR_OBJECTSHADERNODE);
 }
 
 ObjectShaderNode::~ObjectShaderNode() {
@@ -113,9 +113,9 @@ void ObjectShaderNode::LoadLights(ShaderProgram* program, const std::vector<Ligh
         program->SetUniformVec4(uniformVarNameInObjShader + "ambient", lights[i].ambient);
         program->SetUniformVec3(uniformVarNameInObjShader + "attenuation", lights[i].attenuation);
         program->SetUniformInteger(uniformVarNameInObjShader + "is_spot", lights[i].is_spot);
-        program->SetUniformVec3(   uniformVarNameInObjShader + "direction", lights[i].direction);
-        program->SetUniformFloat(  uniformVarNameInObjShader + "cutoff", lights[i].cutoff);
-        program->SetUniformFloat(  uniformVarNameInObjShader + "exponent", lights[i].exponent);
+        program->SetUniformVec3(uniformVarNameInObjShader + "direction", lights[i].direction);
+        program->SetUniformFloat(uniformVarNameInObjShader + "cutoff", lights[i].cutoff);
+        program->SetUniformFloat(uniformVarNameInObjShader + "exponent", lights[i].exponent);
     }
 }
 
@@ -168,7 +168,7 @@ void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
 
     glCheckFunc(glActiveTexture(GL_TEXTURE0));
     glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));
-    
+
     mesh_->Draw();
     shared_->object_program->SetUniformInteger("sm_texture", 0);
     program->Disable();

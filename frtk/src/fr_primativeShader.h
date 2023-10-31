@@ -40,7 +40,7 @@ public:
     Fr_PrimaitiveShader(unsigned int color = 0x111111, float silhouette = 0.005);
 
     Fr_PrimaitiveShader(glm::vec4 color, float silhouette = 0.005);
-    Fr_PrimaitiveShader(float color [4], float silhouette = 0.005);
+    Fr_PrimaitiveShader(float color[4], float silhouette = 0.005);
     /**
      * Destructor
      */
@@ -102,8 +102,8 @@ private:
     static Shared* shared_;
 
     // Attributes
-    std::shared_ptr <Fr_Primatives> primative_;
-    glm::vec4 color_;
+    std::shared_ptr <Fr_Primatives> m_Primative;
+    glm::vec4 m_Color;
     float silhouette_;
     std::string f_objectshader_;
     std::string f_silhouette_;

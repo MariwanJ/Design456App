@@ -5,5 +5,3 @@
 #include <fr_gl3callbacks.h>
 
 #endif
-
-

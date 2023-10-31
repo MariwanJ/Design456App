@@ -54,7 +54,7 @@ public:
     /**
      * Sets an attribute location
      */
-    void SetAttribLocation(const char *name, unsigned int location);
+    void SetAttribLocation(const char* name, unsigned int location);
 
     /**
      * Sets an uniform variable
@@ -90,4 +90,3 @@ private:
 };
 
 #endif
-

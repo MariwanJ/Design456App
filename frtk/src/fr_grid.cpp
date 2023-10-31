@@ -53,7 +53,7 @@ std::shared_ptr<Transform>bunny() {
     Bunny_spot->SetSpecular(0.5f, 0.5f, 0.f);
     bunny_t->AddNode(Bunny_spot);
     bunny_t->AddNode(bunny);
-    
+
     return bunny_t;
 }
 /**
@@ -130,12 +130,12 @@ std::shared_ptr<Transform> Grid::CreateGrid()
     float x, y, z;
     x = y = z = 0;
     float totalLength = gridWidth_ * sections_;
-    glm::vec3 limmitValue = glm::vec3(centerPos_[0] -(totalLength / 2), centerPos_[1] - (totalLength / 2), centerPos_[2]);
+    glm::vec3 limmitValue = glm::vec3(centerPos_[0] - (totalLength / 2), centerPos_[1] - (totalLength / 2), centerPos_[2]);
     //First lines
-    for (int i = 0; i <= (sections_); i ++) {
+    for (int i = 0; i <= (sections_); i++) {
         for (int j = 0; j <= sections_; j += sections_) {
-            x = limmitValue[0]+i* gridWidth_;
-            y = limmitValue[1]+(float)j * gridWidth_;
+            x = limmitValue[0] + i * gridWidth_;
+            y = limmitValue[1] + (float)j * gridWidth_;
             z = limmitValue[2];
             if ((x == 0 && y == 0) ||
                 (x == 0 && z == 0) ||
@@ -149,14 +149,14 @@ std::shared_ptr<Transform> Grid::CreateGrid()
         }
     }
     //Second lines to create the squre plane
-    for (int i = 0; i <= (sections_ ); i ++) {
+    for (int i = 0; i <= (sections_); i++) {
         for (int j = 0; j <= sections_; j += sections_) {
-            x = limmitValue[0]+(float)j * gridWidth_;
-            y = limmitValue[1]+(float)i * gridWidth_;
+            x = limmitValue[0] + (float)j * gridWidth_;
+            y = limmitValue[1] + (float)i * gridWidth_;
             z = limmitValue[2];
-            if ( (x == 0 && y == 0) ||
-                 (x == 0 && z == 0) ||
-                 (y == 0 && z == 0)) {
+            if ((x == 0 && y == 0) ||
+                (x == 0 && z == 0) ||
+                (y == 0 && z == 0)) {
                 //We don't draw the axis line as we draw them seperatly
                 continue;
             }

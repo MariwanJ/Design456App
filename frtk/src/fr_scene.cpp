@@ -26,12 +26,11 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-
 #include <fr_scene.h>
-GLFWwindow* Scene::linkToglfw=nullptr;
+GLFWwindow* Scene::linkToglfw = nullptr;
 
 Scene::Scene() :
-    background_{ 0.9, 0.9, 0.9,1.0 }{
+    background_{ 0.9, 0.9, 0.9,1.0 } {
     type(NODETYPE::FR_SCENE);
 }
 
@@ -41,7 +40,7 @@ void Scene::SetBackgroud(float r, float g, float b) {
     background_.b = b;
     background_.a = 1.0;
 }
-void Scene::SetBackgroud(float r, float g, float b,float alfa) {
+void Scene::SetBackgroud(float r, float g, float b, float alfa) {
     background_.r = r;
     background_.g = g;
     background_.b = b;
@@ -53,13 +52,13 @@ void Scene::add3DObject(std::string fName)
     auto newObj_t = std::make_shared<Transform>();
     newObj_t->Translate(0, 0, 0);
     newObj_t->Scale(1, 1, 1);
-    newObj_t->Rotate(0, 1, 0, 0); //TODO CHECK ME 
+    newObj_t->Rotate(0, 1, 0, 0); //TODO CHECK ME
     auto newObj = std::make_shared<ObjectShaderNode>(glm::vec4(FR_BISQUE), 0.0005f); //  color and
     if (fName.find(".off") != std::string::npos) {
         newObj->SetMesh(std::make_shared<Shape>(fName));
     }
     else {
-        //Not implemented yet  - here .obj should be treated. 
+        //Not implemented yet  - here .obj should be treated.
     }
     auto rightlight_spot = std::make_shared<Light>();
     rightlight_spot->SetActive(true);
@@ -109,4 +108,3 @@ void Scene::RenderScene() {
     render_info.render_transparent = true;
     Render(render_info, render_info.modelview);
 }
-

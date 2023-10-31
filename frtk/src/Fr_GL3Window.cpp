@@ -149,7 +149,6 @@ void Fr_GL3Window::CreateScene()
     scene = new Scene();//Save a link to the windows also.
     scene->linkToglfw = pWindow;
 
-
     CreateCameras();
     setCameraType(CameraList::PERSPECTIVE);
 
@@ -279,7 +278,7 @@ void Fr_GL3Window::CreateCameras()
                     focalDistance 30.248238\n
                     heightAngle 0.78539819\n\n}\n'
             */
-            camera_->Rotate(glm::vec3(0.7429f, 0.307f, 0.594f),-69.7f);
+            camera_->Rotate(glm::vec3(0.7429f, 0.307f, 0.594f), -69.7f);
         }break;
         case 1: {
             //ORTHOGRAPHIC

@@ -25,7 +25,6 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-
 #ifndef FR_GL3WINDOW_H
 #define FR_GL3WINDOW_H
 
@@ -41,10 +40,7 @@
 //fonts for Imgui icons
 #include <imguiFont/IconsFontAwesome6.h>
 
-
-
 #define MAX_CAMERAS 8  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING CameraList enu
-
 
 /* Cameras */
 class Camera;
@@ -53,7 +49,7 @@ class Fr_GL3Window;
 /**
  *  Fr_GL3Windows class definition and methods.
  */
-class FRTK_API Fr_GL3Window{
+class FRTK_API Fr_GL3Window {
 public:
     /**
      * class constructors.
@@ -76,9 +72,7 @@ public:
     *
     */
 
-
     static Fr_GL3Window* getfr_Gl3Window();
-
 
     virtual ~Fr_GL3Window();
     /**
@@ -87,13 +81,12 @@ public:
      * \return int value depending on the way the windows exits.
      */
 
-    /**
-     * Add imgui layer to current view port
-     * @param layer : shared pointer to Fr_ImGuiLyer object
-    */
+     /**
+      * Add imgui layer to current view port
+      * @param layer : shared pointer to Fr_ImGuiLyer object
+     */
     virtual void addLayer(std::shared_ptr<Fr_ImGuiLayer> layer);
     virtual void removeLayer(std::shared_ptr<Fr_ImGuiLayer> layers);
-
 
     virtual int Exit();
     /**
@@ -186,13 +179,13 @@ public:
     ImVec4 getPortViewDimensions();
     const char* label()const;
     void label(std::string l);
-    void label(const char*l);
+    void label(const char* l);
 
     void setCameraType(CameraList typOfCamera);
     CameraList getCameraType();
     int imgui_CameraConfiguration(userData_& data);
     genID idGen_; //Keeps the id generator - used to generate shape/objects unique ID
-    float getAspectRation() const ;
+    float getAspectRation() const;
 protected:
     /**
      * Function to create all cameras listed in CameraList.
@@ -206,7 +199,7 @@ protected:
      *
      * \return
      */
-    int renderimGUI(userData_ &data);
+    int renderimGUI(userData_& data);
     int imgui_LeftPanel();
     int imgui_TopPannel();
 
@@ -238,18 +231,17 @@ private:
     void LeftMouseClick(double xoffset, double yoffset);
     void RightMouseClick(double xoffset, double yoffset);
 
-
     void joystick_callback(int jid, int events);
 
     //Menu and toolbar callbacks
-    void mnuFileNew_cb   ( void* Data);
-    void mnuFileOpen_cb  ( void* Data);
-    void mnuFileClose_cb ( void* Data);
-    void mnuFileSave_cb  ( void* Data);
-    void mnuFileSaveAs_cb( void* Data);
-    void mnuFileExport_cb( void* Data);
-    void mnuFileImport_cb( void* Data);
-    void mnuFileExit_cb( void* Data);
+    void mnuFileNew_cb(void* Data);
+    void mnuFileOpen_cb(void* Data);
+    void mnuFileClose_cb(void* Data);
+    void mnuFileSave_cb(void* Data);
+    void mnuFileSaveAs_cb(void* Data);
+    void mnuFileExport_cb(void* Data);
+    void mnuFileImport_cb(void* Data);
+    void mnuFileExit_cb(void* Data);
     void CameraOptions(void);
     void SunOptions(void);
 
@@ -259,13 +251,7 @@ private:
     void mnuEditCut(void* Data);
     void mnuEditPaste(void* Data);
 
-
     void createOpenDialog(void);
-
-
-
-
-
 
     /**
      * GLFW callback wrapper calss.
@@ -308,10 +294,8 @@ private:
         static void GLFWCallbackWrapper::mnuEditCut(void* Data);
         static void GLFWCallbackWrapper::mnuEditPaste(void* Data);
 
-
     private:
         static  Fr_GL3Window* s_fr_glfwwindow;
-
     };
 
     /**
@@ -358,7 +342,7 @@ private:
     /**
      * Keep track of the active camera.
      */
-    CameraList active_camera_ ;
+    CameraList active_camera_;
     ImVec4 clear_color;
     static Fr_GL3Window* s_Fr_GLFWwindow;
     ImGui::FileBrowser fileDialog;
@@ -366,24 +350,16 @@ private:
     bool showOpenDialog;
     //will be true if rotate/pan starts.
     static bool MouseOnce;
-    float yaw, pitch,roll;
+    float yaw, pitch, roll;
 
     //Camera rotation - mouse callback
     float radiusXYZ;
 
     ImVec4 PortViewDimensions;
 
-
-
-    #if 1//Experemental code - will be removed
+#if 1//Experemental code - will be removed
     std::shared_ptr <Transform> tempBu;
-    #endif
+#endif
 };
-
-
-
-
-
-
 
 #endif

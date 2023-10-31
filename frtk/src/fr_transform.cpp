@@ -34,8 +34,8 @@ Transform::Transform() :
     operation_{ Operation::kNone },
     x_{ 0 },
     y_{ 0 },
-    z_{0},
-    v_(0, 0, 0), 
+    z_{ 0 },
+    v_(0, 0, 0),
     invertX_{ false },
     invertY_{ false }
 {
@@ -44,7 +44,7 @@ Transform::Transform() :
     type(NODETYPE::FR_TRANSFORM);
 }
 
-void Transform::Rotate(float x, float y, float z, float angle ) {
+void Transform::Rotate(float x, float y, float z, float angle) {
     m_Matrix = glm::rotate(m_Matrix, angle, glm::vec3(x, y, z));
     m_Inverse = glm::inverse(m_Matrix);
 }
@@ -71,7 +71,7 @@ void Transform::Scale(float x, float y, float z) {
     m_Inverse = glm::inverse(m_Matrix);
 }
 
-void Transform::Scale(glm::vec3 value ) {
+void Transform::Scale(glm::vec3 value) {
     m_Matrix = glm::scale(m_Matrix, value);
     m_Inverse = glm::inverse(m_Matrix);
 }
@@ -86,7 +86,7 @@ glm::mat4 Transform::GetMatrix(const glm::vec3& look_dir) {
 
     glm::vec3 w = glm::cross(look_dir, manip_dir);
     float theta = asin(glm::length(w));
-    return (glm::translate(m_Position) * glm::rotate(-theta, w)* m_Matrix * glm::rotate(theta, w)* glm::translate(-m_Position));
+    return (glm::translate(m_Position) * glm::rotate(-theta, w) * m_Matrix * glm::rotate(theta, w) * glm::translate(-m_Position));
 }
 
 glm::mat4 Transform::GetInverse() {
@@ -181,4 +181,3 @@ glm::vec3 Transform::computeSphereCoordinates(double x, double y) {
     }
     return glm::vec3(vx, vy, vz);
 }
-

@@ -33,7 +33,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "fr_axis3D.h"
 
-
 Axis3D::Axis3D()
 {
     ZstepSize_ = 10;  //Default value
@@ -48,7 +47,7 @@ vert Axis3D::CreateAxis3D()
 {
     float start = 2000.0f;
     float end = -2000.0f;
-    float arrow1 = start-5.0;
+    float arrow1 = start - 5.0;
     float arrow2 = 5.0;
     float zBlueSize = 10;   //The small lines on the Z axis
 
@@ -119,7 +118,6 @@ vert Axis3D::CreateAxis3D()
         verticesZBlue.push_back(float(i));
     }
 
-
     for (int i = 0; i <= verticesBlue.size(); i++) {
         indicesBlue.push_back(i);
     }
@@ -127,8 +125,7 @@ vert Axis3D::CreateAxis3D()
         indicesZBlue.push_back(i);
     }
 
-
-    auto primativeR= std::make_shared<Fr_Primatives>();
+    auto primativeR = std::make_shared<Fr_Primatives>();
     primativeR->SetVertexes(verticesRed, indicesRed);
     auto axRed = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_RED), 0.005); //  color and
     axRed->SetPrimative(primativeR);
@@ -139,14 +136,14 @@ vert Axis3D::CreateAxis3D()
     primativeG->SetVertexes(verticesGreen, indicesGreen);
     auto axGreen = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_GREEN), 0.005); //  color and
     axGreen->SetPrimative(primativeG);
-    axis_t.Green=std::make_shared<Transform>();
+    axis_t.Green = std::make_shared<Transform>();
     axis_t.Green->AddNode(axGreen);
 
     auto primativeB = std::make_shared<Fr_Primatives>();
     primativeB->SetVertexes(verticesBlue, indicesBlue);
     auto axBlue = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_BLUE), 0.005); //  color and
     axBlue->SetPrimative(primativeB);
-    axis_t.Blue= std::make_shared<Transform>();
+    axis_t.Blue = std::make_shared<Transform>();
     axis_t.Blue->AddNode(axBlue);
     axis_t.Red->Scale(1, 1, 1);
     axis_t.Green->Scale(1, 1, 1);

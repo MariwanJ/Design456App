@@ -36,8 +36,8 @@
 #include <glm/glm.hpp>
 
 /*
-    R= Righ Vector 
-    U= Up Vector 
+    R= Righ Vector
+    U= Up Vector
     D=  Direction Vector
     P=  Camera position vector
 
@@ -46,16 +46,9 @@
                         Dx  Dy  Dz  0               0   0   1   -Pz
                         0   0   0   1               0   0   0   1
 
-                        
 */
 
-
-
-
-
-
 class Manipulator;
-
 
 /**
  * Scene's camera- Must be a subclass of Transform to achive translation
@@ -96,7 +89,7 @@ public:
     /**
      * Sets the manipulator
      */
-    //void SetTransform(std::shared_ptr<Transform> transform);
+     //void SetTransform(std::shared_ptr<Transform> transform);
     glm::mat4 getModelView() const;
 
     /**
@@ -116,19 +109,18 @@ public:
     CameraList getCameraType();
 
     glm::mat4 getPorjection();
-    glm::mat4 getViewMatrix()  ;
+    glm::mat4 getViewMatrix();
 private:
     glm::mat4 m_ViewMatrix;  //viewmodel_
-    CameraList camType_ ;
+    CameraList camType_;
     glm::vec3 camPosition_;
     glm::vec3 direction_;
     glm::vec3 up_;  //RIGHT
     float fovy_;    //LEFT
     float znear_;   //BOTTOM
-    float zfar_;   //TOP 
+    float zfar_;   //TOP
     float aspectRatio_;
     glm::mat4 m_ProjectionMatrix;
 };
 
 #endif
-

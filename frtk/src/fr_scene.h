@@ -38,9 +38,6 @@
 #include <fr_light.h>
 #include <fr_mesh.h>
 
-
-
-
 /**
  * The scene root
  */
@@ -61,7 +58,7 @@ public:
     Scene();
     /**
      * Sets the background color
-     */ 
+     */
     void SetBackgroud(float r, float g, float b);
     void SetBackgroud(float r, float g, float b, float alfa);
 
@@ -73,11 +70,10 @@ public:
      * Throws runtime_error if there's no camera
      */
     virtual void RenderScene();
-    static GLFWwindow*linkToglfw;
+    static GLFWwindow* linkToglfw;
 
 private:
     bkgC  background_;
 };
 
 #endif
-
