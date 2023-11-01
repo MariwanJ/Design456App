@@ -78,7 +78,7 @@ void Transform::Scale(glm::vec3 value) {
 
 //Scroll zooming scale - default is 10.0
 float Transform::kZoomScale = 50.0f;
-
+/*
 glm::mat4 Transform::GetMatrix(const glm::vec3& look_dir) {
     glm::vec3 manip_dir = glm::vec3(0, 0, -1);
     if (glm::length(look_dir - manip_dir) < 0.01)
@@ -88,6 +88,10 @@ glm::mat4 Transform::GetMatrix(const glm::vec3& look_dir) {
     float theta = asin(glm::length(w));
     return (glm::translate(m_Position) * glm::rotate(-theta, w) * m_Matrix * glm::rotate(theta, w) * glm::translate(-m_Position));
 }
+*/
+glm::mat4 Transform::GetMatrix() {
+    return m_Matrix;
+}
 
 glm::mat4 Transform::GetInverse() {
     return m_Inverse;
@@ -95,6 +99,11 @@ glm::mat4 Transform::GetInverse() {
 
 void Transform::SetPosition(float x, float y, float z) {
     m_Position = glm::vec3(x, y, z);
+}
+
+void Transform::SetPosition(glm::vec3 pos)
+{
+    m_Position = pos;
 }
 
 void Transform::GLFWMouse(int button, int state, double x, double y) {

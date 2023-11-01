@@ -46,27 +46,27 @@ int Fr_GL3Window::imguimzo_init()
     float width_ = ImGui::GetWindowWidth();
     float height_ = ImGui::GetWindowHeight();
 
-    // ImGuizmo::SetRect(PortViewDimensions.x, PortViewDimensions.y, width_, height_);
-    ImGuizmo::SetRect(PortViewDimensions.x, PortViewDimensions.y, PortViewDimensions.w, PortViewDimensions.z);
+     //ImGuizmo::SetRect(PortViewDimensions.x, PortViewDimensions.y, width_, height_);
+ 
 
     auto activeCamera = cameraList[(unsigned int)active_camera_];
 
     auto getbu = Fr_GL3Window::getfr_Gl3Window()->tempBu;
-    auto modelview1 = glm::inverse(activeCamera->getModelView());
+    auto cameraView = (activeCamera->getModelView());
 
-    glm::mat4 tranform{ 1 };
+    glm::mat4 tranform =getbu->GetMatrix();
     if (getbu != NULL)
     {
-        auto proj = activeCamera->getPorjection();
-        ImGuizmo::Manipulate(glm::value_ptr(modelview1), glm::value_ptr(proj), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(tranform));
+        auto Camproj  = activeCamera->getPorjection();
+        ImGuizmo::SetRect(PortViewDimensions.x, PortViewDimensions.y, PortViewDimensions.w, PortViewDimensions.z);
+        ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(tranform));
     }
 
-    auto ddd = glm::vec3((tranform[3]));
-
     if (ImGuizmo::IsUsing()) {
-        // DEBUG_BREAK;
-        std::cout << ddd.x << " " << ddd.y << " " << ddd.z << std::endl;
-        tempBu->Translate(ddd);
+        auto resu = tranform[3];
+        tempBu->SetPosition(tranform[3]);
+        std::string resss = std::to_string(resu[0]) + " " + std::to_string(resu[1]) + " " + std::to_string(resu[2]);
+        FRTK_CORE_INFO(resss);
     }
     return 0;
 }

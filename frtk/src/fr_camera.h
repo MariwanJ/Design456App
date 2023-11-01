@@ -90,7 +90,7 @@ public:
      * Sets the manipulator
      */
      //void SetTransform(std::shared_ptr<Transform> transform);
-    glm::mat4 getModelView() const;
+    glm::mat4 getModelView() ;
 
     /**
      * Sets the camera
@@ -109,6 +109,7 @@ public:
     CameraList getCameraType();
 
     glm::mat4 getPorjection();
+    void updateViewMatrix();
     glm::mat4 getViewMatrix();
 private:
     glm::mat4 m_ViewMatrix;  //viewmodel_

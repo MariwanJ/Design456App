@@ -75,17 +75,21 @@ public:
     /**
     * Accumulates the manipulator matrix
     */
-    glm::mat4 GetMatrix(const glm::vec3& look_dir = glm::vec3(0, 0, -1));
+   // glm::mat4 GetMatrix(const glm::vec3& look_dir = glm::vec3(0, 0, -1));
 
     /**
      * Accumulates the inverse of the manipulator matrix
      */
+    glm::mat4 GetMatrix();
     glm::mat4 GetInverse();
 
     /**
      * Sets the reference point (world center)
      */
     void SetPosition(float x, float y, float z);
+
+    void SetPosition(glm::vec3 pos);
+
 
     /**
      * Sets whether each axis is inverted or not

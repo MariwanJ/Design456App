@@ -127,6 +127,8 @@ bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
         projection = glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_);
     }
     modelview = glm::lookAt(camPosition_, direction_, up_);
+    updateViewMatrix();
+    modelview = m_ViewMatrix;
     return true;
 }
 
@@ -139,6 +141,7 @@ bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
  */
 void Camera::SetCenter(float x, float y, float z) {
     direction_ = glm::vec3(x, y, z);
+    updateViewMatrix();
 }
 
 /**
@@ -150,6 +153,8 @@ void Camera::SetCenter(float x, float y, float z) {
  */
 void Camera::SetUp(float x, float y, float z) {
     up_ = glm::vec3(x, y, z);
+    updateViewMatrix();
+
 }
 /**
  * Set fovy, znear and z far values.
@@ -162,6 +167,7 @@ void Camera::SetPerspective(float fovy, float znear, float zfar) {
     fovy_ = fovy;   //LEFT
     znear_ = znear;  //BOTTOM
     zfar_ = zfar;    //TOP
+    updateViewMatrix();
 }
 /**
  * Get camera configurations and saved in data.
@@ -190,10 +196,12 @@ void Camera::setUserData(userData_& data)
     up_ = data.up_;
     zfar_ = data.zfar_;
     znear_ = data.znear_;
+    updateViewMatrix();
 }
 
-glm::mat4 Camera::getModelView() const
+glm::mat4 Camera::getModelView()
 {
+    updateViewMatrix();
     return m_ViewMatrix;
 }
 
@@ -349,9 +357,13 @@ CameraList Camera::getCameraType() {
 
 glm::mat4 Camera::getPorjection()
 {
+    m_ProjectionMatrix = glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_);
     return m_ProjectionMatrix;
 }
-glm::mat4 Camera::getViewMatrix() {
+void Camera::updateViewMatrix() {
     m_ViewMatrix = glm::lookAt(camPosition_, direction_, up_);
+}
+glm::mat4 Camera::getViewMatrix() {
+    updateViewMatrix();
     return m_ViewMatrix;
 }
