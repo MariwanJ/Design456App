@@ -155,7 +155,8 @@ void Fr_GL3Window::CreateScene()
     /*
       * Add here the nodes - Grid, and XYZ axis
       */
-    scene->AddNode(CreateSun());
+    scene->AddNode(CreateSunTop());
+    scene->AddNode(CreateSunBottom());
     tempBu = bunny();
     scene->AddNode(Grid().CreateGrid());
     vert axis = Axis3D().CreateAxis3D();
@@ -472,15 +473,29 @@ int Fr_GL3Window::GLFWrun()
     return 0;
 }
 
-std::shared_ptr<Transform> Fr_GL3Window::CreateSun() {
+std::shared_ptr<Transform> Fr_GL3Window::CreateSunTop() {
     //TODO: FIXME:
     auto sun_ = std::make_shared<Transform>();
-    sun_->Translate(30.0f, 500.f, -30.0f);
+    sun_->Translate(100.0f, 100.f, 300.0f);
     sun = std::make_shared<Light>();
     sun->SetPosition(0.0f, 0.0f, 0.0f);
     sun->SetDiffuse(0.5f, 0.5f, 0.5f);
     sun->SetAmbient(0.2f, 0.2f, 0.2f);
-    sun->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
+    sun->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 1000, 600));
+    sun_->AddNode(sun);
+    sun->SetActive(true);   //A must to have otherwise everything is black.
+    sunT = std::move(sun_);
+    return sunT;
+}
+std::shared_ptr<Transform> Fr_GL3Window::CreateSunBottom() {
+    //TODO: FIXME:
+    auto sun_ = std::make_shared<Transform>();
+    sun_->Translate(-100.0f, -100.f, -300.0f);
+    sun = std::make_shared<Light>();
+    sun->SetPosition(0.0f, 0.0f, 0.0f);
+    sun->SetDiffuse(0.5f, 0.5f, 0.5f);
+    sun->SetAmbient(0.2f, 0.2f, 0.2f);
+    sun->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 1000, 600));
     sun_->AddNode(sun);
     sun->SetActive(true);   //A must to have otherwise everything is black.
     sunT = std::move(sun_);
