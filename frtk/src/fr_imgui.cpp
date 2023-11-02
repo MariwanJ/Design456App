@@ -29,6 +29,7 @@
 #include<fr_menu.h>
 #include<fr_toolbar.h>
 #include <glm/gtx/string_cast.hpp>
+#include<Math/fr_math.h>
 //TODO FIX ME DOSENT WORK DON'T KNOW WHY
 int Fr_GL3Window::imguimzo_init()
 {
@@ -54,17 +55,26 @@ int Fr_GL3Window::imguimzo_init()
     auto getbu = Fr_GL3Window::getfr_Gl3Window()->tempBu;
     auto cameraView = (activeCamera->getModelView());
 
-    glm::mat4 tranform =getbu->GetMatrix();
+    glm::mat4 trnasfrom_ =getbu->GetMatrix();
     if (getbu != NULL)
     {
         auto Camproj  = activeCamera->getPorjection();
         ImGuizmo::SetRect(PortViewDimensions.x, PortViewDimensions.y, PortViewDimensions.w, PortViewDimensions.z);
-        ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(tranform));
+        ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(trnasfrom_));
     }
 
     if (ImGuizmo::IsUsing()) {
-        auto resu = tranform[3];
-        tempBu->SetPosition(tranform[3]);
+        auto resu = trnasfrom_[3];
+        //tempBu->SetPosition(tranform[3]);
+        glm::vec3 trans, rot, scaling;
+
+        ExtractTransformMatrix(trnasfrom_, trans, rot, scaling);
+        if(0)
+            tempBu->Rotate({ rot.x,rot.y,0 }, rot.z);
+        if(0)
+            tempBu->Scale(scaling);
+        if (1)
+            tempBu->Translate(trans);
         std::string resss = std::to_string(resu[0]) + " " + std::to_string(resu[1]) + " " + std::to_string(resu[2]);
         FRTK_CORE_INFO(resss);
     }

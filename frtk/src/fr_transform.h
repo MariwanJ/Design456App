@@ -63,6 +63,8 @@ public:
 
     void Scale(glm::vec3 value);
 
+ 
+ 
 private:
 
     glm::mat4 m_Matrix;
@@ -123,6 +125,16 @@ private:
 
     /** Computes the sphere vector for rotation */
     glm::vec3 computeSphereCoordinates(double x, double y);
+
+    void Render(RenderInfo& info, const glm::mat4& modelview);
+
+    void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview);
+
+    bool SetupShadowMap(ShadowMapInfo& info);
+
+    void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights);
+
+    bool SetupCamera(glm::mat4& projection, glm::mat4& modelview);
 
     glm::vec3 m_Position;
     Operation operation_;

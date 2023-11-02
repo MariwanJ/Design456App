@@ -56,7 +56,7 @@ void Transform::Rotate(glm::vec3 axis, float angle)
 }
 
 void Transform::Translate(glm::vec3 value) {
-    m_Matrix = glm::translate(m_Matrix, value);
+    m_Matrix = glm::translate(glm::mat4{1}, value);
     m_Inverse = glm::inverse(m_Matrix);
 }
 
@@ -78,17 +78,7 @@ void Transform::Scale(glm::vec3 value) {
 
 //Scroll zooming scale - default is 10.0
 float Transform::kZoomScale = 50.0f;
-/*
-glm::mat4 Transform::GetMatrix(const glm::vec3& look_dir) {
-    glm::vec3 manip_dir = glm::vec3(0, 0, -1);
-    if (glm::length(look_dir - manip_dir) < 0.01)
-        return (glm::translate(m_Position) * m_Matrix * glm::translate(-m_Position));
 
-    glm::vec3 w = glm::cross(look_dir, manip_dir);
-    float theta = asin(glm::length(w));
-    return (glm::translate(m_Position) * glm::rotate(-theta, w) * m_Matrix * glm::rotate(theta, w) * glm::translate(-m_Position));
-}
-*/
 glm::mat4 Transform::GetMatrix() {
     return m_Matrix;
 }
@@ -99,11 +89,13 @@ glm::mat4 Transform::GetInverse() {
 
 void Transform::SetPosition(float x, float y, float z) {
     m_Position = glm::vec3(x, y, z);
+    Translate(m_Position);
 }
 
 void Transform::SetPosition(glm::vec3 pos)
 {
     m_Position = pos;
+    Translate(pos);
 }
 
 void Transform::GLFWMouse(int button, int state, double x, double y) {
@@ -189,4 +181,55 @@ glm::vec3 Transform::computeSphereCoordinates(double x, double y) {
         vz = sqrt(1 - vx * vx - vy * vy);
     }
     return glm::vec3(vx, vy, vz);
+}
+
+
+void Transform::Render(RenderInfo& info, const glm::mat4& modelview) {
+    if (!active_)
+        return;
+
+    glm::mat4 sub_modelview = modelview;
+    sub_modelview *= m_Matrix;
+    Group::Render(info, sub_modelview);
+}
+
+
+void Transform::RenderShadowMap(ShadowMapInfo& info,    const glm::mat4& modelview) {
+    if (!active_)
+        return;
+    glm::mat4 sub_modelview = modelview;
+    sub_modelview *= m_Matrix;
+    Group::RenderShadowMap(info, sub_modelview);
+}
+
+bool Transform::SetupShadowMap(ShadowMapInfo& info) {
+    if (!active_)
+        return false;
+
+    if (Group::SetupShadowMap(info)) {
+        info.modelview *= m_Inverse;
+        return true;
+    }
+    return false;
+}
+
+void Transform::SetupLight(const glm::mat4& modelview,    std::vector<LightInfo>& lights) {
+    if (!active_)
+        return;
+
+    glm::mat4 sub_mv = modelview;
+    Group::SetupLight(sub_mv * m_Matrix, lights);
+}
+
+
+
+bool Transform::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
+    if (!active_)
+        return false;
+
+    if (Group::SetupCamera(projection, modelview)) {
+        modelview *= m_Inverse;
+        return true;
+    }
+    return false;
 }
