@@ -34,22 +34,9 @@
 int Fr_GL3Window::imguimzo_init()
 {
     ImGuizmo::BeginFrame();
-    ImGuizmo::SetOrthographic(true);
+    ImGuizmo::SetOrthographic(false);
     ImGuizmo::SetDrawlist();
     ImGuizmo::Enable(true);
-
-    auto view_ = ImGui::GetMainViewport();
-    PortViewDimensions = ImVec4(PortViewDimensions.x, PortViewDimensions.y, PortViewDimensions.w, PortViewDimensions.z);
-
-    if ((PortViewDimensions.w / PortViewDimensions.z) != getAspectRation()) {
-        DebugBreak;
-    }
-    float width_ = ImGui::GetWindowWidth();
-    float height_ = ImGui::GetWindowHeight();
-
-     //ImGuizmo::SetRect(PortViewDimensions.x, PortViewDimensions.y, width_, height_);
- 
-
     auto activeCamera = cameraList[(unsigned int)active_camera_];
 
     auto getbu = Fr_GL3Window::getfr_Gl3Window()->tempBu;
@@ -59,21 +46,23 @@ int Fr_GL3Window::imguimzo_init()
     if (getbu != NULL)
     {
         auto Camproj  = activeCamera->getPorjection();
-        ImGuizmo::SetRect(PortViewDimensions.x, PortViewDimensions.y, PortViewDimensions.w, PortViewDimensions.z);
-        ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(trnasfrom_));
+        float wWidth = (float)ImGui::GetWindowWidth();
+        float wHeight= (float)ImGui::GetWindowHeight();
+        ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, wWidth, wHeight);
+        ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::ROTATE, ImGuizmo::LOCAL, glm::value_ptr(trnasfrom_));
     }
 
     if (ImGuizmo::IsUsing()) {
         auto resu = trnasfrom_[3];
         //tempBu->SetPosition(tranform[3]);
-        glm::vec3 trans, rot, scaling;
-
+        glm::vec3 trans, scaling;
+        glm::vec4 rot;
         ExtractTransformMatrix(trnasfrom_, trans, rot, scaling);
-        if(0)
-            tempBu->Rotate({ rot.x,rot.y,0 }, rot.z);
+        if(1)
+            tempBu->Rotate(rot.x,rot.y,rot.z,rot.w);
         if(0)
             tempBu->Scale(scaling);
-        if (1)
+        if (0)
             tempBu->Translate(trans);
         std::string resss = std::to_string(resu[0]) + " " + std::to_string(resu[1]) + " " + std::to_string(resu[2]);
         FRTK_CORE_INFO(resss);
@@ -184,6 +173,10 @@ int Fr_GL3Window::imgui_CameraConfiguration(userData_& data)
 
     ImGui::Begin("Camera Configuration!");                          // Create a window called "Hello, world!" and append into it.
 
+    f = data.orthoSize_;
+    ImGui::DragFloat("OrthoSize", &f, 0.2, -1000.0f, 1000.0f);
+    data.orthoSize_ = f;
+
     f = data.camPosition_[0];
     ImGui::DragFloat("Position_x", &f, 0.2, -1000.0f, 1000.0f);
     data.camPosition_[0] = f;
@@ -249,14 +242,17 @@ int Fr_GL3Window::imgui_CameraConfiguration(userData_& data)
 }
 float Fr_GL3Window::getAspectRation() const
 {
-    int vp[4];
-    glCheckFunc(glGetIntegerv(GL_VIEWPORT, vp));
-    float ra = (float)vp[2] / vp[3];
-    return ra;
+ 
+    return Camera::aspectRatio_;
+    
 }
 int Fr_GL3Window::imgui_ViewPort()
 {
     ImGui::Begin("View Port");
+    float wWidth = (float)ImGui::GetWindowWidth();
+    float wHeight = (float)ImGui::GetWindowHeight();
+    setPortViewDimension(ImVec4(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, wWidth, wHeight));
+    Camera::aspectRatio_ = wWidth / wHeight;    //Must be updated always
     sceneBuffer->Bind();
     scene->RenderScene();
     ImGui::Image(
@@ -265,10 +261,6 @@ int Fr_GL3Window::imgui_ViewPort()
         ImVec2(0, 1),
         ImVec2(1, 0)
     );
-
-    //Keep size of the window for further usage at other places.
-    PortViewDimensions = ImVec4(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
-
     imguimzo_init();
     ImGui::End();
     sceneBuffer->Unbind();

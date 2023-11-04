@@ -178,6 +178,8 @@ public:
     int  h()const;
 
     ImVec4 getPortViewDimensions();
+    void setPortViewDimension(ImVec4 value);
+
     const char* label()const;
     void label(std::string l);
     void label(const char* l);

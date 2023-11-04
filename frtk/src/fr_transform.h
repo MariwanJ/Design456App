@@ -134,8 +134,6 @@ private:
 
     void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights);
 
-    bool SetupCamera(glm::mat4& projection, glm::mat4& modelview);
-
     glm::vec3 m_Position;
     Operation operation_;
     float x_, y_, z_;

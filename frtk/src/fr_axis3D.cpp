@@ -125,6 +125,9 @@ vert Axis3D::CreateAxis3D()
         indicesZBlue.push_back(i);
     }
 
+    //For the blue, we add also the vertical line 
+
+
     auto primativeR = std::make_shared<Fr_Primatives>();
     primativeR->SetVertexes(verticesRed, indicesRed);
     auto axRed = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_RED), 0.005); //  color and

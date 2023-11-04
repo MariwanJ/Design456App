@@ -95,6 +95,8 @@ RIGHT
  height 44.932899\n\n}\n'
 */
 
+float Camera::aspectRatio_ = 1.9;
+
 Camera::Camera() :
     camPosition_{ 15.f, 11.f,  102.f },
     direction_{ -.098f, -1.372f, 0.0f },
@@ -102,7 +104,7 @@ Camera::Camera() :
     fovy_{ 102.f },
     znear_{ 0.01 },
     zfar_{ 100000 },
-    aspectRatio_{ 1.9 },
+    m_OrthographicSize{10},
     m_ViewMatrix{},
     m_ProjectionMatrix(glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_)),     //default
     camType_(CameraList::PERSPECTIVE) {
@@ -117,11 +119,16 @@ bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
 {
     if (!active_)
         return false;
+ 
+    FRTK_CORE_INFO(aspectRatio_);
 
     if (camType_ == CameraList::ORTHOGRAPHIC) {
         float aspect = Fr_GL3Window::getfr_Gl3Window()->getAspectRation();
-        ImVec4 winDim = Fr_GL3Window::getfr_Gl3Window()->getPortViewDimensions();
-        projection = glm::ortho(float(-winDim.w / fovy_), float(winDim.w / fovy_), -float(winDim.z / fovy_), float(winDim.z / fovy_), znear_, zfar_);
+        float orthoLeft = -m_OrthographicSize * aspectRatio_ * 0.5f;
+        float orthoRight = m_OrthographicSize * aspectRatio_ * 0.5f;
+        float orthoBottom = -m_OrthographicSize * 0.5f;
+        float orthoTop = m_OrthographicSize * 0.5f;
+        projection = glm::ortho(orthoLeft, orthoRight, orthoBottom, orthoTop, znear_, zfar_);
     }
     else {
         projection = glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_);
@@ -184,6 +191,7 @@ void Camera::getUserData(userData_& data)
     data.up_ = up_;
     data.zfar_ = zfar_;
     data.znear_ = znear_;
+    data.orthoSize_ = m_OrthographicSize;
 }
 
 void Camera::setUserData(userData_& data)
@@ -196,6 +204,7 @@ void Camera::setUserData(userData_& data)
     up_ = data.up_;
     zfar_ = data.zfar_;
     znear_ = data.znear_;
+    m_OrthographicSize = data.orthoSize_;
     updateViewMatrix();
 }
 
@@ -214,6 +223,7 @@ glm::mat4 Camera::getModelView()
 void Camera::setupCameraHomeValues() {
     int vp[4];
     glGetIntegerv(GL_VIEWPORT, vp);
+    
     auto win = Fr_GL3Window::getfr_Gl3Window();
     aspectRatio_ = (float)vp[2] / vp[3];
     switch (int(camType_)) {
@@ -366,4 +376,11 @@ void Camera::updateViewMatrix() {
 glm::mat4 Camera::getViewMatrix() {
     updateViewMatrix();
     return m_ViewMatrix;
+}
+
+ 
+
+void Camera::SetOrthographic(float size_)
+{
+    m_OrthographicSize = size_;
 }

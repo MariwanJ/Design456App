@@ -87,6 +87,7 @@ typedef struct userData_ {
     float znear_;
     float zfar_;
     float aspectRatio_;
+    float orthoSize_;
     //        projectionm_Matrix(glm::ortho(-600, 600, -600, 600, -1, 1)),
     CameraList camType_;
 };

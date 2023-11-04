@@ -218,6 +218,11 @@ ImVec4 Fr_GL3Window::getPortViewDimensions()
     return  PortViewDimensions;
 }
 
+void Fr_GL3Window::setPortViewDimension(ImVec4 value)
+{
+    PortViewDimensions = value;
+}
+
 const char* Fr_GL3Window::label() const
 {
     return label_.c_str();

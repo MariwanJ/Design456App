@@ -38,13 +38,24 @@ Fr_Primatives::~Fr_Primatives() {
 
 void Fr_Primatives::Draw()
 {
-    GLuint length;
     if (drawType == GL_LINES) {
         glCheckFunc(glBindVertexArray(vao_));
-        length = (GLuint)indices_.size() * 2;
         glCheckFunc(glDrawArrays(GL_LINES, 0, vertices_.size()));
         glCheckFunc(glBindVertexArray(0));
     }
+    else if (drawType == GL_LINE_STRIP) {
+        glCheckFunc(glBindVertexArray(vao_));
+        glCheckFunc(glDrawArrays(GL_LINE_STIPPLE, 0, vertices_.size()));
+        glCheckFunc(glBindVertexArray(0));
+
+    }
+    else if (drawType == GL_LINE_LOOP) {
+        glCheckFunc(glBindVertexArray(vao_));
+        glCheckFunc(glDrawArrays(GL_LINE_LOOP, 0, vertices_.size()));
+        glCheckFunc(glBindVertexArray(0));
+
+    }
+
 }
 
 void Fr_Primatives::setDrawType(int type)

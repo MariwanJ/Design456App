@@ -1,5 +1,3 @@
-#ifndef FR_MATH_H
-#define FR_MATH_H
 //
 // This file is a part of the Open Source Design456App
 // MIT License
@@ -23,16 +21,28 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// 
-//    This file is borrowed from HAZEL GAME ENGINE - THANKS TO THE CHERNO
-//    But modified to be usable for Design456App
-//    Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
+//  Author :Mariwan Jalal    mariwan.jalal@gmail.com
+//
+#ifndef FR_2D_DRAWING_H
+#define FR_2D_DRAWING_H
+#include<FR.H>
+#include<Fr_Core.h>
 
-#include<FR.h>
-#include<Fr_Core.h>>
+//More will be added later 
+typedef enum twodType{
+    FR_LINE =0,
+    FR_OPEN_LOOP,
+    FR_CLOSED_LOOP, //This includes square, rectanble, triangle,pentagon, hexagon, star ..etc
+    FR_CIRCLE,
+    FR_CURVE,
+    FR_ARC,
+    FR_BSPLINE
+};  
 
 
-bool ExtractTransformMatrix(const glm::mat4& transform, glm::vec3& translation, glm::vec4& rotation, glm::vec3& scale);
-
-#endif // !FR_MATH_H
+class Fr_TwoD_Drawing {
+    Fr_TwoD_Drawing(twodType type, std::vector<float> &verticies, std::vector<float>&indicies);
+    
+};
+#endif

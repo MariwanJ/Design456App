@@ -45,13 +45,13 @@ Transform::Transform() :
 }
 
 void Transform::Rotate(float x, float y, float z, float angle) {
-    m_Matrix = glm::rotate(m_Matrix, angle, glm::vec3(x, y, z));
+    m_Matrix = glm::rotate(glm::mat4{ 1 }, glm::radians(angle), glm::vec3(x, y, z));
     m_Inverse = glm::inverse(m_Matrix);
 }
 
 void Transform::Rotate(glm::vec3 axis, float angle)
 {
-    m_Matrix = glm::rotate(m_Matrix, glm::radians(angle), axis);
+    m_Matrix = glm::rotate(glm::mat4{ 1 }, glm::radians(angle), axis);
     m_Inverse = glm::inverse(m_Matrix);
 }
 
@@ -219,17 +219,4 @@ void Transform::SetupLight(const glm::mat4& modelview,    std::vector<LightInfo>
 
     glm::mat4 sub_mv = modelview;
     Group::SetupLight(sub_mv * m_Matrix, lights);
-}
-
-
-
-bool Transform::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
-    if (!active_)
-        return false;
-
-    if (Group::SetupCamera(projection, modelview)) {
-        modelview *= m_Inverse;
-        return true;
-    }
-    return false;
 }

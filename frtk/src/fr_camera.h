@@ -54,6 +54,7 @@ class Manipulator;
  * Scene's camera- Must be a subclass of Transform to achive translation
  */
 class Camera : public Transform {
+    friend Fr_GL3Window;
 public:
     /**
      * Constructor
@@ -111,7 +112,10 @@ public:
     glm::mat4 getPorjection();
     void updateViewMatrix();
     glm::mat4 getViewMatrix();
+    void SetOrthographic(float size);
+
 private:
+
     glm::mat4 m_ViewMatrix;  //viewmodel_
     CameraList camType_;
     glm::vec3 camPosition_;
@@ -120,8 +124,9 @@ private:
     float fovy_;    //LEFT
     float znear_;   //BOTTOM
     float zfar_;   //TOP
-    float aspectRatio_;
+    static float aspectRatio_;      //must be static as all cameras have the same ratio
     glm::mat4 m_ProjectionMatrix;
+    float m_OrthographicSize;
 };
 
 #endif

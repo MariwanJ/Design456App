@@ -21,13 +21,19 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// 
+//
 //    This file is borrowed from HAZEL GAME ENGINE - THANKS TO THE CHERNO
+//    But modified to be usable for Design456App
+//    Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
 #include <Math/fr_math.h>
 #include <glm/gtx/matrix_decompose.hpp>
-bool ExtractTransformMatrix(const glm::mat4& transform, glm::vec3& translation, glm::vec3& rotation, glm::vec3& scale)
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/norm.hpp>
+
+bool ExtractTransformMatrix(const glm::mat4& transform, glm::vec3& translation, glm::vec4& rotation, glm::vec3& scale)
 {
     // From glm::decompose in matrix_decompose.inl
 
@@ -85,15 +91,33 @@ bool ExtractTransformMatrix(const glm::mat4& transform, glm::vec3& translation, 
     }
 #endif
 
-    rotation.y = asin(-Row[0][2]);
-    if (cos(rotation.y) != 0) {
-        rotation.x = atan2(Row[1][2], Row[2][2]);
-        rotation.z = atan2(Row[0][1], Row[0][0]);
+    glm::vec3 rotation_;
+    rotation_.y = asin(-Row[0][2]);
+    if (cos(rotation_.y) != 0) {
+        rotation_.x = atan2(Row[1][2], Row[2][2]);
+        rotation_.z = atan2(Row[0][1], Row[0][0]);
     }
     else {
-        rotation.x = atan2(-Row[2][0], Row[1][1]);
-        rotation.z = 0;
+        rotation_.x = atan2(-Row[2][0], Row[1][1]);
+        rotation_.z = 0;
+    }
+    if (rotation_.x == 0 && rotation_.y == 0 && rotation_.z == 0) {
+        rotation = glm::vec4{ 0.f,0.f,1.f,0.f };
     }
 
+    else {
+        glm::quat quaternion; // Your quaternion matrix
+
+        // Normalize the quaternion
+        quaternion = glm::normalize(rotation_);
+
+        // Extract the angle
+        float angle = 2.0f * acos(quaternion.w);
+
+        // Extract the axis
+        glm::vec3 axis = glm::normalize(glm::vec3(quaternion.x, quaternion.y, quaternion.z));
+        rotation = { axis, glm::degrees(angle) };
+        // Now you have the angle and axis of rotation
+    }
     return true;
 }
