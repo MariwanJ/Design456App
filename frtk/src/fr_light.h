@@ -33,7 +33,7 @@
 #include<fr_core.h>
 
 #include <fr_node.h>
-class Light : public Node {
+class FRTK_API Light : public Node {
 public:
     /**
      * Default constructor

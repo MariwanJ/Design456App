@@ -33,7 +33,7 @@
 #include<fr_core.h>
 #include <glm/glm.hpp>
 
-class Mesh {
+class FRTK_API Mesh {
 public:
     /**
      * Default Constructor

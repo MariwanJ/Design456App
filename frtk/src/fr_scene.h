@@ -48,7 +48,7 @@ typedef struct {
     float a; //alpha
 } bkgC;
 
-class Scene : public Group {
+class FRTK_API Scene : public Group {
 public:
     /**
      * Default Constructor

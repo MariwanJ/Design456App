@@ -30,8 +30,9 @@
 
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
+#include <FR.h>
 
-class  Fr_Log
+class Fr_Log
 {
 public:
     static void Init();

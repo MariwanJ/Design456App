@@ -36,7 +36,7 @@
 class Mesh;
 class ShaderProgram;
 
-class ObjectShaderNode : public Node {
+class FRTK_API ObjectShaderNode : public Node {
 public:
     /**
      * Constructor

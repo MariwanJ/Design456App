@@ -29,10 +29,10 @@
 #include <memory>
 #include <fr_node.h>
 
-class Fr_Primatives;
-class ShaderProgram;
+class FRTK_API Fr_Primatives;
+class FRTK_API ShaderProgram;
 
-class Fr_PrimaitiveShader : public Node {
+class FRTK_API Fr_PrimaitiveShader : public Node {
 public:
     /**
      * Constructor

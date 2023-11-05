@@ -97,7 +97,7 @@ void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffs
     float fov;
     userData_ data;
     activeCamera->getUserData(data);
-    fov = data.fovy_;
+    fov = data.fovy_;           //TODO:FIXME: THIS IS NOT TOTALLY CORRECCT. FOV SHOULD NOT BE USED FOR ZOOMING - CAMERA POSITION SHOULD BE CHANGED. BUT WE LEAVE IT FOR NOW LIKE THAT
     fov = fov - yoffset;
     if (fov < 0.01f)
         fov = 0.01f;

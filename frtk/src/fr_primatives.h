@@ -31,7 +31,7 @@
 #include <fr_core.h>
 #include <glm/glm.hpp>
 
-class Fr_Primatives
+class FRTK_API Fr_Primatives
 {
 public:
     Fr_Primatives();

@@ -1,7 +1,8 @@
 #ifndef FR_IMGUILAYER_H
 #define FR_IMGUILAYER_H
+#include <../src/Fr_Core.h>
 
-class Fr_ImGuiLayer {
+class FRTK_API Fr_ImGuiLayer {
 public:
     Fr_ImGuiLayer();
     ~Fr_ImGuiLayer();

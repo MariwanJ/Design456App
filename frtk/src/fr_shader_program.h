@@ -32,7 +32,7 @@
 #include<fr_core.h>
 #include <glm/glm.hpp>
 
-class ShaderProgram {
+class FRTK_API ShaderProgram {
 public:
     /**
      * Loads, compiles and links the shader program

@@ -24,25 +24,5 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-#ifndef FR_2D_DRAWING_H
-#define FR_2D_DRAWING_H
-#include<FR.H>
-#include<Fr_Core.h>
 
-//More will be added later 
-typedef enum twodType{
-    FR_LINE =0,
-    FR_OPEN_LOOP,
-    FR_CLOSED_LOOP, //This includes square, rectanble, triangle,pentagon, hexagon, star ..etc
-    FR_CIRCLE,
-    FR_CURVE,
-    FR_ARC,
-    FR_BSPLINE
-};  
-
-
-class Fr_TwoD_Drawing {
-    Fr_TwoD_Drawing(twodType type, std::vector<float> &verticies, std::vector<float>&indicies);
-    
-};
-#endif
+#include<../src/ThreeDWidgets/fr_widget.h>

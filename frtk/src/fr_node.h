@@ -52,7 +52,7 @@ typedef enum class NODETYPE {
  * It offers an empty implementation to it's methods
  * Will be sub-classed by several other classes like (Group, Light, ..etc)
  */
-class Node {
+class FRTK_API Node {
 public:
 
     /**

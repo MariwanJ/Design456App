@@ -53,7 +53,7 @@ class Manipulator;
 /**
  * Scene's camera- Must be a subclass of Transform to achive translation
  */
-class Camera : public Transform {
+class FRTK_API Camera : public Transform {
     friend Fr_GL3Window;
 public:
     /**
@@ -112,7 +112,8 @@ public:
     glm::mat4 getPorjection();
     void updateViewMatrix();
     glm::mat4 getViewMatrix();
-    void SetOrthographic(float size);
+  
+    void SetOrthographicSize(float size);
 
 private:
 

@@ -36,7 +36,7 @@
 /**
  * A container for other nodes
  */
-class Group : public Node {
+class FRTK_API Group : public Node {
 public:
     Group();
     /**

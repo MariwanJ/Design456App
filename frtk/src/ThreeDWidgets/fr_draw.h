@@ -21,41 +21,28 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//  Original Author : Gabriel de Quadros  https://github.com/gligneul
-//  Modified to use with this project by :
+//
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-#ifndef FR_CONVERTIMAGE_H
-#define FR_CONVERTIMAGE_H
-
-#include <../vendor/stb_image/src/stb_image.h>
-
+#ifndef FR_DRAW_H
+#define FR_DRAW_H
+#include<FR.H>
 #include<Fr_Core.h>
 
-namespace ICONS {
-#define HOME                          "../resources/48/home.png"
-#define FILE_NEW                      "../resources/48/new.png"
-#define FILE_CLOSE                    "../resources/48/close.png"
-#define FILE_SAVE                     "../resources/48/save.png"
-#define FILE_SAVEAS                   "../resources/48/saveas.png"
-#define FILE_IMPORT                   "../resources/48/import.png"
-#define FILE_EXPORT                   "../resources/48/export.png"
-}
+//More will be added later 
+typedef enum twodType{
+    FR_LINE =0,
+    FR_OPEN_LOOP,
+    FR_CLOSED_LOOP, //This includes square, rectanble, triangle,pentagon, hexagon, star ..etc
+    FR_CIRCLE,
+    FR_CURVE,
+    FR_ARC,
+    FR_BSPLINE
+};  
 
-class FRTK_API loadImage {
-public:
-    /**
-     * Class constructor.
-     *
-     * \param image file name - and path
-     */
-    loadImage(std::string  image = "");
-    std::shared_ptr < unsigned char> getImage(std::string img);
-    ~loadImage();
 
-    //Maybe we don't use it?
-private:
-    std::string _fName;
+class Fr_TwoD_Drawing {
+    Fr_TwoD_Drawing(twodType type, std::vector<float> &verticies, std::vector<float>&indicies);
+    
 };
-
 #endif

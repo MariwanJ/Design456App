@@ -41,7 +41,7 @@
 std::shared_ptr<Transform>bunny();
 //End Temporary code
 
-class Grid :public Node
+class FRTK_API Grid :public Node
 {
 public:
     /**

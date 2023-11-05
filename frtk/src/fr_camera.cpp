@@ -221,11 +221,6 @@ glm::mat4 Camera::getModelView()
  */
 
 void Camera::setupCameraHomeValues() {
-    int vp[4];
-    glGetIntegerv(GL_VIEWPORT, vp);
-    
-    auto win = Fr_GL3Window::getfr_Gl3Window();
-    aspectRatio_ = (float)vp[2] / vp[3];
     switch (int(camType_)) {
         //TODO: FIXME: If you create more than 6, you should add it here
     case 0: {
@@ -248,6 +243,7 @@ void Camera::setupCameraHomeValues() {
         SetCamPosition(17.46f, -149.46f, 135.46f);
         SetCenter(0.0f, 0.0f, 0.0f);
         SetPerspective(30.248f, 0.429f, 1765.f);
+        SetOrthographicSize(10);
     }break;
     case 2: {
         /*TOP
@@ -380,7 +376,7 @@ glm::mat4 Camera::getViewMatrix() {
 
  
 
-void Camera::SetOrthographic(float size_)
+void Camera::SetOrthographicSize(float size_)
 {
     m_OrthographicSize = size_;
 }

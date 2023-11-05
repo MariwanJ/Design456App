@@ -31,7 +31,7 @@
 #include <memory>
 #include <fr_group.h>
 
-class Transform : public Group {
+class FRTK_API Transform : public Group {
 public:
     /**
      * Constructor

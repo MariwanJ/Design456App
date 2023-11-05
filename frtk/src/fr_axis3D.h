@@ -48,7 +48,7 @@ typedef struct vert {
     std::shared_ptr<Transform> ZBlue; //small lines
 };
 
-class Axis3D :public Node
+class FRTK_API Axis3D :public Node
 {
 public:
     /**

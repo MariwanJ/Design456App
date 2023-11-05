@@ -62,10 +62,6 @@
 #include<imguiFont/IconsMaterialDesign.h>
 #include<fr_texture_buffer.h>
 #include<glm/glm.hpp>
-#include<src/obj_loader.h>
-#include<fr_icons.h>
-#include<fr_ImGuiLayer.h>
-#include<fr_filebrowser.h>
 
 //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
 enum class CameraList {

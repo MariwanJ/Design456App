@@ -39,7 +39,8 @@
 #include<../src/halfedge/fr_new_mesh.h>
 //fonts for Imgui icons
 #include <imguiFont/IconsFontAwesome6.h>
-
+#include <fr_ImGuiLayer.h>
+#include <fr_filebrowser.h>
 #define MAX_CAMERAS 8  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING CameraList enu
 
 /* Cameras */

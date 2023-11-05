@@ -28,9 +28,10 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include <fr_core.h>
+#include <FR.h>
+#include <Fr_Core.h>
 
-class Fr_TextureFrameBuffer
+class  Fr_TextureFrameBuffer
 {
 public:
     Fr_TextureFrameBuffer(int width, int height);
