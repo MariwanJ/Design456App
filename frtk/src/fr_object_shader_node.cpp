@@ -83,7 +83,7 @@ void ObjectShaderNode::SetColor(unsigned int color, float alpha) {
 
 void ObjectShaderNode::SetColor(glm::vec4 color, float alpha)
 {
-    color[3] = alpha; //just in case it is not what you have in color
+    color[3] = alpha; //just in case it is not what you have in the color
     color_ = color;
 }
 

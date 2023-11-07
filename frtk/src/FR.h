@@ -265,4 +265,13 @@ enum {
     GLFW_MOUSE_SCROLL,
 };
 
+enum {
+    FR_ABSTRACT_WIDGET = 0,
+    FR_GROUP_WIDGET = 1,
+    FR_BOX_WIDGET = 2,
+    FR_LBL_WIDGET = 3,
+    FR_BUTTON_WIDGET = 4,
+    //More will be added layter
+
+};
 #endif // !FR_H

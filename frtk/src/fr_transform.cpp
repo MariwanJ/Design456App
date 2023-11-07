@@ -61,7 +61,7 @@ void Transform::Translate(glm::vec3 value) {
 }
 
 void Transform::Translate(float x, float y, float z) {
-    x_ = x; y_ = y_; z = z_;
+    x_ = x; y_ = y; z_ = z;
     m_Matrix = glm::translate(m_Matrix, glm::vec3(x, y, z));
     m_Inverse = glm::inverse(m_Matrix);
 }

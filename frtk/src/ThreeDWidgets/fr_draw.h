@@ -28,7 +28,7 @@
 #define FR_DRAW_H
 #include<FR.H>
 #include<Fr_Core.h>
-
+namespace FR{
 //More will be added later 
 typedef enum twodType{
     FR_LINE =0,
@@ -37,7 +37,7 @@ typedef enum twodType{
     FR_CIRCLE,
     FR_CURVE,
     FR_ARC,
-    FR_BSPLINE
+    FR_BSPLINE,
 };  
 
 
@@ -45,4 +45,5 @@ class Fr_TwoD_Drawing {
     Fr_TwoD_Drawing(twodType type, std::vector<float> &verticies, std::vector<float>&indicies);
     
 };
+}
 #endif
