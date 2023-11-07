@@ -30,6 +30,7 @@
 #include<fr_toolbar.h>
 #include <glm/gtx/string_cast.hpp>
 #include<Math/fr_math.h>
+#include <FR.h>
 //TODO FIX ME DOSENT WORK DON'T KNOW WHY
 int Fr_GL3Window::imguimzo_init()
 {
@@ -139,7 +140,7 @@ int Fr_GL3Window::renderimGUI(userData_& data) {
             return -1;
         if (imgui_LeftPanel() < 0)
             return -1;
-        if (FR::CamerOptionVisible) {
+        if (CamerOptionVisible) {
             // IF the menu checked, render the camera option window
             CameraOptions();
         }
@@ -315,7 +316,7 @@ int Fr_GL3Window::imgui_menu()
         }
         if (ImGui::BeginMenu("Tools"))
         {
-            ImGui::MenuItem("Show/Hide Camera Options", "", &FR::CamerOptionVisible);
+            ImGui::MenuItem("Show/Hide Camera Options", "", &CamerOptionVisible);
             ImGui::EndMenu();
         }
     }

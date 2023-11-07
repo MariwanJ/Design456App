@@ -206,6 +206,7 @@ namespace FR {
         bool m_visible;
         bool m_focus;
         int m_type;   //widget type
+        int m_tabIndex;
 
         static    ShaderProgram* widget_program;
 

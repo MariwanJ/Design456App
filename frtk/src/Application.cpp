@@ -53,10 +53,10 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
     auto shftL = glfwGetKey(win, GLFW_KEY_LEFT_SHIFT);
     auto shftR = glfwGetKey(win, GLFW_KEY_RIGHT_SHIFT);
 
-    if (FR::glfw_MouseButton == GLFW_MOUSE_BUTTON_LEFT && FR::glfw_MouseClicked == 1) {
+    if (glfw_MouseButton == GLFW_MOUSE_BUTTON_LEFT && glfw_MouseClicked == 1) {
         LeftMouseClick(xpos, ypos);
     }
-    else if (FR::glfw_MouseButton == GLFW_MOUSE_BUTTON_MIDDLE && FR::glfw_MouseClicked == 1) {
+    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_MIDDLE && glfw_MouseClicked == 1) {
         if (shftL == GLFW_PRESS || shftR == GLFW_PRESS) {
             cameraPAN(xpos, ypos);
         }
@@ -64,15 +64,15 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
             cameraRotate(xpos, ypos);
         }
     }
-    else if (FR::glfw_MouseButton == GLFW_MOUSE_BUTTON_RIGHT)
+    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_RIGHT)
     {
-        FR::glfw_e_x = xpos;
-        FR::glfw_e_y = ypos;
+        glfw_e_x = xpos;
+        glfw_e_y = ypos;
     }
     else {
-        FR::glfw_MouseButton = false;
-        FR::glfw_e_x = xpos;
-        FR::glfw_e_y = ypos;
+        glfw_MouseButton = false;
+        glfw_e_x = xpos;
+        glfw_e_y = ypos;
     }
 }
 
@@ -83,12 +83,12 @@ void Fr_GL3Window::cursor_enter_callback(GLFWwindow*, int entered)
 void Fr_GL3Window::mouse_button_callback(GLFWwindow* win, int button, int action, int mods)
 {
     if (GLFW_PRESS == action) {
-        FR::glfw_MouseClicked = 1; //Pressed
+        glfw_MouseClicked = 1; //Pressed
     }
     else {
-        FR::glfw_MouseClicked = 0; //Released
+        glfw_MouseClicked = 0; //Released
     }
-    FR::glfw_MouseButton = button;
+    glfw_MouseButton = button;
 }
 
 void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
@@ -111,8 +111,8 @@ void Fr_GL3Window::cameraPAN(double xpos, double ypos)
 {
     if (MouseOnce)
     {
-        FR::glfw_e_x = xpos;
-        FR::glfw_e_y = ypos;
+        glfw_e_x = xpos;
+        glfw_e_y = ypos;
         MouseOnce = false;
     }
     userData_ data;
@@ -124,10 +124,10 @@ void Fr_GL3Window::cameraPAN(double xpos, double ypos)
                      data.camPosition_.y * data.camPosition_.y +
                      data.camPosition_.z * data.camPosition_.z);
 
-    float xoffset = xpos - FR::glfw_e_x;
-    float yoffset = FR::glfw_e_y - ypos;
-    FR::glfw_e_x = xpos;
-    FR::glfw_e_y = ypos;
+    float xoffset = xpos - glfw_e_x;
+    float yoffset = glfw_e_y - ypos;
+    glfw_e_x = xpos;
+    glfw_e_y = ypos;
 
     float sensitivity = 0.1f;
     xoffset *= sensitivity;
@@ -164,18 +164,18 @@ void Fr_GL3Window::cameraRotate(double xpos, double ypos)
 
     if (MouseOnce)
     {
-        FR::glfw_e_x = xpos;
-        FR::glfw_e_y = ypos;
+        glfw_e_x = xpos;
+        glfw_e_y = ypos;
         MouseOnce = false;
         radiusXYZ = sqrt(data.camPosition_.x * data.camPosition_.x +
             data.camPosition_.y * data.camPosition_.y +
             data.camPosition_.z * data.camPosition_.z);
     }
 
-    float delta_X = xpos - FR::glfw_e_x;
-    float delta_Y = FR::glfw_e_y - ypos;
-    FR::glfw_e_x = xpos;
-    FR::glfw_e_y = ypos;
+    float delta_X = xpos - glfw_e_x;
+    float delta_Y = glfw_e_y - ypos;
+    glfw_e_x = xpos;
+    glfw_e_y = ypos;
     float sensitivity = 0.2f;
 
     yaw += delta_X * sensitivity;
