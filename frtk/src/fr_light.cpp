@@ -105,7 +105,7 @@ void Light::EnableShadowMap(const glm::vec3& center, const glm::vec3& up, const 
     // Create texture
     glCheckFunc(glGenTextures(1, &sm_texture_));
     glCheckFunc(glBindTexture(GL_TEXTURE_2D, sm_texture_));
-    glCheckFunc(glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, kShadowmapWidth, kShadowmapHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL));
+    glCheckFunc(glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, kShadowmapWidth, kShadowmapHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL));//No data???? why?
     glCheckFunc(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
     glCheckFunc(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
     glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));

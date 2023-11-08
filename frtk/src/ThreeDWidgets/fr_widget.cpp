@@ -125,11 +125,16 @@ namespace FR {
         m_indicies = indicies_;
     }
 
+    bool Fr_Widget::Resizable()
+    {
+        return m_resizable;
+    }
+
     bool Fr_Widget::active()
     {
         return m_active;
     }
-
+    
     void Fr_Widget::activate(bool value)
     {
         m_active = value;
@@ -208,5 +213,13 @@ namespace FR {
     void Fr_Widget::LoadLights(ShaderProgram* program, const std::vector<LightInfo>& lights)
     {
         throw NotImplementedException();
+    }
+    int Fr_Widget::tabIndex()const
+    {
+        return m_tabIndex;
+    }
+    void Fr_Widget::tabIndex(int index)
+    {
+        m_tabIndex =index;
     }
 }

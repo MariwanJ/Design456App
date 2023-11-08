@@ -45,6 +45,9 @@ public:
     void GetPrimatives(std::vector<float>& vertices, std::vector<float>& normals, std::vector<unsigned int>& indices);
 
     void SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices);
+
+    void lineWidth(unsigned int wid);
+    unsigned int lineWidth();
 private:
 
     glm::vec3 GetVertex(unsigned int index, const float vertices[]);
@@ -61,6 +64,7 @@ private:
     std::vector<unsigned int> indices_;
     unsigned int vbo_[3];
     unsigned int vao_;
+    unsigned int m_lineWidth;
 };
 
 #endif // !FR_PRIMATIVES_H

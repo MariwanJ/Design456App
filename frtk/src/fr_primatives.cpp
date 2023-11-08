@@ -26,7 +26,7 @@
 //
 #include <fr_primatives.h>
 
-Fr_Primatives::Fr_Primatives() :vbo_{ 0, 0, 0 }, vao_(0), drawType(GL_LINES) {
+Fr_Primatives::Fr_Primatives() :vbo_{ 0, 0, 0 }, vao_(0), drawType(GL_LINES),m_lineWidth(1) {
 }
 
 Fr_Primatives::~Fr_Primatives() {
@@ -42,21 +42,25 @@ void Fr_Primatives::Draw()
         glCheckFunc(glBindVertexArray(vao_));
         glCheckFunc(glDrawArrays(GL_LINES, 0, vertices_.size()));
         glCheckFunc(glBindVertexArray(0));
+        glCheckFunc(glLineWidth(m_lineWidth));
     }
     else if (drawType == GL_LINE_STRIP) {
         glCheckFunc(glBindVertexArray(vao_));
         glCheckFunc(glDrawArrays(GL_LINE_STIPPLE, 0, vertices_.size()));
         glCheckFunc(glBindVertexArray(0));
+        glCheckFunc(glLineWidth(m_lineWidth));
     }
     else if (drawType == GL_LINE_LOOP) {
         glCheckFunc(glBindVertexArray(vao_));
         glCheckFunc(glDrawArrays(GL_LINE_LOOP, 0, vertices_.size()));
         glCheckFunc(glBindVertexArray(0));
+        glCheckFunc(glLineWidth(m_lineWidth));
     }
     else if (drawType == GL_TRIANGLES) {
         glCheckFunc(glBindVertexArray(vao_));
         glCheckFunc(glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0));
         glCheckFunc(glBindVertexArray(0));
+        glCheckFunc(glLineWidth(m_lineWidth));
     }
 }
 
@@ -80,6 +84,16 @@ void Fr_Primatives::SetVertexes(std::vector<float>& vertices, std::vector<unsign
     vertices_ = vertices;
     indices_ = indices;
     InitializeVBO(vertices_, normals_, indices_);
+}
+
+void Fr_Primatives::lineWidth(unsigned int wid)
+{
+    m_lineWidth=wid;
+}
+
+unsigned int Fr_Primatives::lineWidth()
+{
+    return m_lineWidth;
 }
 
 glm::vec3 Fr_Primatives::GetVertex(unsigned int index, const float vertices[]) {

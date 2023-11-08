@@ -52,7 +52,6 @@ namespace FR {
         for (auto& widget : m_children) {
             widget->lbl_draw();
         }
-
     }
     void Fr_Group::update_child(std::unique_ptr <Fr_Widget> wd)
     {
@@ -75,7 +74,7 @@ namespace FR {
     void Fr_Group::Render(RenderInfo& info, const glm::mat4& modelview)
     {
     }
-    int Fr_Group::find(std::unique_ptr<Fr_Widget> &wd) const
+    int Fr_Group::find(std::unique_ptr<Fr_Widget>& wd) const
     {
         auto it = std::find(m_children.begin(), m_children.end(), wd);
         if (it != m_children.end())
@@ -86,43 +85,54 @@ namespace FR {
         return -1;
     }
 
-    void Fr_Group::insert(Fr_Widget& wd, int index_before)
-    {
-    }
-    int Fr_Group::remove(Fr_Widget& wd)
+    int Fr_Group::insert(std::unique_ptr <Fr_Widget>wd, int index_before)
     {
         auto it = std::find(m_children.begin(), m_children.end(), wd);
-        if (it != m_children.end())
+        if (m_children.begin() + index_before <= m_children.end())
         {
-            auto index = std::distance(m_children.begin(), it);
-            //m_children.erase(index); wrong!!
-        }
+            auto it = m_children.begin();
 
-        return 0;
+            m_children.insert(m_children.begin() + index_before, std::move(wd));
+            return 0;
+        }
+        return -1; //error
     }
-    int Fr_Group::remove(int index)
+
+    int Fr_Group::tabIndex(std::unique_ptr <Fr_Widget>& wid)
     {
-        return 0;
+        return wid->tabIndex();
     }
-    int Fr_Group::getTabIndex()
+    void Fr_Group::tabIndex(std::unique_ptr <Fr_Widget>& wid, int index)
     {
-        return 0;
-    }
-    void Fr_Group::setTabIndex(int tabIndex)
-    {
+        wid->tabIndex(index);
     }
     void Fr_Group::addResizable(std::unique_ptr <Fr_Widget> wd)
     {
     }
     bool Fr_Group::Resizable(std::unique_ptr <Fr_Widget> wd)
     {
-        return false;
+        return wd->Resizable();
     }
     void Fr_Group::addWidget(std::unique_ptr <Fr_Widget> wid)
     {
+        m_children.push_back(std::move(wid));
     }
-    void Fr_Group::removeWidget(std::unique_ptr <Fr_Widget> wid)
+    int Fr_Group::removeWidget(std::unique_ptr <Fr_Widget> wd)
     {
+        auto it = std::find(m_children.begin(), m_children.end(), wd);
+        if (it != m_children.end())
+        {
+            auto index = std::distance(m_children.begin(), it);
+            //TODO CHECK ME !
+            m_children.erase(m_children.begin() + index);
+            return 0;
+        }
+        return -1; //not found!!
+    }
+    int Fr_Group::removeWidget(int index)
+    {
+        m_children.erase(m_children.begin() + index);
+        return 0;
     }
     void Fr_Group::redraw()
     {

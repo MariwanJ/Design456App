@@ -35,14 +35,16 @@ namespace FR {
         Fr_Group() = delete;
         ~Fr_Group();
 
-  
-
     protected:
         void draw();
         void draw_children();
         void draw_lbl_children();
         void update_child(std::unique_ptr <Fr_Widget> wd);
+    
     public:
+        void redraw() override;
+        int handel(int events) override;
+
         /**
       * Sets the camera
       * Returns true if the camera has been set
@@ -74,22 +76,23 @@ namespace FR {
          * Find a widget and return it's index number.
          */
         virtual int find(std::unique_ptr<Fr_Widget>& wd) const;
-        virtual void insert(Fr_Widget& wd, int index_before);
-        virtual int remove(Fr_Widget& wd);
-        virtual int remove(int index);
-        virtual int getTabIndex();
-        virtual void setTabIndex(int tabIndex);
+
+        virtual void addWidget(std::unique_ptr <Fr_Widget> wid);
+        virtual int insert(std::unique_ptr <Fr_Widget> wd, int index_before);
+
+        virtual int removeWidget(std::unique_ptr <Fr_Widget> wid);
+        virtual int removeWidget(int index);
+
+        virtual int tabIndex(std::unique_ptr <Fr_Widget>& wid);
+        virtual void tabIndex(std::unique_ptr <Fr_Widget>& wid, int tabIndex);
+
         virtual void addResizable(std::unique_ptr <Fr_Widget> wd);
         virtual bool Resizable(std::unique_ptr <Fr_Widget>wd);
 
-
-        void addWidget(std::unique_ptr <Fr_Widget> wid);
-        void removeWidget(std::unique_ptr <Fr_Widget> wid);
-        void redraw() override;
-        int handel(int events) override;
         std::vector<std::unique_ptr <Fr_Widget>> m_risizable;
 
     private:
+
         std::vector < std::unique_ptr <Fr_Widget>> m_children;
     
     

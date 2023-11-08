@@ -70,6 +70,7 @@ namespace FR {
             widget which acts like a container for the widgets.
             */
         friend class Fl_Group;
+
     public:
         /** Copy constructor */
         Fr_Widget(const Fr_Widget&);
@@ -140,6 +141,8 @@ namespace FR {
 
         virtual void resize(std::vector<glm::vec3>& verticies, std::vector<float>& indicies);
 
+        bool Resizable();
+
         bool active();
 
         void activate(bool value);
@@ -185,6 +188,10 @@ namespace FR {
 
         virtual GLuint getCurrentTexturer(void);
 
+        int tabIndex() const;
+        void tabIndex(int index);
+
+
     protected:
         virtual void do_callback();
 
@@ -205,6 +212,7 @@ namespace FR {
         bool m_active;
         bool m_visible;
         bool m_focus;
+        bool m_resizable;
         int m_type;   //widget type
         int m_tabIndex;
 
