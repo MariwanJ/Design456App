@@ -97,13 +97,24 @@ void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffs
     float fov;
     userData_ data;
     activeCamera->getUserData(data);
-    fov = data.fovy_;           //TODO:FIXME: THIS IS NOT TOTALLY CORRECCT. FOV SHOULD NOT BE USED FOR ZOOMING - CAMERA POSITION SHOULD BE CHANGED. BUT WE LEAVE IT FOR NOW LIKE THAT
+    if (activeCamera->getType() == CameraList::ORTHOGRAPHIC) {
+        data.orthoSize_ = data.orthoSize_ + yoffset;
+    }
+    else
+    {
+        data.camPosition_ = glm::vec3(data.camPosition_.x, data.camPosition_.y, data.camPosition_.z + yoffset);
+    }
+
+
+   /* fov = data.fovy_;           //TODO:FIXME: THIS IS NOT TOTALLY CORRECCT. FOV SHOULD NOT BE USED FOR ZOOMING - CAMERA POSITION SHOULD BE CHANGED. BUT WE LEAVE IT FOR NOW LIKE THAT
     fov = fov - yoffset;
     if (fov < 0.01f)
         fov = 0.01f;
     if (fov > MAX_FOV_ZOOM)
         fov = MAX_FOV_ZOOM;
     data.fovy_ = fov;
+
+*/
     activeCamera->setUserData(data);
 }
 
@@ -125,11 +136,11 @@ void Fr_GL3Window::cameraPAN(double xpos, double ypos)
                      data.camPosition_.z * data.camPosition_.z);
 
     float xoffset = xpos - glfw_e_x;
-    float yoffset = glfw_e_y - ypos;
+    float yoffset = (glfw_e_y - ypos)*data.aspectRatio_;
     glfw_e_x = xpos;
     glfw_e_y = ypos;
 
-    float sensitivity = 0.1f;
+    float sensitivity =0.25f;
     xoffset *= sensitivity;
     yoffset *= sensitivity;
 
@@ -173,13 +184,13 @@ void Fr_GL3Window::cameraRotate(double xpos, double ypos)
     }
 
     float delta_X = xpos - glfw_e_x;
-    float delta_Y = glfw_e_y - ypos;
+    float delta_Y = (ypos-glfw_e_y ) ;
     glfw_e_x = xpos;
     glfw_e_y = ypos;
-    float sensitivity = 0.2f;
+    float sensitivity = 0.25f;
 
     yaw += delta_X * sensitivity;
-    pitch += delta_Y * sensitivity;
+    pitch += delta_Y * sensitivity ;
 
     if (pitch > 89.999990f)
         pitch = 89.999990f;
@@ -190,7 +201,7 @@ void Fr_GL3Window::cameraRotate(double xpos, double ypos)
     //std::cout << pitch << "pitch yaw " << yaw << std::endl;
     data.camPosition_.x = radiusXYZ * cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     data.camPosition_.y = radiusXYZ * cos(glm::radians(yaw)) * sin(glm::radians(pitch));
-    //data.camPosition_.z = radiusXYZ * sin(glm::radians(yaw));
+    data.camPosition_.z = radiusXYZ * sin(glm::radians(yaw));
     activeCamera->setUserData(data);
 }
 

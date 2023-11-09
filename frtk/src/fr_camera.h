@@ -114,7 +114,7 @@ public:
     glm::mat4 getViewMatrix();
   
     void SetOrthographicSize(float size);
-
+    float getOrthgraphicSize();
 private:
 
     glm::mat4 m_ViewMatrix;  //viewmodel_

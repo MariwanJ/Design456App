@@ -120,7 +120,7 @@ bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
     if (!active_)
         return false;
  
-    FRTK_CORE_INFO(aspectRatio_);
+    //FRTK_CORE_INFO(aspectRatio_);
 
     if (camType_ == CameraList::ORTHOGRAPHIC) {
         float aspect = Fr_GL3Window::getfr_Gl3Window()->getAspectRation();
@@ -335,6 +335,7 @@ void Camera::setupCameraHomeValues() {
         SetPerspective(100.0f, 55.9f, 166.12f);
     }break;
     }
+    updateViewMatrix();
 }
 /**
 *   Set camera type
@@ -379,4 +380,10 @@ glm::mat4 Camera::getViewMatrix() {
 void Camera::SetOrthographicSize(float size_)
 {
     m_OrthographicSize = size_;
+    updateViewMatrix();
+}
+
+float Camera::getOrthgraphicSize()
+{
+    return m_OrthographicSize;
 }
