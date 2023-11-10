@@ -486,7 +486,7 @@ std::shared_ptr<Transform> Fr_GL3Window::CreateSunTop() {
     sun->SetPosition(0.0f, 0.0f, 0.0f);
     sun->SetDiffuse(0.5f, 0.5f, 0.5f);
     sun->SetAmbient(0.2f, 0.2f, 0.2f);
-    sun->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
+    sun->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-100, 100, -100, 100,1700, 11024));
     sun_->AddNode(sun);
     sun->SetActive(true);   //A must to have otherwise everything is black.
     sunT = std::move(sun_);
@@ -500,7 +500,7 @@ std::shared_ptr<Transform> Fr_GL3Window::CreateSunBottom() {
     sun->SetPosition(0.0f, 0.0f, 0.0f);
     sun->SetDiffuse(0.5f, 0.5f, 0.5f);
     sun->SetAmbient(0.2f, 0.2f, 0.2f);
-    sun->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
+     //sun->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
     sun_->AddNode(sun);
     sun->SetActive(false);   //A must to have otherwise everything is black.
     sunT = std::move(sun_);

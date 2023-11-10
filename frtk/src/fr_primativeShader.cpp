@@ -40,10 +40,10 @@ Fr_PrimaitiveShader::Shared* Fr_PrimaitiveShader::shared_ = nullptr;
 //    0.0, 0.0, 0.5, 0.0,
 //    0.5, 0.5, 0.5, 1.0);
 static const glm::mat4 kShadowMapBiasMatrix(
-    0.5, 0.0, 0.0, 0.0,
+    0.25, 0.0, 0.0, 0.0,
     0.0, 0.5, 0.0, 0.0,
-    0.0, 0.0, 0.5, 0.0,
-    0.5, 0.5, 0.5, 1.0);
+    0.0, 0.0, 0.25, 0.0,
+    0.25, 0.25, 0.25, 1.0);
 void Fr_PrimaitiveShader::defaultShaders()
 {
     f_objectshader_ = "E:/Projects/Design456App/frtk/src/shaders/objectshader";
@@ -98,7 +98,7 @@ Fr_PrimaitiveShader::Fr_PrimaitiveShader(glm::vec4 color, float silhouette) :
 
 Fr_PrimaitiveShader::Fr_PrimaitiveShader(float color[4], float silhouette) :
     m_Primative{ nullptr }, silhouette_(silhouette) {
-    Fr_PrimaitiveShader(glm::vec4(*color));
+    Fr_PrimaitiveShader(glm::vec4{ *color });
     type(NODETYPE::FR_PRIMATIVESHADER);
 }
 
@@ -171,15 +171,14 @@ void Fr_PrimaitiveShader::Render(RenderInfo& info, const glm::mat4& modelview) {
 
     auto mvp = info.projection * modelview;
     auto normalmatrix = glm::transpose(glm::inverse(modelview));
-    ShaderProgram* program = shared_->primative_program;
-
-    //Avoid segmentation fault - Mariwan
-    if (info.shadowmap.mvp.size() > 0 && info.id < info.shadowmap.mvp.size() && info.shadowmap.mvp_transparent.size()>0) {
-        auto sm_mvp = m_Color.a == 1 ? info.shadowmap.mvp[info.id] : info.shadowmap.mvp_transparent[info.id];
-        program->SetUniformMat4("sm_mvp", kShadowMapBiasMatrix * sm_mvp);
-    }
     if (m_Color.a == 1)
         RenderSilhouette(mvp);
+
+    ShaderProgram* program = shared_->primative_program;
+
+
+    auto sm_mvp = m_Color.a == 1 ? info.shadowmap.mvp[info.id] : info.shadowmap.mvp_transparent[info.id];
+    program->SetUniformMat4("sm_mvp", kShadowMapBiasMatrix * sm_mvp);
 
     program->Enable();
     LoadLights(program, info.lights);

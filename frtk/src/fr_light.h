@@ -132,7 +132,7 @@ private:
     glm::mat4 sm_projection_;
     unsigned int sm_framebuffer_;
     unsigned int sm_renderbuffer_;
-    unsigned int sm_texture_;
+    unsigned int shadowMapTexture_;
 };
 
 #endif

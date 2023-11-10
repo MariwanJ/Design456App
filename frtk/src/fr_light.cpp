@@ -41,7 +41,7 @@ Light::Light(glm::vec4 lightColor_) :
     sm_projection_(0),
     sm_framebuffer_(0),
     sm_renderbuffer_(0),
-    sm_texture_(0),
+    shadowMapTexture_(0),
     sm_enable_(false) {
     type(NODETYPE::FR_LIGHT);
     spot_enabled_ = false;
@@ -103,14 +103,14 @@ void Light::EnableShadowMap(const glm::vec3& center, const glm::vec3& up, const 
 
     //TODO FIXME TO GET BETTER TEXTER .. THIS IS NOT GOOD
     // Create texture
-    glCheckFunc(glGenTextures(1, &sm_texture_));
-    glCheckFunc(glBindTexture(GL_TEXTURE_2D, sm_texture_));
-    glCheckFunc(glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, kShadowmapWidth, kShadowmapHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL));//No data???? why?
-    glCheckFunc(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
-    glCheckFunc(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
-    glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-    glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-    glCheckFunc(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, sm_texture_, 0));
+    glCheckFunc(glGenTextures(1, &shadowMapTexture_));
+    glCheckFunc(glBindTexture(GL_TEXTURE_2D, shadowMapTexture_));
+    glCheckFunc(glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, kShadowmapWidth, kShadowmapHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL));
+    glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+    glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+    glCheckFunc(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+    glCheckFunc(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
+    glCheckFunc(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMapTexture_, 0));
 
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if (status != GL_FRAMEBUFFER_COMPLETE)
@@ -150,7 +150,7 @@ bool Light::SetupShadowMap(ShadowMapInfo& info) {
     info.modelview = glm::lookAt(glm::vec3(position_), sm_direction_, sm_up_);
     info.light_id = light_id_;
     info.framebuffer = sm_framebuffer_;
-    info.texture = sm_texture_;
+    info.texture = shadowMapTexture_;
     info.width = kShadowmapWidth;
     info.height = kShadowmapHeight;
     return true;

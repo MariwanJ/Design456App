@@ -50,7 +50,9 @@ int Fr_GL3Window::imguimzo_init()
         float wWidth = (float)ImGui::GetWindowWidth();
         float wHeight= (float)ImGui::GetWindowHeight();
         ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, wWidth, wHeight);
-        ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::ROTATE, ImGuizmo::LOCAL, glm::value_ptr(trnasfrom_));
+        //ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::ROTATE, ImGuizmo::LOCAL, glm::value_ptr(trnasfrom_));
+        ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(trnasfrom_));
+
     }
 
     if (ImGuizmo::IsUsing()) {
@@ -59,11 +61,11 @@ int Fr_GL3Window::imguimzo_init()
         glm::vec3 trans, scaling;
         glm::vec4 rot;
         ExtractTransformMatrix(trnasfrom_, trans, rot, scaling);
-        if(1)
+        if(0)
             tempBu->Rotate(rot.x,rot.y,rot.z,rot.w);
         if(0)
             tempBu->Scale(scaling);
-        if (0)
+        if (1)
             tempBu->Translate(trans);
         std::string resss = std::to_string(resu[0]) + " " + std::to_string(resu[1]) + " " + std::to_string(resu[2]);
         FRTK_CORE_INFO(resss);
