@@ -89,6 +89,8 @@ private:
      */
     void RenderSilhouette(const glm::mat4& mvp);
 
+    void RenderTexture(const glm::mat4& mvp);
+
     // Constants
     const size_t kMaxLights = 8;
 
@@ -108,6 +110,7 @@ private:
     std::string f_objectshader_;
     std::string f_silhouette_;
     std::string f_shadowmap_;
+    std::string f_texture_;
 
     GLuint _texture; //used to return the texture for imgui rendering inside window.
 };

@@ -29,7 +29,6 @@ const vec3 GLOBAL_AMBIENT = vec3(0.1, 0.1, 0.1);
 layout (location=0) in vec3 frag_position;
 layout (location=1) in vec3 frag_normal;
 layout (location=2) in vec3 frag_sm_position;
- 
 
 
 uniform vec4 color;
@@ -48,7 +47,7 @@ bool is_shadow()
 
 vec3 compute_light_intensity(LightInfo light, int id, vec3 frag_normal_)
 {
-    vec3 light_position = light.position.xyz ;// light.position.w;
+    vec3 light_position = light.position.xyz/ light.position.w;
     float dist = length(light_position - frag_position);
     float att = 1 / (light.attenuation.x + light.attenuation.y * dist  + light.attenuation.y * dist * dist);
 
@@ -79,6 +78,6 @@ void main ()
         frag_light += compute_light_intensity(lights[i], i, frag_normal_n);
     }
     frag_light += GLOBAL_AMBIENT;
-   // frag_light = floor(frag_light * NUM_COLORS) / NUM_COLORS;
-    frag_color = vec4(color.rgb * frag_light, color.a);
+    frag_light = floor(frag_light * NUM_COLORS) / NUM_COLORS;
+	frag_color = vec4(color.rgb * frag_light, color.a);
 }

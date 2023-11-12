@@ -28,7 +28,7 @@
 #ifndef FR_CONVERTIMAGE_H
 #define FR_CONVERTIMAGE_H
 
-#include <../vendor/stb_image/src/stb_image.h>
+
 
 #include<Fr_Core.h>
 

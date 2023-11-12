@@ -70,6 +70,22 @@ void Group::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) {
             node->RenderShadowMap(info, modelview);
 }
 
+bool Group::SetupTexture(TextureInfo& info)
+{
+    if (active_)
+        for (auto& node : nodes_)
+            if (node->SetupTexture(info))
+                return true;
+    return false;
+}
+
+void Group::RenderTexture(TextureInfo& info)
+{
+    if (active_)
+        for (auto& node : nodes_)
+            node->RenderTexture(info);
+}
+
 void Group::Render(RenderInfo& info, const glm::mat4& modelview) {
     if (active_)
         for (auto& node : nodes_)

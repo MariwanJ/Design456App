@@ -86,6 +86,18 @@ public:
         unsigned int height;
     };
 
+
+    struct TextureInfo {
+        unsigned int id;
+        std::vector<glm::mat4> mvp;
+        std::vector<glm::mat4> mvp_transparent;
+        glm::mat4 modelview;
+        glm::mat4 projection;
+        unsigned char* localBuffer;
+        unsigned int texturebuffer;
+        int width, height, bpp;
+        unsigned int slot;
+    };
     /**
      * Holds the render information
      */
@@ -96,6 +108,7 @@ public:
         std::vector<LightInfo> lights;
         ShadowMapInfo shadowmap;
         bool render_transparent;
+        TextureInfo textureInfo;
     };
 
     /**
@@ -130,6 +143,10 @@ public:
      * Renders the shadow map
      */
     virtual void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview);
+
+    virtual bool SetupTexture(TextureInfo& info);
+
+    virtual void RenderTexture(TextureInfo& info);
 
     /**
      * Renders the node

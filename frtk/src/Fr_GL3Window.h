@@ -117,7 +117,7 @@ public:
      * \return
      */
     virtual std::shared_ptr<Transform> CreateSunTop();
-    virtual std::shared_ptr<Transform> CreateSunBottom();
+    virtual std::shared_ptr<Transform> CreateSunBottom();  //TODO: NOT SURE IF WE NEED 2?? 
 
     /**
      * Resize Fr_GL3Window size which affects glfw windows.

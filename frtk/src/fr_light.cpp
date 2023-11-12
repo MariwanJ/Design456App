@@ -101,7 +101,7 @@ void Light::EnableShadowMap(const glm::vec3& center, const glm::vec3& up, const 
     glCheckFunc(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, kShadowmapWidth, kShadowmapHeight));
     glCheckFunc(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, sm_renderbuffer_));
 
-    //TODO FIXME TO GET BETTER TEXTER .. THIS IS NOT GOOD
+    //TODO FIXME TO GET BETTER Shadow mapping - Not very important for our application yet.
     // Create texture
     glCheckFunc(glGenTextures(1, &shadowMapTexture_));
     glCheckFunc(glBindTexture(GL_TEXTURE_2D, shadowMapTexture_));
@@ -111,7 +111,8 @@ void Light::EnableShadowMap(const glm::vec3& center, const glm::vec3& up, const 
     glCheckFunc(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
     glCheckFunc(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
     glCheckFunc(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMapTexture_, 0));
-
+    glCheckFunc(glDrawBuffer(GL_NONE));
+    glCheckFunc(glReadBuffer(GL_NONE));
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if (status != GL_FRAMEBUFFER_COMPLETE)
         throw std::runtime_error("Couldn't create shadowmap frame buffer");
