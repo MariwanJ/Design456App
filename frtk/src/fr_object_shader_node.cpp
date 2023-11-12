@@ -53,6 +53,7 @@ ObjectShaderNode::ObjectShaderNode(unsigned int color, float silhouette) :
         shared_->object_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/objectshader");
         shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
         shared_->shadowmap_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/shadowmap");
+        shared_->texture_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/texture");
     }
     type(NODETYPE::FR_OBJECTSHADERNODE);
 }
@@ -65,6 +66,7 @@ silhouette_(silhouette) {
         shared_->object_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/objectshader");
         shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
         shared_->shadowmap_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/shadowmap");
+        //shared_->texture_program= new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/texture");
     }
     type(NODETYPE::FR_OBJECTSHADERNODE);
 }
@@ -165,19 +167,16 @@ void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     program->SetUniformVec4("color", color_);       //Object color - not light color
     program->SetUniformMat4("sm_mvp", kShadowMapBiasMatrix * sm_mvp);
     program->SetUniformInteger("sm_light", info.shadowmap.light_id);
-
     glCheckFunc(glActiveTexture(GL_TEXTURE0));
     glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));
-
+   
     mesh_->Draw();
     shared_->object_program->SetUniformInteger("sm_texture", 0);
     program->Disable();
     info.id++;
 }
+void ObjectShaderNode::RenderTexture(TextureInfo &info) {
 
-GLuint ObjectShaderNode::getCurrentTexturer(void)
-{
-    return _texture;
 }
 
 void ObjectShaderNode::RenderSilhouette(const glm::mat4& mvp) {
@@ -187,6 +186,7 @@ void ObjectShaderNode::RenderSilhouette(const glm::mat4& mvp) {
     program->SetAttribLocation("normal", 1);
     program->SetUniformFloat("silhouette", silhouette_);
     program->SetUniformMat4("mvp", mvp);
+
     mesh_->Draw();
     program->Disable();
 }

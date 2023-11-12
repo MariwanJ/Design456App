@@ -89,8 +89,8 @@ public:
 
     struct TextureInfo {
         unsigned int id;
-        std::vector<glm::mat4> mvp;
-        std::vector<glm::mat4> mvp_transparent;
+       // std::vector<glm::mat4> mvp;
+        //std::vector<glm::mat4> mvp_transparent;
         glm::mat4 modelview;
         glm::mat4 projection;
         unsigned char* localBuffer;

@@ -23,7 +23,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-// 
+//
 //    This file is borrowed from HAZEL GAME ENGINE - THANKS TO THE CHERNO
 //    But modified to be usable for Design456App
 //    Author :Mariwan Jalal    mariwan.jalal@gmail.com
@@ -31,7 +31,6 @@
 
 #include<FR.h>
 #include<Fr_Core.h>>
-
 
 bool ExtractTransformMatrix(const glm::mat4& transform, glm::vec3& translation, glm::vec4& rotation, glm::vec3& scale);
 

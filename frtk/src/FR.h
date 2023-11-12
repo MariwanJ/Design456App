@@ -71,6 +71,15 @@ struct T {
 typedef T FR_COLOR;
 namespace COLOR {
 #define FR_TRANSPARENCY         -1.0000f, -1.0000f, -1.0000f,  1.0000f		   // No color
+#define FR_IRON                  0.5600f,  0.5700f,  0.58000f, 1.0000f
+#define FR_SILVER                0.9720f,  0.9600f,  0.91500f, 1.0000f
+#define FR_ALUMINUM              0.9130f,  0.9210f,  0.92500f, 1.0000f
+#define FR_GOLD                  1.0000f,  0.7660f,  0.33600f, 1.0000f
+#define FR_COPPER                0.9550f,  0.6370f,  0.53800f, 1.0000f
+#define FR_CHROMIUM              0.5500f,  0.5560f,  0.55400f, 1.0000f
+#define FR_NICKEL                0.6600f,  0.6090f,  0.52600f, 1.0000f
+#define FR_TITANIUM              0.5420f,  0.4970f,  0.44900f, 1.0000f
+#define FR_COBALT                0.6620f,  0.6550f,  0.63400f, 1.0000f
 #define FR_PINK                  1.0000f,  0.7529f,  0.7961f,  1.0000f
 #define FR_BLUE                  0.0000f,  0.0000f,  1.0000f,  1.0000f
 #define FR_BLUEG                 0.6941f,  0.8700f,  0.9216f,  1.0000f
@@ -225,7 +234,12 @@ namespace COLOR {
 #define FR_GLASS                 0.3300f,  1.0000f,  1.0000f,  1.0000f
 #define FR_WINGS3D				 0.3800f,  0.3800f,  0.3800f,  0.5000f
 };
+namespace SPECULAR {    
+    //Material             BaseColor(R, G, B)
+#define FR_METAL           0.50f, 0.50f, 0.50f
+#define FR_PLASTIC         0.250f, 0.250f, 0.250f
 
+};
 class Fr_GL3Window; // compiler should define that later.
 
 //static variables used for mouse events inside fr_glw.

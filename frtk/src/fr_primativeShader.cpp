@@ -40,16 +40,16 @@ Fr_PrimaitiveShader::Shared* Fr_PrimaitiveShader::shared_ = nullptr;
 //    0.0, 0.0, 0.5, 0.0,
 //    0.5, 0.5, 0.5, 1.0);
 static const glm::mat4 kShadowMapBiasMatrix(
-    0.5, 0.0, 0.0, 0.0,
-    0.0, 0.5, 0.0, 0.0,
-    0.0, 0.0, 0.5, 0.0,
-    0.5, 0.5, 0.5, 1.0);
+    0.25, 0.0, 0.0, 0.0,
+    0.0, 0.25, 0.0, 0.0,
+    0.0, 0.0, 0.25, 0.0,
+    0.25, 0.25, 0.25, 1.0);
 void Fr_PrimaitiveShader::defaultShaders()
 {
     f_objectshader_ = "E:/Projects/Design456App/frtk/src/shaders/objectshader";
     f_silhouette_ = "E:/Projects/Design456App/frtk/src/shaders/silhouette";
     f_shadowmap_ = "E:/Projects/Design456App/frtk/src/shaders/shadowmap";
-    f_texture_  = "E:/Projects/Design456App/frtk/src/shaders/texture";
+    //f_texture_  = "E:/Projects/Design456App/frtk/src/shaders/texture";
 }
 /** Shader file name and path */
 void Fr_PrimaitiveShader::setObjectshader(const char* newValue)
@@ -65,11 +65,6 @@ void Fr_PrimaitiveShader::setSilhouette(const char* newValue)
 void Fr_PrimaitiveShader::setShadowmap(const char* newValue)
 {
     f_shadowmap_ = newValue;
-}
-
-GLuint Fr_PrimaitiveShader::getCurrentTexturer(void)
-{
-    return _texture;
 }
 
 Fr_PrimaitiveShader::Fr_PrimaitiveShader(unsigned int color, float silhouette) :

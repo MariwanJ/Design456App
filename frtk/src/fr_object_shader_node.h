@@ -84,7 +84,9 @@ public:
      */
     void Render(RenderInfo& info, const glm::mat4& modelview) override;
 
-    GLuint getCurrentTexturer(void);
+    void RenderTexture(TextureInfo& info);
+
+    //GLuint getCurrentTexturer(void);
 private:
     /**
      * Sets the uniform light data
@@ -104,6 +106,7 @@ private:
         ShaderProgram* object_program;
         ShaderProgram* silhouette_program;          //the dark shape and outline of object
         ShaderProgram* shadowmap_program;
+        ShaderProgram* texture_program;
     };
     static Shared* shared_;
 
@@ -111,7 +114,6 @@ private:
     std::shared_ptr<Shape> mesh_;
     glm::vec4 color_;
     float silhouette_;
-    GLuint _texture; //used to return the texture for imgui rendering inside window.
 };
 
 #endif

@@ -38,22 +38,21 @@ std::shared_ptr<Transform>bunny() {
     auto bunny_t = std::make_shared<Transform>();
     bunny_t->Translate(0, 0, 0);
     bunny_t->Scale(1, 1, 1);
-    auto bunny = std::make_shared<ObjectShaderNode>(0x667AFF, 0.013f); //  color and
+    auto bunny = std::make_shared<ObjectShaderNode>(glm::vec4(FR_IRON), 0.02f); //  color and
 
     //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/cube.off"));
-     //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Pyramid.off"));
-    bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Wedge.off"));
+     bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Pyramid.off"));
+    //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Wedge.off"));
     auto Bunny_spot = std::make_shared<Light>();
     Bunny_spot->SetActive(true);
-    Bunny_spot->SetPosition(1.f, -3.f, -15.f);
-    Bunny_spot->SetupSpot(-1.0f, -1.0f, 50.0f, 100.0f, 100.0f);
-    Bunny_spot->SetDiffuse(1.f, 1.f, 1.f);
-    Bunny_spot->SetAmbient(0.50f, 0.5f, 0.31f);
-    Bunny_spot->SetAttenuation(1.0f, 0.002f, 0.50f);
-    Bunny_spot->SetSpecular(0.3f, 0.3f, 0.3f);
+    Bunny_spot->SetPosition(0.f, 2.f, 5.0f);
+   // Bunny_spot->SetupSpot(-1.0f, -10.0f, 5.0f, 25.0f, 1.0f);
+    Bunny_spot->SetDiffuse(.2f, .2f, 0.2);
+    Bunny_spot->SetAmbient(0.2f, 0.2f, 0.2f);
+    Bunny_spot->SetAttenuation(0.50f, 0.2f, 0.50f);
+    Bunny_spot->SetSpecular(FR_METAL);
     bunny_t->AddNode(Bunny_spot);
     bunny_t->AddNode(bunny);
-
     return bunny_t;
 }
 /**

@@ -52,7 +52,7 @@ vec3 compute_light_intensity(LightInfo light, int id, vec3 frag_normal_)
     float att = 1 / (light.attenuation.x + light.attenuation.y * dist  + light.attenuation.y * dist * dist);
 
     if (id == sm_light && is_shadow())
-        return att * vec3(light.ambient);
+        return vec3(light.ambient);
 
     vec3 frag2light = normalize(light_position - frag_position);
     float diff = max(dot(frag_normal_, frag2light), 0);
@@ -78,6 +78,8 @@ void main ()
         frag_light += compute_light_intensity(lights[i], i, frag_normal_n);
     }
     frag_light += GLOBAL_AMBIENT;
-    frag_light = floor(frag_light * NUM_COLORS) / NUM_COLORS;
+    //frag_light = floor(frag_light * NUM_COLORS) / NUM_COLORS;
+	frag_light = (frag_light * NUM_COLORS) / NUM_COLORS; //floor make it worse
 	frag_color = vec4(color.rgb * frag_light, color.a);
+	//frag_color = vec4(color.rgb * frag_light*frag_normal, color.a);//TEST THIS
 }
