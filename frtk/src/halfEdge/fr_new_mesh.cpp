@@ -36,7 +36,7 @@ Shape::Shape(const std::string& path) :
     InitializeVBO(vertices_, normals_, indices_);
     linktoMainWindow = Fr_GL3Window::getfr_Gl3Window();
 }
-Shape::Shape() : vbo_{ 0, 0, 0 }, vao_(0), id(0), normalized_(false) {
+Shape::Shape() : vbo_{ 0, 0, 0 }, vao_(0), normalized_(false) {
 }
 
 Shape::~Shape() {
@@ -46,29 +46,26 @@ Shape::~Shape() {
     }
 }
 
-
 int Shape::build()
 {
-    //TODO : FIXME : NOT FINISHED
-
     std::vector<std::shared_ptr<mesh_face>> faces;
     std::vector < std::shared_ptr < mesh_halfedge>> hedg;
     std::vector < std::shared_ptr < mesh_vertex>> vert_e;
-    for(unsigned int i=0;i<nTriangles;i++){
-        std::shared_ptr <mesh_face>tempSh= std::make_shared <mesh_face>();
+    for (unsigned int i = 0; i < nTriangles; i++) {
+        std::shared_ptr <mesh_face>tempSh = std::make_shared <mesh_face>();
         tempSh->fshape = this;
         faces.push_back(tempSh);
     }
-    for (unsigned int i = 0; i < nTriangles-1; i++) {
-        faces[i]->next= faces[i+1];
+    for (unsigned int i = 0; i < nTriangles - 1; i++) {
+        faces[i]->next = faces[i + 1];
     }
     faces[nTriangles - 1]->next = faces[0];
 
     for (unsigned int i = 1; i < nTriangles; i++) {
-        faces[i]->prev = faces[i- 1];
+        faces[i]->prev = faces[i - 1];
     }
-    faces[0]->prev = faces[nTriangles-1];
-    for (unsigned int i = 0; i < nTriangles *3; i++) {
+    faces[0]->prev = faces[nTriangles - 1];
+    for (unsigned int i = 0; i < nTriangles * 3; i++) {
         hedg.push_back(std::make_shared <mesh_halfedge>());
     }
     for (unsigned int i = 0; i < nVertexes; i++) {
@@ -78,43 +75,40 @@ int Shape::build()
     //make a loop of the faces
     faces[nTriangles - 1]->next = faces[0];
     faces[0]->prev = faces[nTriangles - 1];
-    
+
     //create the vertexes in the same order as the verticies
     unsigned int faceNo = 0;
     for (unsigned int i = 0; i < nVertexes; i++) {
-        vert_e[i]->vertexValue = glm::vec3(vertices_[i*3 + 1], vertices_[i*3 + 1], vertices_[i*3 + 2]);
+        vert_e[i]->vertexValue = glm::vec3(vertices_[i * 3 + 1], vertices_[i * 3 + 1], vertices_[i * 3 + 2]);
     }
     for (unsigned int i = 0; i < nTriangles; i++) {
         for (unsigned int j = 0; j < 3; j++) {
-            hedg[3*i+j]->vertex = vert_e[indices_[i + j]];
+            hedg[3 * i + j]->vertex = vert_e[indices_[i + j]];
         }
     }
 
     //half edges build
     for (unsigned int i = 0; i < nTriangles; i++) {
         for (unsigned int j = 0; j < 3; j++) {
-
             //half edges connection to vertexes
             hedg[i + j]->face = faces[i];
             hedg[i + j]->face = faces[i];
             hedg[i + j]->face = faces[i];
         }
     }
-    for (unsigned int i = 0; i < nTriangles*3; i=i+3) {
-            //half-edge loop inside each face
-            hedg[i]->next = hedg[i + 1];
-            hedg[i + 1]->next = hedg[i + 2];
-            hedg[i + 2]->next = hedg[i];
-        }
-    
-    for (unsigned int i = 0; i < nTriangles*3;i= i + 3) {
-        //half-edge loop in reverse for each face
-        hedg[i]->prev = hedg[i + 2];
-        hedg[i+1]->prev = hedg[i ];
-        hedg[i+2]->prev = hedg[i + 1];
+    for (unsigned int i = 0; i < nTriangles * 3; i = i + 3) {
+        //half-edge loop inside each face
+        hedg[i]->next = hedg[i + 1];
+        hedg[i + 1]->next = hedg[i + 2];
+        hedg[i + 2]->next = hedg[i];
     }
 
-
+    for (unsigned int i = 0; i < nTriangles * 3; i = i + 3) {
+        //half-edge loop in reverse for each face
+        hedg[i]->prev = hedg[i + 2];
+        hedg[i + 1]->prev = hedg[i];
+        hedg[i + 2]->prev = hedg[i + 1];
+    }
 
     //half-edge twin build - the most difficult
 
@@ -130,16 +124,12 @@ int Shape::build()
     }
     return 0;// TODO:FIXME: check this return if it should be somehting else
 }
- 
 
 void Shape::Draw() {
     glCheckFunc(glBindVertexArray(vao_));
     glCheckFunc(glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0));
     glCheckFunc(glBindVertexArray(0));
 }
-
- 
- 
 
 void Shape::GetMesh(std::vector<float>& vertices, std::vector<float>& normals, std::vector<unsigned int>& indices) {
     vertices = vertices_;
@@ -205,7 +195,7 @@ void Shape::ReadOFF(const std::string& path, std::vector<float>& vertices,
     input.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     input.open(path);
 
-    input.ignore(3);  
+    input.ignore(3);
     input >> nVertexes >> nTriangles >> nQuads;
 
     vertices.resize(nVertexes * 3);
@@ -347,16 +337,15 @@ void Shape::InitializeVBO(const std::vector<float>& vertices,
     glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW));
     glCheckFunc(glEnableVertexAttribArray(0));
     glCheckFunc(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL));
-    
+
     //this is the object shader - look at the shader, it uses uniform. so the binding MUST be uniform
-        //Original code 
+        //Original code
     //glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]));          //Using GL_UNIFORM_BUFFER draw the line around the object but now nothing? why?
     //glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * normals.size(), normals.data(), GL_STATIC_DRAW));
 
     //this is the object shader - look at the shader, it uses uniform. so the binding MUST be uniform
     glCheckFunc(glBindBuffer(GL_UNIFORM_BUFFER, vbo_[1]));          //Using GL_UNIFORM_BUFFER draw the line around the object but now nothing? why?
     glCheckFunc(glBufferData(GL_UNIFORM_BUFFER, sizeof(float) * normals.size(), normals.data(), GL_STATIC_DRAW));
-
 
     glCheckFunc(glEnableVertexAttribArray(1));
     glCheckFunc(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL));
@@ -372,8 +361,8 @@ int Shape::updateVerticies(void)
     return 0;
 }
 
-mesh_vertex::mesh_vertex():vertexValue(glm::vec3(0.0, 0.0, 0.0)),
-                            visible(true)
+mesh_vertex::mesh_vertex() :vertexValue(glm::vec3(0.0, 0.0, 0.0)),
+visible(true)
 {
 }
 
@@ -381,13 +370,12 @@ mesh_vertex::~mesh_vertex()
 {
 }
 
-mesh_halfedge::mesh_halfedge() 
+mesh_halfedge::mesh_halfedge()
 {
 }
 
 mesh_halfedge::~mesh_halfedge()
 {
-    
 }
 
 mesh_face::mesh_face() :ID(0),
@@ -400,4 +388,3 @@ normal(glm::vec3(0.0, 0.0, 0.0))
 mesh_face::~mesh_face()
 {
 }
- 

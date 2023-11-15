@@ -176,7 +176,17 @@ void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     info.id++;
 }
 void ObjectShaderNode::RenderTexture(TextureInfo &info) {
-
+    if (!active_)
+        return;
+    ShaderProgram* program = shared_->texture_program;
+    program->Enable();
+    program->SetAttribLocation("position", 0);  //Position variable has (layout(location =0) inside texture_vs.glsl
+    program->SetAttribLocation("normal", 1);    //normal variable has (layout(location =1) inside texture_vs.glsl
+    program->SetUniformInteger("u_TextCoord", 0);
+    program->SetUniformMat4("modelview", info.modelview);
+    mesh_->Draw();
+    info.
+    program->Disable();
 }
 
 void ObjectShaderNode::RenderSilhouette(const glm::mat4& mvp) {
@@ -186,7 +196,6 @@ void ObjectShaderNode::RenderSilhouette(const glm::mat4& mvp) {
     program->SetAttribLocation("normal", 1);
     program->SetUniformFloat("silhouette", silhouette_);
     program->SetUniformMat4("mvp", mvp);
-
     mesh_->Draw();
     program->Disable();
 }

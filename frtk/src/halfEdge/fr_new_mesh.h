@@ -48,7 +48,6 @@ public:
     mesh_face();
     ~mesh_face();
 
-    unsigned int     ID;  //face ID
     Shape* fshape ;
     std::shared_ptr<mesh_halfedge> hedge ;    //first half edge in the face
     bool       visible;
@@ -175,7 +174,7 @@ private:
         const std::vector<float>& normals,
         const std::vector<unsigned int> indices);
 public:
-    unsigned int id;        //Each shape has a unique ID
+    int m_ID;        //Each shape has a unique ID
     std::vector<std::shared_ptr<mesh_face>> FaceObjects; //Hold all faces for the shape and all other elements
 
 public:
