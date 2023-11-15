@@ -185,7 +185,6 @@ void ObjectShaderNode::RenderTexture(TextureInfo &info) {
     program->SetUniformInteger("u_TextCoord", 0);
     program->SetUniformMat4("modelview", info.modelview);
     mesh_->Draw();
-    info.
     program->Disable();
 }
 

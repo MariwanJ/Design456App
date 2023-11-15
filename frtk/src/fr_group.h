@@ -45,17 +45,12 @@ public:
     ~Group();
 
     /**
-     * Adds a node to the group. This could be the global or a child of a child ..etc
+     * Adds a node to the group
      */
-
-    int AddNode(std::shared_ptr<Node> node);//add the object to the scene graph vector, return the index
-
+    void AddNode(std::shared_ptr<Node> node);
     void delNode(std::shared_ptr<Node> node);//add the object to the scene graph vector, return the index
 
-    std::shared_ptr<Node> getNode(int id);//add the object to the scene graph vector, return the index
-
     int getNodeIndex(std::shared_ptr<Node> node);//add the object to the scene graph vector, return the index
-
     /**
      * Retrive a pointer to the desired Node given by id number.
      *
@@ -65,7 +60,6 @@ public:
     std::shared_ptr<Node> getNode(int id);
 
     virtual std::vector<std::shared_ptr<Node>> getNodes();
-
     /**
      * Sets the camera
      * Returns true if the camera has been set
@@ -100,11 +94,10 @@ public:
     virtual void Render(RenderInfo& info, const glm::mat4& modelview) override;
 
 protected:
-    /** Group's children index values */
-    /*Index brought from the main Scene server for unique index, this is not the main index
-        It is used to retrive the objecs from the objects server (vector) using index values
-    */
-    std::vector<int> m_ChildreIndexes; 
+    /** Group's children */
+    std::vector<std::shared_ptr<Node>> nodes_;
+
+private:
 };
 
 #endif

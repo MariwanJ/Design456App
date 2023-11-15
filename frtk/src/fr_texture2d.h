@@ -2,9 +2,8 @@
 #define FR_TEXTURE2D_H
 
 #include<Fr_Core.h>
-#include<../../src/fr_node.h>
-class Fr_Texture2D {
 
+class Fr_Texture2D {
 public:
     Fr_Texture2D();
     ~Fr_Texture2D();

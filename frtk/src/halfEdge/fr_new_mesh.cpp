@@ -29,7 +29,7 @@
 #include <../src/halfEdge/fr_new_mesh.h>
 #include <../src/Fr_GL3Window.h>
 
-Shape::Shape(const std::string& path) :
+Shape::Shape(const std::string& path):
     vbo_{ 0, 0, 0 },
     vao_(0), normalized_(false) {
     ReadFile(path, vertices_, normals_, indices_);
@@ -378,7 +378,7 @@ mesh_halfedge::~mesh_halfedge()
 {
 }
 
-mesh_face::mesh_face() :ID(0),
+mesh_face::mesh_face():
 visible(true),
 selected(false),
 normal(glm::vec3(0.0, 0.0, 0.0))

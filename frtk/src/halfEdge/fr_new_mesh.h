@@ -174,7 +174,6 @@ private:
         const std::vector<float>& normals,
         const std::vector<unsigned int> indices);
 public:
-    int m_ID;        //Each shape has a unique ID
     std::vector<std::shared_ptr<mesh_face>> FaceObjects; //Hold all faces for the shape and all other elements
 
 public:
