@@ -53,8 +53,6 @@ public:
     /**
      * Default Constructor
      */
-
-    std::shared_ptr<std::vector<GLuint>> allTexture;
     Scene();
     /**
      * Sets the background color
@@ -74,6 +72,7 @@ public:
 
 private:
     bkgC  background_;
+
 };
 
 #endif
