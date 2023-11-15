@@ -113,6 +113,11 @@ namespace FR {
          */
         virtual void Render(RenderInfo& info, const glm::mat4& modelview) override;
 
+
+        virtual bool SetupTexture2D(TextureInfo& info);
+
+        virtual void RenderTexture2D(TextureInfo& info);
+
         //Fr_Widget functions
         /**
          * main draw function .

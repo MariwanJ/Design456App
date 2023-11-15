@@ -5,18 +5,14 @@
 
 #version 430 core
 
-
 layout(location = 0) in vec3 position;
-layout(location = 1) in vec2 texCoord;
 
-layout (location = 0) out vec2 v_TexCoord;
+layout (location = 1) out vec2 v_TexCoord;
 
-uniform mat4 mvp;
-uniform vec2 v_Texture;
-
+uniform mat4 modelview;
+uniform vec2 u_Texture;
 
 void main () {
-	v_TexCoord=texCoord;
+	v_TexCoord=u_Texture;
 	gl_Position= mvp * vec4(position, 1.0);
 }
-
