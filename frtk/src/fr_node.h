@@ -32,6 +32,7 @@
 #include <frtk.h>
 #include <fr_core.h>
 #include <glm/glm.hpp>
+#include <fr_texture2d.h>
 
 typedef enum class NODETYPE {
     FR_NODE = 0,
@@ -93,10 +94,7 @@ public:
         //std::vector<glm::mat4> mvp_transparent;
         glm::mat4 modelview;
         glm::mat4 projection;
-        unsigned char* localBuffer;
-        unsigned int texturebuffer;
-        int width, height, bpp;
-        unsigned int slot;
+        std::shared_ptr<Fr_Texture2D> m_Texturer;
     };
     /**
      * Holds the render information
@@ -144,9 +142,9 @@ public:
      */
     virtual void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview);
 
-    virtual bool SetupTexture(TextureInfo& info);
+    virtual bool SetupTexture2D(TextureInfo& info);
 
-    virtual void RenderTexture(TextureInfo& info);
+    virtual void RenderTexture2D(TextureInfo& info);
 
     /**
      * Renders the node
@@ -167,6 +165,10 @@ public:
 
     void type(NODETYPE newVal);
 
+    int Parent();
+
+    void Parent(int index);
+
 protected:
 
     /**
@@ -174,6 +176,17 @@ protected:
      */
     NODETYPE type_;
     bool active_;
+    /**
+     * //This will be used to retrive the objects. 
+     *   A unique ID which will hold the index of the node.
+     *  The -1 indicate that the uniqueIndex is abstract. 
+     *  Whenever the new node addes to the system vector server, the index of the node is what will be here in the uniqueIndex.
+     *  children will have the index of the parent. and so on.
+     */
+    int uniqueIndex; 
+
+    int m_Parent; //-1 for Abstract class that doesnt have parent. and for the Root class
+
 };
 
 #endif

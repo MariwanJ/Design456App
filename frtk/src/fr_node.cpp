@@ -27,7 +27,7 @@
 //
 #include <fr_node.h>
 
-Node::Node() :type_(NODETYPE::FR_NODE),
+Node::Node() :type_(NODETYPE::FR_NODE),m_Parent(-1),
 active_{ true } {
 }
 
@@ -59,13 +59,13 @@ void Node::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) {
     (void)modelview;*/
 }
 
-bool Node::SetupTexture(TextureInfo& info) {
+bool Node::SetupTexture2D(TextureInfo& info) {
     //Dummy code does nothing should be subclassed
     /*(void)info;*/
     return false;
 }
 
-void Node::RenderTexture(TextureInfo& info) {
+void Node::RenderTexture2D(TextureInfo& info) {
     //Dummy code does nothing should be subclassed
     /*(void)info;
     (void)modelview;*/
@@ -94,4 +94,12 @@ NODETYPE Node::type()
 void Node::type(NODETYPE newVal)
 {
     type_ = newVal;
+}
+int Node::Parent() {
+    return m_Parent;
+}
+
+void Node::Parent(int index)
+{
+    m_Parent = index;
 }

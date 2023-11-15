@@ -40,6 +40,7 @@ void Group::AddNode(std::shared_ptr<Node> node) {
     nodes_.push_back(node);
 }
 
+
 bool Group::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
     int ww = 0;
     if (active_)
@@ -70,20 +71,21 @@ void Group::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) {
             node->RenderShadowMap(info, modelview);
 }
 
-bool Group::SetupTexture(TextureInfo& info)
+bool Group::SetupTexture2D(TextureInfo& info)
 {
     if (active_)
         for (auto& node : nodes_)
-            if (node->SetupTexture(info))
+            if (node->SetupTexture2D(info)){
                 return true;
+            }
     return false;
 }
 
-void Group::RenderTexture(TextureInfo& info)
+void Group::RenderTexture2D(TextureInfo& info)
 {
     if (active_)
         for (auto& node : nodes_)
-            node->RenderTexture(info);
+            node->RenderTexture2D(info);
 }
 
 void Group::Render(RenderInfo& info, const glm::mat4& modelview) {
