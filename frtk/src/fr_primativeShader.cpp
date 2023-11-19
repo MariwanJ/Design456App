@@ -49,7 +49,7 @@ void Fr_PrimaitiveShader::defaultShaders()
     f_objectshader_ = "E:/Projects/Design456App/frtk/src/shaders/objectshader";
     f_silhouette_ = "E:/Projects/Design456App/frtk/src/shaders/silhouette";
     f_shadowmap_ = "E:/Projects/Design456App/frtk/src/shaders/shadowmap";
-    //f_texture_  = "E:/Projects/Design456App/frtk/src/shaders/texture";
+    f_texture_  = "E:/Projects/Design456App/frtk/src/shaders/texture";
 }
 /** Shader file name and path */
 void Fr_PrimaitiveShader::setObjectshader(const char* newValue)
@@ -164,19 +164,17 @@ void Fr_PrimaitiveShader::Render(RenderInfo& info, const glm::mat4& modelview) {
         (info.render_transparent && m_Color.a == 1) ||
         (!info.render_transparent && m_Color.a < 1))
         return;
-
     auto mvp = info.projection * modelview;
     auto normalmatrix = glm::transpose(glm::inverse(modelview));
+    auto sm_mvp = m_Color.a == 1 ? info.shadowmap.mvp[info.id] : info.shadowmap.mvp_transparent[info.id];
+
     if (m_Color.a == 1)
         RenderSilhouette(mvp);
 
     ShaderProgram* program = shared_->primative_program;
-
-
-    auto sm_mvp = m_Color.a == 1 ? info.shadowmap.mvp[info.id] : info.shadowmap.mvp_transparent[info.id];
+    program->Enable();
     program->SetUniformMat4("sm_mvp", kShadowMapBiasMatrix * sm_mvp);
 
-    program->Enable();
     LoadLights(program, info.lights);
 
     program->SetAttribLocation("position", 0);
@@ -191,14 +189,11 @@ void Fr_PrimaitiveShader::Render(RenderInfo& info, const glm::mat4& modelview) {
     //TODO FIXME -- THIS IS OLD OPENGL - DOSENT WORK FOR NEW OPENGL
     glGenTextures(1, &info.shadowmap.texture);
     glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));           //     THIS CAUSE ISSUE FIXME!!!!!!!!!!!!!!!!!!!
-
     shared_->primative_program->SetUniformInteger("sm_texture", 0);
 
     //for returning the texture keep the id
     _texture = info.shadowmap.texture;
-
     m_Primative->Draw();
-    program->Enable();
     program->Disable();
     info.id++;
 }
@@ -213,8 +208,8 @@ void Fr_PrimaitiveShader::RenderSilhouette(const glm::mat4& mvp) {
     m_Primative->Draw();
     program->Disable();
 }
-void Fr_PrimaitiveShader::RenderTexture(const glm::mat4& mvp) {
-    ShaderProgram* program = shared_->silhouette_program;
+void Fr_PrimaitiveShader::RenderTexture2D(const glm::mat4& mvp) {
+    ShaderProgram* program = shared_->texture_program;
     program->Enable();
     program->SetAttribLocation("position", 0);
     program->SetAttribLocation("normal", 1);

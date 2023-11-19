@@ -32,6 +32,11 @@ GLFWwindow* Scene::linkToglfw = nullptr;
 Scene::Scene() :
     background_{ 0.9, 0.9, 0.9,1.0 } {
     type(NODETYPE::FR_SCENE);
+
+    glCheckFunc(glEnable(GL_DEPTH_TEST));
+    glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+    glCheckFunc(glEnable(GL_BLEND));
+    glCheckFunc(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 }
 
 void Scene::SetBackgroud(float r, float g, float b) {
@@ -80,22 +85,18 @@ void Scene::delete3DObject(std::shared_ptr<Transform>& obj)
 * This is a general process  for drawing camera, shadow map, render shape /faces ..etc
 */
 void Scene::RenderScene() {
-    glCheckFunc(glEnable(GL_DEPTH_TEST));
-    glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-    glCheckFunc(glEnable(GL_BLEND));
-    glCheckFunc(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-
+    
     RenderInfo render_info;
     if (!SetupCamera(render_info.projection, render_info.modelview))
         throw std::runtime_error("Scene::Render(): Camera not found");
-    SetupLight(render_info.modelview, render_info.lights);
 
+    SetupLight(render_info.modelview, render_info.lights);
     int draw_framebuffer = 0;
     glCheckFunc(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &draw_framebuffer));
 
     SetupShadowMap(render_info.shadowmap);
     glCheckFunc(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, render_info.shadowmap.framebuffer));
-    glCheckFunc(glClear(GL_DEPTH_BUFFER_BIT));
+    glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
     RenderShadowMap(render_info.shadowmap, render_info.shadowmap.modelview);
 
     glCheckFunc(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_framebuffer));

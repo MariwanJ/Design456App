@@ -59,14 +59,14 @@ ObjectShaderNode::ObjectShaderNode(unsigned int color, float silhouette) :
 }
 
 ObjectShaderNode::ObjectShaderNode(glm::vec4 color, float silhouette) :mesh_{ nullptr },
-silhouette_(silhouette) {
+silhouette_(silhouette), text2d_{ nullptr } {
     SetColor(color);
     if (!shared_) {
         shared_ = new Shared;
         shared_->object_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/objectshader");
         shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
         shared_->shadowmap_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/shadowmap");
-        //shared_->texture_program= new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/texture");
+        shared_->texture_program= new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/texture");
     }
     type(NODETYPE::FR_OBJECTSHADERNODE);
 }
@@ -124,7 +124,8 @@ void ObjectShaderNode::LoadLights(ShaderProgram* program, const std::vector<Ligh
 void ObjectShaderNode::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) {
     if (!active_)
         return;
-
+    if (!(mesh_))//Not defined 
+        return;
     auto mvp = info.projection * modelview;
 
     if (color_.a != 1) {
@@ -175,8 +176,29 @@ void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     program->Disable();
     info.id++;
 }
-void ObjectShaderNode::RenderTexture(TextureInfo &info) {
+
+void ObjectShaderNode::RenderSilhouette(const glm::mat4& mvp) {
     if (!active_)
+        return;
+    if (!(mesh_))//Not defined 
+        return;
+
+    ShaderProgram* program = shared_->silhouette_program;
+    program->Enable();
+    program->SetAttribLocation("position", 0);
+    program->SetAttribLocation("normal", 1);
+    program->SetUniformFloat("silhouette", silhouette_);
+    program->SetUniformMat4("mvp", mvp);
+    mesh_->Draw();
+    program->Disable();
+}
+
+
+void ObjectShaderNode::RenderTexture2D(TextureInfo& info)
+{
+    if (!active_)
+        return;
+    if (!(mesh_))//Not defined 
         return;
     ShaderProgram* program = shared_->texture_program;
     program->Enable();
@@ -184,17 +206,6 @@ void ObjectShaderNode::RenderTexture(TextureInfo &info) {
     program->SetAttribLocation("normal", 1);    //normal variable has (layout(location =1) inside texture_vs.glsl
     program->SetUniformInteger("u_TextCoord", 0);
     program->SetUniformMat4("modelview", info.modelview);
-    mesh_->Draw();
-    program->Disable();
-}
-
-void ObjectShaderNode::RenderSilhouette(const glm::mat4& mvp) {
-    ShaderProgram* program = shared_->silhouette_program;
-    program->Enable();
-    program->SetAttribLocation("position", 0);
-    program->SetAttribLocation("normal", 1);
-    program->SetUniformFloat("silhouette", silhouette_);
-    program->SetUniformMat4("mvp", mvp);
     mesh_->Draw();
     program->Disable();
 }

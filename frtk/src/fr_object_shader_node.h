@@ -84,7 +84,7 @@ public:
      */
     void Render(RenderInfo& info, const glm::mat4& modelview) override;
 
-    void RenderTexture(TextureInfo& info);
+    void RenderTexture2D(TextureInfo& info);
 
     //GLuint getCurrentTexturer(void);
 private:
@@ -114,6 +114,7 @@ private:
     std::shared_ptr<Shape> mesh_;
     glm::vec4 color_;
     float silhouette_;
+    std::shared_ptr< Fr_Texture2D> text2d_;
 };
 
 #endif

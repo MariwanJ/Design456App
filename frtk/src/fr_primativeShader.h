@@ -89,7 +89,7 @@ private:
      */
     void RenderSilhouette(const glm::mat4& mvp);
 
-    void RenderTexture(const glm::mat4& mvp);
+    void RenderTexture2D(const glm::mat4& mvp);
 
     // Constants
     const size_t kMaxLights = 8;
@@ -100,6 +100,7 @@ private:
         ShaderProgram* primative_program;
         ShaderProgram* silhouette_program;          //the dark shape and outline of object
         ShaderProgram* shadowmap_program;
+        ShaderProgram* texture_program;
     };
     static Shared* shared_;
 
