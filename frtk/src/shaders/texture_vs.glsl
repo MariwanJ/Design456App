@@ -4,15 +4,18 @@
  */
 
 #version 430 core
-
+//in
 layout(location = 0) in vec3 position;
-
-layout (location = 1) out vec2 v_TexCoord;
-
+layout(location = 1) in vec4 color;
 uniform mat4 modelview;
 uniform vec2 u_Texture;
 
+//out
+out vec2 v_TexCoord;
+out vec4 oColor;
+
 void main () {
 	v_TexCoord=u_Texture;
-	gl_Position= mvp * vec4(position, 1.0);
+	oColor = color;
+	gl_Position= modelview * vec4(position, 1.0);
 }
