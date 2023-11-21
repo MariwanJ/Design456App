@@ -30,13 +30,13 @@
 #include <../src/Fr_GL3Window.h>
 
 Shape::Shape(const std::string& path):
-    vbo_{ 0, 0, 0 },
+    vbo_{ 0, 0, 0,0 },
     vao_(0), normalized_(false) {
-    ReadFile(path, vertices_, normals_, indices_);
-    InitializeVBO(vertices_, normals_, indices_);
+    ReadFile(path);
+    InitializeVBO();
     linktoMainWindow = Fr_GL3Window::getfr_Gl3Window();
 }
-Shape::Shape() : vbo_{ 0, 0, 0 }, vao_(0), normalized_(false) {
+Shape::Shape() : vbo_{ 0, 0, 0 , 0}, vao_(0), normalized_(false) {
 }
 
 Shape::~Shape() {
@@ -171,26 +171,24 @@ void Shape::SetVertex(unsigned int index, float vertices[], const glm::vec3& ver
     vertices[index * 3 + 2] = vertex[2];
 }
 
-void Shape::ReadFile(const std::string& path, std::vector<float>& vertices,
-    std::vector<float>& normals, std::vector<unsigned int>& indices) {
+void Shape::ReadFile(const std::string& path) {
     std::string extension = path.substr(path.rfind('.'));
     if (extension == ".off") {
-        ReadOFF(path, vertices, indices);
+        ReadOFF(path);
         if (normalized_) {
-            CalculateNormals(vertices, indices, normals);
-            NormalizeVertices(vertices_);
+            CalculateNormals();
+            NormalizeVertices();
         }
     }
     else if (extension == ".msh") {
-        ReadMSH(path, vertices, normals, indices);
+        ReadMSH(path);
     }
     else {
         throw std::runtime_error("Unknown mesh extension: " + extension);
     }
 }
 
-void Shape::ReadOFF(const std::string& path, std::vector<float>& vertices,
-    std::vector<unsigned int>& indices) {
+void Shape::ReadOFF(const std::string& path) {
     std::ifstream input;
     input.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     input.open(path);
@@ -198,36 +196,38 @@ void Shape::ReadOFF(const std::string& path, std::vector<float>& vertices,
     input.ignore(3);
     input >> nVertexes >> nTriangles >> nQuads;
 
-    vertices.resize(nVertexes * 3);
-    for (size_t i = 0; i < vertices.size(); ++i)
-        input >> vertices[i];
+    vertices_.resize(nVertexes * 3);
+    for (size_t i = 0; i < vertices_.size(); ++i)
+        input >> vertices_[i];
 
-    indices.resize((nTriangles + 2 * nQuads) * 3);
+    indices_.resize((nTriangles + 2 * nQuads) * 3);
     size_t idx = 0;
     for (size_t i = 0; i < nTriangles + nQuads; ++i) {
         int polygon;
         input >> polygon;
 
         if (polygon == 3) {
-            input >> indices[idx++];
-            input >> indices[idx++];
-            input >> indices[idx++];
+            m_MeshType = FR_POLYGON;
+            input >> indices_[idx++];
+            input >> indices_[idx++];
+            input >> indices_[idx++];
         }
         else {
+            m_MeshType = FR_QUAD;
+
             float quad[4];
             input >> quad[0] >> quad[1] >> quad[2] >> quad[3];
-            indices[idx++] = quad[0];
-            indices[idx++] = quad[1];
-            indices[idx++] = quad[2];
-            indices[idx++] = quad[2];
-            indices[idx++] = quad[3];
-            indices[idx++] = quad[0];
+            indices_[idx++] = quad[0];
+            indices_[idx++] = quad[1];
+            indices_[idx++] = quad[2];
+            indices_[idx++] = quad[2];
+            indices_[idx++] = quad[3];
+            indices_[idx++] = quad[0];
         }
     }
 }
 
-void Shape::ReadMSH(const std::string& path, std::vector<float>& vertices,
-    std::vector<float>& normals, std::vector<unsigned int>& indices) {
+void Shape::ReadMSH(const std::string& path) {
     std::ifstream input;
     input.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     input.open(path);
@@ -235,67 +235,66 @@ void Shape::ReadMSH(const std::string& path, std::vector<float>& vertices,
     size_t nVertices, nTriangles;
     input >> nVertices >> nTriangles;
 
-    vertices.resize(nVertices * 3);
-    normals.resize(nVertices * 3);
+    vertices_.resize(nVertices * 3);
+    normals_.resize(nVertices * 3);
     for (size_t i = 0; i < nVertices; ++i) {
         int id;
         input >> id;
-        input >> vertices[3 * i]
-            >> vertices[3 * i + 1]
-            >> vertices[3 * i + 2];
-        input >> normals[3 * i]
-            >> normals[3 * i + 1]
-            >> normals[3 * i + 2];
+        input >> vertices_[3 * i]
+            >> vertices_[3 * i + 1]
+            >> vertices_[3 * i + 2];
+        input >> normals_[3 * i]
+            >> normals_[3 * i + 1]
+            >> normals_[3 * i + 2];
     }
 
-    indices.resize(nTriangles * 3);
+    indices_.resize(nTriangles * 3);
     for (size_t i = 0; i < nTriangles; ++i) {
         int id;
         input >> id;
-        input >> indices[3 * i]
-            >> indices[3 * i + 1]
-            >> indices[3 * i + 2];
+        input >> indices_[3 * i]
+              >> indices_[3 * i + 1]
+              >> indices_[3 * i + 2];
     }
+    texter
 }
 
-void Shape::NormalizeVertices(std::vector<float>& vertices) {
+void Shape::NormalizeVertices() {
     glm::vec3 min(std::numeric_limits<float>::max(),
         std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
     float max = std::numeric_limits<float>::min();
 
-    for (size_t i = 0; i < vertices.size(); i += 3) {
+    for (size_t i = 0; i < vertices_.size(); i += 3) {
         for (size_t j = 0; j < 3; ++j) {
-            min[j] = std::min(min[j], vertices[i + j]);
-            max = std::max(max, vertices[i + j] - min[j]);
+            min[j] = std::min(min[j], vertices_[i + j]);
+            max = std::max(max, vertices_[i + j] - min[j]);
         }
     }
 
-    for (size_t i = 0; i < vertices.size() / 3; ++i) {
-        glm::vec3 vertex = GetVertex(i, vertices.data());
+    for (size_t i = 0; i < vertices_.size() / 3; ++i) {
+        glm::vec3 vertex = GetVertex(i, vertices_.data());
         glm::vec3 normalized = (vertex - min) / max - 0.5f;
-        SetVertex(i, vertices.data(), normalized);
+        SetVertex(i, vertices_.data(), normalized);
     }
 }
 
-void Shape::CalculateNormals(const std::vector<float>& vertices,
-    const std::vector<unsigned int>& indices,
-    std::vector<float>& normals) {
+void Shape::CalculateNormals() {
     // Initialize the normals
-    std::vector<glm::vec3> pre_normals(vertices.size() / 3);
+    std::vector<glm::vec3> pre_normals(vertices_.size() / 3);
     for (size_t i = 0; i < pre_normals.size(); ++i) {
         pre_normals[i] = { 0, 0, 0 };
     }
 
     // Calculate the normals for each triangle vertex
-    for (size_t i = 0; i < indices.size() - 3; i += 3) {
+    for (size_t i = 0; i < indices_.size() - 3; i += 3) {
         // Triangle vertices' indices
-        unsigned int v[3] = { indices[i], indices[i + 1], indices[i + 2] };
+        unsigned int v[3] = { indices_[i], indices_[i + 1], indices_[i + 2] };
 
         // Triangle's vertices
         glm::vec3 triangle[3] = {
-            GetVertex(v[0], vertices.data()),
-            GetVertex(v[1], vertices.data()),
-            GetVertex(v[2], vertices.data())
+            GetVertex(v[0], vertices_.data()),
+            GetVertex(v[1], vertices_.data()),
+            GetVertex(v[2], vertices_.data())
         };
 
         // Vectors created by the triangle's vertexes
@@ -321,38 +320,42 @@ void Shape::CalculateNormals(const std::vector<float>& vertices,
             pre_normals[v[j]] = pre_normals[v[j]] + t_normal * angle[j];
     }
 
-    normals.resize(vertices.size());
+    normals_.resize(vertices_.size());
     for (size_t i = 0; i < pre_normals.size(); ++i)
-        SetVertex(i, normals.data(), glm::normalize(pre_normals[i]));
+        SetVertex(i, normals_.data(), glm::normalize(pre_normals[i]));
 }
 
-void Shape::InitializeVBO(const std::vector<float>& vertices,
-    const std::vector<float>& normals,
-    const std::vector<unsigned int> indices) {
-    glCheckFunc(glGenBuffers(3, vbo_));
+meshType Shape::getMeshType()
+{
+    return m_MeshType;
+}
+
+void Shape::InitializeVBO() {
+    glCheckFunc(glGenBuffers(NUM_OF_VBO_BUFFERS, vbo_)); //3 
     glCheckFunc(glGenVertexArrays(1, &vao_));
     glCheckFunc(glBindVertexArray(vao_));
-
+    //VERTICIES 
     glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]));
-    glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW));
-    glCheckFunc(glEnableVertexAttribArray(0));
-    glCheckFunc(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL));
+    glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices_.size(), vertices_.data(), GL_STATIC_DRAW));
+    glCheckFunc(glEnableVertexAttribArray(POSITION_VB));
+    glCheckFunc(glVertexAttribPointer(POSITION_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL));                //POSITION_VB = 0
+
+    ///Texture 
+    glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]));
+    glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * textcoord_.size(), textcoord_.data(), GL_STATIC_DRAW));
+    glCheckFunc(glEnableVertexAttribArray(TEXCOORD_VB));
+    glCheckFunc(glVertexAttribPointer(TEXCOORD_VB, 2, GL_FLOAT, GL_FALSE, 0, NULL));        //TEXCOORD_VB=1   NOTE: SHADER MUST HAVE THE SAME SEQUENCE
 
     //this is the object shader - look at the shader, it uses uniform. so the binding MUST be uniform
-        //Original code
-    //glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]));          //Using GL_UNIFORM_BUFFER draw the line around the object but now nothing? why?
-    //glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * normals.size(), normals.data(), GL_STATIC_DRAW));
+    //NORMALS
+    glCheckFunc(glBindBuffer(GL_UNIFORM_BUFFER, vbo_[2]));          //Using GL_UNIFORM_BUFFER draw the line around the object but now nothing? why?
+    glCheckFunc(glBufferData(GL_UNIFORM_BUFFER, sizeof(float) * normals_.size(), normals_.data(), GL_STATIC_DRAW));
 
-    //this is the object shader - look at the shader, it uses uniform. so the binding MUST be uniform
-    glCheckFunc(glBindBuffer(GL_UNIFORM_BUFFER, vbo_[1]));          //Using GL_UNIFORM_BUFFER draw the line around the object but now nothing? why?
-    glCheckFunc(glBufferData(GL_UNIFORM_BUFFER, sizeof(float) * normals.size(), normals.data(), GL_STATIC_DRAW));
-
-    glCheckFunc(glEnableVertexAttribArray(1));
+    //?? Not sure for what purpose we send this??
+    glCheckFunc(glEnableVertexAttribArray(2));
     glCheckFunc(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL));
-
-    glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[2]));
-    glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW));
-
+    glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[3]));
+    glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int), indices_.data(), GL_STATIC_DRAW));
     glCheckFunc(glBindVertexArray(0));
 }
 

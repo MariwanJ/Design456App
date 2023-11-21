@@ -10,7 +10,9 @@
 #version 430 core
 
 layout(location = 0) in vec3 position;
-layout(location = 1) in vec3 normal;
+layout(location = 1) in vec2 texCoord;
+layout(location = 2) in vec3 normal;
+layout(location = 3) in vec3 unKnown;  //We send data to here but we dont use it .. why?
 
 uniform mat4 modelview;
 uniform mat4 normalmatrix;
@@ -19,8 +21,9 @@ uniform mat4 sm_mvp;
 
 
 layout (location = 0) out vec3 frag_position;
-layout (location = 1) out vec3 frag_normal;
-layout (location = 2) out vec3 frag_sm_position;
+layout (location = 1) out vec3 uTextCoord;
+layout (location = 2) out vec3 frag_normal;
+layout (location = 3) out vec3 frag_sm_position;
 layout (location = 4) out vec4 gl_Position ;
 
 out vec2 v_TexCoord;
@@ -33,5 +36,6 @@ void main () {
 	frag_sm_position = sm_position.xyz/ sm_position.w;
 
     gl_Position = mvp * vec4(position, 1.0);
+	vec2 uTextCoord= texCoord;
 }
 

@@ -31,7 +31,12 @@
 
 #include<frtk.h>
 #include<fr_core.h>
+
 #include <glm/glm.hpp>
+
+#define NUM_OF_VBO_BUFFERS 4 //ONE FOR THE MESH, OTHER FOR TEXTURE: This might change
+#define POSITION_VB 0
+#define TEXCOORD_VB 1
 
 class FRTK_API Mesh {
 public:
@@ -117,16 +122,19 @@ private:
     /**
      * Creates the vertex buffer object
      */
-    void InitializeVBO(const std::vector<float>& vertices,
-        const std::vector<float>& normals,
-        const std::vector<unsigned int> indices);
+    void InitializeVBO();
+
+    meshType getMeshType();
 
     std::vector<float> vertices_;
+    std::vector<float>textcoord_; //Texture Coordinates
     std::vector<float> normals_;
     std::vector<unsigned int> indices_;
-    unsigned int vbo_[3];
+
+    unsigned int vbo_[NUM_OF_VBO_BUFFERS];
     unsigned int vao_;
     bool normalized_;
+    meshType m_MeshType;
 };
 
 #endif

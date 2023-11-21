@@ -30,7 +30,7 @@
 //Remove me later : TODO
 #include<fr_mesh.h>
 #include<halfEdge/fr_new_mesh.h>
-#include<fr_object_shader_node.h>
+#include<fr_modelnode.h>
 //End remove me later
 
 /**
@@ -486,7 +486,7 @@ std::shared_ptr<Transform> Fr_GL3Window::CreateSunTop() {
     sun->SetPosition(0.0f, 0.0f, 1000.0f);
     sun->SetDiffuse(0.25f, 0.25f, 0.25f);
     sun->SetAmbient(0.2f, 0.2f, 0.2f);
-   // sun->EnableShadowMap(glm::vec3(0, 0, 1), glm::vec3(0, 0, 4), glm::ortho<float>(-10, 10, -10, 10,100, 114));
+    sun->EnableShadowMap(glm::vec3(0, 0, 1), glm::vec3(0, 0, 4), glm::ortho<float>(-10, 10, -10, 10,100, 114));
     sun_->AddNode(sun);
     sun->SetActive(true);   //A must to have otherwise everything is black.
     sunT = std::move(sun_);

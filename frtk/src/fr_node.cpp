@@ -59,13 +59,13 @@ void Node::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) {
     (void)modelview;*/
 }
 
-bool Node::SetupTexture2D(TextureInfo& info) {
+bool Node::SetupTexture2D( ) {
     //Dummy code does nothing should be subclassed
     /*(void)info;*/
     return false;
 }
 
-void Node::RenderTexture2D(TextureInfo& info) {
+void Node::RenderTexture2D() {
     //Dummy code does nothing should be subclassed
     /*(void)info;
     (void)modelview;*/
@@ -76,7 +76,6 @@ void Node::Render(RenderInfo& info, const glm::mat4& modelview) {
     /*(void)info;
     (void)modelview;*/
 }
-
 
 void Node::SetActive(bool active) {
     active_ = active;

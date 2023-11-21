@@ -42,7 +42,7 @@ typedef enum class NODETYPE {
     FR_PRIMATIVESHADER = 4,
     FR_LIGHT = 5,
     FR_CAMERA = 6,
-    FR_OBJECTSHADERNODE = 7,
+    FR_ModelNode = 7,
     FR_SCENE = 8,
     FR_MESH = 9,
     FR_GRID = 10
@@ -87,15 +87,6 @@ public:
         unsigned int height;
     };
 
-
-    struct TextureInfo {
-        unsigned int id;
-       // std::vector<glm::mat4> mvp;
-        //std::vector<glm::mat4> mvp_transparent;
-        glm::mat4 modelview;
-        glm::mat4 projection;
-        std::shared_ptr<Fr_Texture2D> m_Texturer;
-    };
     /**
      * Holds the render information
      */
@@ -106,7 +97,6 @@ public:
         std::vector<LightInfo> lights;
         ShadowMapInfo shadowmap;
         bool render_transparent;
-        TextureInfo textureInfo;
     };
 
     /**
@@ -142,9 +132,9 @@ public:
      */
     virtual void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview);
 
-    virtual bool SetupTexture2D(TextureInfo& info);
+    virtual bool SetupTexture2D( );
 
-    virtual void RenderTexture2D(TextureInfo& info);
+    virtual void RenderTexture2D();
 
     /**
      * Renders the node

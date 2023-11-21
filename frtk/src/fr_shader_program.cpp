@@ -93,6 +93,26 @@ void ShaderProgram::SetUniformVec3(const std::string& name, const glm::vec3& val
     glUniform3fv(location, 1, glm::value_ptr(value));
 }
 //Send data to a variable inside the shader by the variable name which is retrived by get location.
+//Send one float value to a variable that is 3 floats in the shader
+void ShaderProgram::SetUniformVec2Int(const std::string& name, const glm::ivec2& value) {
+    GLuint location = glGetUniformLocation(program_, name.c_str());
+    if (location == -1)
+        DebugBreak();
+
+    glUniform2i(location,value.x,value.y);
+}
+
+//Send data to a variable inside the shader by the variable name which is retrived by get location.
+//Send one float value to a variable that is 3 floats in the shader
+void ShaderProgram::SetUniformVec2(const std::string& name, const glm::vec2& value) {
+    GLuint location = glGetUniformLocation(program_, name.c_str());
+    if (location == -1)
+        DebugBreak();
+
+    glUniform2f(location, value.x, value.y);
+}
+
+//Send data to a variable inside the shader by the variable name which is retrived by get location.
 //Send one float value to a variable that is float in the shader
 void ShaderProgram::SetUniformVec4(const std::string& name, const glm::vec4& value) {
     GLuint location = glGetUniformLocation(program_, name.c_str());

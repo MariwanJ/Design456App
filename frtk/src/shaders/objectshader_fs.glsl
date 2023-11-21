@@ -27,8 +27,9 @@ const int NUM_COLORS = 2; //check this value
 const vec3 GLOBAL_AMBIENT = vec3(0.1, 0.1, 0.1);
 
 layout (location=0) in vec3 frag_position;
-layout (location=1) in vec3 frag_normal;
-layout (location=2) in vec3 frag_sm_position;
+layout (location=1) in vec2 uTextCoord;
+layout (location=2) in vec3 frag_normal;
+layout (location=3) in vec3 frag_sm_position;
 
 
 uniform vec4 color;

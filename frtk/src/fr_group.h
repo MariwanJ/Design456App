@@ -84,9 +84,9 @@ public:
     virtual void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) override;
 
 
-    virtual bool SetupTexture2D(TextureInfo& info);
+    virtual bool SetupTexture2D( );
 
-    virtual void RenderTexture2D(TextureInfo& info);
+    virtual void RenderTexture2D();
 
     /**
      * Renders the node

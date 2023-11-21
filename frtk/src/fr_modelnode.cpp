@@ -27,11 +27,16 @@
 //
 #include <glm/gtx/transform.hpp>
 #include <fr_shader_program.h>
-#include <fr_object_shader_node.h>
+#include <fr_modelnode.h>
 #include <glad/glad.h>
 #include<fr_primatives.h>
 
-ObjectShaderNode::Shared* ObjectShaderNode::shared_ = nullptr;
+/**
+ * This file is the implementation of shape object based on Mesh data
+ * It has all parts needed to draw a 3D object in mesh format
+ * .
+ */
+ModelNode::Shared* ModelNode::shared_ = nullptr;
 
 static const glm::mat4 kShadowMapBiasMatrix(
     0.5, 0.0, 0.0, 0.0,
@@ -44,7 +49,7 @@ static const glm::mat4 kShadowMapBiasMatrix(
     0.0, 0.0, 0.5, 0.0,
     0.5, 0.5, 0.5, 1.0);*/
 
-ObjectShaderNode::ObjectShaderNode(unsigned int color, float silhouette) :
+ModelNode::ModelNode(unsigned int color, float silhouette) :
     mesh_{ nullptr },
     silhouette_(silhouette) {
     SetColor(color);
@@ -55,11 +60,11 @@ ObjectShaderNode::ObjectShaderNode(unsigned int color, float silhouette) :
         shared_->shadowmap_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/shadowmap");
         shared_->texture_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/texture");
     }
-    type(NODETYPE::FR_OBJECTSHADERNODE);
+    type(NODETYPE::FR_ModelNode);
 }
 
-ObjectShaderNode::ObjectShaderNode(glm::vec4 color, float silhouette) :mesh_{ nullptr },
-silhouette_(silhouette), text2d_{ nullptr } {
+ModelNode::ModelNode(glm::vec4 color, float silhouette) :mesh_{ nullptr },
+silhouette_(silhouette), m_Texture2D{ nullptr } {
     SetColor(color);
     if (!shared_) {
         shared_ = new Shared;
@@ -68,13 +73,13 @@ silhouette_(silhouette), text2d_{ nullptr } {
         shared_->shadowmap_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/shadowmap");
         shared_->texture_program= new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/texture");
     }
-    type(NODETYPE::FR_OBJECTSHADERNODE);
+    type(NODETYPE::FR_ModelNode);
 }
 
-ObjectShaderNode::~ObjectShaderNode() {
+ModelNode::~ModelNode() {
 }
 
-void ObjectShaderNode::SetColor(unsigned int color, float alpha) {
+void ModelNode::SetColor(unsigned int color, float alpha) {
     color_ = glm::vec4(
         ((color >> 16) & 0xFF) / 255.0f,
         ((color >> 8) & 0xFF) / 255.0f,
@@ -83,27 +88,27 @@ void ObjectShaderNode::SetColor(unsigned int color, float alpha) {
     );
 }
 
-void ObjectShaderNode::SetColor(glm::vec4 color, float alpha)
+void ModelNode::SetColor(glm::vec4 color, float alpha)
 {
     color[3] = alpha; //just in case it is not what you have in the color
     color_ = color;
 }
 
-void ObjectShaderNode::SetOpacity(float alpha) {
+void ModelNode::SetOpacity(float alpha) {
     color_.a = alpha;
 }
 
-void ObjectShaderNode::SetMesh(std::shared_ptr<Shape> mesh) {
+void ModelNode::SetMesh(std::shared_ptr<Shape> mesh) {
     mesh_ = mesh;
     mesh_->build();
 }
 
-void ObjectShaderNode::SetMesh(const std::string& mesh) {
+void ModelNode::SetMesh(const std::string& mesh) {
     mesh_ = std::make_shared<Shape>(mesh);
     mesh_->build();
 }
 
-void ObjectShaderNode::LoadLights(ShaderProgram* program, const std::vector<LightInfo>& lights) {
+void ModelNode::LoadLights(ShaderProgram* program, const std::vector<LightInfo>& lights) {
     unsigned int nlights = std::min(lights.size(), kMaxLights);
     program->SetUniformInteger("nlights", nlights);
     for (size_t i = 0; i < nlights; ++i) {
@@ -121,7 +126,7 @@ void ObjectShaderNode::LoadLights(ShaderProgram* program, const std::vector<Ligh
     }
 }
 
-void ObjectShaderNode::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) {
+void ModelNode::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) {
     if (!active_)
         return;
     if (!(mesh_))//Not defined 
@@ -142,7 +147,7 @@ void ObjectShaderNode::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& mod
     program->Disable();
 }
 
-void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
+void ModelNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     if (!active_ ||
         (info.render_transparent && color_.a == 1) ||
         (!info.render_transparent && color_.a < 1))
@@ -161,7 +166,9 @@ void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
 
     LoadLights(program, info.lights);
     program->SetAttribLocation("position", 0);  //Position variable has (layout(location =0) inside objectshader_vs.glsl
-    program->SetAttribLocation("normal", 1);    //normal variable has (layout(location =1) inside objectshader_vs.glsl
+    program->SetAttribLocation("texCoord", 1);  //Position variable has (layout(location =0) inside objectshader_vs.glsl
+
+    program->SetAttribLocation("normal", 2);    //normal variable has (layout(location =1) inside objectshader_vs.glsl
     program->SetUniformMat4("modelview", modelview);
     program->SetUniformMat4("normalmatrix", normalmatrix);
     program->SetUniformMat4("mvp", mvp);
@@ -175,9 +182,11 @@ void ObjectShaderNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     shared_->object_program->SetUniformInteger("sm_texture", 0);
     program->Disable();
     info.id++;
+
+    //Render texture also here.
 }
 
-void ObjectShaderNode::RenderSilhouette(const glm::mat4& mvp) {
+void ModelNode::RenderSilhouette(const glm::mat4& mvp) {
     if (!active_)
         return;
     if (!(mesh_))//Not defined 
@@ -194,18 +203,21 @@ void ObjectShaderNode::RenderSilhouette(const glm::mat4& mvp) {
 }
 
 
-void ObjectShaderNode::RenderTexture2D(TextureInfo& info)
+void ModelNode::RenderTexture2D(RenderInfo& info, const glm::mat4& modelview)
 {
     if (!active_)
         return;
     if (!(mesh_))//Not defined 
         return;
     ShaderProgram* program = shared_->texture_program;
+    m_Texture2D->Bind();
     program->Enable();
     program->SetAttribLocation("position", 0);  //Position variable has (layout(location =0) inside texture_vs.glsl
-    program->SetAttribLocation("normal", 1);    //normal variable has (layout(location =1) inside texture_vs.glsl
-    program->SetUniformInteger("u_TextCoord", 0);
+    program->SetAttribLocation("color", 1);    //normal variable has (layout(location =1) inside texture_vs.glsl
+   // program->SetUniformVec2("u_Texture", 2);
     program->SetUniformMat4("modelview", info.modelview);
+    program->SetUniformVec4("color", color_);       //Object color - not light color
     mesh_->Draw();
+    m_Texture2D->Unbind();
     program->Disable();
 }

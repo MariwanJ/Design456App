@@ -46,7 +46,7 @@ void Fr_Primatives::Draw()
     }
     else if (drawType == GL_LINE_STRIP) {
         glCheckFunc(glBindVertexArray(vao_));
-        glCheckFunc(glDrawArrays(GL_LINE_STIPPLE, 0, vertices_.size()));
+        glCheckFunc(glDrawArrays(GL_LINE_STRIP, 0, vertices_.size()));
         glCheckFunc(glBindVertexArray(0));
         glCheckFunc(glLineWidth(m_lineWidth));
     }

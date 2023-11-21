@@ -32,9 +32,9 @@ Mesh::Mesh(const std::string& path) :
     vbo_{ 0, 0, 0 },
     vao_(0), normalized_(false) {
     ReadFile(path, vertices_, normals_, indices_);
-    InitializeVBO(vertices_, normals_, indices_);
+    InitializeVBO();
 }
-Mesh::Mesh() : vbo_{ 0, 0, 0 }, vao_(0) {
+Mesh::Mesh() : vbo_{ 0, 0, 0, 0 }, vao_(0) {
 }
 
 Mesh::~Mesh() {
@@ -129,11 +129,13 @@ void Mesh::ReadOFF(const std::string& path, std::vector<float>& vertices,
         input >> polygon;
 
         if (polygon == 3) {
+            m_MeshType = FR_POLYGON;
             input >> indices[idx++];
             input >> indices[idx++];
             input >> indices[idx++];
         }
         else {
+            m_MeshType = FR_QUAD;
             float quad[4];
             input >> quad[0] >> quad[1] >> quad[2] >> quad[3];
             indices[idx++] = quad[0];
@@ -246,25 +248,37 @@ void Mesh::CalculateNormals(const std::vector<float>& vertices,
         SetVertex(i, normals.data(), glm::normalize(pre_normals[i]));
 }
 
-void Mesh::InitializeVBO(const std::vector<float>& vertices,
-    const std::vector<float>& normals,
-    const std::vector<unsigned int> indices) {
-    glCheckFunc(glGenBuffers(3, vbo_));
-    glCheckFunc(glGenVertexArrays(1, &vao_));
-    glCheckFunc(glBindVertexArray(vao_));
+void Mesh::InitializeVBO(){
+    glCheckFunc(glGenBuffers(NUM_OF_VBO_BUFFERS, vbo_)); //3 
+glCheckFunc(glGenVertexArrays(1, &vao_));
+glCheckFunc(glBindVertexArray(vao_));
+//VERTICIES 
+glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]));
+glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float)* vertices_.size(), vertices_.data(), GL_STATIC_DRAW));
+glCheckFunc(glEnableVertexAttribArray(POSITION_VB));
+glCheckFunc(glVertexAttribPointer(POSITION_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL));                //POSITION_VB = 0
 
-    glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]));
-    glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW));
-    glCheckFunc(glEnableVertexAttribArray(0));
-    glCheckFunc(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL));
+///Texture 
+glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]));
+glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float)* textcoord_.size(), textcoord_.data(), GL_STATIC_DRAW));
+glCheckFunc(glEnableVertexAttribArray(TEXCOORD_VB));
+glCheckFunc(glVertexAttribPointer(TEXCOORD_VB, 2, GL_FLOAT, GL_FALSE, 0, NULL));        //TEXCOORD_VB=1   NOTE: SHADER MUST HAVE THE SAME SEQUENCE
 
-    glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]));
-    glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * normals.size(), normals.data(), GL_STATIC_DRAW));
-    glCheckFunc(glEnableVertexAttribArray(1));
-    glCheckFunc(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL));
+//this is the object shader - look at the shader, it uses uniform. so the binding MUST be uniform
+//NORMALS
+glCheckFunc(glBindBuffer(GL_UNIFORM_BUFFER, vbo_[2]));          //Using GL_UNIFORM_BUFFER draw the line around the object but now nothing? why?
+glCheckFunc(glBufferData(GL_UNIFORM_BUFFER, sizeof(float)* normals_.size(), normals_.data(), GL_STATIC_DRAW));
 
-    glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[2]));
-    glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW));
+//?? Not sure for what purpose we send this??
+glCheckFunc(glEnableVertexAttribArray(2));
+glCheckFunc(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL));
+glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[3]));
+glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int), indices_.data(), GL_STATIC_DRAW));
+glCheckFunc(glBindVertexArray(0));
+}
 
-    glCheckFunc(glBindVertexArray(0));
+
+meshType Mesh::getMeshType()
+{
+    return m_MeshType;
 }

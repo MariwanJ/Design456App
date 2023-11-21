@@ -42,6 +42,12 @@ class mesh_edge;
 class mesh_vertex;
 class mesh_loop;
 
+#define NUM_OF_VBO_BUFFERS 4 //ONE FOR THE MESH, OTHER FOR TEXTURE: This might change
+#define POSITION_VB 0
+#define TEXCOORD_VB 1
+
+
+
 
 class mesh_face {
 public:
@@ -140,39 +146,34 @@ private:
     /**
      * Reads the vertex information and the point information from file
      */
-    void ReadFile(const std::string& path, std::vector<float>& vertices,
-        std::vector<float>& normals, std::vector<unsigned int>& indices);
+    void ReadFile(const std::string& path);
 
     /**
      * Reads a .off file
      */
-    void ReadOFF(const std::string& path, std::vector<float>& vertices,
-        std::vector<unsigned int>& indices);
+    void ReadOFF(const std::string& path);
 
     /**
      * Reads a .msh file
      */
-    void ReadMSH(const std::string& path, std::vector<float>& vertices,
-        std::vector<float>& normals, std::vector<unsigned int>& indices);
+    void ReadMSH(const std::string& path);
 
     /**
      * Normalize the mesh in the range -0.5, 0.5 and center it in 0, 0, 0
      */
-    void NormalizeVertices(std::vector<float>& vertices);
+    void NormalizeVertices();
 
     /**
      * Calculate the normals based on the triangles
      */
-    void CalculateNormals(const std::vector<float>& vertices,
-        const std::vector<unsigned int>& indices,
-        std::vector<float>& normals);
+    void CalculateNormals();
 
     /**
      * Creates the vertex buffer object
      */
-    void InitializeVBO(const std::vector<float>& vertices,
-        const std::vector<float>& normals,
-        const std::vector<unsigned int> indices);
+    void InitializeVBO();
+    meshType getMeshType();
+
 public:
     std::vector<std::shared_ptr<mesh_face>> FaceObjects; //Hold all faces for the shape and all other elements
 
@@ -185,15 +186,19 @@ public:
 
 private:
     std::vector<float> vertices_;
+    std::vector<float>textcoord_; //Texture Coordinates
+
     std::vector<float> normals_;
     std::vector<unsigned int> indices_;
 
+
     size_t nVertexes, nTriangles, nQuads;
 
-    unsigned int vbo_[3];
+    unsigned int vbo_[NUM_OF_VBO_BUFFERS];
     unsigned int vao_;
     bool normalized_;
 
+    meshType m_MeshType;
 private:
     Fr_GL3Window* linktoMainWindow;
 };

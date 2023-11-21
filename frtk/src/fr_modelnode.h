@@ -25,8 +25,8 @@
 //  Modified to use with this project by :
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-#ifndef FR_OBJECTSHADERNODE_H
-#define FR_OBJECTSHADERNODE_H
+#ifndef FR_ModelNode_H
+#define FR_ModelNode_H
 
 #include <memory>
 #include <fr_node.h>
@@ -36,18 +36,18 @@
 class Mesh;
 class ShaderProgram;
 
-class FRTK_API ObjectShaderNode : public Node {
+class FRTK_API ModelNode : public Node {
 public:
     /**
      * Constructor
      */
-    ObjectShaderNode(unsigned int color = 0x111111, float silhouette = 0.005);
-    ObjectShaderNode(glm::vec4 color = glm::vec4(FR_WHITE), float silhouette = 0.005);
+    ModelNode(unsigned int color = 0x111111, float silhouette = 0.005);
+    ModelNode(glm::vec4 color = glm::vec4(FR_WHITE), float silhouette = 0.005);
 
     /**
      * Destructor
      */
-    ~ObjectShaderNode();
+    ~ModelNode();
 
     /**
      * Sets the color
@@ -84,9 +84,10 @@ public:
      */
     void Render(RenderInfo& info, const glm::mat4& modelview) override;
 
-    void RenderTexture2D(TextureInfo& info);
+    void RenderTexture2D(RenderInfo& info, const glm::mat4& modelview);
+    
+    std::shared_ptr< Fr_Texture2D> m_Texture2D;
 
-    //GLuint getCurrentTexturer(void);
 private:
     /**
      * Sets the uniform light data
@@ -114,7 +115,7 @@ private:
     std::shared_ptr<Shape> mesh_;
     glm::vec4 color_;
     float silhouette_;
-    std::shared_ptr< Fr_Texture2D> text2d_;
+   
 };
 
 #endif

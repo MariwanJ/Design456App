@@ -27,7 +27,7 @@
 
 #include <fr_grid.h>
 
-#include <fr_object_shader_node.h>
+#include <fr_modelnode.h>
 #include <fr_primativeShader.h>
 //Temporary code to have something to show.
 
@@ -38,10 +38,14 @@ std::shared_ptr<Transform>bunny() {
     auto bunny_t = std::make_shared<Transform>();
     bunny_t->Translate(0, 0, 0);
     bunny_t->Scale(1, 1, 1);
-    auto bunny = std::make_shared<ObjectShaderNode>(glm::vec4(FR_IRON), 0.02f); //  color and
+    auto bunny = std::make_shared<ModelNode>(glm::vec4(FR_IRON), 0.02f); //  color and
 
     //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/cube.off"));
      bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Pyramid.off"));
+     std::shared_ptr<Fr_Texture2D> objTextur = std::make_shared<Fr_Texture2D>();
+     std::string imag =  ("E:/Projects/Design456App/resources/Texture/test.png");
+     objTextur->set2DTexture(imag, 375, 335, 1, 0);
+     bunny->m_Texture2D=objTextur;
     //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Wedge.off"));
     auto Bunny_spot = std::make_shared<Light>();
     Bunny_spot->SetActive(true);
@@ -53,6 +57,7 @@ std::shared_ptr<Transform>bunny() {
     Bunny_spot->SetSpecular(FR_METAL);
     bunny_t->AddNode(Bunny_spot);
     bunny_t->AddNode(bunny);
+    bunny->SetActive(true);
     return bunny_t;
 }
 /**

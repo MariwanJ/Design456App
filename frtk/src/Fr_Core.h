@@ -77,6 +77,10 @@ enum class CameraList {
     RIGHT,
     LEFT,
 };
+
+typedef enum meshType { FR_QUAD, FR_POLYGON };
+
+
 typedef struct userData_ {
     glm::vec3 camPosition_;
     glm::vec3 direction_;

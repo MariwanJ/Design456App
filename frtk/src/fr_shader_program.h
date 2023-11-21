@@ -62,6 +62,10 @@ public:
     void SetUniformInteger(const std::string& name, int value);
     void SetUniformFloat(const std::string& name, float value);
     void SetUniformVec3(const std::string& name, const glm::vec3& value);
+    void SetUniformVec2Int(const std::string& name, const glm::ivec2& value);
+
+    void SetUniformVec2(const std::string& name, const glm::vec2& value);
+
     void SetUniformVec4(const std::string& name, const glm::vec4& value);
     void SetUniformMat4(const std::string& name, const glm::mat4& value);
 

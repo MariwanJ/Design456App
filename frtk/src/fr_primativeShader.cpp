@@ -173,17 +173,19 @@ void Fr_PrimaitiveShader::Render(RenderInfo& info, const glm::mat4& modelview) {
 
     ShaderProgram* program = shared_->primative_program;
     program->Enable();
-    program->SetUniformMat4("sm_mvp", kShadowMapBiasMatrix * sm_mvp);
+
 
     LoadLights(program, info.lights);
 
     program->SetAttribLocation("position", 0);
-    program->SetAttribLocation("normal", 1);
+    program->SetAttribLocation("texCoord", 1);
+    program->SetAttribLocation("normal", 2);
     program->SetUniformMat4("modelview", modelview);
     program->SetUniformMat4("normalmatrix", normalmatrix);
     program->SetUniformMat4("mvp", mvp);
     program->SetUniformVec4("color", m_Color);
     program->SetUniformInteger("sm_light", info.shadowmap.light_id);
+    program->SetUniformMat4("sm_mvp", kShadowMapBiasMatrix * sm_mvp);
 
     //****************************************************************************************FIXME
     //TODO FIXME -- THIS IS OLD OPENGL - DOSENT WORK FOR NEW OPENGL
