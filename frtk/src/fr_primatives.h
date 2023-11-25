@@ -48,6 +48,7 @@ public:
 
     void lineWidth(unsigned int wid);
     unsigned int lineWidth();
+    
 private:
 
     glm::vec3 GetVertex(unsigned int index, const float vertices[]);

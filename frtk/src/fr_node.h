@@ -134,7 +134,7 @@ public:
 
     virtual bool SetupTexture2D( );
 
-    virtual void RenderTexture2D();
+    //virtual void RenderTexture2D();
 
     /**
      * Renders the node

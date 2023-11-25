@@ -7,7 +7,7 @@
  * Trabalho - Projeto Final
  */
 
-#version 430 core
+#version 460 core
 
 layout (location = 0) out vec4 frag_color;
 

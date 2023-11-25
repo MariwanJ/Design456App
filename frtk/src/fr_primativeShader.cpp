@@ -49,7 +49,7 @@ void Fr_PrimaitiveShader::defaultShaders()
     f_objectshader_ = "E:/Projects/Design456App/frtk/src/shaders/objectshader";
     f_silhouette_ = "E:/Projects/Design456App/frtk/src/shaders/silhouette";
     f_shadowmap_ = "E:/Projects/Design456App/frtk/src/shaders/shadowmap";
-    f_texture_  = "E:/Projects/Design456App/frtk/src/shaders/texture";
+    //f_texture_  = "E:/Projects/Design456App/frtk/src/shaders/texture";
 }
 /** Shader file name and path */
 void Fr_PrimaitiveShader::setObjectshader(const char* newValue)
@@ -194,7 +194,7 @@ void Fr_PrimaitiveShader::Render(RenderInfo& info, const glm::mat4& modelview) {
     shared_->primative_program->SetUniformInteger("sm_texture", 0);
 
     //for returning the texture keep the id
-    _texture = info.shadowmap.texture;
+    //_texture = info.shadowmap.texture;
     m_Primative->Draw();
     program->Disable();
     info.id++;
@@ -204,19 +204,11 @@ void Fr_PrimaitiveShader::RenderSilhouette(const glm::mat4& mvp) {
     ShaderProgram* program = shared_->silhouette_program;
     program->Enable();
     program->SetAttribLocation("position", 0);
-    program->SetAttribLocation("normal", 1);
+    program->SetAttribLocation("texCoord", 1);
+    program->SetAttribLocation("normal", 2);
     program->SetUniformFloat("silhouette", silhouette_);
     program->SetUniformMat4("mvp", mvp);
     m_Primative->Draw();
     program->Disable();
 }
-void Fr_PrimaitiveShader::RenderTexture2D(const glm::mat4& mvp) {
-    ShaderProgram* program = shared_->texture_program;
-    program->Enable();
-    program->SetAttribLocation("position", 0);
-    program->SetAttribLocation("normal", 1);
-    program->SetUniformFloat("silhouette", silhouette_);
-    program->SetUniformMat4("mvp", mvp);
-    m_Primative->Draw();
-    program->Disable();
-}
+ 

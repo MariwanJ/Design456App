@@ -71,22 +71,22 @@ void Group::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) {
             node->RenderShadowMap(info, modelview);
 }
 
-bool Group::SetupTexture2D( )
-{
-    if (active_)
-        for (auto& node : nodes_)
-            if (node->SetupTexture2D( )){
-                return true;
-            }
-    return false;
-}
+//bool Group::SetupTexture2D( )
+//{
+//    if (active_)
+//        for (auto& node : nodes_)
+//            if (node->SetupTexture2D( )){
+//                return true;
+//            }
+//    return false;
+//}
 
-void Group::RenderTexture2D()
-{
-    if (active_)
-        for (auto& node : nodes_)
-            node->RenderTexture2D();
-}
+//void Group::RenderTexture2D()
+//{
+//    if (active_)
+//        for (auto& node : nodes_)
+//            node->RenderTexture2D();
+//}
 
 void Group::Render(RenderInfo& info, const glm::mat4& modelview) {
     if (active_)

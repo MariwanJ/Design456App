@@ -3,7 +3,7 @@
  * Mariwan Jalal
  */
 
-#version 430 core
+#version 460 core
 //in
 in vec4 oColor;
 vec2 v_TexCoord; 

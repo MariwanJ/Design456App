@@ -114,9 +114,9 @@ namespace FR {
         virtual void Render(RenderInfo& info, const glm::mat4& modelview) override;
 
 
-        virtual bool SetupTexture2D();
+        //virtual bool SetupTexture2D();
 
-        virtual void RenderTexture2D();
+        //virtual void RenderTexture2D();
 
         //Fr_Widget functions
         /**

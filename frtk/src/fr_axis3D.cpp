@@ -25,7 +25,7 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include <fr_modelnode.h>
+#include <fr_modelnodeShader.h>
 #include <fr_primativeShader.h>
 //Temporary code to have something to show.
 

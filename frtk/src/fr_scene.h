@@ -34,7 +34,7 @@
 #include<fr_transform.h>
 #include <fr_primatives.h>
 #include <fr_primativeShader.h>
-#include <fr_modelnode.h>
+#include <fr_modelnodeShader.h>
 #include <fr_light.h>
 #include <fr_mesh.h>
 

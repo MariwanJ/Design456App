@@ -43,6 +43,8 @@
 #include <fr_filebrowser.h>
 #define MAX_CAMERAS 8  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING CameraList enu
 
+
+
 /* Cameras */
 class Camera;
 class Fr_GL3Window;

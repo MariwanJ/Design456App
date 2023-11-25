@@ -146,6 +146,9 @@ void Mesh::ReadOFF(const std::string& path, std::vector<float>& vertices,
             indices[idx++] = quad[0];
         }
     }
+    int totalInd = 2 * vertices_.size() / 9;
+    textcoord_.reserve(totalInd); //2dimention, 
+    textcoord_.assign(totalInd, 1.0); //coord 1,1
 }
 
 void Mesh::ReadMSH(const std::string& path, std::vector<float>& vertices,
@@ -178,6 +181,9 @@ void Mesh::ReadMSH(const std::string& path, std::vector<float>& vertices,
             >> indices[3 * i + 1]
             >> indices[3 * i + 2];
     }
+    int totalInd = 2 * vertices_.size() / 9;
+    textcoord_.reserve(totalInd); //2dimention, 
+    textcoord_.assign(totalInd, 1.0); //coord 1,1
 }
 
 void Mesh::NormalizeVertices(std::vector<float>& vertices) {

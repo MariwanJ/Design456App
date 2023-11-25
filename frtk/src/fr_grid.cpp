@@ -27,12 +27,13 @@
 
 #include <fr_grid.h>
 
-#include <fr_modelnode.h>
+#include <fr_modelnodeShader.h>
 #include <fr_primativeShader.h>
 //Temporary code to have something to show.
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+std::shared_ptr<Fr_Texture2D> saveme;
 
 std::shared_ptr<Transform>bunny() {
     auto bunny_t = std::make_shared<Transform>();
@@ -42,10 +43,12 @@ std::shared_ptr<Transform>bunny() {
 
     //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/cube.off"));
      bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Pyramid.off"));
-     std::shared_ptr<Fr_Texture2D> objTextur = std::make_shared<Fr_Texture2D>();
+     bunny->m_Texture2D = std::make_shared<Fr_Texture2D>();
+     saveme = bunny->m_Texture2D;
      std::string imag =  ("E:/Projects/Design456App/resources/Texture/test.png");
-     objTextur->set2DTexture(imag, 375, 335, 1, 0);
-     bunny->m_Texture2D=objTextur;
+     //std::string imag = ("E:/Projects/Design456App/resources/Texture/bricks.jpg");
+     bunny->m_Texture2D->set2DTexture(imag,  1, 0);
+     
     //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Wedge.off"));
     auto Bunny_spot = std::make_shared<Light>();
     Bunny_spot->SetActive(true);
@@ -58,6 +61,7 @@ std::shared_ptr<Transform>bunny() {
     bunny_t->AddNode(Bunny_spot);
     bunny_t->AddNode(bunny);
     bunny->SetActive(true);
+    bunny->m_Texture2D->setup2DTexture();
     return bunny_t;
 }
 /**

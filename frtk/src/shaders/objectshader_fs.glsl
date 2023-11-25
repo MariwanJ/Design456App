@@ -7,7 +7,7 @@
  * Trabalho - Projeto Final
  */
 
-#version 430 core
+#version 460 core
 
 struct LightInfo {
     vec4 color;
@@ -27,7 +27,7 @@ const int NUM_COLORS = 2; //check this value
 const vec3 GLOBAL_AMBIENT = vec3(0.1, 0.1, 0.1);
 
 layout (location=0) in vec3 frag_position;
-layout (location=1) in vec2 uTextCoord;
+layout (location=1) in vec2 vTextCoord;
 layout (location=2) in vec3 frag_normal;
 layout (location=3) in vec3 frag_sm_position;
 
@@ -37,6 +37,8 @@ uniform int nlights;
 uniform LightInfo lights[MAX_LIGHTS];
 uniform int sm_light;
 uniform sampler2D sm_texture;
+uniform sampler2D ourTexture;
+
 
 layout (location=0) out vec4 frag_color;
 
@@ -81,6 +83,6 @@ void main ()
     frag_light += GLOBAL_AMBIENT;
     //frag_light = floor(frag_light * NUM_COLORS) / NUM_COLORS;
 	frag_light = (frag_light * NUM_COLORS) / NUM_COLORS; //floor make it worse
-	frag_color = vec4(color.rgb * frag_light, color.a);
+	frag_color = texture2D(ourTexture,vTextCoord)* vec4(color.rgb * frag_light, color.a);
 	//frag_color = vec4(color.rgb * frag_light*frag_normal, color.a);//TEST THIS
 }

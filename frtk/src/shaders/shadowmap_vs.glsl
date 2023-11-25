@@ -7,7 +7,7 @@
  * Trabalho - Projeto Final
  */
 
-#version 430 core
+#version 460 core
 
 layout (location = 0) in vec3 position;
 

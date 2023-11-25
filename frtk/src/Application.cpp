@@ -227,10 +227,10 @@ Application::~Application()
 #include <fr_icons.h>
 int Application::run(int argc, char** argv)
 {
-    std::string fname = "R";
+   // std::string fname = "R";
 
-    auto n = loadImage();
-    std::shared_ptr<BYTE> IMG = n.getImage("nofile");
+   // auto n = loadImage();
+    //std::shared_ptr<BYTE> IMG = n.getImage("nofile");
     createGLFWwindow();
 
     return GLFWrun();

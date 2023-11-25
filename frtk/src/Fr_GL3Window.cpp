@@ -30,7 +30,7 @@
 //Remove me later : TODO
 #include<fr_mesh.h>
 #include<halfEdge/fr_new_mesh.h>
-#include<fr_modelnode.h>
+#include<fr_modelnodeShader.h>
 //End remove me later
 
 /**
@@ -74,7 +74,7 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     pitch = 0.0f;  //
     roll = 0.0f;  //Z axis
     gl_version_major = 4;
-    gl_version_minor = 5;
+    gl_version_minor = 6;
     glfwSetErrorCallback(error_callback);
     if (!s_GLFWInitialized)
     {
@@ -377,8 +377,7 @@ int Fr_GL3Window::createGLFWwindow()
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 

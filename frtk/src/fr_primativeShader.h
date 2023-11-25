@@ -89,7 +89,7 @@ private:
      */
     void RenderSilhouette(const glm::mat4& mvp);
 
-    void RenderTexture2D(const glm::mat4& mvp);
+    //void RenderTexture2D(const glm::mat4& mvp);
 
     // Constants
     const size_t kMaxLights = 8;

@@ -90,7 +90,7 @@ void ShaderProgram::SetUniformVec3(const std::string& name, const glm::vec3& val
     if (location == -1)
         DebugBreak();
 
-    glUniform3fv(location, 1, glm::value_ptr(value));
+    glCheckFunc(glUniform3fv(location, 1, glm::value_ptr(value)));
 }
 //Send data to a variable inside the shader by the variable name which is retrived by get location.
 //Send one float value to a variable that is 3 floats in the shader
@@ -99,7 +99,7 @@ void ShaderProgram::SetUniformVec2Int(const std::string& name, const glm::ivec2&
     if (location == -1)
         DebugBreak();
 
-    glUniform2i(location,value.x,value.y);
+    glCheckFunc(glUniform2i(location,value.x,value.y));
 }
 
 //Send data to a variable inside the shader by the variable name which is retrived by get location.
@@ -109,7 +109,7 @@ void ShaderProgram::SetUniformVec2(const std::string& name, const glm::vec2& val
     if (location == -1)
         DebugBreak();
 
-    glUniform2f(location, value.x, value.y);
+    glCheckFunc(glUniform2f(location, value.x, value.y));
 }
 
 //Send data to a variable inside the shader by the variable name which is retrived by get location.
@@ -119,7 +119,7 @@ void ShaderProgram::SetUniformVec4(const std::string& name, const glm::vec4& val
     if (location == -1)
         DebugBreak();
 
-    glUniform4fv(location, 1, glm::value_ptr(value));
+    glCheckFunc(glUniform4fv(location, 1, glm::value_ptr(value)));
 }
 //Send data to a variable inside the shader by the variable name which is retrived by get location.
 //Send one float value to a variable that is glm::mat4 in the shader
@@ -128,7 +128,7 @@ void ShaderProgram::SetUniformMat4(const std::string& name, const glm::mat4& val
     if (location == -1)
         DebugBreak();
 
-    glUniformMatrix4fv(location, 1, false, glm::value_ptr(value));
+    glCheckFunc(glUniformMatrix4fv(location, 1, false, glm::value_ptr(value)));
 }
 
 void ShaderProgram::SetAttribLocation(const char* name, unsigned int location) {

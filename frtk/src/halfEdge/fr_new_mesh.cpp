@@ -225,6 +225,9 @@ void Shape::ReadOFF(const std::string& path) {
             indices_[idx++] = quad[0];
         }
     }
+    int totalInd = 2 * vertices_.size() / 9;
+    textcoord_.reserve(totalInd); //2dimention, 
+    textcoord_.assign(totalInd, 1.0); //coord 1,1
 }
 
 void Shape::ReadMSH(const std::string& path) {
@@ -256,7 +259,9 @@ void Shape::ReadMSH(const std::string& path) {
               >> indices_[3 * i + 1]
               >> indices_[3 * i + 2];
     }
-    texter
+    int totalInd = 2 * vertices_.size() / 9;
+    textcoord_.reserve(totalInd); //2dimention, 
+    textcoord_.assign(totalInd, 1.0); //coord 1,1
 }
 
 void Shape::NormalizeVertices() {
