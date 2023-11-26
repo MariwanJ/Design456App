@@ -165,7 +165,6 @@ void ModelNode::Render(RenderInfo& info, const glm::mat4& modelview) {
 
     ShaderProgram* program = shared_->object_program;
     program->Enable();
-
     LoadLights(program, info.lights);
     program->SetAttribLocation("position", 0);  //Position variable has (layout(location =0) inside objectshader_vs.glsl
     program->SetAttribLocation("normal", 1);    //normal variable has (layout(location =2) inside objectshader_vs.glsl
@@ -177,25 +176,22 @@ void ModelNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     program->SetUniformInteger("sm_light", info.shadowmap.light_id);
     glCheckFunc(glActiveTexture(GL_TEXTURE0));
     glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));
- 
     shared_->object_program->SetUniformInteger("sm_texture", 0);
+    mesh_->Draw();//You should make a draw call to get that  done
     program->Disable();
     info.id++;
- 
-    ////Render texture also here.
-    //program = shared_->texture_program;
-    //program->Enable();
-    //program->SetAttribLocation("position", 0);  //Position variable has (layout(location =0) inside objectshader_vs.glsl
-    //program->SetAttribLocation("texCoord", 1);  //Position variable has (layout(location =1 inside objectshader_vs.glsl
-    //program->SetUniformVec4("color", color_);       //Object color - not light color
-    //program->SetUniformMat4("modelview", modelview);
 
-    //m_Texture2D->Bind();
-    //mesh_->Draw();
-    //m_Texture2D->Unbind();
-    //program->Disable();
-
-
+    //Render texture also here.
+    program = shared_->texture_program;
+    program->Enable();
+    program->SetAttribLocation("position", 0);  //Position variable has (layout(location =0) inside objectshader_vs.glsl
+    program->SetAttribLocation("texCoord", 1);  //Position variable has (layout(location =1 inside objectshader_vs.glsl
+    program->SetUniformVec4("color", color_);       //Object color - not light color
+    program->SetUniformMat4("modelview", modelview);
+    m_Texture2D->Bind(1);
+    mesh_->Draw();      //You should make a draw call to get that  done
+    m_Texture2D->Unbind();   
+    program->Disable();
 }
 
 void ModelNode::calculateTextureCoord()

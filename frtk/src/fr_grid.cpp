@@ -46,7 +46,7 @@ std::shared_ptr<Transform>bunny() {
     bunny->m_Texture2D = std::make_shared<Fr_Texture2D>();
     std::string imag = ("E:/Projects/Design456App/resources/Texture/test.png");
     //std::string imag = ("E:/Projects/Design456App/resources/Texture/bricks.jpg");
-    //bunny->m_Texture2D->set2DTexture(imag, 1, 0);
+    bunny->m_Texture2D->set2DTexture(imag, 1, 0);
     //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Wedge.off"));
     auto Bunny_spot = std::make_shared<Light>();
     Bunny_spot->SetActive(true);

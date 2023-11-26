@@ -42,8 +42,8 @@ Fr_Texture2D::~Fr_Texture2D()
 
 void Fr_Texture2D::Bind(unsigned int slot)
 {
-    glActiveTexture(GL_TEXTURE0+slot);
-    glBindTextureUnit(GL_TEXTURE0+slot, m_RendererID);
+    glActiveTexture(GL_TEXTURE1+slot);
+    glBindTextureUnit(slot, m_RendererID);
 }
 
 void Fr_Texture2D::Unbind()
