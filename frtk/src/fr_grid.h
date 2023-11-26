@@ -37,9 +37,6 @@
 #include <fr_light.h>
 #include <fr_primatives.h>
 
-//Temporary code - just for debuggin
-std::shared_ptr<Transform>bunny();
-//End Temporary code
 
 class FRTK_API Grid :public Node
 {

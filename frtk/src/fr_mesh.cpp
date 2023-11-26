@@ -148,7 +148,7 @@ void Mesh::ReadOFF(const std::string& path, std::vector<float>& vertices,
     }
     int totalInd = 2 * vertices_.size() / 9;
     textcoord_.reserve(totalInd); //2dimention, 
-    textcoord_.assign(totalInd, 1.0); //coord 1,1
+    textcoord_.assign(totalInd, 0.0); //coord 1,1
 }
 
 void Mesh::ReadMSH(const std::string& path, std::vector<float>& vertices,
@@ -183,7 +183,7 @@ void Mesh::ReadMSH(const std::string& path, std::vector<float>& vertices,
     }
     int totalInd = 2 * vertices_.size() / 9;
     textcoord_.reserve(totalInd); //2dimention, 
-    textcoord_.assign(totalInd, 1.0); //coord 1,1
+    textcoord_.assign(totalInd, 0.0); //coord 1,1
 }
 
 void Mesh::NormalizeVertices(std::vector<float>& vertices) {
@@ -261,14 +261,14 @@ glCheckFunc(glBindVertexArray(vao_));
 //VERTICIES 
 glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]));
 glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float)* vertices_.size(), vertices_.data(), GL_STATIC_DRAW));
-glCheckFunc(glEnableVertexAttribArray(POSITION_VB));
-glCheckFunc(glVertexAttribPointer(POSITION_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL));                //POSITION_VB = 0
+glCheckFunc(glEnableVertexAttribArray(FR_POSITION_VB));
+glCheckFunc(glVertexAttribPointer(FR_POSITION_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL));                //POSITION_VB = 0
 
 ///Texture 
 glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]));
 glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float)* textcoord_.size(), textcoord_.data(), GL_STATIC_DRAW));
-glCheckFunc(glEnableVertexAttribArray(TEXCOORD_VB));
-glCheckFunc(glVertexAttribPointer(TEXCOORD_VB, 2, GL_FLOAT, GL_FALSE, 0, NULL));        //TEXCOORD_VB=1   NOTE: SHADER MUST HAVE THE SAME SEQUENCE
+glCheckFunc(glEnableVertexAttribArray(FR_TEXCOORD_VB));
+glCheckFunc(glVertexAttribPointer(FR_TEXCOORD_VB, 2, GL_FLOAT, GL_FALSE, 0, NULL));        //TEXCOORD_VB=1   NOTE: SHADER MUST HAVE THE SAME SEQUENCE
 
 //this is the object shader - look at the shader, it uses uniform. so the binding MUST be uniform
 //NORMALS

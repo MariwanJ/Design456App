@@ -178,8 +178,7 @@ void Fr_PrimaitiveShader::Render(RenderInfo& info, const glm::mat4& modelview) {
     LoadLights(program, info.lights);
 
     program->SetAttribLocation("position", 0);
-    program->SetAttribLocation("texCoord", 1);
-    program->SetAttribLocation("normal", 2);
+    program->SetAttribLocation("normal", 1);
     program->SetUniformMat4("modelview", modelview);
     program->SetUniformMat4("normalmatrix", normalmatrix);
     program->SetUniformMat4("mvp", mvp);

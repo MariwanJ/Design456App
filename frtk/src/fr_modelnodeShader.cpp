@@ -58,7 +58,7 @@ ModelNode::ModelNode(unsigned int color, float silhouette) :
         shared_->object_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/objectshader");
         shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
         shared_->shadowmap_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/shadowmap");
-        //shared_->texture_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/texture");
+        shared_->texture_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/texture");
     }
     type(NODETYPE::FR_ModelNode);
 }
@@ -168,9 +168,7 @@ void ModelNode::Render(RenderInfo& info, const glm::mat4& modelview) {
 
     LoadLights(program, info.lights);
     program->SetAttribLocation("position", 0);  //Position variable has (layout(location =0) inside objectshader_vs.glsl
-    program->SetAttribLocation("texCoord", 1);  //Position variable has (layout(location =1 inside objectshader_vs.glsl
-
-    program->SetAttribLocation("normal", 2);    //normal variable has (layout(location =2) inside objectshader_vs.glsl
+    program->SetAttribLocation("normal", 1);    //normal variable has (layout(location =2) inside objectshader_vs.glsl
     program->SetUniformMat4("modelview", modelview);
     program->SetUniformMat4("normalmatrix", normalmatrix);
     program->SetUniformMat4("mvp", mvp);
@@ -179,16 +177,30 @@ void ModelNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     program->SetUniformInteger("sm_light", info.shadowmap.light_id);
     glCheckFunc(glActiveTexture(GL_TEXTURE0));
     glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));
-
-    m_Texture2D->Bind();
-
-    mesh_->Draw();
+ 
     shared_->object_program->SetUniformInteger("sm_texture", 0);
     program->Disable();
     info.id++;
-    m_Texture2D->Unbind();
+ 
+    ////Render texture also here.
+    //program = shared_->texture_program;
+    //program->Enable();
+    //program->SetAttribLocation("position", 0);  //Position variable has (layout(location =0) inside objectshader_vs.glsl
+    //program->SetAttribLocation("texCoord", 1);  //Position variable has (layout(location =1 inside objectshader_vs.glsl
+    //program->SetUniformVec4("color", color_);       //Object color - not light color
+    //program->SetUniformMat4("modelview", modelview);
 
-    //Render texture also here.
+    //m_Texture2D->Bind();
+    //mesh_->Draw();
+    //m_Texture2D->Unbind();
+    //program->Disable();
+
+
+}
+
+void ModelNode::calculateTextureCoord()
+{
+    mesh_->calcualteTextCoor(m_Texture2D->getWidth(), m_Texture2D->getHgeith());
 }
 
 void ModelNode::RenderSilhouette(const glm::mat4& mvp) {
@@ -200,8 +212,7 @@ void ModelNode::RenderSilhouette(const glm::mat4& mvp) {
     ShaderProgram* program = shared_->silhouette_program;
     program->Enable();
     program->SetAttribLocation("position", 0);
-    //program->SetAttribLocation("texCoord", 1);
-    program->SetAttribLocation("normal", 2);
+    program->SetAttribLocation("normal", 1);
     program->SetUniformFloat("silhouette", silhouette_);
     program->SetUniformMat4("mvp", mvp);
     mesh_->Draw();

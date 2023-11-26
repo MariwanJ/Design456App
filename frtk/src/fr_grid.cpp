@@ -43,17 +43,15 @@ std::shared_ptr<Transform>bunny() {
 
     //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/cube.off"));
      bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Pyramid.off"));
-     bunny->m_Texture2D = std::make_shared<Fr_Texture2D>();
-     saveme = bunny->m_Texture2D;
-     std::string imag =  ("E:/Projects/Design456App/resources/Texture/test.png");
-     //std::string imag = ("E:/Projects/Design456App/resources/Texture/bricks.jpg");
-     bunny->m_Texture2D->set2DTexture(imag,  1, 0);
-     
+    bunny->m_Texture2D = std::make_shared<Fr_Texture2D>();
+    std::string imag = ("E:/Projects/Design456App/resources/Texture/test.png");
+    //std::string imag = ("E:/Projects/Design456App/resources/Texture/bricks.jpg");
+    //bunny->m_Texture2D->set2DTexture(imag, 1, 0);
     //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Wedge.off"));
     auto Bunny_spot = std::make_shared<Light>();
     Bunny_spot->SetActive(true);
     Bunny_spot->SetPosition(0.f, 2.f, 5.0f);
-   // Bunny_spot->SetupSpot(-1.0f, -10.0f, 5.0f, 25.0f, 1.0f);
+    // Bunny_spot->SetupSpot(-1.0f, -10.0f, 5.0f, 25.0f, 1.0f);
     Bunny_spot->SetDiffuse(.2f, .2f, 0.2);
     Bunny_spot->SetAmbient(0.2f, 0.2f, 0.2f);
     Bunny_spot->SetAttenuation(0.50f, 0.2f, 0.50f);
@@ -61,7 +59,8 @@ std::shared_ptr<Transform>bunny() {
     bunny_t->AddNode(Bunny_spot);
     bunny_t->AddNode(bunny);
     bunny->SetActive(true);
-    bunny->m_Texture2D->setup2DTexture();
+    //bunny->m_Texture2D->setup2DTexture();
+    //bunny->calculateTextureCoord();
     return bunny_t;
 }
 /**

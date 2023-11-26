@@ -110,7 +110,7 @@ public:
     int build();
   
 
-
+    void convertVertexesToNormals();
 
     /**
      * Draws the shape
@@ -130,6 +130,7 @@ public:
 
     void SetNormalizeMesh(bool value);
     bool getNormalizeMesh();
+    void calcualteTextCoor(int width, int height);
 
 private:
     /**
@@ -153,6 +154,7 @@ private:
      */
     void ReadOFF(const std::string& path);
 
+
     /**
      * Reads a .msh file
      */
@@ -164,9 +166,11 @@ private:
     void NormalizeVertices();
 
     /**
-     * Calculate the normals based on the triangles
+     * Calculate the normals based on the triangles, if yes the vectors will be stored in normalized version
      */
     void CalculateNormals();
+
+    void Shape::diffCalculateNormals();
 
     /**
      * Creates the vertex buffer object

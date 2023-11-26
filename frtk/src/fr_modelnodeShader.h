@@ -88,6 +88,8 @@ public:
     
     std::shared_ptr< Fr_Texture2D> m_Texture2D;
 
+    void calculateTextureCoord();
+
 private:
     /**
      * Sets the uniform light data

@@ -29,14 +29,14 @@
 #include <../src/halfEdge/fr_new_mesh.h>
 #include <../src/Fr_GL3Window.h>
 
-Shape::Shape(const std::string& path):
+Shape::Shape(const std::string& path) :
     vbo_{ 0, 0, 0,0 },
     vao_(0), normalized_(false) {
     ReadFile(path);
     InitializeVBO();
     linktoMainWindow = Fr_GL3Window::getfr_Gl3Window();
 }
-Shape::Shape() : vbo_{ 0, 0, 0 , 0}, vao_(0), normalized_(false) {
+Shape::Shape() : vbo_{ 0, 0, 0 , 0 }, vao_(0), normalized_(false) {
 }
 
 Shape::~Shape() {
@@ -187,7 +187,28 @@ void Shape::ReadFile(const std::string& path) {
         throw std::runtime_error("Unknown mesh extension: " + extension);
     }
 }
+void Shape::calcualteTextCoor(int width, int height) {
+    // Calculate texture coordinates based on vertex positions
+        // Loop through the vertices and calculate texture coordinates
+    if (normals_.size() == 0)
+        diffCalculateNormals();
+    for (int i = 0; i < normals_.size(); i += 3)
+    {
+        // Get the vertex position
+        GLfloat x = normals_[i];
+        GLfloat y = normals_[i + 1];
+        GLfloat z = normals_[i + 2];
 
+        // Calculate texture coordinates based on vertex position
+        GLfloat u = (x  +.5f) ;
+        GLfloat v = (y  +.5f) ;
+
+        // Store the texture coordinates in the vertices array
+        textcoord_.push_back(u);
+        textcoord_.push_back(v);
+        //textcoord_.push_back(0.0f);
+    }
+}
 void Shape::ReadOFF(const std::string& path) {
     std::ifstream input;
     input.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -226,8 +247,7 @@ void Shape::ReadOFF(const std::string& path) {
         }
     }
     int totalInd = 2 * vertices_.size() / 9;
-    textcoord_.reserve(totalInd); //2dimention, 
-    textcoord_.assign(totalInd, 1.0); //coord 1,1
+    // textcoord_.reserve(totalInd); //2dimention,
 }
 
 void Shape::ReadMSH(const std::string& path) {
@@ -256,14 +276,13 @@ void Shape::ReadMSH(const std::string& path) {
         int id;
         input >> id;
         input >> indices_[3 * i]
-              >> indices_[3 * i + 1]
-              >> indices_[3 * i + 2];
+            >> indices_[3 * i + 1]
+            >> indices_[3 * i + 2];
     }
     int totalInd = 2 * vertices_.size() / 9;
-    textcoord_.reserve(totalInd); //2dimention, 
-    textcoord_.assign(totalInd, 1.0); //coord 1,1
 }
 
+//TODO CHECK ME - WHY TWO FUNCTIONS FOR NORMALIZATION OF THE VERTICIES????
 void Shape::NormalizeVertices() {
     glm::vec3 min(std::numeric_limits<float>::max(),
         std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
@@ -283,6 +302,27 @@ void Shape::NormalizeVertices() {
     }
 }
 
+void Shape::diffCalculateNormals() {
+    glm::vec3 min(std::numeric_limits<float>::max(),
+        std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+    float max = std::numeric_limits<float>::min();
+
+    for (size_t i = 0; i < vertices_.size(); i += 3) {
+        for (size_t j = 0; j < 3; ++j) {
+            min[j] = std::min(min[j], vertices_[i + j]);
+            max = std::max(max, vertices_[i + j] - min[j]);
+        }
+    }
+    if (normals_.size() == 0)
+        normals_.reserve(vertices_.size() );
+    normals_.resize(vertices_.size());
+    std::fill(normals_.begin(), normals_.end(), 0);
+    for (size_t i = 0; i < vertices_.size()/3 ; ++i) {
+        glm::vec3 vertex = GetVertex(i, vertices_.data());
+        glm::vec3 normalized = (vertex - min) / max - 0.5f;
+        SetVertex(i, normals_.data(), normalized);
+    }
+}
 void Shape::CalculateNormals() {
     // Initialize the normals
     std::vector<glm::vec3> pre_normals(vertices_.size() / 3);
@@ -306,7 +346,7 @@ void Shape::CalculateNormals() {
         glm::vec3 v0_to_v1 = triangle[1] - triangle[0];
         glm::vec3 v0_to_v2 = triangle[2] - triangle[0];
         glm::vec3 v1_to_v2 = triangle[2] - triangle[1];
-
+        //lambda function to return angle between verticies
         auto angleBetween = [](const glm::vec3& u, const glm::vec3& v) {
             return acos(glm::dot(u, v) / (glm::length(u) * glm::length(v)));
             };
@@ -325,9 +365,10 @@ void Shape::CalculateNormals() {
             pre_normals[v[j]] = pre_normals[v[j]] + t_normal * angle[j];
     }
 
-    normals_.resize(vertices_.size());
-    for (size_t i = 0; i < pre_normals.size(); ++i)
-        SetVertex(i, normals_.data(), glm::normalize(pre_normals[i]));
+        normals_.resize(vertices_.size());
+        for (size_t i = 0; i < pre_normals.size(); ++i)
+            SetVertex(i, normals_.data(), glm::normalize(pre_normals[i]));
+    
 }
 
 meshType Shape::getMeshType()
@@ -336,16 +377,16 @@ meshType Shape::getMeshType()
 }
 
 void Shape::InitializeVBO() {
-    glCheckFunc(glGenBuffers(NUM_OF_VBO_BUFFERS, vbo_)); //3 
+    glCheckFunc(glGenBuffers(NUM_OF_VBO_BUFFERS, vbo_)); //3
     glCheckFunc(glGenVertexArrays(1, &vao_));
     glCheckFunc(glBindVertexArray(vao_));
-    //VERTICIES 
+    //VERTICIES
     glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]));
     glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices_.size(), vertices_.data(), GL_STATIC_DRAW));
     glCheckFunc(glEnableVertexAttribArray(POSITION_VB));
     glCheckFunc(glVertexAttribPointer(POSITION_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL));                //POSITION_VB = 0
 
-    ///Texture 
+    ///Texture
     glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]));
     glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * textcoord_.size(), textcoord_.data(), GL_STATIC_DRAW));
     glCheckFunc(glEnableVertexAttribArray(TEXCOORD_VB));
@@ -386,10 +427,10 @@ mesh_halfedge::~mesh_halfedge()
 {
 }
 
-mesh_face::mesh_face():
-visible(true),
-selected(false),
-normal(glm::vec3(0.0, 0.0, 0.0))
+mesh_face::mesh_face() :
+    visible(true),
+    selected(false),
+    normal(glm::vec3(0.0, 0.0, 0.0))
 {
 }
 

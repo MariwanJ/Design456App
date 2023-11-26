@@ -35,8 +35,8 @@
 #include <glm/glm.hpp>
 
 #define NUM_OF_VBO_BUFFERS 4 //ONE FOR THE MESH, OTHER FOR TEXTURE: This might change
-#define POSITION_VB 0
-#define TEXCOORD_VB 1
+#define FR_POSITION_VB 0
+#define FR_TEXCOORD_VB 1
 
 class FRTK_API Mesh {
 public:
