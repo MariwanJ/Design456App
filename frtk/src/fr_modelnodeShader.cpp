@@ -174,7 +174,7 @@ void ModelNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     program->SetUniformVec4("color", color_);       //Object color - not light color
     program->SetUniformMat4("sm_mvp", kShadowMapBiasMatrix * sm_mvp);
     program->SetUniformInteger("sm_light", info.shadowmap.light_id);
-    glCheckFunc(glActiveTexture(GL_TEXTURE0));
+    //glCheckFunc(glActiveTexture(GL_TEXTURE0));
     glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));
     shared_->object_program->SetUniformInteger("sm_texture", 0);
     mesh_->Draw();//You should make a draw call to get that  done

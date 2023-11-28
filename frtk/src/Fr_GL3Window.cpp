@@ -87,6 +87,7 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_version_minor);
     glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
     Fr_GL3Window::GLFWCallbackWrapper::setGLFWwindow(this);
     radiusXYZ = 0;
 }
@@ -434,7 +435,7 @@ int Fr_GL3Window::GLFWrun()
     glViewport(0, 0, _w, _h);
 
     clear_color = ImVec4(FR_WINGS3D); //ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-    sceneBuffer = std::make_shared<Fr_TextureFrameBuffer>(w(), h());
+    sceneBuffer = std::make_shared<Fr_TextureFrameBuffer>(w(), h());        //Our draws will bo on this buffer, which then drawn inside portview in ImGui 
 
     /**
      *

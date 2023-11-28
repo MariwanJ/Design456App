@@ -24,15 +24,25 @@ bool Fr_Texture2D::set2DTexture(std::string& path, int bpp, int compno) {
 }
 bool Fr_Texture2D::setup2DTexture() {
     glCheckFunc(glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID));
-    glTextureStorage2D(m_RendererID, 1, GL_RGB8, m_width, m_height);
+    if (m_BPP == 3){
+        glCheckFunc(glTextureStorage2D(m_RendererID, 1, GL_RGB8, m_width, m_height));
+    }
+    else if (m_BPP == 4){
+        glCheckFunc(glTextureStorage2D(m_RendererID, 1, GL_RGBA8, m_width, m_height));
+    }
     glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
     glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
     glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
     glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
-    glCheckFunc(glTextureSubImage2D(m_RendererID, 0, 0, 0,  m_width, m_height, GL_RGB, GL_UNSIGNED_BYTE, m_LocalBuffer));
+    if (m_BPP == 3){
+        glCheckFunc(glTextureSubImage2D(m_RendererID, 0, 0, 0, m_width, m_height, GL_RGB, GL_UNSIGNED_BYTE, m_LocalBuffer));
+    }
+    else 
+        if (m_BPP == 4){
+        glCheckFunc(glTextureSubImage2D(m_RendererID, 0, 0, 0, m_width, m_height, GL_RGBA, GL_UNSIGNED_BYTE, m_LocalBuffer));
+        }
 
-    if (m_LocalBuffer)
-        free(m_LocalBuffer);
+    stbi_image_free(m_LocalBuffer);
     return true;
 }
 Fr_Texture2D::~Fr_Texture2D()
@@ -42,8 +52,8 @@ Fr_Texture2D::~Fr_Texture2D()
 
 void Fr_Texture2D::Bind(unsigned int slot)
 {
-    glActiveTexture(GL_TEXTURE1+slot);
-    glBindTextureUnit(slot, m_RendererID);
+    glCheckFunc(glActiveTexture(GL_TEXTURE0 + slot));
+    glCheckFunc(glBindTextureUnit(slot, m_RendererID));
 }
 
 void Fr_Texture2D::Unbind()

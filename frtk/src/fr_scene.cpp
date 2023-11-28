@@ -59,6 +59,15 @@ void Scene::add3DObject(std::string fName)
     newObj_t->Scale(1, 1, 1);
     newObj_t->Rotate(0, 1, 0, 0); //TODO CHECK ME
     auto newObj = std::make_shared<ModelNode>(glm::vec4(FR_BISQUE), 0.0005f); //  color and
+
+
+    //texture
+    newObj->m_Texture2D = std::make_shared<Fr_Texture2D>();
+    //std::string imag = ("E:/Projects/Design456App/resources/Texture/test.png");
+    std::string imag = ("E:/Projects/Design456App/resources/Texture/bricks.jpg");
+    newObj->m_Texture2D->set2DTexture(imag, GL_RGB, 0);
+
+
     if (fName.find(".off") != std::string::npos) {
         newObj->SetMesh(std::make_shared<Shape>(fName));
     }
