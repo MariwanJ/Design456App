@@ -48,7 +48,6 @@ void Fr_PrimaitiveShader::defaultShaders()
 {
     f_objectshader_ = "E:/Projects/Design456App/frtk/src/shaders/objectshader";
     f_silhouette_ = "E:/Projects/Design456App/frtk/src/shaders/silhouette";
-    f_shadowmap_ = "E:/Projects/Design456App/frtk/src/shaders/shadowmap";
     //f_texture_  = "E:/Projects/Design456App/frtk/src/shaders/texture";
 }
 /** Shader file name and path */
@@ -61,11 +60,6 @@ void Fr_PrimaitiveShader::setSilhouette(const char* newValue)
 {
     f_silhouette_ = newValue;
 }
-/** shado map file name and path */
-void Fr_PrimaitiveShader::setShadowmap(const char* newValue)
-{
-    f_shadowmap_ = newValue;
-}
 
 Fr_PrimaitiveShader::Fr_PrimaitiveShader(unsigned int color, float silhouette) :
     m_Primative{ nullptr }, silhouette_(silhouette) {
@@ -75,7 +69,6 @@ Fr_PrimaitiveShader::Fr_PrimaitiveShader(unsigned int color, float silhouette) :
         defaultShaders();
         shared_->primative_program = new ShaderProgram(f_objectshader_);
         shared_->silhouette_program = new ShaderProgram(f_silhouette_);
-        shared_->shadowmap_program = new ShaderProgram(f_shadowmap_);
     }
     type(NODETYPE::FR_PRIMATIVESHADER);
 }
@@ -87,7 +80,6 @@ Fr_PrimaitiveShader::Fr_PrimaitiveShader(glm::vec4 color, float silhouette) :
         shared_ = new Shared;
         shared_->primative_program = new ShaderProgram(f_objectshader_);
         shared_->silhouette_program = new ShaderProgram(f_silhouette_);
-        shared_->shadowmap_program = new ShaderProgram(f_shadowmap_);
     }
     type(NODETYPE::FR_PRIMATIVESHADER);
 }

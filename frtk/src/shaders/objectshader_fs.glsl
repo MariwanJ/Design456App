@@ -35,26 +35,18 @@ uniform vec4 color;
 uniform int nlights;
 uniform LightInfo lights[MAX_LIGHTS];
 uniform int sm_light;
-uniform sampler2D sm_texture;
+
  
 
 
 layout (location=0) out vec4 frag_color;
 
-bool is_shadow()
-{
-    float face = texture(sm_texture, frag_sm_position.xy).z + 0.0001;
-    return face < frag_sm_position.z;
-}
 
 vec3 compute_light_intensity(LightInfo light, int id, vec3 frag_normal_)
 {
     vec3 light_position = light.position.xyz/ light.position.w;
     float dist = length(light_position - frag_position);
     float att = 1 / (light.attenuation.x + light.attenuation.y * dist  + light.attenuation.y * dist * dist);
-
-    if (id == sm_light && is_shadow())
-        return vec3(light.ambient);
 
     vec3 frag2light = normalize(light_position - frag_position);
     float diff = max(dot(frag_normal_, frag2light), 0);

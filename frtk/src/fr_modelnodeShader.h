@@ -103,7 +103,6 @@ private:
     struct Shared {
         ShaderProgram* object_program;
         ShaderProgram* silhouette_program;          //the dark shape and outline of object
-        ShaderProgram* shadowmap_program;
         ShaderProgram* texture_program;
     };
     static Shared* shared_;

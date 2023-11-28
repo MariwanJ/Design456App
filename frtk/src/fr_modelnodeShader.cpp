@@ -57,7 +57,6 @@ ModelNode::ModelNode(unsigned int color, float silhouette) :
         shared_ = new Shared;
         shared_->object_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/objectshader");
         shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
-        shared_->shadowmap_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/shadowmap");
         shared_->texture_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/texture");
     }
     type(NODETYPE::FR_ModelNode);
@@ -70,7 +69,6 @@ silhouette_(silhouette), m_Texture2D{ nullptr } {
         shared_ = new Shared;
         shared_->object_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/objectshader");
         shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
-        shared_->shadowmap_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/shadowmap");
         shared_->texture_program= new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/texture");
     }
     type(NODETYPE::FR_ModelNode);
