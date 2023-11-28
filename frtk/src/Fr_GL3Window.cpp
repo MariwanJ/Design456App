@@ -159,12 +159,16 @@ void Fr_GL3Window::CreateScene()
     scene->AddNode(CreateSunTop());
     scene->AddNode(CreateSunBottom());
     tempBu = bunny();
+    auto dd = bunny();
+    dd->Translate(10.f, 30.f, 20.f);
     scene->AddNode(Grid().CreateGrid());
     vert axis = Axis3D().CreateAxis3D();
     scene->AddNode(axis.Red);
     scene->AddNode(axis.Green);
     scene->AddNode(axis.Blue);
     scene->AddNode(tempBu);
+    scene->AddNode(dd);
+
 }
 
 void Fr_GL3Window::resizeWindow(int xGl, int yGl, int wGl, int hGl)

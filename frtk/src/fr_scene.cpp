@@ -63,10 +63,14 @@ void Scene::add3DObject(std::string fName)
 
     //texture
     newObj->m_Texture2D = std::make_shared<Fr_Texture2D>();
-    //std::string imag = ("E:/Projects/Design456App/resources/Texture/test.png");
-    std::string imag = ("E:/Projects/Design456App/resources/Texture/bricks.jpg");
-    newObj->m_Texture2D->set2DTexture(imag, GL_RGB, 0);
-
+    std::string imag = ("E:/Projects/Design456App/resources/Texture/test.png");
+    //std::string imag = ("E:/Projects/Design456App/resources/Texture/bricks.jpg");
+    if (newObj->m_Texture2D->set2DTexture(imag))
+    {
+            newObj->m_Texture2D->setup2DTexture();      //Dont forget to do this always
+    }
+    else
+        DEBUG_BREAK;
 
     if (fName.find(".off") != std::string::npos) {
         newObj->SetMesh(std::make_shared<Shape>(fName));
@@ -75,7 +79,7 @@ void Scene::add3DObject(std::string fName)
         //Not implemented yet  - here .obj should be treated.
     }
     auto rightlight_spot = std::make_shared<Light>();
-    rightlight_spot->SetActive(true);
+    rightlight_spot->SetActive(false);
     rightlight_spot->SetPosition(2.956f, -0.514f, 1.074f);
     rightlight_spot->SetupSpot(1.0f, 0.0f, -0.1f, 45.0f, 16.0f);
     rightlight_spot->SetDiffuse(0.0f, 0.0f, 0.0f);
@@ -108,7 +112,7 @@ void Scene::RenderScene() {
     render_info.id = 0;
     render_info.render_transparent = false;
     Render(render_info, render_info.modelview);
-    render_info.id = 0;
-    render_info.render_transparent = true;
-    Render(render_info, render_info.modelview);
+    //render_info.id = 0;
+    //render_info.render_transparent = true;
+    //Render(render_info, render_info.modelview);
 }
