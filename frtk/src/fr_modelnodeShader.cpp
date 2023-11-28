@@ -158,7 +158,7 @@ void ModelNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     program->SetAttribLocation("texCoord", 1);  //Position variable has (layout(location =1 inside objectshader_vs.glsl
     program->SetUniformVec4("color", color_);       //Object color - not light color
     program->SetUniformMat4("modelview", modelview);
-    m_Texture2D->Bind(1);
+    m_Texture2D->Bind(0);
     mesh_->Draw();      //You should make a draw call to get that  done
     m_Texture2D->Unbind();   
     program->Disable();
