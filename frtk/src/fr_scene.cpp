@@ -102,12 +102,6 @@ void Scene::RenderScene() {
     SetupLight(render_info.modelview, render_info.lights);
     int draw_framebuffer = 0;
     glCheckFunc(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &draw_framebuffer));
-
-    SetupShadowMap(render_info.shadowmap);
-    glCheckFunc(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, render_info.shadowmap.framebuffer));
-    glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-    RenderShadowMap(render_info.shadowmap, render_info.shadowmap.modelview);
-
     glCheckFunc(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_framebuffer));
     glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 

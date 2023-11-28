@@ -128,10 +128,6 @@ private:
 
     void Render(RenderInfo& info, const glm::mat4& modelview);
 
-    void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview);
-
-    bool SetupShadowMap(ShadowMapInfo& info);
-
     void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights);
 
     glm::vec3 m_Position;

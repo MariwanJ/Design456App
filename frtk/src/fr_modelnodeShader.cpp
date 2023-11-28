@@ -128,27 +128,6 @@ void ModelNode::LoadLights(ShaderProgram* program, const std::vector<LightInfo>&
 
 }
 
-void ModelNode::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) {
-    if (!active_)
-        return;
-    if (!(mesh_))//Not defined 
-        return;
-    auto mvp = info.projection * modelview;
-
-    if (color_.a != 1) {
-        info.mvp_transparent.push_back(mvp);
-        return;
-    }
-
-    info.mvp.push_back(mvp);
-    ShaderProgram* program = shared_->shadowmap_program;
-    program->Enable();
-    program->SetAttribLocation("position", 0);      //Position variable has (layout(location =0) inside objectshader_vs.glsl
-    program->SetUniformMat4("mvp", mvp);
-    mesh_->Draw();
-    program->Disable();
-}
-
 void ModelNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     if (!active_ ||
         (info.render_transparent && color_.a == 1) ||
@@ -157,8 +136,6 @@ void ModelNode::Render(RenderInfo& info, const glm::mat4& modelview) {
 
     auto mvp = info.projection * modelview;
     auto normalmatrix = glm::transpose(glm::inverse(modelview));
-    auto sm_mvp = color_.a == 1 ? info.shadowmap.mvp[info.id] :
-        info.shadowmap.mvp_transparent[info.id];
 
     if (color_.a == 1)
         RenderSilhouette(mvp);
@@ -172,11 +149,6 @@ void ModelNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     program->SetUniformMat4("normalmatrix", normalmatrix);
     program->SetUniformMat4("mvp", mvp);
     program->SetUniformVec4("color", color_);       //Object color - not light color
-    program->SetUniformMat4("sm_mvp", kShadowMapBiasMatrix * sm_mvp);
-    program->SetUniformInteger("sm_light", info.shadowmap.light_id);
-    //glCheckFunc(glActiveTexture(GL_TEXTURE0));
-    glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));
-    shared_->object_program->SetUniformInteger("sm_texture", 0);
     mesh_->Draw();//You should make a draw call to get that  done
     program->Disable();
     info.id++;

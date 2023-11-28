@@ -55,15 +55,6 @@ namespace FR {
     {
     }
 
-    bool Fr_Widget::SetupShadowMap(ShadowMapInfo& info)
-    {
-        return false;
-    }
-
-    void Fr_Widget::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview)
-    {
-        throw NotImplementedException();
-    }
 
     void Fr_Widget::Render(RenderInfo& info, const glm::mat4& modelview)
     {

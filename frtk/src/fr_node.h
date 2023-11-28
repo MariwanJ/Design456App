@@ -73,21 +73,6 @@ public:
     };
 
     /**
-     * Holds the shadow map information
-     */
-    struct ShadowMapInfo {
-        std::vector<glm::mat4> mvp;
-        std::vector<glm::mat4> mvp_transparent;
-        glm::mat4 modelview;
-        glm::mat4 projection;
-        unsigned int light_id;
-        unsigned int framebuffer;
-        unsigned int texture;
-        unsigned int width;
-        unsigned int height;
-    };
-
-    /**
      * Holds the render information
      */
     struct RenderInfo {
@@ -95,7 +80,7 @@ public:
         glm::mat4 modelview;
         glm::mat4 projection;
         std::vector<LightInfo> lights;
-        ShadowMapInfo shadowmap;
+        //ShadowMapInfo shadowmap;
         bool render_transparent;
     };
 
@@ -122,15 +107,6 @@ public:
      */
     virtual void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights);
 
-    /**
-     * Sets the shadow map
-     */
-    virtual bool SetupShadowMap(ShadowMapInfo& info);
-
-    /**
-     * Renders the shadow map
-     */
-    virtual void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview);
 
     virtual bool SetupTexture2D( );
 

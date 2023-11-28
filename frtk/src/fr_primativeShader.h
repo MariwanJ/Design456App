@@ -63,10 +63,6 @@ public:
      */
     void SetPrimative(std::shared_ptr <Fr_Primatives> primative);
 
-    /**
-     * Renders the shadow map
-     */
-    void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) override;
 
     /**
      * Renders the node

@@ -75,11 +75,6 @@ public:
     void SetMesh(const std::string& mesh);
 
     /**
-     * Renders the shadow map
-     */
-    void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) override;
-
-    /**
      * Renders the node
      */
     void Render(RenderInfo& info, const glm::mat4& modelview) override;

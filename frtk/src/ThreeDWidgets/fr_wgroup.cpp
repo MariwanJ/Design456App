@@ -64,13 +64,6 @@ namespace FR {
     void Fr_Group::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights)
     {
     }
-    bool Fr_Group::SetupShadowMap(ShadowMapInfo& info)
-    {
-        return false;
-    }
-    void Fr_Group::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview)
-    {
-    }
     void Fr_Group::Render(RenderInfo& info, const glm::mat4& modelview)
     {
     }

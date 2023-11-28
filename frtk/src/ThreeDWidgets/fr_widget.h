@@ -97,17 +97,6 @@ namespace FR {
          * Returns the light info by reference
          */
         virtual void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) override;
-
-        /**
-         * Sets the shadow map
-         */
-        virtual bool SetupShadowMap(ShadowMapInfo& info) override;
-
-        /**
-         * Renders the shadow map
-         */
-        virtual void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) override;
-
         /**
          * Renders the node
          */

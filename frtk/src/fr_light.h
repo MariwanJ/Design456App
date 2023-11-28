@@ -95,10 +95,6 @@ public:
      */
     void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) override;
 
-    /**
-     * Sets the shadow map
-     */
-    bool SetupShadowMap(ShadowMapInfo& info) override;
 
 public:
     int getLightID();

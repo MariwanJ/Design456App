@@ -57,36 +57,6 @@ void Group::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& light
             node->SetupLight(modelview, lights);
 }
 
-bool Group::SetupShadowMap(ShadowMapInfo& info) {
-    if (active_)
-        for (auto& node : nodes_)
-            if (node->SetupShadowMap(info))
-                return true;
-    return false;
-}
-
-void Group::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) {
-    if (active_)
-        for (auto& node : nodes_)
-            node->RenderShadowMap(info, modelview);
-}
-
-//bool Group::SetupTexture2D( )
-//{
-//    if (active_)
-//        for (auto& node : nodes_)
-//            if (node->SetupTexture2D( )){
-//                return true;
-//            }
-//    return false;
-//}
-
-//void Group::RenderTexture2D()
-//{
-//    if (active_)
-//        for (auto& node : nodes_)
-//            node->RenderTexture2D();
-//}
 
 void Group::Render(RenderInfo& info, const glm::mat4& modelview) {
     if (active_)

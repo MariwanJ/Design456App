@@ -143,20 +143,6 @@ void Light::SetupLight(const glm::mat4& modelview,
     light_id_ = lights.size() - 1;
 }
 
-bool Light::SetupShadowMap(ShadowMapInfo& info) {
-    if (!active_)
-        return false;
-
-    info.projection = sm_projection_;
-    info.modelview = glm::lookAt(glm::vec3(position_), sm_direction_, sm_up_);
-    info.light_id = light_id_;
-    info.framebuffer = sm_framebuffer_;
-    info.texture = shadowMapTexture_;
-    info.width = kShadowmapWidth;
-    info.height = kShadowmapHeight;
-    return true;
-}
-
 int Light::getLightID()
 {
     return light_id_;

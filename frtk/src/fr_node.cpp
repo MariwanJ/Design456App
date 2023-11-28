@@ -47,18 +47,6 @@ void Node::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights
     (void)lights;*/
 }
 
-bool Node::SetupShadowMap(ShadowMapInfo& info) {
-    //Dummy code does nothing should be subclassed
-    /*(void)info;*/
-    return false;
-}
-
-void Node::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) {
-    //Dummy code does nothing should be subclassed
-    /*(void)info;
-    (void)modelview;*/
-}
-
 bool Node::SetupTexture2D( ) {
     //Dummy code does nothing should be subclassed
     /*(void)info;*/

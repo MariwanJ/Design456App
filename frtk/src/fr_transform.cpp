@@ -193,26 +193,6 @@ void Transform::Render(RenderInfo& info, const glm::mat4& modelview) {
     Group::Render(info, sub_modelview);
 }
 
-
-void Transform::RenderShadowMap(ShadowMapInfo& info,    const glm::mat4& modelview) {
-    if (!active_)
-        return;
-    glm::mat4 sub_modelview = modelview;
-    sub_modelview *= m_Matrix;
-    Group::RenderShadowMap(info, sub_modelview);
-}
-
-bool Transform::SetupShadowMap(ShadowMapInfo& info) {
-    if (!active_)
-        return false;
-
-    if (Group::SetupShadowMap(info)) {
-        info.modelview *= m_Inverse;
-        return true;
-    }
-    return false;
-}
-
 void Transform::SetupLight(const glm::mat4& modelview,    std::vector<LightInfo>& lights) {
     if (!active_)
         return;

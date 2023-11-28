@@ -139,26 +139,6 @@ void Fr_PrimaitiveShader::LoadLights(ShaderProgram* program, const std::vector<L
     }
 }
 
-void Fr_PrimaitiveShader::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) {
-    if (!active_)
-        return;
-
-    auto mvp = info.projection * modelview;
-
-    if (m_Color.a != 1) {
-        info.mvp_transparent.push_back(mvp);
-        return;
-    }
-
-    info.mvp.push_back(mvp);
-    ShaderProgram* program = shared_->shadowmap_program;
-    program->Enable();
-    program->SetAttribLocation("position", 0);
-    program->SetUniformMat4("mvp", mvp);
-    m_Primative->Draw();
-    program->Disable();
-}
-
 void Fr_PrimaitiveShader::Render(RenderInfo& info, const glm::mat4& modelview) {
     if (!active_ ||
         (info.render_transparent && m_Color.a == 1) ||
@@ -166,7 +146,6 @@ void Fr_PrimaitiveShader::Render(RenderInfo& info, const glm::mat4& modelview) {
         return;
     auto mvp = info.projection * modelview;
     auto normalmatrix = glm::transpose(glm::inverse(modelview));
-    auto sm_mvp = m_Color.a == 1 ? info.shadowmap.mvp[info.id] : info.shadowmap.mvp_transparent[info.id];
 
     if (m_Color.a == 1)
         RenderSilhouette(mvp);
@@ -183,14 +162,6 @@ void Fr_PrimaitiveShader::Render(RenderInfo& info, const glm::mat4& modelview) {
     program->SetUniformMat4("normalmatrix", normalmatrix);
     program->SetUniformMat4("mvp", mvp);
     program->SetUniformVec4("color", m_Color);
-    program->SetUniformInteger("sm_light", info.shadowmap.light_id);
-    program->SetUniformMat4("sm_mvp", kShadowMapBiasMatrix * sm_mvp);
-
-    //****************************************************************************************FIXME
-    //TODO FIXME -- THIS IS OLD OPENGL - DOSENT WORK FOR NEW OPENGL
-    glGenTextures(1, &info.shadowmap.texture);
-    glCheckFunc(glBindTexture(GL_TEXTURE_2D, info.shadowmap.texture));           //     THIS CAUSE ISSUE FIXME!!!!!!!!!!!!!!!!!!!
-    shared_->primative_program->SetUniformInteger("sm_texture", 0);
 
     //for returning the texture keep the id
     //_texture = info.shadowmap.texture;
