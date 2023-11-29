@@ -68,8 +68,7 @@ void Scene::add3DObject(std::string fName)
     if (newObj->m_Texture2D->set2DTexture(imag))
     {
             newObj->m_Texture2D->setup2DTexture();      //Dont forget to do this always
-    }
-    else
+    }else
         DEBUG_BREAK;
 
     if (fName.find(".off") != std::string::npos) {
@@ -79,13 +78,15 @@ void Scene::add3DObject(std::string fName)
         //Not implemented yet  - here .obj should be treated.
     }
     auto rightlight_spot = std::make_shared<Light>();
-    rightlight_spot->SetActive(false);
+    rightlight_spot->SetActive(true);
     rightlight_spot->SetPosition(2.956f, -0.514f, 1.074f);
     rightlight_spot->SetupSpot(1.0f, 0.0f, -0.1f, 45.0f, 16.0f);
     rightlight_spot->SetDiffuse(0.0f, 0.0f, 0.0f);
     rightlight_spot->SetAmbient(0.42f, 0.42f, 0.42f);
     rightlight_spot->SetAttenuation(1.0f, 0.002f, 0.0f);
     newObj_t->AddNode(rightlight_spot);
+    newObj_t->SetActive(true);
+    newObj->calculateTextureCoord();
     newObj_t->AddNode(newObj);
     AddNode(newObj_t);
 }

@@ -31,9 +31,9 @@ bool Fr_Texture2D::setup2DTexture() {
         glCheckFunc(glTextureStorage2D(m_RendererID, 1, GL_RGBA8, m_width, m_height));
     }
     glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-    glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-    glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
-    glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
+    glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+    glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+    glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
     if (m_BPP == 3) {
         glCheckFunc(glTextureSubImage2D(m_RendererID, 0, 0, 0, m_width, m_height, GL_RGB, GL_UNSIGNED_BYTE, m_LocalBuffer));
     }

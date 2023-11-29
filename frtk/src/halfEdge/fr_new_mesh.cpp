@@ -192,6 +192,7 @@ void Shape::calcualteTextCoor(int width, int height) {
         // Loop through the vertices and calculate texture coordinates
     if (normals_.size() == 0)
         diffCalculateNormals();
+    std::cout << ".........................start..........................." << std::endl;
     for (int i = 0; i < normals_.size(); i += 3)
     {
         // Get the vertex position
@@ -200,14 +201,18 @@ void Shape::calcualteTextCoor(int width, int height) {
         GLfloat z = normals_[i + 2];
 
         // Calculate texture coordinates based on vertex position
-        GLfloat u = (x  +.5f) ;
-        GLfloat v = (y  +.5f) ;
+        GLfloat u = (x  ) ;
+        GLfloat v = (y  ) ;
+        
+        std::cout << "x=" << u << " y=" << v << std::endl;
 
         // Store the texture coordinates in the vertices array
         textcoord_.push_back(u);
         textcoord_.push_back(v);
         //textcoord_.push_back(0.0f);
     }
+    std::cout << ".........................End..........................." << std::endl;
+
 }
 void Shape::ReadOFF(const std::string& path) {
     std::ifstream input;
@@ -303,14 +308,13 @@ void Shape::NormalizeVertices() {
 }
 
 void Shape::diffCalculateNormals() {
-    glm::vec3 min(std::numeric_limits<float>::max(),
-        std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
-    float max = std::numeric_limits<float>::min();
+    glm::vec3 m_min(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+    glm::vec3 m_max(std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min());
 
     for (size_t i = 0; i < vertices_.size(); i += 3) {
         for (size_t j = 0; j < 3; ++j) {
-            min[j] = std::min(min[j], vertices_[i + j]);
-            max = std::max(max, vertices_[i + j] - min[j]);
+            m_min [j] = std::min(m_min[j], vertices_[i + j]);
+            m_max [j] = std::max(m_max[j], vertices_[i + j] - m_min[j]);
         }
     }
     if (normals_.size() == 0)
@@ -319,7 +323,7 @@ void Shape::diffCalculateNormals() {
     std::fill(normals_.begin(), normals_.end(), 0);
     for (size_t i = 0; i < vertices_.size()/3 ; ++i) {
         glm::vec3 vertex = GetVertex(i, vertices_.data());
-        glm::vec3 normalized = (vertex - min) / max - 0.5f;
+        glm::vec3 normalized = (vertex / (m_max-m_min)) ;
         SetVertex(i, normals_.data(), normalized);
     }
 }

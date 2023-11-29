@@ -23,8 +23,5 @@ layout (location=0) out vec4 frag_color;
 
 void main ()
 {
-	vec4 ncolor= color;
-	frag_color = texture2D(ourTexture,vTextCoord) ;
-	//frag_color=vec4(1.f,.0f,1.f,1.f);
-	//frag_color = vec4(color.rgb * frag_light*frag_normal, color.a);//TEST THIS
+	frag_color=vec4((color * texture2D(ourTexture,vTextCoord)).rgb, 1.0);
 }
