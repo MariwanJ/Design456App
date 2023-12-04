@@ -86,7 +86,6 @@ void Scene::add3DObject(std::string fName)
     rightlight_spot->SetAttenuation(1.0f, 0.002f, 0.0f);
     newObj_t->AddNode(rightlight_spot);
     newObj_t->SetActive(true);
-    newObj->calculateTextureCoord();
     newObj_t->AddNode(newObj);
     AddNode(newObj_t);
 }

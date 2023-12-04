@@ -33,6 +33,7 @@ Shape::Shape(const std::string& path) :
     vbo_{ 0, 0, 0,0 },
     vao_(0), normalized_(false) {
     ReadFile(path);
+    calcualteTextCoor(1024,1024);
     InitializeVBO();
     linktoMainWindow = Fr_GL3Window::getfr_Gl3Window();
 }
@@ -195,7 +196,7 @@ void Shape::calcualteTextCoor(int width, int height) {
     std::cout << ".........................start..........................." << std::endl;
     for (int i = 0; i < normals_.size(); i += 3)
     {
-        // Get the vertex position
+         //Get the vertex position
         GLfloat x = normals_[i];
         GLfloat y = normals_[i + 1];
         GLfloat z = normals_[i + 2];
@@ -206,12 +207,13 @@ void Shape::calcualteTextCoor(int width, int height) {
         
         std::cout << "x=" << u << " y=" << v << std::endl;
 
-        // Store the texture coordinates in the vertices array
-        textcoord_.push_back(u);
-        textcoord_.push_back(v);
-        //textcoord_.push_back(0.0f);
+      //   Store the texture coordinates in the vertices array
+        textcoord_.push_back(u );
+        textcoord_.push_back(v );
+
     }
-    std::cout << ".........................End..........................." << std::endl;
+  
+
 
 }
 void Shape::ReadOFF(const std::string& path) {
@@ -390,6 +392,12 @@ void Shape::InitializeVBO() {
     glCheckFunc(glEnableVertexAttribArray(POSITION_VB));
     glCheckFunc(glVertexAttribPointer(POSITION_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL));                //POSITION_VB = 0
 
+    //?? Not sure for what purpose we send this??
+    glCheckFunc(glEnableVertexAttribArray(1));
+    glCheckFunc(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL));
+    glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[3]));
+    glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int), indices_.data(), GL_STATIC_DRAW));
+
     ///Texture
     glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]));
     glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * textcoord_.size(), textcoord_.data(), GL_STATIC_DRAW));
@@ -401,11 +409,6 @@ void Shape::InitializeVBO() {
     glCheckFunc(glBindBuffer(GL_UNIFORM_BUFFER, vbo_[2]));          //Using GL_UNIFORM_BUFFER draw the line around the object but now nothing? why?
     glCheckFunc(glBufferData(GL_UNIFORM_BUFFER, sizeof(float) * normals_.size(), normals_.data(), GL_STATIC_DRAW));
 
-    //?? Not sure for what purpose we send this??
-    glCheckFunc(glEnableVertexAttribArray(2));
-    glCheckFunc(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL));
-    glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[3]));
-    glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int), indices_.data(), GL_STATIC_DRAW));
     glCheckFunc(glBindVertexArray(0));
 }
 

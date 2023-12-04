@@ -63,7 +63,7 @@ std::shared_ptr<Transform>bunny() {
     bunny_t->AddNode(bunny);
     bunny->SetActive(true);
  
-    bunny->calculateTextureCoord();
+    //bunny->calculateTextureCoord();
     return bunny_t;
 }
 /**

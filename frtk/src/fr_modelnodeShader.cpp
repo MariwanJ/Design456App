@@ -134,31 +134,33 @@ void ModelNode::Render(RenderInfo& info, const glm::mat4& modelview) {
 
     auto mvp = info.projection * modelview;
     auto normalmatrix = glm::transpose(glm::inverse(modelview));
+    ShaderProgram* program;
+    //if (color_.a == 1)
+    //    RenderSilhouette(mvp);
 
-    if (color_.a == 1)
-        RenderSilhouette(mvp);
-
-    ShaderProgram* program = shared_->object_program;
-    program->Enable();
-    LoadLights(program, info.lights);
-    program->SetAttribLocation("position", 0);  //Position variable has (layout(location =0) inside objectshader_vs.glsl
-    program->SetAttribLocation("normal", 1);    //normal variable has (layout(location =2) inside objectshader_vs.glsl
-    program->SetUniformMat4("modelview", modelview);
-    program->SetUniformMat4("normalmatrix", normalmatrix);
-    program->SetUniformMat4("mvp", mvp);
-    program->SetUniformVec4("color", color_);       //Object color - not light color
-    mesh_->Draw();//You should make a draw call to get that  done
-    program->Disable();
-    info.id++;
+    //ShaderProgram* program = shared_->object_program;
+    //program->Enable();
+    //LoadLights(program, info.lights);
+    //program->SetAttribLocation("position", 0);  //Position variable has (layout(location =0) inside objectshader_vs.glsl
+    //program->SetAttribLocation("normal", 1);    //normal variable has (layout(location =2) inside objectshader_vs.glsl
+    //program->SetUniformMat4("modelview", modelview);
+    //program->SetUniformMat4("normalmatrix", normalmatrix);
+    //program->SetUniformMat4("mvp", mvp);
+    //program->SetUniformVec4("color", color_);       //Object color - not light color
+    //mesh_->Draw();//You should make a draw call to get that  done
+    //program->Disable();
+    //info.id++;
 
     //Render texture also here.
-    program = shared_->texture_program;
+    program = shared_->texture_program;  
+    m_Texture2D->Bind(0);
     program->Enable();
+  
     program->SetAttribLocation("position", 0);  //Position variable has (layout(location =0) inside objectshader_vs.glsl
     program->SetAttribLocation("texCoord", 1);  //Position variable has (layout(location =1 inside objectshader_vs.glsl
     program->SetUniformVec4("color", color_);       //Object color - not light color
-    program->SetUniformMat4("modelview", modelview);
-    m_Texture2D->Bind(0);
+    program->SetUniformMat4("modelview", mvp);
+    
     mesh_->Draw();      //You should make a draw call to get that  done
     m_Texture2D->Unbind();   
     program->Disable();

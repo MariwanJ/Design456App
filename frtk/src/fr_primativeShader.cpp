@@ -48,7 +48,7 @@ void Fr_PrimaitiveShader::defaultShaders()
 {
     f_objectshader_ = "E:/Projects/Design456App/frtk/src/shaders/objectshader";
     f_silhouette_ = "E:/Projects/Design456App/frtk/src/shaders/silhouette";
-    //f_texture_  = "E:/Projects/Design456App/frtk/src/shaders/texture";
+    ///f_texture_  = "E:/Projects/Design456App/frtk/src/shaders/texture";
 }
 /** Shader file name and path */
 void Fr_PrimaitiveShader::setObjectshader(const char* newValue)

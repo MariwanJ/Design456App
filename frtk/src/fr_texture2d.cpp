@@ -52,7 +52,7 @@ Fr_Texture2D::~Fr_Texture2D()
 
 void Fr_Texture2D::Bind(unsigned int slot)
 {
-    glCheckFunc(glActiveTexture(GL_TEXTURE1 + slot));
+    //glCheckFunc(glActiveTexture(GL_TEXTURE0 + slot));
     glCheckFunc(glBindTextureUnit(slot, m_RendererID));
 }
 
