@@ -25,7 +25,7 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 #include "Application.h"
-
+#include <glm/gtx/transform.hpp>
 /* Scene and engine*/
 static Scene* scene = nullptr;
 
@@ -54,26 +54,25 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
     auto shftR = glfwGetKey(win, GLFW_KEY_RIGHT_SHIFT);
 
     if (glfw_MouseButton == GLFW_MOUSE_BUTTON_LEFT && glfw_MouseClicked == 1) {
+        FRTK_CORE_INFO("MOUSE LEFT");
         LeftMouseClick(xpos, ypos);
     }
     else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_MIDDLE && glfw_MouseClicked == 1) {
         if (shftL == GLFW_PRESS || shftR == GLFW_PRESS) {
+            FRTK_CORE_INFO("MOUSE PAN");
             cameraPAN(xpos, ypos);
         }
         else {
+            FRTK_CORE_INFO("MOUSE ROTATE");
             cameraRotate(xpos, ypos);
         }
     }
-    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_RIGHT)
-    {
-        glfw_e_x = xpos;
-        glfw_e_y = ypos;
-    }
-    else {
+    else if (glfw_MouseButton != GLFW_MOUSE_BUTTON_RIGHT) {
         glfw_MouseButton = false;
-        glfw_e_x = xpos;
-        glfw_e_y = ypos;
     }
+
+    glfw_e_x = xpos;
+    glfw_e_y = ypos;
 }
 
 void Fr_GL3Window::cursor_enter_callback(GLFWwindow*, int entered)
@@ -94,27 +93,43 @@ void Fr_GL3Window::mouse_button_callback(GLFWwindow* win, int button, int action
 void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
 {
     auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
-    float fov;
+    //float fov;
     userData_ data;
     activeCamera->getUserData(data);
     if (activeCamera->getType() == CameraList::ORTHOGRAPHIC) {
-        data.orthoSize_ = data.orthoSize_ + yoffset;
+        data.orthoSize_ = data.orthoSize_ + yoffset * mouseDefaults.MouseScrollScale;
     }
     else
     {
-        data.camPosition_ = glm::vec3(data.camPosition_.x, data.camPosition_.y, data.camPosition_.z + yoffset);
+        //Scroll zooming using the correct method of zooming. Use camera position by scaling the view-matrix
+        float scale_;
+
+        glm::mat4 matr = glm::lookAt(data.camPosition_, data.direction_, data.up_);
+        if (yoffset < 0) {
+            scale_ = 1 / mouseDefaults.MouseScrollScale;
+        }
+        else
+        {
+            scale_ = mouseDefaults.MouseScrollScale;
+        }
+        matr = glm::scale(matr, glm::vec3(scale_, scale_, scale_));
+        glm::vec3 position, direction, up;
+        glm::mat4 inverseViewMatrix = glm::inverse(matr);
+        data.camPosition_ = glm::vec3(inverseViewMatrix[3]);
+        glm::vec3 ddd = glm::vec3(inverseViewMatrix[2]);
+        data.direction_ = -glm::vec3(inverseViewMatrix[2]);
+        data.up_ = glm::vec3(inverseViewMatrix[1]);
     }
 
+    /* fov = data.fovy_;           //TODO:FIXME: THIS IS NOT TOTALLY CORRECCT. FOV SHOULD NOT BE USED FOR ZOOMING - CAMERA POSITION SHOULD BE CHANGED. BUT WE LEAVE IT FOR NOW LIKE THAT
+     fov = fov - yoffset;
+     if (fov < 0.01f)
+         fov = 0.01f;
+     if (fov > MAX_FOV_ZOOM)
+         fov = MAX_FOV_ZOOM;
+     data.fovy_ = fov;
 
-   /* fov = data.fovy_;           //TODO:FIXME: THIS IS NOT TOTALLY CORRECCT. FOV SHOULD NOT BE USED FOR ZOOMING - CAMERA POSITION SHOULD BE CHANGED. BUT WE LEAVE IT FOR NOW LIKE THAT
-    fov = fov - yoffset;
-    if (fov < 0.01f)
-        fov = 0.01f;
-    if (fov > MAX_FOV_ZOOM)
-        fov = MAX_FOV_ZOOM;
-    data.fovy_ = fov;
-
-*/
+ */
     activeCamera->setUserData(data);
 }
 
@@ -122,8 +137,8 @@ void Fr_GL3Window::cameraPAN(double xpos, double ypos)
 {
     if (MouseOnce)
     {
-        glfw_e_x = xpos;
-        glfw_e_y = ypos;
+        glfw_e_x = xpos * mouseDefaults.MouseXYScale;
+        glfw_e_y = ypos * mouseDefaults.MouseXYScale;
         MouseOnce = false;
     }
     userData_ data;
@@ -132,17 +147,13 @@ void Fr_GL3Window::cameraPAN(double xpos, double ypos)
 
     activeCamera->getUserData(data);
     radiusXYZ = sqrt(data.camPosition_.x * data.camPosition_.x +
-                     data.camPosition_.y * data.camPosition_.y +
-                     data.camPosition_.z * data.camPosition_.z);
+        data.camPosition_.y * data.camPosition_.y +
+        data.camPosition_.z * data.camPosition_.z);
 
-    float xoffset = xpos - glfw_e_x;
-    float yoffset = (glfw_e_y - ypos)*data.aspectRatio_;
-    glfw_e_x = xpos;
-    glfw_e_y = ypos;
-
-    float sensitivity =0.25f;
-    xoffset *= sensitivity;
-    yoffset *= sensitivity;
+    float xoffset = xpos * mouseDefaults.MouseXYScale - glfw_e_x;
+    float yoffset = (glfw_e_y - ypos * mouseDefaults.MouseXYScale) * data.aspectRatio_;
+    glfw_e_x = xpos * mouseDefaults.MouseXYScale;
+    glfw_e_y = ypos * mouseDefaults.MouseXYScale;
 
     yaw += xoffset;
     pitch += yoffset;
@@ -155,15 +166,14 @@ void Fr_GL3Window::cameraPAN(double xpos, double ypos)
     glm::vec3 direction;
     //TODO : CHECK ME .. DO WE SHOULD HAVE BOTH OR ONE OF THEM??
 
-     data.direction_.x = radiusXYZ * cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-     data.direction_.y = radiusXYZ * cos(glm::radians(yaw)) * sin(glm::radians(pitch));
+    data.camPosition_.x = radiusXYZ * cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    data.camPosition_.y = radiusXYZ * cos(glm::radians(yaw)) * sin(glm::radians(pitch));
 
-   // data.camPosition_.x = radiusXYZ * cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-   // data.camPosition_.y = radiusXYZ * cos(glm::radians(yaw)) * sin(glm::radians(pitch));
+    // data.camPosition_.x = radiusXYZ * cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    // data.camPosition_.y = radiusXYZ * cos(glm::radians(yaw)) * sin(glm::radians(pitch));
 
-    
-    //data.direction_.z =  sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    // data.direction_ = glm::normalize(data.direction_);
+     //data.direction_.z =  sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+     // data.direction_ = glm::normalize(data.direction_);
     activeCamera->setUserData(data);
 }
 
@@ -175,22 +185,21 @@ void Fr_GL3Window::cameraRotate(double xpos, double ypos)
 
     if (MouseOnce)
     {
-        glfw_e_x = xpos;
-        glfw_e_y = ypos;
+        glfw_e_x = xpos * mouseDefaults.MouseXYScale;
+        glfw_e_y = ypos * mouseDefaults.MouseXYScale;
         MouseOnce = false;
         radiusXYZ = sqrt(data.camPosition_.x * data.camPosition_.x +
             data.camPosition_.y * data.camPosition_.y +
             data.camPosition_.z * data.camPosition_.z);
     }
 
-    float delta_X = xpos - glfw_e_x;
-    float delta_Y = (ypos-glfw_e_y ) ;
-    glfw_e_x = xpos;
-    glfw_e_y = ypos;
-    float sensitivity = 0.25f;
+    float delta_X = xpos * mouseDefaults.MouseXYScale - glfw_e_x;
+    float delta_Y = (ypos * mouseDefaults.MouseXYScale - glfw_e_y);
+    glfw_e_x = xpos * mouseDefaults.MouseXYScale;
+    glfw_e_y = ypos * mouseDefaults.MouseXYScale;
 
-    yaw += delta_X * sensitivity;
-    pitch += delta_Y * sensitivity ;
+    yaw += delta_X;
+    pitch += delta_Y;
 
     if (pitch > 89.999990f)
         pitch = 89.999990f;
@@ -227,10 +236,10 @@ Application::~Application()
 #include <fr_icons.h>
 int Application::run(int argc, char** argv)
 {
-   // std::string fname = "R";
+    // std::string fname = "R";
 
-   // auto n = loadImage();
-    //std::shared_ptr<BYTE> IMG = n.getImage("nofile");
+    // auto n = loadImage();
+     //std::shared_ptr<BYTE> IMG = n.getImage("nofile");
     createGLFWwindow();
 
     return GLFWrun();

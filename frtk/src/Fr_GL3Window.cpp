@@ -70,6 +70,8 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     _y = y;
     _w = w;
     _h = h;
+    mouseDefaults.MouseScrollScale = 2;
+    mouseDefaults.MouseXYScale =1;
     yaw = -90.0f;
     pitch = 0.0f;  //
     roll = 0.0f;  //Z axis
@@ -461,9 +463,8 @@ int Fr_GL3Window::GLFWrun()
 
         glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - defualt should be wings3D or FreeCAD
         glClear(GL_COLOR_BUFFER_BIT);
-        int display_w, display_h;
-        glfwGetFramebufferSize(pWindow, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
+        glfwGetFramebufferSize(pWindow, &_w, &_h);
+        glViewport(_x, _y, _w, _h);
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
 
         //Render GLFW stuff or Our 3D drawing

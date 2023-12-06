@@ -43,7 +43,10 @@
 #include <fr_filebrowser.h>
 #define MAX_CAMERAS 8  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING CameraList enu
 
-
+typedef struct {
+    float MouseXYScale;
+    float MouseScrollScale;
+}mouseScale;
 
 /* Cameras */
 class Camera;
@@ -311,6 +314,7 @@ private:
 private:
     int gl_version_major;
     int gl_version_minor;
+    mouseScale mouseDefaults;
 
     //Keep ImGui layers saved and removed
     std::vector<std::shared_ptr<Fr_ImGuiLayer>> layers_;

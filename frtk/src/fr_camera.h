@@ -111,7 +111,10 @@ public:
 
     glm::mat4 getPorjection();
     void updateViewMatrix();
+    
     glm::mat4 getViewMatrix();
+    void setViewMatrix(glm::mat4 t);
+
   
     void SetOrthographicSize(float size);
     float getOrthgraphicSize();

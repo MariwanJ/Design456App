@@ -133,7 +133,6 @@ bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
     else {
         projection = glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_);
     }
-    modelview = glm::lookAt(camPosition_, direction_, up_);
     updateViewMatrix();
     modelview = m_ViewMatrix;
     return true;
@@ -373,6 +372,11 @@ void Camera::updateViewMatrix() {
 glm::mat4 Camera::getViewMatrix() {
     updateViewMatrix();
     return m_ViewMatrix;
+}
+
+void Camera::setViewMatrix(glm::mat4 t)
+{
+    m_ViewMatrix = t;
 }
 
  
