@@ -80,8 +80,11 @@ public:
     void SetUp(float x, float y, float z);
 
     /**
-     * Sets the perspective parameters
-     * Default 60, 1, 100
+     * .
+     * 
+     * \param fovy : type float, Lens of the camera , normally should be round 45
+     * \param znear : type float, normally is near to zero, but cannot be zero
+     * \param zfar  : type float, normally is about 1000
      */
     void SetPerspective(float fovy, float znear, float zfar);
 

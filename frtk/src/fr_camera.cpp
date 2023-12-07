@@ -232,9 +232,10 @@ void Camera::setupCameraHomeValues() {
                 focalDistance 30.248238\n
                 heightAngle 0.78539819\n\n}\n'
         */
-        SetCamPosition(17.46f, -17.46f, 135.0f);
+        SetCamPosition(1.12f, -51.0f, 62.0f);
         SetCenter(0.0f, 0.0f, 0.0f);
-        SetPerspective(30.248f, 0.429f, 1765.f);
+        SetUp(-58.0f, 628.0f, 300.f);
+        SetPerspective(45.0f, 0.429f, 1765.f);
     }break;
     case 1: {
         //ORTHOGRAPHIC
@@ -256,8 +257,8 @@ void Camera::setupCameraHomeValues() {
         */
         SetCamPosition(-2.f, -8.f, -54.f);
         SetCenter(0.0f, 0.0f, 0.0f);
-        SetUp(0.8f, 10.f, 10.f);
-        SetPerspective(45.f, 1.5f, 10002.7f);
+        SetUp(0.0f, 37.f, 0.0f);
+        SetPerspective(45.f, 0.1f, 10002.7f);
     }break;
     case 3: {
         /*Bottom
@@ -269,9 +270,10 @@ void Camera::setupCameraHomeValues() {
          focalDistance 100\n
          height 44.932903\n\n}\n'
         */
-        SetCamPosition(10.53f, 7.5f, -97.4f);
+        SetCamPosition(0.0f, 0.0f, -100.4f);
         SetCenter(0.0f, 0.0f, 0.0f);
-        SetPerspective(65, 66.0f, 230.0f);
+        SetUp(0.0f, 0.1f, 10.f);
+        SetPerspective(65, 0.10f, 1000.0f);
     }break;
     case 4: {
         /**
@@ -285,9 +287,10 @@ void Camera::setupCameraHomeValues() {
           height 44.932899\n\n}\n'
                  *
          */
-        SetCamPosition(28.8f, -89.0f, 2.6f);
+        SetCamPosition(0.0f, -90.0f, 0.0f);
         SetCenter(0.0f, 0.0f, 0.0f);
-        SetPerspective(100.0f, 34.0f, 144.18f);
+        SetUp(0.0f, 0.0f, .5f);
+        SetPerspective(45.0f, 0.10f, 1000.18f);
     }break;
     case 5: {
         /*REAR
@@ -299,9 +302,10 @@ void Camera::setupCameraHomeValues() {
             focalDistance 100\n
             height 44.932899\n\n}\n'
             */
-        SetCamPosition(15.33f, 110.9f, 2.6f);
+        SetCamPosition(0.0f, 90.0f, 0.0f);
         SetCenter(0.0f, 0.0f, 0.0f);
-        SetPerspective(100.0f, 55.9f, 166.12f);
+        SetUp(0.0f, 0.0f, 10.f);
+        SetPerspective(45.0f, 0.1f, 1000.0f);
     }break;
     case 6: {
         /*
@@ -314,9 +318,10 @@ void Camera::setupCameraHomeValues() {
             focalDistance 100\n
             height 44.932899\n\n
             */
-        SetCamPosition(115.3f, 10.96f, 2.60f);
+        SetCamPosition(100.0f, 0.0f, 0.0f);
         SetCenter(0.0f, 0.0f, 0.0f);
-        SetPerspective(60.0f, 1.5f, 10000.0f);
+        SetUp(0.0f, 0.0f, 0.1f);
+        SetPerspective(0.0f, 0.10f, 1000.0f);
     }break;
 
     case 7: {
@@ -329,9 +334,10 @@ void Camera::setupCameraHomeValues() {
             focalDistance 100\n
             height 44.932899\n\n}\n'
             */
-        SetCamPosition(-71.18f, 10.96f, 2.60f);
+        SetCamPosition(-100.0f, 0.0f, 0.0f);
         SetCenter(0.0f, 0.0f, 0.0f);
-        SetPerspective(100.0f, 55.9f, 166.12f);
+        SetUp(0.0f, 0.0f, 0.1f);
+        SetPerspective(0.0f, 0.10f, 1000.0f);
     }break;
     }
     updateViewMatrix();

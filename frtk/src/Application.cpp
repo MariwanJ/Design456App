@@ -93,7 +93,6 @@ void Fr_GL3Window::mouse_button_callback(GLFWwindow* win, int button, int action
 void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
 {
     auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
-    //float fov;
     userData_ data;
     activeCamera->getUserData(data);
     if (activeCamera->getType() == CameraList::ORTHOGRAPHIC) {
@@ -120,16 +119,6 @@ void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffs
         data.direction_ = -glm::vec3(inverseViewMatrix[2]);
         data.up_ = glm::vec3(inverseViewMatrix[1]);
     }
-
-    /* fov = data.fovy_;           //TODO:FIXME: THIS IS NOT TOTALLY CORRECCT. FOV SHOULD NOT BE USED FOR ZOOMING - CAMERA POSITION SHOULD BE CHANGED. BUT WE LEAVE IT FOR NOW LIKE THAT
-     fov = fov - yoffset;
-     if (fov < 0.01f)
-         fov = 0.01f;
-     if (fov > MAX_FOV_ZOOM)
-         fov = MAX_FOV_ZOOM;
-     data.fovy_ = fov;
-
- */
     activeCamera->setUserData(data);
 }
 
