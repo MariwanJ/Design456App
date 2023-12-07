@@ -243,7 +243,7 @@ void Camera::setupCameraHomeValues() {
         SetCamPosition(17.46f, -149.46f, 135.46f);
         SetCenter(0.0f, 0.0f, 0.0f);
         SetPerspective(30.248f, 0.429f, 1765.f);
-        SetOrthographicSize(10);
+        SetOrthographicSize(45);
     }break;
     case 2: {
         /*TOP
@@ -321,7 +321,7 @@ void Camera::setupCameraHomeValues() {
         SetCamPosition(100.0f, 0.0f, 0.0f);
         SetCenter(0.0f, 0.0f, 0.0f);
         SetUp(0.0f, 0.0f, 0.1f);
-        SetPerspective(0.0f, 0.10f, 1000.0f);
+        SetPerspective(45.0f, 0.10f, 1000.0f);
     }break;
 
     case 7: {
@@ -337,7 +337,7 @@ void Camera::setupCameraHomeValues() {
         SetCamPosition(-100.0f, 0.0f, 0.0f);
         SetCenter(0.0f, 0.0f, 0.0f);
         SetUp(0.0f, 0.0f, 0.1f);
-        SetPerspective(0.0f, 0.10f, 1000.0f);
+        SetPerspective(45.0f, 0.10f, 1000.0f);
     }break;
     }
     updateViewMatrix();

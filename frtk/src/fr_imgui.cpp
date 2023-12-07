@@ -236,6 +236,7 @@ int Fr_GL3Window::imgui_CameraConfiguration(userData_& data)
         counter++;
         auto camm = cameraList[(int)active_camera_];
         camm->setupCameraHomeValues();
+        camm->getUserData(data);
     }
     ImGui::SameLine();
     ImGui::Text("counter = %d", counter);
