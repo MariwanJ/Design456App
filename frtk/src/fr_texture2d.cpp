@@ -15,6 +15,9 @@ bool Fr_Texture2D::set2DTexture(std::string& path) {
     numComponents = 0;
     stbi_set_flip_vertically_on_load(1);
     m_LocalBuffer = 0;
+    if (m_FilePath.size() == 0) {
+        m_FilePath = "E:/Projects/Design456App/resources/Texture/4.png";    ///Default texture 
+    }
     m_LocalBuffer = stbi_load(m_FilePath.c_str(), &m_width, &m_height, &m_BPP, numComponents);
     if (m_LocalBuffer == NULL) {
         FRTK_CORE_ERROR("Cannot load Texture", path);

@@ -45,7 +45,11 @@ std::shared_ptr<Transform>bunny() {
      bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Pyramid.off"));
     bunny->m_Texture2D = std::make_shared<Fr_Texture2D>();
     //std::string imag = ("E:/Projects/Design456App/resources/Texture/test.png");
-    std::string imag = ("E:/Projects/Design456App/resources/Texture/bricks.jpg");
+    //std::string imag = ("E:/Projects/Design456App/resources/Texture/ts.png");
+    //std::string imag = ("E:/Projects/Design456App/resources/Texture/Surface.png");
+   // std::string imag = ("E:/Projects/Design456App/resources/Texture/2.png");
+    //std::string imag = ("E:/Projects/Design456App/resources/Texture/3.png");
+    std::string imag = ("E:/Projects/Design456App/resources/Texture/default.png");
     if (!bunny->m_Texture2D->set2DTexture(imag)) {
         DEBUG_BREAK;
     }

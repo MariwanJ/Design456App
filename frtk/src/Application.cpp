@@ -34,7 +34,7 @@ void Fr_GL3Window::framebuffer_size_callback(GLFWwindow* window, int width, int 
     this->_w = width;
     _h = height;
     if (s_GladInitialized && s_GLFWInitialized) {
-        glViewport(0, 0, _w, _h);
+        glViewport(_x, _y, _w, _h);
     }
 }
 
@@ -54,16 +54,16 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
     auto shftR = glfwGetKey(win, GLFW_KEY_RIGHT_SHIFT);
 
     if (glfw_MouseButton == GLFW_MOUSE_BUTTON_LEFT && glfw_MouseClicked == 1) {
-        FRTK_CORE_INFO("MOUSE LEFT");
+        //FRTK_CORE_INFO("MOUSE LEFT");
         LeftMouseClick(xpos, ypos);
     }
     else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_MIDDLE && glfw_MouseClicked == 1) {
         if (shftL == GLFW_PRESS || shftR == GLFW_PRESS) {
-            FRTK_CORE_INFO("MOUSE PAN");
+         //   FRTK_CORE_INFO("MOUSE PAN");
             cameraPAN(xpos, ypos);
         }
         else {
-            FRTK_CORE_INFO("MOUSE ROTATE");
+         //   FRTK_CORE_INFO("MOUSE ROTATE");
             cameraRotate(xpos, ypos);
         }
     }

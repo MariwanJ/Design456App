@@ -63,8 +63,12 @@ void Scene::add3DObject(std::string fName)
 
     //texture
     newObj->m_Texture2D = std::make_shared<Fr_Texture2D>();
-    std::string imag = ("E:/Projects/Design456App/resources/Texture/test.png");
-    //std::string imag = ("E:/Projects/Design456App/resources/Texture/bricks.jpg");
+    //std::string imag = ("E:/Projects/Design456App/resources/Texture/test.png");
+  //  std::string imag = ("E:/Projects/Design456App/resources/Texture/ts.png");
+    //std::string imag = ("E:/Projects/Design456App/resources/Texture/2.png");
+    //std::string imag = ("E:/Projects/Design456App/resources/Texture/3.png");
+    std::string imag = ("E:/Projects/Design456App/resources/Texture/default.png");
+    
     if (newObj->m_Texture2D->set2DTexture(imag))
     {
             newObj->m_Texture2D->setup2DTexture();      //Dont forget to do this always
@@ -112,7 +116,7 @@ void Scene::RenderScene() {
     render_info.id = 0;
     render_info.render_transparent = false;
     Render(render_info, render_info.modelview);
-    //render_info.id = 0;
-    //render_info.render_transparent = true;
-    //Render(render_info, render_info.modelview);
+    render_info.id = 0;
+    render_info.render_transparent = true;
+    Render(render_info, render_info.modelview);
 }

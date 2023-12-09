@@ -193,7 +193,6 @@ void Shape::calcualteTextCoor(int width, int height) {
         // Loop through the vertices and calculate texture coordinates
     if (normals_.size() == 0)
         diffCalculateNormals();
-    std::cout << ".........................start..........................." << std::endl;
     for (int i = 0; i < normals_.size(); i += 3)
     {
          //Get the vertex position
@@ -204,17 +203,12 @@ void Shape::calcualteTextCoor(int width, int height) {
         // Calculate texture coordinates based on vertex position
         GLfloat u = (x  ) ;
         GLfloat v = (y  ) ;
-        
-        std::cout << "x=" << u << " y=" << v << std::endl;
 
       //   Store the texture coordinates in the vertices array
         textcoord_.push_back(u );
         textcoord_.push_back(v );
 
     }
-  
-
-
 }
 void Shape::ReadOFF(const std::string& path) {
     std::ifstream input;

@@ -35,10 +35,14 @@
 int Fr_GL3Window::imguimzo_init()
 {
     ImGuizmo::BeginFrame();
-    ImGuizmo::SetOrthographic(false);
+    auto activeCamera = cameraList[(unsigned int)active_camera_];
+
+    if (activeCamera->getType() == CameraList::ORTHOGRAPHIC)
+        ImGuizmo::SetOrthographic(true);
+    else 
+        ImGuizmo::SetOrthographic(false);
     ImGuizmo::SetDrawlist();
     ImGuizmo::Enable(true);
-    auto activeCamera = cameraList[(unsigned int)active_camera_];
 
     auto getbu = Fr_GL3Window::getfr_Gl3Window()->tempBu;
     auto cameraView = (activeCamera->getModelView());
@@ -52,7 +56,7 @@ int Fr_GL3Window::imguimzo_init()
         ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, wWidth, wHeight);
         //ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::ROTATE, ImGuizmo::LOCAL, glm::value_ptr(trnasfrom_));
         ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(trnasfrom_));
-
+        //ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::SCALE, ImGuizmo::LOCAL, glm::value_ptr(trnasfrom_));
     }
 
     if (ImGuizmo::IsUsing()) {
@@ -68,7 +72,7 @@ int Fr_GL3Window::imguimzo_init()
         if (1)
             tempBu->Translate(trans);
         std::string resss = std::to_string(resu[0]) + " " + std::to_string(resu[1]) + " " + std::to_string(resu[2]);
-        FRTK_CORE_INFO(resss);
+
     }
     return 0;
 }
@@ -255,8 +259,16 @@ int Fr_GL3Window::imgui_ViewPort()
     ImGui::Begin("View Port");
     float wWidth = (float)ImGui::GetWindowWidth();
     float wHeight = (float)ImGui::GetWindowHeight();
+    FRTK_CORE_INFO("wWidth");
+    FRTK_CORE_INFO(wWidth);
+    FRTK_CORE_INFO("wHeight");
+    FRTK_CORE_INFO( wHeight);
+
     setPortViewDimension(ImVec4(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, wWidth, wHeight));
-    Camera::aspectRatio_ = wWidth / wHeight;    //Must be updated always
+   // Camera::aspectRatio_ = wWidth / wHeight;    //Must be updated always
+   
+    //WE MUST UPDATE THIS, OTHERWISE THE RENDERING WILL BE MISSING DATA, AND THE PICTURE SHOWN WILL BE WRONG!!
+    sceneBuffer->RescaleFrameBuffer(wWidth,wHeight);        
     sceneBuffer->Bind();
     scene->RenderScene();
     ImGui::Image(
