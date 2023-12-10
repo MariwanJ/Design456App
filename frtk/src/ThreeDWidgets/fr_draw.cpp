@@ -100,7 +100,7 @@ namespace FR {
 
     unsigned int Fr_TwoD_Drawing::lineWidth()
     {
-        m_lineWidth;
+        return m_lineWidth;
     }
 
     int Fr_TwoD_Drawing::initializeVBO()
@@ -116,6 +116,8 @@ namespace FR {
         //    glCheckFunc(glEnableVertexAttribArray(0));
         //    glCheckFunc(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL));
         //}
-        //glCheckFunc(glBindVertexArray(0));
+        //glCheckFunc(glBindVertexArray(0)); 
+        return 0;//todo fixme
     }
+    
 }

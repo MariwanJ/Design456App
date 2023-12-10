@@ -25,7 +25,7 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include <../src/FR.h>
+#include <../src/fr_constants.h>
 #include <../src/Fr_Core.h>
 #include <../src/fr_node.h>
 #include<../src/ThreeDWidgets/fr_draw.h>
