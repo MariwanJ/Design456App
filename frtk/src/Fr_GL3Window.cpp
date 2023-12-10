@@ -29,9 +29,9 @@
 
 //Remove me later : TODO
 #include<fr_mesh.h>
-#include<fr_object_shader_node.h>
+#include<halfEdge/fr_new_mesh.h>
+#include<fr_modelnodeShader.h>
 //End remove me later
-
 
 /**
  *
@@ -40,8 +40,6 @@
  * It will be calle
  * \param window
  */
-
-
 
 GLuint m_QuadVA, m_QuadVB, m_QuadIB;
 
@@ -63,18 +61,22 @@ static void error_callback(int error, const char* description)
 * FIXME: CLEANUP CODE
 */
 Scene* Fr_GL3Window::scene = nullptr;
-Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::string l = "GLFW ImGUI Test"):
-                                active_camera_(CameraList::PERSPECTIVE),
-                                _x(x), _y(y), _w(w), _h(h), label_(l) , showOpenDialog(false){
-    
+bool Fr_GL3Window::MouseOnce = true;
+Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::string l = "GLFW ImGUI Test") :
+    active_camera_(CameraList::PERSPECTIVE),
+    _x(x), _y(y), _w(w), _h(h), label_(l), showOpenDialog(false) {
     s_Fr_GLFWwindow = this;
     _x = x;
     _y = y;
     _w = w;
     _h = h;
-
+    mouseDefaults.MouseScrollScale = 2;
+    mouseDefaults.MouseXYScale =1;
+    yaw = -90.0f;
+    pitch = 0.0f;  //
+    roll = 0.0f;  //Z axis
     gl_version_major = 4;
-    gl_version_minor = 3;
+    gl_version_minor = 6;
     glfwSetErrorCallback(error_callback);
     if (!s_GLFWInitialized)
     {
@@ -87,7 +89,9 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_version_minor);
     glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
     Fr_GL3Window::GLFWCallbackWrapper::setGLFWwindow(this);
+    radiusXYZ = 0;
 }
 
 void Fr_GL3Window::flush() {
@@ -103,8 +107,6 @@ Fr_GL3Window::Fr_GL3Window()
     label_ = "GLFW ImGUI Test";
     s_Fr_GLFWwindow = this;
 }
-
-
 
 Fr_GL3Window* Fr_GL3Window::getfr_Gl3Window()
 {
@@ -149,20 +151,26 @@ void Fr_GL3Window::CreateScene()
 {
     scene = new Scene();//Save a link to the windows also.
     scene->linkToglfw = pWindow;
+
     CreateCameras();
     setCameraType(CameraList::PERSPECTIVE);
 
     /*
       * Add here the nodes - Grid, and XYZ axis
       */
-    CreateSun();
-    scene->AddNode(sun);
-    scene->AddNode(bunny());
+    scene->AddNode(CreateSunTop());
+    scene->AddNode(CreateSunBottom());
+    tempBu = bunny();
+    auto dd = bunny();
+    dd->Translate(10.f, 30.f, 20.f);
     scene->AddNode(Grid().CreateGrid());
     vert axis = Axis3D().CreateAxis3D();
     scene->AddNode(axis.Red);
     scene->AddNode(axis.Green);
     scene->AddNode(axis.Blue);
+    scene->AddNode(tempBu);
+    scene->AddNode(dd);
+
 }
 
 void Fr_GL3Window::resizeWindow(int xGl, int yGl, int wGl, int hGl)
@@ -212,6 +220,16 @@ int Fr_GL3Window::h() const
     return _h;
 }
 
+ImVec4 Fr_GL3Window::getPortViewDimensions()
+{
+    return  PortViewDimensions;
+}
+
+void Fr_GL3Window::setPortViewDimension(ImVec4 value)
+{
+    PortViewDimensions = value;
+}
+
 const char* Fr_GL3Window::label() const
 {
     return label_.c_str();
@@ -228,16 +246,16 @@ void Fr_GL3Window::label(const char* l)
 }
 /**
  * Set active camera which affext how setup works.
- * 
+ *
  * \param _type Camera type which is written in CameraList enum
  */
 void Fr_GL3Window::setCameraType(CameraList _type)
 {
     active_camera_ = _type;
     for (int i = 0; i < MAX_CAMERAS; i++) {
-        (cameras[i]).camera->SetActive(false);
+        (cameraList[i])->SetActive(false);
     }
-    (cameras[(int)active_camera_]).camera->SetActive(true);
+    (cameraList[(int)active_camera_])->SetActive(true);
 }
 
 CameraList Fr_GL3Window::getCameraType()
@@ -246,27 +264,117 @@ CameraList Fr_GL3Window::getCameraType()
 }
 
 /**
- * 
+ *
  * Create a list of cameras that will be later used using GUI buttons.
- * 
+ *
  */
 void Fr_GL3Window::CreateCameras()
 {
     for (int i = 0; i < MAX_CAMERAS; i++) {
         auto camera_ = std::make_shared < Camera>();   //Shared pointer to the created camera,
-        auto camera_trans = std::make_shared<Transform>();      //Shared pointer to the Transform that holds the camera as a child
         //By default no camera is active, developer MUST define one after creating cameras
         camera_->SetActive(false);
-        camera_trans->Rotate(glm::vec3(1, 0, 0), 90);
-        scene->AddNode(camera_trans);  //Add it to the scene graph, but only active one will render.
+        cameraList.push_back(camera_);
+        scene->AddNode(camera_);  //Add it to the scene graph, but only active one will render.
         camera_->setType((CameraList)i);   //Depending on the list it should be as the enum defined
-        auto manipulator = new Manipulator(); //manipulation for the camera.
-        camera_->SetManipulator(std::unique_ptr<Manipulator>(manipulator)); //A child to the camera that can manipulate it
-        camera_trans->AddNode(camera_);
-        camtype pCam;
-        pCam.camera = camera_.get();
-        pCam.manipulator = manipulator;
-        cameras.push_back(pCam);  //Transform with a camera child.
+        camera_->setupCameraHomeValues();
+
+        switch (i) {
+            //TODO: FIXME: If you create more than 6, you should add it here
+        case 0: {
+            /*Normal view PERSPECTIVE, HOME
+                    position 17.463835 -17.463825 13.463827\n
+                    orientation 0.74290609 0.30772209 0.59447283  1.2171158\n
+                    nearDistance 0.42925534\n
+                    farDistance 1761.75\n
+                    aspectRatio 1\n
+                    focalDistance 30.248238\n
+                    heightAngle 0.78539819\n\n}\n'
+            */
+            camera_->Rotate(glm::vec3(0.7429f, 0.307f, 0.594f), -69.7f);
+        }break;
+        case 1: {
+            //ORTHOGRAPHIC
+
+            camera_->Rotate(glm::vec3(0.74290609f, 0.30772209f, 0.59447283f), 69.7f);
+        }break;
+        case 2: {
+            /*TOP
+             position 15.337841 10.960548 102.60384\n
+             orientation 0 0 1  0\n
+             nearDistance 102.50124\n
+             farDistance 102.70644\n
+             aspectRatio 1\n
+             focalDistance 100\n
+             height 44.932899\n\n}\n'
+            */
+            camera_->Rotate(glm::vec3(0.0f, 0.0, 1.0f), 0);
+        }break;
+        case 3: {
+            /*Bottom
+             position 10.531155 7.5401545 -97.396126\n
+             orientation -0.99999994 1.4210855e-014 9.4830476e-008  3.1415935\n
+             nearDistance 97.298668\n
+             farDistance 97.493576\n
+             aspectRatio 1\n
+             focalDistance 100\n
+             height 44.932903\n\n}\n'
+            */
+            camera_->Rotate(glm::vec3(-1.0f, 0.0f, 0.0f), 180);
+        }break;
+        case 4: {
+            /**
+             *  FRONT
+              position 28.817665 -89.039444 2.6038942\n
+              orientation -1 4.214686e-007 8.4293717e-008  4.7123895\n
+              nearDistance 34.005363\n
+              farDistance 144.1835\n
+              aspectRatio 1\n
+              focalDistance 100\n
+              height 44.932899\n\n}\n'
+                     *
+             */
+            camera_->Rotate(glm::vec3(-1.0f, 0, 0), 270.0f);
+        }break;
+        case 5: {
+            /*REAR
+                position 15.337867 110.96054 2.6038241\n
+                orientation 1.4901161e-008 - 0.70710683 - 0.70710671  3.141593\n
+                nearDistance 55.904575\n
+                farDistance 166.1265\n
+                aspectRatio 1\n
+                focalDistance 100\n
+                height 44.932899\n\n}\n'
+                */
+            camera_->Rotate(glm::vec3(0.f, -0.70710683, -0.70710671f), 270.0f);
+        }break;
+        case 6: {
+            /*
+            RIGHT
+                position 115.33784 10.960509 2.6038659\n
+                orientation - 0.57735032 - 0.57735026 - 0.5773502  4.1887908\n
+                nearDistance 60.277466\n
+                farDistance 170.50819\n
+                aspectRatio 1\n
+                focalDistance 100\n
+                height 44.932899\n\n
+                */
+            camera_->Rotate(glm::vec3(-0.577f, -0.577f, -0.577f), 240.f);
+        }break;
+
+        case 7: {
+            /*LEFT
+                position - 71.182274 10.960546 2.6038406\n
+                orientation 0.57735014 - 0.5773505 - 0.5773502  2.0943947\n
+                nearDistance 16.166088\n
+                farDistance 126.30847\n
+                aspectRatio 1\n
+                focalDistance 100\n
+                height 44.932899\n\n}\n'
+                */
+            camera_->Rotate(glm::vec3(0.57f, -0.57f, -0.57f), 270.0f);
+        }break;
+        }
     }
 }
 
@@ -276,8 +384,7 @@ int Fr_GL3Window::createGLFWwindow()
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
@@ -316,29 +423,28 @@ int Fr_GL3Window::createGLFWwindow()
     return 1;
 }
 
-
 void Fr_GL3Window::resize(int x, int y, int w, int h)
 {
 }
 
 void Fr_GL3Window::show() {
     if (createGLFWwindow() != 0) {
-            if (s_GladInitialized == true) {
+        if (s_GladInitialized == true) {
             //                       TODO: DO WE NEED THIS? I remove it for now
-            }
         }
+    }
 }
 
 int Fr_GL3Window::GLFWrun()
 {
     userData_ data;
     glViewport(0, 0, _w, _h);
-    CreateScene();   //Main drawing process.
+
     clear_color = ImVec4(FR_WINGS3D); //ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-    sceneBuffer = std::make_shared<Fr_TextureFrameBuffer>(w(),h());
+    sceneBuffer = std::make_shared<Fr_TextureFrameBuffer>(w(), h());        //Our draws will bo on this buffer, which then drawn inside portview in ImGui 
 
     /**
-     * 
+     *
      * For the layers, We will make :
      * 1-Main layer which has the dockspace and menus
      * 2-Top bar (toolbars having tab)
@@ -348,27 +454,27 @@ int Fr_GL3Window::GLFWrun()
     for (int i = 0; i < 4; i++) {
         std::shared_ptr<Fr_ImGuiLayer> mlayer = std::shared_ptr<Fr_ImGuiLayer>();
         layers_.push_back(mlayer);
-     }
+    }
     layers_[0]->createLayer();
+    CreateScene();   //Main drawing process.
     while (!glfwWindowShouldClose(pWindow))
     {
         layers_[0]->StartLayer();
 
         glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - defualt should be wings3D or FreeCAD
         glClear(GL_COLOR_BUFFER_BIT);
-        int display_w, display_h;
-        glfwGetFramebufferSize(pWindow, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
+        glfwGetFramebufferSize(pWindow, &_w, &_h);
+        glViewport(_x, _y, _w, _h);
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
 
-         //Render GLFW stuff or Our 3D drawing
+        //Render GLFW stuff or Our 3D drawing
         renderimGUI(data);
-        // Rendering IMGUI 
+        // Rendering IMGUI
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         layers_[0]->EndLayer();
-       glCheckFunc(glfwPollEvents());
-       glCheckFunc(glfwSwapBuffers(pWindow));
+        glCheckFunc(glfwPollEvents());
+        glCheckFunc(glfwSwapBuffers(pWindow));
     }
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -376,29 +482,32 @@ int Fr_GL3Window::GLFWrun()
     glfwDestroyWindow(pWindow);
     return 0;
 }
-/**
-PerspectiveCamera
 
-  position 17.463835 -17.463825 13.463827\n
-  orientation 0.74290609 0.30772209 0.59447283  1.2171158\n
-  nearDistance 0.42925534\n
-  farDistance 1761.75\n
-  aspectRatio 1\n
-  focalDistance 30.248238\n
-  heightAngle 0.78539819
-
-  */
-
-std::shared_ptr<Transform> Fr_GL3Window::CreateSun() {
+std::shared_ptr<Transform> Fr_GL3Window::CreateSunTop() {
     //TODO: FIXME:
     auto sun_ = std::make_shared<Transform>();
-    sun_->Translate(30, 30, 30);
-    sun= std::make_shared<Light>();
-    sun->SetPosition(0, 0, 0);
-    sun->SetDiffuse(0.5, 0.5, 0.5);
-    sun->SetAmbient(1.0f, 1.0f, 1.0f);
-    sun->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
+    sun_->Translate(0.0f, 0.0f, 0.f);
+    sun = std::make_shared<Light>();
+    sun->SetPosition(0.0f, 0.0f, 1000.0f);
+    sun->SetDiffuse(0.25f, 0.25f, 0.25f);
+    sun->SetAmbient(0.2f, 0.2f, 0.2f);
+    sun->EnableShadowMap(glm::vec3(0, 0, 1), glm::vec3(0, 0, 4), glm::ortho<float>(-10, 10, -10, 10,100, 114));
     sun_->AddNode(sun);
-    sun_->SetActive(true);   //A must to have or the rabbit mesh will be black.
-    return sun_;
+    sun->SetActive(true);   //A must to have otherwise everything is black.
+    sunT = std::move(sun_);
+    return sunT;
+}
+std::shared_ptr<Transform> Fr_GL3Window::CreateSunBottom() {
+    //TODO: FIXME:
+    auto sun_ = std::make_shared<Transform>();
+    sun_->Translate(-100.0f, -100.f, -300.0f);
+    sun = std::make_shared<Light>();
+    sun->SetPosition(0.0f, 0.0f, 0.0f);
+    sun->SetDiffuse(0.5f, 0.5f, 0.5f);
+    sun->SetAmbient(0.2f, 0.2f, 0.2f);
+     //sun->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
+    sun_->AddNode(sun);
+    sun->SetActive(false);   //A must to have otherwise everything is black.
+    sunT = std::move(sun_);
+    return sunT;
 }

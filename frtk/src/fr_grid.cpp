@@ -27,36 +27,47 @@
 
 #include <fr_grid.h>
 
-#include <fr_object_shader_node.h>
+#include <fr_modelnodeShader.h>
 #include <fr_primativeShader.h>
 //Temporary code to have something to show.
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+///std::shared_ptr<Fr_Texture2D> saveme;
 
 std::shared_ptr<Transform>bunny() {
-    //auto floor = std::make_shared<Transform>();
     auto bunny_t = std::make_shared<Transform>();
     bunny_t->Translate(0, 0, 0);
     bunny_t->Scale(1, 1, 1);
-    bunny_t->Rotate(0, 1, 0, 0);
-    //bunny_t->Rotate(0, 0, 0, 1);
-    bunny_t->Rotate(90, 0, 0, 1);
-    auto bunny = std::make_shared<ObjectShaderNode>(0x667AFF, 0.005f); //  color and
+    auto bunny = std::make_shared<ModelNode>(glm::vec4(FR_123D), 0.02f); //  color and
 
-    //bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/xy_plane.off"));
-     bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/Pyramid.off"));
-    //bunny->SetMesh(std::make_shared<Mesh>("E:/Projects/Design456App/resources/mesh/Cube.off"));
-
-    auto rightlight_spot = std::make_shared<Light>();
-    rightlight_spot->SetActive(true);
-    rightlight_spot->SetPosition(2.956f, -0.514f, 1.074f);
-    rightlight_spot->SetupSpot(1.0f, 0.0f, -0.1f, 45.0f, 16.0f);
-    rightlight_spot->SetDiffuse(0.0f, 0.0f, 0.0f);
-    rightlight_spot->SetAmbient(0.42f, 0.42f, 0.42f);
-    rightlight_spot->SetAttenuation(1.0f, 0.002f, 0.0f);
-    bunny_t->AddNode(rightlight_spot);
+    //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/cube.off"));
+     bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Pyramid.off"));
+    bunny->m_Texture2D = std::make_shared<Fr_Texture2D>();
+    //std::string imag = ("E:/Projects/Design456App/resources/Texture/test.png");
+    //std::string imag = ("E:/Projects/Design456App/resources/Texture/ts.png");
+    //std::string imag = ("E:/Projects/Design456App/resources/Texture/Surface.png");
+   // std::string imag = ("E:/Projects/Design456App/resources/Texture/2.png");
+    //std::string imag = ("E:/Projects/Design456App/resources/Texture/3.png");
+    //std::string imag = ("E:/Projects/Design456App/resources/Texture/default.png");
+    ///*if (!bunny->m_Texture2D->set2DTexture(imag)) {
+    //    DEBUG_BREAK;
+    //}*/
+    bunny->m_Texture2D->setup2DTexture();
+    //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Wedge.off"));
+    auto Bunny_spot = std::make_shared<Light>();
+    Bunny_spot->SetActive(true);
+    Bunny_spot->SetPosition(0.f, 2.f, 5.0f);
+    // Bunny_spot->SetupSpot(-1.0f, -10.0f, 5.0f, 25.0f, 1.0f);
+    Bunny_spot->SetDiffuse(.2f, .2f, 0.2);
+    Bunny_spot->SetAmbient(0.2f, 0.2f, 0.2f);
+    Bunny_spot->SetAttenuation(0.50f, 0.2f, 0.50f);
+    Bunny_spot->SetSpecular(FR_METAL);
+    bunny_t->AddNode(Bunny_spot);
     bunny_t->AddNode(bunny);
+    bunny->SetActive(true);
+ 
+    //bunny->calculateTextureCoord();
     return bunny_t;
 }
 /**
@@ -133,25 +144,36 @@ std::shared_ptr<Transform> Grid::CreateGrid()
     float x, y, z;
     x = y = z = 0;
     float totalLength = gridWidth_ * sections_;
-    glm::vec3 limmitValue = glm::vec3(centerPos_[0] -(totalLength / 2), centerPos_[1] - (totalLength / 2), centerPos_[2]);
+    glm::vec3 limmitValue = glm::vec3(centerPos_[0] - (totalLength / 2), centerPos_[1] - (totalLength / 2), centerPos_[2]);
     //First lines
-    for (int i = 0; i <= (sections_); i ++) {
+    for (int i = 0; i <= (sections_); i++) {
         for (int j = 0; j <= sections_; j += sections_) {
-            x = limmitValue[0]+i* gridWidth_;
-            y = limmitValue[1]+(float)j * gridWidth_;
+            x = limmitValue[0] + i * gridWidth_;
+            y = limmitValue[1] + (float)j * gridWidth_;
             z = limmitValue[2];
-            
+            if ((x == 0 && y == 0) ||
+                (x == 0 && z == 0) ||
+                (y == 0 && z == 0)) {
+                //We don't draw the axis line as we draw them seperatly
+                continue;
+            }
             vertices.push_back(x);
             vertices.push_back(y);
             vertices.push_back(z);
         }
     }
     //Second lines to create the squre plane
-    for (int i = 0; i <= (sections_ ); i ++) {
+    for (int i = 0; i <= (sections_); i++) {
         for (int j = 0; j <= sections_; j += sections_) {
-            x = limmitValue[0]+(float)j * gridWidth_;
-            y = limmitValue[1]+(float)i * gridWidth_;
+            x = limmitValue[0] + (float)j * gridWidth_;
+            y = limmitValue[1] + (float)i * gridWidth_;
             z = limmitValue[2];
+            if ((x == 0 && y == 0) ||
+                (x == 0 && z == 0) ||
+                (y == 0 && z == 0)) {
+                //We don't draw the axis line as we draw them seperatly
+                continue;
+            }
             vertices.push_back(x);
             vertices.push_back(y);
             vertices.push_back(z);
@@ -159,7 +181,7 @@ std::shared_ptr<Transform> Grid::CreateGrid()
     }
 
     std::vector<unsigned int> indices;
-    for (int i = 0; i <= sections_ * 2; i++) {
+    for (int i = 0; i <= vertices.size(); i++) {
         indices.push_back(i);
     }
     grid_t->Scale(1, 1, 1);

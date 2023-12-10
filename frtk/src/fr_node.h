@@ -32,20 +32,20 @@
 #include <frtk.h>
 #include <fr_core.h>
 #include <glm/glm.hpp>
-
+#include <fr_texture2d.h>
 
 typedef enum class NODETYPE {
-    FR_NODE                      =  0,
-    FR_GROUP                     =  1,
-    FR_TRANSFORM                 =  2,
-    FR_MANIPULATOR               =  3,
-    FR_PRIMATIVESHADER           =  4,
-    FR_LIGHT                     =  5,
-    FR_CAMERA                    =  6,
-    FR_OBJECTSHADERNODE          =  7,
-    FR_SCENE                     =  8,
-    FR_MESH                      =  9,
-    FR_GRID                      = 10
+    FR_NODE = 0,
+    FR_GROUP = 1,
+    FR_TRANSFORM = 2,
+    FR_MANIPULATOR = 3,
+    FR_PRIMATIVESHADER = 4,
+    FR_LIGHT = 5,
+    FR_CAMERA = 6,
+    FR_ModelNode = 7,
+    FR_SCENE = 8,
+    FR_MESH = 9,
+    FR_GRID = 10
 }NODETYPE;
 
 /**
@@ -53,13 +53,14 @@ typedef enum class NODETYPE {
  * It offers an empty implementation to it's methods
  * Will be sub-classed by several other classes like (Group, Light, ..etc)
  */
-class Node {
+class FRTK_API Node {
 public:
 
     /**
      * Holds the light information
      */
     struct LightInfo {
+        glm::vec4 lightcolor;
         glm::vec4 position;
         glm::vec4 diffuse;
         glm::vec4 specular;
@@ -72,21 +73,6 @@ public:
     };
 
     /**
-     * Holds the shadow map information
-     */
-    struct ShadowMapInfo {
-        std::vector<glm::mat4> mvp;
-        std::vector<glm::mat4> mvp_transparent;
-        glm::mat4 modelview;
-        glm::mat4 projection;
-        unsigned int light_id;
-        unsigned int framebuffer;
-        unsigned int texture;
-        unsigned int width;
-        unsigned int height;
-    };
-
-    /**
      * Holds the render information
      */
     struct RenderInfo {
@@ -94,7 +80,7 @@ public:
         glm::mat4 modelview;
         glm::mat4 projection;
         std::vector<LightInfo> lights;
-        ShadowMapInfo shadowmap;
+        //ShadowMapInfo shadowmap;
         bool render_transparent;
     };
 
@@ -121,15 +107,10 @@ public:
      */
     virtual void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights);
 
-    /**
-     * Sets the shadow map
-     */
-    virtual bool SetupShadowMap(ShadowMapInfo& info);
 
-    /**
-     * Renders the shadow map
-     */
-    virtual void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview);
+    virtual bool SetupTexture2D( );
+
+    //virtual void RenderTexture2D();
 
     /**
      * Renders the node
@@ -150,6 +131,10 @@ public:
 
     void type(NODETYPE newVal);
 
+    int Parent();
+
+    void Parent(int index);
+
 protected:
 
     /**
@@ -157,7 +142,17 @@ protected:
      */
     NODETYPE type_;
     bool active_;
+    /**
+     * //This will be used to retrive the objects. 
+     *   A unique ID which will hold the index of the node.
+     *  The -1 indicate that the uniqueIndex is abstract. 
+     *  Whenever the new node addes to the system vector server, the index of the node is what will be here in the uniqueIndex.
+     *  children will have the index of the parent. and so on.
+     */
+    int uniqueIndex; 
+
+    int m_Parent; //-1 for Abstract class that doesnt have parent. and for the Root class
+
 };
 
 #endif
-

@@ -26,13 +26,17 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-
 #include <fr_scene.h>
-GLFWwindow* Scene::linkToglfw=nullptr;
+GLFWwindow* Scene::linkToglfw = nullptr;
 
 Scene::Scene() :
-    background_{ 0.9, 0.9, 0.9,1.0 }{
+    background_{ 0.9, 0.9, 0.9,1.0 } {
     type(NODETYPE::FR_SCENE);
+
+    glCheckFunc(glEnable(GL_DEPTH_TEST));
+    glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+    glCheckFunc(glEnable(GL_BLEND));
+    glCheckFunc(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 }
 
 void Scene::SetBackgroud(float r, float g, float b) {
@@ -41,7 +45,7 @@ void Scene::SetBackgroud(float r, float g, float b) {
     background_.b = b;
     background_.a = 1.0;
 }
-void Scene::SetBackgroud(float r, float g, float b,float alfa) {
+void Scene::SetBackgroud(float r, float g, float b, float alfa) {
     background_.r = r;
     background_.g = g;
     background_.b = b;
@@ -50,20 +54,34 @@ void Scene::SetBackgroud(float r, float g, float b,float alfa) {
 
 void Scene::add3DObject(std::string fName)
 {
-    
     auto newObj_t = std::make_shared<Transform>();
     newObj_t->Translate(0, 0, 0);
     newObj_t->Scale(1, 1, 1);
-    newObj_t->Rotate(0, 1, 0, 90); //TODO CHECK ME 
-    auto newObj = std::make_shared<ObjectShaderNode>(0x667AFF, 0.005f); //  color and
+    newObj_t->Rotate(0, 1, 0, 0); //TODO CHECK ME
+    auto newObj = std::make_shared<ModelNode>(glm::vec4(FR_BISQUE), 0.0005f); //  color and
+
+
+    //texture
+    newObj->m_Texture2D = std::make_shared<Fr_Texture2D>();
+    //std::string imag = ("E:/Projects/Design456App/resources/Texture/test.png");
+  //  std::string imag = ("E:/Projects/Design456App/resources/Texture/ts.png");
+    //std::string imag = ("E:/Projects/Design456App/resources/Texture/2.png");
+    //std::string imag = ("E:/Projects/Design456App/resources/Texture/3.png");
+    //std::string imag = ("E:/Projects/Design456App/resources/Texture/default.png");
+    
+    //if (newObj->m_Texture2D->set2DTexture(imag))
+    //{
+    //        newObj->m_Texture2D->setup2DTexture();      //Dont forget to do this always
+    //}else
+    //    DEBUG_BREAK;
+    newObj->m_Texture2D->setup2DTexture();      //Dont forget to do this always
     if (fName.find(".off") != std::string::npos) {
-        newObj->SetMesh(std::make_shared<Mesh>(fName));
+        newObj->SetMesh(std::make_shared<Shape>(fName));
     }
     else {
-        //Not implemented yet  - here .obj should be treated. 
+        //Not implemented yet  - here .obj should be treated.
     }
     auto rightlight_spot = std::make_shared<Light>();
-
     rightlight_spot->SetActive(true);
     rightlight_spot->SetPosition(2.956f, -0.514f, 1.074f);
     rightlight_spot->SetupSpot(1.0f, 0.0f, -0.1f, 45.0f, 16.0f);
@@ -71,8 +89,9 @@ void Scene::add3DObject(std::string fName)
     rightlight_spot->SetAmbient(0.42f, 0.42f, 0.42f);
     rightlight_spot->SetAttenuation(1.0f, 0.002f, 0.0f);
     newObj_t->AddNode(rightlight_spot);
+    newObj_t->SetActive(true);
     newObj_t->AddNode(newObj);
-    this->AddNode(newObj_t);
+    AddNode(newObj_t);
 }
 
 void Scene::delete3DObject(std::shared_ptr<Transform>& obj)
@@ -83,32 +102,21 @@ void Scene::delete3DObject(std::shared_ptr<Transform>& obj)
 * This is a general process  for drawing camera, shadow map, render shape /faces ..etc
 */
 void Scene::RenderScene() {
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+    
     RenderInfo render_info;
     if (!SetupCamera(render_info.projection, render_info.modelview))
-        ;//throw std::runtime_error("Scene::Render(): Camera not found");
+        throw std::runtime_error("Scene::Render(): Camera not found");
+
     SetupLight(render_info.modelview, render_info.lights);
-
     int draw_framebuffer = 0;
-    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &draw_framebuffer);
-
-    SetupShadowMap(render_info.shadowmap);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, render_info.shadowmap.framebuffer);
-    glClear(GL_DEPTH_BUFFER_BIT);
-    RenderShadowMap(render_info.shadowmap, render_info.shadowmap.modelview);
-
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_framebuffer);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glCheckFunc(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &draw_framebuffer));
+    glCheckFunc(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_framebuffer));
+    glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
     render_info.id = 0;
     render_info.render_transparent = false;
     Render(render_info, render_info.modelview);
     render_info.id = 0;
-    render_info.render_transparent = false;
+    render_info.render_transparent = true;
     Render(render_info, render_info.modelview);
-
 }
-

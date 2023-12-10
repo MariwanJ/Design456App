@@ -32,6 +32,7 @@
 #include<fr_core.h>
 #include <fr_transform.h>
 #include <fr_mesh.h>
+#include<halfEdge/fr_new_mesh.h>
 #include <fr_node.h>
 #include <fr_light.h>
 #include <fr_primatives.h>
@@ -40,55 +41,56 @@
 std::shared_ptr<Transform>bunny();
 //End Temporary code
 
-typedef struct vert{
-	std::shared_ptr<Transform> Red;
-	std::shared_ptr<Transform> Green;
-	std::shared_ptr<Transform> Blue;
+typedef struct vert {
+    std::shared_ptr<Transform> Red;
+    std::shared_ptr<Transform> Green;
+    std::shared_ptr<Transform> Blue;
+    std::shared_ptr<Transform> ZBlue; //small lines
 };
 
-class Axis3D :public Node
+class FRTK_API Axis3D :public Node
 {
 public:
-/**
- * class constructor.
- *
- */
-	Axis3D();
+    /**
+     * class constructor.
+     *
+     */
 
-	~Axis3D();
-	/**
-	 * .
-	 */
-	
-	vert CreateAxis3D();
+    Axis3D();
 
-	/**
-	 * Sets the grid visibility.
-	 *
-	 * \param status boolean variable. If true: Grids shown, if false: Grid is not visible
-	 */
-	void setVisible(bool status);
-	/**
-	 * Sets grid size. This is the distance between each line in both axis
-	 */
-	void setAxis3DSize( unsigned int sizeINmm);
-	/**
-	 * Returns the grid size.
-	 *
-	 * \return gird size defined previously
-	 */
-	unsigned int getAxis3DSize(void) const;
+    ~Axis3D();
+    /**
+     * .
+     */
 
-	/**
-	 * Create the Grid verticies.
-	 *
-	 * \return pointer to the created grid
-	 */
+    vert CreateAxis3D();
+
+    /**
+     * Sets the grid visibility.
+     *
+     * \param status boolean variable. If true: Grids shown, if false: Grid is not visible
+     */
+    void setVisible(bool status);
+    /**
+     * Sets grid size. This is the distance between each line in both axis
+     */
+    void setAxisZstepSize(float sizeINmm);
+    float getAxisZstepSize(void) const;
+
+    void setStepWidth(float sec);
+    float getStepWidth(void) const;
+
+    /**
+     * Create the Grid verticies.
+     *
+     * \return pointer to the created grid
+     */
 
 private:
 
-	int axis3DSize_; 
-	glm::vec4 axis3DColor_;
+    float ZstepSize_;
+    glm::vec4 axis3DColor_;
+    float stepWidth_;
 };
 
 #endif

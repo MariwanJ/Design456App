@@ -29,10 +29,10 @@
 #include <memory>
 #include <fr_node.h>
 
-class Fr_Primatives;
-class ShaderProgram;
+class FRTK_API Fr_Primatives;
+class FRTK_API ShaderProgram;
 
-class Fr_PrimaitiveShader : public Node {
+class FRTK_API Fr_PrimaitiveShader : public Node {
 public:
     /**
      * Constructor
@@ -40,7 +40,7 @@ public:
     Fr_PrimaitiveShader(unsigned int color = 0x111111, float silhouette = 0.005);
 
     Fr_PrimaitiveShader(glm::vec4 color, float silhouette = 0.005);
-    Fr_PrimaitiveShader(float color [4], float silhouette = 0.005);
+    Fr_PrimaitiveShader(float color[4], float silhouette = 0.005);
     /**
      * Destructor
      */
@@ -63,10 +63,6 @@ public:
      */
     void SetPrimative(std::shared_ptr <Fr_Primatives> primative);
 
-    /**
-     * Renders the shadow map
-     */
-    void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) override;
 
     /**
      * Renders the node
@@ -75,7 +71,6 @@ public:
 
     void setObjectshader(const char* newValue);
     void setSilhouette(const char* newValue);
-    void setShadowmap(const char* newValue);
 
     GLuint getCurrentTexturer(void);
 private:
@@ -89,6 +84,8 @@ private:
      */
     void RenderSilhouette(const glm::mat4& mvp);
 
+    //void RenderTexture2D(const glm::mat4& mvp);
+
     // Constants
     const size_t kMaxLights = 8;
 
@@ -98,16 +95,17 @@ private:
         ShaderProgram* primative_program;
         ShaderProgram* silhouette_program;          //the dark shape and outline of object
         ShaderProgram* shadowmap_program;
+        ShaderProgram* texture_program;
     };
     static Shared* shared_;
 
     // Attributes
-    std::shared_ptr <Fr_Primatives> primative_;
-    glm::vec4 color_;
+    std::shared_ptr <Fr_Primatives> m_Primative;
+    glm::vec4 m_Color;
     float silhouette_;
     std::string f_objectshader_;
     std::string f_silhouette_;
-    std::string f_shadowmap_;
+    std::string f_texture_;
 
     GLuint _texture; //used to return the texture for imgui rendering inside window.
 };

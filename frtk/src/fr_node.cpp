@@ -27,37 +27,37 @@
 //
 #include <fr_node.h>
 
-Node::Node() :type_(NODETYPE::FR_NODE),
-    active_{true} {
+Node::Node() :type_(NODETYPE::FR_NODE),m_Parent(-1),
+active_{ true } {
 }
 
 Node::~Node() {
 }
 
-bool Node::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {   
-    //Dummy code doese nothing should  be subclassed 
+bool Node::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
+    //Dummy code doese nothing should  be subclassed
     //(void)projection;
     //(void)modelview;
     return false;
 }
 
 void Node::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) {
-    //Dummy code doese nothing should  be subclassed 
+    //Dummy code doese nothing should  be subclassed
    /*/ (void)modelview;
     (void)lights;*/
 }
 
-bool Node::SetupShadowMap(ShadowMapInfo& info) {
+bool Node::SetupTexture2D( ) {
     //Dummy code does nothing should be subclassed
     /*(void)info;*/
     return false;
 }
 
-void Node::RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) {
-    //Dummy code does nothing should be subclassed
-    /*(void)info;
-    (void)modelview;*/
-}
+//void Node::RenderTexture2D() {
+//    //Dummy code does nothing should be subclassed
+//    /*(void)info;
+//    (void)modelview;*/
+//}
 
 void Node::Render(RenderInfo& info, const glm::mat4& modelview) {
     //Dummy code does nothing should be subclassed
@@ -82,4 +82,11 @@ void Node::type(NODETYPE newVal)
 {
     type_ = newVal;
 }
+int Node::Parent() {
+    return m_Parent;
+}
 
+void Node::Parent(int index)
+{
+    m_Parent = index;
+}

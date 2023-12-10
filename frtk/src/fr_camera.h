@@ -31,12 +31,13 @@
 
 #include<frtk.h>
 #include<fr_core.h>
+#include<fr_transform.h>
 #include <fr_node.h>
 #include <glm/glm.hpp>
 
 /*
-    R= Righ Vector 
-    U= Up Vector 
+    R= Righ Vector
+    U= Up Vector
     D=  Direction Vector
     P=  Camera position vector
 
@@ -45,21 +46,15 @@
                         Dx  Dy  Dz  0               0   0   1   -Pz
                         0   0   0   1               0   0   0   1
 
-                        
 */
 
-
-
-
-
-
 class Manipulator;
-
 
 /**
  * Scene's camera- Must be a subclass of Transform to achive translation
  */
-class Camera : public Node {
+class FRTK_API Camera : public Transform {
+    friend Fr_GL3Window;
 public:
     /**
      * Constructor
@@ -85,8 +80,11 @@ public:
     void SetUp(float x, float y, float z);
 
     /**
-     * Sets the perspective parameters
-     * Default 60, 1, 100
+     * .
+     * 
+     * \param fovy : type float, Lens of the camera , normally should be round 45
+     * \param znear : type float, normally is near to zero, but cannot be zero
+     * \param zfar  : type float, normally is about 1000
      */
     void SetPerspective(float fovy, float znear, float zfar);
 
@@ -95,14 +93,8 @@ public:
     /**
      * Sets the manipulator
      */
-    void SetManipulator(std::shared_ptr<Manipulator> manipulator);
-
-    /**
-     * Get the manipulator that is associated with the camera.
-     * 
-     * \return pointer to manipulator associated with the camera
-     */
-    std::shared_ptr<Manipulator> getManipulator();
+     //void SetTransform(std::shared_ptr<Transform> transform);
+    glm::mat4 getModelView() ;
 
     /**
      * Sets the camera
@@ -121,18 +113,27 @@ public:
     CameraList getCameraType();
 
     glm::mat4 getPorjection();
+    void updateViewMatrix();
+    
+    glm::mat4 getViewMatrix();
+    void setViewMatrix(glm::mat4 t);
+
+  
+    void SetOrthographicSize(float size);
+    float getOrthgraphicSize();
 private:
-    CameraList camType_ ;
+
+    glm::mat4 m_ViewMatrix;  //viewmodel_
+    CameraList camType_;
     glm::vec3 camPosition_;
     glm::vec3 direction_;
     glm::vec3 up_;  //RIGHT
     float fovy_;    //LEFT
     float znear_;   //BOTTOM
-    float zfar_;   //TOP 
-    float aspectRatio_;
-    std::shared_ptr<Manipulator> manipulator_;
-    glm::mat4 projectionMatrix_;
+    float zfar_;   //TOP
+    static float aspectRatio_;      //must be static as all cameras have the same ratio
+    glm::mat4 m_ProjectionMatrix;
+    float m_OrthographicSize;
 };
 
 #endif
-

@@ -34,12 +34,9 @@
 #include<fr_transform.h>
 #include <fr_primatives.h>
 #include <fr_primativeShader.h>
-#include <fr_object_shader_node.h>
+#include <fr_modelnodeShader.h>
 #include <fr_light.h>
 #include <fr_mesh.h>
-
-
-
 
 /**
  * The scene root
@@ -51,17 +48,15 @@ typedef struct {
     float a; //alpha
 } bkgC;
 
-class Scene : public Group {
+class FRTK_API Scene : public Group {
 public:
     /**
      * Default Constructor
      */
-
-    std::shared_ptr<std::vector<GLuint>> allTexture;
     Scene();
     /**
      * Sets the background color
-     */ 
+     */
     void SetBackgroud(float r, float g, float b);
     void SetBackgroud(float r, float g, float b, float alfa);
 
@@ -73,11 +68,11 @@ public:
      * Throws runtime_error if there's no camera
      */
     virtual void RenderScene();
-    static GLFWwindow*linkToglfw;
+    static GLFWwindow* linkToglfw;
 
 private:
     bkgC  background_;
+
 };
 
 #endif
-

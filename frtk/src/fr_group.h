@@ -36,8 +36,7 @@
 /**
  * A container for other nodes
  */
-class Group : public Node {
-
+class FRTK_API Group : public Node {
 public:
     Group();
     /**
@@ -49,20 +48,17 @@ public:
      * Adds a node to the group
      */
     void AddNode(std::shared_ptr<Node> node);
+    void delNode(std::shared_ptr<Node> node);//add the object to the scene graph vector, return the index
 
+    int getNodeIndex(std::shared_ptr<Node> node);//add the object to the scene graph vector, return the index
     /**
      * Retrive a pointer to the desired Node given by id number.
-     * 
+     *
      * \param id    Node number
      * \return pointer to the node if exists. or nullpntr
      */
     std::shared_ptr<Node> getNode(int id);
 
-    /**
-     * Return a pointer to the vector nodes (all of them).
-     * 
-     * \return pointer to the vector nodes even if there is no children (which will be an empty vector
-     */
     virtual std::vector<std::shared_ptr<Node>> getNodes();
     /**
      * Sets the camera
@@ -75,17 +71,7 @@ public:
      * Sets the lights
      * Returns the light info by reference
      */
-    virtual void SetupLight(const glm::mat4& modelview,  std::vector<LightInfo>& lights) override;
-
-    /**
-     * Sets the shadow map
-     */
-    virtual bool SetupShadowMap(ShadowMapInfo& info) override;
-
-    /**
-     * Renders the shadow map
-     */
-    virtual void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) override;
+    virtual void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) override;
 
     /**
      * Renders the node
@@ -100,4 +86,3 @@ private:
 };
 
 #endif
-

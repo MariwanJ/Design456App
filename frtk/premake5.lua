@@ -34,6 +34,7 @@ project "frtk"
 		"src/**.h",
 		"src/**.cpp",
 		"src/**.cxx",
+		"src/**.c",
 	}
 
 	defines

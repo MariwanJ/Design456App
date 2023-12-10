@@ -33,20 +33,20 @@
 #include<fr_core.h>
 
 #include <fr_node.h>
-typedef struct {
-    bool spot_enabled_;
-    glm::vec4 spot_direction_;
-    float spot_cutoff_Ang;
-    float spot_exponent_;
-}_spot;
-
-class Light : public Node {
+class FRTK_API Light : public Node {
 public:
     /**
      * Default constructor
      */
-    Light();
+    Light(glm::vec4 lightcolor = glm::vec4(1, 1, 1, 1));
+    /**
+    * Light color
+    */
+    void SetLightColor(glm::vec4 lightColor);
 
+    /**
+    * Sets the light position
+    */
     void SetPosition(glm::vec4 pos);
 
     /**
@@ -60,7 +60,7 @@ public:
      * Default = 0.2, 0.2, 0.2, 1.0
      */
     void SetAmbient(float r, float g, float b, float a = 1.0f);
-    
+
     /**
      * Sets the diffuse component
      * Default = 0.4, 0.4, 0.4, 1.0
@@ -79,31 +79,21 @@ public:
      */
     void SetAttenuation(float c, float l, float q);
 
-    void SetupSpot(_spot newSpot);
-
     /**
-     * Setup spot
-     */
-    void SetupSpot(float x, float y, float z, float cutoff, float exponent);
-
-    _spot getSpot(void);
+    * Setup spot
+    */
+    void SetupSpot(float x, float y, float z, float cutoffAngle, float exponent);
 
     /**
      * Enables the shadow map
      */
-    void EnableShadowMap(const glm::vec3& center, const glm::vec3& up,  const glm::mat4& projection);
+    void EnableShadowMap(const glm::vec3& center, const glm::vec3& up, const glm::mat4& projection);
 
     /**
      * Sets the lights
      * Returns the light info by reference
      */
     void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) override;
-
-    /**
-     * Sets the shadow map
-     */
-    bool SetupShadowMap(ShadowMapInfo& info) override;
-
 
 
 public:
@@ -114,32 +104,31 @@ public:
     glm::vec4 getSpecular();
     glm::vec3 getAttenuation();
 
-
 private:
     // Constants
-    const int kShadowmapWidth = 8192;
+    const int kShadowmapWidth = 1024;
     const int kShadowmapHeight = kShadowmapWidth;
 
     // Attributes
+    glm::vec4 lightColor_;
     int light_id_;
     glm::vec4 position_;
     glm::vec4 ambient_;
     glm::vec4 diffuse_;
     glm::vec4 specular_;
     glm::vec3 attenuation_;
-    //bool spot_enabled_;
-    //glm::vec4 spot_direction_;
-    //float spot_cutoff_;
-    //float spot_exponent_;
-    _spot spot_;
+    bool spot_enabled_;
+    glm::vec4 spot_direction_;
+    float spot_cutoff_Ang;
+    float spot_exponent_;
+
     bool sm_enable_;
     glm::vec3 sm_direction_;
     glm::vec3 sm_up_;
     glm::mat4 sm_projection_;
     unsigned int sm_framebuffer_;
     unsigned int sm_renderbuffer_;
-    unsigned int sm_texture_;
+    unsigned int shadowMapTexture_;
 };
 
 #endif
-

@@ -27,10 +27,8 @@
 
 #ifndef FR_CORE_H
 #define FR_CORE_H
-
-#include <FR.h>
 #include <frtk.h>
-
+#include<fr_constants.h>
 #include<Fr_Log.h>
 
 #if defined(__APPLE__)
@@ -40,8 +38,6 @@
 #define GLAD_STATIC 1
 #include<glad/glad.h>
 #endif
-
-
 
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
@@ -56,7 +52,7 @@
 #include <widgets/imgui_toolbars.h>
 #include <ImGuizmo.h>
 
-//imGUI fonts 
+//imGUI fonts
 
 #include<imguiFont/IconsFontaudio.h>
 #include<imguiFont/IconsFontAwesome6.h>
@@ -66,23 +62,25 @@
 #include<imguiFont/IconsMaterialDesign.h>
 #include<fr_texture_buffer.h>
 #include<glm/glm.hpp>
-#include<src/obj_loader.h>
-#include<fr_icons.h>
-#include<fr_ImGuiLayer.h>
-#include<fr_filebrowser.h>
 
+#include <../vendor/stb_image/src/stb_image.h>
 
-//PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT, 
+//PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
 enum class CameraList {
     PERSPECTIVE = 0, //This is not fixed and can be moved , others are not.
     ORTHOGRAPHIC,
+
     TOP,
     BOTTOM,
-    RIGHT,
-    LEFT,
     FRONT,
     BACK,
+    RIGHT,
+    LEFT,
 };
+
+typedef enum meshType { FR_QUAD, FR_POLYGON };
+
+
 typedef struct userData_ {
     glm::vec3 camPosition_;
     glm::vec3 direction_;
@@ -91,19 +89,10 @@ typedef struct userData_ {
     float znear_;
     float zfar_;
     float aspectRatio_;
-    //        projectionMatrix_(glm::ortho(-600, 600, -600, 600, -1, 1)),
+    float orthoSize_;
+    //        projectionm_Matrix(glm::ortho(-600, 600, -600, 600, -1, 1)),
     CameraList camType_;
 };
-
-
-
-
-
-
-
-
-
-
 
 #ifdef _WIN32
 #define DEBUG_BREAK __debugbreak()

@@ -1,4 +1,3 @@
-
 //
 // This file is a part of the Open Source Design456App
 // MIT License
@@ -34,7 +33,7 @@
 
 ShaderProgram::ShaderProgram(const std::string& prefix) :
     program_((glCreateProgram())) {
-    CompileShader(GL_VERTEX_SHADER, prefix + "_vs.glsl"); 
+    CompileShader(GL_VERTEX_SHADER, prefix + "_vs.glsl");
     CompileShader(GL_FRAGMENT_SHADER, prefix + "_fs.glsl");
     LinkShader();
 }
@@ -61,60 +60,94 @@ std::string ShaderProgram::ReadFile(const std::string& path) {
 }
 
 void ShaderProgram::Enable() {
-    glCheckFunc( glUseProgram(program_));
+    glCheckFunc(glUseProgram(program_));
 }
 
 void ShaderProgram::Disable() {
     glCheckFunc(glUseProgram(0));
 }
-
+//Send data to a variable inside the shader by the variable name which is retrived by get location.
+// send integer value to a variable that is integer in the shader
 void ShaderProgram::SetUniformInteger(const std::string& name, int value) {
-    GLuint location = glGetUniformLocation(program_, name.c_str() );
+    GLuint location = glGetUniformLocation(program_, name.c_str());
+    if (location == -1)
+        DebugBreak();
     glCheckFunc(glUniform1i(location, value));
 }
-
+//Send data to a variable inside the shader by the variable name which is retrived by get location.
+//Send one float value to a variable that is float in the shader
 void ShaderProgram::SetUniformFloat(const std::string& name, float value) {
     GLuint location = glGetUniformLocation(program_, name.c_str());
+    if (location == -1)
+        DebugBreak();
+
     glCheckFunc(glUniform1f(location, value));
 }
-
-void ShaderProgram::SetUniformVec3(const std::string& name,
-        const glm::vec3& value) {
+//Send data to a variable inside the shader by the variable name which is retrived by get location.
+//Send one float value to a variable that is 3 floats in the shader
+void ShaderProgram::SetUniformVec3(const std::string& name, const glm::vec3& value) {
     GLuint location = glGetUniformLocation(program_, name.c_str());
-    glUniform3fv(location, 1, glm::value_ptr(value));
+    if (location == -1)
+        DebugBreak();
+
+    glCheckFunc(glUniform3fv(location, 1, glm::value_ptr(value)));
+}
+//Send data to a variable inside the shader by the variable name which is retrived by get location.
+//Send one float value to a variable that is 3 floats in the shader
+void ShaderProgram::SetUniformVec2Int(const std::string& name, const glm::ivec2& value) {
+    GLuint location = glGetUniformLocation(program_, name.c_str());
+    if (location == -1)
+        DebugBreak();
+
+    glCheckFunc(glUniform2i(location,value.x,value.y));
 }
 
-void ShaderProgram::SetUniformVec4(const std::string& name,
-        const glm::vec4& value) {
+//Send data to a variable inside the shader by the variable name which is retrived by get location.
+//Send one float value to a variable that is 3 floats in the shader
+void ShaderProgram::SetUniformVec2(const std::string& name, const glm::vec2& value) {
     GLuint location = glGetUniformLocation(program_, name.c_str());
-    glUniform4fv(location, 1, glm::value_ptr(value));
+    if (location == -1)
+        DebugBreak();
+
+    glCheckFunc(glUniform2f(location, value.x, value.y));
 }
 
-void ShaderProgram::SetUniformMat4(const std::string& name,
-        const glm::mat4& value) {
+//Send data to a variable inside the shader by the variable name which is retrived by get location.
+//Send one float value to a variable that is float in the shader
+void ShaderProgram::SetUniformVec4(const std::string& name, const glm::vec4& value) {
     GLuint location = glGetUniformLocation(program_, name.c_str());
-    glUniformMatrix4fv(location, 1, false, glm::value_ptr(value));
+    if (location == -1)
+        DebugBreak();
+
+    glCheckFunc(glUniform4fv(location, 1, glm::value_ptr(value)));
+}
+//Send data to a variable inside the shader by the variable name which is retrived by get location.
+//Send one float value to a variable that is glm::mat4 in the shader
+void ShaderProgram::SetUniformMat4(const std::string& name, const glm::mat4& value) {
+    GLuint location = glGetUniformLocation(program_, name.c_str());
+    if (location == -1)
+        DebugBreak();
+
+    glCheckFunc(glUniformMatrix4fv(location, 1, false, glm::value_ptr(value)));
 }
 
-void ShaderProgram::SetAttribLocation(const char *name, unsigned int location) {
+void ShaderProgram::SetAttribLocation(const char* name, unsigned int location) {
     glCheckFunc(glBindAttribLocation(program_, location, name));
-
-    //printf("location=%i name=%s  \n", location, name);
 }
 
 void ShaderProgram::CompileShader(int shader_type, const std::string& path) {
     auto shader_str = ReadFile(path);
     auto shader_cstr = shader_str.c_str();
     auto shader = glCreateShader(shader_type);
-    glCheckFunc( glShaderSource(shader, 1, &shader_cstr, NULL));
+    glCheckFunc(glShaderSource(shader, 1, &shader_cstr, NULL));
     glCheckFunc(glCompileShader(shader));
     GLint success = 0;
     glCheckFunc(glGetShaderiv(shader, GL_COMPILE_STATUS, &success));
-    if (!success) {
+    if (success == GL_FALSE) {   //FAILED TO COMPILE
         GLint length = 0;
         glCheckFunc(glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length));
-        
-        char *log=new char(length);
+
+        char* log = new char(length);
         glCheckFunc(glGetShaderInfoLog(shader, length, &length, log));
         glCheckFunc(glDeleteShader(shader));
         throw std::runtime_error(log);
@@ -124,7 +157,7 @@ void ShaderProgram::CompileShader(int shader_type, const std::string& path) {
 }
 
 void ShaderProgram::LinkShader() {
-    glCheckFunc( glLinkProgram(program_));
+    glCheckFunc(glLinkProgram(program_));
     GLint program_linked;
     glGetProgramiv(program_, GL_LINK_STATUS, &program_linked);
     if (program_linked != GL_TRUE)
@@ -137,4 +170,3 @@ void ShaderProgram::LinkShader() {
 
     // TODO verify status
 }
-

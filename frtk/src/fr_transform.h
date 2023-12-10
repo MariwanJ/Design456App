@@ -31,20 +31,13 @@
 #include <memory>
 #include <fr_group.h>
 
-class Manipulator;
-
-class Transform : public Group {
+class FRTK_API Transform : public Group {
 public:
     /**
      * Constructor
      * Loads the identity by default
      */
     Transform();
-
-    /**
-     * Loads the identity matrix
-     */
-    void LoadIndentity();
 
     /**
      * Multiply the current matrix by a rotation matrix
@@ -56,6 +49,8 @@ public:
      */
     void Rotate(glm::vec3 axis, float angle);
 
+    void Translate(glm::vec3 v);
+
     /**
      * Multiply the current matrix by a translation matrix
      */
@@ -66,48 +61,80 @@ public:
      */
     void Scale(float x, float y, float z);
 
-    /**
-     * Sets the manipulator
-     */
-    void SetManipulator(std::unique_ptr<Manipulator> manipulator);
+    void Scale(glm::vec3 value);
 
-    bool SetupCamera(glm::mat4& projection, glm::mat4& modelview);
+ 
+ 
+private:
 
-    /**
-     * Sets the camera
-     * Returns true if the camera has been set
-     * Returns the camera info by reference
-     */
-    //bool SetupCamera(glm::mat4& projection, glm::mat4& modelview) override;
+    glm::mat4 m_Matrix;
+    glm::mat4 m_Inverse;
 
-    /**
-     * Sets the lights
-     * Returns the light info by reference
-     */
-    void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights);
+    //From maniupulator
+
+public:
 
     /**
-     * Sets the shadow map
-     */
-    bool SetupShadowMap(ShadowMapInfo& info) override;
+    * Accumulates the manipulator matrix
+    */
+   // glm::mat4 GetMatrix(const glm::vec3& look_dir = glm::vec3(0, 0, -1));
 
     /**
-     * Renders the shadow map
+     * Accumulates the inverse of the manipulator matrix
      */
-    void RenderShadowMap(ShadowMapInfo& info, const glm::mat4& modelview) override;
+    glm::mat4 GetMatrix();
+    glm::mat4 GetInverse();
 
     /**
-     * Renders the node
+     * Sets the reference point (world center)
      */
-    void Render(RenderInfo& info, const glm::mat4& modelview) override;
+    void SetPosition(float x, float y, float z);
 
-    glm::mat4 getManupulatorMatrix()const;
+    void SetPosition(glm::vec3 pos);
+
+
+    /**
+     * Sets whether each axis is inverted or not
+     */
+    void SetInvertAxis(bool invertX, bool invertY = false);
+
+    void GLFWMotion(int x, int y);
+
+    /**
+     * Mouse button function
+     */
+    void GLFWMouse(int button, int state, double x, double y);
+
+    float get_X()const;
+    float get_Y()const;
+    float get_Z() const;
+    void setZommingScale(float scale);
 
 private:
-    std::unique_ptr<Manipulator> manipulator_;
-    glm::mat4 matrix_;
-    glm::mat4 inverse_;
+    enum class Operation {
+        kRotation,  //Mouse click and drag
+        kZoom,       //Left mouse and drag
+        kNone       //nothing
+    };
+
+    static float kZoomScale;
+
+    /** Verifies the k_button state and sets the k_operation */
+    template<int k_button, Operation k_operation>
+    void SetOperation(int button, int state, double x, double y);
+
+    /** Computes the sphere vector for rotation */
+    glm::vec3 computeSphereCoordinates(double x, double y);
+
+    void Render(RenderInfo& info, const glm::mat4& modelview);
+
+    void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights);
+
+    glm::vec3 m_Position;
+    Operation operation_;
+    float x_, y_, z_;
+    glm::vec3 v_;
+    bool invertX_, invertY_;
 };
 
 #endif
-

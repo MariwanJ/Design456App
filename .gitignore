@@ -5,7 +5,7 @@ bin-int/
 
 # Files
 *.user
-
+Wing3D Conversion/PyScripts/__pycache__/*.*
 
 .vscode/
 *.sln

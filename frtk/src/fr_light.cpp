@@ -29,23 +29,29 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <fr_light.h>
 
-Light::Light() :
+Light::Light(glm::vec4 lightColor_) :
+    lightColor_(lightColor_),
     light_id_(0),
     position_(0, 0, 0, 1),
     ambient_(0.2, 0.2, 0.2, 1),
     diffuse_(0.4, 0.4, 0.4, 1),
     specular_(0.4, 0.4, 0.4, 1),
     attenuation_(1, 0, 0),
+    spot_enabled_(false),
     sm_projection_(0),
     sm_framebuffer_(0),
     sm_renderbuffer_(0),
-    sm_texture_(0),
+    shadowMapTexture_(0),
     sm_enable_(false) {
     type(NODETYPE::FR_LIGHT);
-    spot_.spot_enabled_ = false;
-    spot_.spot_cutoff_Ang=0.f;
-    spot_.spot_direction_ = glm::vec4(0, 0, 0, 0);
-    spot_.spot_exponent_ = 0.0f;
+    spot_enabled_ = false;
+    spot_cutoff_Ang = 0.0f;
+    spot_direction_ = glm::vec4(0, 0, 0, 0);
+    spot_exponent_ = 0.0f;
+}
+
+void Light::SetLightColor(glm::vec4 lightColor) {
+    lightColor_ = lightColor;
 }
 
 void Light::SetPosition(glm::vec4 pos) {
@@ -72,30 +78,18 @@ void Light::SetAttenuation(float c, float l, float q) {
     attenuation_ = glm::vec3(c, l, q);
 }
 
-void Light::SetupSpot(_spot newSpot) {
-    spot_.spot_enabled_ = newSpot.spot_enabled_;
-    spot_.spot_direction_ = newSpot.spot_direction_;
-    spot_.spot_cutoff_Ang = newSpot.spot_cutoff_Ang;
-    spot_.spot_exponent_= newSpot.spot_exponent_;
+void Light::SetupSpot(float x, float y, float z, float cutoffAngle, float exponent) {
+    spot_enabled_ = true;
+    spot_direction_ = glm::vec4(glm::normalize(glm::vec3(x, y, z)), 1);
+    spot_cutoff_Ang = cos(glm::radians(cutoffAngle));
+    spot_exponent_ = exponent;
 }
 
-void Light::SetupSpot(float x, float y, float z, float cutoff, float exponent) {
-    spot_.spot_enabled_ = true;
-    spot_.spot_direction_ = glm::vec4(glm::normalize(glm::vec3(x, y, z)), 1);
-    spot_.spot_cutoff_Ang = cos(glm::radians(cutoff));
-    spot_.spot_exponent_ = exponent;
-}
-_spot Light::getSpot(void) {
-    return spot_;
-}
 void Light::EnableShadowMap(const glm::vec3& center, const glm::vec3& up, const glm::mat4& projection) {
     sm_enable_ = true;
     sm_direction_ = center;
     sm_up_ = up;
     sm_projection_ = projection;
-
-    int width = kShadowmapWidth;
-    int height = kShadowmapHeight;
 
     // Create Framebuffer
     glCheckFunc(glGenFramebuffers(1, &sm_framebuffer_));
@@ -104,19 +98,21 @@ void Light::EnableShadowMap(const glm::vec3& center, const glm::vec3& up, const 
     // Create Renderbuffer
     glCheckFunc(glGenRenderbuffers(1, &sm_renderbuffer_));
     glCheckFunc(glBindRenderbuffer(GL_RENDERBUFFER, sm_renderbuffer_));
-    glCheckFunc(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height));
+    glCheckFunc(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, kShadowmapWidth, kShadowmapHeight));
     glCheckFunc(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, sm_renderbuffer_));
 
+    //TODO FIXME TO GET BETTER Shadow mapping - Not very important for our application yet.
     // Create texture
-    glCheckFunc(glGenTextures(1, &sm_texture_));
-    glCheckFunc(glBindTexture(GL_TEXTURE_2D, sm_texture_));
-    glCheckFunc(glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0));
-    glCheckFunc(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
-    glCheckFunc(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
+    glCheckFunc(glGenTextures(1, &shadowMapTexture_));
+    glCheckFunc(glBindTexture(GL_TEXTURE_2D, shadowMapTexture_));
+    glCheckFunc(glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, kShadowmapWidth, kShadowmapHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL));
     glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
     glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-    glCheckFunc(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, sm_texture_, 0));
-
+    glCheckFunc(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+    glCheckFunc(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
+    glCheckFunc(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMapTexture_, 0));
+    glCheckFunc(glDrawBuffer(GL_NONE));
+    glCheckFunc(glReadBuffer(GL_NONE));
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if (status != GL_FRAMEBUFFER_COMPLETE)
         throw std::runtime_error("Couldn't create shadowmap frame buffer");
@@ -139,26 +135,12 @@ void Light::SetupLight(const glm::mat4& modelview,
     info.specular = specular_;
     info.ambient = ambient_;
     info.attenuation = attenuation_;
-    info.is_spot = spot_.spot_enabled_;
-    info.direction = glm::normalize(glm::vec3(normalmatrix * spot_.spot_direction_));
-    info.cutoff = spot_.spot_cutoff_Ang;
-    info.exponent = spot_.spot_exponent_;
+    info.is_spot = spot_enabled_;
+    info.direction = glm::normalize(glm::vec3(normalmatrix * spot_direction_));
+    info.cutoff = spot_cutoff_Ang;
+    info.exponent = spot_exponent_;
     lights.push_back(info);
     light_id_ = lights.size() - 1;
-}
-
-bool Light::SetupShadowMap(ShadowMapInfo& info) {
-    if (!active_)
-        return false;
-
-    info.projection = sm_projection_;
-    info.modelview = glm::lookAt(glm::vec3(position_), sm_direction_, sm_up_);
-    info.light_id = light_id_;
-    info.framebuffer = sm_framebuffer_;
-    info.texture = sm_texture_;
-    info.width = kShadowmapWidth;
-    info.height = kShadowmapHeight;
-    return true;
 }
 
 int Light::getLightID()

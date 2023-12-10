@@ -25,36 +25,28 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-
 #ifndef FR_GL3WINDOW_H
 #define FR_GL3WINDOW_H
 
-#include <frtk.h>
-#include<fr_core.h>
 #include<fr_scene.h>
 #include<fr_camera.h>
-#include<fr_manipulator.h>
 #include<fr_light.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <fr_grid.h>
 #include<fr_axis3D.h>
 #include<fr_texture_buffer.h>  //used to render to texture - imgui
+#include<../src/halfedge/fr_new_mesh.h>
 //fonts for Imgui icons
 #include <imguiFont/IconsFontAwesome6.h>
-
-
-#define MAX_CAMERAS 6  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING CameraList enu
+#include <fr_ImGuiLayer.h>
+#include <fr_filebrowser.h>
+#define MAX_CAMERAS 8  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING CameraList enu
 
 typedef struct {
-    Camera* camera;
-    Manipulator* manipulator;
-} camtype;
-
-
-
-
-
+    float MouseXYScale;
+    float MouseScrollScale;
+}mouseScale;
 
 /* Cameras */
 class Camera;
@@ -63,7 +55,7 @@ class Fr_GL3Window;
 /**
  *  Fr_GL3Windows class definition and methods.
  */
-class FRTK_API Fr_GL3Window{
+class FRTK_API Fr_GL3Window {
 public:
     /**
      * class constructors.
@@ -86,9 +78,7 @@ public:
     *
     */
 
-
     static Fr_GL3Window* getfr_Gl3Window();
-
 
     virtual ~Fr_GL3Window();
     /**
@@ -97,13 +87,12 @@ public:
      * \return int value depending on the way the windows exits.
      */
 
-    /**
-     * Add imgui layer to current view port
-     * @param layer : shared pointer to Fr_ImGuiLyer object
-    */
+     /**
+      * Add imgui layer to current view port
+      * @param layer : shared pointer to Fr_ImGuiLyer object
+     */
     virtual void addLayer(std::shared_ptr<Fr_ImGuiLayer> layer);
     virtual void removeLayer(std::shared_ptr<Fr_ImGuiLayer> layers);
-
 
     virtual int Exit();
     /**
@@ -126,16 +115,17 @@ public:
     /**
      * Create Scene graph.
      */
-    virtual void CreateScene();  //Must be overriden to get the desired results
+    virtual void CreateScene();  //Must be overridden to get the desired results
     /**
      * Create Sun (Light) inside the Scene graph.
      *
      * \return
      */
-    virtual std::shared_ptr<Transform> CreateSun();
+    virtual std::shared_ptr<Transform> CreateSunTop();
+    virtual std::shared_ptr<Transform> CreateSunBottom();  //TODO: NOT SURE IF WE NEED 2?? 
 
     /**
-     * Resize Fr_GL3Window size which affects both fltk and glfw windows.
+     * Resize Fr_GL3Window size which affects glfw windows.
      *
      * \param x left-start position of the window
      * \param y top-start position of the window
@@ -162,6 +152,7 @@ public:
      */
     virtual int GLFWrun();
 
+public:
     /**
      * Pointer to link to the scene.
      */
@@ -172,7 +163,7 @@ public:
      * 6 types of cameras are created by the window
      * see CameraList
      */
-    std::vector<camtype> cameras; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
+    std::vector<std::shared_ptr<Camera>> cameraList; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
 
     /**
      * Static pointer used to access the GLFW window.
@@ -192,15 +183,18 @@ public:
     int  w()const;
     int  h()const;
 
+    ImVec4 getPortViewDimensions();
+    void setPortViewDimension(ImVec4 value);
+
     const char* label()const;
     void label(std::string l);
-    void label(const char*l);
+    void label(const char* l);
 
     void setCameraType(CameraList typOfCamera);
     CameraList getCameraType();
     int imgui_CameraConfiguration(userData_& data);
-
-
+    genID idGen_; //Keeps the id generator - used to generate shape/objects unique ID
+    float getAspectRation() const;
 protected:
     /**
      * Function to create all cameras listed in CameraList.
@@ -214,13 +208,13 @@ protected:
      *
      * \return
      */
-    int renderimGUI(userData_ &data);
+    int renderimGUI(userData_& data);
     int imgui_LeftPanel();
     int imgui_TopPannel();
 
     int imgui_ViewPort();
     int imgui_menu();
- 
+
     /**
      * Create the GLFW Window .
      *
@@ -239,17 +233,24 @@ private:
     void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cursor entered the window's client area, or GL_FALSE if it left it.
     void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
     void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
+
+    void cameraPAN(double xoffset, double yoffset);
+    void cameraRotate(double xoffset, double yoffset);
+
+    void LeftMouseClick(double xoffset, double yoffset);
+    void RightMouseClick(double xoffset, double yoffset);
+
     void joystick_callback(int jid, int events);
 
     //Menu and toolbar callbacks
-    void mnuFileNew_cb   ( void* Data);
-    void mnuFileOpen_cb  ( void* Data);
-    void mnuFileClose_cb ( void* Data);
-    void mnuFileSave_cb  ( void* Data);
-    void mnuFileSaveAs_cb( void* Data);
-    void mnuFileExport_cb( void* Data);
-    void mnuFileImport_cb( void* Data);
-    void mnuFileExit_cb( void* Data);
+    void mnuFileNew_cb(void* Data);
+    void mnuFileOpen_cb(void* Data);
+    void mnuFileClose_cb(void* Data);
+    void mnuFileSave_cb(void* Data);
+    void mnuFileSaveAs_cb(void* Data);
+    void mnuFileExport_cb(void* Data);
+    void mnuFileImport_cb(void* Data);
+    void mnuFileExit_cb(void* Data);
     void CameraOptions(void);
     void SunOptions(void);
 
@@ -259,16 +260,7 @@ private:
     void mnuEditCut(void* Data);
     void mnuEditPaste(void* Data);
 
-
     void createOpenDialog(void);
-
-
-
-
-
-
-
-
 
     /**
      * GLFW callback wrapper calss.
@@ -311,18 +303,18 @@ private:
         static void GLFWCallbackWrapper::mnuEditCut(void* Data);
         static void GLFWCallbackWrapper::mnuEditPaste(void* Data);
 
-
     private:
         static  Fr_GL3Window* s_fr_glfwwindow;
-  
     };
 
     /**
      * GLAD VERSION DEFINITION
      * Currently it is 4.3.
      */
+private:
     int gl_version_major;
     int gl_version_minor;
+    mouseScale mouseDefaults;
 
     //Keep ImGui layers saved and removed
     std::vector<std::shared_ptr<Fr_ImGuiLayer>> layers_;
@@ -334,7 +326,7 @@ private:
      * .
      */
     std::shared_ptr<Light> sun;
-
+    std::shared_ptr<Transform> sunT;
     /**
     * low level variable to keep the id of the GLFW window
      * HWND .
@@ -360,17 +352,24 @@ private:
     /**
      * Keep track of the active camera.
      */
-    CameraList active_camera_ ;
+    CameraList active_camera_;
     ImVec4 clear_color;
     static Fr_GL3Window* s_Fr_GLFWwindow;
     ImGui::FileBrowser fileDialog;
 
     bool showOpenDialog;
+    //will be true if rotate/pan starts.
+    static bool MouseOnce;
+    float yaw, pitch, roll;
+
+    //Camera rotation - mouse callback
+    float radiusXYZ;
+
+    ImVec4 PortViewDimensions;
+
+#if 1//Experemental code - will be removed
+    std::shared_ptr <Transform> tempBu;
+#endif
 };
-
-
-
-
-
 
 #endif
