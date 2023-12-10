@@ -27,7 +27,7 @@
 #ifndef FR_PRIMATIVES_H
 #define FR_PRIMATIVES_H
 
-#include <FR.h>
+#include<fr_constants.h>
 #include <fr_core.h>
 #include <glm/glm.hpp>
 
@@ -55,9 +55,7 @@ private:
 
     void SetVertex(unsigned int index, float vertices[], const glm::vec3& vertex);
 
-    void InitializeVBO(const std::vector<float>& vertices,
-        const std::vector<float>& normals,
-        const std::vector<unsigned int> indices);
+    void InitializeVBO();
 
     int drawType;
     std::vector<float> vertices_;

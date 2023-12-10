@@ -1,7 +1,7 @@
 #include "fr_ImGuiLayer.h"
 #include<Fr_Core.h>
 #include <frtk.h>
-#include<FR.h>
+#include<fr_constants.h>
 #include <Fr_GL3Window.h>
 Fr_ImGuiLayer::Fr_ImGuiLayer()
 {

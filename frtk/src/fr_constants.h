@@ -29,8 +29,8 @@
     FR static variable/classes.
  */
 
-#ifndef FR_H
-#define FR_H
+#ifndef FR_CONSTANTS_H
+#define FR_CONSTANTS_H
 
  /**
     The major release version
@@ -233,6 +233,7 @@ namespace COLOR {
 #define FR_OLDLACE               0.9922f,  0.9608f,  0.9020f,  1.0000f
 #define FR_GLASS                 0.3300f,  1.0000f,  1.0000f,  1.0000f
 #define FR_WINGS3D				 0.3800f,  0.3800f,  0.3800f,  0.5000f
+#define FR_123D                  0.0117f,  0.6392f,  0.8470f,  1.0000f
 };
 namespace SPECULAR {    
     //Material             BaseColor(R, G, B)

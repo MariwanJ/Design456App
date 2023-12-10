@@ -39,7 +39,7 @@ namespace FR {
         void draw();
         void draw_children();
         void draw_lbl_children();
-        void update_child(std::unique_ptr <Fr_Widget> wd);
+        void update_child(std::shared_ptr <Fr_Widget> wd);
     
     public:
         void redraw() override;
@@ -65,26 +65,23 @@ namespace FR {
         /**
          * Find a widget and return it's index number.
          */
-        virtual int find(std::unique_ptr<Fr_Widget>& wd) const;
+        virtual int find(std::shared_ptr<Fr_Widget>& wd) const;
 
-        virtual void addWidget(std::unique_ptr <Fr_Widget> wid);
-        virtual int insert(std::unique_ptr <Fr_Widget> wd, int index_before);
+        virtual void addWidget(std::shared_ptr <Fr_Widget> wid);
+        virtual int insert(std::shared_ptr <Fr_Widget> wd, int index_before);
 
-        virtual int removeWidget(std::unique_ptr <Fr_Widget> wid);
+        virtual int removeWidget(std::shared_ptr <Fr_Widget> wid);
         virtual int removeWidget(int index);
 
-        virtual int tabIndex(std::unique_ptr <Fr_Widget>& wid);
-        virtual void tabIndex(std::unique_ptr <Fr_Widget>& wid, int tabIndex);
+        virtual int tabIndex(std::shared_ptr <Fr_Widget>& wid);
+        virtual void tabIndex(std::shared_ptr <Fr_Widget>& wid, int tabIndex);
 
-        virtual void addResizable(std::unique_ptr <Fr_Widget> wd);
-        virtual bool Resizable(std::unique_ptr <Fr_Widget>wd);
+        virtual void addResizable(std::shared_ptr <Fr_Widget> wd);
+        virtual bool Resizable(std::shared_ptr <Fr_Widget>wd);
 
-        std::vector<std::unique_ptr <Fr_Widget>> m_risizable;
+        std::vector<std::shared_ptr <Fr_Widget>> m_resizable;
 
     private:
-
-        std::vector < std::unique_ptr <Fr_Widget>> m_children;
-    
-    
+        std::vector < std::shared_ptr <Fr_Widget>> m_children;
     };
 }

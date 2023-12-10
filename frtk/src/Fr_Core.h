@@ -28,7 +28,7 @@
 #ifndef FR_CORE_H
 #define FR_CORE_H
 #include <frtk.h>
-#include<FR.h>
+#include<fr_constants.h>
 #include<Fr_Log.h>
 
 #if defined(__APPLE__)

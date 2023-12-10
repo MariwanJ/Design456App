@@ -1,5 +1,5 @@
 #include <frtk.h>
-#include <FR.h>
+#include<fr_constants.h>
 #include<Fr_Core.h>
 
 //File menu toolbar

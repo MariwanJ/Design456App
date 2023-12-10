@@ -30,7 +30,7 @@
 #include<fr_toolbar.h>
 #include <glm/gtx/string_cast.hpp>
 #include<Math/fr_math.h>
-#include <FR.h>
+#include<fr_constants.h>
 //TODO FIX ME DOSENT WORK DON'T KNOW WHY
 int Fr_GL3Window::imguimzo_init()
 {

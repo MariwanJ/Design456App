@@ -1,5 +1,5 @@
 #include <frtk.h>
-#include <FR.h>
+#include<fr_constants.h>
 
 #include <Fr_GL3Window.h>
 #include "fr_gl3callbacks.h"

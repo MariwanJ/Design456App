@@ -26,11 +26,13 @@
 //
 #ifndef FR_DRAW_H
 #define FR_DRAW_H
-#include<FR.H>
 #include<Fr_Core.h>
+#include<frtk.h>
+
 namespace FR{
-//More will be added later 
-typedef enum twodType{
+    //More will be added later 
+
+    typedef enum twodType{
     FR_LINE =0,
     FR_OPEN_LOOP,
     FR_CLOSED_LOOP, //This includes square, rectanble, triangle,pentagon, hexagon, star ..etc
@@ -42,8 +44,37 @@ typedef enum twodType{
 
 
 class Fr_TwoD_Drawing {
-    Fr_TwoD_Drawing(twodType type, std::vector<float> &verticies, std::vector<float>&indicies);
+public:
+    Fr_TwoD_Drawing();
+    Fr_TwoD_Drawing(Fr_TwoD_Drawing& obj);
+    Fr_TwoD_Drawing(twodType type, std::shared_ptr<std::vector<float>> verticies, 
+                                   std::shared_ptr < std::vector<unsigned int>>&indicies);
+    ~Fr_TwoD_Drawing();
+
+    void Verticies(std::shared_ptr<std::vector<float>> vert);
+    std::shared_ptr<std::vector<float>>  Verticies();
+
+    void Indicies(std::shared_ptr < std::vector<unsigned int>>indc);
+    std::shared_ptr < std::vector<unsigned int>>Indicies();
+
+    int initializeVBO();
+
+    void Type(twodType type);
+    twodType Type(void);
     
+    void Draw();
+    void lineWidth(unsigned int wid);
+    unsigned int lineWidth();
+
+private:
+    std::shared_ptr<std::vector<float>> m_Vertices;
+    std::shared_ptr<std::vector<unsigned int>> m_Indices;
+    std::shared_ptr<std::vector<float>> m_Normals;
+    twodType m_Type;
+    unsigned int m_vbo[3];
+    unsigned int m_vao;
+    unsigned int m_lineWidth;
+
 };
 }
 #endif

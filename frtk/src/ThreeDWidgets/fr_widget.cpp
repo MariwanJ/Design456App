@@ -26,8 +26,10 @@
 //
 
 #include<../src/ThreeDWidgets/fr_widget.h>
-
 namespace FR {
+
+
+
     Fr_Widget::Fr_Widget(const Fr_Widget& t) :m_position{ 0.f,0.f,0.f }, m_callback_(t.m_callback_),
         m_verticies(t.m_verticies), m_indicies(t.m_indicies)
     {
