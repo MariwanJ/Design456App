@@ -9,14 +9,14 @@ Fr_Texture2D::Fr_Texture2D() {
     m_LocalBuffer = NULL;
     m_RendererID = -1;
 }
-bool Fr_Texture2D::set2DTexture(std::string& path) {
+bool Fr_Texture2D::set2DTexture(std::string path) {
     m_FilePath = path;
     m_BPP = 0;
     numComponents = 0;
     stbi_set_flip_vertically_on_load(1);
     m_LocalBuffer = 0;
     if (m_FilePath.size() == 0) {
-        m_FilePath = "E:/Projects/Design456App/resources/Texture/4.png";    ///Default texture 
+        m_FilePath = "E:/Projects/Design456App/resources/Texture/default.png";    ///Default texture 
     }
     m_LocalBuffer = stbi_load(m_FilePath.c_str(), &m_width, &m_height, &m_BPP, numComponents);
     if (m_LocalBuffer == NULL) {
@@ -26,6 +26,9 @@ bool Fr_Texture2D::set2DTexture(std::string& path) {
     return true;
 }
 bool Fr_Texture2D::setup2DTexture() {
+    if (m_LocalBuffer == NULL) {
+        set2DTexture();
+    }
     glCheckFunc(glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID));
     if (m_BPP == 3) {
         glCheckFunc(glTextureStorage2D(m_RendererID, 1, GL_RGB8, m_width, m_height));
@@ -33,8 +36,8 @@ bool Fr_Texture2D::setup2DTexture() {
     else if (m_BPP == 4) {
         glCheckFunc(glTextureStorage2D(m_RendererID, 1, GL_RGBA8, m_width, m_height));
     }
-    glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-    glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+    glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+    glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
     glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
     glCheckFunc(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
     if (m_BPP == 3) {

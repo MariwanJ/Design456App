@@ -67,14 +67,14 @@ void Scene::add3DObject(std::string fName)
   //  std::string imag = ("E:/Projects/Design456App/resources/Texture/ts.png");
     //std::string imag = ("E:/Projects/Design456App/resources/Texture/2.png");
     //std::string imag = ("E:/Projects/Design456App/resources/Texture/3.png");
-    std::string imag = ("E:/Projects/Design456App/resources/Texture/default.png");
+    //std::string imag = ("E:/Projects/Design456App/resources/Texture/default.png");
     
-    if (newObj->m_Texture2D->set2DTexture(imag))
-    {
-            newObj->m_Texture2D->setup2DTexture();      //Dont forget to do this always
-    }else
-        DEBUG_BREAK;
-
+    //if (newObj->m_Texture2D->set2DTexture(imag))
+    //{
+    //        newObj->m_Texture2D->setup2DTexture();      //Dont forget to do this always
+    //}else
+    //    DEBUG_BREAK;
+    newObj->m_Texture2D->setup2DTexture();      //Dont forget to do this always
     if (fName.find(".off") != std::string::npos) {
         newObj->SetMesh(std::make_shared<Shape>(fName));
     }

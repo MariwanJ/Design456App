@@ -6,7 +6,7 @@
 class Fr_Texture2D {
 public:
     Fr_Texture2D();
-    bool set2DTexture(std::string& path);
+    bool set2DTexture(std::string path="");
     ~Fr_Texture2D();
     bool setup2DTexture();
     void Bind(unsigned int slot = 0);

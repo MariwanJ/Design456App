@@ -49,10 +49,10 @@ std::shared_ptr<Transform>bunny() {
     //std::string imag = ("E:/Projects/Design456App/resources/Texture/Surface.png");
    // std::string imag = ("E:/Projects/Design456App/resources/Texture/2.png");
     //std::string imag = ("E:/Projects/Design456App/resources/Texture/3.png");
-    std::string imag = ("E:/Projects/Design456App/resources/Texture/default.png");
-    if (!bunny->m_Texture2D->set2DTexture(imag)) {
-        DEBUG_BREAK;
-    }
+    //std::string imag = ("E:/Projects/Design456App/resources/Texture/default.png");
+    ///*if (!bunny->m_Texture2D->set2DTexture(imag)) {
+    //    DEBUG_BREAK;
+    //}*/
     bunny->m_Texture2D->setup2DTexture();
     //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Wedge.off"));
     auto Bunny_spot = std::make_shared<Light>();
