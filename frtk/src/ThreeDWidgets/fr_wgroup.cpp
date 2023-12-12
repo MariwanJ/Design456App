@@ -28,11 +28,11 @@
 #include <../src/ThreeDWidgets/fr_wgroup.h>
 
 namespace FR {
-    int FR::Fr_Group::handel(int events)
+    int FR::Fr_Group::handle(int events)
     {
         return 0;
     }
-    Fr_Group::Fr_Group(glm::vec3 position, std::vector<glm::vec3> verticies, std::vector<float> indicies, std::string label) :Fr_Widget(position, verticies, indicies, label)
+    Fr_Group::Fr_Group(glm::vec3 position, std::shared_ptr<std::vector <float>>verticies, std::shared_ptr<std::vector <float>> indicies, std::string label) :Fr_Widget(position, verticies, indicies, label)
     {
     }
     Fr_Group::~Fr_Group()

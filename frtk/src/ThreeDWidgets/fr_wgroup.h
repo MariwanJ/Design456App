@@ -31,7 +31,7 @@
 namespace FR {
     class FRTK_API Fr_Group : public Fr_Widget {
     public:
-        Fr_Group(glm::vec3 position, std::vector<glm::vec3> verticies, std::vector<float> indicies, std::string label);
+        Fr_Group(glm::vec3 position, std::shared_ptr<std::vector <float>> verticies, std::shared_ptr<std::vector <float>> indicies, std::string label);
         Fr_Group() = delete;
         ~Fr_Group();
 
@@ -43,7 +43,7 @@ namespace FR {
     
     public:
         void redraw() override;
-        int handel(int events) override;
+        int handle(int events) override;
 
         /**
       * Sets the camera

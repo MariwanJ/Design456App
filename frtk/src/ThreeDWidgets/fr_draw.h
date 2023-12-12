@@ -63,7 +63,7 @@ public:
     void Type(twodType type);
     twodType Type(void);
     
-    void Draw();
+    virtual void Draw();
     void lineWidth(unsigned int wid);
     unsigned int lineWidth();
 

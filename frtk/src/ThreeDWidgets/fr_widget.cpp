@@ -38,8 +38,8 @@ namespace FR {
         m_visible = t.m_visible;
     }
 
-    Fr_Widget::Fr_Widget(glm::vec3 position, std::vector<glm::vec3> verticies,
-        std::vector<float> indicies, std::string label) :m_callback_{ NULL },
+    Fr_Widget::Fr_Widget(glm::vec3 position, std::shared_ptr<std::vector <float>> verticies,
+        std::shared_ptr<std::vector <float>> indicies, std::string label) :m_callback_{ NULL },
         m_label{ 0 }, m_draw{0}
     {
     }
@@ -88,6 +88,11 @@ namespace FR {
         throw NotImplementedException();
     }
 
+    bool Fr_Widget::setup()
+    {
+        return false;   //Should be subclassed to change that.
+    }
+
     void Fr_Widget::label(std::string& lbl)
     {
         m_label = lbl;
@@ -112,7 +117,7 @@ namespace FR {
     {
         m_fontSize = size_;
     }
-    void Fr_Widget::resize(std::vector<glm::vec3>& verticies_, std::vector<float>& indicies_)
+    void Fr_Widget::resize(std::shared_ptr<std::vector <float>>verticies_, std::shared_ptr<std::vector <float>> indicies_)
     {
         m_verticies = verticies_;
         m_indicies = indicies_;
@@ -153,7 +158,7 @@ namespace FR {
         return m_visible;
     }
 
-    int Fr_Widget::handel(int handel)
+    int Fr_Widget::handle(int handel)
     {
         throw NotImplementedException();
         //This must be subclassed. 

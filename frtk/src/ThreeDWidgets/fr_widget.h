@@ -77,7 +77,7 @@ namespace FR {
 
         //Default constructor is disallowed
         Fr_Widget() = delete;
-        Fr_Widget(glm::vec3 position, std::vector<glm::vec3> verticies, std::vector<float> indicies, std::string label);
+        Fr_Widget(glm::vec3 position, std::shared_ptr<std::vector <float>> verticies, std::shared_ptr<std::vector <float>> indicies, std::string label);
 
         /**
          * Virtual destructor
@@ -120,6 +120,8 @@ namespace FR {
         virtual void lbl_draw();
 
         virtual void lbl_redraw();
+
+        virtual bool setup();  //this will initialize vbo and other stuff. 
         /**
          *
          */
@@ -133,7 +135,7 @@ namespace FR {
 
         void fontSize(int size_);
 
-        virtual void resize(std::vector<glm::vec3>& verticies, std::vector<float>& indicies);
+        virtual void resize(std::shared_ptr<std::vector <float>> verticies, std::shared_ptr<std::vector <float>> indicies);
 
         bool Resizable();
 
@@ -152,7 +154,7 @@ namespace FR {
         /**
         *   Handle events - must be subclassed
         */
-        virtual int handel(int handel);
+        virtual int handle(int e);
 
         virtual void show();
 
@@ -197,8 +199,8 @@ namespace FR {
         virtual void LoadLights(ShaderProgram* program, const std::vector<LightInfo>& lights);
 
         Fr_Callback* m_callback_;
-        std::vector <glm::vec3> m_verticies;    //This has 3 float which is the xyz values
-        std::vector<float> m_indicies;     // We don´t use glm::vec3 but we can even so use it for Triangle drawing. Decide that by the drawing type.
+        std::shared_ptr<std::vector <float>> m_verticies;    
+        std::shared_ptr<std::vector<float>> m_indicies;          // We don´t use glm::vec3 but we can even so use it for Triangle drawing. Decide that by the drawing type.
         glm::vec3 m_position;
         std::string m_label;
         std::string m_fontName;
