@@ -40,7 +40,7 @@ namespace FR {
 
     Fr_Widget::Fr_Widget(glm::vec3 position, std::vector<glm::vec3> verticies,
         std::vector<float> indicies, std::string label) :m_callback_{ NULL },
-        m_label{ 0 }
+        m_label{ 0 }, m_draw{0}
     {
     }
 

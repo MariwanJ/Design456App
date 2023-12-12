@@ -78,6 +78,10 @@ enum class CameraList {
     LEFT,
 };
 
+#define NUM_OF_VBO_BUFFERS 4 //ONE FOR THE MESH, OTHER FOR TEXTURE: This might change
+#define POSITION_VB 0
+#define TEXCOORD_VB 1
+
 typedef enum meshType { FR_QUAD, FR_POLYGON };
 
 

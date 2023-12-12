@@ -34,7 +34,7 @@ Mesh::Mesh(const std::string& path) :
     ReadFile(path, vertices_, normals_, indices_);
     InitializeVBO();
 }
-Mesh::Mesh() : vbo_{ 0, 0, 0, 0 }, vao_(0) {
+Mesh::Mesh() : vbo_{ 0, 0, 0 }, vao_(0) {
 }
 
 Mesh::~Mesh() {
@@ -265,20 +265,20 @@ glCheckFunc(glEnableVertexAttribArray(FR_POSITION_VB));
 glCheckFunc(glVertexAttribPointer(FR_POSITION_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL));                //POSITION_VB = 0
 
 ///Texture 
-glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]));
+glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[3]));
 glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float)* textcoord_.size(), textcoord_.data(), GL_STATIC_DRAW));
 glCheckFunc(glEnableVertexAttribArray(FR_TEXCOORD_VB));
 glCheckFunc(glVertexAttribPointer(FR_TEXCOORD_VB, 2, GL_FLOAT, GL_FALSE, 0, NULL));        //TEXCOORD_VB=1   NOTE: SHADER MUST HAVE THE SAME SEQUENCE
 
 //this is the object shader - look at the shader, it uses uniform. so the binding MUST be uniform
 //NORMALS
-glCheckFunc(glBindBuffer(GL_UNIFORM_BUFFER, vbo_[2]));          //Using GL_UNIFORM_BUFFER draw the line around the object but now nothing? why?
+glCheckFunc(glBindBuffer(GL_UNIFORM_BUFFER, vbo_[1]));          //Using GL_UNIFORM_BUFFER draw the line around the object but now nothing? why?
 glCheckFunc(glBufferData(GL_UNIFORM_BUFFER, sizeof(float)* normals_.size(), normals_.data(), GL_STATIC_DRAW));
 
 //?? Not sure for what purpose we send this??
 glCheckFunc(glEnableVertexAttribArray(2));
 glCheckFunc(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL));
-glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[3]));
+glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[2]));
 glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int), indices_.data(), GL_STATIC_DRAW));
 glCheckFunc(glBindVertexArray(0));
 }

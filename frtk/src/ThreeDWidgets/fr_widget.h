@@ -188,7 +188,7 @@ namespace FR {
 
     protected:
         virtual void do_callback();
-
+        std::shared_ptr<Fr_TwoD_Drawing> m_draw;
     private:
         //From shader
         /**

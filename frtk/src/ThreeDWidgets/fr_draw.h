@@ -48,7 +48,8 @@ public:
     Fr_TwoD_Drawing();
     Fr_TwoD_Drawing(Fr_TwoD_Drawing& obj);
     Fr_TwoD_Drawing(twodType type, std::shared_ptr<std::vector<float>> verticies, 
-                                   std::shared_ptr < std::vector<unsigned int>>&indicies);
+                                   std::shared_ptr < std::vector<unsigned int>>&indicies,
+                                   glm::vec4 color= glm::vec4(FR_123D) );
     ~Fr_TwoD_Drawing();
 
     void Verticies(std::shared_ptr<std::vector<float>> vert);
@@ -66,15 +67,23 @@ public:
     void lineWidth(unsigned int wid);
     unsigned int lineWidth();
 
-private:
+    void Color(glm::vec4 color);
+    glm::vec4 Color();
+
+protected:
+    unsigned int m_vbo[NUM_OF_VBO_BUFFERS];
+    unsigned int m_vao;
     std::shared_ptr<std::vector<float>> m_Vertices;
     std::shared_ptr<std::vector<unsigned int>> m_Indices;
     std::shared_ptr<std::vector<float>> m_Normals;
-    twodType m_Type;
-    unsigned int m_vbo[3];
-    unsigned int m_vao;
-    unsigned int m_lineWidth;
+    std::shared_ptr<std::vector<float>> m_Textcoord;
 
+    std::string m_label;
+private:
+    twodType m_Type;
+    unsigned int m_lineWidth;
+    glm::vec4 m_Color;
 };
+
 }
 #endif

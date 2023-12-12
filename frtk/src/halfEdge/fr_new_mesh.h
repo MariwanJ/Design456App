@@ -42,9 +42,7 @@ class mesh_edge;
 class mesh_vertex;
 class mesh_loop;
 
-#define NUM_OF_VBO_BUFFERS 4 //ONE FOR THE MESH, OTHER FOR TEXTURE: This might change
-#define POSITION_VB 0
-#define TEXCOORD_VB 1
+
 
 
 

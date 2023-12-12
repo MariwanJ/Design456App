@@ -26,10 +26,7 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 namespace FR {
-
-
-
-    Fr_TwoD_Drawing::Fr_TwoD_Drawing() :m_Vertices {0}, m_Indices{0}, m_Normals{0}, m_Type(FR_LINE), m_vbo{0}, m_vao{0}
+    Fr_TwoD_Drawing::Fr_TwoD_Drawing() :m_Vertices{ 0 }, m_Indices{ 0 }, m_Normals{ 0 }, m_Type(FR_LINE), m_vbo{ 0 }, m_vao{ 0 }
     {
     }
 
@@ -43,15 +40,19 @@ namespace FR {
         m_vbo[0] = obj.m_vbo[0];
         m_vbo[1] = obj.m_vbo[1];
         m_vbo[2] = obj.m_vbo[2];
-        m_vao=obj.m_vao;
-        m_lineWidth=obj.m_lineWidth;
+        m_vao = obj.m_vao;
+        m_lineWidth = obj.m_lineWidth;
     }
 
-    Fr_TwoD_Drawing::Fr_TwoD_Drawing(twodType type, std::shared_ptr<std::vector<float>> verticies, std::shared_ptr<std::vector<unsigned int>>& indicies)
+    Fr_TwoD_Drawing::Fr_TwoD_Drawing(twodType type,
+        std::shared_ptr<std::vector<float>> verticies,
+        std::shared_ptr<std::vector<unsigned int>>& indicies,
+        glm::vec4 color)
     {
         m_Vertices = std::move(verticies);
         m_Indices = std::move(indicies);
         m_Type = type;
+        m_Color = color;
     }
 
     Fr_TwoD_Drawing::~Fr_TwoD_Drawing()
@@ -78,7 +79,6 @@ namespace FR {
         return m_Indices;
     }
 
-
     void Fr_TwoD_Drawing::Type(twodType type)
     {
         m_Type = type;
@@ -91,6 +91,45 @@ namespace FR {
 
     void Fr_TwoD_Drawing::Draw()
     {
+        switch (m_Type) {
+        case FR_LINE: {
+            glCheckFunc(glBindVertexArray(m_vao));
+            glCheckFunc(glDrawElements(GL_LINE, m_Indices->size(), GL_UNSIGNED_INT, 0));
+            glCheckFunc(glBindVertexArray(0));
+            break;
+        }
+        case FR_OPEN_LOOP: {
+            glCheckFunc(glBindVertexArray(m_vao));
+            glCheckFunc(glDrawElements(GL_LINE_LOOP, m_Indices->size(), GL_UNSIGNED_INT, 0));    //TODO: Check if this is correct!!
+            glCheckFunc(glBindVertexArray(0));
+            break;
+        }
+        case FR_CLOSED_LOOP:  //This includes square, rectanble, triangle,pentagon, hexagon, star ..etc 
+        {
+            glCheckFunc(glBindVertexArray(m_vao));
+            glCheckFunc(glDrawElements(GL_TRIANGLE_FAN, m_Indices->size(), GL_UNSIGNED_INT, 0));    //TODO: Check if this is correct!!
+            glCheckFunc(glBindVertexArray(0));
+            break;
+        }
+        case FR_CIRCLE: {
+            FRTK_CORE_INFO("NOT IMPLEMENTED YET!");
+
+            break;
+        }
+        case FR_CURVE: {
+            FRTK_CORE_INFO("NOT IMPLEMENTED YET!");
+            break;
+        }
+        case FR_ARC: {
+            FRTK_CORE_INFO("NOT IMPLEMENTED YET!");
+
+            break;
+        }
+        case FR_BSPLINE: {
+            FRTK_CORE_INFO("NOT IMPLEMENTED YET!");
+            break;
+        }
+        }
     }
 
     void Fr_TwoD_Drawing::lineWidth(unsigned int wid)
@@ -102,22 +141,44 @@ namespace FR {
     {
         return m_lineWidth;
     }
+    void Fr_TwoD_Drawing::Color(glm::vec4 color) {
+        m_Color = color;
+    }
+    glm::vec4 Fr_TwoD_Drawing::Color() {
+        return m_Color;
+    }
 
     int Fr_TwoD_Drawing::initializeVBO()
     {
-        //todo fixme
 
-        //    glCheckFunc(glGenBuffers(1, vbo_));
-        //    glCheckFunc(glGenVertexArrays(1, &vao_));
-        //    glCheckFunc(glBindVertexArray(vao_));       //Keeps all instructions related this object
 
-        //    glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]));        //First object buffer
-        //    glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices_.size(), vertices_.data(), GL_STATIC_DRAW));
-        //    glCheckFunc(glEnableVertexAttribArray(0));
-        //    glCheckFunc(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL));
-        //}
-        //glCheckFunc(glBindVertexArray(0)); 
+            glCheckFunc(glGenBuffers(3, m_vbo));
+            glCheckFunc(glGenVertexArrays(1, &m_vao));
+            glCheckFunc(glBindVertexArray(m_vao));       //Keeps all instructions related this object
+
+            //VERTICIES
+            glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_vbo[0]));
+            glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_Vertices->size(), m_Vertices->data(), GL_STATIC_DRAW));
+            glCheckFunc(glEnableVertexAttribArray(POSITION_VB));
+            glCheckFunc(glVertexAttribPointer(POSITION_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL));                //POSITION_VB = 0
+
+            glCheckFunc(glEnableVertexAttribArray(1));
+            glCheckFunc(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL));
+            glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vbo[2]));
+            glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Indices->size() * sizeof(unsigned int), m_Indices->data(), GL_STATIC_DRAW));
+
+            ///Texture
+            glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]));
+            glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_Textcoord->size(), m_Textcoord->data(), GL_STATIC_DRAW));
+            glCheckFunc(glEnableVertexAttribArray(TEXCOORD_VB));
+            glCheckFunc(glVertexAttribPointer(TEXCOORD_VB, 2, GL_FLOAT, GL_FALSE, 0, NULL));        //TEXCOORD_VB=1   NOTE: SHADER MUST HAVE THE SAME SEQUENCE
+
+            //this is the object shader - look at the shader, it uses uniform. so the binding MUST be uniform
+            //NORMALS
+            glCheckFunc(glBindBuffer(GL_UNIFORM_BUFFER, m_vbo[2]));          //Using GL_UNIFORM_BUFFER draw the line around the object but now nothing? why?
+            glCheckFunc(glBufferData(GL_UNIFORM_BUFFER, sizeof(float) * m_Normals->size(), m_Normals->data(), GL_STATIC_DRAW));
+
+            glCheckFunc(glBindVertexArray(0));
         return 0;//todo fixme
     }
-    
 }
