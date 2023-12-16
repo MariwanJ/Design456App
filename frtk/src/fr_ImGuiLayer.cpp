@@ -3,7 +3,7 @@
 #include <frtk.h>
 #include<fr_constants.h>
 #include <Fr_GL3Window.h>
-Fr_ImGuiLayer::Fr_ImGuiLayer()
+Fr_ImGuiLayer::Fr_ImGuiLayer() : m_visible(true)
 {
 }
 
@@ -11,8 +11,9 @@ Fr_ImGuiLayer::~Fr_ImGuiLayer()
 {
 }
 
-void Fr_ImGuiLayer::createLayer()
+void Fr_ImGuiLayer::createLayer()   
 {
+   
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -56,7 +57,7 @@ void Fr_ImGuiLayer::createLayer()
     GLFWwindow* window = (GLFWwindow*)(Fr_GL3Window::getfr_Gl3Window()->pWindow);
     // Setup Platform/Renderer bindings
     ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 410");
+    ImGui_ImplOpenGL3_Init("#version 460");
 }
 
 void Fr_ImGuiLayer::destroyLayer()
@@ -69,15 +70,19 @@ void Fr_ImGuiLayer::destroyLayer()
 
 void Fr_ImGuiLayer::StartLayer()
 {
+    //We create frame ONLY if it is visible
+    if (m_visible){
     // Start the Dear ImGui layer
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
     ImGuizmo::BeginFrame();
+    }
 }
 
 void Fr_ImGuiLayer::EndLayer()
 {
+    if (m_visible){//We do this ONLY if visible otherwise we do nothing
     ImGuiIO io = ImGui::GetIO();
     if (Fr_GL3Window::getfr_Gl3Window() != nullptr) {
         io.DisplaySize = ImVec2(float(Fr_GL3Window::getfr_Gl3Window()->w()), float(Fr_GL3Window::getfr_Gl3Window()->h()));
@@ -94,4 +99,15 @@ void Fr_ImGuiLayer::EndLayer()
     else {
         std::cout << "pWindow not defined\n";
     }
+    }
+}
+
+bool Fr_ImGuiLayer::Visible()
+{
+    return m_visible;
+}
+
+void Fr_ImGuiLayer::Visible(bool v)
+{
+    m_visible = v;
 }

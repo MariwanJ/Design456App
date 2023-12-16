@@ -11,5 +11,9 @@ public:
 
     void StartLayer();
     void EndLayer();
+    bool Visible();
+    void Visible(bool v);
+private:
+    bool m_visible;
 };
 #endif // !FR_IMGUILAYER_H

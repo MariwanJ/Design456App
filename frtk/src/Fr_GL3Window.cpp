@@ -446,33 +446,24 @@ int Fr_GL3Window::GLFWrun()
     /**
      *
      * For the layers, We will make :
-     * 1-Main layer which has the dockspace and menus
-     * 2-Top bar (toolbars having tab)
-     * 3-Left panel - Toolbar, properity ..etc (tabs)
-     * 4-View Port (main opengl drawing inside imgui
+     *  Main layer which has the dockspace and all other GUI parts and will be default ivsible object layer
      */
-    for (int i = 0; i < 4; i++) {
-        std::shared_ptr<Fr_ImGuiLayer> mlayer = std::shared_ptr<Fr_ImGuiLayer>();
-        layers_.push_back(mlayer);
-    }
+    std::shared_ptr<Fr_ImGuiLayer> mlayer = std::make_shared<Fr_ImGuiLayer>();
+    layers_.push_back(mlayer);
     layers_[0]->createLayer();
     CreateScene();   //Main drawing process.
+    glfwGetFramebufferSize(pWindow, &_w, &_h);
+    glViewport(_x, _y, _w, _h);
     while (!glfwWindowShouldClose(pWindow))
     {
-        layers_[0]->StartLayer();
-
+        layers_[0]->StartLayer();   //Default layer. This should always be there.
         glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - defualt should be wings3D or FreeCAD
         glClear(GL_COLOR_BUFFER_BIT);
-        glfwGetFramebufferSize(pWindow, &_w, &_h);
-        glViewport(_x, _y, _w, _h);
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
-
         //Render GLFW stuff or Our 3D drawing
         renderimGUI(data);
         // Rendering IMGUI
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        layers_[0]->EndLayer();
+        layers_[0]->EndLayer(); 
         glCheckFunc(glfwPollEvents());
         glCheckFunc(glfwSwapBuffers(pWindow));
     }
