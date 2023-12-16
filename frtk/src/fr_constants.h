@@ -73,8 +73,10 @@ namespace COLOR {
 #define FR_TRANSPARENCY         -1.0000f, -1.0000f, -1.0000f,  1.0000f		   // No color
 #define FR_IRON                  0.5600f,  0.5700f,  0.58000f, 1.0000f
 #define FR_SILVER                0.9720f,  0.9600f,  0.91500f, 1.0000f
+#define FR_SILVER1               0.7529f,  0.7529f,  0.7529f,  1.0000f
 #define FR_ALUMINUM              0.9130f,  0.9210f,  0.92500f, 1.0000f
 #define FR_GOLD                  1.0000f,  0.7660f,  0.33600f, 1.0000f
+#define FR_GOLD1                 1.0000f,  0.8431f,  0.0000f,  1.0000f
 #define FR_COPPER                0.9550f,  0.6370f,  0.53800f, 1.0000f
 #define FR_CHROMIUM              0.5500f,  0.5560f,  0.55400f, 1.0000f
 #define FR_NICKEL                0.6600f,  0.6090f,  0.52600f, 1.0000f
@@ -101,14 +103,13 @@ namespace COLOR {
 #define FR_CHOCOLATE             0.8235f,  0.4118f,  0.1176f,  1.0000f
 #define FR_PAPAYAWHIP            1.0000f,  0.9373f,  0.8353f,  1.0000f
 #define FR_OLIVE                 0.5020f,  0.5020f,  0.0000f,  1.0000f
-#define FR_SILVER                0.7529f,  0.7529f,  0.7529f,  1.0000f
 #define FR_PEACHPUFF             1.0000f,  0.8549f,  0.7255f,  1.0000f
 #define FR_PLUM                  0.8667f,  0.6275f,  0.8667f,  1.0000f
 #define FR_DARKGOLDENROD         0.7216f,  0.5255f,  0.0431f,  1.0000f
 #define FR_SLATEGREY             0.4392f,  0.5020f,  0.5647f,  1.0000f
 #define FR_MINTCREAM             0.9608f,  1.0000f,  0.9804f,  1.0000f
 #define FR_CORNFLOWERBLUE        0.3922f,  0.5843f,  0.9294f,  1.0000f
-#define FR_GOLD                  1.0000f,  0.8431f,  0.0000f,  1.0000f
+
 #define FR_HOTPINK               1.0000f,  0.4118f,  0.7059f,  1.0000f
 #define FR_DARKBLUE              0.0000f,  0.0000f,  0.5451f,  1.0000f
 #define FR_LIMEGREEN             0.1961f,  0.8039f,  0.1961f,  1.0000f

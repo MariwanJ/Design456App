@@ -41,6 +41,8 @@
 #include <imguiFont/IconsFontAwesome6.h>
 #include <fr_ImGuiLayer.h>
 #include <fr_filebrowser.h>
+#include <ThreeDWidgets/fr_window.h>
+
 #define MAX_CAMERAS 8  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING CameraList enu
 
 typedef struct {
@@ -315,7 +317,9 @@ private:
     int gl_version_major;
     int gl_version_minor;
     mouseScale mouseDefaults;
-
+    
+    std::shared_ptr<FR::Fr_Window> WidgWindow;  //FR_WINDOW That keeps the FR_WIDGET objects 
+    
     //Keep ImGui layers saved and removed
     std::vector<std::shared_ptr<Fr_ImGuiLayer>> layers_;
 

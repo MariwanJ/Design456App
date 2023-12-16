@@ -1,5 +1,3 @@
-#ifndef FR_MATH_H
-#define FR_MATH_H
 //
 // This file is a part of the Open Source Design456App
 // MIT License
@@ -24,10 +22,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-//    This file is borrowed from HAZEL GAME ENGINE - THANKS TO THE CHERNO
-//    But modified to be usable for Design456App
-//    Author :Mariwan Jalal    mariwan.jalal@gmail.com
+//  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
+#ifndef FR_MATH_H
+#define FR_MATH_H
 
 #include<fr_constants.h>
 #include<Fr_Core.h>>

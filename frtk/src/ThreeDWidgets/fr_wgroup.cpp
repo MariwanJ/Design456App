@@ -59,13 +59,23 @@ namespace FR {
     }
     bool Fr_WGroup::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
     {
+        for (auto& widget : m_children) {
+            if( widget->SetupCamera(projection, modelview))
+                return true;
+        }
         return false;
     }
     void Fr_WGroup::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights)
     {
+        for (auto& widget : m_children) {
+            widget->SetupLight(modelview, lights);
+        }
     }
     void Fr_WGroup::Render(RenderInfo& info, const glm::mat4& modelview)
     {
+        for (auto& widget : m_children) {
+            widget->Render(info,modelview);
+        }
     }
     int Fr_WGroup::find(std::shared_ptr<Fr_Widget>& wd) const
     {

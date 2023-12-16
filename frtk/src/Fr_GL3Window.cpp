@@ -63,6 +63,7 @@ static void error_callback(int error, const char* description)
 Scene* Fr_GL3Window::scene = nullptr;
 bool Fr_GL3Window::MouseOnce = true;
 Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::string l = "GLFW ImGUI Test") :
+    WidgWindow(NULL),
     active_camera_(CameraList::PERSPECTIVE),
     _x(x), _y(y), _w(w), _h(h), label_(l), showOpenDialog(false) {
     s_Fr_GLFWwindow = this;
@@ -91,6 +92,8 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
     Fr_GL3Window::GLFWCallbackWrapper::setGLFWwindow(this);
+    WidgWindow = std::make_shared<FR::Fr_Window>(); //Create FR_WINDOW that keeps the widget system 
+    WidgWindow->linkToMainWindow = this;
     radiusXYZ = 0;
 }
 
@@ -106,6 +109,8 @@ Fr_GL3Window::Fr_GL3Window()
     _h = 800;
     label_ = "GLFW ImGUI Test";
     s_Fr_GLFWwindow = this;
+    WidgWindow = std::make_shared<FR::Fr_Window>(); //Create FR_WINDOW that keeps the widget system 
+    WidgWindow->linkToMainWindow = this;    
 }
 
 Fr_GL3Window* Fr_GL3Window::getfr_Gl3Window()
