@@ -34,7 +34,7 @@ namespace FR {
         friend Fr_GL3Window;
     public:
         /**
-         * Class constructor for main dummy window object that holds the FR_WIDGET system objects and their properities.
+         * Class constructor for main dummy window object that holds the FR_WIDGET system objects and their properties.
          */
 
         Fr_Window(glm::vec3 position, std::shared_ptr<std::vector <float>> verticies, std::shared_ptr<std::vector <float>> indicies, std::string label);

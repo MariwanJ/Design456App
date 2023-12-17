@@ -42,7 +42,20 @@ namespace FR {
         void update_child(std::shared_ptr <Fr_Widget> wd);
     
     public:
+        /**
+         * Something happened to the widget and it needs to be redrawn immediately 
+         * 
+         */
         void redraw() override;
+        /**
+         * Handle is a very important function that take care of all events happen (mouse, keyboard or between widgets).
+         * Whenever a widget consumes the events, it should return 0. FR_NO_EVENTS means that there is no more events left.
+         * But if a widget uses the event but want to return the event to the system, it should return Fr_WGroup::handle(e).
+         * or if the widget didn't care about the event, it should also return either 1 or Fr_WGroup::handle(e).
+         * 
+         * \param events
+         * \return 
+         */
         int handle(int events) override;
 
         /**
@@ -77,14 +90,14 @@ namespace FR {
          * Insert the widget at a specific position in the vector.
          * 
          * \param wd shared pointer to a widget that will be added
-         * \param index_before Position where the widget will be insertet (added)
+         * \param index_before Position where the widget will be inserted (added)
          * \return 
          */
         virtual int insert(std::shared_ptr <Fr_Widget> wd, int index_before);
         /**
          * Remove a widget from the group by getting a shared pointer to the widget.
          * 
-         * \param wid Shared pointer to teh widget
+         * \param wid Shared pointer to the widget
          * \return 
          */
         virtual int removeWidget(std::shared_ptr <Fr_Widget> wid);

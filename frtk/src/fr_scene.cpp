@@ -71,10 +71,10 @@ void Scene::add3DObject(std::string fName)
     
     //if (newObj->m_Texture2D->set2DTexture(imag))
     //{
-    //        newObj->m_Texture2D->setup2DTexture();      //Dont forget to do this always
+    //        newObj->m_Texture2D->setup2DTexture();      //Don't forget to do this always
     //}else
     //    DEBUG_BREAK;
-    newObj->m_Texture2D->setup2DTexture();      //Dont forget to do this always
+    newObj->m_Texture2D->setup2DTexture();      //Don't forget to do this always
     if (fName.find(".off") != std::string::npos) {
         newObj->SetMesh(std::make_shared<Shape>(fName));
     }

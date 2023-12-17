@@ -143,7 +143,7 @@ protected:
     NODETYPE type_;
     bool active_;
     /**
-     * //This will be used to retrive the objects. 
+     * //This will be used to retrieve the objects. 
      *   A unique ID which will hold the index of the node.
      *  The -1 indicate that the uniqueIndex is abstract. 
      *  Whenever the new node addes to the system vector server, the index of the node is what will be here in the uniqueIndex.
@@ -151,7 +151,7 @@ protected:
      */
     int uniqueIndex; 
 
-    int m_Parent; //-1 for Abstract class that doesnt have parent. and for the Root class
+    int m_Parent; //-1 for Abstract class that doesn't have parent. and for the Root class
 
 };
 

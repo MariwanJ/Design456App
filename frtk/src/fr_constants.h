@@ -245,7 +245,7 @@ namespace SPECULAR {
 class Fr_GL3Window; // compiler should define that later.
 
 //static variables used for mouse events inside fr_glw.
-//TODO : FIXME : Remove these .. we shouldnt have them here. 
+//TODO : FIXME : Remove these .. we shouldn't have them here. 
 static int glfw_e_x=0;  //SAVE X AND Y OF LAST CLICK INSIDE GLFW
 static int glfw_e_y = 0;
 static int glfw_click = 0;
@@ -285,7 +285,7 @@ enum {
     FR_BOX_WIDGET = 2,
     FR_LBL_WIDGET = 3,
     FR_BUTTON_WIDGET = 4,
-    //More will be added layter
+    //More will be added later
 
 };
 #endif // !FR_H

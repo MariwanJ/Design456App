@@ -28,7 +28,7 @@
 
 /**
  *
- * This object is a container for the FR_WIDGETS. It has important widget method, properity and is their parent :
+ * This object is a container for the FR_WIDGETS. It has important widget method, property and is their parent :
  * 1- Deliver events
  * 2- Keep track of widgets, add, remove,
  * 3- Layer responsible for the whole FR_WIDGET system (ONLY ONE LAYER AT THE MOMENT, THIS IS A DESIGN QUESTION THAT DONT KNOW KNOW
@@ -42,7 +42,7 @@ namespace FR {
     {
     }
     /**
-     * Default constructor requied by Fr_GL3Window.
+     * Default constructor required by Fr_GL3Window.
      * 
      */
     Fr_Window::Fr_Window() :Fr_WGroup(glm::vec3(0.f,0.f,0.f),NULL,NULL,"")

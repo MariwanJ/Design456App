@@ -84,7 +84,7 @@ namespace FR {
          */
         virtual ~Fr_Widget();
 
-        // Node functions - donot touch let it be there only and should be subclassed.
+        // Node functions - do not touch let it be there only and should be subclassed.
         /**
          * Sets the camera
          * Returns true if the camera has been set

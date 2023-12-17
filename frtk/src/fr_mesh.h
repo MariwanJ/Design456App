@@ -84,7 +84,7 @@ private:
     glm::vec3 GetVertex(unsigned int index, const float vertices[]);
 
     /**
-     * Receives an index and sets the vertice
+     * Receives an index and sets the vertices
      */
     void SetVertex(unsigned int index, float vertices[],
         const glm::vec3& vertex);

@@ -52,7 +52,7 @@ public:
 
     int getNodeIndex(std::shared_ptr<Node> node);//add the object to the scene graph vector, return the index
     /**
-     * Retrive a pointer to the desired Node given by id number.
+     * Retrieve a pointer to the desired Node given by id number.
      *
      * \param id    Node number
      * \return pointer to the node if exists. or nullpntr

@@ -30,7 +30,11 @@
 namespace FR {
     int FR::Fr_WGroup::handle(int events)
     {
-        return 0;
+        for (auto& widget : m_children) {
+            if (widget->handle(events) != 0) {
+                break;  //We are done. Events is consumed and we no longer need to send it to other widgets.
+           }
+        }
     }
     Fr_WGroup::Fr_WGroup(glm::vec3 position, std::shared_ptr<std::vector <float>>verticies, std::shared_ptr<std::vector <float>> indicies, std::string label) :Fr_Widget(position, verticies, indicies, label)
     {
