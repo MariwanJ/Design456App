@@ -36,6 +36,7 @@ void Fr_GL3Window::framebuffer_size_callback(GLFWwindow* window, int width, int 
     if (s_GladInitialized && s_GLFWInitialized) {
         glViewport(_x, _y, _w, _h);
     }
+    WidgWindow->handle(FR_WINDOW_RESIZE);
 }
 
 void Fr_GL3Window::keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods)

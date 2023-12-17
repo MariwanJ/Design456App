@@ -50,10 +50,10 @@ namespace FR {
     class ShaderProgram;
     class Shape;
 
-    /** Default callback type definition for all fltk widgets (by far the most used) */
+    /** Default callback type definition for all frtk widgets (by far the most used) */
     typedef void (Fr_Callback)(Fr_Widget*, void*);
 
-    /** Default callback type pointer definition for all fltk widgets */
+    /** Default callback type pointer definition for all frtk widgets */
     typedef Fr_Callback* Fr_Callback_p;
 
     /** One parameter callback type definition passing only the widget */

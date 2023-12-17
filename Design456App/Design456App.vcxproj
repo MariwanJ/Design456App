@@ -100,9 +100,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\threads.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>

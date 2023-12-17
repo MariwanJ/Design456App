@@ -160,7 +160,7 @@ public:
      */
     static Scene* scene;
     /**
-     * Vecotor of shared pointers for Transform object.
+     * Vector of shared pointers for Transform object.
      * Transform object will have only one child which is a camera
      * 6 types of cameras are created by the window
      * see CameraList

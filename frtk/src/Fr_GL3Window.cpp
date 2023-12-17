@@ -33,14 +33,6 @@
 #include<fr_modelnodeShader.h>
 //End remove me later
 
-/**
- *
- * Update FLTK callback.
- * This function should replace the need of Fl::run
- * It will be called
- * \param window
- */
-
 GLuint m_QuadVA, m_QuadVB, m_QuadIB;
 
 bool Fr_GL3Window::s_GLFWInitialized = false;
