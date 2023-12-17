@@ -37,7 +37,7 @@
  *
  * Update FLTK callback.
  * This function should replace the need of Fl::run
- * It will be calle
+ * It will be called
  * \param window
  */
 
@@ -82,7 +82,7 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     if (!s_GLFWInitialized)
     {
         int success = glfwInit();
-        //FRTK_CORE_ASSERT(success, "Could not intialize GLFW!");
+        //FRTK_CORE_ASSERT(success, "Could not initialize GLFW!");
         s_GLFWInitialized = true;
     }
     //Hint to GLFW  - Window is visible, not decorated and gl version is 3.3
@@ -250,7 +250,7 @@ void Fr_GL3Window::label(const char* l)
     label_ = l;
 }
 /**
- * Set active camera which affext how setup works.
+ * Set active camera which affects how setup works.
  *
  * \param _type Camera type which is written in CameraList enum
  */
@@ -446,12 +446,12 @@ int Fr_GL3Window::GLFWrun()
     glViewport(0, 0, _w, _h);
 
     clear_color = ImVec4(FR_WINGS3D); //ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-    sceneBuffer = std::make_shared<Fr_TextureFrameBuffer>(w(), h());        //Our draws will bo on this buffer, which then drawn inside portview in ImGui 
+    sceneBuffer = std::make_shared<Fr_TextureFrameBuffer>(w(), h());        //Our draws will be on this buffer, which then drawn inside portview in ImGui 
 
     /**
      *
      * For the layers, We will make :
-     *  Main layer which has the dockspace and all other GUI parts and will be default ivsible object layer
+     *  Main layer which has the dockspace and all other GUI parts and will be default visible object layer
      */
     std::shared_ptr<Fr_ImGuiLayer> mlayer = std::make_shared<Fr_ImGuiLayer>();
     layers_.push_back(mlayer);

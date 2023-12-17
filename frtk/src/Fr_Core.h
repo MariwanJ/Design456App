@@ -153,24 +153,24 @@ static unsigned char GLLogCall() {
 #define clearBIT(x) (0 << x)
 
 namespace FR {
-    enum FR_EVENTS{
-        FR_NO_EVENT     =0,     //DONT CARE EVENT
-        FR_PUSH         =1,
-        FR_RELEASE      =2,
-        FR_ENTER        =3,
-        FR_DRAG         =4,
-        FR_FOCUS        =5,
-        FR_KEYBOARD     =6,
-        FR_CLOSE        =7,
-        FR_MOVE         =8,
-        FR_DEACIVATE    =9,
-        FR_ACTIVE       =10,
-        FR_HIDE         =11,
-        FR_SHOW         =12,
-        FR_DND_DRAG     =13,
-        FR_DND_RELEASE  =14
+    enum FR_EVENTS {
+        FR_NO_EVENT = 0,     //DONT CARE EVENT
+        FR_PUSH = 1,
+        FR_RELEASE = 2,
+        FR_ENTER = 3,
+        FR_DRAG = 4,
+        FR_FOCUS = 5,
+        FR_KEYBOARD = 6,
+        FR_CLOSE = 7,
+        FR_MOVE = 8,
+        FR_DEACIVATE = 9,
+        FR_ACTIVE = 10,
+        FR_HIDE = 11,
+        FR_SHOW = 12,
+        FR_DND_DRAG = 13,
+        FR_DND_RELEASE = 14
 
-    }
+    };
 
 
 }

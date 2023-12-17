@@ -43,7 +43,7 @@
 #include <fr_filebrowser.h>
 #include <ThreeDWidgets/fr_window.h>
 
-#define MAX_CAMERAS 8  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING CameraList enu
+#define MAX_CAMERAS 8  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING CameraList menu
 
 typedef struct {
     float MouseXYScale;
@@ -62,9 +62,9 @@ public:
     /**
      * class constructors.
      *
-     * \param x left side of the window ref to the whole screen (System dependen)
-     * \param y top side of the window ref to the whole screen (System dependen)
-     * \param w width of the window (max depends on the rosolution of the screen)
+     * \param x left side of the window ref to the whole screen (System dependent)
+     * \param y top side of the window ref to the whole screen (System dependent)
+     * \param w width of the window (max depends on the resolution of the screen)
      * \param h hight of the window (mad depends on the resolution of the screen)
      * \param l Windows title bar label
      */
@@ -147,7 +147,7 @@ public:
     virtual void hide();
 
     /**
-     * Windows run function wich replaces the Fl::run() function.
+     * Windows run function which replaces the Fl::run() function.
      * This is necessary to avoid problem with the Fl:run
      *
      * \return int value which represents the windows exit code
@@ -265,7 +265,7 @@ private:
     void createOpenDialog(void);
 
     /**
-     * GLFW callback wrapper calss.
+     * GLFW callback wrapper class.
      * This class is necessary to avoid having static callback functions.
      * This allow us to reach Fr_GL3Window variables without using
      * other solutions.
@@ -334,11 +334,11 @@ private:
     /**
     * low level variable to keep the id of the GLFW window
      * HWND .
-     * TODO: Implement the Linxu and other OS
+     * TODO: Implement the Linux and other OS
      */
     HWND glfwHND;
     /**
-     * Boolean variale keeps information about GLFW window if it is initialized or not.
+     * Boolean variable keeps information about GLFW window if it is initialized or not.
      */
     static bool s_GLFWInitialized;
     /**
@@ -346,7 +346,7 @@ private:
      */
     static bool s_GladInitialized;
     /**
-     * Private values that keep the dimention of the window.
+     * Private values that keep the dimension of the window.
      */
     int _x;
     int _y;
@@ -371,7 +371,7 @@ private:
 
     ImVec4 PortViewDimensions;
 
-#if 1//Experemental code - will be removed
+#if 1//Experimental code - will be removed
     std::shared_ptr <Transform> tempBu;
 #endif
 };
