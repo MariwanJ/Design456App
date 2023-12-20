@@ -129,9 +129,7 @@ void Fr_GL3Window::mouse_button_callback(GLFWwindow* win, int button, int action
         if (WidgWindow->handle(FR::FR_RELEASE) == 0) //Mouse click
             return;
     }
-    MouseMovement(glfw_e_x, glfw_e_y);
-    if (WidgWindow->handle(FR::FR_MOUSE_MOVE) == 0) //Mouse click
-        return;
+
 }
 void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double ypos)
 {
@@ -144,12 +142,13 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
 
     if (glfw_MouseButton == GLFW_MOUSE_BUTTON_LEFT && glfw_MouseClicked == 1) 
     {
+        LeftMouseDRAG(win, glfw_e_x, glfw_e_y);
         if (WidgWindow->handle(FR::FR_LEFT_DRAG_PUSH)==0) //Mouse click
-            m_GLFWevents = { -1,-1,-1,-1,-1 };
             return;  //Events is consumed - no more action required
     }
     else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_LEFT && glfw_MouseClicked == 0)
     {
+        LeftMouseDRAGrelease(win, glfw_e_x, glfw_e_y);
         if (WidgWindow->handle(FR::FR_LEFT_DRAG_RELEASE) == 0) //Mouse click
             m_GLFWevents = { -1,-1,-1,-1,-1 };
             return;  //Events is consumed - no more action required
@@ -157,13 +156,13 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
 
     else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_RIGHT && glfw_MouseClicked == 1)
     {
+        RightMouseDRAG(win, glfw_e_x, glfw_e_y);
         if (WidgWindow->handle(FR::FR_RIGHT_DRAG_PUSH) == 0) //Mouse click
-            m_GLFWevents = { -1,-1,-1,-1,-1 };
             return;  //Events is consumed - no more action required
     }
     else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_RIGHT && glfw_MouseClicked == 0)
     {
- 
+        RightMouseDRAGrelease(win, glfw_e_x, glfw_e_y);
         if (WidgWindow->handle(FR::FR_RIGHT_DRAG_RELEASE) == 0) //Mouse click
             m_GLFWevents = { -1,-1,-1,-1,-1 };
             return;  //Events is consumed - no more action required
@@ -174,29 +173,23 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
         if (shftL == GLFW_PRESS || shftR == GLFW_PRESS) {
          //   FRTK_CORE_INFO("MOUSE PAN");
             cameraPAN(win,xpos, ypos);
+            return;                                 //TODO: FR_WIDGET DOSEN'T GET THIS EVENT.. SHOULD WE?
         }
         else {
-         //   FRTK_CORE_INFO("MOUSE ROTATE");
+         //   FRTK_CORE_INFO("MOUSE ROTATE");           //TODO: FR_WIDGET DOSEN'T GET THIS EVENT.. SHOULD WE?
             cameraRotate(win,xpos, ypos);
-        }
-        //TODO : Not sure if widgets needs this event
-        if (WidgWindow->handle(FR::FR_PUSH) == 0) //Mouse click
             return;
+        }
     }
 
     else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_MIDDLE && glfw_MouseClicked == 0)
     {
         //TODO : Not sure if widgets needs this event
-        if (WidgWindow->handle(FR::FR_RELEASE) == 0) //Mouse click
+        MiddMouseDRAGrelease(win, glfw_e_x, glfw_e_y);
+        if (WidgWindow->handle(FR::FR_RELEASE) == 0) //Mouse click 
             m_GLFWevents = { -1,-1,-1,-1,-1 };
             return;
     }
-    
-    if (WidgWindow->handle(FR::FR_MOUSE_MOVE) == 0) //Mouse click
-        m_GLFWevents = { -1,-1,-1,-1,-1 };
-        return;
-
-
 }
 
 void Fr_GL3Window::cursor_enter_callback(GLFWwindow*, int entered)
@@ -366,6 +359,18 @@ void Fr_GL3Window::MiddMouseDRAG(GLFWwindow* win, double xoffset, double yoffset
 {
 }
 
+void Fr_GL3Window::LeftMouseDRAGrelease(GLFWwindow* win, double xoffset, double yoffset)
+{
+}
+
+void Fr_GL3Window::RightMouseDRAGrelease(GLFWwindow* win, double xoffset, double yoffset)
+{
+}
+
+
+void Fr_GL3Window::MiddMouseDRAGrelease(GLFWwindow* win, double xoffset, double yoffset)
+{
+}
 
 void Fr_GL3Window::joystick_callback( int jid, int events)
 {

@@ -135,7 +135,7 @@ public:
      * \return
      */
     virtual std::shared_ptr<Transform> CreateSunTop();
-    virtual std::shared_ptr<Transform> CreateSunBottom();  //TODO: NOT SURE IF WE NEED 2?? 
+    virtual std::shared_ptr<Transform> CreateSunBottom();  //TODO: NOT SURE IF WE NEED 2??
 
     /**
      * Resize Fr_GL3Window size which affects glfw windows.
@@ -170,7 +170,7 @@ public:
      * Pointer to link to the scene.
      */
     static Scene* scene;
-    
+
     /**
      * Vector of shared pointers for Transform object.
      * Transform object will have only one child which is a camera
@@ -244,7 +244,7 @@ private:
 
     /** GLFW Callbacks*/
     void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-    /** 
+    /**
         void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 
             window: A pointer to the GLFW window that received the event.
@@ -256,34 +256,173 @@ private:
                 GLFW_REPEAT: The key was held down and is being repeated.
             mods: Bit field describing which modifier keys (Shift, Control, Alt, Super) were held down.
 */
-
+/**
+ * Keyboard callback fro GLFW Window.
+ *
+ * \param window    GLFW main window
+ * \param key       Keyboard - key that was pressed or released
+ * \param scancode  ScanCode of the key (GLFW Window specific)
+ * \param action    GLFW_PRESS, GLFW_RELEASE OR GLFW_REPEAT
+ * \param mods      Bit field describing which modifier keys (Shift, Control, Alt, Super) were held down.
+ */
     void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-    void cursor_position_callback(GLFWwindow*, double xpos, double ypos);
-    void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cursor entered the window's client area, or GL_FALSE if it left it.
-    void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
-    void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
-    void MouseMovement( double xoffset, double yoffset);
-    void cameraPAN(GLFWwindow*win ,double xoffset, double yoffset);
-    void cameraRotate(GLFWwindow* win,double xoffset, double yoffset);
-
+    /**
+     * Mouse cursor movement callback.
+     *
+     * \param win  Main GLFW Window pointer
+     * \param xpos  Current X-Axis position of the mouse cursor
+     * \param ypos  Current Y-Axis position of the mouse cursor
+     */
+    void cursor_position_callback(GLFWwindow* win, double xpos, double ypos);
+    /**
+    *   Callback activates when mouse cursor is entering the GLFW client area
+     * \param win GLFW Window pointer
+     * \param entered  GL_TRUE if the cursor entered the window's client area, or GL_FALSE if it left it.
+     */
+    void cursor_enter_callback(GLFWwindow* win, int entered);
+    /**
+     * Mouse button pressed/released callback.
+     *
+     * \param win GLFW Window pointer
+     * \param button    GLFW_MOUSE_BUTTON_LEFT, GLFW_MOUSE_BUTTON_RIGHT, GLFW_MOUSE_BUTTON_MIDDLE
+     * \param action    GLFW_PRESS, GLFW_RELEASE OR GLFW_REPEAT
+     * \param mods      Bit field describing which modifier keys (Shift, Control, Alt, Super) were held down.
+     */
+    void mouse_button_callback(GLFWwindow* win, int button, int action, int mods);
+    /**
+     * Mouse scroll event. This will be used for PAN, Zooming.
+     *
+     * \param win   GLFW Main window pointer
+     * \param xoffset   last X-Axis position of the mouse cursor
+     * \param yoffset   last Y-Axis position of the mouse cursor
+     */
+    void scroll_callback(GLFWwindow* win, double xoffset, double yoffset);
+    /**
+     * Mouse movement callback, if it is not DND.
+     *
+     * \param xoffset   last X-Axis position of the mouse cursor
+     * \param yoffset   last Y-Axis position of the mouse cursor
+     */
+    void MouseMovement(double xoffset, double yoffset);
+    /**
+     * PAN Camera. Middle-mouse-button must be used with movement of cursor and shift-key
+     *
+     * \param win
+     * \param xoffset   last X-Axis position of the mouse cursor
+     * \param yoffset   last Y-Axis position of the mouse cursor
+     */
+    void cameraPAN(GLFWwindow* win, double xoffset, double yoffset);
+    /**
+     * Camera rotation. No shift is pressed and middle-mouse-button is pressed, and mouse moved
+     *
+     * \param win
+     * \param xoffset   last X-Axis position of the mouse cursor
+     * \param yoffset   last Y-Axis position of the mouse cursor
+     */
+    void cameraRotate(GLFWwindow* win, double xoffset, double yoffset);
+    /**
+     * Left mouse button is clicked.
+     *
+     * \param win   GLFW Main window pointer
+     * \param xoffset   last X-Axis position of the mouse cursor
+     * \param yoffset   last Y-Axis position of the mouse cursor
+     */
     void LeftMouseClick(GLFWwindow* win, double xoffset, double yoffset);
+    /**
+     * Right mouse button is clicked.
+     *
+     * \param win   GLFW Main window pointer
+     * \param xoffset   last X-Axis position of the mouse cursor
+     * \param yoffset   last Y-Axis position of the mouse cursor
+     */
     void RightMouseClick(GLFWwindow* win, double xoffset, double yoffset);
-
+    /**
+     * Middle mouse button is clicked.
+     *
+     * \param win   GLFW Main window pointer
+     * \param xoffset   last X-Axis position of the mouse cursor
+     * \param yoffset   last Y-Axis position of the mouse cursor
+     */
     void MiddMouseClick(GLFWwindow* win, double xoffset, double yoffset);
-
+    /**
+     * Left mouse button is released
+     *
+     * \param win   GLFW Main window pointer
+     * \param xoffset   last X-Axis position of the mouse cursor
+     * \param yoffset   last Y-Axis position of the mouse cursor
+     */
     void LeftMouseRelease(GLFWwindow* win, double xoffset, double yoffset);
-
+    /**
+    * Right mouse button is released
+    *
+    * \param win   GLFW Main window pointer
+    * \param xoffset   last X-Axis position of the mouse cursor
+    * \param yoffset   last Y-Axis position of the mouse cursor
+    */
     void RightMouseRelease(GLFWwindow* win, double xoffset, double yoffset);
-
+    /**
+     * Middle mouse button is released
+     *
+     * \param win   GLFW Main window pointer
+     * \param xoffset   last X-Axis position of the mouse cursor
+     * \param yoffset   last Y-Axis position of the mouse cursor
+     */
     void MiddMouseRelease(GLFWwindow* win, double xoffset, double yoffset);
-
+    /**
+     * Left mouse DND
+     *
+     * \param win   GLFW Main window pointer
+     * \param xoffset   last X-Axis position of the mouse cursor
+     * \param yoffset   last Y-Axis position of the mouse cursor
+     */
     void LeftMouseDRAG(GLFWwindow* win, double xoffset, double yoffset);
-
+    /**
+     * RIGHT mouse DND
+     *
+     * \param win   GLFW Main window pointer
+     * \param xoffset   last X-Axis position of the mouse cursor
+     * \param yoffset   last Y-Axis position of the mouse cursor
+     */
     void RightMouseDRAG(GLFWwindow* win, double xoffset, double yoffset);
-
+    /**
+     * Middle mouse DND
+     *
+     * \param win   GLFW Main window pointer
+     * \param xoffset   last X-Axis position of the mouse cursor
+     * \param yoffset   last Y-Axis position of the mouse cursor
+     */
     void MiddMouseDRAG(GLFWwindow* win, double xoffset, double yoffset);
-
-    void joystick_callback(  int jid, int events);
+    /**
+     * Left mouse DND
+     *
+     * \param win   GLFW Main window pointer
+     * \param xoffset   last X-Axis position of the mouse cursor
+     * \param yoffset   last Y-Axis position of the mouse cursor
+     */
+    void LeftMouseDRAGrelease(GLFWwindow* win, double xoffset, double yoffset);
+    /**
+     * RIGHT mouse DND
+     *
+     * \param win   GLFW Main window pointer
+     * \param xoffset   last X-Axis position of the mouse cursor
+     * \param yoffset   last Y-Axis position of the mouse cursor
+     */
+    void RightMouseDRAGrelease(GLFWwindow* win, double xoffset, double yoffset);
+    /**
+     * Middle mouse DND
+     *
+     * \param win   GLFW Main window pointer
+     * \param xoffset   last X-Axis position of the mouse cursor
+     * \param yoffset   last Y-Axis position of the mouse cursor
+     */
+    void MiddMouseDRAGrelease(GLFWwindow* win, double xoffset, double yoffset);
+    /**
+     * Joystick callback //This will not be used by Design456App.
+     * 
+     * \param jid
+     * \param events
+     */
+    void joystick_callback(int jid, int events);
 
     //Menu and toolbar callbacks
     void mnuFileNew_cb(void* Data);
@@ -327,7 +466,7 @@ private:
         static void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cursor entered the window's client area, or GL_FALSE if it left it.
         static void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
         static void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
-        static void joystick_callback( int jid, int events);
+        static void joystick_callback(int jid, int events);
         static void setGLFWwindow(Fr_GL3Window* glfwWindow);
 
         //Menu callback rappers
@@ -360,8 +499,8 @@ private:
     mouseScale mouseDefaults;
     static eventData m_GLFWevents;        //All GLFW events that will be used by FR_WIDGET system
 
-    std::shared_ptr<FR::Fr_Window> WidgWindow;  //FR_WINDOW That keeps the FR_WIDGET objects 
-    
+    std::shared_ptr<FR::Fr_Window> WidgWindow;  //FR_WINDOW That keeps the FR_WIDGET objects
+
     //Keep ImGui layers saved and removed
     std::vector<std::shared_ptr<Fr_ImGuiLayer>> layers_;
 
