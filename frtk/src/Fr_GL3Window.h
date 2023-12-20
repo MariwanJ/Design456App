@@ -49,6 +49,17 @@ typedef struct {
     float MouseXYScale;
     float MouseScrollScale;
 }mouseScale;
+/**
+ * Each of these variables will keep the last events happened and their value.
+ * If the event is not relative to the variable, it will have -1 sa value.
+ */
+typedef struct {
+    int lastAction;
+    int lastKey;
+    int lastMod;
+    int button;
+    int scancode;
+} eventData;
 
 /* Cameras */
 class Camera;
@@ -159,6 +170,7 @@ public:
      * Pointer to link to the scene.
      */
     static Scene* scene;
+    
     /**
      * Vector of shared pointers for Transform object.
      * Transform object will have only one child which is a camera
@@ -197,6 +209,8 @@ public:
     int imgui_CameraConfiguration(userData_& data);
     genID idGen_; //Keeps the id generator - used to generate shape/objects unique ID
     float getAspectRation() const;
+    eventData GLFWevents() const;
+
 protected:
     /**
      * Function to create all cameras listed in CameraList.
@@ -230,19 +244,46 @@ private:
 
     /** GLFW Callbacks*/
     void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+    /** 
+        void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+
+            window: A pointer to the GLFW window that received the event.
+            key: The keyboard key that was pressed or released.
+            scancode: The system-specific scancode of the key.
+            action: The action that was performed on the key. It can be one of the following values:
+                GLFW_PRESS: The key was pressed.
+                GLFW_RELEASE: The key was released.
+                GLFW_REPEAT: The key was held down and is being repeated.
+            mods: Bit field describing which modifier keys (Shift, Control, Alt, Super) were held down.
+*/
+
     void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
     void cursor_position_callback(GLFWwindow*, double xpos, double ypos);
     void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cursor entered the window's client area, or GL_FALSE if it left it.
     void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
     void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
+    void MouseMovement( double xoffset, double yoffset);
+    void cameraPAN(GLFWwindow*win ,double xoffset, double yoffset);
+    void cameraRotate(GLFWwindow* win,double xoffset, double yoffset);
 
-    void cameraPAN(double xoffset, double yoffset);
-    void cameraRotate(double xoffset, double yoffset);
+    void LeftMouseClick(GLFWwindow* win, double xoffset, double yoffset);
+    void RightMouseClick(GLFWwindow* win, double xoffset, double yoffset);
 
-    void LeftMouseClick(double xoffset, double yoffset);
-    void RightMouseClick(double xoffset, double yoffset);
+    void MiddMouseClick(GLFWwindow* win, double xoffset, double yoffset);
 
-    void joystick_callback(int jid, int events);
+    void LeftMouseRelease(GLFWwindow* win, double xoffset, double yoffset);
+
+    void RightMouseRelease(GLFWwindow* win, double xoffset, double yoffset);
+
+    void MiddMouseRelease(GLFWwindow* win, double xoffset, double yoffset);
+
+    void LeftMouseDRAG(GLFWwindow* win, double xoffset, double yoffset);
+
+    void RightMouseDRAG(GLFWwindow* win, double xoffset, double yoffset);
+
+    void MiddMouseDRAG(GLFWwindow* win, double xoffset, double yoffset);
+
+    void joystick_callback(  int jid, int events);
 
     //Menu and toolbar callbacks
     void mnuFileNew_cb(void* Data);
@@ -286,7 +327,7 @@ private:
         static void cursor_enter_callback(GLFWwindow*, int entered); //      GL_TRUE if the cursor entered the window's client area, or GL_FALSE if it left it.
         static void mouse_button_callback(GLFWwindow*, int button, int action, int mods);
         static void scroll_callback(GLFWwindow*, double xoffset, double yoffset);
-        static void joystick_callback(int jid, int events);
+        static void joystick_callback( int jid, int events);
         static void setGLFWwindow(Fr_GL3Window* glfwWindow);
 
         //Menu callback rappers
@@ -317,7 +358,8 @@ private:
     int gl_version_major;
     int gl_version_minor;
     mouseScale mouseDefaults;
-    
+    static eventData m_GLFWevents;        //All GLFW events that will be used by FR_WIDGET system
+
     std::shared_ptr<FR::Fr_Window> WidgWindow;  //FR_WINDOW That keeps the FR_WIDGET objects 
     
     //Keep ImGui layers saved and removed

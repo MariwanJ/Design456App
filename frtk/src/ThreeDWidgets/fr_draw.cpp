@@ -104,7 +104,7 @@ namespace FR {
             glCheckFunc(glBindVertexArray(0));
             break;
         }
-        case FR_CLOSED_LOOP:  //This includes square, rectanble, triangle,pentagon, hexagon, star ..etc 
+        case FR_CLOSED_LOOP:  //This includes square, rectangle, triangle,pentagon, hexagon, star ..etc 
         {
             glCheckFunc(glBindVertexArray(m_vao));
             glCheckFunc(glDrawElements(GL_TRIANGLE_FAN, m_Indices->size(), GL_UNSIGNED_INT, 0));    //TODO: Check if this is correct!!

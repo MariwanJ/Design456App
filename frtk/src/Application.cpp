@@ -26,6 +26,9 @@
 //
 #include "Application.h"
 #include <glm/gtx/transform.hpp>
+
+
+//TODO: I don't see any reason to have these functions here any more - move them to other place
 /* Scene and engine*/
 static Scene* scene = nullptr;
 
@@ -36,52 +39,43 @@ void Fr_GL3Window::framebuffer_size_callback(GLFWwindow* window, int width, int 
     if (s_GladInitialized && s_GLFWInitialized) {
         glViewport(_x, _y, _w, _h);
     }
-    WidgWindow->handle(FR_WINDOW_RESIZE);
+    WidgWindow->handle(FR::FR_WINDOW_RESIZE);
 }
+/*
 
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+
+    window: A pointer to the GLFW window that received the event.
+    key: The keyboard key that was pressed or released.
+    scancode: The system-specific scancode of the key.
+    action: The action that was performed on the key. It can be one of the following values:
+        GLFW_PRESS: The key was pressed.
+        GLFW_RELEASE: The key was released.
+        GLFW_REPEAT: The key was held down and is being repeated.
+    mods: Bit field describing which modifier keys (Shift, Control, Alt, Super) were held down.
+
+*/
 void Fr_GL3Window::keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-}
-
-void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double ypos)
-{
-    /*
-        if (glfwGetMouseButton(win, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
-        {
-            return;
-        }
-     */
-    auto shftL = glfwGetKey(win, GLFW_KEY_LEFT_SHIFT);
-    auto shftR = glfwGetKey(win, GLFW_KEY_RIGHT_SHIFT);
-
-    if (glfw_MouseButton == GLFW_MOUSE_BUTTON_LEFT && glfw_MouseClicked == 1) {
-        //FRTK_CORE_INFO("MOUSE LEFT");
-        LeftMouseClick(xpos, ypos);
+    m_GLFWevents = { -1,-1,-1,-1,-1};
+    
+    m_GLFWevents.lastKey = key;
+    m_GLFWevents.lastAction = action;
+    m_GLFWevents.lastMod = mods;
+    m_GLFWevents.scancode = scancode;
+    if (WidgWindow->handle(FR::FR_KEYBOARD) == 0) {
+        m_GLFWevents = { -1,-1,-1,-1,-1 };  
+        return;
     }
-    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_MIDDLE && glfw_MouseClicked == 1) {
-        if (shftL == GLFW_PRESS || shftR == GLFW_PRESS) {
-         //   FRTK_CORE_INFO("MOUSE PAN");
-            cameraPAN(xpos, ypos);
-        }
-        else {
-         //   FRTK_CORE_INFO("MOUSE ROTATE");
-            cameraRotate(xpos, ypos);
-        }
-    }
-    else if (glfw_MouseButton != GLFW_MOUSE_BUTTON_RIGHT) {
-        glfw_MouseButton = false;
-    }
-
-    glfw_e_x = xpos;
-    glfw_e_y = ypos;
-}
-
-void Fr_GL3Window::cursor_enter_callback(GLFWwindow*, int entered)
-{
 }
 
 void Fr_GL3Window::mouse_button_callback(GLFWwindow* win, int button, int action, int mods)
 {
+    //TODO FIX ME  - THIS IS NOT FINISHED - THIS AND MOUSE MOVEMENT IS NOT CORRECT
+    m_GLFWevents.button = button;
+    m_GLFWevents.lastAction = action;
+    m_GLFWevents.lastMod = mods;
+
     if (GLFW_PRESS == action) {
         glfw_MouseClicked = 1; //Pressed
     }
@@ -89,7 +83,126 @@ void Fr_GL3Window::mouse_button_callback(GLFWwindow* win, int button, int action
         glfw_MouseClicked = 0; //Released
     }
     glfw_MouseButton = button;
+
+    auto shftL = glfwGetKey(win, GLFW_KEY_LEFT_SHIFT);
+    auto shftR = glfwGetKey(win, GLFW_KEY_RIGHT_SHIFT);
+
+    if (glfw_MouseButton == GLFW_MOUSE_BUTTON_LEFT && glfw_MouseClicked == 1)
+    {        //FRTK_CORE_INFO("MOUSE LEFT");
+        LeftMouseClick(win,glfw_e_x, glfw_e_y );
+        if (WidgWindow->handle(FR::FR_PUSH) == 0) //Mouse click
+            return;  //Events is consumed - no more action required
+    }
+    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_LEFT && glfw_MouseClicked == 0)
+    {
+        //FRTK_CORE_INFO("MOUSE LEFT");
+        LeftMouseRelease(win,glfw_e_x, glfw_e_y);
+        if (WidgWindow->handle(FR::FR_RELEASE) == 0) //Mouse click
+            return;  //Events is consumed - no more action required
+    }
+
+    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_RIGHT && glfw_MouseClicked == 1)
+    {
+        RightMouseClick(win,glfw_e_x, glfw_e_y);
+        if (WidgWindow->handle(FR::FR_PUSH) == 0) //Mouse click
+            return;  //Events is consumed - no more action required
+    }
+    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_RIGHT && glfw_MouseClicked == 0)
+    {
+        RightMouseRelease(win,glfw_e_x, glfw_e_y);
+        if (WidgWindow->handle(FR::FR_RELEASE) == 0) //Mouse click
+            return;  //Events is consumed - no more action required
+    }
+
+    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_MIDDLE && glfw_MouseClicked == 1)
+    {
+        //TODO : Not sure if widgets needs this event
+        MiddMouseClick(win,glfw_e_x, glfw_e_y);
+        if (WidgWindow->handle(FR::FR_PUSH) == 0) //Mouse click
+            return;
+    }
+
+    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_MIDDLE && glfw_MouseClicked == 0)
+    {
+        //TODO : Not sure if widgets needs this event
+        MiddMouseRelease(win,glfw_e_x, glfw_e_y);
+        if (WidgWindow->handle(FR::FR_RELEASE) == 0) //Mouse click
+            return;
+    }
+    MouseMovement(glfw_e_x, glfw_e_y);
+    if (WidgWindow->handle(FR::FR_MOUSE_MOVE) == 0) //Mouse click
+        return;
 }
+void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double ypos)
+{
+        //Here we have mouse movement
+
+    auto shftL = glfwGetKey(win, GLFW_KEY_LEFT_SHIFT);
+    auto shftR = glfwGetKey(win, GLFW_KEY_RIGHT_SHIFT);
+    glfw_e_x = xpos;
+    glfw_e_y = ypos;
+
+    if (glfw_MouseButton == GLFW_MOUSE_BUTTON_LEFT && glfw_MouseClicked == 1) 
+    {
+        if (WidgWindow->handle(FR::FR_LEFT_DRAG_PUSH)==0) //Mouse click
+            m_GLFWevents = { -1,-1,-1,-1,-1 };
+            return;  //Events is consumed - no more action required
+    }
+    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_LEFT && glfw_MouseClicked == 0)
+    {
+        if (WidgWindow->handle(FR::FR_LEFT_DRAG_RELEASE) == 0) //Mouse click
+            m_GLFWevents = { -1,-1,-1,-1,-1 };
+            return;  //Events is consumed - no more action required
+    }
+
+    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_RIGHT && glfw_MouseClicked == 1)
+    {
+        if (WidgWindow->handle(FR::FR_RIGHT_DRAG_PUSH) == 0) //Mouse click
+            m_GLFWevents = { -1,-1,-1,-1,-1 };
+            return;  //Events is consumed - no more action required
+    }
+    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_RIGHT && glfw_MouseClicked == 0)
+    {
+ 
+        if (WidgWindow->handle(FR::FR_RIGHT_DRAG_RELEASE) == 0) //Mouse click
+            m_GLFWevents = { -1,-1,-1,-1,-1 };
+            return;  //Events is consumed - no more action required
+    }
+
+    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_MIDDLE && glfw_MouseClicked == 1) 
+    {
+        if (shftL == GLFW_PRESS || shftR == GLFW_PRESS) {
+         //   FRTK_CORE_INFO("MOUSE PAN");
+            cameraPAN(win,xpos, ypos);
+        }
+        else {
+         //   FRTK_CORE_INFO("MOUSE ROTATE");
+            cameraRotate(win,xpos, ypos);
+        }
+        //TODO : Not sure if widgets needs this event
+        if (WidgWindow->handle(FR::FR_PUSH) == 0) //Mouse click
+            return;
+    }
+
+    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_MIDDLE && glfw_MouseClicked == 0)
+    {
+        //TODO : Not sure if widgets needs this event
+        if (WidgWindow->handle(FR::FR_RELEASE) == 0) //Mouse click
+            m_GLFWevents = { -1,-1,-1,-1,-1 };
+            return;
+    }
+    
+    if (WidgWindow->handle(FR::FR_MOUSE_MOVE) == 0) //Mouse click
+        m_GLFWevents = { -1,-1,-1,-1,-1 };
+        return;
+
+
+}
+
+void Fr_GL3Window::cursor_enter_callback(GLFWwindow*, int entered)
+{
+}
+
 
 void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
 {
@@ -123,7 +236,11 @@ void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffs
     activeCamera->setUserData(data);
 }
 
-void Fr_GL3Window::cameraPAN(double xpos, double ypos)
+void Fr_GL3Window::MouseMovement(double xoffset, double yoffset)
+{
+}
+
+void Fr_GL3Window::cameraPAN(GLFWwindow* win, double xpos, double ypos)
 {
     if (MouseOnce)
     {
@@ -167,7 +284,7 @@ void Fr_GL3Window::cameraPAN(double xpos, double ypos)
     activeCamera->setUserData(data);
 }
 
-void Fr_GL3Window::cameraRotate(double xpos, double ypos)
+void Fr_GL3Window::cameraRotate(GLFWwindow* win, double xpos, double ypos)
 {
     userData_ data;
     auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
@@ -204,15 +321,53 @@ void Fr_GL3Window::cameraRotate(double xpos, double ypos)
     activeCamera->setUserData(data);
 }
 
-void Fr_GL3Window::LeftMouseClick(double xoffset, double yoffset)
+void Fr_GL3Window::LeftMouseClick(GLFWwindow* win, double xoffset, double yoffset)
+{
+
+}
+
+void Fr_GL3Window::RightMouseClick(GLFWwindow* win, double xoffset, double yoffset)
 {
 }
 
-void Fr_GL3Window::RightMouseClick(double xoffset, double yoffset)
+
+void Fr_GL3Window::MiddMouseClick(GLFWwindow* win, double xoffset, double yoffset)
+{
+
+}
+
+void Fr_GL3Window::LeftMouseRelease(GLFWwindow* win, double xoffset, double yoffset)
+{
+
+}
+
+void Fr_GL3Window::RightMouseRelease(GLFWwindow* win, double xoffset, double yoffset)
 {
 }
 
-void Fr_GL3Window::joystick_callback(int jid, int events)
+
+void Fr_GL3Window::MiddMouseRelease(GLFWwindow* win, double xoffset, double yoffset)
+{
+
+}
+
+
+void Fr_GL3Window::LeftMouseDRAG(GLFWwindow* win, double xoffset, double yoffset)
+{
+
+}
+
+void Fr_GL3Window::RightMouseDRAG(GLFWwindow* win, double xoffset, double yoffset)
+{
+}
+
+
+void Fr_GL3Window::MiddMouseDRAG(GLFWwindow* win, double xoffset, double yoffset)
+{
+}
+
+
+void Fr_GL3Window::joystick_callback( int jid, int events)
 {
 }
 

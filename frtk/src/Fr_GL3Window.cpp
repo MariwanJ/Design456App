@@ -42,6 +42,7 @@ Fr_GL3Window* Fr_GL3Window::GLFWCallbackWrapper::s_fr_glfwwindow = nullptr;
 static int counter = 0;
 
 Fr_GL3Window* Fr_GL3Window::s_Fr_GLFWwindow = nullptr;
+eventData Fr_GL3Window::m_GLFWevents = { -1,-1,-1,-1,-1 };
 
 static void error_callback(int error, const char* description)
 {
@@ -64,7 +65,7 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     _w = w;
     _h = h;
     mouseDefaults.MouseScrollScale = 2;
-    mouseDefaults.MouseXYScale =1;
+    mouseDefaults.MouseXYScale = 1;
     yaw = -90.0f;
     pitch = 0.0f;  //
     roll = 0.0f;  //Z axis
@@ -84,7 +85,7 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
     Fr_GL3Window::GLFWCallbackWrapper::setGLFWwindow(this);
-    WidgWindow = std::make_shared<FR::Fr_Window>(); //Create FR_WINDOW that keeps the widget system 
+    WidgWindow = std::make_shared<FR::Fr_Window>(); //Create FR_WINDOW that keeps the widget system
     WidgWindow->linkToMainWindow = this;
     radiusXYZ = 0;
 }
@@ -101,8 +102,8 @@ Fr_GL3Window::Fr_GL3Window()
     _h = 800;
     label_ = "GLFW ImGUI Test";
     s_Fr_GLFWwindow = this;
-    WidgWindow = std::make_shared<FR::Fr_Window>(); //Create FR_WINDOW that keeps the widget system 
-    WidgWindow->linkToMainWindow = this;    
+    WidgWindow = std::make_shared<FR::Fr_Window>(); //Create FR_WINDOW that keeps the widget system
+    WidgWindow->linkToMainWindow = this;
 }
 
 Fr_GL3Window* Fr_GL3Window::getfr_Gl3Window()
@@ -167,7 +168,6 @@ void Fr_GL3Window::CreateScene()
     scene->AddNode(axis.Blue);
     scene->AddNode(tempBu);
     scene->AddNode(dd);
-
 }
 
 void Fr_GL3Window::resizeWindow(int xGl, int yGl, int wGl, int hGl)
@@ -438,7 +438,7 @@ int Fr_GL3Window::GLFWrun()
     glViewport(0, 0, _w, _h);
 
     clear_color = ImVec4(FR_WINGS3D); //ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-    sceneBuffer = std::make_shared<Fr_TextureFrameBuffer>(w(), h());        //Our draws will be on this buffer, which then drawn inside portview in ImGui 
+    sceneBuffer = std::make_shared<Fr_TextureFrameBuffer>(w(), h());        //Our draws will be on this buffer, which then drawn inside portview in ImGui
 
     /**
      *
@@ -460,7 +460,7 @@ int Fr_GL3Window::GLFWrun()
         //Render GLFW stuff or Our 3D drawing
         renderimGUI(data);
         // Rendering IMGUI
-        layers_[0]->EndLayer(); 
+        layers_[0]->EndLayer();
         glCheckFunc(glfwPollEvents());
         glCheckFunc(glfwSwapBuffers(pWindow));
     }
@@ -479,7 +479,7 @@ std::shared_ptr<Transform> Fr_GL3Window::CreateSunTop() {
     sun->SetPosition(0.0f, 0.0f, 1000.0f);
     sun->SetDiffuse(0.25f, 0.25f, 0.25f);
     sun->SetAmbient(0.2f, 0.2f, 0.2f);
-    sun->EnableShadowMap(glm::vec3(0, 0, 1), glm::vec3(0, 0, 4), glm::ortho<float>(-10, 10, -10, 10,100, 114));
+    sun->EnableShadowMap(glm::vec3(0, 0, 1), glm::vec3(0, 0, 4), glm::ortho<float>(-10, 10, -10, 10, 100, 114));
     sun_->AddNode(sun);
     sun->SetActive(true);   //A must to have otherwise everything is black.
     sunT = std::move(sun_);
@@ -493,7 +493,7 @@ std::shared_ptr<Transform> Fr_GL3Window::CreateSunBottom() {
     sun->SetPosition(0.0f, 0.0f, 0.0f);
     sun->SetDiffuse(0.5f, 0.5f, 0.5f);
     sun->SetAmbient(0.2f, 0.2f, 0.2f);
-     //sun->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
+    //sun->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
     sun_->AddNode(sun);
     sun->SetActive(false);   //A must to have otherwise everything is black.
     sunT = std::move(sun_);

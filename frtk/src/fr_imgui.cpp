@@ -254,6 +254,10 @@ float Fr_GL3Window::getAspectRation() const
     return Camera::aspectRatio_;
     
 }
+eventData Fr_GL3Window::GLFWevents() const
+{
+    return m_GLFWevents;
+}
 int Fr_GL3Window::imgui_ViewPort()
 {
     ImGui::Begin("View Port");

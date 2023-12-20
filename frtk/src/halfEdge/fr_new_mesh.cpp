@@ -330,7 +330,7 @@ void Shape::CalculateNormals() {
         pre_normals[i] = { 0, 0, 0 };
     }
 
-    // Calculate the normals for each triangle vertex
+    // Calculate the normals for each triangle vertex 
     for (size_t i = 0; i < indices_.size() - 3; i += 3) {
         // Triangle vertices' indices
         unsigned int v[3] = { indices_[i], indices_[i + 1], indices_[i + 2] };
@@ -346,7 +346,7 @@ void Shape::CalculateNormals() {
         glm::vec3 v0_to_v1 = triangle[1] - triangle[0];
         glm::vec3 v0_to_v2 = triangle[2] - triangle[0];
         glm::vec3 v1_to_v2 = triangle[2] - triangle[1];
-        //lambda function to return angle between verticies
+        //lambda function to return angle between vertices
         auto angleBetween = [](const glm::vec3& u, const glm::vec3& v) {
             return acos(glm::dot(u, v) / (glm::length(u) * glm::length(v)));
             };

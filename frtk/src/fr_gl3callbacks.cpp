@@ -63,9 +63,9 @@ void Fr_GL3Window::GLFWCallbackWrapper::scroll_callback(GLFWwindow* window, doub
     s_fr_glfwwindow->scroll_callback(window, xoffset, yoffset);
 }
 
-void Fr_GL3Window::GLFWCallbackWrapper::joystick_callback(int jid, int events)
+void Fr_GL3Window::GLFWCallbackWrapper::joystick_callback( int jid, int events)
 {
-    s_fr_glfwwindow->joystick_callback(jid, events);
+    s_fr_glfwwindow->joystick_callback( jid, events);
 }
 
 void Fr_GL3Window::GLFWCallbackWrapper::setGLFWwindow(Fr_GL3Window* glfwWindow)

@@ -154,22 +154,37 @@ static unsigned char GLLogCall() {
 
 namespace FR {
     enum FR_EVENTS {
-        FR_NO_EVENT = 0,     //DONT CARE EVENT
-        FR_PUSH = 1,
-        FR_RELEASE = 2,
-        FR_ENTER = 3,
-        FR_DRAG = 4,
-        FR_FOCUS = 5,
-        FR_KEYBOARD = 6,
-        FR_CLOSE = 7,
-        FR_MOVE = 8,
-        FR_DEACIVATE = 9,
-        FR_ACTIVE = 10,
-        FR_HIDE = 11,
-        FR_SHOW = 12,
-        FR_DND_DRAG = 13,
-        FR_DND_RELEASE = 14
+        FR_NO_EVENT             = 0,     //DONT CARE EVENT
+        FR_PUSH                    ,
+        FR_RELEASE                 ,
+        FR_ENTER                   ,
+        FR_DRAG                    ,
+        FR_FOCUS                   ,
+        FR_KEYBOARD                ,
+        FR_CLOSE                   ,
+        FR_MOVE                    ,
+        FR_DEACIVATE               ,
+        FR_ACTIVE                  ,
+        FR_HIDE                    ,
+        FR_SHOW                    ,
+        FR_LEFT_DRAG_PUSH          ,
+        FR_LEFT_DRAG_RELEASE       ,
 
+        FR_MIDDLE_DRAG_PUSH        ,
+        FR_MIDDLE_DRAG_RELEASE     ,
+        
+        FR_RIGHT_DRAG_PUSH         ,
+        FR_RIGHT_DRAG_RELEASE      ,
+
+        FR_WINDOW_RESIZE           ,
+        FR_WINDOW_MINIMIZE         ,
+        FR_MOUSE_RIGHT             ,
+        FR_MOUSE_MIDDLE            ,
+        FR_MOUSE_LEFT              ,
+        FR_MOUSE_MOVE              ,
+
+
+        
     };
 
 
