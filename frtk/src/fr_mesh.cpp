@@ -29,7 +29,7 @@
 #include <fr_mesh.h>
 
 Mesh::Mesh(const std::string& path) :
-    vbo_{ 0, 0, 0 }, m_hasTexture(true),
+    vbo_{ 0, 0, 0 }, m_hasTexture(0),
     vao_(0), normalized_(false) {
     ReadFile(path, vertices_, normals_, indices_);
     InitializeVBO();

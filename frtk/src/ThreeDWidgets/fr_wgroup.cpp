@@ -37,7 +37,9 @@ namespace FR {
         }
         return 1;//We didn't use the event, let other part of the system use it.
     }
-    Fr_WGroup::Fr_WGroup(glm::vec3 position, std::shared_ptr<std::vector <float>>verticies, std::shared_ptr<std::vector <unsigned int>> indicies, std::string label) :Fr_Widget(position, verticies, indicies, label)
+    Fr_WGroup::Fr_WGroup(glm::vec3 position, std::shared_ptr<std::vector <float>>verticies, 
+                        std::shared_ptr<std::vector <unsigned int>> indicies, 
+                        std::string label):Fr_Widget(position, verticies, indicies, label)
     {
     }
     Fr_WGroup::~Fr_WGroup()

@@ -134,7 +134,7 @@ void ModelNode::Render(RenderInfo& info, const glm::mat4& modelview) {
     auto mvp = info.projection * modelview;
     auto normalmatrix = glm::transpose(glm::inverse(modelview));
 
-    ShaderProgram* program;
+    ShaderProgram* program=NULL;
     if (color_.a == 1)
         RenderSilhouette(mvp);
 
@@ -145,16 +145,16 @@ void ModelNode::Render(RenderInfo& info, const glm::mat4& modelview) {
 
     LoadLights(program, info.lights);
     program->SetAttribLocation("position", 0);  //Position variable has (layout(location =0) inside objectshader_vs.glsl
-    program->SetAttribLocation("texCoord", 2);  //Position variable has (layout(location =1 inside objectshader_vs.glsl
-    program->SetAttribLocation("normal", 1);  //Position variable has (layout(location =1 inside objectshader_vs.glsl
+    program->SetAttribLocation("texCoord", 1);  //Position variable has (layout(location =1 inside objectshader_vs.glsl
+    program->SetAttribLocation("normal", 2);  //Position variable has (layout(location =1 inside objectshader_vs.glsl
     program->SetUniformMat4("modelview", modelview);
     program->SetUniformMat4("normalmatrix", normalmatrix);
     program->SetUniformMat4("mvp", mvp);
-    program->SetUniformVec4("vcolor", color_);       //Object color - not light color
+    program->SetUniformVec4("color", color_);       //Object color - not light color
     //
     //program->Disable();
     //info.id++;
-    program->SetUniformInteger("has_texture", mesh_->hasTexture());
+    program->SetUniformInteger("hasTexture", mesh_->hasTexture());
     mesh_->Draw();      //You should make a draw call to get that  done
     m_Texture2D->Unbind();   
     program->Disable();
