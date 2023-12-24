@@ -1,18 +1,15 @@
-/***
-
-
-*/
 
 #version 460 core
 
 layout(location = 0) in vec3 position;
-layout(location = 1) in vec2 texCoord;
-layout(location = 2) in vec3 normal;
+layout(location = 1) in vec3 normal;
+layout(location = 2) in vec2 texCoord;
 
 uniform mat4 modelview;
 uniform mat4 normalmatrix;
 uniform mat4 mvp;
 uniform int has_texture;
+uniform vec4 vcolor;
 
 layout (location = 0) out vec3 frag_position;
 layout (location = 1) out vec3 frag_normal;

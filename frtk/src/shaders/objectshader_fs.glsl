@@ -1,7 +1,3 @@
-/***
-
-
-*/
 
 #version 460 core
 
@@ -63,6 +59,7 @@ vec3 compute_light_intensity(LightInfo light, int id, vec3 frag_normal_)
 
 void main ()
 {
+	int textureActive=hasTexture;
     vec3 frag_normal_n = normalize(frag_normal);
     vec3 frag_light = vec3(0, 0, 0);
     for (int i = 0; i < nlights; i++) {
@@ -72,11 +69,12 @@ void main ()
 	frag_light = (frag_light * NUM_COLORS) / NUM_COLORS; //floor make it worse
 
 	// Use sampling form texture if we use texture otherwise we use the original color calculation	
-	if (hasTexture==1)
+	if (textureActive==1){
 		frag_color=vec4((color * texture2D(ourTexture,vTextCoord)).rgb, 1.0);
-	else
+		}
+	else{
 		frag_color =  vec4(color.rgb * frag_light, color.a);
 	//frag_color = vec4(color.rgb * frag_light*frag_normal, color.a);//TEST THIS
-
+	}
  
 }
