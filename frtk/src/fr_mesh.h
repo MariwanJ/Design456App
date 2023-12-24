@@ -76,6 +76,8 @@ public:
 
     void SetNormalizeMesh(bool value);
     bool getNormalizeMesh();
+    int hasTexture();
+    void hasTexture(int val);
 
 private:
     /**
@@ -119,6 +121,9 @@ private:
         const std::vector<unsigned int>& indices,
         std::vector<float>& normals);
 
+    std::shared_ptr<std::vector<float>> ConcatenateVectors(const std::vector<float>& v1, const std::vector<float>& v2);
+
+
     /**
      * Creates the vertex buffer object
      */
@@ -135,6 +140,7 @@ private:
     unsigned int vao_;
     bool normalized_;
     meshType m_MeshType;
+    bool m_hasTexture;    ///Allow not using texture
 };
 
 #endif

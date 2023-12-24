@@ -25,13 +25,14 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include<../src/ThreeDWidgets/fr_widget.h>
-#include<../src/ThreeDWidgets/fr_draw.h>
+#ifndef FR_WGROUP_H
+#define FR_WGROUP_H
 
+#include<../src/ThreeDWidgets/fr_widget.h>
 namespace FR {
     class FRTK_API Fr_WGroup : public Fr_Widget {
     public:
-        Fr_WGroup(glm::vec3 position, std::shared_ptr<std::vector <float>> verticies, std::shared_ptr<std::vector <float>> indicies, std::string label);
+        Fr_WGroup(glm::vec3 position, std::shared_ptr<std::vector <float>> verticies, std::shared_ptr<std::vector <unsigned int>> indicies, std::string label);
         Fr_WGroup() = delete;
         ~Fr_WGroup();
 
@@ -40,11 +41,11 @@ namespace FR {
         void draw_children();
         void draw_lbl_children();
         void update_child(std::shared_ptr <Fr_Widget> wd);
-    
+
     public:
         /**
-         * Something happened to the widget and it needs to be redrawn immediately 
-         * 
+         * Something happened to the widget and it needs to be redrawn immediately
+         *
          */
         void redraw() override;
         /**
@@ -52,9 +53,9 @@ namespace FR {
          * Whenever a widget consumes the events, it should return 0. FR_NO_EVENTS means that there is no more events left.
          * But if a widget uses the event but want to return the event to the system, it should return Fr_WGroup::handle(e).
          * or if the widget didn't care about the event, it should also return either 1 or Fr_WGroup::handle(e).
-         * 
+         *
          * \param events
-         * \return 
+         * \return
          */
         int handle(int events) override;
 
@@ -81,40 +82,41 @@ namespace FR {
         virtual int find(std::shared_ptr<Fr_Widget>& wd) const;
         /**
          * Add new widget to the group.
-         * 
+         *
          * \param wid : shared pointer to a widget that will be added
          */
         virtual void addWidget(std::shared_ptr <Fr_Widget> wid);
 
         /**
          * Insert the widget at a specific position in the vector.
-         * 
+         *
          * \param wd shared pointer to a widget that will be added
          * \param index_before Position where the widget will be inserted (added)
-         * \return 
+         * \return
          */
         virtual int insert(std::shared_ptr <Fr_Widget> wd, int index_before);
         /**
          * Remove a widget from the group by getting a shared pointer to the widget.
-         * 
+         *
          * \param wid Shared pointer to the widget
-         * \return 
+         * \return
          */
         virtual int removeWidget(std::shared_ptr <Fr_Widget> wid);
         /**
          * Remove a widget by it's position int the vector.
-         * 
+         *
          * \param index
-         * \return 
+         * \return
          */
         virtual int removeWidget(int index);
         /**
          * Return the tab information of the widget which determines how TAB key move focus from a widg to another.
-         * 
+         *
          * \param wid Shared pointer to a widget
-         * \return 
+         * \return
          */
     private:
         std::vector < std::shared_ptr <Fr_Widget>> m_children;
     };
 }
+#endif

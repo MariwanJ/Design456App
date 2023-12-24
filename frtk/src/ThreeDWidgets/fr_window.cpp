@@ -1,4 +1,3 @@
-#include "fr_window.h"
 //
 // This file is a part of the Open Source Design456App
 // MIT License
@@ -34,9 +33,10 @@
  * 3- Layer responsible for the whole FR_WIDGET system (ONLY ONE LAYER AT THE MOMENT, THIS IS A DESIGN QUESTION THAT DONT KNOW KNOW
  * .
  */
+#include "fr_window.h"
 namespace FR {
     Fr_Window::Fr_Window(glm::vec3 position, std::shared_ptr<std::vector<float>> verticies,
-                         std::shared_ptr<std::vector<float>> indicies, std::string label) : 
+                         std::shared_ptr<std::vector<unsigned int>> indicies, std::string label) : 
                         Fr_WGroup(position,verticies,indicies,label),
                         m_layer(std::make_shared<Fr_ImGuiLayer>())
     {

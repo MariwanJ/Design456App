@@ -24,12 +24,14 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
+#ifndef FR_WIDGET_H
+#define FR_WIDGET_H
 
 #include <../src/fr_constants.h>
-#include <../src/Fr_Core.h>
 #include <../src/fr_node.h>
-#include<../src/ThreeDWidgets/fr_draw.h>
+#include<ThreeDWidgets/fr_draw.h>
 #include <stdexcept>
+#include<fr_core.h>
 namespace FR {
     typedef struct {
         //TODO : FIXME: This is just a dummy construction. this should be changed later
@@ -37,7 +39,7 @@ namespace FR {
             std::string str;
             int val;
         };
-    } userData;
+    } userWidgetData;
 
     class NotImplementedException : public std::logic_error
     {
@@ -72,13 +74,14 @@ namespace FR {
         friend class Fl_Group;
 
     public:
-        /** Copy constructor */
-        Fr_Widget(const Fr_Widget&);
-
         //Default constructor is disallowed
         Fr_Widget() = delete;
-        Fr_Widget(glm::vec3 position, std::shared_ptr<std::vector <float>> verticies, std::shared_ptr<std::vector <float>> indicies, std::string label);
-
+        Fr_Widget(glm::vec3 position,
+            std::shared_ptr<std::vector <float>> verticies,
+            std::shared_ptr<std::vector <unsigned int>> indicies,
+            std::string label);
+        /** Copy constructor */
+        Fr_Widget(const Fr_Widget&);
         /**
          * Virtual destructor
          */
@@ -102,7 +105,6 @@ namespace FR {
          */
         virtual void Render(RenderInfo& info, const glm::mat4& modelview) override;
 
-
         //virtual bool SetupTexture2D();
 
         //virtual void RenderTexture2D();
@@ -121,7 +123,7 @@ namespace FR {
 
         virtual void lbl_redraw();
 
-        virtual bool setup();  //this will initialize vbo and other stuff. 
+        virtual bool setup();  //this will initialize vbo and other stuff.
         /**
          *
          */
@@ -135,7 +137,8 @@ namespace FR {
 
         void fontSize(int size_);
 
-        virtual void resize(std::shared_ptr<std::vector <float>> verticies, std::shared_ptr<std::vector <float>> indicies);
+        virtual void resize(std::shared_ptr<std::vector <float>> verticies,
+                            std::shared_ptr<std::vector <unsigned int>> indicies);
 
         bool Resizable();
 
@@ -184,13 +187,59 @@ namespace FR {
 
         virtual GLuint getCurrentTexturer(void);
 
-        int tabIndex() const;
+        virtual int tabIndex() const;
         void tabIndex(int index);
+        void hasTexture(int val);
+        int hasTexture();
 
+        /**
+           * Multiply the current matrix by a rotation matrix
+           */
+        virtual void Rotate(float x, float y, float z, float angle);
+
+        /**
+         * Multiply the current matrix by a rotation matrix
+         */
+        virtual void Rotate(glm::vec3 axis, float angle);
+
+        virtual void Translate(glm::vec3 v);
+
+        /**
+         * Multiply the current matrix by a translation matrix
+         */
+        virtual void Translate(float x, float y, float z);
+
+        /**
+         * Multiply the current matrix by a translation matrix
+         */
+        virtual void Scale(float x, float y, float z);
+
+        virtual void Scale(glm::vec3 value);
+
+        glm::mat4 GetMatrix();
+        glm::mat4 GetInvers();
+
+        void SetPosition(float x, float y, float z);
+
+        void SetPosition(glm::vec3 pos);
+
+        virtual void diffCalculateNormals();
+
+        glm::vec3 GetVertex(unsigned int index, const float vertices[]);
+
+        void SetVertex(unsigned int index, float vertices[], const glm::vec3& vertex);
+
+        virtual void calcualteTextCoor(int width, int height);
 
     protected:
         virtual void do_callback();
         std::shared_ptr<Fr_TwoD_Drawing> m_draw;
+        std::shared_ptr<std::vector <float>> m_verticies;
+        std::shared_ptr<std::vector<float>> m_indicies;          // We don´t use glm::vec3 but we can even so use it for Triangle drawing. Decide that by the drawing type.
+        std::shared_ptr<std::vector<float>> m_vertCoord;          //must be calculated internally
+        std::shared_ptr<std::vector<float>>  m_normals;
+        std::shared_ptr<std::vector<float>>  m_textCoord;
+
     private:
         //From shader
         /**
@@ -199,8 +248,8 @@ namespace FR {
         virtual void LoadLights(ShaderProgram* program, const std::vector<LightInfo>& lights);
 
         Fr_Callback* m_callback_;
-        std::shared_ptr<std::vector <float>> m_verticies;    
-        std::shared_ptr<std::vector<float>> m_indicies;          // We don´t use glm::vec3 but we can even so use it for Triangle drawing. Decide that by the drawing type.
+
+
         glm::vec3 m_position;
         std::string m_label;
         std::string m_fontName;
@@ -211,8 +260,11 @@ namespace FR {
         bool m_resizable;
         int m_type;   //widget type
         int m_tabIndex;
+        int m_hasTexture;
+        glm::mat4 m_Matrix;
+        //glm::mat4 m_Inverse;
 
-        static    ShaderProgram* widget_program;
+        static    ShaderProgram* widget_program;  //todo : Static?? or not
 
         // Attributes
         glm::vec4 m_color;
@@ -220,3 +272,4 @@ namespace FR {
         GLuint m_texture; //used to return the texture for imgui rendering inside window.
     };
 }
+#endif

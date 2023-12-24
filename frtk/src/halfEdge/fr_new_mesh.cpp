@@ -30,7 +30,7 @@
 #include <../src/Fr_GL3Window.h>
 
 Shape::Shape(const std::string& path) :
-    vbo_{ 0, 0, 0,0 },
+    vbo_{ 0, 0, 0,0 }, m_hasTexture(true),
     vao_(0), normalized_(false) {
     ReadFile(path);
     calcualteTextCoor(1024,1024);
@@ -123,7 +123,7 @@ int Shape::build()
         }
         //CONTINUE TO DEVELOP THIS.
     }
-    return 0;// TODO:FIXME: check this return if it should be somehting else
+    return 0;// TODO:FIXME: check this return if it should be something else
 }
 
 void Shape::Draw() {
@@ -143,7 +143,7 @@ void Shape::SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>&
     indices_ = indices;
 }
 /**
- * Change verticies size to be inbetween -1 and 1.
+ * Change vertices size to be in-between -1 and 1.
  * This is left as an option might not be used.
  * Call this before reading the mesh.
  * \param value
@@ -323,6 +323,14 @@ void Shape::diffCalculateNormals() {
         SetVertex(i, normals_.data(), normalized);
     }
 }
+int Shape::hasTexture()
+{
+    return m_hasTexture;
+}
+void Shape::hasTexture(int val)
+{
+    m_hasTexture = val;
+}
 void Shape::CalculateNormals() {
     // Initialize the normals
     std::vector<glm::vec3> pre_normals(vertices_.size() / 3);
@@ -376,6 +384,23 @@ meshType Shape::getMeshType()
     return m_MeshType;
 }
 
+std::shared_ptr<std::vector<float>>Shape::ConcatenateVectors(const std::vector<float>& v1, const std::vector<float>& v2) {
+    std::shared_ptr<std::vector<float>> result = std::make_shared<std::vector <float>>();
+    int v1Index = 0;
+    int v2Index = 0;
+
+    while (v1Index < v1.size() || v2Index < v2.size()) {
+        for (int i = 0; i < 3 && v1Index < v1.size(); i++) {
+            result->push_back(std::move(v1[v1Index]));
+            v1Index++;
+        }
+        for (int i = 0; i < 2 && v2Index < v2.size(); i++) {
+            result->push_back(std::move(v2[v2Index]));
+            v2Index++;
+        }
+    }
+    return result;
+}
 void Shape::InitializeVBO() {
     glCheckFunc(glGenBuffers(NUM_OF_VBO_BUFFERS, vbo_)); //3
     glCheckFunc(glGenVertexArrays(1, &vao_));
@@ -392,11 +417,12 @@ void Shape::InitializeVBO() {
     glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[3]));
     glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int), indices_.data(), GL_STATIC_DRAW));
 
-    ///Texture
-    glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]));
-    glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * textcoord_.size(), textcoord_.data(), GL_STATIC_DRAW));
-    glCheckFunc(glEnableVertexAttribArray(TEXCOORD_VB));
-    glCheckFunc(glVertexAttribPointer(TEXCOORD_VB, 2, GL_FLOAT, GL_FALSE, 0, NULL));        //TEXCOORD_VB=1   NOTE: SHADER MUST HAVE THE SAME SEQUENCE
+    /////Texture
+    //if(hasTexture() == 1)
+    //    glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]));
+    //glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * textcoord_.size(), textcoord_.data(), GL_STATIC_DRAW));
+    //glCheckFunc(glEnableVertexAttribArray(TEXCOORD_VB));
+    //glCheckFunc(glVertexAttribPointer(TEXCOORD_VB, 2, GL_FLOAT, GL_FALSE, 0, NULL));        //TEXCOORD_VB=1   NOTE: SHADER MUST HAVE THE SAME SEQUENCE
 
     //this is the object shader - look at the shader, it uses uniform. so the binding MUST be uniform
     //NORMALS

@@ -25,6 +25,8 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
+#include<ThreeDWidgets/fr_draw.h>
+
 namespace FR {
     Fr_TwoD_Drawing::Fr_TwoD_Drawing() :m_Vertices{ 0 }, m_Indices{ 0 }, m_Normals{ 0 }, m_Type(FR_LINE), m_vbo{ 0 }, m_vao{ 0 }
     {
@@ -46,11 +48,13 @@ namespace FR {
 
     Fr_TwoD_Drawing::Fr_TwoD_Drawing(twodType type,
         std::shared_ptr<std::vector<float>> verticies,
-        std::shared_ptr<std::vector<unsigned int>>& indicies,
+        std::shared_ptr<std::vector<unsigned int>>indicies,
         glm::vec4 color)
     {
         m_Vertices = std::move(verticies);
         m_Indices = std::move(indicies);
+        m_Normals= std::make_shared<std::vector<float>>();
+        m_Textcoord= std::make_shared<std::vector<float>>();
         m_Type = type;
         m_Color = color;
     }
@@ -69,14 +73,29 @@ namespace FR {
         return m_Vertices;
     }
 
-    void Fr_TwoD_Drawing::Indicies(std::shared_ptr<std::vector<unsigned int>> indc)
-    {
-        m_Indices = std::move(indc);
-    }
+    //void Fr_TwoD_Drawing::Indicies(std::shared_ptr<std::vector<unsigned int>> indc)
+    //{
+    //    m_Indices = std::move(indc);
+    //}
+
+    //void Fr_TwoD_Drawing::TextureCoord(std::shared_ptr<std::vector<float>> tex)
+    //{
+    //    m_Textcoord = tex;
+    //}
 
     std::shared_ptr<std::vector<unsigned int>> Fr_TwoD_Drawing::Indicies()
     {
         return m_Indices;
+    }
+
+    std::shared_ptr<std::vector<float>> Fr_TwoD_Drawing::Normals()
+    {
+        return  m_Normals;
+    }
+
+    std::shared_ptr<std::vector<float>> Fr_TwoD_Drawing::TextCoord()
+    {
+        return m_Textcoord;
     }
 
     void Fr_TwoD_Drawing::Type(twodType type)
@@ -150,8 +169,6 @@ namespace FR {
 
     int Fr_TwoD_Drawing::initializeVBO()
     {
-
-
             glCheckFunc(glGenBuffers(3, m_vbo));
             glCheckFunc(glGenVertexArrays(1, &m_vao));
             glCheckFunc(glBindVertexArray(m_vao));       //Keeps all instructions related this object

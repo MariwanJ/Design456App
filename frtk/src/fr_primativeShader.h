@@ -67,7 +67,10 @@ public:
     /**
      * Renders the node
      */
+
     void Render(RenderInfo& info, const glm::mat4& modelview) override;
+
+    std::shared_ptr< Fr_Texture2D> m_Texture2D;
 
     void setObjectshader(const char* newValue);
     void setSilhouette(const char* newValue);

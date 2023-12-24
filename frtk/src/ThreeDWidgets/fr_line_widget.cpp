@@ -26,10 +26,20 @@
 //
 #include "fr_line_widget.h"
 namespace FR{
-Fr_Line_Widget::Fr_Line_Widget(glm::vec3 position, std::shared_ptr<std::vector <float>> verticies,
-                                     std::shared_ptr<std::vector <float>> indicies, std::string label):
-                                     Fr_Widget(position,verticies,indicies,label)
+
+Fr_Line_Widget::Fr_Line_Widget(glm::vec3 position, 
+                                std::shared_ptr<std::vector <float>> verticies,
+                                std::shared_ptr<std::vector <unsigned int>> indicies, 
+                                std::string label) : Fr_Widget(position,verticies,indicies,label)
 {
+ 
+    lineObj = std::make_shared< Fr_TwoD_Drawing>(FR_LINE,verticies, indicies);
+    m_normals= lineObj->Normals();
+    m_textCoord = lineObj->TextCoord();
+    lineObj->lineWidth(5);
+    lineObj->Type(FR::FR_LINE);
+    diffCalculateNormals();
+    lineObj->initializeVBO();
 }
 
 Fr_Line_Widget::~Fr_Line_Widget()
@@ -38,6 +48,7 @@ Fr_Line_Widget::~Fr_Line_Widget()
 
 void Fr_Line_Widget::draw()
 {
+    lineObj->Draw();
 }
 
 void Fr_Line_Widget::lbl_draw()
@@ -46,5 +57,15 @@ void Fr_Line_Widget::lbl_draw()
 
 void Fr_Line_Widget::lbl_redraw()
 {
+}
+int Fr_Line_Widget::handle(int e)
+{
+ 
+    switch (e) {
+    case FR_PUSH: FRTK_CORE_INFO("Line Widget is clicked");
+        return 1; //Consume the event
+    case FR_RELEASE: FRTK_CORE_INFO("Line Widget is released");
+    }
+    return 0;
 }
 }

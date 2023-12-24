@@ -43,10 +43,7 @@ class mesh_vertex;
 class mesh_loop;
 
 
-
-
-
-
+ 
 class mesh_face {
 public:
     mesh_face();
@@ -129,6 +126,8 @@ public:
     void SetNormalizeMesh(bool value);
     bool getNormalizeMesh();
     void calcualteTextCoor(int width, int height);
+    //Combine two vertices in a pattern of 3 +2 (vertices and texcoord)
+    std::shared_ptr<std::vector<float>>Shape::ConcatenateVectors(const std::vector<float>& v1, const std::vector<float>& v2);
 
 private:
     /**
@@ -178,7 +177,8 @@ private:
 
 public:
     std::vector<std::shared_ptr<mesh_face>> FaceObjects; //Hold all faces for the shape and all other elements
-
+    int hasTexture();
+    void hasTexture(int val);
 public:
     /**
     *   Use this to update the verticies that will be drawn by OpenGL.
@@ -201,6 +201,8 @@ private:
     bool normalized_;
 
     meshType m_MeshType;
+    int m_hasTexture;    ///Allow not using texture
+
 private:
     Fr_GL3Window* linktoMainWindow;
 };

@@ -35,17 +35,22 @@
 #include <fr_texture2d.h>
 
 typedef enum class NODETYPE {
-    FR_NODE = 0,
-    FR_GROUP = 1,
-    FR_TRANSFORM = 2,
-    FR_MANIPULATOR = 3,
-    FR_PRIMATIVESHADER = 4,
-    FR_LIGHT = 5,
-    FR_CAMERA = 6,
-    FR_ModelNode = 7,
-    FR_SCENE = 8,
-    FR_MESH = 9,
-    FR_GRID = 10
+    FR_NODE				= 0,
+    FR_GROUP 			= 1,
+    FR_TRANSFORM 		= 2,
+    FR_MANIPULATOR 		= 3,
+    FR_PRIMATIVESHADER 	= 4,
+    FR_LIGHT 			= 5,
+    FR_CAMERA 			= 6,
+    FR_ModelNode 		= 7,
+    FR_SCENE 			= 8,
+    FR_MESH 			= 9,
+    FR_GRID 			= 10,
+    //FR WIDGETS
+    FR_WIDGET 			= 11,
+    FR_WGROUP 			= 12,
+    FR_WINDOW 			= 13,
+    FR_LINE_WIDGET      = 14,
 }NODETYPE;
 
 /**

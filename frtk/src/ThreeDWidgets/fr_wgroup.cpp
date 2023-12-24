@@ -33,11 +33,11 @@ namespace FR {
         for (auto& widget : m_children) {
             if (widget->handle(events) != 0) {
                 return 0;  //We are done. Events is consumed and we no longer need to send it to other widgets.
-           }
+            }
         }
         return 1;//We didn't use the event, let other part of the system use it.
     }
-    Fr_WGroup::Fr_WGroup(glm::vec3 position, std::shared_ptr<std::vector <float>>verticies, std::shared_ptr<std::vector <float>> indicies, std::string label) :Fr_Widget(position, verticies, indicies, label)
+    Fr_WGroup::Fr_WGroup(glm::vec3 position, std::shared_ptr<std::vector <float>>verticies, std::shared_ptr<std::vector <unsigned int>> indicies, std::string label) :Fr_Widget(position, verticies, indicies, label)
     {
     }
     Fr_WGroup::~Fr_WGroup()
@@ -65,7 +65,7 @@ namespace FR {
     bool Fr_WGroup::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
     {
         for (auto& widget : m_children) {
-            if( widget->SetupCamera(projection, modelview))
+            if (widget->SetupCamera(projection, modelview))
                 return true;
         }
         return false;
@@ -79,9 +79,10 @@ namespace FR {
     void Fr_WGroup::Render(RenderInfo& info, const glm::mat4& modelview)
     {
         for (auto& widget : m_children) {
-            widget->Render(info,modelview);
+            widget->Render(info, modelview);
         }
     }
+
     int Fr_WGroup::find(std::shared_ptr<Fr_Widget>& wd) const
     {
         auto it = std::find(m_children.begin(), m_children.end(), wd);
@@ -105,7 +106,7 @@ namespace FR {
         }
         return -1; //error
     }
-   
+
     void Fr_WGroup::addWidget(std::shared_ptr <Fr_Widget> wid)
     {
         m_children.push_back(std::move(wid));

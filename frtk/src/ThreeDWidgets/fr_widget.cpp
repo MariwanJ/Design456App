@@ -26,22 +26,31 @@
 //
 
 #include<../src/ThreeDWidgets/fr_widget.h>
+#include <cmath>
+#include <glm/gtx/transform.hpp>
+
 namespace FR {
 
 
 
     Fr_Widget::Fr_Widget(const Fr_Widget& t) :m_position{ 0.f,0.f,0.f }, m_callback_(t.m_callback_),
-        m_verticies(t.m_verticies), m_indicies(t.m_indicies)
+        m_verticies(std::move(t.m_verticies)), m_indicies(std::move(t.m_indicies))
     {
         m_label = t.m_label;
         m_active = t.m_active;
         m_visible = t.m_visible;
+        m_Matrix = glm::mat4(1.0f);
+        type(NODETYPE::FR_WIDGET);
+ 
     }
 
-    Fr_Widget::Fr_Widget(glm::vec3 position, std::shared_ptr<std::vector <float>> verticies,
-        std::shared_ptr<std::vector <float>> indicies, std::string label) :m_callback_{ NULL },
-        m_label{ 0 }, m_draw{0}
+    Fr_Widget::Fr_Widget(glm::vec3 position, 
+        std::shared_ptr<std::vector <float>> verticies,
+        std::shared_ptr<std::vector <unsigned int>> indicies, 
+        std::string label) :m_callback_{ NULL },
+        m_label(""), m_draw{0}, m_verticies(std::move(verticies)), m_indicies(std::move(m_indicies))
     {
+ 
     }
 
     Fr_Widget::~Fr_Widget()
@@ -117,10 +126,11 @@ namespace FR {
     {
         m_fontSize = size_;
     }
-    void Fr_Widget::resize(std::shared_ptr<std::vector <float>>verticies_, std::shared_ptr<std::vector <float>> indicies_)
+    void Fr_Widget::resize(std::shared_ptr<std::vector<float>>verticies_, 
+                           std::shared_ptr<std::vector <unsigned int>> m_indicies)
     {
-        m_verticies = verticies_;
-        m_indicies = indicies_;
+        m_verticies = std::move(verticies_);
+        m_indicies = std::move(m_indicies);
     }
 
     bool Fr_Widget::Resizable()
@@ -219,5 +229,119 @@ namespace FR {
     void Fr_Widget::tabIndex(int index)
     {
         m_tabIndex =index;
+    }
+    void Fr_Widget::hasTexture(int val) {
+        m_hasTexture = val;
+    }
+    int Fr_Widget::hasTexture() {
+        return m_hasTexture; 
+    }
+    void Fr_Widget::Rotate(float x, float y, float z, float angle)
+    {
+        m_Matrix = glm::rotate(glm::mat4{ 1 }, glm::radians(angle), glm::vec3(x, y, z));
+
+    }
+    void Fr_Widget::Rotate(glm::vec3 axis, float angle)
+    {
+        m_Matrix = glm::rotate(glm::mat4{ 1 }, glm::radians(angle), axis);
+
+    }
+    void Fr_Widget::Translate(glm::vec3 v)
+    {
+        m_Matrix = glm::translate(glm::mat4{ 1 }, v);
+
+    }
+    void Fr_Widget::Translate(float x, float y, float z)
+    {
+        m_position = glm::vec3(x, y, z);
+        m_Matrix = glm::translate(m_Matrix, m_position);
+
+    }
+    void Fr_Widget::Scale(float x, float y, float z)
+    {
+        m_Matrix = glm::scale(m_Matrix, glm::vec3(x, y, z));
+
+    }
+    void Fr_Widget::Scale(glm::vec3 value)
+    {
+        m_Matrix = glm::scale(m_Matrix, value);
+
+    }
+    glm::mat4 Fr_Widget::GetMatrix()
+    {
+        return m_Matrix;
+    }
+
+    glm::mat4 Fr_Widget::GetInvers()
+    {
+        return (glm::inverse(m_Matrix));
+    }
+ 
+    void Fr_Widget::SetPosition(float x, float y, float z)
+    {
+        m_position = glm::vec3(x, y, z);
+        Translate(m_position);
+    }
+    void Fr_Widget::SetPosition(glm::vec3 pos)
+    {
+        m_position = pos;
+        Translate(pos);
+    }
+
+    void Fr_Widget::diffCalculateNormals() {
+        glm::vec3 m_min(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+        glm::vec3 m_max(std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min());
+        for (size_t i = 0; i < m_verticies->size(); i += 3) {
+            for (size_t j = 0; j < 3; ++j) {
+                
+                m_min[j] = std::min(m_min[j], m_verticies->at(i + j) );
+                m_max[j] = std::max(m_max[j], m_verticies->at(i + j) - m_min[j]);
+            }
+        }
+        if (m_normals->size() == 0)
+            m_normals->reserve(m_verticies->size());
+        m_normals->resize(m_verticies->size());
+        std::fill(m_normals->begin(), m_normals->end(), 0);
+        for (size_t i = 0; i < m_verticies->size() / 3; ++i) {
+            glm::vec3 vertex = GetVertex(i, m_verticies->data());
+            glm::vec3 normalized = (vertex / (m_max - m_min));
+            SetVertex(i, m_normals->data(), normalized);
+        }
+    }
+    glm::vec3 Fr_Widget::GetVertex(unsigned int index, const float vertices[]) {
+        return glm::vec3(
+            vertices[index * 3],
+            vertices[index * 3 + 1],
+            vertices[index * 3 + 2]
+        );
+    }
+
+    void Fr_Widget::SetVertex(unsigned int index, float vertices[], const glm::vec3& vertex) {
+        vertices[index * 3] = vertex[0];
+        vertices[index * 3 + 1] = vertex[1];
+        vertices[index * 3 + 2] = vertex[2];
+    }
+
+    void Fr_Widget::calcualteTextCoor(int width, int height) {
+        // Calculate texture coordinates based on vertex positions
+            // Loop through the vertices and calculate texture coordinates
+        if (m_normals->size() == 0)
+            diffCalculateNormals();
+        for (int i = 0; i < m_normals->size(); i += 3)
+        {
+            //Get the vertex position
+            GLfloat x = m_normals->at(i);
+            GLfloat y = m_normals->at(i + 1);
+            GLfloat z = m_normals->at(i + 2);
+
+            // Calculate texture coordinates based on vertex position
+            GLfloat u = (x);
+            GLfloat v = (y);
+
+            //   Store the texture coordinates in the vertices array
+            m_textCoord->push_back(u);
+            m_textCoord->push_back(v);
+
+        }
     }
 }

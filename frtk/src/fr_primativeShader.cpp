@@ -46,7 +46,7 @@ static const glm::mat4 kShadowMapBiasMatrix(
     0.25, 0.25, 0.25, 1.0);
 void Fr_PrimaitiveShader::defaultShaders()
 {
-    f_objectshader_ = "E:/Projects/Design456App/frtk/src/shaders/objectshader";
+    f_objectshader_ = "E:/Projects/Design456App/frtk/src/shaders/primativeshader";
     f_silhouette_ = "E:/Projects/Design456App/frtk/src/shaders/silhouette";
     ///f_texture_  = "E:/Projects/Design456App/frtk/src/shaders/texture";
 }

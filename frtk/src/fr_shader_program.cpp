@@ -66,7 +66,7 @@ void ShaderProgram::Enable() {
 void ShaderProgram::Disable() {
     glCheckFunc(glUseProgram(0));
 }
-//Send data to a variable inside the shader by the variable name which is retrived by get location.
+//Send data to a variable inside the shader by the variable name which is retrieved by get location.
 // send integer value to a variable that is integer in the shader
 void ShaderProgram::SetUniformInteger(const std::string& name, int value) {
     GLuint location = glGetUniformLocation(program_, name.c_str());
@@ -74,7 +74,7 @@ void ShaderProgram::SetUniformInteger(const std::string& name, int value) {
         DebugBreak();
     glCheckFunc(glUniform1i(location, value));
 }
-//Send data to a variable inside the shader by the variable name which is retrived by get location.
+//Send data to a variable inside the shader by the variable name which is retrieved by get location.
 //Send one float value to a variable that is float in the shader
 void ShaderProgram::SetUniformFloat(const std::string& name, float value) {
     GLuint location = glGetUniformLocation(program_, name.c_str());

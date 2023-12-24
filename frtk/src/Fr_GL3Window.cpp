@@ -27,8 +27,8 @@
 
 #include<Fr_GL3Window.h>
 
-//Remove me later : TODO
-#include<fr_mesh.h>
+ //Remove me later : TODO
+#include<fr_mesh.h>        
 #include<halfEdge/fr_new_mesh.h>
 #include<fr_modelnodeShader.h>
 //End remove me later
@@ -144,7 +144,12 @@ GLFWwindow* Fr_GL3Window::getCurrentGLWindow()
 {
     return pWindow;
 }
+/**
+ * Main Scene creation. It creates the cameras, Grid, Axis, and Navigation box (Not implemented yet) 
+ * 
+ */
 
+#include<ThreeDWidgets/fr_line_widget.h> ///this is a test TODO : REMOVE ME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
 void Fr_GL3Window::CreateScene()
 {
     scene = new Scene();//Save a link to the windows also.
@@ -168,6 +173,11 @@ void Fr_GL3Window::CreateScene()
     scene->AddNode(axis.Blue);
     scene->AddNode(tempBu);
     scene->AddNode(dd);
+
+    std::shared_ptr<std::vector<float>> vert = std::make_shared<std::vector<float>>(std::initializer_list<float>{10.f, 10.f, 0.f, 100.f, 100.f, 100.f});
+    std::shared_ptr < std::vector<unsigned int>> ind = std::make_shared<std::vector<unsigned int>>(std::initializer_list<unsigned int>{0,1});
+    std::shared_ptr<FR::Fr_Line_Widget> line = std::make_shared<FR::Fr_Line_Widget>(glm::vec3(0.0f, 0.0f, 0.0f), vert, ind,"");
+    WidgWindow->addWidget(line);
 }
 
 void Fr_GL3Window::resizeWindow(int xGl, int yGl, int wGl, int hGl)

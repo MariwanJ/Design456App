@@ -26,64 +26,68 @@
 //
 #ifndef FR_DRAW_H
 #define FR_DRAW_H
+
 #include<Fr_Core.h>
 #include<frtk.h>
 
-namespace FR{
-    //More will be added later 
+namespace FR {
+    //More will be added later
 
-    typedef enum twodType{
-    FR_LINE =0,
-    FR_OPEN_LOOP,
-    FR_CLOSED_LOOP, //This includes square, rectanble, triangle,pentagon, hexagon, star ..etc
-    FR_CIRCLE,
-    FR_CURVE,
-    FR_ARC,
-    FR_BSPLINE,
-};  
+    typedef enum twodType {
+        FR_LINE = 0,
+        FR_OPEN_LOOP,
+        FR_CLOSED_LOOP, //This includes square, rectangle, triangle,pentagon, hexagon, star ..etc
+        FR_CIRCLE,
+        FR_CURVE,
+        FR_ARC,
+        FR_BSPLINE,
+    };
 
+    class FRTK_API Fr_TwoD_Drawing {
+    public:
+        Fr_TwoD_Drawing();
+        Fr_TwoD_Drawing(Fr_TwoD_Drawing& obj);
+        Fr_TwoD_Drawing(twodType type, std::shared_ptr<std::vector<float>> verticies,
+            std::shared_ptr < std::vector<unsigned int>>indicies,
+            glm::vec4 color = glm::vec4(FR_123D));
+        ~Fr_TwoD_Drawing();
 
-class Fr_TwoD_Drawing {
-public:
-    Fr_TwoD_Drawing();
-    Fr_TwoD_Drawing(Fr_TwoD_Drawing& obj);
-    Fr_TwoD_Drawing(twodType type, std::shared_ptr<std::vector<float>> verticies, 
-                                   std::shared_ptr < std::vector<unsigned int>>&indicies,
-                                   glm::vec4 color= glm::vec4(FR_123D) );
-    ~Fr_TwoD_Drawing();
+        void Verticies(std::shared_ptr<std::vector<float>> vert);
+        std::shared_ptr<std::vector<float>>  Verticies();
 
-    void Verticies(std::shared_ptr<std::vector<float>> vert);
-    std::shared_ptr<std::vector<float>>  Verticies();
+   /*     void Indicies(std::shared_ptr < std::vector<unsigned int>>indc);
+        void TextureCoord(std::shared_ptr<std::vector<float>> tex);*/
 
-    void Indicies(std::shared_ptr < std::vector<unsigned int>>indc);
-    std::shared_ptr < std::vector<unsigned int>>Indicies();
+        std::shared_ptr < std::vector<unsigned int>>Indicies();
+        
+        std::shared_ptr<std::vector<float>> Normals();
+        std::shared_ptr<std::vector<float>> TextCoord();
 
-    int initializeVBO();
+        int initializeVBO();
 
-    void Type(twodType type);
-    twodType Type(void);
-    
-    virtual void Draw();
-    void lineWidth(unsigned int wid);
-    unsigned int lineWidth();
+        void Type(twodType type);
+        twodType Type(void);
 
-    void Color(glm::vec4 color);
-    glm::vec4 Color();
+        virtual void Draw();
+        void lineWidth(unsigned int wid);
+        unsigned int lineWidth();
 
-protected:
-    unsigned int m_vbo[NUM_OF_VBO_BUFFERS];
-    unsigned int m_vao;
-    std::shared_ptr<std::vector<float>> m_Vertices;
-    std::shared_ptr<std::vector<unsigned int>> m_Indices;
-    std::shared_ptr<std::vector<float>> m_Normals;
-    std::shared_ptr<std::vector<float>> m_Textcoord;
+        void Color(glm::vec4 color);
+        glm::vec4 Color();
 
-    std::string m_label;
-private:
-    twodType m_Type;
-    unsigned int m_lineWidth;
-    glm::vec4 m_Color;
-};
+    protected:
+        unsigned int m_vbo[NUM_OF_VBO_BUFFERS];
+        unsigned int m_vao;
+        std::shared_ptr<std::vector<float>> m_Vertices;
+        std::shared_ptr<std::vector<unsigned int>> m_Indices;
+        std::shared_ptr<std::vector<float>> m_Normals;
+        std::shared_ptr<std::vector<float>> m_Textcoord;
 
+        std::string m_label;
+    private:
+        twodType m_Type;
+        unsigned int m_lineWidth;
+        glm::vec4 m_Color;
+    };
 }
 #endif

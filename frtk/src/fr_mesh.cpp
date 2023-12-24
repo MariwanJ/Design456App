@@ -29,7 +29,7 @@
 #include <fr_mesh.h>
 
 Mesh::Mesh(const std::string& path) :
-    vbo_{ 0, 0, 0 },
+    vbo_{ 0, 0, 0 }, m_hasTexture(true),
     vao_(0), normalized_(false) {
     ReadFile(path, vertices_, normals_, indices_);
     InitializeVBO();
@@ -74,6 +74,16 @@ void Mesh::SetNormalizeMesh(bool value)
 bool Mesh::getNormalizeMesh()
 {
     return normalized_;
+}
+
+int Mesh::hasTexture()
+{
+    return m_hasTexture;
+}
+
+void Mesh::hasTexture(int val)
+{
+    m_hasTexture = val;
 }
 
 glm::vec3 Mesh::GetVertex(unsigned int index, const float vertices[]) {
@@ -253,22 +263,35 @@ void Mesh::CalculateNormals(const std::vector<float>& vertices,
     for (size_t i = 0; i < pre_normals.size(); ++i)
         SetVertex(i, normals.data(), glm::normalize(pre_normals[i]));
 }
+std::shared_ptr<std::vector<float>>Mesh::ConcatenateVectors(const std::vector<float>& v1, const std::vector<float>& v2) {
+    std::shared_ptr<std::vector<float>> result = std::make_shared<std::vector <float>>();
+    int v1Index = 0;
+    int v2Index = 0;
+
+    while (v1Index < v1.size() || v2Index < v2.size()) {
+        for (int i = 0; i < 3 && v1Index < v1.size(); i++) {
+            result->push_back(std::move(v1[v1Index]));
+            v1Index++;
+        }
+        for (int i = 0; i < 2 && v2Index < v2.size(); i++) {
+            result->push_back(std::move(v2[v2Index]));
+            v2Index++;
+        }
+    }
+    return result;
+}
 
 void Mesh::InitializeVBO(){
-    glCheckFunc(glGenBuffers(NUM_OF_VBO_BUFFERS, vbo_)); //3 
+std::shared_ptr<std::vector<float>> result = ConcatenateVectors(vertices_, textcoord_);
+glCheckFunc(glGenBuffers(NUM_OF_VBO_BUFFERS, vbo_)); //3 
 glCheckFunc(glGenVertexArrays(1, &vao_));
 glCheckFunc(glBindVertexArray(vao_));
+
 //VERTICIES 
 glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]));
-glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float)* vertices_.size(), vertices_.data(), GL_STATIC_DRAW));
+glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float)* result->size(), result->data(), GL_STATIC_DRAW));
 glCheckFunc(glEnableVertexAttribArray(FR_POSITION_VB));
 glCheckFunc(glVertexAttribPointer(FR_POSITION_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL));                //POSITION_VB = 0
-
-///Texture 
-glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[3]));
-glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float)* textcoord_.size(), textcoord_.data(), GL_STATIC_DRAW));
-glCheckFunc(glEnableVertexAttribArray(FR_TEXCOORD_VB));
-glCheckFunc(glVertexAttribPointer(FR_TEXCOORD_VB, 2, GL_FLOAT, GL_FALSE, 0, NULL));        //TEXCOORD_VB=1   NOTE: SHADER MUST HAVE THE SAME SEQUENCE
 
 //this is the object shader - look at the shader, it uses uniform. so the binding MUST be uniform
 //NORMALS
