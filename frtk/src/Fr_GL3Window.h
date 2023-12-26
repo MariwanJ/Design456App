@@ -45,6 +45,14 @@
 #include <ThreeDWidgets/fr_window.h>
 
 #define MAX_CAMERAS 8  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING CameraList menu
+typedef struct  {
+    double Old_x = 0;  //SAVE X AND Y OF LAST CLICK INSIDE GLFW
+    double Old_y = 0;
+    int click = 0;
+    int double_click = 0;
+    bool Pressed = false;
+    int Button = 0;
+}glfwMouseEvent;
 
 typedef struct {
     float MouseXYScale;
@@ -241,6 +249,7 @@ protected:
 
     int imguimzo_init();
 
+    static glfwMouseEvent mouseEvent;
 private:
 
     /** GLFW Callbacks*/
@@ -321,14 +330,13 @@ private:
      * \param yoffset   last Y-Axis position of the mouse cursor
      */
     void cameraRotate(GLFWwindow* win, double xoffset, double yoffset);
+    glm::vec3 computeSphereCoordinates(double x, double y);
     /**
      * Left mouse button is clicked.
      *
      * \param win   GLFW Main window pointer
-     * \param xoffset   last X-Axis position of the mouse cursor
-     * \param yoffset   last Y-Axis position of the mouse cursor
      */
-    void LeftMouseClick(GLFWwindow* win, double xoffset, double yoffset);
+    void LeftMouseClick(GLFWwindow* win);
     /**
      * Right mouse button is clicked.
      *
@@ -336,7 +344,7 @@ private:
      * \param xoffset   last X-Axis position of the mouse cursor
      * \param yoffset   last Y-Axis position of the mouse cursor
      */
-    void RightMouseClick(GLFWwindow* win, double xoffset, double yoffset);
+    void RightMouseClick(GLFWwindow* win);
     /**
      * Middle mouse button is clicked.
      *
@@ -344,7 +352,7 @@ private:
      * \param xoffset   last X-Axis position of the mouse cursor
      * \param yoffset   last Y-Axis position of the mouse cursor
      */
-    void MiddMouseClick(GLFWwindow* win, double xoffset, double yoffset);
+    void MiddMouseClick(GLFWwindow* win);
     /**
      * Left mouse button is released
      *
@@ -352,7 +360,7 @@ private:
      * \param xoffset   last X-Axis position of the mouse cursor
      * \param yoffset   last Y-Axis position of the mouse cursor
      */
-    void LeftMouseRelease(GLFWwindow* win, double xoffset, double yoffset);
+    void LeftMouseRelease(GLFWwindow* win);
     /**
     * Right mouse button is released
     *
@@ -360,7 +368,7 @@ private:
     * \param xoffset   last X-Axis position of the mouse cursor
     * \param yoffset   last Y-Axis position of the mouse cursor
     */
-    void RightMouseRelease(GLFWwindow* win, double xoffset, double yoffset);
+    void RightMouseRelease(GLFWwindow* win);
     /**
      * Middle mouse button is released
      *
@@ -368,7 +376,7 @@ private:
      * \param xoffset   last X-Axis position of the mouse cursor
      * \param yoffset   last Y-Axis position of the mouse cursor
      */
-    void MiddMouseRelease(GLFWwindow* win, double xoffset, double yoffset);
+    void MiddMouseRelease(GLFWwindow* win);
     /**
      * Left mouse DND
      *
@@ -546,7 +554,7 @@ private:
     bool showOpenDialog;
     //will be true if rotate/pan starts.
     static bool MouseOnce;
-    float yaw, pitch, roll;
+    float phi, theta;
 
     //Camera rotation - mouse callback
     float radiusXYZ;

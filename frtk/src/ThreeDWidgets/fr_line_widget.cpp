@@ -53,10 +53,12 @@ void Fr_Line_Widget::draw()
 
 void Fr_Line_Widget::lbl_draw()
 {
+    lineObj->Draw();
 }
 
 void Fr_Line_Widget::lbl_redraw()
 {
+    lbl_draw();
 }
 int Fr_Line_Widget::handle(int e)
 {
@@ -65,7 +67,14 @@ int Fr_Line_Widget::handle(int e)
     case FR_PUSH: FRTK_CORE_INFO("Line Widget is clicked");
         return 1; //Consume the event
     case FR_RELEASE: FRTK_CORE_INFO("Line Widget is released");
+        return 1;
     }
     return 0;
 }
+void Fr_Line_Widget::Render(RenderInfo& info, const glm::mat4& modelview) {
+    if (!active_)
+        return;
+    draw();
+    lbl_draw();
+    }
 }

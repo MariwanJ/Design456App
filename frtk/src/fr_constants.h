@@ -246,12 +246,6 @@ class Fr_GL3Window; // compiler should define that later.
 
 //static variables used for mouse events inside fr_glw.
 //TODO : FIXME : Remove these .. we shouldn't have them here. 
-static int glfw_e_x=0;  //SAVE X AND Y OF LAST CLICK INSIDE GLFW
-static int glfw_e_y = 0;
-static int glfw_click = 0;
-static int glfw_double_click = 0;
-static bool glfw_MouseClicked = false;
-static int glfw_MouseButton = 0;
 static bool CamerOptionVisible=false;
 
 

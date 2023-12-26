@@ -44,17 +44,22 @@ static int counter = 0;
 Fr_GL3Window* Fr_GL3Window::s_Fr_GLFWwindow = nullptr;
 eventData Fr_GL3Window::m_GLFWevents = { -1,-1,-1,-1,-1 };
 
+glfwMouseEvent Fr_GL3Window::mouseEvent = {0,0,0,0,false,0};
+
+Scene* Fr_GL3Window::scene = nullptr;
+bool Fr_GL3Window::MouseOnce = true;
+
 static void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
 }
 
+
 /**
 * Class constructor -
 * FIXME: CLEANUP CODE
 */
-Scene* Fr_GL3Window::scene = nullptr;
-bool Fr_GL3Window::MouseOnce = true;
+
 Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::string l = "GLFW ImGUI Test") :
     WidgWindow(NULL),
     active_camera_(CameraList::PERSPECTIVE),
@@ -64,11 +69,10 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     _y = y;
     _w = w;
     _h = h;
-    mouseDefaults.MouseScrollScale = 2;
-    mouseDefaults.MouseXYScale = 1;
-    yaw = -90.0f;
-    pitch = 0.0f;  //
-    roll = 0.0f;  //Z axis
+    mouseDefaults.MouseScrollScale = 1.2;
+    mouseDefaults.MouseXYScale = 0.0001f;
+    phi = -90.0f;
+    theta = 0;
     gl_version_major = 4;
     gl_version_minor = 6;
     glfwSetErrorCallback(error_callback);
@@ -161,6 +165,7 @@ void Fr_GL3Window::CreateScene()
     /*
       * Add here the nodes - Grid, and XYZ axis
       */
+    scene->AddNode(WidgWindow);
     scene->AddNode(CreateSunTop());
     scene->AddNode(CreateSunBottom());
     tempBu = bunny();
@@ -178,6 +183,7 @@ void Fr_GL3Window::CreateScene()
     std::shared_ptr < std::vector<unsigned int>> ind = std::make_shared<std::vector<unsigned int>>(std::initializer_list<unsigned int>{0,1});
     std::shared_ptr<FR::Fr_Line_Widget> line = std::make_shared<FR::Fr_Line_Widget>(glm::vec3(0.0f, 0.0f, 0.0f), vert, ind,"");
     WidgWindow->addWidget(line);
+
 }
 
 void Fr_GL3Window::resizeWindow(int xGl, int yGl, int wGl, int hGl)

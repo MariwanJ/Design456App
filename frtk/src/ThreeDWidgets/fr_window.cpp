@@ -38,8 +38,10 @@ namespace FR {
     Fr_Window::Fr_Window(glm::vec3 position, std::shared_ptr<std::vector<float>> verticies,
                          std::shared_ptr<std::vector<unsigned int>> indicies, std::string label) : 
                         Fr_WGroup(position,verticies,indicies,label),
-                        m_layer(std::make_shared<Fr_ImGuiLayer>())
+                        m_layer(nullptr)
     {
+        m_layer = std::make_shared<Fr_ImGuiLayer>();
+        m_layer->Visible(true);
     }
     /**
      * Default constructor required by Fr_GL3Window.
@@ -47,7 +49,8 @@ namespace FR {
      */
     Fr_Window::Fr_Window() :Fr_WGroup(glm::vec3(0.f,0.f,0.f),NULL,NULL,"")
     {
-
+        m_layer = std::make_shared<Fr_ImGuiLayer>();
+        m_layer->Visible(true);
     }
 
     Fr_Window::~Fr_Window()

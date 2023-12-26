@@ -113,7 +113,7 @@ namespace FR {
         switch (m_Type) {
         case FR_LINE: {
             glCheckFunc(glBindVertexArray(m_vao));
-            glCheckFunc(glDrawElements(GL_LINE, m_Indices->size(), GL_UNSIGNED_INT, 0));
+            glCheckFunc(glDrawElements(GL_LINES, m_Indices->size(), GL_UNSIGNED_INT, 0));
             glCheckFunc(glBindVertexArray(0));
             break;
         }

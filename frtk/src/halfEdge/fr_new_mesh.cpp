@@ -416,14 +416,6 @@ void Shape::InitializeVBO() {
     glCheckFunc(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL));
     glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[3]));
     glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int), indices_.data(), GL_STATIC_DRAW));
-
-    /////Texture
-    //if(hasTexture() == 1)
-    //    glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]));
-    //glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * textcoord_.size(), textcoord_.data(), GL_STATIC_DRAW));
-    //glCheckFunc(glEnableVertexAttribArray(TEXCOORD_VB));
-    //glCheckFunc(glVertexAttribPointer(TEXCOORD_VB, 2, GL_FLOAT, GL_FALSE, 0, NULL));        //TEXCOORD_VB=1   NOTE: SHADER MUST HAVE THE SAME SEQUENCE
-
     //this is the object shader - look at the shader, it uses uniform. so the binding MUST be uniform
     //NORMALS
     glCheckFunc(glBindBuffer(GL_UNIFORM_BUFFER, vbo_[2]));          //Using GL_UNIFORM_BUFFER draw the line around the object but now nothing? why?

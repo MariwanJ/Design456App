@@ -77,55 +77,55 @@ void Fr_GL3Window::mouse_button_callback(GLFWwindow* win, int button, int action
     m_GLFWevents.lastMod = mods;
 
     if (GLFW_PRESS == action) {
-        glfw_MouseClicked = 1; //Pressed
+        mouseEvent.Pressed = 1; //Pressed
     }
     else {
-        glfw_MouseClicked = 0; //Released
+        mouseEvent.Pressed = 0; //Released
     }
-    glfw_MouseButton = button;
+    mouseEvent.Button= button;
 
     auto shftL = glfwGetKey(win, GLFW_KEY_LEFT_SHIFT);
     auto shftR = glfwGetKey(win, GLFW_KEY_RIGHT_SHIFT);
 
-    if (glfw_MouseButton == GLFW_MOUSE_BUTTON_LEFT && glfw_MouseClicked == 1)
+    if (mouseEvent.Button == GLFW_MOUSE_BUTTON_LEFT && mouseEvent.Pressed== 1)
     {        //FRTK_CORE_INFO("MOUSE LEFT");
-        LeftMouseClick(win,glfw_e_x, glfw_e_y );
+        LeftMouseClick(win );
         if (WidgWindow->handle(FR::FR_PUSH) == 0) //Mouse click
             return;  //Events is consumed - no more action required
     }
-    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_LEFT && glfw_MouseClicked == 0)
+    else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_LEFT && mouseEvent.Pressed == 0)
     {
         //FRTK_CORE_INFO("MOUSE LEFT");
-        LeftMouseRelease(win,glfw_e_x, glfw_e_y);
+        LeftMouseRelease(win);
         if (WidgWindow->handle(FR::FR_RELEASE) == 0) //Mouse click
             return;  //Events is consumed - no more action required
     }
 
-    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_RIGHT && glfw_MouseClicked == 1)
+    else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_RIGHT && mouseEvent.Pressed == 1)
     {
-        RightMouseClick(win,glfw_e_x, glfw_e_y);
+        RightMouseClick(win);
         if (WidgWindow->handle(FR::FR_PUSH) == 0) //Mouse click
             return;  //Events is consumed - no more action required
     }
-    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_RIGHT && glfw_MouseClicked == 0)
+    else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_RIGHT && mouseEvent.Pressed == 0)
     {
-        RightMouseRelease(win,glfw_e_x, glfw_e_y);
+        RightMouseRelease(win);
         if (WidgWindow->handle(FR::FR_RELEASE) == 0) //Mouse click
             return;  //Events is consumed - no more action required
     }
 
-    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_MIDDLE && glfw_MouseClicked == 1)
+    else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_MIDDLE && mouseEvent.Pressed == 1)
     {
         //TODO : Not sure if widgets needs this event
-        MiddMouseClick(win,glfw_e_x, glfw_e_y);
+        MiddMouseClick(win);
         if (WidgWindow->handle(FR::FR_PUSH) == 0) //Mouse click
             return;
     }
 
-    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_MIDDLE && glfw_MouseClicked == 0)
+    else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_MIDDLE && mouseEvent.Pressed == 0)
     {
         //TODO : Not sure if widgets needs this event
-        MiddMouseRelease(win,glfw_e_x, glfw_e_y);
+        MiddMouseRelease(win);
         if (WidgWindow->handle(FR::FR_RELEASE) == 0) //Mouse click
             return;
     }
@@ -137,38 +137,36 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
 
     auto shftL = glfwGetKey(win, GLFW_KEY_LEFT_SHIFT);
     auto shftR = glfwGetKey(win, GLFW_KEY_RIGHT_SHIFT);
-    glfw_e_x = xpos;
-    glfw_e_y = ypos;
 
-    if (glfw_MouseButton == GLFW_MOUSE_BUTTON_LEFT && glfw_MouseClicked == 1) 
+    if (mouseEvent.Button == GLFW_MOUSE_BUTTON_LEFT && mouseEvent.Pressed== 1)
     {
-        LeftMouseDRAG(win, glfw_e_x, glfw_e_y);
+        LeftMouseDRAG(win, xpos, ypos);
         if (WidgWindow->handle(FR::FR_LEFT_DRAG_PUSH)==0) //Mouse click
             return;  //Events is consumed - no more action required
     }
-    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_LEFT && glfw_MouseClicked == 0)
+    else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_LEFT && mouseEvent.Pressed== 0)
     {
-        LeftMouseDRAGrelease(win, glfw_e_x, glfw_e_y);
+        LeftMouseDRAGrelease(win, xpos, ypos);
         if (WidgWindow->handle(FR::FR_LEFT_DRAG_RELEASE) == 0) //Mouse click
             m_GLFWevents = { -1,-1,-1,-1,-1 };
             return;  //Events is consumed - no more action required
     }
 
-    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_RIGHT && glfw_MouseClicked == 1)
+    else if (mouseEvent.Button== GLFW_MOUSE_BUTTON_RIGHT && mouseEvent.Pressed== 1)
     {
-        RightMouseDRAG(win, glfw_e_x, glfw_e_y);
+        RightMouseDRAG(win, xpos,ypos);
         if (WidgWindow->handle(FR::FR_RIGHT_DRAG_PUSH) == 0) //Mouse click
             return;  //Events is consumed - no more action required
     }
-    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_RIGHT && glfw_MouseClicked == 0)
+    else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_RIGHT && mouseEvent.Pressed== 0)
     {
-        RightMouseDRAGrelease(win, glfw_e_x, glfw_e_y);
+        RightMouseDRAGrelease(win, xpos, ypos);
         if (WidgWindow->handle(FR::FR_RIGHT_DRAG_RELEASE) == 0) //Mouse click
             m_GLFWevents = { -1,-1,-1,-1,-1 };
             return;  //Events is consumed - no more action required
     }
 
-    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_MIDDLE && glfw_MouseClicked == 1) 
+    else if (mouseEvent.Button== GLFW_MOUSE_BUTTON_MIDDLE && mouseEvent.Pressed == 1)
     {
         if (shftL == GLFW_PRESS || shftR == GLFW_PRESS) {
          //   FRTK_CORE_INFO("MOUSE PAN");
@@ -182,10 +180,10 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
         }
     }
 
-    else if (glfw_MouseButton == GLFW_MOUSE_BUTTON_MIDDLE && glfw_MouseClicked == 0)
+    else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_MIDDLE && mouseEvent.Pressed == 0)
     {
         //TODO : Not sure if widgets needs this event
-        MiddMouseDRAGrelease(win, glfw_e_x, glfw_e_y);
+        MiddMouseDRAGrelease(win, xpos, ypos);
         if (WidgWindow->handle(FR::FR_RELEASE) == 0) //Mouse click 
             m_GLFWevents = { -1,-1,-1,-1,-1 };
             return;
@@ -234,112 +232,110 @@ void Fr_GL3Window::MouseMovement(double xoffset, double yoffset)
 }
 
 void Fr_GL3Window::cameraPAN(GLFWwindow* win, double xpos, double ypos)
-{
-    if (MouseOnce)
-    {
-        glfw_e_x = xpos * mouseDefaults.MouseXYScale;
-        glfw_e_y = ypos * mouseDefaults.MouseXYScale;
-        MouseOnce = false;
-    }
+{   
     userData_ data;
-    //std::cout << pitch << "pitch yaw " << yaw << std::endl;
-    auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
+    if (mouseEvent.Old_x == 0 || mouseEvent.Old_y == 0) {
+        //avoid having a jump and just make the delta = 0
+        mouseEvent.Old_x = xpos;
+        mouseEvent.Old_y = ypos;   
 
-    activeCamera->getUserData(data);
-    radiusXYZ = sqrt(data.camPosition_.x * data.camPosition_.x +
+        radiusXYZ = sqrt(data.camPosition_.x * data.camPosition_.x +
         data.camPosition_.y * data.camPosition_.y +
         data.camPosition_.z * data.camPosition_.z);
 
-    float xoffset = xpos * mouseDefaults.MouseXYScale - glfw_e_x;
-    float yoffset = (glfw_e_y - ypos * mouseDefaults.MouseXYScale) * data.aspectRatio_;
-    glfw_e_x = xpos * mouseDefaults.MouseXYScale;
-    glfw_e_y = ypos * mouseDefaults.MouseXYScale;
+    }
+    double deltax = mouseEvent.Old_x - xpos;
+    double deltay = mouseEvent.Old_y - ypos;
 
-    yaw += xoffset;
-    pitch += yoffset;
+  
+    auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
 
-    if (pitch > 89.999990f)
-        pitch = 89.999990f;
-    if (pitch < -89.999990f)
-        pitch = -89.999990f;
+    activeCamera->getUserData(data);
 
-    glm::vec3 direction;
-    //TODO : CHECK ME .. DO WE SHOULD HAVE BOTH OR ONE OF THEM??
+    float xoffset = deltax * mouseDefaults.MouseXYScale  ;
+    float yoffset = deltay * mouseDefaults.MouseXYScale  ;  //should we do this?
+ 
 
-    data.camPosition_.x = radiusXYZ * cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    data.camPosition_.y = radiusXYZ * cos(glm::radians(yaw)) * sin(glm::radians(pitch));
+     data.camPosition_.x += deltax ;
+     data.camPosition_.y += deltay;
 
-    // data.camPosition_.x = radiusXYZ * cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    // data.camPosition_.y = radiusXYZ * cos(glm::radians(yaw)) * sin(glm::radians(pitch));
-
-     //data.direction_.z =  sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-     // data.direction_ = glm::normalize(data.direction_);
+     data.direction_.x += deltax ;
+     data.direction_.y += deltay ;
+ 
     activeCamera->setUserData(data);
+    mouseEvent.Old_x = xpos;
+    mouseEvent.Old_y = ypos;
 }
-
+ 
 void Fr_GL3Window::cameraRotate(GLFWwindow* win, double xpos, double ypos)
 {
     userData_ data;
     auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
     activeCamera->getUserData(data);
 
-    if (MouseOnce)
+    if (mouseEvent.Old_x == 0 && mouseEvent.Old_y == 0)
     {
-        glfw_e_x = xpos * mouseDefaults.MouseXYScale;
-        glfw_e_y = ypos * mouseDefaults.MouseXYScale;
-        MouseOnce = false;
+        mouseEvent.Old_x = xpos * mouseDefaults.MouseXYScale;
+        mouseEvent.Old_y = ypos * mouseDefaults.MouseXYScale;  
         radiusXYZ = sqrt(data.camPosition_.x * data.camPosition_.x +
             data.camPosition_.y * data.camPosition_.y +
             data.camPosition_.z * data.camPosition_.z);
+        phi = 0;
+        theta = 0;
     }
 
-    float delta_X = xpos * mouseDefaults.MouseXYScale - glfw_e_x;
-    float delta_Y = (ypos * mouseDefaults.MouseXYScale - glfw_e_y);
-    glfw_e_x = xpos * mouseDefaults.MouseXYScale;
-    glfw_e_y = ypos * mouseDefaults.MouseXYScale;
+    
 
-    yaw += delta_X;
-    pitch += delta_Y;
+    float delta_X = xpos * mouseDefaults.MouseXYScale - mouseEvent.Old_x;
+    float delta_Y = (ypos * mouseDefaults.MouseXYScale - mouseEvent.Old_y);
 
-    if (pitch > 89.999990f)
-        pitch = 89.999990f;
-    if (pitch < -89.999990f)
-        pitch = -89.999990f;
+    if (delta_X>0)
+        phi+= 1;
+    else 
+        phi += -1;
+
+    if (delta_Y > 0)
+        theta += 1;
+    else
+        theta = -1;
+
 
     glm::vec3 direction;
     //std::cout << pitch << "pitch yaw " << yaw << std::endl;
-    data.camPosition_.x = radiusXYZ * cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    data.camPosition_.y = radiusXYZ * cos(glm::radians(yaw)) * sin(glm::radians(pitch));
-    data.camPosition_.z = radiusXYZ * sin(glm::radians(yaw));
+    data.camPosition_.x = radiusXYZ   *sin(glm::radians(phi));
+    data.camPosition_.y = radiusXYZ  * cos(glm::radians(phi));
+   
     activeCamera->setUserData(data);
+    mouseEvent.Old_x = xpos * mouseDefaults.MouseXYScale;
+    mouseEvent.Old_y = ypos * mouseDefaults.MouseXYScale;
 }
 
-void Fr_GL3Window::LeftMouseClick(GLFWwindow* win, double xoffset, double yoffset)
+void Fr_GL3Window::LeftMouseClick(GLFWwindow* win)
 {
 
 }
 
-void Fr_GL3Window::RightMouseClick(GLFWwindow* win, double xoffset, double yoffset)
+void Fr_GL3Window::RightMouseClick(GLFWwindow* win)
 {
 }
 
 
-void Fr_GL3Window::MiddMouseClick(GLFWwindow* win, double xoffset, double yoffset)
+void Fr_GL3Window::MiddMouseClick(GLFWwindow* win)
 {
 
 }
 
-void Fr_GL3Window::LeftMouseRelease(GLFWwindow* win, double xoffset, double yoffset)
+void Fr_GL3Window::LeftMouseRelease(GLFWwindow* win)
 {
 
 }
 
-void Fr_GL3Window::RightMouseRelease(GLFWwindow* win, double xoffset, double yoffset)
+void Fr_GL3Window::RightMouseRelease(GLFWwindow* win)
 {
 }
 
 
-void Fr_GL3Window::MiddMouseRelease(GLFWwindow* win, double xoffset, double yoffset)
+void Fr_GL3Window::MiddMouseRelease(GLFWwindow* win)
 {
 
 }

@@ -263,10 +263,6 @@ int Fr_GL3Window::imgui_ViewPort()
     ImGui::Begin("View Port");
     float wWidth = (float)ImGui::GetWindowWidth();
     float wHeight = (float)ImGui::GetWindowHeight();
-    FRTK_CORE_INFO("wWidth");
-    FRTK_CORE_INFO(wWidth);
-    FRTK_CORE_INFO("wHeight");
-    FRTK_CORE_INFO( wHeight);
 
     setPortViewDimension(ImVec4(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, wWidth, wHeight));
    // Camera::aspectRatio_ = wWidth / wHeight;    //Must be updated always
