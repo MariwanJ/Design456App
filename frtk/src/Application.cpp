@@ -234,6 +234,9 @@ void Fr_GL3Window::MouseMovement(double xoffset, double yoffset)
 void Fr_GL3Window::cameraPAN(GLFWwindow* win, double xpos, double ypos)
 {   
     userData_ data;
+    auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
+    activeCamera->getUserData(data);
+
     if (mouseEvent.Old_x == 0 || mouseEvent.Old_y == 0) {
         //avoid having a jump and just make the delta = 0
         mouseEvent.Old_x = xpos;
@@ -246,21 +249,17 @@ void Fr_GL3Window::cameraPAN(GLFWwindow* win, double xpos, double ypos)
     }
     double deltax = mouseEvent.Old_x - xpos;
     double deltay = mouseEvent.Old_y - ypos;
-
-  
-    auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
-
-    activeCamera->getUserData(data);
+ 
 
     float xoffset = deltax * mouseDefaults.MouseXYScale  ;
     float yoffset = deltay * mouseDefaults.MouseXYScale  ;  //should we do this?
  
 
-     data.camPosition_.x += deltax ;
-     data.camPosition_.y += deltay;
+     data.camPosition_.x += xoffset;
+     data.camPosition_.y += yoffset;
 
-     data.direction_.x += deltax ;
-     data.direction_.y += deltay ;
+     data.direction_.x += xoffset ;
+     data.direction_.y += yoffset;
  
     activeCamera->setUserData(data);
     mouseEvent.Old_x = xpos;

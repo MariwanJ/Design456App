@@ -70,7 +70,7 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     _w = w;
     _h = h;
     mouseDefaults.MouseScrollScale = 1.2;
-    mouseDefaults.MouseXYScale = 0.0001f;
+    mouseDefaults.MouseXYScale = 0.1f;
     phi = -90.0f;
     theta = 0;
     gl_version_major = 4;
