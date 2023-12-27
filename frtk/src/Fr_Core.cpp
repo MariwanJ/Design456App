@@ -26,6 +26,7 @@ namespace ResourcePath {
 		return mergedPath;
 	}
 	bool checkIfFileExists(const std::string& filePath) {
+		return true;
 	}
 	std::string exePath() {
 		return "";
@@ -91,4 +92,4 @@ namespace ResourcePath {
 		return pathA + "/" + pathB;
 	}
 #endif
-}
+};

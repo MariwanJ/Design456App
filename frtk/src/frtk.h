@@ -57,11 +57,11 @@
 #include <vector>
 #include <string>
 
-//for ResourcePath
+ //for ResourcePath
 #if defined(_WIN32)
 #include <windows.h>
 #include <Shlwapi.h>
-#include <io.h> 
+#include <io.h>
 
 #define access _access_s
 #endif
@@ -86,6 +86,5 @@
 
 #endif
 //end for ResourcePath
-
 
 #endif
