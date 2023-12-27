@@ -133,7 +133,6 @@ static unsigned char GLLogCall() {
 //Create DLL/SO or link statically ?
 
 #ifdef FRTK_PLATFORM_WINDOWS  //PLATFORM CHECK
-#include <Windows.h>
 #ifdef FR_BUILD_STATIC
 #define FRTK_API 			//NOTHING
 #else
@@ -182,22 +181,8 @@ namespace FR {
         FR_MOUSE_MIDDLE,
         FR_MOUSE_LEFT,
         FR_MOUSE_MOVE,
-
-
-
     };
 
-    // https://stackoverflow.com/questions/1528298/get-path-of-executable
-    namespace ResourcePath {
-        std::string getExecutablePath();
-        std::string getExecutableDir();
-        std::string mergePaths(std::string pathA, std::string pathB);
-        bool checkIfFileExists(const std::string& filePath);
-        std::string exePath();
-        std::string meshPath();
-        std::string shaderPath();
-        std::string imgPath();
 
-    };
 };
 #endif

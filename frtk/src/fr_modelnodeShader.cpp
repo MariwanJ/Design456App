@@ -107,7 +107,7 @@ void ModelNode::SetMesh(const std::string& mesh) {
 }
 
 void ModelNode::LoadLights(ShaderProgram* program, const std::vector<LightInfo>& lights) {
-    unsigned int nlights = std::min(lights.size(), kMaxLights);
+    unsigned int nlights = min(lights.size(), kMaxLights);
     program->SetUniformInteger("nlights", nlights);
     for (size_t i = 0; i < nlights; ++i) {
         auto uniformVarNameInObjShader = "lights[" + std::to_string(i) + "].";
