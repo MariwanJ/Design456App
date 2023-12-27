@@ -132,3 +132,17 @@ project "frtk"
 			"Glad",
             "objloader",
     }
+   
+---Dependencies should be under FRTK not Design456App. We hide them inside FRTK lib. 
+group "Dependencies"
+	include "frtk/vendor/GLFW"
+	include "frtk/vendor/Glad"
+	include "frtk/vendor/imGui"
+	include "frtk/vendor/ImGuizmo"
+	include "frtk/vendor/spdlog"
+	include "frtk/vendor/yaml-cpp"
+	include "frtk/vendor/stb_image"
+	include "frtk/vendor/objloader"   
+group ""
+
+include "frtk"
