@@ -187,6 +187,17 @@ namespace FR {
         
     };
 
-
+// https://stackoverflow.com/questions/1528298/get-path-of-executable
+namespace ResourcePath {
+        std::string getExecutablePath();
+        std::string getExecutableDir();
+        std::string mergePaths(std::string pathA, std::string pathB);
+        bool checkIfFileExists(const std::string& filePath);
+        std::string exePath();
+        std::string meshPath();
+        std::string shaderPath();
+        std::string imgPath();
+        
+    };
 }
 #endif
