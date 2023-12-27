@@ -31,18 +31,10 @@ IncludeDir["objloader"] = "../frtk/vendor/objloader"
 --Projects
 --Include other lua scripts and group them as dependecies
 group "Dependencies"
-      include "frtk/vendor/GLFW"
-      include "frtk/vendor/Glad"
-      include "frtk/vendor/imGui"
-      include "frtk/vendor/ImGuizmo"
-	  include "frtk/vendor/spdlog"
-	  include "frtk/vendor/yaml-cpp"
-	  include "frtk/vendor/stb_image"
-      include "frtk/vendor/objloader"  
+      include "frtk/"
 
 -- Don't remove below line. Without this, the following names will be grouped as dependecies.
 group ""
-
 
 --to inlcude other lua scritp-project
 include "frtk"
