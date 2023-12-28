@@ -133,7 +133,6 @@ static unsigned char GLLogCall() {
 //Create DLL/SO or link statically ?
 
 #ifdef FRTK_PLATFORM_WINDOWS  //PLATFORM CHECK
-#include <Windows.h>
 #ifdef FR_BUILD_STATIC
 #define FRTK_API 			//NOTHING
 #else
@@ -154,39 +153,36 @@ static unsigned char GLLogCall() {
 
 namespace FR {
     enum FR_EVENTS {
-        FR_NO_EVENT             = 0,     //DONT CARE EVENT
-        FR_PUSH                    ,
-        FR_RELEASE                 ,
-        FR_ENTER                   ,
-        FR_DRAG                    ,
-        FR_FOCUS                   ,
-        FR_KEYBOARD                ,
-        FR_CLOSE                   ,
-        FR_MOVE                    ,
-        FR_DEACIVATE               ,
-        FR_ACTIVE                  ,
-        FR_HIDE                    ,
-        FR_SHOW                    ,
-        FR_LEFT_DRAG_PUSH          ,
-        FR_LEFT_DRAG_RELEASE       ,
+        FR_NO_EVENT = 0,     //DONT CARE EVENT
+        FR_PUSH,
+        FR_RELEASE,
+        FR_ENTER,
+        FR_DRAG,
+        FR_FOCUS,
+        FR_KEYBOARD,
+        FR_CLOSE,
+        FR_MOVE,
+        FR_DEACIVATE,
+        FR_ACTIVE,
+        FR_HIDE,
+        FR_SHOW,
+        FR_LEFT_DRAG_PUSH,
+        FR_LEFT_DRAG_RELEASE,
 
-        FR_MIDDLE_DRAG_PUSH        ,
-        FR_MIDDLE_DRAG_RELEASE     ,
-        
-        FR_RIGHT_DRAG_PUSH         ,
-        FR_RIGHT_DRAG_RELEASE      ,
+        FR_MIDDLE_DRAG_PUSH,
+        FR_MIDDLE_DRAG_RELEASE,
 
-        FR_WINDOW_RESIZE           ,
-        FR_WINDOW_MINIMIZE         ,
-        FR_MOUSE_RIGHT             ,
-        FR_MOUSE_MIDDLE            ,
-        FR_MOUSE_LEFT              ,
-        FR_MOUSE_MOVE              ,
+        FR_RIGHT_DRAG_PUSH,
+        FR_RIGHT_DRAG_RELEASE,
 
-
-        
+        FR_WINDOW_RESIZE,
+        FR_WINDOW_MINIMIZE,
+        FR_MOUSE_RIGHT,
+        FR_MOUSE_MIDDLE,
+        FR_MOUSE_LEFT,
+        FR_MOUSE_MOVE,
     };
 
 
-}
+};
 #endif

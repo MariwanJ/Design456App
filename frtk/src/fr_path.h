@@ -25,41 +25,11 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef FRTK_H
-#define FRTK_H
-/**
- *  PUT HERE ONLY HEADER FILES THAT ARE PRE-COMPILED HEADER FIELS
- *
- * .
- */
-#include <array>
+#include<frtk.h>
 
-#include <algorithm>
-#include <cinttypes>
-#include <cmath>
-#include <fstream>
-#include <filesystem>
-#include <functional>
-#include <iostream>
-#include <limits>
-#include <memory>
-#include <sstream>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdexcept>
-#include <stdio.h>
-#include <stdlib.h>
-#include <tuple>
-#include <unordered_map>
-#include <unordered_set>
-#include <utility>
-
-#include <vector>
-#include <string>
-
- //for ResourcePath
+//for ResourcePath
 #if defined(_WIN32)
-//#include <windows.h>
+#include <windows.h>
 #include <Shlwapi.h>
 #include <io.h>
 
@@ -85,6 +55,18 @@
 #endif
 
 #endif
-//end for ResourcePath
 
-#endif
+
+    // https://stackoverflow.com/questions/1528298/get-path-of-executable
+namespace ResourcePath {
+    std::string getExecutablePath();
+    std::string getExecutableDir();
+    std::string mergePaths(std::string pathA, std::string pathB);
+    bool checkIfFileExists(const std::string& filePath);
+    std::string exePath();
+    std::string meshPath();
+    std::string shaderPath();
+    std::string imgPath();
+
+};
+//end for ResourcePath
