@@ -41,8 +41,9 @@ std::shared_ptr<Transform>bunny() {
     bunny_t->Scale(1, 1, 1);
     auto bunny = std::make_shared<ModelNode>(glm::vec4(FR_123D), 0.02f); //  color and
 
-    //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/cube.off"));
-     bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Pyramid.off"));
+   // bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/cube.off"));
+    bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/CubeCenter.off"));
+    //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Pyramid.off"));
     bunny->m_Texture2D = std::make_shared<Fr_Texture2D>();
     //std::string imag = ("E:/Projects/Design456App/resources/Texture/test.png");
     //std::string imag = ("E:/Projects/Design456App/resources/Texture/ts.png");

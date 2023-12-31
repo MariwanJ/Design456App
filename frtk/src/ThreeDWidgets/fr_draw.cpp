@@ -28,7 +28,7 @@
 #include<ThreeDWidgets/fr_draw.h>
 
 namespace FR {
-    Fr_TwoD_Drawing::Fr_TwoD_Drawing() :m_Vertices{ 0 }, m_Indices{ 0 }, m_Normals{ 0 }, m_Type(FR_LINE), m_vbo{ 0 }, m_vao{ 0 }
+    Fr_TwoD_Drawing::Fr_TwoD_Drawing() :m_Vertices{ 0 }, m_Indices{ 0 }, m_Normals{ 0 }, m_Type(FR_LINES), m_vbo{ 0 }, m_vao{ 0 }
     {
     }
 
@@ -111,7 +111,7 @@ namespace FR {
     void Fr_TwoD_Drawing::Draw()
     {
         switch (m_Type) {
-        case FR_LINE: {
+        case FR_LINES: {
             glCheckFunc(glBindVertexArray(m_vao));
             glCheckFunc(glDrawElements(GL_LINES, m_Indices->size(), GL_UNSIGNED_INT, 0));
             glCheckFunc(glBindVertexArray(0));

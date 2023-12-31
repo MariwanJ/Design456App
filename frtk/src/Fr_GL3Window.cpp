@@ -179,7 +179,7 @@ void Fr_GL3Window::CreateScene()
     scene->AddNode(tempBu);
     scene->AddNode(dd);
 
-    std::shared_ptr<std::vector<float>> vert = std::make_shared<std::vector<float>>(std::initializer_list<float>{10.f, 10.f, 0.f, 100.f, 100.f, 100.f});
+    std::shared_ptr<std::vector<float>> vert = std::make_shared<std::vector<float>>(std::initializer_list<float>{0.f, 0.f, 0.f, 100.f, 100.f, 100.f});
     std::shared_ptr < std::vector<unsigned int>> ind = std::make_shared<std::vector<unsigned int>>(std::initializer_list<unsigned int>{0,1});
     std::shared_ptr<FR::Fr_Line_Widget> line = std::make_shared<FR::Fr_Line_Widget>(glm::vec3(0.0f, 0.0f, 0.0f), vert, ind,"");
     WidgWindow->addWidget(line);

@@ -34,7 +34,7 @@ namespace FR {
     //More will be added later
 
     typedef enum twodType {
-        FR_LINE = 0,
+        FR_LINES = 0,
         FR_OPEN_LOOP,
         FR_CLOSED_LOOP, //This includes square, rectangle, triangle,pentagon, hexagon, star ..etc
         FR_CIRCLE,

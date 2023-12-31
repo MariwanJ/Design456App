@@ -33,11 +33,11 @@ Fr_Line_Widget::Fr_Line_Widget(glm::vec3 position,
                                 std::string label) : Fr_Widget(position,verticies,indicies,label)
 {
  
-    lineObj = std::make_shared< Fr_TwoD_Drawing>(FR_LINE,verticies, indicies);
+    lineObj = std::make_shared< Fr_TwoD_Drawing>(FR_LINES,verticies, indicies);
     m_normals= lineObj->Normals();
     m_textCoord = lineObj->TextCoord();
     lineObj->lineWidth(5);
-    lineObj->Type(FR::FR_LINE);
+    lineObj->Type(FR::FR_LINES);
     diffCalculateNormals();
     lineObj->initializeVBO();
 }
@@ -53,7 +53,7 @@ void Fr_Line_Widget::draw()
 
 void Fr_Line_Widget::lbl_draw()
 {
-    lineObj->Draw();
+  //  lineObj->Draw();
 }
 
 void Fr_Line_Widget::lbl_redraw()

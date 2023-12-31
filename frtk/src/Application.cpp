@@ -117,6 +117,7 @@ void Fr_GL3Window::mouse_button_callback(GLFWwindow* win, int button, int action
     else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_MIDDLE && mouseEvent.Pressed == 1)
     {
         //TODO : Not sure if widgets needs this event
+        theta = phi = 0;
         MiddMouseClick(win);
         if (WidgWindow->handle(FR::FR_PUSH) == 0) //Mouse click
             return;
@@ -279,11 +280,8 @@ void Fr_GL3Window::cameraRotate(GLFWwindow* win, double xpos, double ypos)
         radiusXYZ = sqrt(data.camPosition_.x * data.camPosition_.x +
             data.camPosition_.y * data.camPosition_.y +
             data.camPosition_.z * data.camPosition_.z);
-        phi = 0;
-        theta = 0;
-    }
 
-    
+    }
 
     float delta_X = xpos * mouseDefaults.MouseXYScale - mouseEvent.Old_x;
     float delta_Y = (ypos * mouseDefaults.MouseXYScale - mouseEvent.Old_y);
@@ -300,9 +298,10 @@ void Fr_GL3Window::cameraRotate(GLFWwindow* win, double xpos, double ypos)
 
 
     glm::vec3 direction;
-    //std::cout << pitch << "pitch yaw " << yaw << std::endl;
+
     data.camPosition_.x = radiusXYZ   *sin(glm::radians(phi));
     data.camPosition_.y = radiusXYZ  * cos(glm::radians(phi));
+    data.camPosition_.z = radiusXYZ * cos(glm::radians(theta));
    
     activeCamera->setUserData(data);
     mouseEvent.Old_x = xpos * mouseDefaults.MouseXYScale;
