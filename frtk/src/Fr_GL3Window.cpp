@@ -92,6 +92,8 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     WidgWindow = std::make_shared<FR::Fr_Window>(); //Create FR_WINDOW that keeps the widget system
     WidgWindow->linkToMainWindow = this;
     radiusXYZ = 0;
+
+
 }
 
 void Fr_GL3Window::flush() {

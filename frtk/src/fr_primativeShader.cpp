@@ -91,6 +91,9 @@ Fr_PrimaitiveShader::Fr_PrimaitiveShader(float color[4], float silhouette) :
 }
 
 Fr_PrimaitiveShader::~Fr_PrimaitiveShader() {
+    delete shared_->primative_program;
+    delete shared_->silhouette_program;
+    delete shared_;
 }
 
 void Fr_PrimaitiveShader::SetColor(glm::vec4 color) {

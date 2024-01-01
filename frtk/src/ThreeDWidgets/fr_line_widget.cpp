@@ -40,6 +40,7 @@ Fr_Line_Widget::Fr_Line_Widget(glm::vec3 position,
     lineObj->Type(FR::FR_LINES);
     diffCalculateNormals();
     lineObj->initializeVBO();
+    CreateShader();
 }
 
 Fr_Line_Widget::~Fr_Line_Widget()
@@ -62,7 +63,6 @@ void Fr_Line_Widget::lbl_redraw()
 }
 int Fr_Line_Widget::handle(int e)
 {
- 
     switch (e) {
     case FR_PUSH: FRTK_CORE_INFO("Line Widget is clicked");
         return 1; //Consume the event
@@ -71,10 +71,44 @@ int Fr_Line_Widget::handle(int e)
     }
     return 0;
 }
+void Fr_Line_Widget::LoadLights(ShaderProgram* program, const std::vector<LightInfo>& lights) {
+    unsigned int nlights = std::min(lights.size(), kMaxLights);
+    program->SetUniformInteger("nlights", nlights);
+    for (size_t i = 0; i < nlights; ++i) {
+        auto uniformVarNameInObjShader = "lights[" + std::to_string(i) + "].";
+        program->SetUniformVec4(uniformVarNameInObjShader + "color", lights[i].lightcolor);
+        program->SetUniformVec4(uniformVarNameInObjShader + "position", lights[i].position);       //Here we send the name of the variable as "lights[xxx=number]." wher xxx= a number from 0 to nlights
+        program->SetUniformVec4(uniformVarNameInObjShader + "diffuse", lights[i].diffuse);
+        program->SetUniformVec4(uniformVarNameInObjShader + "specular", lights[i].specular);
+        program->SetUniformVec4(uniformVarNameInObjShader + "ambient", lights[i].ambient);
+        program->SetUniformVec3(uniformVarNameInObjShader + "attenuation", lights[i].attenuation);
+        program->SetUniformInteger(uniformVarNameInObjShader + "is_spot", lights[i].is_spot);
+        program->SetUniformVec3(uniformVarNameInObjShader + "direction", lights[i].direction);
+        program->SetUniformFloat(uniformVarNameInObjShader + "cutoff", lights[i].cutoff);
+        program->SetUniformFloat(uniformVarNameInObjShader + "exponent", lights[i].exponent);
+    }
+}
+
+
 void Fr_Line_Widget::Render(RenderInfo& info, const glm::mat4& modelview) {
     if (!active_)
         return;
-    draw();
+
+    auto mvp = info.projection * modelview;
+    auto normalmatrix = glm::transpose(glm::inverse(modelview));
+    widget_program->Enable();
+    LoadLights(widget_program, info.lights);
+    widget_program->SetAttribLocation("position", 0);  //Position variable has (layout(location =0) inside objectshader_vs.glsl
+    widget_program->SetAttribLocation("texCoord", 1);  //Position variable has (layout(location =1 inside objectshader_vs.glsl
+    widget_program->SetAttribLocation("normal", 2);  //Position variable has (layout(location =1 inside objectshader_vs.glsl
+    widget_program->SetUniformMat4("modelview", modelview);
+    widget_program->SetUniformMat4("normalmatrix", normalmatrix);
+    widget_program->SetUniformMat4("mvp", mvp);
+    widget_program->SetUniformVec4("color", m_color);       //Object color - not light color
+    widget_program->SetUniformInteger("hasTexture", false);
+    draw();      //You should make a draw call to get that  done
     lbl_draw();
+    widget_program->Disable();
+    info.id++;
     }
 }

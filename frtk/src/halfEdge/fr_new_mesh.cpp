@@ -30,7 +30,7 @@
 #include <../src/Fr_GL3Window.h>
 
 Shape::Shape(const std::string& path) :
-    vbo_{ 0, 0, 0,0 }, m_hasTexture(0),
+    vbo_{ 0, 0, 0,0 }, m_hasTexture(0),             //M_HAStEXTUER = 1 -->TEXTURE IS APPLIED, =0 -->TEXTURE IS NOT APPLIED
     vao_(0), normalized_(false) {
     ReadFile(path);
     calcualteTextCoor(1024,1024);

@@ -169,6 +169,7 @@ namespace FR {
 
     int Fr_TwoD_Drawing::initializeVBO()
     {
+             
             glCheckFunc(glGenBuffers(3, m_vbo));
             glCheckFunc(glGenVertexArrays(1, &m_vao));
             glCheckFunc(glBindVertexArray(m_vao));       //Keeps all instructions related this object

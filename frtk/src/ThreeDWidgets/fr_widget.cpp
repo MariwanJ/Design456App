@@ -28,10 +28,12 @@
 #include<../src/ThreeDWidgets/fr_widget.h>
 #include <cmath>
 #include <glm/gtx/transform.hpp>
+#include<fr_shader_program.h>
 
 namespace FR {
 
 
+  
 
     Fr_Widget::Fr_Widget(const Fr_Widget& t) :m_position{ 0.f,0.f,0.f }, m_callback_(t.m_callback_),
         m_verticies(std::move(t.m_verticies)), m_indicies(std::move(t.m_indicies))
@@ -41,7 +43,7 @@ namespace FR {
         m_visible = t.m_visible;
         m_Matrix = glm::mat4(1.0f);
         type(NODETYPE::FR_WIDGET);
- 
+      
     }
 
     Fr_Widget::Fr_Widget(glm::vec3 position, 
@@ -50,11 +52,12 @@ namespace FR {
         std::string label) :m_callback_{ NULL },
         m_label(""), m_draw{0}, m_verticies(std::move(verticies)), m_indicies(std::move(m_indicies))
     {
- 
+       
     }
 
     Fr_Widget::~Fr_Widget()
     {
+        delete widget_program;
     }
 
     bool Fr_Widget::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
@@ -62,6 +65,9 @@ namespace FR {
         return false;
     }
 
+    void Fr_Widget::CreateShader() {
+        widget_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/widgetshader");
+    }
     void Fr_Widget::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights)
     {
     }
@@ -99,7 +105,7 @@ namespace FR {
 
     bool Fr_Widget::setup()
     {
-        return false;   //Should be subclassed to change that.
+        return false;   //Should be sub-classed to change that.
     }
 
     void Fr_Widget::label(std::string& lbl)
@@ -171,13 +177,13 @@ namespace FR {
     int Fr_Widget::handle(int handel)
     {
         throw NotImplementedException();
-        //This must be subclassed. 
+        //This must be sub-classed. 
         return 0;
     }
 
     void Fr_Widget::show()
     {
-        //This must be subclassed. 
+        //This must be sub-classed. 
         m_visible = true;
     }
 

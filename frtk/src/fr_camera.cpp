@@ -109,6 +109,11 @@ Camera::Camera() :
     m_ProjectionMatrix(glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_)),     //default
     camType_(CameraList::PERSPECTIVE) {
     type(NODETYPE::FR_CAMERA);
+    int width, height;
+    Fr_GL3Window* g = Fr_GL3Window::getfr_Gl3Window();
+    glfwGetWindowSize(g->pWindow, &width, &height);
+    aspectRatio_ = float(width) / float(height);
+
 }
 
 void Camera::SetCamPosition(float x, float y, float z) {

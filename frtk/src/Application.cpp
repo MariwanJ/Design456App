@@ -26,8 +26,7 @@
 //
 #include "Application.h"
 #include <glm/gtx/transform.hpp>
-
-
+ 
 //TODO: I don't see any reason to have these functions here any more - move them to other place
 /* Scene and engine*/
 static Scene* scene = nullptr;
@@ -138,6 +137,7 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
 
     auto shftL = glfwGetKey(win, GLFW_KEY_LEFT_SHIFT);
     auto shftR = glfwGetKey(win, GLFW_KEY_RIGHT_SHIFT);
+    //std::cout << "xpos= ypso=" << xpos << " " << ypos<<std::endl;
 
     if (mouseEvent.Button == GLFW_MOUSE_BUTTON_LEFT && mouseEvent.Pressed== 1)
     {
@@ -184,10 +184,15 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
     else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_MIDDLE && mouseEvent.Pressed == 0)
     {
         //TODO : Not sure if widgets needs this event
+        
         MiddMouseDRAGrelease(win, xpos, ypos);
+
         if (WidgWindow->handle(FR::FR_RELEASE) == 0) //Mouse click 
             m_GLFWevents = { -1,-1,-1,-1,-1 };
-            return;
+
+        mouseEvent.Old_x = mouseEvent.Old_y = 0;
+        mouseEvent.Button = -1;
+        return;
     }
 }
 
@@ -240,21 +245,18 @@ void Fr_GL3Window::cameraPAN(GLFWwindow* win, double xpos, double ypos)
 
     if (mouseEvent.Old_x == 0 || mouseEvent.Old_y == 0) {
         //avoid having a jump and just make the delta = 0
-        mouseEvent.Old_x = xpos;
-        mouseEvent.Old_y = ypos;   
-
+        mouseEvent.Old_x = xpos ;
+        mouseEvent.Old_y = ypos ;
         radiusXYZ = sqrt(data.camPosition_.x * data.camPosition_.x +
         data.camPosition_.y * data.camPosition_.y +
         data.camPosition_.z * data.camPosition_.z);
-
     }
+
     double deltax = mouseEvent.Old_x - xpos;
     double deltay = mouseEvent.Old_y - ypos;
- 
 
     float xoffset = deltax * mouseDefaults.MouseXYScale  ;
     float yoffset = deltay * mouseDefaults.MouseXYScale  ;  //should we do this?
- 
 
      data.camPosition_.x += xoffset;
      data.camPosition_.y += yoffset;
@@ -272,40 +274,94 @@ void Fr_GL3Window::cameraRotate(GLFWwindow* win, double xpos, double ypos)
     userData_ data;
     auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
     activeCamera->getUserData(data);
+    ImVec4 viewPortDim = getPortViewDimensions();
+    ImVec2 center = ImVec2((viewPortDim.z ) / 2, (viewPortDim.w )/ 2);
+    int sign = 1;
 
     if (mouseEvent.Old_x == 0 && mouseEvent.Old_y == 0)
     {
-        mouseEvent.Old_x = xpos * mouseDefaults.MouseXYScale;
-        mouseEvent.Old_y = ypos * mouseDefaults.MouseXYScale;  
+        mouseEvent.Old_x = xpos;
+        mouseEvent.Old_y = ypos;
         radiusXYZ = sqrt(data.camPosition_.x * data.camPosition_.x +
             data.camPosition_.y * data.camPosition_.y +
             data.camPosition_.z * data.camPosition_.z);
-
     }
 
-    float delta_X = xpos * mouseDefaults.MouseXYScale - mouseEvent.Old_x;
-    float delta_Y = (ypos * mouseDefaults.MouseXYScale - mouseEvent.Old_y);
-
-    if (delta_X>0)
-        phi+= 1;
-    else 
-        phi += -1;
-
-    if (delta_Y > 0)
-        theta += 1;
-    else
-        theta = -1;
-
-
-    glm::vec3 direction;
-
-    data.camPosition_.x = radiusXYZ   *sin(glm::radians(phi));
-    data.camPosition_.y = radiusXYZ  * cos(glm::radians(phi));
-    data.camPosition_.z = radiusXYZ * cos(glm::radians(theta));
+    /*
+        1         +        2
+                  +      
+    ---------------------------
+        3         +        4
+                  +
+   */
+    float deltax= mouseEvent.Old_x - xpos;
+    float deltay = mouseEvent.Old_y - ypos;
+    //if (deltax < 0 || deltay < 0)
+    //    sign = -1;
+    //else
+    //    sign = 1;
+    
+    float tempAn = sign*glm::degrees(std::atan2(xpos, ypos));
    
+    if (xpos < center.x && ypos < center.y) {       //1  270-360
+        //lower0 part - right side
+        phi = 270 + tempAn;
+        FRTK_CORE_INFO(1);
+    }else 
+
+    if (xpos > center.x && ypos < center.y) {       //2 180-270
+      //lower part - left side
+        phi = 270 + tempAn;
+        FRTK_CORE_INFO(2);
+    }else
+
+    if (xpos < center.x && ypos > center.y) {       //3 90-180
+      //upper part - left side
+        phi = 90 + tempAn;
+        FRTK_CORE_INFO(3);
+    }else
+    if (xpos > center.x && ypos > center.y) {       //4  0 -90
+      //upper part -  side
+        phi = tempAn;
+        FRTK_CORE_INFO(4);
+    }
+   // std::cout << "temphi " << tempAn <<"phi " << phi<<std::endl;
+    std::cout << "centerx " << center.x <<"centery " << center.y << std::endl;
+
+    data.camPosition_.x = radiusXYZ   * cos(glm::radians(phi));
+    data.camPosition_.y = radiusXYZ  * sin(glm::radians(phi));
+   // data.camPosition_.z = radiusXYZ * cos(glm::radians(theta));
+
     activeCamera->setUserData(data);
-    mouseEvent.Old_x = xpos * mouseDefaults.MouseXYScale;
-    mouseEvent.Old_y = ypos * mouseDefaults.MouseXYScale;
+    mouseEvent.Old_x = xpos ;
+    mouseEvent.Old_y = ypos ;
+}
+
+glm::vec3 Fr_GL3Window::computeSphereCoordinates(double x, double y, bool invertX_, bool invertY_ ) {
+    int vp[4];
+    glGetIntegerv(GL_VIEWPORT, vp);
+    const float w = vp[2];
+    const float h = vp[3];
+
+    if (invertX_) 
+        x = w - x;
+    if (invertY_) 
+        y = h - y;
+
+    const float radius = std::min(w / 2.0f, h / 2.0f);
+    float vx = (x - w / 2.0f) / radius;
+    float vy = (h - y - h / 2.0f) / radius;
+    float vz = 0;
+
+    const float dist = hypot(vx, vy);
+    if (dist > 1.0f) {
+        vx /= dist;
+        vy /= dist;
+    }
+    else {
+        vz = sqrt(1 - vx * vx - vy * vy);
+    }
+    return glm::vec3(vx, vy, vz);
 }
 
 void Fr_GL3Window::LeftMouseClick(GLFWwindow* win)

@@ -113,7 +113,7 @@ void Transform::GLFWMotion(int x, int y) {
         return;
 
     if (operation_ == Operation::kRotation) {
-        glm::vec3 v = computeSphereCoordinates(x, y);
+        glm::vec3 v = computeSphereCoordinate(x, y);
         glm::vec3 w = glm::cross(v_, v);
         float theta = asin(glm::length(w));
         if (theta != 0)
@@ -150,7 +150,7 @@ void Transform::SetOperation(int button, int state, double x, double y) {       
             operation_ = k_operation;
             x_ = x;
             y_ = y;
-            v_ = computeSphereCoordinates(x, y);
+            v_ = computeSphereCoordinate(x, y);
         }
         else if (state == 1 && operation_ == k_operation) {
             operation_ = Operation::kNone;
@@ -158,7 +158,7 @@ void Transform::SetOperation(int button, int state, double x, double y) {       
     }
 }
 
-glm::vec3 Transform::computeSphereCoordinates(double x, double y) {
+glm::vec3 Transform::computeSphereCoordinate(double x, double y) {
     int vp[4];
     glGetIntegerv(GL_VIEWPORT, vp);
     const float w = vp[2];

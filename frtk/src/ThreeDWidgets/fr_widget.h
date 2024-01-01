@@ -31,8 +31,13 @@
 #include <../src/fr_node.h>
 #include<ThreeDWidgets/fr_draw.h>
 #include <stdexcept>
+#include <fr_shader_program.h>
 #include<fr_core.h>
+
 namespace FR {
+    
+    const size_t kMaxLights = 8;        //This is important to concider. This is also defined in the   objectshader_fs.glsl as MAX_LIGHTS
+
     typedef struct {
         //TODO : FIXME: This is just a dummy construction. this should be changed later
         union {
@@ -49,7 +54,6 @@ namespace FR {
 
     class Fr_Widget;
     class Fr_Group;
-    class ShaderProgram;
     class Shape;
 
     /** Default callback type definition for all frtk widgets (by far the most used) */
@@ -94,6 +98,8 @@ namespace FR {
          * Returns the camera info by reference
          */
         virtual bool SetupCamera(glm::mat4& projection, glm::mat4& modelview) override;
+
+        virtual void CreateShader();
 
         /**
          * Sets the lights
@@ -239,8 +245,8 @@ namespace FR {
         std::shared_ptr<std::vector<float>> m_vertCoord;          //must be calculated internally
         std::shared_ptr<std::vector<float>>  m_normals;
         std::shared_ptr<std::vector<float>>  m_textCoord;
+        ShaderProgram* widget_program;  //todo : Static?? or not,
 
-    private:
         //From shader
         /**
          * Sets the uniform light data
@@ -263,8 +269,6 @@ namespace FR {
         int m_hasTexture;
         glm::mat4 m_Matrix;
         //glm::mat4 m_Inverse;
-
-        static    ShaderProgram* widget_program;  //todo : Static?? or not
 
         // Attributes
         glm::vec4 m_color;

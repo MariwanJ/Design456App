@@ -53,7 +53,9 @@ int Fr_GL3Window::imguimzo_init()
         auto Camproj  = activeCamera->getPorjection();
         float wWidth = (float)ImGui::GetWindowWidth();
         float wHeight= (float)ImGui::GetWindowHeight();
-        ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, wWidth, wHeight);
+        ImVec4 dim = getPortViewDimensions();
+        //ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, wWidth, wHeight);
+        ImGuizmo::SetRect(dim.x, dim.y , dim.z+dim.x, dim.w+dim.y);
         //ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::ROTATE, ImGuizmo::LOCAL, glm::value_ptr(trnasfrom_));
         ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(trnasfrom_));
         //ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::SCALE, ImGuizmo::LOCAL, glm::value_ptr(trnasfrom_));
@@ -167,6 +169,21 @@ int Fr_GL3Window::imgui_LeftPanel()
 {
     ImGui::Begin("LeftPannel");
     ImGui::Button(ICON_FA_BOX);
+
+    // Get the position and size of the widget
+    ImVec2 widgetPos = ImGui::GetWindowPos();
+    ImVec2 widgetSize = ImGui::GetWindowSize();
+
+    // Get the mouse position
+    ImVec2 mousePos = ImGui::GetMousePos();
+
+    // Calculate the relative position
+    ImVec2 relativePos = ImVec2(mousePos.x - widgetPos.x, mousePos.y - widgetPos.y);
+
+    // Display the relative position
+    ImGui::Text("Mouse Position: (%.1f, %.1f)", relativePos.x, relativePos.y);
+
+
     ImGui::End();
     return 0;
 }
@@ -264,8 +281,11 @@ int Fr_GL3Window::imgui_ViewPort()
     float wWidth = (float)ImGui::GetWindowWidth();
     float wHeight = (float)ImGui::GetWindowHeight();
 
-    setPortViewDimension(ImVec4(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, wWidth, wHeight));
-   // Camera::aspectRatio_ = wWidth / wHeight;    //Must be updated always
+    ImVec2 windowPos = ImGui::GetWindowPos();
+ 
+
+    setPortViewDimension(ImVec4(windowPos.x, windowPos.y, wWidth, wHeight));
+    //Camera::aspectRatio_ = wWidth / wHeight;    //Must be updated always
    
     //WE MUST UPDATE THIS, OTHERWISE THE RENDERING WILL BE MISSING DATA, AND THE PICTURE SHOWN WILL BE WRONG!!
     sceneBuffer->RescaleFrameBuffer(wWidth,wHeight);        

@@ -220,6 +220,9 @@ public:
     float getAspectRation() const;
     eventData GLFWevents() const;
 
+    glm::vec3 computeSphereCoordinates(double x, double y, bool invertX_ = false, bool invertY_ = false);
+
+
 protected:
     /**
      * Function to create all cameras listed in CameraList.
@@ -330,7 +333,7 @@ private:
      * \param yoffset   last Y-Axis position of the mouse cursor
      */
     void cameraRotate(GLFWwindow* win, double xoffset, double yoffset);
-    glm::vec3 computeSphereCoordinates(double x, double y);
+
     /**
      * Left mouse button is clicked.
      *

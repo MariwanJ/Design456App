@@ -124,7 +124,7 @@ private:
     void SetOperation(int button, int state, double x, double y);
 
     /** Computes the sphere vector for rotation */
-    glm::vec3 computeSphereCoordinates(double x, double y);
+    glm::vec3 computeSphereCoordinate(double x, double y);
 
     void Render(RenderInfo& info, const glm::mat4& modelview);
 

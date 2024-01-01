@@ -34,5 +34,3 @@ int main(int argc, char** argv)
     Fr_Log::GetAPPLogger()->info("App Started!");
     return Design456App->run(argc,argv);
 }
-
-

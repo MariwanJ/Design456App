@@ -20,6 +20,7 @@ namespace FR {
     protected:
         std::shared_ptr <Fr_TwoD_Drawing> lineObj;
         int handle(int e);
+        void LoadLights(ShaderProgram* program, const std::vector<LightInfo>& lights);
         void Render(RenderInfo& info, const glm::mat4& modelview) override;
     };
 }

@@ -1,4 +1,4 @@
-//
+    //
 // This file is a part of the Open Source Design456App
 // MIT License
 //
@@ -75,6 +75,10 @@ silhouette_(silhouette), m_Texture2D{ nullptr } {
 }
 
 ModelNode::~ModelNode() {
+    delete shared_->object_program;
+    delete shared_->silhouette_program;
+    //delete shared_->texture_program;
+    delete shared_;
 }
 
 void ModelNode::SetColor(unsigned int color, float alpha) {
@@ -122,8 +126,6 @@ void ModelNode::LoadLights(ShaderProgram* program, const std::vector<LightInfo>&
         program->SetUniformFloat(uniformVarNameInObjShader + "cutoff", lights[i].cutoff);
         program->SetUniformFloat(uniformVarNameInObjShader + "exponent", lights[i].exponent);
     }
-
-
 }
 
 void ModelNode::Render(RenderInfo& info, const glm::mat4& modelview) {
