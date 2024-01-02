@@ -275,7 +275,7 @@ void Fr_GL3Window::cameraRotate(GLFWwindow* win, double xpos, double ypos)
     auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
     activeCamera->getUserData(data);
     ImVec4 viewPortDim = getPortViewDimensions();
-    ImVec2 center = ImVec2((viewPortDim.z ) / 2, (viewPortDim.w )/ 2);
+    ImVec2 center = ImVec2(viewPortDim.x+(viewPortDim.z ) / 2, viewPortDim.y+(viewPortDim.w )/ 2);
     int sign = 1;
 
     if (mouseEvent.Old_x == 0 && mouseEvent.Old_y == 0)
@@ -311,7 +311,7 @@ void Fr_GL3Window::cameraRotate(GLFWwindow* win, double xpos, double ypos)
 
     if (xpos > center.x && ypos < center.y) {       //2 180-270
       //lower part - left side
-        phi = 270 + tempAn;
+        phi = 180 + tempAn;
         FRTK_CORE_INFO(2);
     }else
 
