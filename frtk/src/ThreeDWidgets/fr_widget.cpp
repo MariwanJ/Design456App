@@ -42,6 +42,7 @@ namespace FR {
         m_active = t.m_active;
         m_visible = t.m_visible;
         m_Matrix = glm::mat4(1.0f);
+        m_color = glm::vec4(FR_ANTIQUEWHITE);
         type(NODETYPE::FR_WIDGET);
       
     }

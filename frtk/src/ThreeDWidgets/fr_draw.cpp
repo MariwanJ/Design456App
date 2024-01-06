@@ -170,7 +170,7 @@ namespace FR {
     int Fr_TwoD_Drawing::initializeVBO()
     {
              
-            glCheckFunc(glGenBuffers(3, m_vbo));
+            glCheckFunc(glGenBuffers(4, m_vbo));
             glCheckFunc(glGenVertexArrays(1, &m_vao));
             glCheckFunc(glBindVertexArray(m_vao));       //Keeps all instructions related this object
 
@@ -182,7 +182,7 @@ namespace FR {
 
             glCheckFunc(glEnableVertexAttribArray(1));
             glCheckFunc(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL));
-            glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vbo[2]));
+            glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vbo[3]));
             glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Indices->size() * sizeof(unsigned int), m_Indices->data(), GL_STATIC_DRAW));
 
             ///Texture

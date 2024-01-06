@@ -36,8 +36,8 @@ Fr_Line_Widget::Fr_Line_Widget(glm::vec3 position,
     lineObj = std::make_shared< Fr_TwoD_Drawing>(FR_LINES,verticies, indicies);
     m_normals= lineObj->Normals();
     m_textCoord = lineObj->TextCoord();
-    lineObj->lineWidth(5);
-    lineObj->Type(FR::FR_LINES);
+    lineObj->lineWidth(50);
+
     diffCalculateNormals();
     lineObj->initializeVBO();
     CreateShader();

@@ -53,7 +53,7 @@ vec3 compute_light_intensity(LightInfo light, int id, vec3 frag_normal_)
         }
         return vec3(0, 0, 0);
     }
-	
+
     return (intensity);
 }
 

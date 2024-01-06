@@ -238,8 +238,8 @@ namespace COLOR {
 };
 namespace SPECULAR {    
     //Material             BaseColor(R, G, B)
-#define FR_METAL           0.50f, 0.50f, 0.50f
-#define FR_PLASTIC         0.250f, 0.250f, 0.250f
+#define FR_METAL           0.50f, 0.50f, 0.50f,  1.0
+#define FR_PLASTIC         0.250f, 0.250f, 0.250f , 1.0
 
 };
 class Fr_GL3Window; // compiler should define that later.

@@ -193,7 +193,7 @@ void Transform::Render(RenderInfo& info, const glm::mat4& modelview) {
     Group::Render(info, sub_modelview);
 }
 
-void Transform::SetupLight(const glm::mat4& modelview,    std::vector<LightInfo>& lights) {
+void Transform::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) {
     if (!active_)
         return;
 

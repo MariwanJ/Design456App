@@ -39,7 +39,7 @@ int Fr_GL3Window::imguimzo_init()
 
     if (activeCamera->getType() == CameraList::ORTHOGRAPHIC)
         ImGuizmo::SetOrthographic(true);
-    else 
+    else
         ImGuizmo::SetOrthographic(false);
     ImGuizmo::SetDrawlist();
     ImGuizmo::Enable(true);
@@ -47,17 +47,23 @@ int Fr_GL3Window::imguimzo_init()
     auto getbu = Fr_GL3Window::getfr_Gl3Window()->tempBu;
     auto cameraView = (activeCamera->getModelView());
 
-    glm::mat4 trnasfrom_ =getbu->GetMatrix();
+    glm::mat4 trnasfrom_ = getbu->GetMatrix();
     if (getbu != NULL)
     {
-        auto Camproj  = activeCamera->getPorjection();
-        float wWidth = (float)ImGui::GetWindowWidth();
-        float wHeight= (float)ImGui::GetWindowHeight();
+        auto Camproj = activeCamera->getPorjection();
+        //float wWidth = (float)ImGui::GetWindowWidth();
+        //float wHeight= (float)ImGui::GetWindowHeight();
         ImVec4 dim = getPortViewDimensions();
-        //ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, wWidth, wHeight);
-        ImGuizmo::SetRect(dim.x, dim.y , dim.z+dim.x, dim.w+dim.y);
+
+        ImGuizmo::SetOrthographic(false);
+        ImGuizmo::SetDrawlist();
+
+        ImGuizmo::SetRect(dim.x, dim.y, dim.z - dim.x, dim.w - dim.y);
         //ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::ROTATE, ImGuizmo::LOCAL, glm::value_ptr(trnasfrom_));
-        ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(trnasfrom_));
+        ImGuizmo::Manipulate(glm::value_ptr(cameraView), 
+                             glm::value_ptr(Camproj), 
+                              ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, 
+                                glm::value_ptr(trnasfrom_));
         //ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::SCALE, ImGuizmo::LOCAL, glm::value_ptr(trnasfrom_));
     }
 
@@ -67,14 +73,13 @@ int Fr_GL3Window::imguimzo_init()
         glm::vec3 trans, scaling;
         glm::vec4 rot;
         ExtractTransformMatrix(trnasfrom_, trans, rot, scaling);
-        if(0)
-            tempBu->Rotate(rot.x,rot.y,rot.z,rot.w);
-        if(0)
+        if (0)
+            tempBu->Rotate(rot.x, rot.y, rot.z, rot.w);
+        if (0)
             tempBu->Scale(scaling);
         if (1)
             tempBu->Translate(trans);
         std::string resss = std::to_string(resu[0]) + " " + std::to_string(resu[1]) + " " + std::to_string(resu[2]);
-
     }
     return 0;
 }
@@ -183,7 +188,6 @@ int Fr_GL3Window::imgui_LeftPanel()
     // Display the relative position
     ImGui::Text("Mouse Position: (%.1f, %.1f)", relativePos.x, relativePos.y);
 
-
     ImGui::End();
     return 0;
 }
@@ -267,9 +271,7 @@ int Fr_GL3Window::imgui_CameraConfiguration(userData_& data)
 }
 float Fr_GL3Window::getAspectRation() const
 {
- 
     return Camera::aspectRatio_;
-    
 }
 eventData Fr_GL3Window::GLFWevents() const
 {
@@ -282,13 +284,20 @@ int Fr_GL3Window::imgui_ViewPort()
     float wHeight = (float)ImGui::GetWindowHeight();
 
     ImVec2 windowPos = ImGui::GetWindowPos();
- 
 
-    setPortViewDimension(ImVec4(windowPos.x, windowPos.y, wWidth, wHeight));
+    auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
+    auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
+    auto viewportOffset = ImGui::GetWindowPos();
+    ImVec2 Bound1, Bound2;
+    Bound1 = ImVec2(viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y);
+    Bound2 = ImVec2(viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y);
+
+    //setPortViewDimension(ImVec4(windowPos.x, windowPos.y, wWidth, wHeight));
+    setPortViewDimension(ImVec4(Bound1.x, Bound1.y, Bound2.x, Bound2.y));
     //Camera::aspectRatio_ = wWidth / wHeight;    //Must be updated always
-   
+
     //WE MUST UPDATE THIS, OTHERWISE THE RENDERING WILL BE MISSING DATA, AND THE PICTURE SHOWN WILL BE WRONG!!
-    sceneBuffer->RescaleFrameBuffer(wWidth,wHeight);        
+    sceneBuffer->RescaleFrameBuffer(wWidth, wHeight);
     sceneBuffer->Bind();
     scene->RenderScene();
     ImGui::Image(

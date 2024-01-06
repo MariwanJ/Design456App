@@ -37,9 +37,11 @@ void Fr_GL3Window::framebuffer_size_callback(GLFWwindow* window, int width, int 
     _h = height;
     if (s_GladInitialized && s_GLFWInitialized) {
         glViewport(_x, _y, _w, _h);
+        auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
     }
     WidgWindow->handle(FR::FR_WINDOW_RESIZE);
 }
+
 /*
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)

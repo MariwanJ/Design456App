@@ -171,19 +171,22 @@ void Fr_GL3Window::CreateScene()
     scene->AddNode(CreateSunTop());
     scene->AddNode(CreateSunBottom());
     tempBu = bunny();
-    auto dd = bunny();
-    dd->Translate(10.f, 30.f, 20.f);
+
+    tempBu->Translate(10.f, 10.f, 30.f);
+   // auto dd = bunny();
+  //  dd->Translate(10.f, 30.f, 20.f);
     scene->AddNode(Grid().CreateGrid());
     vert axis = Axis3D().CreateAxis3D();
     scene->AddNode(axis.Red);
     scene->AddNode(axis.Green);
     scene->AddNode(axis.Blue);
     scene->AddNode(tempBu);
-    scene->AddNode(dd);
+   //scene->AddNode(dd);
 
     std::shared_ptr<std::vector<float>> vert = std::make_shared<std::vector<float>>(std::initializer_list<float>{0.f, 0.f, 0.f, 100.f, 100.f, 100.f});
     std::shared_ptr < std::vector<unsigned int>> ind = std::make_shared<std::vector<unsigned int>>(std::initializer_list<unsigned int>{0,1});
     std::shared_ptr<FR::Fr_Line_Widget> line = std::make_shared<FR::Fr_Line_Widget>(glm::vec3(0.0f, 0.0f, 0.0f), vert, ind,"");
+    line->lineObj->lineWidth(5);
     WidgWindow->addWidget(line);
 
 }
