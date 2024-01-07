@@ -30,33 +30,89 @@
 
 #include <glm/glm.hpp>
 #include<frtk.h>
-
+/**
+ * 2D BoundBox class definition.
+ */
 class cBoundBox2D {
 public:
+    /**
+     * Class constructor.
+     * 
+     */
     cBoundBox2D();
     ~cBoundBox2D();
 
 public:
     //functions:
+    /**
+     * Boolean function return true if a point is inside the polygon.
+     * 
+     * \param point 2D vertex 
+     * \return true if the vertex inside the polygon, false if not
+     */
     virtual bool isInside(glm::vec2 point);
+    /**
+     * .
+     * 
+     * \return 
+     */
+    /**
+     * Calculate diagonal length of the 2D polygon.
+     * 
+     * \return diagonal length of the 2D polygon
+     */
     virtual float DiagonalLength();
+    /**
+     * .
+     * 
+     * \return 
+     */
+    /**
+     * Get max value of X in the vertices (Boundbox).
+     * 
+     * \return float value represent max X
+     */
     virtual float XgetMax();
+    /**
+     * Get max value of Y in the vertices (Boundbox).
+     * 
+     * \return float value represent max Y
+     */
     virtual float YgetMax();
+    /**
+     * Calculate boundbox which is all max,min, diagonal length, ..etc  values .
+     * 
+     */
     virtual void calBoundBox();
+    /**
+     * .
+     * 
+     * \param points
+     */
     virtual void setVertices(std::shared_ptr<std::vector<glm::vec2>>points);
+    float minX();  
+    float maxX();  
+    float minY(); 
+    float maxY(); 
+
+    float Xlength();
+    float Ylength();
+
 protected:
 
-    float minX;
-    float maxX;
-    float minY;
-    float maxY;
+    float m_minX; //Min X value of the BoundBox
+    float m_maxX; //Max X value of the BoundBox
+    float m_minY; //Min Y value of the BoundBox
+    float m_maxY; //Max Y value of the BoundBox
     
-    float Xlength;
-    float Ylength;
+    float m_Xlength;
+    float m_Ylength;
+    float m_DiagonalLength;
 private:
-    std::shared_ptr<std::vector<glm::vec2>>points;
-
+    std::shared_ptr<std::vector<glm::vec2>>m_points;
 };
+
+
 class cBoundBox :public cBoundBox2D{
 public:
 
@@ -68,12 +124,12 @@ public:
      virtual float DiagonalLength();
      virtual float ZgetMax();
 protected:
-    float minZ;
-    float maxZ;
+    float m_minZ;
+    float m_maxZ;
 
-    float Zlength;
+    float m_Zlength;
 private:
-    std::shared_ptr<std::vector<glm::vec3>>points;
+    std::shared_ptr<std::vector<glm::vec3>>m_points;
 };
 
 #endif
