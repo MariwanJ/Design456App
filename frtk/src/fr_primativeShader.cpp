@@ -118,7 +118,7 @@ void Fr_PrimaitiveShader::SetPrimative(std::shared_ptr<Fr_Primatives> primative)
 }
 
 void Fr_PrimaitiveShader::LoadLights(ShaderProgram* program, const std::vector<LightInfo>& lights) {
-    unsigned int nlights = min(lights.size(), kMaxLights);
+    unsigned int nlights = std::min(lights.size(), kMaxLights);
     program->SetUniformInteger("nlights", nlights);
     for (size_t i = 0; i < nlights; ++i) {
         auto id = "lights[" + std::to_string(i) + "].";

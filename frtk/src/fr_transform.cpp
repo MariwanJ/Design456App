@@ -167,7 +167,7 @@ glm::vec3 Transform::computeSphereCoordinate(double x, double y) {
     if (invertX_) x = w - x;
     if (invertY_) y = h - y;
 
-    const float radius = min(w / 2.0f, h / 2.0f);
+    const float radius = std::min(w / 2.0f, h / 2.0f);
     float vx = (x - w / 2.0f) / radius;
     float vy = (h - y - h / 2.0f) / radius;
     float vz = 0;
