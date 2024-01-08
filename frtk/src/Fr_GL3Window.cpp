@@ -155,6 +155,7 @@ GLFWwindow* Fr_GL3Window::getCurrentGLWindow()
  * 
  */
 
+
 #include<ThreeDWidgets/fr_line_widget.h> ///this is a test TODO : REMOVE ME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
 void Fr_GL3Window::CreateScene()
 {
@@ -186,7 +187,10 @@ void Fr_GL3Window::CreateScene()
     std::shared_ptr<std::vector<float>> vert = std::make_shared<std::vector<float>>(std::initializer_list<float>{0.f, 0.f, 0.f, 100.f, 100.f, 100.f});
     std::shared_ptr < std::vector<unsigned int>> ind = std::make_shared<std::vector<unsigned int>>(std::initializer_list<unsigned int>{0,1});
     std::shared_ptr<FR::Fr_Line_Widget> line = std::make_shared<FR::Fr_Line_Widget>(glm::vec3(0.0f, 0.0f, 0.0f), vert, ind,"");
+    line->hasTexture(false);
+    line->SetColor(glm::vec4(FR_WHITE));
     line->lineObj->lineWidth(5);
+    lineMain = line;//REMOVE ME WHEN TEST IS FINISHED TODO FIXME
     WidgWindow->addWidget(line);
 
 }

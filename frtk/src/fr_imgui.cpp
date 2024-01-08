@@ -284,6 +284,9 @@ int Fr_GL3Window::imgui_ViewPort()
     float wHeight = (float)ImGui::GetWindowHeight();
 
     ImVec2 windowPos = ImGui::GetWindowPos();
+    
+    static float lineAngl = 0.0f;   //dummy code - remove me later -- TODO: REMOVE ME
+    static int counter = 0;
 
     auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
     auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
@@ -297,6 +300,9 @@ int Fr_GL3Window::imgui_ViewPort()
     //Camera::aspectRatio_ = wWidth / wHeight;    //Must be updated always
 
     //WE MUST UPDATE THIS, OTHERWISE THE RENDERING WILL BE MISSING DATA, AND THE PICTURE SHOWN WILL BE WRONG!!
+    if (lineAngl == 359) {
+        lineAngl = 0;
+    }
     sceneBuffer->RescaleFrameBuffer(wWidth, wHeight);
     sceneBuffer->Bind();
     scene->RenderScene();
@@ -309,6 +315,15 @@ int Fr_GL3Window::imgui_ViewPort()
     imguimzo_init();
     ImGui::End();
     sceneBuffer->Unbind();
+    if (++counter >= 5)
+    {
+        tempBu->Rotate(glm::vec3(0.0f, 0.0f, 1.0f), lineAngl);
+        lineMain->Rotate(glm::vec3(0.0f, 0.0f, 1.0f), lineAngl);
+        FRTK_CORE_INFO("{}", lineAngl);
+        lineAngl++;
+        counter = 0;
+    }
+
     return 0;
 }
 

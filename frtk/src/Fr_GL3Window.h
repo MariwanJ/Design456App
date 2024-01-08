@@ -43,6 +43,7 @@
 #include <fr_ImGuiLayer.h>
 #include <fr_filebrowser.h>
 #include <ThreeDWidgets/fr_window.h>
+#include <ThreeDWidgets/fr_line_widget.h>
 
 #define MAX_CAMERAS 8  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING CameraList menu
 typedef struct  {
@@ -566,7 +567,20 @@ private:
 
 #if 1//Experimental code - will be removed
     std::shared_ptr <Transform> tempBu;
+
+
+    //Dummy CODE - TODO REMOVE ME WHEN TEST IS FINISHD : 
+    std::shared_ptr<FR::Fr_Line_Widget> lineMain;
+
 #endif
 };
+
+
+
+
+
+
+
+
 
 #endif

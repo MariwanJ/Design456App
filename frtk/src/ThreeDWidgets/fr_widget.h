@@ -231,9 +231,18 @@ namespace FR {
 
         virtual void diffCalculateNormals();
 
-        glm::vec3 GetVertex(unsigned int index, const float vertices[]);
+        /**
+         * Get a vertex (x,y,z) from the vertices at index 'index'.
+         * 
+         * \param ind
+         * \param vertices array of float values
+         * \return vertex in (x,y,z) format
+         */
+        glm::vec3 GetVertex(unsigned int ind, const float vertices[]);
+        glm::vec3 GetVertex(unsigned int ind);
 
-        void SetVertex(unsigned int index, float vertices[], const glm::vec3& vertex);
+        void SetVertex(unsigned int ind, float vertices[], const glm::vec3& vertex);
+        void SetVertex(unsigned int ind, const glm::vec3& vertex);
 
         virtual void calcualteTextCoor(int width, int height);
 

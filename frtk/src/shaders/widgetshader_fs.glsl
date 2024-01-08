@@ -75,6 +75,7 @@ void main ()
 	else{
 		frag_color =  vec4(color.rgb * frag_light, color.a);
 	//frag_color = vec4(color.rgb * frag_light*frag_normal, color.a);//TEST THIS
+		 
 	}
  
 }

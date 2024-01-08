@@ -55,7 +55,7 @@ namespace FR {
         void Verticies(std::shared_ptr<std::vector<float>> vert);
         std::shared_ptr<std::vector<float>>  Verticies();
 
-   /*     void Indicies(std::shared_ptr < std::vector<unsigned int>>indc);
+   /*     void Indices(std::shared_ptr < std::vector<unsigned int>>indc);
         void TextureCoord(std::shared_ptr<std::vector<float>> tex);*/
 
         std::shared_ptr < std::vector<unsigned int>>Indicies();

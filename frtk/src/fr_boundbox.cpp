@@ -1,8 +1,8 @@
 #include "fr_boundbox.h"
-cBoundBox2D::cBoundBox2D(): m_minX(0),m_maxX(0),
-                            m_minY(0),m_maxY(0),
-                            m_Xlength(0),m_Ylength(0),
-                            m_DiagonalLength(0)
+cBoundBox2D::cBoundBox2D(): m_minX(0.0f),m_maxX(0.0f),
+                            m_minY(0.0f),m_maxY(0.0f),
+                            m_Xlength(0.0f),m_Ylength(0.f),
+                            m_DiagonalLength(0.0f), m_center(0.0f,0.0f)
 {
 }
 
@@ -42,6 +42,7 @@ void cBoundBox2D::calBoundBox()
     m_Xlength = m_maxX - m_minX;
     m_Ylength = m_maxY - m_minY;
     m_DiagonalLength= std::sqrt(m_Xlength* m_Xlength+ m_Ylength* m_Ylength);
+    m_center = glm::vec2((m_minX + m_maxX) / 2, (m_minY + m_maxY) / 2);
 }
 
 void cBoundBox2D::setVertices(std::shared_ptr<std::vector<glm::vec2>> pnts)
@@ -79,9 +80,14 @@ float cBoundBox2D::Ylength()
     return 0.0f;
 }
 
+glm::vec2 cBoundBox2D::Center()
+{
+    return m_center;
+}
+
 cBoundBox::cBoundBox() :cBoundBox2D(),
-                        m_Zlength(0), 
-                        m_minZ(0),m_maxZ(0)
+                        m_Zlength(0.0f), 
+                        m_minZ(0.0f),m_maxZ(0.0f),m_center(0.0f,0.0f,0.0f)
 {
     m_minX = m_maxX = m_minY = m_maxY = m_minZ= m_maxZ= m_Xlength = m_Ylength =0 ;
 }
@@ -99,6 +105,14 @@ void cBoundBox::calBoundBox()
         m_maxY = std::max(m_maxY, vertex.y);
         m_maxZ = std::max(m_maxZ, vertex.z);
     }
+    m_Xlength = m_maxX - m_minX;
+    m_Ylength = m_maxY - m_minY;
+    m_Zlength = m_maxZ - m_minZ;
+    
+    m_DiagonalLength = std::sqrt(m_Xlength * m_Xlength + m_Ylength * m_Ylength+ m_Zlength * m_Zlength);
+    m_center = glm::vec3((m_minX + m_maxX) / 2,
+                         (m_minY + m_maxY) / 2,
+                         (m_minZ + m_maxZ) / 2);
 }
 bool cBoundBox::isInside(glm::vec3 point)
 {
@@ -113,4 +127,9 @@ float cBoundBox::DiagonalLength()
 float cBoundBox::ZgetMax()
 {
     return 0.0f;
+}
+
+glm::vec3 cBoundBox::Center()
+{
+    return m_center;
 }

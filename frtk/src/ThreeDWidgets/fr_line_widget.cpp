@@ -25,6 +25,7 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 #include "fr_line_widget.h"
+#include <glm/gtx/transform.hpp>
 namespace FR{
 
 Fr_Line_Widget::Fr_Line_Widget(glm::vec3 position, 
@@ -93,8 +94,9 @@ void Fr_Line_Widget::LoadLights(ShaderProgram* program, const std::vector<LightI
 void Fr_Line_Widget::Render(RenderInfo& info, const glm::mat4& modelview) {
     if (!active_)
         return;
+ 
 
-    auto mvp = info.projection * modelview;
+    auto mvp = info.projection * modelview * m_Matrix;
     auto normalmatrix = glm::transpose(glm::inverse(modelview));
     widget_program->Enable();
     LoadLights(widget_program, info.lights);
@@ -111,4 +113,11 @@ void Fr_Line_Widget::Render(RenderInfo& info, const glm::mat4& modelview) {
     widget_program->Disable();
     info.id++;
     }
+void Fr_Line_Widget::Rotate(glm::vec3 axis, float angle)
+{
+    m_Matrix = glm::rotate(glm::mat4{ 1 }, glm::radians(angle), axis);
+
+}
+ 
+
 }

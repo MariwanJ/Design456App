@@ -71,6 +71,7 @@ namespace FR {
     }
     void Fr_Widget::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights)
     {
+        return; //You should override this
     }
 
 
@@ -267,7 +268,6 @@ namespace FR {
     void Fr_Widget::Scale(float x, float y, float z)
     {
         m_Matrix = glm::scale(m_Matrix, glm::vec3(x, y, z));
-
     }
     void Fr_Widget::Scale(glm::vec3 value)
     {
@@ -323,10 +323,25 @@ namespace FR {
         );
     }
 
+    glm::vec3 Fr_Widget::GetVertex(unsigned int ind)
+    {            return glm::vec3(
+                (*m_verticies.get())[ind * 3],
+                (*m_verticies.get())[ind * 3 + 1],
+                (*m_verticies.get())[ind * 3 + 2]);
+        
+     }
+
     void Fr_Widget::SetVertex(unsigned int index, float vertices[], const glm::vec3& vertex) {
         vertices[index * 3] = vertex[0];
         vertices[index * 3 + 1] = vertex[1];
         vertices[index * 3 + 2] = vertex[2];
+    }
+
+    void Fr_Widget::SetVertex(unsigned int ind, const glm::vec3& vertex)
+    {
+        (*m_verticies.get())[ind * 3] = vertex[0];
+        (*m_verticies.get())[ind * 3+1] = vertex[1];
+        (*m_verticies.get())[ind * 3+2] = vertex[2];
     }
 
     void Fr_Widget::calcualteTextCoor(int width, int height) {
