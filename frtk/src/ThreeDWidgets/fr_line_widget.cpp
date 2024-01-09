@@ -42,6 +42,9 @@ Fr_Line_Widget::Fr_Line_Widget(glm::vec3 position,
     diffCalculateNormals();
     lineObj->initializeVBO();
     CreateShader();
+    BoundBox = std::make_shared<cBoundBox2D>();
+    BoundBox->setVertices(m_verticies);
+    BoundBox->calBoundBox();
 }
 
 Fr_Line_Widget::~Fr_Line_Widget()
@@ -64,6 +67,9 @@ void Fr_Line_Widget::lbl_redraw()
 }
 int Fr_Line_Widget::handle(int e)
 {
+    if (!active_)
+        return 0; //we don't use the event/we don't care
+    if (mouse_event)
     switch (e) {
     case FR_PUSH: FRTK_CORE_INFO("Line Widget is clicked");
         return 1; //Consume the event
@@ -113,11 +119,7 @@ void Fr_Line_Widget::Render(RenderInfo& info, const glm::mat4& modelview) {
     widget_program->Disable();
     info.id++;
     }
-void Fr_Line_Widget::Rotate(glm::vec3 axis, float angle)
-{
-    m_Matrix = glm::rotate(glm::mat4{ 1 }, glm::radians(angle), axis);
 
-}
  
 
 }

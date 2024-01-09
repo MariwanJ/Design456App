@@ -33,6 +33,7 @@
 #include <stdexcept>
 #include <fr_shader_program.h>
 #include<fr_core.h>
+#include<fr_boundbox.h>
 
 namespace FR {
     
@@ -98,7 +99,10 @@ namespace FR {
          * Returns the camera info by reference
          */
         virtual bool SetupCamera(glm::mat4& projection, glm::mat4& modelview) override;
-
+        /**
+         * Create shader program that will be used by the entire widget system
+         * 
+         */
         virtual void CreateShader();
 
         /**
@@ -120,6 +124,10 @@ namespace FR {
          * main draw function .
          */
         virtual void draw();
+        /**
+         * Redraw the last object.
+         * 
+         */
         virtual void redraw();
 
         /**
@@ -161,12 +169,18 @@ namespace FR {
         bool visible(void);
 
         /**
-        *   Handle events - must be subclassed
+        *   Handle events - must be sub-classed
         */
         virtual int handle(int e);
-
+        /**
+         * Let the object be visible.
+         * 
+         */
         virtual void show();
-
+        /**
+         * Hide the object.
+         * 
+         */
         virtual void hide();
 
         /** Gets the current callback function for the widget.
@@ -174,7 +188,11 @@ namespace FR {
          \return current callback
       */
         Fr_Callback_p callback() const;
-
+        /**
+         * Retrieve the position of the widget.
+         * 
+         * \return glm::vec3 position of the widget
+         */
         glm::vec3 getPosition() const;
 
         //From shader
@@ -192,10 +210,29 @@ namespace FR {
         void SetOpacity(float alpha);
 
         virtual GLuint getCurrentTexturer(void);
-
+        /**
+         * Retrieve tab index of the widget.
+         * 
+         * \return Tab-Index of the widget
+         */
         virtual int tabIndex() const;
+        /**
+         * Set Tab index of the widget.
+         * 
+         * \param index
+         */
         void tabIndex(int index);
+        /**
+         * Define if the widget has texture.
+         * 
+         * \param val an integer that defines if a widget has a texture 1 : has texture, 0: no texture
+         */
         void hasTexture(int val);
+        /**
+         * .
+         * 
+         * \return 
+         */
         int hasTexture();
 
         /**
@@ -220,13 +257,22 @@ namespace FR {
         virtual void Translate(float x, float y, float z);
 
         /**
-         * Multiply the current matrix by a translation matrix
+         * Scale the object by a percentage 
          */
         virtual void Scale(float x, float y, float z);
 
         virtual void Scale(glm::vec3 value);
-
+        /**
+         * Get widget matrix.
+         * 
+         * \return m_matrix : matrix of the widget
+         */
         glm::mat4 GetMatrix();
+        /**
+         * Get inverse of the matrix.
+         * 
+         * \return 
+         */
         glm::mat4 GetInvers();
 
         void SetPosition(float x, float y, float z);
@@ -258,7 +304,7 @@ namespace FR {
         std::shared_ptr<std::vector<float>> m_vertCoord;          //must be calculated internally
         std::shared_ptr<std::vector<float>>  m_normals;
         std::shared_ptr<std::vector<float>>  m_textCoord;
-        ShaderProgram* widget_program;  //todo : Static?? or not,
+        ShaderProgram* widget_program; 
 
         //From shader
         /**
@@ -287,6 +333,7 @@ namespace FR {
         glm::vec4 m_color;
         float m_silhouette;
         GLuint m_texture; //used to return the texture for imgui rendering inside window.
+
     };
 }
 #endif

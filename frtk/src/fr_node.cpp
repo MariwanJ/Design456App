@@ -29,6 +29,7 @@
 
 Node::Node() :type_(NODETYPE::FR_NODE),m_Parent(-1),
 active_{ true } {
+    
 }
 
 Node::~Node() {

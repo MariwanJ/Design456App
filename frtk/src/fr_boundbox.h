@@ -89,7 +89,7 @@ public:
      * 
      * \param points
      */
-    virtual void setVertices(std::shared_ptr<std::vector<glm::vec2>>points);
+    virtual void setVertices(std::shared_ptr<std::vector<float>>points);
     float minX();  
     float maxX();  
     float minY(); 
@@ -109,10 +109,10 @@ protected:
     float m_Xlength;
     float m_Ylength;
     float m_DiagonalLength;
+    std::shared_ptr<std::vector<float>>m_points;
 
 private: 
     glm::vec2 m_center;
-    std::shared_ptr<std::vector<glm::vec2>>m_points;
 };
 
 
@@ -127,14 +127,12 @@ public:
      virtual float DiagonalLength();
      virtual float ZgetMax();
      glm::vec3 Center();
-
 protected:
     float m_minZ;
     float m_maxZ;
 
     float m_Zlength;
 private:
-    std::shared_ptr<std::vector<glm::vec3>>m_points;
     glm::vec3 m_center;
 };
 

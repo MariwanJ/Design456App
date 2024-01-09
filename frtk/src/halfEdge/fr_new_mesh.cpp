@@ -35,6 +35,9 @@ Shape::Shape(const std::string& path) :
     ReadFile(path);
     calcualteTextCoor(1024,1024);
     InitializeVBO();
+    BoundBox = std::make_shared<cBoundBox>();
+    std::shared_ptr<std::vector<float>> t = std::make_shared<std::vector<float>>(vertices_);
+    BoundBox->setVertices(t);
     linktoMainWindow = Fr_GL3Window::getfr_Gl3Window();
 }
 Shape::Shape() : vbo_{ 0, 0, 0 , 0 }, vao_(0), normalized_(false) {

@@ -34,6 +34,7 @@
 #include<../vendor/glm/glm/glm.hpp>
 #include<../src/fr_transform.h>
 #include<../src/halfedge/fr_genID.h>
+#include <fr_boundbox.h>
 
 class Shape;  //Object container for any 2D or 3D shape
 class mesh_halfedge;
@@ -136,7 +137,7 @@ private:
     glm::vec3 GetVertex(unsigned int index, const float vertices[]);
 
     /**
-     * Receives an index and sets the vertice
+     * Receives an index and sets the vertices
      */
     void SetVertex(unsigned int index, float vertices[],
         const glm::vec3& vertex);
@@ -181,10 +182,11 @@ public:
     void hasTexture(int val);
 public:
     /**
-    *   Use this to update the verticies that will be drawn by OpenGL.
-    *   This must be done after any manupulation.
+    *   Use this to update the vertices that will be drawn by OpenGL.
+    *   This must be done after any manipulation.
     */
     int updateVerticies(void);
+    std::shared_ptr<cBoundBox> BoundBox;    //Boundbox of the shape
 
 private:
     std::vector<float> vertices_;

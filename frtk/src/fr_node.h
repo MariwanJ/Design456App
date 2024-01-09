@@ -34,6 +34,7 @@
 #include <glm/glm.hpp>
 #include <fr_texture2d.h>
 
+
 typedef enum class NODETYPE {
     FR_NODE				= 0,
     FR_GROUP 			= 1,
@@ -88,7 +89,7 @@ public:
         //ShadowMapInfo shadowmap;
         bool render_transparent;
     };
-
+    
     /**
      * Constructor
      */

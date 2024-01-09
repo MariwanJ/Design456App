@@ -2,6 +2,7 @@
 #define FR_LINE_WIDGET_H
 
  #include<ThreeDWidgets/fr_widget.h>
+#include<fr_boundbox.h>
 //#include<ThreeDWidgets/fr_draw.h>
 class Fr_TwoD_Drawing;
 namespace FR {
@@ -18,7 +19,8 @@ namespace FR {
         virtual void lbl_draw();
         virtual void lbl_redraw();
         std::shared_ptr <Fr_TwoD_Drawing> lineObj;        
-        void Rotate(glm::vec3 axis, float angle);
+    public:
+        std::shared_ptr<cBoundBox2D> BoundBox;
  
     protected:
         

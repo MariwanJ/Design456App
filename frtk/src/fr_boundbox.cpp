@@ -32,12 +32,12 @@ float cBoundBox2D::YgetMax()
 
 void cBoundBox2D::calBoundBox()
 {
-    for ( auto vertex : *m_points) {
-        m_minX = std::min(m_minX, vertex.x);
-        m_minY = std::min(m_minY, vertex.y);
+    for (int i = 0; i < m_points->size();i=i+2) {
+        m_minX = std::min(m_minX, (*m_points.get())[i]);
+        m_minY = std::min(m_minY, (*m_points.get())[i+1]);
  
-        m_maxX = std::max(m_maxX, vertex.x);
-        m_maxY = std::max(m_maxY, vertex.y);
+        m_maxX = std::max(m_maxX, (*m_points.get())[i]);
+        m_maxY = std::max(m_maxY, (*m_points.get())[i + 1]);
     }
     m_Xlength = m_maxX - m_minX;
     m_Ylength = m_maxY - m_minY;
@@ -45,7 +45,7 @@ void cBoundBox2D::calBoundBox()
     m_center = glm::vec2((m_minX + m_maxX) / 2, (m_minY + m_maxY) / 2);
 }
 
-void cBoundBox2D::setVertices(std::shared_ptr<std::vector<glm::vec2>> pnts)
+void cBoundBox2D::setVertices(std::shared_ptr<std::vector<float>> pnts)
 {
     m_points = pnts;
 }
@@ -97,13 +97,13 @@ cBoundBox::~cBoundBox()
 }
 void cBoundBox::calBoundBox()
 {
-    for (auto vertex : *m_points) {
-        m_minX = std::min(m_minX, vertex.x);
-        m_minY = std::min(m_minY, vertex.y);
-        m_minZ = std::min(m_minZ, vertex.z);
-        m_maxX = std::max(m_maxX, vertex.x);
-        m_maxY = std::max(m_maxY, vertex.y);
-        m_maxZ = std::max(m_maxZ, vertex.z);
+    for (int i = 0; i < m_points->size(); i = i + 3) {
+        m_minX = std::min(m_minX, (*m_points.get())[i]);
+        m_minY = std::min(m_minY, (*m_points.get())[i+1]);
+        m_minZ = std::min(m_minZ, (*m_points.get())[i+2]);
+        m_maxX = std::max(m_maxX, (*m_points.get())[i]);
+        m_maxY = std::max(m_maxY, (*m_points.get())[i+1]);
+        m_maxZ = std::max(m_maxZ, (*m_points.get())[i+2]);
     }
     m_Xlength = m_maxX - m_minX;
     m_Ylength = m_maxY - m_minY;

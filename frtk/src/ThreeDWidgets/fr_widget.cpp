@@ -35,7 +35,8 @@ namespace FR {
 
   
 
-    Fr_Widget::Fr_Widget(const Fr_Widget& t) :m_position{ 0.f,0.f,0.f }, m_callback_(t.m_callback_),
+    Fr_Widget::Fr_Widget(const Fr_Widget& t) :m_position{ 0.f,0.f,0.f }, 
+        m_callback_(t.m_callback_), 
         m_verticies(std::move(t.m_verticies)), m_indicies(std::move(t.m_indicies))
     {
         m_label = t.m_label;
@@ -47,9 +48,9 @@ namespace FR {
       
     }
 
-    Fr_Widget::Fr_Widget(glm::vec3 position, 
+    Fr_Widget::Fr_Widget(glm::vec3 position,
         std::shared_ptr<std::vector <float>> verticies,
-        std::shared_ptr<std::vector <unsigned int>> indicies, 
+        std::shared_ptr<std::vector <unsigned int>> indicies,
         std::string label) :m_callback_{ NULL },
         m_label(""), m_draw{0}, m_verticies(std::move(verticies)), m_indicies(std::move(m_indicies))
     {
