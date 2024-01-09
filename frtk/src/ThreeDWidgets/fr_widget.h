@@ -207,6 +207,10 @@ namespace FR {
          * Multiply the current matrix by a rotation matrix
          */
         virtual void Rotate(glm::vec3 axis, float angle);
+        /**
+         * Translate the widget to the new location
+         * @param v 3D vector of the new position.
+         */
 
         virtual void Translate(glm::vec3 v);
 

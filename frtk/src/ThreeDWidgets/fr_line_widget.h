@@ -19,7 +19,7 @@ namespace FR {
         virtual void lbl_redraw();
         std::shared_ptr <Fr_TwoD_Drawing> lineObj;        
         void Rotate(glm::vec3 axis, float angle);
-
+ 
     protected:
         
         int handle(int e);

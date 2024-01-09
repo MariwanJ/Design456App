@@ -69,7 +69,7 @@ int Fr_GL3Window::imguimzo_init()
 
     if (ImGuizmo::IsUsing()) {
         auto resu = trnasfrom_[3];
-        //tempBu->SetPosition(tranform[3]);
+        //tempBu->SetPosition(transform[3]);
         glm::vec3 trans, scaling;
         glm::vec4 rot;
         ExtractTransformMatrix(trnasfrom_, trans, rot, scaling);

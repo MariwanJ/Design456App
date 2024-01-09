@@ -262,7 +262,7 @@ namespace FR {
     void Fr_Widget::Translate(float x, float y, float z)
     {
         m_position = glm::vec3(x, y, z);
-        m_Matrix = glm::translate(m_Matrix, m_position);
+        m_Matrix = glm::translate(glm::mat4{ 1 }, m_position);
 
     }
     void Fr_Widget::Scale(float x, float y, float z)
