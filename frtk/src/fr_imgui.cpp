@@ -315,10 +315,10 @@ int Fr_GL3Window::imgui_ViewPort()
     imguimzo_init();
     ImGui::End();
     sceneBuffer->Unbind();
-    if (++counter >= 5)
+    if (++counter >= 35)
     {
         tempBu->Rotate(glm::vec3(0.0f, 0.0f, 1.0f), lineAngl);
-        lineMain->Rotate(glm::vec3(0.0f, 0.0f, 1.0f), lineAngl);
+        lineMain->Rotate(glm::vec3(0.0f, 0.0f, 1.0f), 0);
         FRTK_CORE_INFO("{}", lineAngl);
         lineAngl++;
         counter = 0;

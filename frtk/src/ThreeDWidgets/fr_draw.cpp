@@ -114,12 +114,14 @@ namespace FR {
         case FR_LINES: {
             glCheckFunc(glBindVertexArray(m_vao));
             glCheckFunc(glDrawElements(GL_LINES, m_Indices->size(), GL_UNSIGNED_INT, 0));
+            glCheckFunc(glLineWidth(m_lineWidth));
             glCheckFunc(glBindVertexArray(0));
             break;
         }
         case FR_OPEN_LOOP: {
             glCheckFunc(glBindVertexArray(m_vao));
             glCheckFunc(glDrawElements(GL_LINE_LOOP, m_Indices->size(), GL_UNSIGNED_INT, 0));    //TODO: Check if this is correct!!
+            glCheckFunc(glLineWidth(m_lineWidth));
             glCheckFunc(glBindVertexArray(0));
             break;
         }
@@ -127,6 +129,7 @@ namespace FR {
         {
             glCheckFunc(glBindVertexArray(m_vao));
             glCheckFunc(glDrawElements(GL_TRIANGLE_FAN, m_Indices->size(), GL_UNSIGNED_INT, 0));    //TODO: Check if this is correct!!
+            glCheckFunc(glLineWidth(m_lineWidth));
             glCheckFunc(glBindVertexArray(0));
             break;
         }

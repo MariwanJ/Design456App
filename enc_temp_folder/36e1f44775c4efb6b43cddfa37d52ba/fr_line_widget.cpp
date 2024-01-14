@@ -71,12 +71,12 @@ bool Fr_Line_Widget::PointOnLine() {
     // Perform geometric check
     Fr_GL3Window* win = ParentGL3Window();
     glfwMouseEvent mouse_evnets = win->getMouseEvents();
-    float distanceThreshold = 0.01f;
+    int distanceThreshold = 0.01f;
 
     for (int i = 0; i < m_verticies->size() / 3; i = i + 6) {
         double lineLength = std::sqrt(std::pow(m_verticies->at(i + 3) - m_verticies->at(i), 2) + std::pow(m_verticies->at(i + 3 + 1) - m_verticies->at(i + 1), 2) + std::pow(m_verticies->at(i + 3 + 2) - m_verticies->at(i + 2), 2));
         double distance = std::abs((m_verticies->at(i + 3 + 1) - m_verticies->at(i + 1)) * mouse_evnets.Old_x - (m_verticies->at(i + 3) - m_verticies->at(i)) * mouse_evnets.Old_y + m_verticies->at(i + 3) * m_verticies->at(i + 1) - m_verticies->at(i + 3 + 1) * m_verticies->at(i)) / lineLength;
-        if (distance <= distanceThreshold) {
+        if (distance < distanceThreshold) {
             return true;
         }
     }

@@ -29,10 +29,13 @@
 #ifndef FR_NODE_H
 #define FR_NODE_H
 
+ 
+
 #include <frtk.h>
 #include <fr_core.h>
 #include <glm/glm.hpp>
 #include <fr_texture2d.h>
+
 
 
 typedef enum class NODETYPE {
@@ -60,6 +63,7 @@ typedef enum class NODETYPE {
  * Will be sub-classed by several other classes like (Group, Light, ..etc)
  */
 class FRTK_API Node {
+    friend Fr_GL3Window;
 public:
 
     /**
@@ -140,7 +144,8 @@ public:
     int Parent();
 
     void Parent(int index);
-
+    Fr_GL3Window* ParentGL3Window();
+    static void setParentlink(Fr_GL3Window* p);
 protected:
 
     /**
@@ -157,8 +162,11 @@ protected:
      */
     int uniqueIndex; 
 
-    int m_Parent; //-1 for Abstract class that doesn't have parent. and for the Root class
+    int m_Parent; //-1 for Abstract class that doesn't have parent. and for the Root classS
 
+ 
+
+   static Fr_GL3Window *m_parentGl3Win;
 };
 
 #endif

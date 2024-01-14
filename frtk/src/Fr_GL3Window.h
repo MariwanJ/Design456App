@@ -45,6 +45,7 @@
 #include <ThreeDWidgets/fr_window.h>
 #include <ThreeDWidgets/fr_line_widget.h>
 
+
 #define MAX_CAMERAS 8  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING CameraList menu
 typedef struct  {
     double Old_x = 0;  //SAVE X AND Y OF LAST CLICK INSIDE GLFW
@@ -100,6 +101,11 @@ public:
     * Class destructor.
     *
     */
+    /**
+     * Interface class override to define the function.
+     * 
+     * \return 
+     */
 
     static Fr_GL3Window* getfr_Gl3Window();
 
@@ -193,6 +199,7 @@ public:
      * Static pointer used to access the GLFW window.
      */
     GLFWwindow* pWindow;
+
     /**
      * Function to change the initialization variable of glad to false.
      * The variable will be used to avoid calling glad functions
@@ -223,7 +230,7 @@ public:
 
     glm::vec3 computeSphereCoordinates(double x, double y, bool invertX_ = false, bool invertY_ = false);
 
-
+    glfwMouseEvent getMouseEvents();
 protected:
     /**
      * Function to create all cameras listed in CameraList.

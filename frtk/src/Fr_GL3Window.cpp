@@ -91,9 +91,8 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     Fr_GL3Window::GLFWCallbackWrapper::setGLFWwindow(this);
     WidgWindow = std::make_shared<FR::Fr_Window>(); //Create FR_WINDOW that keeps the widget system
     WidgWindow->linkToMainWindow = this;
+    WidgWindow->setParentlink(this) ;
     radiusXYZ = 0;
-
-
 }
 
 void Fr_GL3Window::flush() {
@@ -110,7 +109,9 @@ Fr_GL3Window::Fr_GL3Window()
     s_Fr_GLFWwindow = this;
     WidgWindow = std::make_shared<FR::Fr_Window>(); //Create FR_WINDOW that keeps the widget system
     WidgWindow->linkToMainWindow = this;
+
 }
+
 
 Fr_GL3Window* Fr_GL3Window::getfr_Gl3Window()
 {
@@ -189,7 +190,7 @@ void Fr_GL3Window::CreateScene()
     std::shared_ptr<FR::Fr_Line_Widget> line = std::make_shared<FR::Fr_Line_Widget>(glm::vec3(0.0f, 0.0f, 0.0f), vert, ind,"");
     line->hasTexture(false);
     line->SetColor(glm::vec4(FR_WHITE));
-    line->lineObj->lineWidth(5);
+    line->lineObj->lineWidth(50);
     lineMain = line;//REMOVE ME WHEN TEST IS FINISHED TODO FIXME
     WidgWindow->addWidget(line);
 

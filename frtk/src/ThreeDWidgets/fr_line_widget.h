@@ -8,16 +8,17 @@ class Fr_TwoD_Drawing;
 namespace FR {
     class FRTK_API Fr_Line_Widget : public Fr_Widget {
     public:
-        Fr_Line_Widget(glm::vec3 position,                                          //Translation 
+         Fr_Line_Widget(glm::vec3 position,                                          //Translation 
                         std::shared_ptr<std::vector <float>>verticies,
                         std::shared_ptr<std::vector <unsigned int>> indicies,
                         std::string label);
-        ~Fr_Line_Widget();
+        virtual ~Fr_Line_Widget();
         //Default constructor is disallowed
         Fr_Line_Widget() = delete;
         virtual void draw();
         virtual void lbl_draw();
         virtual void lbl_redraw();
+        bool PointOnLine();
         std::shared_ptr <Fr_TwoD_Drawing> lineObj;        
     public:
         std::shared_ptr<cBoundBox2D> BoundBox;

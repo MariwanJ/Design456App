@@ -366,6 +366,11 @@ glm::vec3 Fr_GL3Window::computeSphereCoordinates(double x, double y, bool invert
     return glm::vec3(vx, vy, vz);
 }
 
+glfwMouseEvent Fr_GL3Window::getMouseEvents()
+{
+    return mouseEvent;
+}
+
 void Fr_GL3Window::LeftMouseClick(GLFWwindow* win)
 {
 

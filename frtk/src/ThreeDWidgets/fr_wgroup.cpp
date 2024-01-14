@@ -98,11 +98,8 @@ namespace FR {
 
     int Fr_WGroup::insert(std::shared_ptr <Fr_Widget>wd, int index_before)
     {
-        auto it = std::find(m_children.begin(), m_children.end(), wd);
         if (m_children.begin() + index_before <= m_children.end())
         {
-            auto it = m_children.begin();
-
             m_children.insert(m_children.begin() + index_before, std::move(wd));
             return 0;
         }

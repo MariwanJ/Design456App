@@ -26,10 +26,12 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 #include <fr_node.h>
+#include <Fr_GL3Window.h>
 
-Node::Node() :type_(NODETYPE::FR_NODE),m_Parent(-1),
-active_{ true } {
-    
+Node::Node() :type_(NODETYPE::FR_NODE), m_Parent(-1),
+active_{ true}
+{
+ 
 }
 
 Node::~Node() {
@@ -59,7 +61,7 @@ bool Node::SetupTexture2D( ) {
 //    /*(void)info;
 //    (void)modelview;*/
 //}
-
+Fr_GL3Window *Node::m_parentGl3Win = 0;
 void Node::Render(RenderInfo& info, const glm::mat4& modelview) {
     //Dummy code does nothing should be subclassed
     /*(void)info;
@@ -91,3 +93,11 @@ void Node::Parent(int index)
 {
     m_Parent = index;
 }
+
+Fr_GL3Window* Node::ParentGL3Window(){
+    return m_parentGl3Win;
+}
+void Node::setParentlink(Fr_GL3Window* p)
+{
+    m_parentGl3Win = p;
+};

@@ -65,6 +65,10 @@
 #include<glm/glm.hpp>
 
 #include <../vendor/stb_image/src/stb_image.h>
+class Fr_GL3Window;
+
+
+
 
 //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
 enum class CameraList {
@@ -184,5 +188,9 @@ namespace FR {
     };
 
 
+
 };
+
+
+
 #endif
