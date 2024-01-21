@@ -66,21 +66,41 @@ void Fr_Line_Widget::lbl_redraw()
 {
     lbl_draw();
 }
+
+
 bool Fr_Line_Widget::PointOnLine() {
 
     // Perform geometric check
     Fr_GL3Window* win = ParentGL3Window();
     glfwMouseEvent mouse_evnets = win->getMouseEvents();
-    float distanceThreshold = 0.01f;
+    float distanceThreshold = 0.99f;
+    glm::vec3 mouseIn3D = win->computeSphereCoordinates(mouse_evnets.Old_x, mouse_evnets.Old_y, false, false);
+    
+ 
 
     for (int i = 0; i < m_verticies->size() / 3; i = i + 6) {
-        double lineLength = std::sqrt(std::pow(m_verticies->at(i + 3) - m_verticies->at(i), 2) + std::pow(m_verticies->at(i + 3 + 1) - m_verticies->at(i + 1), 2) + std::pow(m_verticies->at(i + 3 + 2) - m_verticies->at(i + 2), 2));
-        double distance = std::abs((m_verticies->at(i + 3 + 1) - m_verticies->at(i + 1)) * mouse_evnets.Old_x - (m_verticies->at(i + 3) - m_verticies->at(i)) * mouse_evnets.Old_y + m_verticies->at(i + 3) * m_verticies->at(i + 1) - m_verticies->at(i + 3 + 1) * m_verticies->at(i)) / lineLength;
-        if (distance <= distanceThreshold) {
-            return true;
-        }
+        float x1, x2, y1, y2, z1, z2;
+        x1 = m_verticies->at(i);
+        x2 = m_verticies->at(i + 3);
+        y1 = m_verticies->at(i + 1);
+        y2 = m_verticies->at(i + 3 + 1);
+        z1 = m_verticies->at(i + 2);
+        z2 = m_verticies->at(i + 3 + 2);
+
+        //double lineLength = std::sqrt(std::pow(m_verticies->at(i + 3) - m_verticies->at(i), 2) + 
+        //                    std::pow(m_verticies->at(i + 3 + 1) - m_verticies->at(i + 1), 2) + 
+        //                    std::pow(m_verticies->at(i + 3 + 2) - m_verticies->at(i + 2), 2));
+        //double distance = std::abs((m_verticies->at(i + 3 + 1) - 
+        //                   m_verticies->at(i + 1)) * mouse_evnets.Old_x - 
+        //                    (m_verticies->at(i + 3) - m_verticies->at(i)) * mouse_evnets.Old_y + 
+        //                    m_verticies->at(i + 3) * m_verticies->at(i + 1) - 
+        //                    m_verticies->at(i + 3 + 1) * m_verticies->at(i)) / lineLength;
+
+    /*    auto result = calculateDistance(mouseIn3D.x, mouseIn3D.y, mouseIn3D.z, x1, y1, z1, x2, y2, z2);*/
+       /* if (result <= distanceThreshold && result >0)*/
+           // return true;
     }
-    return false;
+        return false;
 }
 int Fr_Line_Widget::handle(int e)
 {

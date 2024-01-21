@@ -212,12 +212,6 @@ void Camera::setUserData(userData_& data)
     updateViewMatrix();
 }
 
-glm::mat4 Camera::getModelView()
-{
-    updateViewMatrix();
-    return m_ViewMatrix;
-}
-
 /**
  *
  * Home values.

@@ -117,8 +117,7 @@ void Fr_GL3Window::mouse_button_callback(GLFWwindow* win, int button, int action
 
     else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_MIDDLE && mouseEvent.Pressed == 1)
     {
-        //TODO : Not sure if widgets needs this event
-        theta = phi = 0;
+ 
         MiddMouseClick(win);
         if (WidgWindow->handle(FR::FR_PUSH) == 0) //Mouse click
             return;
@@ -143,12 +142,17 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
 
     if (mouseEvent.Button == GLFW_MOUSE_BUTTON_LEFT && mouseEvent.Pressed== 1)
     {
+        mouseEvent.Old_x = xpos;
+        mouseEvent.Old_y = ypos;
+
         LeftMouseDRAG(win, xpos, ypos);
         if (WidgWindow->handle(FR::FR_LEFT_DRAG_PUSH)==0) //Mouse click
             return;  //Events is consumed - no more action required
     }
     else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_LEFT && mouseEvent.Pressed== 0)
     {
+        mouseEvent.Old_x = xpos;
+        mouseEvent.Old_y = ypos;
         LeftMouseDRAGrelease(win, xpos, ypos);
         if (WidgWindow->handle(FR::FR_LEFT_DRAG_RELEASE) == 0) //Mouse click
             m_GLFWevents = { -1,-1,-1,-1,-1 };
@@ -157,12 +161,17 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
 
     else if (mouseEvent.Button== GLFW_MOUSE_BUTTON_RIGHT && mouseEvent.Pressed== 1)
     {
+        mouseEvent.Old_x = xpos;
+        mouseEvent.Old_y = ypos;
         RightMouseDRAG(win, xpos,ypos);
         if (WidgWindow->handle(FR::FR_RIGHT_DRAG_PUSH) == 0) //Mouse click
             return;  //Events is consumed - no more action required
     }
     else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_RIGHT && mouseEvent.Pressed== 0)
     {
+
+        mouseEvent.Old_x = xpos;
+        mouseEvent.Old_y = ypos;
         RightMouseDRAGrelease(win, xpos, ypos);
         if (WidgWindow->handle(FR::FR_RIGHT_DRAG_RELEASE) == 0) //Mouse click
             m_GLFWevents = { -1,-1,-1,-1,-1 };
@@ -179,6 +188,8 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
         else {
          //   FRTK_CORE_INFO("MOUSE ROTATE");           //TODO: FR_WIDGET DOSEN'T GET THIS EVENT.. SHOULD WE?
             cameraRotate(win,xpos, ypos);
+            mouseEvent.Old_x = xpos;
+            mouseEvent.Old_y = ypos;
             return;
         }
     }
@@ -192,7 +203,7 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
         if (WidgWindow->handle(FR::FR_RELEASE) == 0) //Mouse click 
             m_GLFWevents = { -1,-1,-1,-1,-1 };
 
-        mouseEvent.Old_x = mouseEvent.Old_y = 0;
+        mouseEvent.Old_x = mouseEvent.Old_y = 0;        //TODO : is this correct????????? 
         mouseEvent.Button = -1;
         return;
     }
@@ -274,7 +285,9 @@ void Fr_GL3Window::cameraPAN(GLFWwindow* win, double xpos, double ypos)
 void Fr_GL3Window::cameraRotate(GLFWwindow* win, double xpos, double ypos)
 {
     userData_ data;
-    auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
+    float phi = 0.0f;
+    float theta = 0.0f;
+    auto activeCamera = cameraList[(unsigned int)active_camera_];
     activeCamera->getUserData(data);
     ImVec4 viewPortDim = getPortViewDimensions();
     ImVec2 center = ImVec2(viewPortDim.x+(viewPortDim.z ) / 2, viewPortDim.y+(viewPortDim.w )/ 2);
@@ -339,16 +352,50 @@ void Fr_GL3Window::cameraRotate(GLFWwindow* win, double xpos, double ypos)
     mouseEvent.Old_y = ypos ;
 }
 
-glm::vec3 Fr_GL3Window::computeSphereCoordinates(double x, double y, bool invertX_, bool invertY_ ) {
+
+glm::vec3 Fr_GL3Window::computeSphereCoordinates(double mouseX, double mouseY, bool invertX_, bool invertY_ ) {
+
+#if 1
+        float width, height;
+        ImVec4 viewPortDim = getPortViewDimensions();
+
+        auto activeCamera =  cameraList[(unsigned int)active_camera_];
+        width = viewPortDim.z- viewPortDim.x;
+        height = viewPortDim.w- viewPortDim.y;
+ 
+        glm::mat4 viewMatrix = activeCamera->getViewMatrix();
+        glm::mat4 projectionMatrix = activeCamera->getPorjection();
+
+ 
+        glm::mat4 inverseProjectionMatrix = glm::inverse(projectionMatrix);
+        glm::mat4 inverseViewMatrix = glm::inverse(viewMatrix);
+ 
+            // Convert mouse coordinates to NDC
+            float x_ndc = (2.0f * mouseX) / width - 1.0f;
+            float y_ndc = 1.0f - (2.0f * mouseY) / height;
+
+            // Calculate the clip space coordinates
+            glm::vec4 clipCoords(x_ndc, y_ndc, -1.0f, 1.0f);
+
+            // Transform to eye space
+            glm::vec4 eyeCoords = glm::inverse(projectionMatrix) * clipCoords;
+            eyeCoords = glm::vec4(eyeCoords.x, eyeCoords.y, -1.0f, 0.0f);
+
+            // Transform to world coordinates
+            glm::vec4 worldCoords = glm::inverse(viewMatrix) * eyeCoords;
+            glm::vec3 worldCoord = glm::vec3(worldCoords.x, worldCoords.y, worldCoords.z);
+            worldCoord = glm::normalize(worldCoord);
+  
+    FRTK_CORE_INFO("xyz {},{} ,{} ", worldCoord.x*width , worldCoord.y*height , worldCoord.z);
+    return worldCoords;
+#else
     int vp[4];
     glGetIntegerv(GL_VIEWPORT, vp);
     const float w = vp[2];
     const float h = vp[3];
 
-    if (invertX_) 
-        x = w - x;
-    if (invertY_) 
-        y = h - y;
+    if (invertX_) x = w - x;
+    if (invertY_) y = h - y;
 
     const float radius = std::min(w / 2.0f, h / 2.0f);
     float vx = (x - w / 2.0f) / radius;
@@ -364,6 +411,8 @@ glm::vec3 Fr_GL3Window::computeSphereCoordinates(double x, double y, bool invert
         vz = sqrt(1 - vx * vx - vy * vy);
     }
     return glm::vec3(vx, vy, vz);
+#endif
+
 }
 
 glfwMouseEvent Fr_GL3Window::getMouseEvents()

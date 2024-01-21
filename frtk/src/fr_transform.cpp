@@ -98,10 +98,6 @@ void Transform::SetPosition(glm::vec3 pos)
     Translate(pos);
 }
 
-void Transform::GLFWMouse(int button, int state, double x, double y) {
-    SetOperation<0, Operation::kRotation>(button, state, x, y);  //mouse move + right click
-    SetOperation<1, Operation::kZoom>(button, state, x, y);   ///Mouse move+leftclick
-}
 
 void Transform::SetInvertAxis(bool invertX, bool invertY) {
     invertX_ = invertX;
@@ -141,21 +137,6 @@ float Transform::get_Z() const
 void Transform::setZommingScale(float _scale)
 {
     kZoomScale = _scale;
-}
-
-template<int k_button, Transform::Operation k_operation>
-void Transform::SetOperation(int button, int state, double x, double y) {            ///TODO FIXME : CHANGE THE STATE TO A BETTER AND MEANINGSFULL ENUM.
-    if (button == k_button) {
-        if (state == 0 && operation_ == Operation::kNone) {
-            operation_ = k_operation;
-            x_ = x;
-            y_ = y;
-            v_ = computeSphereCoordinate(x, y);
-        }
-        else if (state == 1 && operation_ == k_operation) {
-            operation_ = Operation::kNone;
-        }
-    }
 }
 
 glm::vec3 Transform::computeSphereCoordinate(double x, double y) {

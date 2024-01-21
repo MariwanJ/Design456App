@@ -45,7 +45,7 @@ int Fr_GL3Window::imguimzo_init()
     ImGuizmo::Enable(true);
 
     auto getbu = Fr_GL3Window::getfr_Gl3Window()->tempBu;
-    auto cameraView = (activeCamera->getModelView());
+    auto cameraView = (activeCamera->getViewMatrix());
 
     glm::mat4 trnasfrom_ = getbu->GetMatrix();
     if (getbu != NULL)
@@ -175,18 +175,8 @@ int Fr_GL3Window::imgui_LeftPanel()
     ImGui::Begin("LeftPannel");
     ImGui::Button(ICON_FA_BOX);
 
-    // Get the position and size of the widget
-    ImVec2 widgetPos = ImGui::GetWindowPos();
-    ImVec2 widgetSize = ImGui::GetWindowSize();
-
-    // Get the mouse position
-    ImVec2 mousePos = ImGui::GetMousePos();
-
-    // Calculate the relative position
-    ImVec2 relativePos = ImVec2(mousePos.x - widgetPos.x, mousePos.y - widgetPos.y);
-
     // Display the relative position
-    ImGui::Text("Mouse Position: (%.1f, %.1f)", relativePos.x, relativePos.y);
+    ImGui::Text("Mouse Position: (%.1f, %.1f)", mousePos.x, mousePos.y);
 
     ImGui::End();
     return 0;
@@ -280,24 +270,42 @@ eventData Fr_GL3Window::GLFWevents() const
 int Fr_GL3Window::imgui_ViewPort()
 {
     ImGui::Begin("View Port");
-    float wWidth = (float)ImGui::GetWindowWidth();
-    float wHeight = (float)ImGui::GetWindowHeight();
+
+#if 1 //JUST FOR DEBUG PURPOOSE
+    // Get the position and size of the widget
+    ImVec2 widgetPos = ImGui::GetWindowPos();
+ 
+    // Get the mouse position
+      mousePos = ImGui::GetMousePos();
+
+    // Calculate the relative position
+       mousePos = ImVec2(mousePos.x - widgetPos.x, mousePos.y - widgetPos.y);
+#endif
 
     ImVec2 windowPos = ImGui::GetWindowPos();
-    
+    ImGui::Text("window pos %.1f %.1f", windowPos.x, windowPos.y);
+
+    float wWidth = (float)ImGui::GetWindowWidth();
+    float wHeight = (float)ImGui::GetWindowHeight();
+ 
     static float lineAngl = 0.0f;   //dummy code - remove me later -- TODO: REMOVE ME
     static int counter = 0;
 
     auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
     auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
-    auto viewportOffset = ImGui::GetWindowPos();
+ 
     ImVec2 Bound1, Bound2;
-    Bound1 = ImVec2(viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y);
-    Bound2 = ImVec2(viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y);
+    Bound1 = ImVec2(viewportMinRegion.x + windowPos.x, viewportMinRegion.y + windowPos.y);
+    Bound2 = ImVec2(viewportMaxRegion.x + windowPos.x, viewportMaxRegion.y + windowPos.y);
+
+    ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 
     //setPortViewDimension(ImVec4(windowPos.x, windowPos.y, wWidth, wHeight));
+    FRTK_CORE_INFO("{}, {}", Bound1.x, Bound1.y);
+    FRTK_CORE_INFO("{} , {}", Bound1.x, Bound1.y);
+
     setPortViewDimension(ImVec4(Bound1.x, Bound1.y, Bound2.x, Bound2.y));
-    //Camera::aspectRatio_ = wWidth / wHeight;    //Must be updated always
+    Camera::aspectRatio_ = (Bound2.x-Bound1.x) / (Bound2.y-Bound1.y);    //Must be updated always
 
     //WE MUST UPDATE THIS, OTHERWISE THE RENDERING WILL BE MISSING DATA, AND THE PICTURE SHOWN WILL BE WRONG!!
     if (lineAngl == 359) {
@@ -319,11 +327,10 @@ int Fr_GL3Window::imgui_ViewPort()
     {
         tempBu->Rotate(glm::vec3(0.0f, 0.0f, 1.0f), lineAngl);
         lineMain->Rotate(glm::vec3(0.0f, 0.0f, 1.0f), 0);
-        FRTK_CORE_INFO("{}", lineAngl);
+        //FRTK_CORE_INFO("{}", lineAngl);
         lineAngl++;
         counter = 0;
     }
-
     return 0;
 }
 

@@ -45,6 +45,10 @@
 #include <ThreeDWidgets/fr_window.h>
 #include <ThreeDWidgets/fr_line_widget.h>
 
+//Mouse picking - ray casting 
+#define RECURSION_COUNT = 200;
+#define RAY_RANGE = 600;
+
 
 #define MAX_CAMERAS 8  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING CameraList menu
 typedef struct  {
@@ -565,7 +569,7 @@ private:
     bool showOpenDialog;
     //will be true if rotate/pan starts.
     static bool MouseOnce;
-    float phi, theta;
+    //float phi, theta;
 
     //Camera rotation - mouse callback
     float radiusXYZ;
@@ -574,7 +578,7 @@ private:
 
 #if 1//Experimental code - will be removed
     std::shared_ptr <Transform> tempBu;
-
+    ImVec2 mousePos; // Just for debug purpose
 
     //Dummy CODE - TODO REMOVE ME WHEN TEST IS FINISHD : 
     std::shared_ptr<FR::Fr_Line_Widget> lineMain;

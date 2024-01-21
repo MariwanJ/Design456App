@@ -90,12 +90,7 @@ public:
 
     void getUserData(userData_& data);
     void setUserData(userData_& data);
-    /**
-     * Sets the manipulator
-     */
-     //void SetTransform(std::shared_ptr<Transform> transform);
-    glm::mat4 getModelView() ;
-
+ 
     /**
      * Sets the camera
      * Returns true if the camera has been set

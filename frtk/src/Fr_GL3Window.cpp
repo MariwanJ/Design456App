@@ -71,8 +71,6 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     _h = h;
     mouseDefaults.MouseScrollScale = 1.2;
     mouseDefaults.MouseXYScale = 0.1f;
-    phi = -90.0f;
-    theta = 0;
     gl_version_major = 4;
     gl_version_minor = 6;
     glfwSetErrorCallback(error_callback);
@@ -93,6 +91,10 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     WidgWindow->linkToMainWindow = this;
     WidgWindow->setParentlink(this) ;
     radiusXYZ = 0;
+
+#if 1 //just for debug purpose
+    mousePos = { 0,0 };
+#endif
 }
 
 void Fr_GL3Window::flush() {
