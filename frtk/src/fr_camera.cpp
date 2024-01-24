@@ -97,7 +97,7 @@ RIGHT
 
 float Camera::aspectRatio_ = 1.9;
 
-Camera::Camera() :
+Camera::Camera() :Transform(),
     camPosition_{ 15.f, 11.f,  102.f },
     direction_{ -.098f, -1.372f, 0.0f },
     up_{ -58.84f, 628.451f, 29.412f },
@@ -105,7 +105,6 @@ Camera::Camera() :
     znear_{ 0.01 },
     zfar_{ 100000 },
     m_OrthographicSize{10},
-    m_ViewMatrix{},
     m_ProjectionMatrix(glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_)),     //default
     camType_(CameraList::PERSPECTIVE) {
     type(NODETYPE::FR_CAMERA);
@@ -139,7 +138,7 @@ bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
         projection = glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_);
     }
     updateViewMatrix();
-    modelview = m_ViewMatrix;
+    modelview = m_Matrix;
     return true;
 }
 
@@ -200,7 +199,7 @@ void Camera::getUserData(userData_& data)
 
 void Camera::setUserData(userData_& data)
 {
-    aspectRatio_ = data.aspectRatio_;
+    //aspectRatio_ = data.aspectRatio_;
     camPosition_ = data.camPosition_;
     camType_ = data.camType_;
     direction_ = data.direction_;
@@ -372,19 +371,42 @@ glm::mat4 Camera::getPorjection()
     return m_ProjectionMatrix;
 }
 void Camera::updateViewMatrix() {
-    m_ViewMatrix = glm::lookAt(camPosition_, direction_, up_);
+    m_Matrix = glm::lookAt(camPosition_, direction_, up_);
+    m_Inverse = glm::inverse(m_Matrix);
 }
-glm::mat4 Camera::getViewMatrix() {
+glm::mat4 Camera::GetMatrix() {
     updateViewMatrix();
-    return m_ViewMatrix;
+    return m_Matrix;
 }
 
-void Camera::setViewMatrix(glm::mat4 t)
+void Camera::setViewMatrix(glm::mat4 &t)
 {
-    m_ViewMatrix = t;
+    m_Matrix = t;
 }
 
- 
+void Camera::Rotate(float x, float y, float z, float angle) {
+    auto savedirec = direction_;
+    auto saveup = up_;
+    m_Matrix = m_Matrix *glm::rotate(glm::mat4{1}, glm::radians(angle), glm::vec3(x, y, z));
+    m_Inverse = glm::inverse(m_Matrix);
+    camPosition_ = glm::vec3(m_Inverse[3]);
+    direction_ = savedirec;
+    up_ = saveup;
+    updateViewMatrix();
+}
+
+void Camera::Rotate(glm::vec3 axis, float angle)
+{
+    auto savedirec = direction_;
+    auto saveup = up_;
+    m_Matrix = m_Matrix * glm::rotate(glm::mat4{ 1 }, glm::radians(angle), axis);
+    m_Inverse = glm::inverse(m_Matrix);
+    camPosition_ = -glm::vec3(m_Inverse[3]);
+    camPosition_ = glm::vec3(m_Inverse[3]);
+    direction_ = savedirec;
+    up_ = saveup;
+    updateViewMatrix();
+}
 
 void Camera::SetOrthographicSize(float size_)
 {

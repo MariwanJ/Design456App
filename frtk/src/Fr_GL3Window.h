@@ -569,7 +569,7 @@ private:
     bool showOpenDialog;
     //will be true if rotate/pan starts.
     static bool MouseOnce;
-    //float phi, theta;
+    float phi, theta;
 
     //Camera rotation - mouse callback
     float radiusXYZ;

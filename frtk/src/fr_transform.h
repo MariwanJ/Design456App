@@ -42,14 +42,14 @@ public:
     /**
      * Multiply the current matrix by a rotation matrix
      */
-    void Rotate(float x, float y, float z, float angle);
+    virtual void Rotate(float x, float y, float z, float angle);
 
     /**
      * Multiply the current matrix by a rotation matrix
      */
-    void Rotate(glm::vec3 axis, float angle);
+    virtual void Rotate(glm::vec3 axis, float angle);
 
-    void Translate(glm::vec3 v);
+    virtual void Translate(glm::vec3 v);
 
     /**
      * Multiply the current matrix by a translation matrix
@@ -59,13 +59,13 @@ public:
     /**
      * Multiply the current matrix by a translation matrix
      */
-    void Scale(float x, float y, float z);
+    virtual void Scale(float x, float y, float z);
 
-    void Scale(glm::vec3 value);
+    virtual void Scale(glm::vec3 value);
 
  
  
-private:
+protected:
 
     glm::mat4 m_Matrix;
     glm::mat4 m_Inverse;
@@ -82,8 +82,8 @@ public:
     /**
      * Accumulates the inverse of the manipulator matrix
      */
-    glm::mat4 GetMatrix();
-    glm::mat4 GetInverse();
+   virtual glm::mat4 GetMatrix();
+   virtual glm::mat4 GetInverse();
 
     /**
      * Sets the reference point (world center)

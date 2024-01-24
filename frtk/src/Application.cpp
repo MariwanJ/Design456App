@@ -188,8 +188,6 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
         else {
          //   FRTK_CORE_INFO("MOUSE ROTATE");           //TODO: FR_WIDGET DOSEN'T GET THIS EVENT.. SHOULD WE?
             cameraRotate(win,xpos, ypos);
-            mouseEvent.Old_x = xpos;
-            mouseEvent.Old_y = ypos;
             return;
         }
     }
@@ -202,8 +200,8 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
 
         if (WidgWindow->handle(FR::FR_RELEASE) == 0) //Mouse click 
             m_GLFWevents = { -1,-1,-1,-1,-1 };
-
-        mouseEvent.Old_x = mouseEvent.Old_y = 0;        //TODO : is this correct????????? 
+        phi = theta = 0.0f;
+       
         mouseEvent.Button = -1;
         return;
     }
@@ -218,6 +216,7 @@ void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffs
 {
     auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
     userData_ data;
+    mouseEvent.Old_x = mouseEvent.Old_y = 0;        //TODO : is this correct????????? 
     activeCamera->getUserData(data);
     if (activeCamera->getType() == CameraList::ORTHOGRAPHIC) {
         data.orthoSize_ = data.orthoSize_ + yoffset * mouseDefaults.MouseScrollScale;
@@ -236,10 +235,10 @@ void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffs
             scale_ = mouseDefaults.MouseScrollScale;
         }
         matr = glm::scale(matr, glm::vec3(scale_, scale_, scale_));
-        glm::vec3 position, direction, up;
+       // glm::vec3 position, direction, up;
         glm::mat4 inverseViewMatrix = glm::inverse(matr);
         data.camPosition_ = glm::vec3(inverseViewMatrix[3]);
-        glm::vec3 ddd = glm::vec3(inverseViewMatrix[2]);
+       // glm::vec3 ddd = glm::vec3(inverseViewMatrix[2]);
         data.direction_ = -glm::vec3(inverseViewMatrix[2]);
         data.up_ = glm::vec3(inverseViewMatrix[1]);
     }
@@ -256,7 +255,7 @@ void Fr_GL3Window::cameraPAN(GLFWwindow* win, double xpos, double ypos)
     auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
     activeCamera->getUserData(data);
 
-    if (mouseEvent.Old_x == 0 || mouseEvent.Old_y == 0) {
+    if (mouseEvent.Old_x == 0 && mouseEvent.Old_y == 0) {
         //avoid having a jump and just make the delta = 0
         mouseEvent.Old_x = xpos ;
         mouseEvent.Old_y = ypos ;
@@ -275,7 +274,7 @@ void Fr_GL3Window::cameraPAN(GLFWwindow* win, double xpos, double ypos)
      data.camPosition_.y += yoffset;
 
      data.direction_.x += xoffset ;
-     data.direction_.y += yoffset;
+     data.direction_.y -= yoffset;
  
     activeCamera->setUserData(data);
     mouseEvent.Old_x = xpos;
@@ -285,8 +284,7 @@ void Fr_GL3Window::cameraPAN(GLFWwindow* win, double xpos, double ypos)
 void Fr_GL3Window::cameraRotate(GLFWwindow* win, double xpos, double ypos)
 {
     userData_ data;
-    float phi = 0.0f;
-    float theta = 0.0f;
+    
     auto activeCamera = cameraList[(unsigned int)active_camera_];
     activeCamera->getUserData(data);
     ImVec4 viewPortDim = getPortViewDimensions();
@@ -302,52 +300,31 @@ void Fr_GL3Window::cameraRotate(GLFWwindow* win, double xpos, double ypos)
             data.camPosition_.z * data.camPosition_.z);
     }
 
-    /*
-        1         +        2
-                  +      
-    ---------------------------
-        3         +        4
-                  +
-   */
     float deltax= mouseEvent.Old_x - xpos;
     float deltay = mouseEvent.Old_y - ypos;
-    //if (deltax < 0 || deltay < 0)
-    //    sign = -1;
-    //else
-    //    sign = 1;
-    
-    float tempAn = sign*glm::degrees(std::atan2(xpos, ypos));
-   
-    if (xpos < center.x && ypos < center.y) {       //1  270-360
-        //lower0 part - right side
-        phi = 270 + tempAn;
-        FRTK_CORE_INFO(1);
-    }else 
 
-    if (xpos > center.x && ypos < center.y) {       //2 180-270
-      //lower part - left side
-        phi = 180 + tempAn;
-        FRTK_CORE_INFO(2);
-    }else
+    FRTK_CORE_INFO("-({},{})-", xpos, ypos);
 
-    if (xpos < center.x && ypos > center.y) {       //3 90-180
-      //upper part - left side
-        phi = 90 + tempAn;
-        FRTK_CORE_INFO(3);
-    }else
-    if (xpos > center.x && ypos > center.y) {       //4  0 -90
-      //upper part -  side
-        phi = tempAn;
-        FRTK_CORE_INFO(4);
-    }
-   // std::cout << "temphi " << tempAn <<"phi " << phi<<std::endl;
-    std::cout << "centerx " << center.x <<"centery " << center.y << std::endl;
+    //deltay = deltay * activeCamera->aspectRatio_;
+    if (deltax > 0)
+        phi += 1 * mouseDefaults.MouseXYScale;
+    else if (deltax < 0)
+        phi -= 1 * mouseDefaults.MouseXYScale;
+ 
+    if (deltay > 0)
+        theta += 1 * mouseDefaults.MouseXYScale;
+    else if (deltay < 0)
+        theta -= 1 * mouseDefaults.MouseXYScale;
+ 
+    FRTK_CORE_INFO("phi = {}  theta = {}", phi, theta);
+    theta +=  deltay * mouseDefaults.MouseXYScale;
+    //data.camPosition_.x = radiusXYZ   * cos(glm::radians(phi));
+    //data.camPosition_.y = radiusXYZ  * sin(glm::radians(phi));
+   // data.camPosition_.z += theta;//data.camPosition_.z * cos(glm::radians(theta));
 
-    data.camPosition_.x = radiusXYZ   * cos(glm::radians(phi));
-    data.camPosition_.y = radiusXYZ  * sin(glm::radians(phi));
-   // data.camPosition_.z = radiusXYZ * cos(glm::radians(theta));
-
-    activeCamera->setUserData(data);
+    //activeCamera->setUserData(data);
+    activeCamera->Rotate(0.f,0.f,1.f, phi);
+ 
     mouseEvent.Old_x = xpos ;
     mouseEvent.Old_y = ypos ;
 }
@@ -363,12 +340,12 @@ glm::vec3 Fr_GL3Window::computeSphereCoordinates(double mouseX, double mouseY, b
         width = viewPortDim.z- viewPortDim.x;
         height = viewPortDim.w- viewPortDim.y;
  
-        glm::mat4 viewMatrix = activeCamera->getViewMatrix();
+        glm::mat4 viewMatrix = activeCamera->GetMatrix();
         glm::mat4 projectionMatrix = activeCamera->getPorjection();
 
  
         glm::mat4 inverseProjectionMatrix = glm::inverse(projectionMatrix);
-        glm::mat4 inverseViewMatrix = glm::inverse(viewMatrix);
+        glm::mat4 inverseViewMatrix = activeCamera->GetInverse();
  
             // Convert mouse coordinates to NDC
             float x_ndc = (2.0f * mouseX) / width - 1.0f;
@@ -385,8 +362,8 @@ glm::vec3 Fr_GL3Window::computeSphereCoordinates(double mouseX, double mouseY, b
             glm::vec4 worldCoords = glm::inverse(viewMatrix) * eyeCoords;
             glm::vec3 worldCoord = glm::vec3(worldCoords.x, worldCoords.y, worldCoords.z);
             worldCoord = glm::normalize(worldCoord);
-  
-    FRTK_CORE_INFO("xyz {},{} ,{} ", worldCoord.x*width , worldCoord.y*height , worldCoord.z);
+            
+    FRTK_CORE_INFO("xyz {},{} ,{} ", worldCoord.x , worldCoord.y , worldCoord.z);
     return worldCoords;
 #else
     int vp[4];
@@ -394,12 +371,12 @@ glm::vec3 Fr_GL3Window::computeSphereCoordinates(double mouseX, double mouseY, b
     const float w = vp[2];
     const float h = vp[3];
 
-    if (invertX_) x = w - x;
-    if (invertY_) y = h - y;
+    if (invertX_) mouseX = w - mouseX;
+    if (invertY_) mouseY = h - mouseY;
 
     const float radius = std::min(w / 2.0f, h / 2.0f);
-    float vx = (x - w / 2.0f) / radius;
-    float vy = (h - y - h / 2.0f) / radius;
+    float vx = (mouseX - w / 2.0f) / radius;
+    float vy = (h - mouseY - h / 2.0f) / radius;
     float vz = 0;
 
     const float dist = hypot(vx, vy);

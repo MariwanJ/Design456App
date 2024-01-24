@@ -45,7 +45,7 @@ int Fr_GL3Window::imguimzo_init()
     ImGuizmo::Enable(true);
 
     auto getbu = Fr_GL3Window::getfr_Gl3Window()->tempBu;
-    auto cameraView = (activeCamera->getViewMatrix());
+    auto cameraView = (activeCamera->GetMatrix());
 
     glm::mat4 trnasfrom_ = getbu->GetMatrix();
     if (getbu != NULL)
@@ -55,10 +55,11 @@ int Fr_GL3Window::imguimzo_init()
         //float wHeight= (float)ImGui::GetWindowHeight();
         ImVec4 dim = getPortViewDimensions();
 
-        ImGuizmo::SetOrthographic(false);
-        ImGuizmo::SetDrawlist();
+ 
+        ImVec4 rect = ImVec4(dim.x, dim.y, dim.z - dim.x, dim.w - dim.y);
 
-        ImGuizmo::SetRect(dim.x, dim.y, dim.z - dim.x, dim.w - dim.y);
+        ImGuizmo::SetRect(rect.x, rect.y, rect.z,rect.w);
+        ImGuizmo::SetDrawlist();
         //ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::ROTATE, ImGuizmo::LOCAL, glm::value_ptr(trnasfrom_));
         ImGuizmo::Manipulate(glm::value_ptr(cameraView), 
                              glm::value_ptr(Camproj), 
@@ -300,12 +301,10 @@ int Fr_GL3Window::imgui_ViewPort()
 
     ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 
-    //setPortViewDimension(ImVec4(windowPos.x, windowPos.y, wWidth, wHeight));
-    FRTK_CORE_INFO("{}, {}", Bound1.x, Bound1.y);
-    FRTK_CORE_INFO("{} , {}", Bound1.x, Bound1.y);
+ 
 
     setPortViewDimension(ImVec4(Bound1.x, Bound1.y, Bound2.x, Bound2.y));
-    Camera::aspectRatio_ = (Bound2.x-Bound1.x) / (Bound2.y-Bound1.y);    //Must be updated always
+    ///Camera::aspectRatio_ = (Bound2.x-Bound1.x) / (Bound2.y-Bound1.y);    //Must be updated always
 
     //WE MUST UPDATE THIS, OTHERWISE THE RENDERING WILL BE MISSING DATA, AND THE PICTURE SHOWN WILL BE WRONG!!
     if (lineAngl == 359) {

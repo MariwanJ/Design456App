@@ -69,8 +69,8 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     _y = y;
     _w = w;
     _h = h;
-    mouseDefaults.MouseScrollScale = 1.2;
-    mouseDefaults.MouseXYScale = 0.1f;
+    mouseDefaults.MouseScrollScale = 1.5f;
+    mouseDefaults.MouseXYScale = .6f;
     gl_version_major = 4;
     gl_version_minor = 6;
     glfwSetErrorCallback(error_callback);
@@ -90,7 +90,8 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     WidgWindow = std::make_shared<FR::Fr_Window>(); //Create FR_WINDOW that keeps the widget system
     WidgWindow->linkToMainWindow = this;
     WidgWindow->setParentlink(this) ;
-    radiusXYZ = 0;
+    radiusXYZ = 0.0f;
+    phi = theta = 0.f;
 
 #if 1 //just for debug purpose
     mousePos = { 0,0 };

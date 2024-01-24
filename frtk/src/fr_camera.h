@@ -110,15 +110,27 @@ public:
     glm::mat4 getPorjection();
     void updateViewMatrix();
     
-    glm::mat4 getViewMatrix();
-    void setViewMatrix(glm::mat4 t);
+
+    virtual glm::mat4 GetMatrix() override;
+
+    void setViewMatrix(glm::mat4 &t);
 
   
     void SetOrthographicSize(float size);
     float getOrthgraphicSize();
+
+    /**
+       * Multiply the current matrix by a rotation matrix
+       */
+    virtual void Rotate(float x, float y, float z, float angle)override;
+
+    /**
+     * Multiply the current matrix by a rotation matrix
+     */
+    virtual void Rotate(glm::vec3 axis, float angle)override;
+
 private:
 
-    glm::mat4 m_ViewMatrix;  //viewmodel_
     CameraList camType_;
     glm::vec3 camPosition_;
     glm::vec3 direction_;
