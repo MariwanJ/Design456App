@@ -180,6 +180,10 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
 
     else if (mouseEvent.Button== GLFW_MOUSE_BUTTON_MIDDLE && mouseEvent.Pressed == 1)
     {
+        if (runCode) {
+            mouseEvent.Old_x = mouseEvent.Old_y = 0;        //TODO : is this correct????????? 
+            runCode = false;
+        }
         if (shftL == GLFW_PRESS || shftR == GLFW_PRESS) {
          //   FRTK_CORE_INFO("MOUSE PAN");
             cameraPAN(win,xpos, ypos);
@@ -195,14 +199,14 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
     else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_MIDDLE && mouseEvent.Pressed == 0)
     {
         //TODO : Not sure if widgets needs this event
-        
+        mouseEvent.Old_x = mouseEvent.Old_y = 0;
         MiddMouseDRAGrelease(win, xpos, ypos);
 
         if (WidgWindow->handle(FR::FR_RELEASE) == 0) //Mouse click 
             m_GLFWevents = { -1,-1,-1,-1,-1 };
         phi = theta = 0.0f;
-       
         mouseEvent.Button = -1;
+        runCode = true;
         return;
     }
 }
@@ -216,7 +220,7 @@ void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffs
 {
     auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
     userData_ data;
-    mouseEvent.Old_x = mouseEvent.Old_y = 0;        //TODO : is this correct????????? 
+
     activeCamera->getUserData(data);
     if (activeCamera->getType() == CameraList::ORTHOGRAPHIC) {
         data.orthoSize_ = data.orthoSize_ + yoffset * mouseDefaults.MouseScrollScale;
@@ -287,44 +291,53 @@ void Fr_GL3Window::cameraRotate(GLFWwindow* win, double xpos, double ypos)
     
     auto activeCamera = cameraList[(unsigned int)active_camera_];
     activeCamera->getUserData(data);
-    ImVec4 viewPortDim = getPortViewDimensions();
-    ImVec2 center = ImVec2(viewPortDim.x+(viewPortDim.z ) / 2, viewPortDim.y+(viewPortDim.w )/ 2);
-    int sign = 1;
-
+   // ImVec4 viewPortDim = getPortViewDimensions();
+   // ImVec2 center = ImVec2((viewPortDim.z ) / 2,(viewPortDim.w )/ 2);
     if (mouseEvent.Old_x == 0 && mouseEvent.Old_y == 0)
     {
-        mouseEvent.Old_x = xpos;
-        mouseEvent.Old_y = ypos;
+        mouseEvent.Old_x = xpos ;
+        mouseEvent.Old_y = ypos ;
         radiusXYZ = sqrt(data.camPosition_.x * data.camPosition_.x +
             data.camPosition_.y * data.camPosition_.y +
             data.camPosition_.z * data.camPosition_.z);
     }
-
-    float deltax= mouseEvent.Old_x - xpos;
-    float deltay = mouseEvent.Old_y - ypos;
-
-    FRTK_CORE_INFO("-({},{})-", xpos, ypos);
-
-    //deltay = deltay * activeCamera->aspectRatio_;
-    if (deltax > 0)
-        phi += 1 * mouseDefaults.MouseXYScale;
-    else if (deltax < 0)
-        phi -= 1 * mouseDefaults.MouseXYScale;
+    glm::vec2 delta = glm::vec2(mouseEvent.Old_x - xpos, mouseEvent.Old_y - ypos)* mouseDefaults.MouseXYScale;
+  
  
-    if (deltay > 0)
-        theta += 1 * mouseDefaults.MouseXYScale;
-    else if (deltay < 0)
-        theta -= 1 * mouseDefaults.MouseXYScale;
  
-    FRTK_CORE_INFO("phi = {}  theta = {}", phi, theta);
-    theta +=  deltay * mouseDefaults.MouseXYScale;
-    //data.camPosition_.x = radiusXYZ   * cos(glm::radians(phi));
-    //data.camPosition_.y = radiusXYZ  * sin(glm::radians(phi));
-   // data.camPosition_.z += theta;//data.camPosition_.z * cos(glm::radians(theta));
 
-    //activeCamera->setUserData(data);
-    activeCamera->Rotate(0.f,0.f,1.f, phi);
- 
+    if (data.camPosition_.x != 0)
+    {
+        phi = std::atan(data.camPosition_.y / data.camPosition_.x);
+    }
+    else
+    {
+        if (data.camPosition_.y > 0)
+        {
+            phi = M_PI / 2;  
+        }
+        else if (data.camPosition_.y < 0)
+        {
+            phi = -M_PI / 2; 
+        }
+        else
+        {
+            phi = 0;  
+        }
+    }
+
+    if (radiusXYZ != 0)
+        theta = std::acos(data.camPosition_.z / radiusXYZ);
+    /*if (data.camPosition_.x != 0)
+        phi = std::atan(data.camPosition_.y / data.camPosition_.x);*/
+
+    phi = phi + delta.x*mouseDefaults.MouseXYScale;
+    theta = theta + delta.y* mouseDefaults.MouseXYScale;
+
+    data.camPosition_.x = radiusXYZ * sin(theta)*cos(phi);
+    data.camPosition_.y = radiusXYZ * sin(theta)*sin(phi);
+    data.camPosition_.z = radiusXYZ * cos(theta);
+    activeCamera->setUserData(data);
     mouseEvent.Old_x = xpos ;
     mouseEvent.Old_y = ypos ;
 }

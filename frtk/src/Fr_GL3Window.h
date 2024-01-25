@@ -575,7 +575,7 @@ private:
     float radiusXYZ;
 
     ImVec4 PortViewDimensions;
-
+    bool runCode;
 #if 1//Experimental code - will be removed
     std::shared_ptr <Transform> tempBu;
     ImVec2 mousePos; // Just for debug purpose
