@@ -304,8 +304,10 @@ int Fr_GL3Window::imgui_ViewPort()
  
 
     setPortViewDimension(ImVec4(Bound1.x, Bound1.y, Bound2.x, Bound2.y));
-    ///Camera::aspectRatio_ = (Bound2.x-Bound1.x) / (Bound2.y-Bound1.y);    //Must be updated always
-
+    auto win = getfr_Gl3Window();
+    auto activeCamera=win->cameraList[(int)win->active_camera_];
+   // activeCamera->aspectRatio_ = (Bound2.x - Bound1.x) / (Bound2.y - Bound1.y);    //Must be updated always
+   // activeCamera->updateViewMatrix();
     //WE MUST UPDATE THIS, OTHERWISE THE RENDERING WILL BE MISSING DATA, AND THE PICTURE SHOWN WILL BE WRONG!!
     if (lineAngl == 359) {
         lineAngl = 0;

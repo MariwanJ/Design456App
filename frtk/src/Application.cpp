@@ -304,8 +304,6 @@ void Fr_GL3Window::cameraRotate(GLFWwindow* win, double xpos, double ypos)
     glm::vec2 delta = glm::vec2(mouseEvent.Old_x - xpos, mouseEvent.Old_y - ypos)* mouseDefaults.MouseXYScale;
   
  
- 
-
     if (data.camPosition_.x != 0)
     {
         phi = std::atan(data.camPosition_.y / data.camPosition_.x);
@@ -314,16 +312,20 @@ void Fr_GL3Window::cameraRotate(GLFWwindow* win, double xpos, double ypos)
     {
         if (data.camPosition_.y > 0)
         {
-            phi = M_PI / 2;  
+            phi = M_PI / 2;
+            data.camPosition_.y = abs(radiusXYZ * sin(theta) * sin(phi));
+
         }
-        else if (data.camPosition_.y < 0)
+        if (data.camPosition_.y > 0)
         {
-            phi = -M_PI / 2; 
+           
+            phi = - M_PI/ 2;  
+            data.camPosition_.y = -abs(radiusXYZ * sin(theta) * sin(phi));
         }
-        else
-        {
-            phi = 0;  
-        }
+ 
+        data.camPosition_.x = 0;
+        data.camPosition_.z = radiusXYZ * cos(theta);
+
     }
 
     if (radiusXYZ != 0)
@@ -338,6 +340,8 @@ void Fr_GL3Window::cameraRotate(GLFWwindow* win, double xpos, double ypos)
     data.camPosition_.y = radiusXYZ * sin(theta)*sin(phi);
     data.camPosition_.z = radiusXYZ * cos(theta);
     activeCamera->setUserData(data);
+
+    FRTK_CORE_INFO("PHI,THETA --> {},{}", glm::degrees(phi), glm::degrees(theta));
     mouseEvent.Old_x = xpos ;
     mouseEvent.Old_y = ypos ;
 }
