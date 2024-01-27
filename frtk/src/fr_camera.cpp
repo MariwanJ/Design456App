@@ -373,11 +373,6 @@ void Camera::updateViewMatrix() {
     m_Matrix = glm::lookAt(camPosition_, direction_, up_);
     m_Inverse = glm::inverse(m_Matrix);
 }
-void Camera::updateParameters() {
-    camPosition_ = glm::vec3(m_Inverse[3]);
-    direction_ = -glm::vec3(m_Inverse[2]);
-    up_ = glm::vec3(m_Inverse[1]);
-}
 
 glm::mat4 Camera::GetViewMatrix() {
     updateViewMatrix();
@@ -399,32 +394,6 @@ void Camera::SetOrthographicSize(float size_)
 float Camera::getOrthgraphicSize()
 {
     return m_OrthographicSize;
-}
-
-void Camera::mouseRotate(float x, float y) {
-   /* glm::vec3 v = computeSphereCoordinates(x, y);
-    glm::vec3 w = glm::cross(v_, v);
-
-    float theta = asin(glm::length(w)); 
-    if (theta != 0)
-        m_Matrix =  (glm::rotate(glm::mat4{ 1 }, theta, glm::normalize(w ) ))* m_Matrix;
-    v_ = v;*/
-
-    float xyRadius =std::sqrt(x * x + y * y);
-    float theta = 0;
-    if (x != 0)
-        float theta = std::atan2(y, x);
-
-    camPosition_.x = xyRadius * sin(theta);
-    camPosition_.y= xyRadius * cos(theta);
-    updateParameters();
-}
-
-void Camera::mouseRotate(glm::vec2 pos) {
-    mouseRotate(pos.x, pos.y);
-}
-void Camera::mouseRotate(ImVec2 pos) {
-    mouseRotate(glm::vec2(pos.x, pos.y));
 }
 
 glm::mat4 Camera::GetInverseViewMatrix() {

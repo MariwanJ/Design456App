@@ -92,12 +92,6 @@ public:
     void getUserData(userData_& data);
     void setUserData(userData_& data);
  
-    void mouseRotate(float x, float y);
-
-    void mouseRotate(glm::vec2 pos);
-
-    void mouseRotate(ImVec2 pos);
-
     /**
      * Sets the camera
      * Returns true if the camera has been set
@@ -116,9 +110,6 @@ public:
 
     glm::mat4 getPorjection();
     void updateViewMatrix();
-
-    void updateParameters();
-    
 
     virtual glm::mat4 GetViewMatrix();
     glm::mat4 GetInverseViewMatrix();
