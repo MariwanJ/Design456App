@@ -27,7 +27,7 @@
 //
 
 #include <cmath>
-
+#include <glm/gtx/transform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glad/glad.h>
 #include <fr_camera.h>
@@ -98,7 +98,7 @@ RIGHT
 float Camera::aspectRatio_ = 1.9;
 
 Camera::Camera() :Transform(),
-    camPosition_{ 15.f, 11.f,  102.f },
+    camPosition_{ 15.f, 11.f,  102.f }, v_(0, 0, 0),
     direction_{ -.098f, -1.372f, 0.0f },
     up_{ -58.84f, 628.451f, 29.412f },
     fovy_{ 102.f },
@@ -118,7 +118,6 @@ Camera::Camera() :Transform(),
 void Camera::SetCamPosition(float x, float y, float z) {
     camPosition_ = glm::vec3(x, y, z);
 }
-
 bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
 {
     if (!active_)
@@ -374,7 +373,13 @@ void Camera::updateViewMatrix() {
     m_Matrix = glm::lookAt(camPosition_, direction_, up_);
     m_Inverse = glm::inverse(m_Matrix);
 }
-glm::mat4 Camera::GetMatrix() {
+void Camera::updateParameters() {
+    camPosition_ = glm::vec3(m_Inverse[3]);
+    direction_ = -glm::vec3(m_Inverse[2]);
+    up_ = glm::vec3(m_Inverse[1]);
+}
+
+glm::mat4 Camera::GetViewMatrix() {
     updateViewMatrix();
     return m_Matrix;
 }
@@ -384,29 +389,6 @@ void Camera::setViewMatrix(glm::mat4 &t)
     m_Matrix = t;
 }
 
-void Camera::Rotate(float x, float y, float z, float angle) {
-    auto savedirec = direction_;
-    auto saveup = up_;
-    m_Matrix = m_Matrix *glm::rotate(glm::mat4{1}, glm::radians(angle), glm::vec3(x, y, z));
-    m_Inverse = glm::inverse(m_Matrix);
-    camPosition_ = glm::vec3(m_Inverse[3]);
-    direction_ = savedirec;
-    up_ = saveup;
-    updateViewMatrix();
-}
-
-void Camera::Rotate(glm::vec3 axis, float angle)
-{
-    auto savedirec = direction_;
-    auto saveup = up_;
-    m_Matrix = m_Matrix * glm::rotate(glm::mat4{ 1 }, glm::radians(angle), axis);
-    m_Inverse = glm::inverse(m_Matrix);
-    camPosition_ = -glm::vec3(m_Inverse[3]);
-    camPosition_ = glm::vec3(m_Inverse[3]);
-    direction_ = savedirec;
-    up_ = saveup;
-    updateViewMatrix();
-}
 
 void Camera::SetOrthographicSize(float size_)
 {
@@ -417,4 +399,59 @@ void Camera::SetOrthographicSize(float size_)
 float Camera::getOrthgraphicSize()
 {
     return m_OrthographicSize;
+}
+
+void Camera::mouseRotate(float x, float y) {
+    glm::vec3 v = computeSphereCoordinates(x, y);
+    glm::vec3 w = glm::cross(v_, v);
+
+    float theta = asin(glm::length(w)); 
+    if (theta != 0)
+        m_Matrix =  (glm::rotate(glm::mat4{ 1 }, theta, glm::normalize(w ) ))* m_Matrix;
+    v_ = v;
+    m_Inverse = glm::inverse(m_Matrix);
+    updateParameters();
+}
+
+void Camera::mouseRotate(glm::vec2 pos) {
+    mouseRotate(pos.x, pos.y);
+}
+void Camera::mouseRotate(ImVec2 pos) {
+    mouseRotate(glm::vec2(pos.x, pos.y));
+}
+
+glm::mat4 Camera::GetInverseViewMatrix() {
+    return m_Inverse;
+}
+
+glm::vec3 Camera::computeSphereCoordinates(int x, int y) {
+    int vp[4];
+    glGetIntegerv(GL_VIEWPORT, vp);
+    Fr_GL3Window* win=Fr_GL3Window::getfr_Gl3Window();
+
+    ImVec4 screenDim = win->getPortViewDimensions();
+    //const float w = vp[2];
+    //const float h = vp[3];
+
+    const float w = screenDim.z;
+    const float h = screenDim.w;
+
+    /*  if (invertX_) x = w - x;
+      if (invertY_) y = h - y;*/
+
+    const float radius = std::min(w / 2.0f, h / 2.0f);
+    float vx = (x - w / 2.0f) / radius;
+    float vy = (h - y - h / 2.0f) / radius;
+    float vz = 0;
+
+    const float dist = hypot(vx, vy);
+    if (dist > 1.0f) {
+        vx /= dist;
+        vy /= dist;
+    }
+    else {
+        vz = sqrt(1 - vx * vx - vy * vy);
+    }
+
+    return glm::vec3(vx, vy, vz);
 }

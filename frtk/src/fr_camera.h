@@ -31,8 +31,7 @@
 
 #include<frtk.h>
 #include<fr_core.h>
-#include<fr_transform.h>
-#include <fr_node.h>
+#include <fr_transform.h>
 #include <glm/glm.hpp>
 
 /*
@@ -66,6 +65,8 @@ public:
      * Default = (1, 0, 0)
      */
     void SetCamPosition(float x, float y, float z);
+
+    glm::vec3 computeSphereCoordinates(int x, int y);
     void setupCameraHomeValues();
     /**
      * Sets the center coordinates
@@ -91,6 +92,12 @@ public:
     void getUserData(userData_& data);
     void setUserData(userData_& data);
  
+    void mouseRotate(float x, float y);
+
+    void mouseRotate(glm::vec2 pos);
+
+    void mouseRotate(ImVec2 pos);
+
     /**
      * Sets the camera
      * Returns true if the camera has been set
@@ -109,9 +116,12 @@ public:
 
     glm::mat4 getPorjection();
     void updateViewMatrix();
+
+    void updateParameters();
     
 
-    virtual glm::mat4 GetMatrix() override;
+    virtual glm::mat4 GetViewMatrix();
+    glm::mat4 GetInverseViewMatrix();
 
     void setViewMatrix(glm::mat4 &t);
 
@@ -119,15 +129,6 @@ public:
     void SetOrthographicSize(float size);
     float getOrthgraphicSize();
 
-    /**
-       * Multiply the current matrix by a rotation matrix
-       */
-    virtual void Rotate(float x, float y, float z, float angle)override;
-
-    /**
-     * Multiply the current matrix by a rotation matrix
-     */
-    virtual void Rotate(glm::vec3 axis, float angle)override;
 
 private:
 
@@ -140,7 +141,8 @@ private:
     float zfar_;   //TOP
     static float aspectRatio_;      //must be static as all cameras have the same ratio
     glm::mat4 m_ProjectionMatrix;
-    float m_OrthographicSize;
+    float m_OrthographicSize;  
+    glm::vec3 v_;
 };
 
 #endif
