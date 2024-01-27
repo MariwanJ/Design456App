@@ -402,14 +402,21 @@ float Camera::getOrthgraphicSize()
 }
 
 void Camera::mouseRotate(float x, float y) {
-    glm::vec3 v = computeSphereCoordinates(x, y);
+   /* glm::vec3 v = computeSphereCoordinates(x, y);
     glm::vec3 w = glm::cross(v_, v);
 
     float theta = asin(glm::length(w)); 
     if (theta != 0)
         m_Matrix =  (glm::rotate(glm::mat4{ 1 }, theta, glm::normalize(w ) ))* m_Matrix;
-    v_ = v;
-    m_Inverse = glm::inverse(m_Matrix);
+    v_ = v;*/
+
+    float xyRadius =std::sqrt(x * x + y * y);
+    float theta = 0;
+    if (x != 0)
+        float theta = std::atan2(y, x);
+
+    camPosition_.x = xyRadius * sin(theta);
+    camPosition_.y= xyRadius * cos(theta);
     updateParameters();
 }
 
@@ -428,17 +435,9 @@ glm::vec3 Camera::computeSphereCoordinates(int x, int y) {
     int vp[4];
     glGetIntegerv(GL_VIEWPORT, vp);
     Fr_GL3Window* win=Fr_GL3Window::getfr_Gl3Window();
-
     ImVec4 screenDim = win->getPortViewDimensions();
-    //const float w = vp[2];
-    //const float h = vp[3];
-
     const float w = screenDim.z;
     const float h = screenDim.w;
-
-    /*  if (invertX_) x = w - x;
-      if (invertY_) y = h - y;*/
-
     const float radius = std::min(w / 2.0f, h / 2.0f);
     float vx = (x - w / 2.0f) / radius;
     float vy = (h - y - h / 2.0f) / radius;

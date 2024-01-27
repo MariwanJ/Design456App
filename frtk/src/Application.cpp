@@ -186,11 +186,15 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
         }
         if (shftL == GLFW_PRESS || shftR == GLFW_PRESS) {
          //   FRTK_CORE_INFO("MOUSE PAN");
+            MainWinCursor = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
+            glfwSetCursor(win, MainWinCursor);
             cameraPAN(win,xpos, ypos);
             return;                                 //TODO: FR_WIDGET DOSEN'T GET THIS EVENT.. SHOULD WE?
         }
         else {
          //   FRTK_CORE_INFO("MOUSE ROTATE");           //TODO: FR_WIDGET DOSEN'T GET THIS EVENT.. SHOULD WE?
+            MainWinCursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);    //bad icon but what to do glfw dosent have any
+            glfwSetCursor(win, MainWinCursor);
             cameraRotate(win,xpos, ypos);
             return;
         }
@@ -199,6 +203,7 @@ void Fr_GL3Window::cursor_position_callback(GLFWwindow* win, double xpos, double
     else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_MIDDLE && mouseEvent.Pressed == 0)
     {
         //TODO : Not sure if widgets needs this event
+        glfwSetCursor(win, NULL);//REMOVE CURSOR 
         mouseEvent.Old_x = mouseEvent.Old_y = 0;
         MiddMouseDRAGrelease(win, xpos, ypos);
 
@@ -293,14 +298,14 @@ void Fr_GL3Window::cameraRotate(GLFWwindow* win, double xpos, double ypos)
     activeCamera->getUserData(data);
    //// ImVec4 viewPortDim = getPortViewDimensions();
    //// ImVec2 center = ImVec2((viewPortDim.z ) / 2,(viewPortDim.w )/ 2);
-   // if (mouseEvent.Old_x == 0 && mouseEvent.Old_y == 0)
-   // {
-   //     mouseEvent.Old_x = xpos ;
-   //     mouseEvent.Old_y = ypos ;
-   //     radiusXYZ = sqrt(data.camPosition_.x * data.camPosition_.x +
-   //         data.camPosition_.y * data.camPosition_.y +
-   //         data.camPosition_.z * data.camPosition_.z);
-   // }
+    if (mouseEvent.Old_x == 0 && mouseEvent.Old_y == 0)
+    {
+        mouseEvent.Old_x = xpos ;
+        mouseEvent.Old_y = ypos ;
+        radiusXYZ = sqrt(data.camPosition_.x * data.camPosition_.x +
+            data.camPosition_.y * data.camPosition_.y +
+            data.camPosition_.z * data.camPosition_.z);
+    }
    // glm::vec2 delta = glm::vec2(mouseEvent.Old_x - xpos, mouseEvent.Old_y - ypos)* mouseDefaults.MouseXYScale;
   
  
@@ -342,7 +347,34 @@ void Fr_GL3Window::cameraRotate(GLFWwindow* win, double xpos, double ypos)
    // activeCamera->setUserData(data);
 
    // FRTK_CORE_INFO("PHI,THETA --> {},{}", glm::degrees(phi), glm::degrees(theta));
-    activeCamera->mouseRotate(xpos, ypos);
+
+//    activeCamera->mouseRotate(xpos, ypos);
+
+
+
+
+
+
+
+    float deltax = mouseEvent.Old_x- xpos  ;
+    float deltay = mouseEvent.Old_y - ypos;
+     float sensitivity = 0.1f;
+    deltax*= mouseDefaults.MouseXYScale;
+    deltay/= mouseDefaults.MouseXYScale;
+
+    theta+= deltax;
+    phi += deltay;
+
+    if (phi > 89.90f)
+        phi = 89.90f;
+    if (phi < -89.90f)
+        phi = -89.90f;
+
+    glm::vec3 front;
+    activeCamera->camPosition_.x = radiusXYZ* cos(glm::radians(theta));
+    activeCamera->camPosition_.y = radiusXYZ * sin(glm::radians(theta));
+    activeCamera->camPosition_.z = radiusXYZ * sin(glm::radians(phi)) ;
+    activeCamera->updateViewMatrix();
     mouseEvent.Old_x = xpos ;
     mouseEvent.Old_y = ypos ;
 }

@@ -210,7 +210,7 @@ public:
      * while it is not initialized.
      */
     static void deinitializeGlad();
-
+    GLFWcursor* MainWinCursor;  //needed to change to hand, rotation.
     std::shared_ptr<Fr_TextureFrameBuffer> sceneBuffer;
 
     int  x()const;

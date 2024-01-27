@@ -61,7 +61,7 @@ static void error_callback(int error, const char* description)
 */
 
 Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::string l = "GLFW ImGUI Test") :
-    WidgWindow(NULL),
+    WidgWindow(NULL), MainWinCursor(NULL),
     active_camera_(CameraList::PERSPECTIVE),
     _x(x), _y(y), _w(w), _h(h), label_(l), showOpenDialog(false) {
     s_Fr_GLFWwindow = this;
@@ -70,7 +70,7 @@ Fr_GL3Window::Fr_GL3Window(int x = 0, int y = 0, int w = 900, int h = 800, std::
     _w = w;
     _h = h;
     mouseDefaults.MouseScrollScale = 1.5f;
-    mouseDefaults.MouseXYScale = .1f;
+    mouseDefaults.MouseXYScale = 1.1f;
     gl_version_major = 4;
     gl_version_minor = 6;
     glfwSetErrorCallback(error_callback);
