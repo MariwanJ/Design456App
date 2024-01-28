@@ -24,46 +24,26 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-#ifndef FR_PRIMATIVES_H
-#define FR_PRIMATIVES_H
+#ifndef FR_COMMON_H
+#define FR_COMMAN_H
+#include <frtk.h>
+#include <Fr_Core.h>
 
-#include<fr_constants.h>
-#include <fr_core.h>
-#include <glm/glm.hpp>
+/**
+         
+        x2 + y2 = a2                        //Circle 
+        y = mx + c.*                        //Line
+         (1 + m2)x2 + 2cmx + c2 – a2­ = 0.  resolving
+         -b ±sqrt(b^2-4ac               Quadratic Formula
+    x = -----------------
+              2a
+    Sol: b*b -4*a*c >= 0;
+*/
 
-class FRTK_API Fr_Primatives
-{
-public:
-    Fr_Primatives();
-    ~Fr_Primatives();
+namespace FR {
+    extern float mouseClickCircleRadious;
+    bool intersectLine(glm::vec3 p1, glm::vec3 p2);
 
-    void Draw();
+}
 
-    void setDrawType(int type);
-    int getDrawType() const;
-
-    void GetPrimatives(std::vector<float>& vertices, std::vector<float>& normals, std::vector<unsigned int>& indices);
-
-    void SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices);
-
-    void lineWidth(unsigned int wid);
-    unsigned int lineWidth();
-    
-private:
-
-    glm::vec3 GetVertex(unsigned int index, const float vertices[]);
-
-    void SetVertex(unsigned int index, float vertices[], const glm::vec3& vertex);
-
-    void InitializeVBO();
-
-    int drawType;
-    std::vector<float> vertices_;
-    std::vector<float> normals_;
-    std::vector<unsigned int> indices_;
-    unsigned int vbo_[3];
-    unsigned int vao_;
-    unsigned int m_lineWidth;
-};
-
-#endif // !FR_PRIMATIVES_H
+#endif
