@@ -58,6 +58,7 @@ project "frtk"
         "%{IncludeDir.objloader}",
         "$(SolutionDir)frtk/vendor/spdlog/include",
 		"$(SolutionDir)frtk/vendor/instrumentation",
+		"$(SolutionDir)frtk/vendor/EnTT",
         "src",
 		--"%{IncludeDir.yaml-cpp}",
 	}

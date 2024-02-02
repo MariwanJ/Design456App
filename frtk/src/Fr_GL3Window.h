@@ -2,7 +2,7 @@
 // This file is a part of the Open Source Design456App
 // MIT License
 //
-// Copyright (c) 2024
+// Copyright (c) 2023
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -561,7 +561,7 @@ private:
     /**
      * Keep track of the active camera.
      */
-    CameraList active_camera_;
+
     ImVec4 clear_color;
     static Fr_GL3Window* s_Fr_GLFWwindow;
     ImGui::FileBrowser fileDialog;
@@ -576,14 +576,17 @@ private:
 
     ImVec4 PortViewDimensions;
     bool runCode;
+
 #if 1//Experimental code - will be removed
     std::shared_ptr <Transform> tempBu;
     ImVec2 mousePos; // Just for debug purpose
 
     //Dummy CODE - TODO REMOVE ME WHEN TEST IS FINISHD : 
     std::shared_ptr<FR::Fr_Line_Widget> lineMain;
-
 #endif
+  public:
+      CameraList active_camera_;
+
 };
 
 

@@ -2,7 +2,7 @@
 // This file is a part of the Open Source Design456App
 // MIT License
 //
-// Copyright (c) 2024
+// Copyright (c) 2023
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -117,6 +117,10 @@ Camera::Camera() :Transform(),
 
 void Camera::SetCamPosition(float x, float y, float z) {
     camPosition_ = glm::vec3(x, y, z);
+}
+glm::vec3 Camera::GetCamPosition()
+{
+    return camPosition_;
 }
 bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
 {
@@ -356,13 +360,7 @@ CameraList  Camera::getType() const
 {
     return camType_;
 }
-
-/**
-*   Get Camera Type
-*/
-CameraList Camera::getCameraType() {
-    return camType_;
-}
+ 
 
 glm::mat4 Camera::getPorjection()
 {

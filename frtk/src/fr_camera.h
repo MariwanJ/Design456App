@@ -2,7 +2,7 @@
 // This file is a part of the Open Source Design456App
 // MIT License
 //
-// Copyright (c) 2024
+// Copyright (c) 2023
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -65,6 +65,7 @@ public:
      * Default = (1, 0, 0)
      */
     void SetCamPosition(float x, float y, float z);
+    glm::vec3 GetCamPosition();
 
     glm::vec3 computeSphereCoordinates(int x, int y);
     void setupCameraHomeValues();
@@ -106,8 +107,6 @@ public:
 
     CameraList  getType() const;
 
-    CameraList getCameraType();
-
     glm::mat4 getPorjection();
     void updateViewMatrix();
 
@@ -115,11 +114,10 @@ public:
     glm::mat4 GetInverseViewMatrix();
 
     void setViewMatrix(glm::mat4 &t);
-
   
     void SetOrthographicSize(float size);
     float getOrthgraphicSize();
-
+    
 
 private:
 
