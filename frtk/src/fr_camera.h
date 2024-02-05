@@ -2,7 +2,7 @@
 // This file is a part of the Open Source Design456App
 // MIT License
 //
-// Copyright (c) 2023
+// Copyright (c) 2024
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -108,16 +108,18 @@ public:
     CameraList  getType() const;
 
     glm::mat4 getPorjection();
+    
     void updateViewMatrix();
 
     virtual glm::mat4 GetViewMatrix();
+
     glm::mat4 GetInverseViewMatrix();
 
     void setViewMatrix(glm::mat4 &t);
   
     void SetOrthographicSize(float size);
+
     float getOrthgraphicSize();
-    
 
 private:
 

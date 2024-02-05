@@ -2,7 +2,7 @@
 // This file is a part of the Open Source Design456App
 // MIT License
 //
-// Copyright (c) 2023
+// Copyright (c) 2024
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -64,8 +64,8 @@ std::shared_ptr<Transform>bunny() {
     Bunny_spot->SetAmbient(0.2f, 0.2f, 0.2f);
     Bunny_spot->SetAttenuation(0.50f, 0.2f, 0.50f);
     Bunny_spot->SetSpecular(FR_METAL);
-    bunny_t->AddNode(Bunny_spot);
-    bunny_t->AddNode(bunny);
+    //bunny_t->AddNode(Bunny_spot);
+    //bunny_t->AddNode(bunny);
     bunny->SetActive(true);
  
     //bunny->calculateTextureCoord();

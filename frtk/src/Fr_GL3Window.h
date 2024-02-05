@@ -2,7 +2,7 @@
 // This file is a part of the Open Source Design456App
 // MIT License
 //
-// Copyright (c) 2023
+// Copyright (c) 2024
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -228,7 +228,6 @@ public:
     void setCameraType(CameraList typOfCamera);
     CameraList getCameraType();
     int imgui_CameraConfiguration(userData_& data);
-    genID idGen_; //Keeps the id generator - used to generate shape/objects unique ID
     float getAspectRation() const;
     eventData GLFWevents() const;
 

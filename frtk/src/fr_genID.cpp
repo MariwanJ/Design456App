@@ -1,3 +1,4 @@
+#include "fr_genID.h"
 //
 // This file is a part of the Open Source Design456App
 // MIT License
@@ -24,49 +25,20 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-#ifndef FR_ENTTSENE_H
-#define FR_ENTTSENE_H
 
-#include<entt.hpp>
-#include<fr_genID.h>
+#include "fr_genID.h"
+#include <random>
+#include <unordered_map>
+
 namespace FR {
 
-	class Fr_enttScene {
-	public:
-		friend class Fr_Module;
-		Fr_enttScene() = default;
-		~Fr_enttScene();
-		Fr_enttScene(entt::entity ID, Fr_enttScene* scene);
-		Fr_enttScene(const Fr_enttScene& other) = default;  //shallow copy of the member variables
+	static std::random_device s_r_mDevice;
+	static std::mt19937_64 s_Engine(s_r_mDevice());
+	static std::uniform_int_distribution<uint64_t> s_udf;
 
-		operator bool() const;
-		operator entt::entity() const;
-		operator uint32_t() const;
+	genID::genID (): m_genID(s_udf(s_r_mDevice))
+	{	}
+	genID::genID(uint64_t u): m_genID(u)
+	{	}
 
-		
-
-		Fr_Module createModule(const std::string& name = std::string());
-		Fr_Module createModuleWithID(genID id, const std::string& name = std::string());
-
-		void removeModule(Fr_Module moduleVal);
-		//Module DuplicateModule(Module moduleVal);
-		//Module copy(Module moduleVal);
-		//void paste(Module moduleVal);
-
-		Fr_Module findModuleByName(std::string_view name);
-		Fr_Module getModuleByUUID(UUID uuid);
-
-		template<typename... Components>
-		auto GetAllEntitiesWith()
-		{
-			return m_Registry.view<Components...>();
-		}
-	private:
-		void RenderScene();
-
-	private:
-		entt::registry m_Registry;
-		std::unordered_map<genID, entt::entity> m_ModuleMap;
-	};
 }
-#endif

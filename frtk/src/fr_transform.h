@@ -2,7 +2,7 @@
 // This file is a part of the Open Source Design456App
 // MIT License
 //
-// Copyright (c) 2023
+// Copyright (c) 2024
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,9 +29,8 @@
 #define FR_TRANSFORM_H
 
 #include <memory>
-#include <fr_group.h>
-
-class FRTK_API Transform : public Group {
+#include <Fr_Core.h>
+class FRTK_API Transform  {
 public:
     /**
      * Constructor
@@ -63,17 +62,13 @@ public:
 
     virtual void Scale(glm::vec3 value);
 
- 
- 
 protected:
 
     glm::mat4 m_Matrix;
     glm::mat4 m_Inverse;
-
-    //From maniupulator
-
+     bool active_;
 public:
-
+    int type();
     /**
     * Accumulates the manipulator matrix
     */
@@ -97,41 +92,15 @@ public:
      * Sets whether each axis is inverted or not
      */
     void SetInvertAxis(bool invertX, bool invertY = false);
-
-    void GLFWMotion(int x, int y);
-
-    /**
-     * Mouse button function
-     */
-    void GLFWMouse(int button, int state, double x, double y);
-
+  
     float get_X()const;
     float get_Y()const;
     float get_Z() const;
-    void setZommingScale(float scale);
-
-private:
-    enum class Operation {
-        kRotation,  //Mouse click and drag
-        kZoom,       //Left mouse and drag
-        kNone       //nothing
-    };
-
-    static float kZoomScale;
-
-    /** Verifies the k_button state and sets the k_operation */
-    template<int k_button, Operation k_operation>
-    void SetOperation(int button, int state, double x, double y);
 
     /** Computes the sphere vector for rotation */
     glm::vec3 computeSphereCoordinate(double x, double y);
 
-    void Render(RenderInfo& info, const glm::mat4& modelview);
-
-    void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights);
-
     glm::vec3 m_Position;
-    Operation operation_;
     float x_, y_, z_;
     glm::vec3 v_;
     bool invertX_, invertY_;

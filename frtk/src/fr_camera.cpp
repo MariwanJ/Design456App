@@ -2,7 +2,7 @@
 // This file is a part of the Open Source Design456App
 // MIT License
 //
-// Copyright (c) 2023
+// Copyright (c) 2024
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -107,12 +107,10 @@ Camera::Camera() :Transform(),
     m_OrthographicSize{10},
     m_ProjectionMatrix(glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_)),     //default
     camType_(CameraList::PERSPECTIVE) {
-    type(NODETYPE::FR_CAMERA);
     int width, height;
     Fr_GL3Window* g = Fr_GL3Window::getfr_Gl3Window();
     glfwGetWindowSize(g->pWindow, &width, &height);
     aspectRatio_ = float(width) / float(height);
-
 }
 
 void Camera::SetCamPosition(float x, float y, float z) {

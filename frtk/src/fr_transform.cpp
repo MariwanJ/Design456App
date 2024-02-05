@@ -2,7 +2,7 @@
 // This file is a part of the Open Source Design456App
 // MIT License
 //
-// Copyright (c) 2023
+// Copyright (c) 2024
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,8 +30,7 @@
 #include <fr_transform.h>
 
 Transform::Transform() :
-    m_Position(0, 0, 0),
-    operation_{ Operation::kNone },
+    m_Position(0, 0, 0),active_(true),
     x_{ 0 },
     y_{ 0 },
     z_{ 0 },
@@ -41,7 +40,7 @@ Transform::Transform() :
 {
     m_Matrix = glm::mat4(1.0f);
     m_Inverse = glm::inverse(m_Matrix);
-    type(NODETYPE::FR_TRANSFORM);
+    
 }
 
 void Transform::Rotate(float x, float y, float z, float angle) {
@@ -76,9 +75,6 @@ void Transform::Scale(glm::vec3 value) {
     m_Inverse = glm::inverse(m_Matrix);
 }
 
-//Scroll zooming scale - default is 10.0
-float Transform::kZoomScale = 50.0f;
-
 glm::mat4 Transform::GetMatrix() {
     return m_Matrix;
 }
@@ -104,23 +100,6 @@ void Transform::SetInvertAxis(bool invertX, bool invertY) {
     invertY_ = invertY;
 }
 
-void Transform::GLFWMotion(int x, int y) {
-    if (operation_ == Operation::kNone)
-        return;
-
-    if (operation_ == Operation::kRotation) {
-        glm::vec3 v = computeSphereCoordinate(x, y);
-        glm::vec3 w = glm::cross(v_, v);
-        float theta = asin(glm::length(w));
-        if (theta != 0)
-            m_Matrix = glm::rotate(theta, w) * m_Matrix;
-        v_ = v;
-    }
-    m_Inverse = glm::inverse(m_Matrix);
-    x_ = x;
-    y_ = y;
-}
-
 float Transform::get_X() const
 {
     return x_;
@@ -133,10 +112,6 @@ float Transform::get_Y() const
 float Transform::get_Z() const
 {
     return z_;
-}
-void Transform::setZommingScale(float _scale)
-{
-    kZoomScale = _scale;
 }
 
 glm::vec3 Transform::computeSphereCoordinate(double x, double y) {
@@ -162,22 +137,4 @@ glm::vec3 Transform::computeSphereCoordinate(double x, double y) {
         vz = sqrt(1 - vx * vx - vy * vy);
     }
     return glm::vec3(vx, vy, vz);
-}
-
-
-void Transform::Render(RenderInfo& info, const glm::mat4& modelview) {
-    if (!active_)
-        return;
-
-    glm::mat4 sub_modelview = modelview;
-    sub_modelview *= m_Matrix;
-    Group::Render(info, sub_modelview);
-}
-
-void Transform::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) {
-    if (!active_)
-        return;
-
-    glm::mat4 sub_mv = modelview;
-    Group::SetupLight(sub_mv * m_Matrix, lights);
 }

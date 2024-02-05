@@ -2,7 +2,7 @@
 // This file is a part of the Open Source Design456App
 // MIT License
 //
-// Copyright (c) 2023
+// Copyright (c) 2024
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -144,8 +144,11 @@ public:
     int Parent();
 
     void Parent(int index);
+    
     Fr_GL3Window* ParentGL3Window();
+    
     static void setParentlink(Fr_GL3Window* p);
+
 protected:
 
     /**
