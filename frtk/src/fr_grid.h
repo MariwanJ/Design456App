@@ -56,14 +56,14 @@ public:
     /**
      * Sets the position of the grid.
      *
-     * \param pos Vertext that is the center of the grid
+     * \param pos Vertex that is the center of the grid
      */
     void setCenterPosition(glm::vec3 pos);
     /**
      * Sets Angle of rotation and the axis of rotation.
      *
      * \param axis 3 floats - Axis of rotation
-     * \param angle Angle of rotation in degrees
+     * \param angle of rotation in degrees
      */
     void setAngle(float Angle);
 
@@ -82,7 +82,7 @@ public:
     /**
      * Sets the grid visibility.
      *
-     * \param status boolean variable. If ture: Grids shown, if false: Grid is not visible
+     * \param status boolean variable. If true: Grids shown, if false: Grid is not visible
      */
     void setVisible(bool status);
     /**
@@ -97,13 +97,13 @@ public:
     unsigned int getgridWidth(void) const;
 
     /**
-     * Create the Grid verticies.
+     * Create the Grid vertices.
      *
      * \return pointer to the created grid
      */
-    std::shared_ptr<Transform>CreateGrid();
-private:
+    std::shared_ptr<Fr_PrimaitiveShader>CreateGrid();
 
+private:
     int sections_; //No of lines in both directions
     int gridWidth_; //Distance between each line in mm. This will be affected by the scale
     glm::vec3 scale_; //Scale the whole grid - Be careful this affects the distance value.

@@ -35,42 +35,42 @@
 #include <glm/gtc/type_ptr.hpp>
 ///std::shared_ptr<Fr_Texture2D> saveme;
 
-std::shared_ptr<Transform>bunny() {
-    auto bunny_t = std::make_shared<Transform>();
-    bunny_t->Translate(0, 0, 0);
-    bunny_t->Scale(1, 1, 1);
-    auto bunny = std::make_shared<ModelNode>(glm::vec4(FR_123D), 0.02f); //  color and
-
-   // bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/cube.off"));
-    bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/CubeCenter.off"));
-    //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Pyramid.off"));
-    bunny->m_Texture2D = std::make_shared<Fr_Texture2D>();
-    //std::string imag = ("E:/Projects/Design456App/resources/Texture/test.png");
-    //std::string imag = ("E:/Projects/Design456App/resources/Texture/ts.png");
-    //std::string imag = ("E:/Projects/Design456App/resources/Texture/Surface.png");
-   // std::string imag = ("E:/Projects/Design456App/resources/Texture/2.png");
-    //std::string imag = ("E:/Projects/Design456App/resources/Texture/3.png");
-    //std::string imag = ("E:/Projects/Design456App/resources/Texture/default.png");
-    ///*if (!bunny->m_Texture2D->set2DTexture(imag)) {
-    //    DEBUG_BREAK;
-    //}*/
-    bunny->m_Texture2D->setup2DTexture();
-    //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Wedge.off"));
-    auto Bunny_spot = std::make_shared<Light>();
-    Bunny_spot->SetActive(true);
-    Bunny_spot->SetPosition(0.f, 2.f, 5.0f);
-    // Bunny_spot->SetupSpot(-1.0f, -10.0f, 5.0f, 25.0f, 1.0f);
-    Bunny_spot->SetDiffuse(.2f, .2f, 0.2);
-    Bunny_spot->SetAmbient(0.2f, 0.2f, 0.2f);
-    Bunny_spot->SetAttenuation(0.50f, 0.2f, 0.50f);
-    Bunny_spot->SetSpecular(FR_METAL);
-    //bunny_t->AddNode(Bunny_spot);
-    //bunny_t->AddNode(bunny);
-    bunny->SetActive(true);
- 
-    //bunny->calculateTextureCoord();
-    return bunny_t;
-}
+//std::shared_ptr<Transform>bunny() {
+//    auto bunny_t = std::make_shared<Transform>();
+//    bunny_t->Translate(0, 0, 0);
+//    bunny_t->Scale(1, 1, 1);
+//    auto bunny = std::make_shared<ModelNode>(glm::vec4(FR_123D), 0.02f); //  color and
+//
+//   // bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/cube.off"));
+//    bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/CubeCenter.off"));
+//    //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Pyramid.off"));
+//    bunny->m_Texture2D = std::make_shared<Fr_Texture2D>();
+//    //std::string imag = ("E:/Projects/Design456App/resources/Texture/test.png");
+//    //std::string imag = ("E:/Projects/Design456App/resources/Texture/ts.png");
+//    //std::string imag = ("E:/Projects/Design456App/resources/Texture/Surface.png");
+//   // std::string imag = ("E:/Projects/Design456App/resources/Texture/2.png");
+//    //std::string imag = ("E:/Projects/Design456App/resources/Texture/3.png");
+//    //std::string imag = ("E:/Projects/Design456App/resources/Texture/default.png");
+//    ///*if (!bunny->m_Texture2D->set2DTexture(imag)) {
+//    //    DEBUG_BREAK;
+//    //}*/
+//    bunny->m_Texture2D->setup2DTexture();
+//    //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Wedge.off"));
+//    auto Bunny_spot = std::make_shared<Light>();
+//    Bunny_spot->SetActive(true);
+//    Bunny_spot->SetPosition(0.f, 2.f, 5.0f);
+//    // Bunny_spot->SetupSpot(-1.0f, -10.0f, 5.0f, 25.0f, 1.0f);
+//    Bunny_spot->SetDiffuse(.2f, .2f, 0.2);
+//    Bunny_spot->SetAmbient(0.2f, 0.2f, 0.2f);
+//    Bunny_spot->SetAttenuation(0.50f, 0.2f, 0.50f);
+//    Bunny_spot->SetSpecular(FR_METAL);
+//    //bunny_t->AddNode(Bunny_spot);
+//    //bunny_t->AddNode(bunny);
+//    bunny->SetActive(true);
+// 
+//    //bunny->calculateTextureCoord();
+//    return bunny_t;
+//}
 /**
  * Grid constructor.
  *
@@ -138,9 +138,8 @@ unsigned int Grid::getgridWidth(void) const
     return gridWidth_;
 }
 
-std::shared_ptr<Transform> Grid::CreateGrid()
+std::shared_ptr<Fr_PrimaitiveShader> Grid::CreateGrid()
 {
-    auto grid_t = std::make_shared<Transform>();
     std::vector<float> vertices;
     float x, y, z;
     x = y = z = 0;
@@ -155,7 +154,7 @@ std::shared_ptr<Transform> Grid::CreateGrid()
             if ((x == 0 && y == 0) ||
                 (x == 0 && z == 0) ||
                 (y == 0 && z == 0)) {
-                //We don't draw the axis line as we draw them seperatly
+                //We don't draw the axis line as we draw them separately
                 continue;
             }
             vertices.push_back(x);
@@ -172,7 +171,7 @@ std::shared_ptr<Transform> Grid::CreateGrid()
             if ((x == 0 && y == 0) ||
                 (x == 0 && z == 0) ||
                 (y == 0 && z == 0)) {
-                //We don't draw the axis line as we draw them seperatly
+                //We don't draw the axis line as we draw them separately
                 continue;
             }
             vertices.push_back(x);
@@ -185,11 +184,9 @@ std::shared_ptr<Transform> Grid::CreateGrid()
     for (int i = 0; i <= vertices.size(); i++) {
         indices.push_back(i);
     }
-    grid_t->Scale(1, 1, 1);
     std::shared_ptr<Fr_Primatives> primative = std::make_shared<Fr_Primatives>();
     primative->SetVertexes(vertices, indices);
     std::shared_ptr gridS = std::make_shared<Fr_PrimaitiveShader>(gridColor_, 0.005); //  color and
     gridS->SetPrimative(primative);
-    grid_t->AddNode(gridS);
-    return grid_t;
+    return gridS;
 }

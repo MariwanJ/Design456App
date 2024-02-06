@@ -31,7 +31,7 @@
 #include<fr_genID.h>
 namespace FR {
 
-	class Fr_enttScene {
+	class FRTK_API Fr_enttScene {
 	public:
 		friend class Fr_Module;
 		Fr_enttScene() = default;
@@ -61,12 +61,22 @@ namespace FR {
 		{
 			return m_Registry.view<Components...>();
 		}
+		
+		void setBackgroud(float r, float g, float b, float alfa);
+		void setBackgroud(glm::vec4 color);
+
+	protected:
+		static GLFWwindow* linkToglfw;
 	private:
 		void RenderScene();
+		//Grid, Axis, Camera which is always created automatically.User shouldn't need to do anything
+		void setupScene();	
 
 	private:
+		glm::vec4 m_Background;
 		entt::registry m_Registry;
 		std::unordered_map<genID, entt::entity> m_ModuleMap;
+		    static GLFWwindow* linkToglfw;
 	};
 }
 #endif

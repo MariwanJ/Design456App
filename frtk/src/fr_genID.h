@@ -32,7 +32,7 @@
 
 namespace FR {
 
-	class genID
+	class FRTK_API genID
 	{
 	public:
 		genID();

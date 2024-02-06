@@ -31,8 +31,9 @@
 #include<fr_transform.h>
 #include<fr_module.h>
 
-namespace FR {
+GLFWwindow* FR::Fr_enttScene::linkToglfw = nullptr;
 
+namespace FR {
 
 
     Fr_enttScene::~Fr_enttScene()
@@ -71,11 +72,21 @@ namespace FR {
 
         return newModule;
     }
+    void Fr_enttScene::setBackgroud(float r, float g, float b, float alfa) {
+        m_Background = glm::vec4(r, g, b, alfa);
+    }
+
+    void Fr_enttScene::setBackgroud(glm::vec4 color) {
+        m_Background = color;
+    }
 
 
     void Fr_enttScene::RenderScene() {
+        glCheckFunc(glEnable(GL_DEPTH_TEST));
+        glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+        glCheckFunc(glEnable(GL_BLEND));
+        glCheckFunc(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
-       
     }
 
 }

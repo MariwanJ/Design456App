@@ -33,7 +33,7 @@
 
 namespace FR {
 
-	class Fr_Module
+	class FRTK_API Fr_Module
 	{
 	public:
 		Fr_Module() = default;
@@ -81,7 +81,7 @@ namespace FR {
 
 		bool operator==(const Fr_Module& val) const
 		{
-			return m_ID == val.m_ID && m_Scene == val.m_Scene;
+			return m_ID == val.m_ID && m_enttScene == val.m_enttScene;
 		}
 
 		bool operator!=(const Fr_Module& other) const
@@ -91,7 +91,7 @@ namespace FR {
 	private:
 
 		entt::entity m_ID;
-		Fr_enttScene* m_Scene;
+		Fr_enttScene* m_enttScene;
 	};
 }
 #endif

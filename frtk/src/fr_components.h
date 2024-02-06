@@ -3,7 +3,7 @@
 #include<fr_genID.h>
 namespace FR {
 
-	class moudleID
+	class FRTK_API moudleID
 	{
 	public:
 		moudleID() = default;
@@ -11,7 +11,7 @@ namespace FR {
 		genID ID;
 	};
 
-	class moudleName
+	class FRTK_API moudleName
 	{
 	public:
 
