@@ -28,7 +28,7 @@ Please notice that the main will not be updated until I get a working scene, wit
 
 7-After making stable cameras (6 cameras), I will release this version as a base code for any other project you might need such a setup. But for now the development is continuing. 
 
-Don't forget that you need to download preemake5.exe 
+Don't forget that you need to download premake5.exe 
 
 # Some Ideas are comming from:
 Some of the code is inspired by TheCherno (thaks) and Hazel Game Engine. 
