@@ -97,7 +97,7 @@ RIGHT
 
 float Camera::aspectRatio_ = 1.9;
 
-Camera::Camera() :Transform(),
+Camera::Camera() : 
     camPosition_{ 15.f, 11.f,  102.f }, v_(0, 0, 0),
     direction_{ -.098f, -1.372f, 0.0f },
     up_{ -58.84f, 628.451f, 29.412f },

@@ -33,6 +33,7 @@
 #include<fr_core.h>
 
 #include <fr_node.h>
+
 class FRTK_API Light : public Node {
 public:
     /**
@@ -94,7 +95,6 @@ public:
      * Returns the light info by reference
      */
     void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) override;
-
 
 public:
     int getLightID();

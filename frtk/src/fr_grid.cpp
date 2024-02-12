@@ -75,6 +75,8 @@
  * Grid constructor.
  *
  */
+
+namespace FR{
 Grid::Grid()
 {
     setGridParam();//default values. Otherwise you have to use setGridParam
@@ -189,4 +191,5 @@ std::shared_ptr<Fr_PrimaitiveShader> Grid::CreateGrid()
     std::shared_ptr gridS = std::make_shared<Fr_PrimaitiveShader>(gridColor_, 0.005); //  color and
     gridS->SetPrimative(primative);
     return gridS;
+}
 }

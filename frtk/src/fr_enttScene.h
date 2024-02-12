@@ -28,12 +28,16 @@
 #define FR_ENTTSENE_H
 
 #include<entt.hpp>
+#include<fr_camera.h>
 #include<fr_genID.h>
+
 namespace FR {
 
 	class FRTK_API Fr_enttScene {
-	public:
 		friend class Fr_Module;
+		friend Fr_GL3Window;
+	public:
+		
 		Fr_enttScene() = default;
 		~Fr_enttScene();
 		Fr_enttScene(entt::entity ID, Fr_enttScene* scene);
@@ -65,18 +69,30 @@ namespace FR {
 		void setBackgroud(float r, float g, float b, float alfa);
 		void setBackgroud(glm::vec4 color);
 
+		void setupActiveCamera(std::string name);
+
+		void defaultCameras(void);
+		void defaultSunLight(void);
+
+		std::vector<std::shared_ptr<Camera>> cameraList; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
+		CameraList active_camera_;
+
+
 	protected:
 		static GLFWwindow* linkToglfw;
+ 
 	private:
 		void RenderScene();
 		//Grid, Axis, Camera which is always created automatically.User shouldn't need to do anything
 		void setupScene();	
 
 	private:
+
 		glm::vec4 m_Background;
 		entt::registry m_Registry;
 		std::unordered_map<genID, entt::entity> m_ModuleMap;
-		    static GLFWwindow* linkToglfw;
+		std::unordered_map<genID, entt::entity> m_cameraGroupEnt;
+		const char*camNames[8] = {"Perspective","Orthographic","Top","Bottom","Front","Rear","Right","Left"};
 	};
 }
 #endif

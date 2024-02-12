@@ -31,8 +31,9 @@
 #include <Fr_GL3Window.h>
 #include "fr_gl3callbacks.h"
 
-//Wrapper Callbacks
 
+//Wrapper Callbacks
+namespace FR{
 void Fr_GL3Window::GLFWCallbackWrapper::framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     s_fr_glfwwindow->framebuffer_size_callback(window, width, height);
@@ -139,6 +140,12 @@ void Fr_GL3Window::GLFWCallbackWrapper::mnuEditPaste(void* Data)
 }
 
 void Fr_GL3Window::mnuFileNew_cb(void* Data) {
+    if (activeScene != NULL) {
+        mnuFileSave_cb(Data);
+        delete activeScene;
+    }
+
+    activeScene = std::make_shared<Fr_enttScene>();
     std::cout << "File new callback\n";
 }
 
@@ -210,9 +217,10 @@ void Fr_GL3Window::createOpenDialog(void)
     if (fileDialog.HasSelected())
     {
         std::string fileName = fileDialog.GetSelected().string();
-        scene->add3DObject(fileName);
+        activeScene->add3DObject(fileName);
         fileDialog.ClearSelected();
         showOpenDialog = false;
     }
     ImGui::End();
+}
 }

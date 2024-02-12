@@ -37,7 +37,7 @@
 #include <fr_light.h>
 #include <fr_primatives.h>
 
-
+namespace FR{
 class FRTK_API Grid :public Node
 {
 public:
@@ -112,4 +112,7 @@ private:
     glm::vec4 gridColor_;
 };
 
+}
+
 #endif
+
