@@ -69,7 +69,8 @@ namespace FR {
 		void setBackgroud(float r, float g, float b, float alfa);
 		void setBackgroud(glm::vec4 color);
 
-		void setupActiveCamera(std::string name);
+		void setupActiveCamera(std::string& name);
+		void setupActiveCamera(CameraList val);
 
 		void defaultCameras(void);
 		void defaultSunLight(void);
@@ -90,9 +91,10 @@ namespace FR {
 
 		glm::vec4 m_Background;
 		entt::registry m_Registry;
+		entt::registry m_CamRegistry;
 		std::unordered_map<genID, entt::entity> m_ModuleMap;
-		std::unordered_map<genID, entt::entity> m_cameraGroupEnt;
-		const char*camNames[8] = {"Perspective","Orthographic","Top","Bottom","Front","Rear","Right","Left"};
+		//std::unordered_map<genID, entt::entity> m_cameraGroupEnt; //TODO : do we need to use this?? 
+		
 	};
 }
 #endif

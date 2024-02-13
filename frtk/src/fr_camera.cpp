@@ -101,7 +101,7 @@ Camera::Camera() :
     camPosition_{ 15.f, 11.f,  102.f }, v_(0, 0, 0),
     direction_{ -.098f, -1.372f, 0.0f },
     up_{ -58.84f, 628.451f, 29.412f },
-    fovy_{ 102.f },
+    fovy_{ 102.f }, m_Active(false),
     znear_{ 0.01 },
     zfar_{ 100000 },
     m_OrthographicSize{10},
@@ -122,7 +122,7 @@ glm::vec3 Camera::GetCamPosition()
 }
 bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
 {
-    if (!active_)
+    if (!m_Active)
         return false;
  
     //FRTK_CORE_INFO(aspectRatio_);
@@ -347,7 +347,7 @@ void Camera::setupCameraHomeValues() {
 void Camera::setType(CameraList camTyp)
 {
     camType_ = camTyp;
-    active_ = true;
+    m_Active = true;
 }
 /**
  *
@@ -391,6 +391,17 @@ float Camera::getOrthgraphicSize()
 {
     return m_OrthographicSize;
 }
+
+void Camera::isActive(bool val)
+{
+    m_Active = val;
+}
+
+bool Camera::isActive()
+{
+    return m_Active;
+}
+ 
 
 glm::mat4 Camera::GetInverseViewMatrix() {
     return m_Inverse;

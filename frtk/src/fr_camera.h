@@ -52,6 +52,9 @@
 /**
  * Scene's camera- Must be a subclass of Transform to achive translation
  */
+
+const char* camNames[8] = { "Perspective","Orthographic","Top","Bottom","Front","Rear","Right","Left" };
+
 class FRTK_API Camera {
     friend Fr_GL3Window;
 public:
@@ -120,6 +123,9 @@ public:
     void SetOrthographicSize(float size);
 
     float getOrthgraphicSize();
+    
+    void isActive(bool val);
+    bool isActive();
 
 private:
 
@@ -134,6 +140,7 @@ private:
     glm::mat4 m_ProjectionMatrix;
     float m_OrthographicSize;  
     glm::vec3 v_;
+    bool m_Active;
 };
 
 #endif

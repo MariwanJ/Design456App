@@ -34,9 +34,7 @@
 GLFWwindow* FR::Fr_enttScene::linkToglfw = nullptr;
 
 namespace FR {
-    
     Fr_enttScene::Fr_enttScene() {
-        
     }
     Fr_enttScene::~Fr_enttScene()
     {
@@ -51,7 +49,6 @@ namespace FR {
         return createModuleWithID(genID(), name);
     }
 
-
     void Fr_enttScene::removeModule(Fr_Module moduleVal)
     {
     }
@@ -65,7 +62,7 @@ namespace FR {
     {
         return Fr_Module();
     }
- 
+
     Fr_Module Fr_enttScene::createModuleWithID(genID id, const std::string& name)
     {
         Fr_Module  newModule = { m_Registry.create(), this };
@@ -83,45 +80,55 @@ namespace FR {
     void Fr_enttScene::setBackgroud(glm::vec4 color) {
         m_Background = color;
     }
-    void Fr_enttScene::setupActiveCamera(std::string name) {
-        auto cameras=m_Registry.view<Transform, Camera>();
-        for (auto ent : cameras) {
-            const moudleName& nm = ent.get<moudleName>(ent);
 
+
+    void Fr_enttScene::setupActiveCamera(std::string& name) {
+        auto cameraGroup = m_Registry.group<moudleName, Camera>();
+        for (auto ent : cameraGroup) {
+            Fr_Module cameraModule = { ent,this };
+            auto actCam = cameraModule.GetModule<Camera>();
+            actCam.isActive(true);
+            if (name.compare(cameraModule.GetName()) == 0) {
+                actCam.isActive(true);
+            }
+            else {
+                actCam.isActive(false);
             }
         }
     }
+    void Fr_enttScene::setupActiveCamera(CameraList  val)
+    {
+        std::string CamName = camNames[int(val)];
+        setupActiveCamera(CamName);
+    }
     void Fr_enttScene::defaultCameras(void)
     {
-         
     }
 
     void Fr_enttScene::defaultSunLight(void)
     {
     }
 
-
     void Fr_enttScene::RenderScene() {
         glCheckFunc(glEnable(GL_DEPTH_TEST));
         glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
         glCheckFunc(glEnable(GL_BLEND));
         glCheckFunc(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-
     }
     void Fr_enttScene::setupScene() {
         //Add all cameras
-    
+
          // Entity
          //. |
          //  ___Transform
          //  ---Tag - name
          //  ---Camera instance
          //
-        //TODO: Dose it make sence to create 8 cameras, or you should just keep the configurations? 
+        //TODO: Dose it make sence to create 8 cameras, or you should just keep the configurations?
         //Note: I cannot create a group to keep track of these cameras. I will wait with that.
-        for (int i = 0; i< 8; i++) {
+        for (int i = 0; i < 8; i++) {
             Fr_Module  newModule = { m_Registry.create(), this };//Entity
-            newModule=createModuleWithID(genID(), camNames[i]);
+            newModule = createModuleWithID(genID(), camNames[i]);
             newModule.addModule<Camera>();
         }
     }

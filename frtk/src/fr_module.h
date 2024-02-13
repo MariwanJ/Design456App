@@ -32,7 +32,10 @@
 #include <fr_components.h>
 
 namespace FR {
-
+	/**
+	 * Class to make it easy to treat entt
+	 * since entt is just only an id, we need to convert that to a container.
+	 */
 	class FRTK_API Fr_Module
 	{
 	public:
