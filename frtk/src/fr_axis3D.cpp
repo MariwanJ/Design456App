@@ -135,37 +135,27 @@ vert Axis3D::CreateAxis3D()
     primativeR->lineWidth(5); //THICKER LINE
     auto axRed = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_RED), 0.005); //  color and
     axRed->SetPrimative(primativeR);
-    axis_t.Red = std::make_shared<Transform>();
-    axis_t.Red->AddNode(axRed);
 
     std::shared_ptr <Fr_Primatives>primativeG = std::shared_ptr<Fr_Primatives>(new Fr_Primatives());
     primativeG->SetVertexes(verticesGreen, indicesGreen);
     primativeG->lineWidth(5); //THICKER LINE
     auto axGreen = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_GREEN), 0.005); //  color and
     axGreen->SetPrimative(primativeG);
-    axis_t.Green = std::make_shared<Transform>();
-    axis_t.Green->AddNode(axGreen);
+
 
     auto primativeB = std::make_shared<Fr_Primatives>();
     primativeB->SetVertexes(verticesBlue, indicesBlue);
     primativeB->lineWidth(5); //THICKER LINE
     auto axBlue = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_BLUE ), 0.005); //  color and
     axBlue->SetPrimative(primativeB);
-    axis_t.Blue = std::make_shared<Transform>();
-    axis_t.Blue->AddNode(axBlue);
+
 
     auto primativeZB = std::make_shared<Fr_Primatives>();
     primativeZB->lineWidth(2);
     primativeZB->SetVertexes(verticesZBlue, indicesZBlue);
     auto axZBlue = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_YELLOW), 0.005); //  color and
-    axZBlue->SetPrimative(primativeZB);
-    axis_t.Blue->AddNode(axZBlue);
-
-
-    axis_t.Red->Scale(1, 1, 1);
-    axis_t.Green->Scale(1, 1, 1);
-    axis_t.Blue->Scale(1, 1, 1);
-    return axis_t;
+    vert answer = { axRed,axGreen, axBlue, axZBlue};
+    return answer;
 }
 
 void Axis3D::setVisible(bool status)

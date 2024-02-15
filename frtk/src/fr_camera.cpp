@@ -220,7 +220,7 @@ void Camera::setUserData(userData_& data)
 
 void Camera::setupCameraHomeValues() {
     switch (int(camType_)) {
-        //TODO: FIXME: If you create more than 6, you should add it here
+        //TODO: FIXME: If you create more than 8, you should add it here
     case 0: {
         /*Normal view PERSPECTIVE, HOME
                 position 17.463835 -17.463825 13.463827\n

@@ -29,6 +29,7 @@
 
 #include<entt.hpp>
 #include<fr_camera.h>
+#include<fr_light.h>
 #include<fr_genID.h>
 
 namespace FR {
@@ -72,18 +73,21 @@ namespace FR {
 		void setupActiveCamera(std::string& name);
 		void setupActiveCamera(CameraList val);
 
-		void defaultCameras(void);
-		void defaultSunLight(void);
+		void CreateDefaultCameras(void);
+
+		void CreateDefaultSunLight(void);
 
 		std::vector<std::shared_ptr<Camera>> cameraList; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
 		CameraList active_camera_;
-
 
 	protected:
 		static GLFWwindow* linkToglfw;
  
 	private:
 		void RenderScene();
+		void CreateGrid();
+		void CreateAxis();
+ 
 		//Grid, Axis, Camera which is always created automatically.User shouldn't need to do anything
 		void setupScene();	
 

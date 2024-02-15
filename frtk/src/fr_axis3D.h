@@ -37,15 +37,15 @@
 #include <fr_light.h>
 #include <fr_primatives.h>
 
-//Temporary code - just for debuggin
-std::shared_ptr<Transform>bunny();
-//End Temporary code
+////Temporary code - just for debuggin
+//std::shared_ptr<Transform>bunny();
+////End Temporary code
 
 typedef struct vert {
-    std::shared_ptr<Transform> Red;
-    std::shared_ptr<Transform> Green;
-    std::shared_ptr<Transform> Blue;
-    std::shared_ptr<Transform> ZBlue; //small lines
+    std::shared_ptr<Fr_PrimaitiveShader> Red;
+    std::shared_ptr<Fr_PrimaitiveShader> Green;
+    std::shared_ptr<Fr_PrimaitiveShader> Blue;
+    std::shared_ptr<Fr_PrimaitiveShader> ZBlue; //small lines
 };
 
 class FRTK_API Axis3D :public Node
@@ -81,7 +81,7 @@ public:
     float getStepWidth(void) const;
 
     /**
-     * Create the Grid verticies.
+     * Create the Grid vertices.
      *
      * \return pointer to the created grid
      */

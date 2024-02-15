@@ -53,8 +53,9 @@
  * Scene's camera- Must be a subclass of Transform to achive translation
  */
 
-const char* camNames[8] = { "Perspective","Orthographic","Top","Bottom","Front","Rear","Right","Left" };
+constexpr unsigned char TOTAL_CAMS = 8;
 
+const char* camNames[TOTAL_CAMS] = { "Perspective","Orthographic","Top","Bottom","Front","Rear","Right","Left" };
 class FRTK_API Camera {
     friend Fr_GL3Window;
 public:
