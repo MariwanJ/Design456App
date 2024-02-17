@@ -97,14 +97,14 @@ RIGHT
 
 float Camera::aspectRatio_ = 1.9;
 
-Camera::Camera() : 
+Camera::Camera() :
     camPosition_{ 15.f, 11.f,  102.f }, v_(0, 0, 0),
     direction_{ -.098f, -1.372f, 0.0f },
-    up_{ -58.84f, 628.451f, 29.412f },
+    up_{ -58.84f, 628.451f, 29.412f }, m_Matrix(0),
     fovy_{ 102.f }, m_Active(false),
-    znear_{ 0.01 },
+    znear_{ 0.01 }, modelViewLink(0),
     zfar_{ 100000 },
-    m_OrthographicSize{10},
+    m_OrthographicSize{ 10 },
     m_ProjectionMatrix(glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_)),     //default
     camType_(CameraList::PERSPECTIVE) {
     int width, height;
@@ -120,11 +120,11 @@ glm::vec3 Camera::GetCamPosition()
 {
     return camPosition_;
 }
-bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
+bool  Camera::SetupCamera(glm::mat4& projection)
 {
     if (!m_Active)
         return false;
- 
+
     //FRTK_CORE_INFO(aspectRatio_);
 
     if (camType_ == CameraList::ORTHOGRAPHIC) {
@@ -139,7 +139,6 @@ bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
         projection = glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_);
     }
     updateViewMatrix();
-    modelview = m_Matrix;
     return true;
 }
 
@@ -165,7 +164,6 @@ void Camera::SetCenter(float x, float y, float z) {
 void Camera::SetUp(float x, float y, float z) {
     up_ = glm::vec3(x, y, z);
     updateViewMatrix();
-
 }
 /**
  * Set fovy, znear and z far values.
@@ -349,6 +347,10 @@ void Camera::setType(CameraList camTyp)
     camType_ = camTyp;
     m_Active = true;
 }
+void Camera::setLinkToMatrix(glm::mat4* transformMatrix)
+{
+    m_Matrix = transformMatrix;
+}
 /**
  *
  * Set camera type which affects the setup function.
@@ -358,7 +360,6 @@ CameraList  Camera::getType() const
 {
     return camType_;
 }
- 
 
 glm::mat4 Camera::getPorjection()
 {
@@ -366,20 +367,18 @@ glm::mat4 Camera::getPorjection()
     return m_ProjectionMatrix;
 }
 void Camera::updateViewMatrix() {
-    m_Matrix = glm::lookAt(camPosition_, direction_, up_);
-    m_Inverse = glm::inverse(m_Matrix);
+    *m_Matrix = glm::lookAt(camPosition_, direction_, up_);
 }
 
 glm::mat4 Camera::GetViewMatrix() {
     updateViewMatrix();
-    return m_Matrix;
+    return *m_Matrix;
 }
 
-void Camera::setViewMatrix(glm::mat4 &t)
+void Camera::setViewMatrix(glm::mat4& t)
 {
-    m_Matrix = t;
+    *m_Matrix = t;
 }
-
 
 void Camera::SetOrthographicSize(float size_)
 {
@@ -401,16 +400,15 @@ bool Camera::isActive()
 {
     return m_Active;
 }
- 
 
 glm::mat4 Camera::GetInverseViewMatrix() {
-    return m_Inverse;
+    return glm::inverse(*m_Matrix);
 }
 
 glm::vec3 Camera::computeSphereCoordinates(int x, int y) {
     int vp[4];
     glGetIntegerv(GL_VIEWPORT, vp);
-    Fr_GL3Window* win=Fr_GL3Window::getfr_Gl3Window();
+    Fr_GL3Window* win = Fr_GL3Window::getfr_Gl3Window();
     ImVec4 screenDim = win->getPortViewDimensions();
     const float w = screenDim.z;
     const float h = screenDim.w;
@@ -427,6 +425,5 @@ glm::vec3 Camera::computeSphereCoordinates(int x, int y) {
     else {
         vz = sqrt(1 - vx * vx - vy * vy);
     }
-
     return glm::vec3(vx, vy, vz);
 }

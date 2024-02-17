@@ -67,7 +67,7 @@
 //    //bunny_t->AddNode(Bunny_spot);
 //    //bunny_t->AddNode(bunny);
 //    bunny->SetActive(true);
-// 
+//
 //    //bunny->calculateTextureCoord();
 //    return bunny_t;
 //}
@@ -76,120 +76,120 @@
  *
  */
 
-namespace FR{
-Grid::Grid()
-{
-    setGridParam();//default values. Otherwise you have to use setGridParam
-    type(NODETYPE::FR_GRID);
-}
-/**
- * .
- *
- * \param sections No of line sections. default = 50
- * \param gridWidth Distance between each line. default = 1mm
- * \param pos Center of the grid. Defualt is the origin (0,0,0)
- * \param scale Scale of the grid - defualt is (1.0f,1.0f,1.0f)
- */
+namespace FR {
+    Grid::Grid()
+    {
+        setGridParam();//default values. Otherwise you have to use setGridParam
+        type(NODETYPE::FR_GRID);
+    }
+    /**
+     * .
+     *
+     * \param sections No of line sections. default = 50
+     * \param gridWidth Distance between each line. default = 1mm
+     * \param pos Center of the grid. Defualt is the origin (0,0,0)
+     * \param scale Scale of the grid - defualt is (1.0f,1.0f,1.0f)
+     */
 
-void Grid::setGridParam(unsigned int sections,
-    unsigned int gridWidth,
-    glm::vec3 pos,
-    glm::vec3 scale) {
-    sections_ = sections;
-    gridWidth_ = gridWidth;
-    scale_ = scale;
-    centerPos_ = pos;
-    gridColor_ = (glm::vec4)FR_RED;
-}
+    void Grid::setGridParam(unsigned int sections,
+        unsigned int gridWidth,
+        glm::vec3 pos,
+        glm::vec3 scale) {
+        sections_ = sections;
+        gridWidth_ = gridWidth;
+        scale_ = scale;
+        centerPos_ = pos;
+        gridColor_ = (glm::vec4)FR_RED;
+    }
 
-Grid::~Grid()
-{
-}
+    Grid::~Grid()
+    {
+    }
 
-void Grid::setCenterPosition(glm::vec3 pos)
-{
-    centerPos_ = pos;
-}
+    void Grid::setCenterPosition(glm::vec3 pos)
+    {
+        centerPos_ = pos;
+    }
 
-void Grid::setAngle(float Angle)
-{
-    gridRotation_[3] = glm::radians(Angle);
-}
+    void Grid::setAngle(float Angle)
+    {
+        gridRotation_[3] = glm::radians(Angle);
+    }
 
-void Grid::setRotation(glm::vec4 rotation)
-{
-    gridRotation_ = rotation;
-}
+    void Grid::setRotation(glm::vec4 rotation)
+    {
+        gridRotation_ = rotation;
+    }
 
-glm::vec4 Grid::getRotation(void) {
-    return gridRotation_;
-}
+    glm::vec4 Grid::getRotation(void) {
+        return gridRotation_;
+    }
 
-void Grid::setVisible(bool status)
-{
-    active_ = status;
-}
+    void Grid::setVisible(bool status)
+    {
+        active_ = status;
+    }
 
-void Grid::setgridWidth(unsigned int sizeINmm)
-{
-    gridWidth_ = sizeINmm;
-}
+    void Grid::setgridWidth(unsigned int sizeINmm)
+    {
+        gridWidth_ = sizeINmm;
+    }
 
-unsigned int Grid::getgridWidth(void) const
-{
-    return gridWidth_;
-}
+    unsigned int Grid::getgridWidth(void) const
+    {
+        return gridWidth_;
+    }
 
-std::shared_ptr<Fr_PrimaitiveShader> Grid::CreateGrid()
-{
-    std::vector<float> vertices;
-    float x, y, z;
-    x = y = z = 0;
-    float totalLength = gridWidth_ * sections_;
-    glm::vec3 limmitValue = glm::vec3(centerPos_[0] - (totalLength / 2), centerPos_[1] - (totalLength / 2), centerPos_[2]);
-    //First lines
-    for (int i = 0; i <= (sections_); i++) {
-        for (int j = 0; j <= sections_; j += sections_) {
-            x = limmitValue[0] + i * gridWidth_;
-            y = limmitValue[1] + (float)j * gridWidth_;
-            z = limmitValue[2];
-            if ((x == 0 && y == 0) ||
-                (x == 0 && z == 0) ||
-                (y == 0 && z == 0)) {
-                //We don't draw the axis line as we draw them separately
-                continue;
+    std::shared_ptr<Fr_PrimaitiveShader> Grid::CreateGrid()
+    {
+        std::vector<float> vertices;
+        float x, y, z;
+        x = y = z = 0;
+        float totalLength = gridWidth_ * sections_;
+        glm::vec3 limmitValue = glm::vec3(centerPos_[0] - (totalLength / 2), centerPos_[1] - (totalLength / 2), centerPos_[2]);
+        //First lines
+        for (int i = 0; i <= (sections_); i++) {
+            for (int j = 0; j <= sections_; j += sections_) {
+                x = limmitValue[0] + i * gridWidth_;
+                y = limmitValue[1] + (float)j * gridWidth_;
+                z = limmitValue[2];
+                if ((x == 0 && y == 0) ||
+                    (x == 0 && z == 0) ||
+                    (y == 0 && z == 0)) {
+                    //We don't draw the axis line as we draw them separately
+                    continue;
+                }
+                vertices.push_back(x);
+                vertices.push_back(y);
+                vertices.push_back(z);
             }
-            vertices.push_back(x);
-            vertices.push_back(y);
-            vertices.push_back(z);
         }
-    }
-    //Second lines to create the squre plane
-    for (int i = 0; i <= (sections_); i++) {
-        for (int j = 0; j <= sections_; j += sections_) {
-            x = limmitValue[0] + (float)j * gridWidth_;
-            y = limmitValue[1] + (float)i * gridWidth_;
-            z = limmitValue[2];
-            if ((x == 0 && y == 0) ||
-                (x == 0 && z == 0) ||
-                (y == 0 && z == 0)) {
-                //We don't draw the axis line as we draw them separately
-                continue;
+        //Second lines to create the squre plane
+        for (int i = 0; i <= (sections_); i++) {
+            for (int j = 0; j <= sections_; j += sections_) {
+                x = limmitValue[0] + (float)j * gridWidth_;
+                y = limmitValue[1] + (float)i * gridWidth_;
+                z = limmitValue[2];
+                if ((x == 0 && y == 0) ||
+                    (x == 0 && z == 0) ||
+                    (y == 0 && z == 0)) {
+                    //We don't draw the axis line as we draw them separately
+                    continue;
+                }
+                vertices.push_back(x);
+                vertices.push_back(y);
+                vertices.push_back(z);
             }
-            vertices.push_back(x);
-            vertices.push_back(y);
-            vertices.push_back(z);
         }
-    }
 
-    std::vector<unsigned int> indices;
-    for (int i = 0; i <= vertices.size(); i++) {
-        indices.push_back(i);
+        std::vector<unsigned int> indices;
+        for (int i = 0; i <= vertices.size(); i++) {
+            indices.push_back(i);
+        }
+        std::shared_ptr<Fr_Primatives> primative = std::make_shared<Fr_Primatives>();
+        primative->SetVertexes(vertices, indices);
+        std::shared_ptr gridS = std::make_shared<Fr_PrimaitiveShader>(gridColor_, 0.005); //  color and
+        gridS->SetPrimative(primative);
+        return gridS;
     }
-    std::shared_ptr<Fr_Primatives> primative = std::make_shared<Fr_Primatives>();
-    primative->SetVertexes(vertices, indices);
-    std::shared_ptr gridS = std::make_shared<Fr_PrimaitiveShader>(gridColor_, 0.005); //  color and
-    gridS->SetPrimative(primative);
-    return gridS;
-}
 }

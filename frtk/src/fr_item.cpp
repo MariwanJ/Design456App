@@ -25,18 +25,11 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef Application_h
-#define Application_h
+#include "fr_item.h"
 
-#include<fr_core.h>
-#include<Fr_GL3Window.h>
 namespace FR {
-    class Application : public Fr_GL3Window {
-    public:
-        Application(int x = 0, int y = 0, int w = 1530, int h = 800, const char* l = "Design456App");
-        ~Application();
-
-        int run(int argc, char** argv);
-    };
+    FR::Fr_Item::Fr_Item(entt::entity IDval, Fr_enttScene* enttScene_val) :
+        m_ID(IDval), m_enttScene(enttScene_val)
+    {
+    }
 }
-#endif

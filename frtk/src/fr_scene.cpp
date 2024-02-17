@@ -60,7 +60,6 @@ void Scene::add3DObject(std::string fName)
     newObj_t->Rotate(0, 1, 0, 0); //TODO CHECK ME
     auto newObj = std::make_shared<ModelNode>(glm::vec4(FR_BISQUE), 0.0005f); //  color and
 
-
     //texture
     newObj->m_Texture2D = std::make_shared<Fr_Texture2D>();
     //std::string imag = ("E:/Projects/Design456App/resources/Texture/test.png");
@@ -68,7 +67,7 @@ void Scene::add3DObject(std::string fName)
     //std::string imag = ("E:/Projects/Design456App/resources/Texture/2.png");
     //std::string imag = ("E:/Projects/Design456App/resources/Texture/3.png");
     //std::string imag = ("E:/Projects/Design456App/resources/Texture/default.png");
-    
+
     //if (newObj->m_Texture2D->set2DTexture(imag))
     //{
     //        newObj->m_Texture2D->setup2DTexture();      //Don't forget to do this always
@@ -102,7 +101,6 @@ void Scene::delete3DObject(std::shared_ptr<Transform>& obj)
 * This is a general process  for drawing camera, shadow map, render shape /faces ..etc
 */
 void Scene::RenderScene() {
-    
     RenderInfo render_info;
     if (!SetupCamera(render_info.projection, render_info.modelview))
         throw std::runtime_error("Scene::Render(): Camera not found");

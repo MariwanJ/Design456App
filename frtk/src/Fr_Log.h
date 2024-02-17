@@ -31,7 +31,7 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
 #include<fr_constants.h>
-
+namespace FR{
 class Fr_Log
 {
 public:
@@ -57,5 +57,5 @@ private:
 #define APP_APP_WARN(...)	   Fr_Log::GetAPPLogger()->warn(__VA_ARGS__)
 #define APP_APP_ERROR(...)	   Fr_Log::GetAPPLogger()->error(__VA_ARGS__)
 #define APP_APP_FATAL(...)	   Fr_Log::GetAPPLogger()->fatal(__VA_ARGS__)
-
+}
 #endif

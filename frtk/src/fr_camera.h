@@ -102,12 +102,15 @@ public:
      * Returns true if the camera has been set
      * Returns the camera info by reference
      */
-    virtual bool SetupCamera(glm::mat4& projection, glm::mat4& modelview);
+    virtual bool SetupCamera(glm::mat4& projection);
 
     /**
     *   Setup camera type , default perspective
     */
     void setType(CameraList camTyp = CameraList::PERSPECTIVE);
+
+    void setLinkToMatrix(glm::mat4* transformMatrix);
+
 
     CameraList  getType() const;
 
@@ -129,7 +132,7 @@ public:
     bool isActive();
 
 private:
-
+    std::shared_ptr <glm::mat4>modelViewLink;
     CameraList camType_;
     glm::vec3 camPosition_;
     glm::vec3 direction_;
@@ -142,6 +145,7 @@ private:
     float m_OrthographicSize;  
     glm::vec3 v_;
     bool m_Active;
+    glm::mat4* m_Matrix;
 };
 
 #endif

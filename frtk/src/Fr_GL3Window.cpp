@@ -46,7 +46,6 @@ namespace FR {
 
     glfwMouseEvent Fr_GL3Window::mouseEvent = { 0,0,0,0,false,0 };
 
-    
     bool Fr_GL3Window::MouseOnce = true;
 
     static void error_callback(int error, const char* description)
@@ -93,10 +92,10 @@ namespace FR {
         phi = theta = 0.f;
         runCode = true;
 
-        #if 1 //just for debug purpose
-                mousePos = { 0,0 };
-        #endif
-            }
+#if 1 //just for debug purpose
+        mousePos = { 0,0 };
+#endif
+    }
 
     void Fr_GL3Window::flush() {
         glad_glFlush();
@@ -160,7 +159,7 @@ namespace FR {
 #include<ThreeDWidgets/fr_line_widget.h> ///this is a test TODO : REMOVE ME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
     void Fr_GL3Window::CreateScene()
     {
-        if (activeScene != nullptr){
+        if (activeScene != nullptr) {
             delete activeScene;
             cameraList.clear();
         }

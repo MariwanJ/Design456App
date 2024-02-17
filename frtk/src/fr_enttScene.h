@@ -33,72 +33,64 @@
 #include<fr_genID.h>
 
 namespace FR {
+    class FRTK_API Fr_enttScene {
+        friend class Fr_Item;
+        friend Fr_GL3Window;
+    public:
 
-	class FRTK_API Fr_enttScene {
-		friend class Fr_Module;
-		friend Fr_GL3Window;
-	public:
-		
-		Fr_enttScene() = default;
-		~Fr_enttScene();
-		Fr_enttScene(entt::entity ID, Fr_enttScene* scene);
-		Fr_enttScene(const Fr_enttScene& other) = default;  //shallow copy of the member variables
+        Fr_enttScene() = default;
+        ~Fr_enttScene();
+        Fr_enttScene(entt::entity ID, Fr_enttScene* scene);
+        Fr_enttScene(const Fr_enttScene& other) = default;  //shallow copy of the member variables
 
-		operator bool() const;
-		operator entt::entity() const;
-		operator uint32_t() const;
+        Fr_Item createItem(const std::string& name = std::string());
+        Fr_Item createItemWithID(genID id, const std::string& name = std::string());
 
-		
+        void removeItem(Fr_Item ItemVal);
+        //Item DuplicateItem(Item ItemVal);
+        //Item copy(Item ItemVal);
+        //void paste(Item ItemVal);
 
-		Fr_Module createModule(const std::string& name = std::string());
-		Fr_Module createModuleWithID(genID id, const std::string& name = std::string());
+        Fr_Item findItemByName(std::string_view name);
+        Fr_Item getItemByUUID(genID uuid);
 
-		void removeModule(Fr_Module moduleVal);
-		//Module DuplicateModule(Module moduleVal);
-		//Module copy(Module moduleVal);
-		//void paste(Module moduleVal);
+        template<typename... Components>
+        auto GetAllEntitiesWith()
+        {
+            return m_Registry.view<Components...>();
+        }
 
-		Fr_Module findModuleByName(std::string_view name);
-		Fr_Module getModuleByUUID(UUID uuid);
+        void setBackgroud(float r, float g, float b, float alfa);
+        void setBackgroud(glm::vec4 color);
 
-		template<typename... Components>
-		auto GetAllEntitiesWith()
-		{
-			return m_Registry.view<Components...>();
-		}
-		
-		void setBackgroud(float r, float g, float b, float alfa);
-		void setBackgroud(glm::vec4 color);
+        Fr_Item& setupActiveCamera(std::string& name);
+        Fr_Item& setupActiveCamera(CameraList val);
 
-		void setupActiveCamera(std::string& name);
-		void setupActiveCamera(CameraList val);
+        void CreateDefaultCameras(void);
 
-		void CreateDefaultCameras(void);
+        void CreateDefaultSunLight(void);
 
-		void CreateDefaultSunLight(void);
+        std::vector<std::shared_ptr<Camera>> cameraList; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
+        CameraList active_camera_;
 
-		std::vector<std::shared_ptr<Camera>> cameraList; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
-		CameraList active_camera_;
+    protected:
+        static GLFWwindow* linkToglfw;
 
-	protected:
-		static GLFWwindow* linkToglfw;
- 
-	private:
-		void RenderScene();
-		void CreateGrid();
-		void CreateAxis();
- 
-		//Grid, Axis, Camera which is always created automatically.User shouldn't need to do anything
-		void setupScene();	
+    private:
+        void RenderScene();
+        void CreateGrid();
+        void CreateAxis();
 
-	private:
+        //Grid, Axis, Camera which is always created automatically.User shouldn't need to do anything
+        void setupScene();
 
-		glm::vec4 m_Background;
-		entt::registry m_Registry;
-		entt::registry m_CamRegistry;
-		std::unordered_map<genID, entt::entity> m_ModuleMap;
-		//std::unordered_map<genID, entt::entity> m_cameraGroupEnt; //TODO : do we need to use this?? 
-		
-	};
+    private:
+
+        glm::vec4 m_Background;
+        entt::registry m_Registry;
+        entt::registry m_CamRegistry;
+        std::unordered_map<genID, entt::entity> m_ItemMap;
+        //std::unordered_map<genID, entt::entity> m_cameraGroupEnt; //TODO : do we need to use this??
+    };
 }
 #endif

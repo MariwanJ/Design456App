@@ -30,7 +30,9 @@
 
 #include <memory>
 #include <Fr_Core.h>
+##include <fr_camera.h>
 class FRTK_API Transform  {
+    friend Camera;
 public:
     /**
      * Constructor
@@ -86,7 +88,7 @@ public:
     void SetPosition(float x, float y, float z);
 
     void SetPosition(glm::vec3 pos);
-
+    glm::mat4* GetMatrixPointer();
 
     /**
      * Sets whether each axis is inverted or not

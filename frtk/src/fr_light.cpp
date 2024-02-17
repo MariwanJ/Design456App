@@ -140,12 +140,6 @@ namespace FR {
         info.cutoff = spot_cutoff_Ang;
         info.exponent = spot_exponent_;
         lights.push_back(info);
-        light_id_ = lights.size() - 1;
-    }
-
-    int Light::getLightID()
-    {
-        return light_id_;
     }
 
     glm::vec4 Light::getPosition()

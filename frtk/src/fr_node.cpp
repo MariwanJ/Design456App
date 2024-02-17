@@ -27,77 +27,77 @@
 //
 #include <fr_node.h>
 #include <Fr_GL3Window.h>
+namespace FR {
+    Node::Node() :type_(NODETYPE::FR_NODE), m_Parent(-1),
+        active_{ true }
+    {
+    }
 
-Node::Node() :type_(NODETYPE::FR_NODE), m_Parent(-1),
-active_{ true}
-{
- 
-}
+    Node::~Node() {
+    }
 
-Node::~Node() {
-}
+    bool Node::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
+        //Dummy code doese nothing should  be subclassed
+        //(void)projection;
+        //(void)modelview;
+        return false;
+    }
 
-bool Node::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
-    //Dummy code doese nothing should  be subclassed
-    //(void)projection;
-    //(void)modelview;
-    return false;
-}
+    void Node::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) {
+        //Dummy code doese nothing should  be subclassed
+       /*/ (void)modelview;
+        (void)lights;*/
+    }
 
-void Node::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) {
-    //Dummy code doese nothing should  be subclassed
-   /*/ (void)modelview;
-    (void)lights;*/
-}
+    bool Node::SetupTexture2D() {
+        //Dummy code does nothing should be subclassed
+        /*(void)info;*/
+        return false;
+    }
 
-bool Node::SetupTexture2D( ) {
-    //Dummy code does nothing should be subclassed
-    /*(void)info;*/
-    return false;
-}
+    //void Node::RenderTexture2D() {
+    //    //Dummy code does nothing should be subclassed
+    //    /*(void)info;
+    //    (void)modelview;*/
+    //}
+    Fr_GL3Window* Node::m_parentGl3Win = 0;
+    void Node::Render(RenderInfo& info, const glm::mat4& modelview) {
+        //Dummy code does nothing should be subclassed
+        /*(void)info;
+        (void)modelview;*/
+    }
 
-//void Node::RenderTexture2D() {
-//    //Dummy code does nothing should be subclassed
-//    /*(void)info;
-//    (void)modelview;*/
-//}
-Fr_GL3Window *Node::m_parentGl3Win = 0;
-void Node::Render(RenderInfo& info, const glm::mat4& modelview) {
-    //Dummy code does nothing should be subclassed
-    /*(void)info;
-    (void)modelview;*/
-}
+    void Node::SetActive(bool active) {
+        active_ = active;
+    }
 
-void Node::SetActive(bool active) {
-    active_ = active;
-}
+    bool Node::GetActive() {
+        return active_;
+    }
 
-bool Node::GetActive() {
-    return active_;
-}
+    NODETYPE Node::type()
+    {
+        return type_;
+    }
 
-NODETYPE Node::type()
-{
-    return type_;
-}
+    void Node::type(NODETYPE newVal)
+    {
+        type_ = newVal;
+    }
+    int Node::Parent() {
+        return m_Parent;
+    }
 
-void Node::type(NODETYPE newVal)
-{
-    type_ = newVal;
-}
-int Node::Parent() {
-    return m_Parent;
-}
+    void Node::Parent(int index)
+    {
+        m_Parent = index;
+    }
 
-void Node::Parent(int index)
-{
-    m_Parent = index;
+    Fr_GL3Window* Node::ParentGL3Window() {
+        return m_parentGl3Win;
+    }
+    void Node::setParentlink(Fr_GL3Window* p)
+    {
+        m_parentGl3Win = p;
+    };
 }
-
-Fr_GL3Window* Node::ParentGL3Window(){
-    return m_parentGl3Win;
-}
-void Node::setParentlink(Fr_GL3Window* p)
-{
-    m_parentGl3Win = p;
-};

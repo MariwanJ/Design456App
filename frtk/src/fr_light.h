@@ -97,7 +97,7 @@ namespace FR {
         void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) override;
 
     public:
-        int getLightID();
+
         glm::vec4 getPosition();
         glm::vec4 gtAmbient();
         glm::vec4 getDiffuse();
@@ -111,7 +111,6 @@ namespace FR {
 
         // Attributes
         glm::vec4 lightColor_;
-        int light_id_;
         glm::vec4 position_;
         glm::vec4 ambient_;
         glm::vec4 diffuse_;

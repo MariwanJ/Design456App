@@ -40,7 +40,6 @@ Transform::Transform() :
 {
     m_Matrix = glm::mat4(1.0f);
     m_Inverse = glm::inverse(m_Matrix);
-    
 }
 
 void Transform::Rotate(float x, float y, float z, float angle) {
@@ -92,6 +91,11 @@ void Transform::SetPosition(glm::vec3 pos)
 {
     m_Position = pos;
     Translate(pos);
+}
+
+glm::mat4* Transform::GetMatrixPointer()
+{
+    return &m_Matrix;
 }
 
 
