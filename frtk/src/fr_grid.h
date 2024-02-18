@@ -36,83 +36,81 @@
 #include <fr_node.h>
 #include <fr_light.h>
 #include <fr_primatives.h>
+#include <fr_primativeShader.h>
+namespace FR {
+    class FRTK_API Grid :public Node
+    {
+    public:
+        /**
+         * class constructor.
+         *
+         */
+        Grid();
 
-namespace FR{
-class FRTK_API Grid :public Node
-{
-public:
-    /**
-     * class constructor.
-     *
-     */
-    Grid();
+        void setGridParam(unsigned int sections = 100, unsigned int gridWidth = 10, glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 scale = glm::vec3(0.0f, 0.0f, 0.0f));
+        /**
+         * Class destructor.
+         *
+         */
+        ~Grid();
+        /**
+         * Sets the position of the grid.
+         *
+         * \param pos Vertex that is the center of the grid
+         */
+        void setCenterPosition(glm::vec3 pos);
+        /**
+         * Sets Angle of rotation and the axis of rotation.
+         *
+         * \param axis 3 floats - Axis of rotation
+         * \param angle of rotation in degrees
+         */
+        void setAngle(float Angle);
 
-    void setGridParam(unsigned int sections = 100, unsigned int gridWidth = 10, glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 scale = glm::vec3(0.0f, 0.0f, 0.0f));
-    /**
-     * Class destructor.
-     *
-     */
-    ~Grid();
-    /**
-     * Sets the position of the grid.
-     *
-     * \param pos Vertex that is the center of the grid
-     */
-    void setCenterPosition(glm::vec3 pos);
-    /**
-     * Sets Angle of rotation and the axis of rotation.
-     *
-     * \param axis 3 floats - Axis of rotation
-     * \param angle of rotation in degrees
-     */
-    void setAngle(float Angle);
+        /**
+         * Set Grid rotation.
+         *
+         * \param rotation 4 float : axis and an angle
+         */
+        void setRotation(glm::vec4 rotation);
+        /**
+         * Get rotation axis and angle in radians.
+         *
+         * \return
+         */
+        glm::vec4 getRotation(void);
+        /**
+         * Sets the grid visibility.
+         *
+         * \param status boolean variable. If true: Grids shown, if false: Grid is not visible
+         */
+        void setVisible(bool status);
+        /**
+         * Sets grid size. This is the distance between each line in both axis
+         */
+        void setgridWidth(unsigned int sizeINmm);
+        /**
+         * Returns the grid size.
+         *
+         * \return gird size defined previously
+         */
+        unsigned int getgridWidth(void) const;
 
-    /**
-     * Set Grid rotation.
-     *
-     * \param rotation 4 float : axis and an angle
-     */
-    void setRotation(glm::vec4 rotation);
-    /**
-     * Get rotation axis and angle in radians.
-     *
-     * \return
-     */
-    glm::vec4 getRotation(void);
-    /**
-     * Sets the grid visibility.
-     *
-     * \param status boolean variable. If true: Grids shown, if false: Grid is not visible
-     */
-    void setVisible(bool status);
-    /**
-     * Sets grid size. This is the distance between each line in both axis
-     */
-    void setgridWidth(unsigned int sizeINmm);
-    /**
-     * Returns the grid size.
-     *
-     * \return gird size defined previously
-     */
-    unsigned int getgridWidth(void) const;
+        /**
+         * Create the Grid vertices.
+         *
+         * \return pointer to the created grid
+         */
+        std::shared_ptr<Fr_PrimaitiveShader>CreateGrid();
 
-    /**
-     * Create the Grid vertices.
-     *
-     * \return pointer to the created grid
-     */
-    std::shared_ptr<Fr_PrimaitiveShader>CreateGrid();
-
-private:
-    int sections_; //No of lines in both directions
-    int gridWidth_; //Distance between each line in mm. This will be affected by the scale
-    glm::vec3 scale_; //Scale the whole grid - Be careful this affects the distance value.
-    glm::vec3 centerPos_;//Center of the grid
-    glm::vec4 gridRotation_; //(Axis, angle) 4 float values
-    glm::vec4 gridColor_;
-};
-
+    private:
+        int sections_; //No of lines in both directions
+        int gridWidth_; //Distance between each line in mm. This will be affected by the scale
+        glm::vec3 scale_; //Scale the whole grid - Be careful this affects the distance value.
+        glm::vec3 centerPos_;//Center of the grid
+        glm::vec4 gridRotation_; //(Axis, angle) 4 float values
+        glm::vec4 gridColor_;
+    };
 }
 
 #endif
-

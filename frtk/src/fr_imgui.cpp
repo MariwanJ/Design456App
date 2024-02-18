@@ -31,12 +31,14 @@
 #include <glm/gtx/string_cast.hpp>
 #include<Math/fr_math.h>
 #include<fr_constants.h>
+#include<fr_camera.h>
+
 namespace FR {
     //TODO FIX ME DOSENT WORK DON'T KNOW WHY
     int Fr_GL3Window::imguimzo_init()
     {
         ImGuizmo::BeginFrame();
-        auto activeCamera = cameraList[(unsigned int)active_camera_];
+        std::shared_ptr<Camera> activeCamera = activeScene->cameraList[(unsigned int)activeScene->active_camera_];
 
         if (activeCamera->getType() == CameraList::ORTHOGRAPHIC)
             ImGuizmo::SetOrthographic(true);
@@ -46,7 +48,7 @@ namespace FR {
         ImGuizmo::Enable(true);
 
         auto getbu = Fr_GL3Window::getfr_Gl3Window()->tempBu;
-        auto cameraView = (activeCamera->GetMatrix());
+        auto cameraView = (activeCamera->GetViewMatrix());
 
         glm::mat4 trnasfrom_ = getbu->GetMatrix();
         if (getbu != NULL)
@@ -250,7 +252,7 @@ namespace FR {
 
         if (ImGui::Button("Reset Camera to defaults")) {                            // Buttons return true when clicked (most widgets return true when edited/activated)
             counter++;
-            auto camm = cameraList[(int)active_camera_];
+            auto camm = activeScene->cameraList[(int)activeScene->active_camera_];
             camm->setupCameraHomeValues();
             camm->getUserData(data);
         }
@@ -303,7 +305,7 @@ namespace FR {
 
         setPortViewDimension(ImVec4(Bound1.x, Bound1.y, Bound2.x, Bound2.y));
         auto win = getfr_Gl3Window();
-        auto activeCamera = win->cameraList[(int)win->active_camera_];
+        auto activeCamera = win->activeScene->cameraList[(int)win->activeScene->active_camera_];
         // activeCamera->aspectRatio_ = (Bound2.x - Bound1.x) / (Bound2.y - Bound1.y);    //Must be updated always
         // activeCamera->updateViewMatrix();
          //WE MUST UPDATE THIS, OTHERWISE THE RENDERING WILL BE MISSING DATA, AND THE PICTURE SHOWN WILL BE WRONG!!
@@ -312,7 +314,7 @@ namespace FR {
         }
         sceneBuffer->RescaleFrameBuffer(wWidth, wHeight);
         sceneBuffer->Bind();
-        scene->RenderScene();
+        activeScene->RenderScene();
         ImGui::Image(
             (ImTextureID)sceneBuffer->getFrameTexture(),
             ImGui::GetContentRegionAvail(),
@@ -402,17 +404,17 @@ namespace FR {
           //| ImGuiWindowFlags_NoSavedSettings
             ;
 
-        auto camm = cameraList[(int)active_camera_];
+        auto camm = activeScene->cameraList[(int)activeScene->active_camera_];
         camm->getUserData(data);
         imgui_CameraConfiguration(data);
-        if (active_camera_ != data.camType_) {
-            camm->SetActive(false);
-            active_camera_ = data.camType_;
-            camm = cameraList[(int)active_camera_];
+        if (activeScene->active_camera_ != data.camType_) {
+            camm->isActive(false);
+            activeScene->active_camera_ = data.camType_;
+            camm = activeScene->cameraList[(int)activeScene->active_camera_];
             camm->getUserData(data);
         }
         camm->setUserData(data);
-        camm->SetActive(true);
+        camm->isActive(true);
     }
 
     void Fr_GL3Window::SunOptions() {

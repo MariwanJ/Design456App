@@ -47,105 +47,99 @@
 
 */
 
-
-
 /**
- * Scene's camera- Must be a subclass of Transform to achive translation
+ * Scene's camera- Must be a subclass of Transform to achieve translation
  */
+namespace FR {
+    constexpr unsigned char TOTAL_CAMS = 8;
 
-constexpr unsigned char TOTAL_CAMS = 8;
+    const char* camNames[TOTAL_CAMS] = { "Perspective","Orthographic","Top","Bottom","Front","Rear","Right","Left" };
+    class FRTK_API Camera {
+        friend Fr_GL3Window;
+    public:
+        /**
+         * Constructor
+         */
+        Camera();
 
-const char* camNames[TOTAL_CAMS] = { "Perspective","Orthographic","Top","Bottom","Front","Rear","Right","Left" };
-class FRTK_API Camera {
-    friend Fr_GL3Window;
-public:
-    /**
-     * Constructor
-     */
-    Camera();
+        /**
+         * Sets the eye coordinates
+         * Default = (1, 0, 0)
+         */
+        void SetCamPosition(float x, float y, float z);
+        glm::vec3 GetCamPosition();
 
-    /**
-     * Sets the eye coordinates
-     * Default = (1, 0, 0)
-     */
-    void SetCamPosition(float x, float y, float z);
-    glm::vec3 GetCamPosition();
+        glm::vec3 computeSphereCoordinates(int x, int y);
+        void setupCameraHomeValues();
+        /**
+         * Sets the center coordinates
+         * Default = (0, 0, 0)
+         */
+        void SetCenter(float x, float y, float z);
 
-    glm::vec3 computeSphereCoordinates(int x, int y);
-    void setupCameraHomeValues();
-    /**
-     * Sets the center coordinates
-     * Default = (0, 0, 0)
-     */
-    void SetCenter(float x, float y, float z);
+        /**
+         * Sets the up coordinates
+         * Default = (0, 1, 0)
+         */
+        void SetUp(float x, float y, float z);
 
-    /**
-     * Sets the up coordinates
-     * Default = (0, 1, 0)
-     */
-    void SetUp(float x, float y, float z);
+        /**
+         * .
+         *
+         * \param fovy : type float, Lens of the camera , normally should be round 45
+         * \param znear : type float, normally is near to zero, but cannot be zero
+         * \param zfar  : type float, normally is about 1000
+         */
+        void SetPerspective(float fovy, float znear, float zfar);
 
-    /**
-     * .
-     * 
-     * \param fovy : type float, Lens of the camera , normally should be round 45
-     * \param znear : type float, normally is near to zero, but cannot be zero
-     * \param zfar  : type float, normally is about 1000
-     */
-    void SetPerspective(float fovy, float znear, float zfar);
+        void getUserData(userData_& data);
+        void setUserData(userData_& data);
 
-    void getUserData(userData_& data);
-    void setUserData(userData_& data);
- 
-    /**
-     * Sets the camera
-     * Returns true if the camera has been set
-     * Returns the camera info by reference
-     */
-    virtual bool SetupCamera(glm::mat4& projection);
+        /**
+         * Sets the camera
+         * Returns true if the camera has been set
+         * Returns the camera info by reference
+         */
+        virtual bool SetupCamera(glm::mat4& projection);
 
-    /**
-    *   Setup camera type , default perspective
-    */
-    void setType(CameraList camTyp = CameraList::PERSPECTIVE);
+        /**
+        *   Setup camera type , default perspective
+        */
+        void setType(CameraList camTyp = CameraList::PERSPECTIVE);
 
-    void setLinkToMatrix(glm::mat4* transformMatrix);
+        CameraList  getType() const;
 
+        glm::mat4 getPorjection();
 
-    CameraList  getType() const;
+        void updateViewMatrix();
 
-    glm::mat4 getPorjection();
-    
-    void updateViewMatrix();
+        virtual glm::mat4 GetViewMatrix();
 
-    virtual glm::mat4 GetViewMatrix();
+        glm::mat4 GetInverseViewMatrix();
 
-    glm::mat4 GetInverseViewMatrix();
+        void setViewMatrix(glm::mat4& t);
 
-    void setViewMatrix(glm::mat4 &t);
-  
-    void SetOrthographicSize(float size);
+        void SetOrthographicSize(float size);
 
-    float getOrthgraphicSize();
-    
-    void isActive(bool val);
-    bool isActive();
+        float getOrthgraphicSize();
 
-private:
-    std::shared_ptr <glm::mat4>modelViewLink;
-    CameraList camType_;
-    glm::vec3 camPosition_;
-    glm::vec3 direction_;
-    glm::vec3 up_;  //RIGHT
-    float fovy_;    //LEFT
-    float znear_;   //BOTTOM
-    float zfar_;   //TOP
-    static float aspectRatio_;      //must be static as all cameras have the same ratio
-    glm::mat4 m_ProjectionMatrix;
-    float m_OrthographicSize;  
-    glm::vec3 v_;
-    bool m_Active;
-    glm::mat4* m_Matrix;
-};
+        void isActive(bool val);
+        bool isActive();
 
+    private:
+        CameraList camType_;
+        glm::vec3 camPosition_;
+        glm::vec3 direction_;
+        glm::vec3 up_;  //RIGHT
+        float fovy_;    //LEFT
+        float znear_;   //BOTTOM
+        float zfar_;   //TOP
+        static float aspectRatio_;      //must be static as all cameras have the same ratio
+        glm::mat4 m_ProjectionMatrix;
+        float m_OrthographicSize;
+        glm::vec3 v_;
+        bool m_Active;
+        glm::mat4 m_ModelView;
+    };
+}
 #endif

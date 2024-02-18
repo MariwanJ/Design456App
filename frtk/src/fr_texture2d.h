@@ -2,7 +2,7 @@
 #define FR_TEXTURE2D_H
 
 #include<Fr_Core.h>
-
+namespace FR{
 class Fr_Texture2D {
 public:
     Fr_Texture2D();
@@ -21,5 +21,5 @@ private:
     unsigned char* m_LocalBuffer;
     int m_width, m_height, m_BPP, numComponents; // bpp : Bit per pixel (RGB or RGBA) in the file
 };
-
+}
 #endif

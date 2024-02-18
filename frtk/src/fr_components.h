@@ -3,21 +3,21 @@
 #include<fr_genID.h>
 namespace FR {
 
-	class FRTK_API moudleID
+	class FRTK_API ItemID
 	{
 	public:
-		moudleID() = default;
-		moudleID(const moudleID&) = default;
+		ItemID() = default;
+		ItemID(const ItemID&) = default;
 		genID ID;
 	};
 
-	class FRTK_API moudleName
+	class FRTK_API ItemName
 	{
 	public:
 
-		moudleName() = default;
-		moudleName(const moudleName&) = default;
-		moudleName(const std::string& name): m_Name(name) {}
+		ItemName() = default;
+		ItemName(const ItemName&) = default;
+		ItemName(const std::string& name): m_Name(name) {}
 		std::string m_Name;
 
 	};

@@ -44,7 +44,7 @@ namespace FR {
             std::string label);
         Fr_Window();
 /**
- * Class deconstructor.
+ * Class destructor .
  */
         ~Fr_Window();
         /**

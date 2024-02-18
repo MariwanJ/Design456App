@@ -30,9 +30,9 @@
 
 #include <memory>
 #include <Fr_Core.h>
-##include <fr_camera.h>
-class FRTK_API Transform  {
-    friend Camera;
+#include <fr_camera.h>
+class FRTK_API Transform {
+    friend class Camera;
 public:
     /**
      * Constructor
@@ -68,19 +68,21 @@ protected:
 
     glm::mat4 m_Matrix;
     glm::mat4 m_Inverse;
-     bool active_;
+    bool active_;
 public:
+    void SetMatrix(glm::mat4& val);
+
     int type();
     /**
     * Accumulates the manipulator matrix
     */
-   // glm::mat4 GetMatrix(const glm::vec3& look_dir = glm::vec3(0, 0, -1));
+    // glm::mat4 GetMatrix(const glm::vec3& look_dir = glm::vec3(0, 0, -1));
 
-    /**
-     * Accumulates the inverse of the manipulator matrix
-     */
-   virtual glm::mat4 GetMatrix();
-   virtual glm::mat4 GetInverse();
+     /**
+      * Accumulates the inverse of the manipulator matrix
+      */
+    virtual glm::mat4 GetMatrix();
+    virtual glm::mat4 GetInverse();
 
     /**
      * Sets the reference point (world center)
@@ -94,7 +96,7 @@ public:
      * Sets whether each axis is inverted or not
      */
     void SetInvertAxis(bool invertX, bool invertY = false);
-  
+
     float get_X()const;
     float get_Y()const;
     float get_Z() const;

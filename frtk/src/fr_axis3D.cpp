@@ -32,153 +32,150 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "fr_axis3D.h"
-
-Axis3D::Axis3D()
-{
-    ZstepSize_ = 10;  //Default value
-    stepWidth_ = 10;
-}
-
-Axis3D::~Axis3D()
-{
-}
-
-vert Axis3D::CreateAxis3D()
-{
-    float start = 2000.0f;
-    float end = -2000.0f;
-    float arrow1 = start - 5.0;
-    float arrow2 = 5.0;
-    float zBlueSize = 10;   //The small lines on the Z axis
-
-    vert axis_t;
-    std::vector<float> verticesRed;
-    std::vector<float> verticesGreen;
-    std::vector<float> verticesBlue;
-    std::vector<float> verticesZBlue;
-    float x, y, z;
-    x = y = z = 0;
-
-    glm::vec3 lightColorX(1.0, 0.0, 0.0); // red x
-
-    verticesRed = {
-         end,    0.0f,     0.0f,
-         start,  0.0f,     0.0f,
-
-         start,  0.0f,     0.0f,
-         arrow1, arrow2,   0.0f,
-         start,  0.0f,     0.0f,
-         arrow1, -arrow2,  0.0f
-    };
-
-    glm::vec3 lightColorY(0.0, 1.0, 0.0); // green y
-
-    verticesGreen = {
-        0.0f,   end,     0.0f,
-        0.0f,   start,   0.0f,
-
-        0.0f,    start,  0.0f,
-        arrow2,   arrow1, 0.0f,
-        0.0f,    start,  0.0f,
-       -arrow2,  arrow1,  0.0f
-    };
-
-    // z
-    glm::vec3 lightColorZ(0.0, 0.0, 1.0); // blue z
-
-    verticesBlue = {
-        0.0f,  0.0f,    end,
-        0.0f,  0.0f,    start,
-
-        0.0f,  0.0f,    start,
-        0.0f,  arrow2,  arrow1,
-        0.0f,  0.0f,    start,
-        0.0f, -arrow2,  arrow1
-    };
-
-    std::vector<unsigned int> indicesRed;
-
-    for (int i = 0; i <= verticesRed.size(); i++) {
-        indicesRed.push_back(i);
-    }
-    std::vector<unsigned int> indicesGreen;
-
-    for (int i = 0; i <= verticesGreen.size(); i++) {
-        indicesGreen.push_back(i);
-    }
-    std::vector<unsigned int> indicesBlue;
-
-    std::vector<unsigned int> indicesZBlue;
-    //Parallel lines
-    for (int i = -500; i <= 500; i = i + ZstepSize_) {
-        verticesZBlue.push_back(0.0f);
-        verticesZBlue.push_back(float(-zBlueSize / 2));
-        verticesZBlue.push_back(float(i));
-        verticesZBlue.push_back(0.0f);
-        verticesZBlue.push_back(float(zBlueSize / 2));
-        verticesZBlue.push_back(float(i));
-    }
-    for (int i = 0; i <= verticesZBlue.size(); i++) {
-        indicesZBlue.push_back(i);
+namespace FR {
+    Axis3D::Axis3D()
+    {
+        ZstepSize_ = 10;  //Default value
+        stepWidth_ = 10;
     }
 
-    for (int i = 0; i <= verticesBlue.size(); i++) {
-        indicesBlue.push_back(i);
+    Axis3D::~Axis3D()
+    {
     }
 
+    vert Axis3D::CreateAxis3D()
+    {
+        float start = 2000.0f;
+        float end = -2000.0f;
+        float arrow1 = start - 5.0;
+        float arrow2 = 5.0;
+        float zBlueSize = 10;   //The small lines on the Z axis
 
-    //For the blue, we add also the vertical line 
+        vert axis_t;
+        std::vector<float> verticesRed;
+        std::vector<float> verticesGreen;
+        std::vector<float> verticesBlue;
+        std::vector<float> verticesZBlue;
+        float x, y, z;
+        x = y = z = 0;
 
+        glm::vec3 lightColorX(1.0, 0.0, 0.0); // red x
 
-    auto primativeR = std::make_shared<Fr_Primatives>();
-    primativeR->SetVertexes(verticesRed, indicesRed);
-    primativeR->lineWidth(5); //THICKER LINE
-    auto axRed = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_RED), 0.005); //  color and
-    axRed->SetPrimative(primativeR);
+        verticesRed = {
+             end,    0.0f,     0.0f,
+             start,  0.0f,     0.0f,
 
-    std::shared_ptr <Fr_Primatives>primativeG = std::shared_ptr<Fr_Primatives>(new Fr_Primatives());
-    primativeG->SetVertexes(verticesGreen, indicesGreen);
-    primativeG->lineWidth(5); //THICKER LINE
-    auto axGreen = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_GREEN), 0.005); //  color and
-    axGreen->SetPrimative(primativeG);
+             start,  0.0f,     0.0f,
+             arrow1, arrow2,   0.0f,
+             start,  0.0f,     0.0f,
+             arrow1, -arrow2,  0.0f
+        };
 
+        glm::vec3 lightColorY(0.0, 1.0, 0.0); // green y
 
-    auto primativeB = std::make_shared<Fr_Primatives>();
-    primativeB->SetVertexes(verticesBlue, indicesBlue);
-    primativeB->lineWidth(5); //THICKER LINE
-    auto axBlue = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_BLUE ), 0.005); //  color and
-    axBlue->SetPrimative(primativeB);
+        verticesGreen = {
+            0.0f,   end,     0.0f,
+            0.0f,   start,   0.0f,
 
+            0.0f,    start,  0.0f,
+            arrow2,   arrow1, 0.0f,
+            0.0f,    start,  0.0f,
+           -arrow2,  arrow1,  0.0f
+        };
 
-    auto primativeZB = std::make_shared<Fr_Primatives>();
-    primativeZB->lineWidth(2);
-    primativeZB->SetVertexes(verticesZBlue, indicesZBlue);
-    auto axZBlue = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_YELLOW), 0.005); //  color and
-    vert answer = { axRed,axGreen, axBlue, axZBlue};
-    return answer;
-}
+        // z
+        glm::vec3 lightColorZ(0.0, 0.0, 1.0); // blue z
 
-void Axis3D::setVisible(bool status)
-{
-    active_ = status;
-}
+        verticesBlue = {
+            0.0f,  0.0f,    end,
+            0.0f,  0.0f,    start,
 
-void Axis3D::setAxisZstepSize(float sizeINmm)
-{
-    ZstepSize_ = sizeINmm;
-}
+            0.0f,  0.0f,    start,
+            0.0f,  arrow2,  arrow1,
+            0.0f,  0.0f,    start,
+            0.0f, -arrow2,  arrow1
+        };
 
-float Axis3D::getAxisZstepSize(void) const
-{
-    return ZstepSize_;
-}
+        std::vector<unsigned int> indicesRed;
 
-void Axis3D::setStepWidth(float sec)
-{
-    stepWidth_ = sec;
-}
+        for (int i = 0; i <= verticesRed.size(); i++) {
+            indicesRed.push_back(i);
+        }
+        std::vector<unsigned int> indicesGreen;
 
-float Axis3D::getStepWidth(void) const
-{
-    return stepWidth_;
+        for (int i = 0; i <= verticesGreen.size(); i++) {
+            indicesGreen.push_back(i);
+        }
+        std::vector<unsigned int> indicesBlue;
+
+        std::vector<unsigned int> indicesZBlue;
+        //Parallel lines
+        for (int i = -500; i <= 500; i = i + ZstepSize_) {
+            verticesZBlue.push_back(0.0f);
+            verticesZBlue.push_back(float(-zBlueSize / 2));
+            verticesZBlue.push_back(float(i));
+            verticesZBlue.push_back(0.0f);
+            verticesZBlue.push_back(float(zBlueSize / 2));
+            verticesZBlue.push_back(float(i));
+        }
+        for (int i = 0; i <= verticesZBlue.size(); i++) {
+            indicesZBlue.push_back(i);
+        }
+
+        for (int i = 0; i <= verticesBlue.size(); i++) {
+            indicesBlue.push_back(i);
+        }
+
+        //For the blue, we add also the vertical line
+
+        auto primativeR = std::make_shared<Fr_Primatives>();
+        primativeR->SetVertexes(verticesRed, indicesRed);
+        primativeR->lineWidth(5); //THICKER LINE
+        auto axRed = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_RED), 0.005); //  color and
+        axRed->SetPrimative(primativeR);
+
+        std::shared_ptr <Fr_Primatives>primativeG = std::shared_ptr<Fr_Primatives>(new Fr_Primatives());
+        primativeG->SetVertexes(verticesGreen, indicesGreen);
+        primativeG->lineWidth(5); //THICKER LINE
+        auto axGreen = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_GREEN), 0.005); //  color and
+        axGreen->SetPrimative(primativeG);
+
+        auto primativeB = std::make_shared<Fr_Primatives>();
+        primativeB->SetVertexes(verticesBlue, indicesBlue);
+        primativeB->lineWidth(5); //THICKER LINE
+        auto axBlue = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_BLUE), 0.005); //  color and
+        axBlue->SetPrimative(primativeB);
+
+        auto primativeZB = std::make_shared<Fr_Primatives>();
+        primativeZB->lineWidth(2);
+        primativeZB->SetVertexes(verticesZBlue, indicesZBlue);
+        auto axZBlue = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_YELLOW), 0.005); //  color and
+        vert answer = { axRed,axGreen, axBlue, axZBlue };
+        return answer;
+    }
+
+    void Axis3D::setVisible(bool status)
+    {
+        active_ = status;
+    }
+
+    void Axis3D::setAxisZstepSize(float sizeINmm)
+    {
+        ZstepSize_ = sizeINmm;
+    }
+
+    float Axis3D::getAxisZstepSize(void) const
+    {
+        return ZstepSize_;
+    }
+
+    void Axis3D::setStepWidth(float sec)
+    {
+        stepWidth_ = sec;
+    }
+
+    float Axis3D::getStepWidth(void) const
+    {
+        return stepWidth_;
+    }
 }

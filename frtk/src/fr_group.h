@@ -32,57 +32,57 @@
 #include<frtk.h>
 #include<fr_core.h>
 #include <fr_node.h>
-
-/**
- * A container for other nodes
- */
-class FRTK_API Group : public Node {
-public:
-    Group();
+namespace FR {
     /**
-     * Virtual destructor
+     * A container for other nodes
      */
-    ~Group();
+    class FRTK_API Group : public Node {
+    public:
+        Group();
+        /**
+         * Virtual destructor
+         */
+        ~Group();
 
-    /**
-     * Adds a node to the group
-     */
-    void AddNode(std::shared_ptr<Node> node);
-    void delNode(std::shared_ptr<Node> node);//add the object to the scene graph vector, return the index
+        /**
+         * Adds a node to the group
+         */
+        void AddNode(std::shared_ptr<Node> node);
+        void delNode(std::shared_ptr<Node> node);//add the object to the scene graph vector, return the index
 
-    int getNodeIndex(std::shared_ptr<Node> node);//add the object to the scene graph vector, return the index
-    /**
-     * Retrieve a pointer to the desired Node given by id number.
-     *
-     * \param id    Node number
-     * \return pointer to the node if exists. or nullpntr
-     */
-    std::shared_ptr<Node> getNode(int id);
+        int getNodeIndex(std::shared_ptr<Node> node);//add the object to the scene graph vector, return the index
+        /**
+         * Retrieve a pointer to the desired Node given by id number.
+         *
+         * \param id    Node number
+         * \return pointer to the node if exists. or nullpntr
+         */
+        std::shared_ptr<Node> getNode(int id);
 
-    virtual std::vector<std::shared_ptr<Node>> getNodes();
-    /**
-     * Sets the camera
-     * Returns true if the camera has been set
-     * Returns the camera info by reference
-     */
-    virtual bool SetupCamera(glm::mat4& projection, glm::mat4& modelview) override;
+        virtual std::vector<std::shared_ptr<Node>> getNodes();
+        /**
+         * Sets the camera
+         * Returns true if the camera has been set
+         * Returns the camera info by reference
+         */
+        virtual bool SetupCamera(glm::mat4& projection, glm::mat4& modelview) override;
 
-    /**
-     * Sets the lights
-     * Returns the light info by reference
-     */
-    virtual void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) override;
+        /**
+         * Sets the lights
+         * Returns the light info by reference
+         */
+        virtual void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) override;
 
-    /**
-     * Renders the node
-     */
-    virtual void Render(RenderInfo& info, const glm::mat4& modelview) override;
+        /**
+         * Renders the node
+         */
+        virtual void Render(RenderInfo& info, const glm::mat4& modelview) override;
 
-protected:
-    /** Group's children */
-    std::vector<std::shared_ptr<Node>> nodes_;
+    protected:
+        /** Group's children */
+        std::vector<std::shared_ptr<Node>> nodes_;
 
-private:
-};
-
+    private:
+    };
+}
 #endif

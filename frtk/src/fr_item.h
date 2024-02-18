@@ -46,41 +46,41 @@ namespace FR {
         template<typename T, typename... Args>
         T& addItem(Args&&... args)
         {
-            T& component = m_Scene->m_Registry.emplace<T>(m_ID, std::forward<Args>(args)...);
+            T& component = m_enttScene->m_Registry.emplace<T>(m_ID, std::forward<Args>(args)...);
             return component;
         }
 
         template<typename T, typename... Args>
         T& addOrReplaceItem(Args&&... args)
         {
-            T& component = m_Scene->m_Registry.emplace_or_replace<T>(m_ID, std::forward<Args>(args)...);
+            T& component = m_enttScene->m_Registry.emplace_or_replace<T>(m_ID, std::forward<Args>(args)...);
             return component;
         }
 
         template<typename T>
         T& GetItem()
         {
-            return m_Scene->m_Registry.get<T>(m_ID);
+            return m_enttScene->m_Registry.get<T>(m_ID);
         }
 
         template<typename T>
         bool HasItem()
         {
-            return m_Scene->m_Registry.has<T>(m_ID);
+            return m_enttScene->m_Registry.has<T>(m_ID);
         }
 
         template<typename T>
         void delItem()
         {
-            m_Scene->m_Registry.remove<T>(m_ID);
+            m_enttScene->m_Registry.remove<T>(m_ID);
         }
 
         operator bool() const { return m_ID != entt::null; }
         operator entt::entity() const { return m_ID; }
         operator uint32_t() const { return (uint32_t)m_ID; }
 
-        genID GetUUID() { return GetItem<moudleID>().ID; }
-        const std::string& GetName() { return GetItem<moudleName>().m_Name; }
+        genID GetUUID() { return GetItem<ItemID>().ID; }
+        const std::string& GetName() { return GetItem<ItemName>().m_Name; }
 
         bool operator==(const Fr_Item& val) const
         {

@@ -33,6 +33,7 @@
 /**
  * 2D BoundBox class definition.
  */
+namespace FR{
 class cBoundBox2D {
 public:
     /**
@@ -135,5 +136,5 @@ protected:
 private:
     glm::vec3 m_center;
 };
-
+}
 #endif

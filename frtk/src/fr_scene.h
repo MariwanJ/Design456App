@@ -47,7 +47,7 @@ typedef struct {
     float b;
     float a; //alpha
 } bkgC;
-
+namespace FR{
 class FRTK_API Scene : public Group {
 public:
     /**
@@ -74,5 +74,5 @@ private:
     bkgC  background_;
 
 };
-
+}
 #endif

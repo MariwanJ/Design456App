@@ -28,7 +28,7 @@
 #ifndef FR_GL3WINDOW_H
 #define FR_GL3WINDOW_H
 
-#include<fr_scene.h>
+#include<fr_enttScene.h>
 #include<fr_camera.h>
 #include<fr_light.h>
 #include <glm/gtc/matrix_transform.hpp>

@@ -30,40 +30,40 @@
 #include<fr_constants.h>
 #include <fr_core.h>
 #include <glm/glm.hpp>
+namespace FR {
+    class FRTK_API Fr_Primatives
+    {
+    public:
+        Fr_Primatives();
+        ~Fr_Primatives();
 
-class FRTK_API Fr_Primatives
-{
-public:
-    Fr_Primatives();
-    ~Fr_Primatives();
+        void Draw();
 
-    void Draw();
+        void setDrawType(int type);
+        int getDrawType() const;
 
-    void setDrawType(int type);
-    int getDrawType() const;
+        void GetPrimatives(std::vector<float>& vertices, std::vector<float>& normals, std::vector<unsigned int>& indices);
 
-    void GetPrimatives(std::vector<float>& vertices, std::vector<float>& normals, std::vector<unsigned int>& indices);
+        void SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices);
 
-    void SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices);
+        void lineWidth(unsigned int wid);
+        unsigned int lineWidth();
 
-    void lineWidth(unsigned int wid);
-    unsigned int lineWidth();
-    
-private:
+    private:
 
-    glm::vec3 GetVertex(unsigned int index, const float vertices[]);
+        glm::vec3 GetVertex(unsigned int index, const float vertices[]);
 
-    void SetVertex(unsigned int index, float vertices[], const glm::vec3& vertex);
+        void SetVertex(unsigned int index, float vertices[], const glm::vec3& vertex);
 
-    void InitializeVBO();
+        void InitializeVBO();
 
-    int drawType;
-    std::vector<float> vertices_;
-    std::vector<float> normals_;
-    std::vector<unsigned int> indices_;
-    unsigned int vbo_[3];
-    unsigned int vao_;
-    unsigned int m_lineWidth;
-};
-
+        int drawType;
+        std::vector<float> vertices_;
+        std::vector<float> normals_;
+        std::vector<unsigned int> indices_;
+        unsigned int vbo_[3];
+        unsigned int vao_;
+        unsigned int m_lineWidth;
+    };
+}
 #endif // !FR_PRIMATIVES_H

@@ -30,7 +30,7 @@
 #include <fr_transform.h>
 
 Transform::Transform() :
-    m_Position(0, 0, 0),active_(true),
+    m_Position(0, 0, 0), active_(true),
     x_{ 0 },
     y_{ 0 },
     z_{ 0 },
@@ -74,6 +74,11 @@ void Transform::Scale(glm::vec3 value) {
     m_Inverse = glm::inverse(m_Matrix);
 }
 
+void Transform::SetMatrix(glm::mat4& val)
+{
+    m_Matrix = val;
+}
+
 glm::mat4 Transform::GetMatrix() {
     return m_Matrix;
 }
@@ -97,7 +102,6 @@ glm::mat4* Transform::GetMatrixPointer()
 {
     return &m_Matrix;
 }
-
 
 void Transform::SetInvertAxis(bool invertX, bool invertY) {
     invertX_ = invertX;

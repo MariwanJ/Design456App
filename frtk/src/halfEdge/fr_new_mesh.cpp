@@ -28,7 +28,7 @@
 
 #include <../src/halfEdge/fr_new_mesh.h>
 #include <../src/Fr_GL3Window.h>
-
+namespace FR{
 Shape::Shape(const std::string& path) :
     vbo_{ 0, 0, 0,0 }, m_hasTexture(0),             //M_HAStEXTUER = 1 -->TEXTURE IS APPLIED, =0 -->TEXTURE IS NOT APPLIED
     vao_(0), normalized_(false) {
@@ -458,4 +458,5 @@ mesh_face::mesh_face() :
 
 mesh_face::~mesh_face()
 {
+}
 }

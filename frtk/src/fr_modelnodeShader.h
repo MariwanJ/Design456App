@@ -35,83 +35,82 @@
 #include<halfEdge/fr_new_mesh.h>
 class Mesh;
 class ShaderProgram;
+namespace FR {
+    class FRTK_API ModelNode : public Node {
+    public:
+        /**
+         * Constructor
+         */
+        ModelNode(unsigned int color = 0x111111, float silhouette = 0.005);
+        ModelNode(glm::vec4 color = glm::vec4(FR_WHITE), float silhouette = 0.005);
 
-class FRTK_API ModelNode : public Node {
-public:
-    /**
-     * Constructor
-     */
-    ModelNode(unsigned int color = 0x111111, float silhouette = 0.005);
-    ModelNode(glm::vec4 color = glm::vec4(FR_WHITE), float silhouette = 0.005);
+        /**
+         * Destructor
+         */
+        ~ModelNode();
 
-    /**
-     * Destructor
-     */
-    ~ModelNode();
+        /**
+         * Sets the color
+         */
+        void SetColor(unsigned int color, float alpha = 1.0f);
 
-    /**
-     * Sets the color
-     */
-    void SetColor(unsigned int color, float alpha = 1.0f);
+        /**
+         * Sets the color
+         */
+        void SetColor(glm::vec4, float alpha = 1.0f);
 
-    /**
-     * Sets the color
-     */
-    void SetColor(glm::vec4, float alpha = 1.0f);
+        /**
+         * Sets the opacity
+         */
+        void SetOpacity(float alpha);
 
-    /**
-     * Sets the opacity
-     */
-    void SetOpacity(float alpha);
+        /**
+         * Sets the mesh
+         */
+        void SetMesh(std::shared_ptr<Shape> mesh);
 
-    /**
-     * Sets the mesh
-     */
-    void SetMesh(std::shared_ptr<Shape> mesh);
+        /**
+         * Sets the mesh
+         */
+        void SetMesh(const std::string& mesh);
 
-    /**
-     * Sets the mesh
-     */
-    void SetMesh(const std::string& mesh);
+        /**
+         * Renders the node
+         */
+        void Render(RenderInfo& info, const glm::mat4& modelview) override;
 
-    /**
-     * Renders the node
-     */
-    void Render(RenderInfo& info, const glm::mat4& modelview) override;
+        /* void RenderTexture2D(RenderInfo& info, const glm::mat4& modelview);*/
 
-   /* void RenderTexture2D(RenderInfo& info, const glm::mat4& modelview);*/
-    
-    std::shared_ptr< Fr_Texture2D> m_Texture2D;
+        std::shared_ptr< Fr_Texture2D> m_Texture2D;
 
-    void calculateTextureCoord();
+        void calculateTextureCoord();
 
-private:
-    /**
-     * Sets the uniform light data
-     */
-    void LoadLights(ShaderProgram* program, const std::vector<LightInfo>& lights);
+    private:
+        /**
+         * Sets the uniform light data
+         */
+        void LoadLights(ShaderProgram* program, const std::vector<LightInfo>& lights);
 
-    /**
-     * Renders the silhouette
-     */
-    void RenderSilhouette(const glm::mat4& mvp);
+        /**
+         * Renders the silhouette
+         */
+        void RenderSilhouette(const glm::mat4& mvp);
 
-    // Constants
-    const size_t kMaxLights = 8;        //This is important to concider. This is also defined in the   objectshader_fs.glsl as MAX_LIGHTS
+        // Constants
+        const size_t kMaxLights = 8;        //This is important to concider. This is also defined in the   objectshader_fs.glsl as MAX_LIGHTS
 
-    // Shared between instances
-    struct Shared {
-        ShaderProgram* object_program;
-        ShaderProgram* silhouette_program;          //the dark shape and outline of object
-        ShaderProgram* texture_program;
+        // Shared between instances
+        struct Shared {
+            ShaderProgram* object_program;
+            ShaderProgram* silhouette_program;          //the dark shape and outline of object
+            ShaderProgram* texture_program;
+        };
+        static Shared* shared_;
+
+        // Attributes
+        std::shared_ptr<Shape> mesh_;
+        glm::vec4 color_;
+        float silhouette_;
     };
-    static Shared* shared_;
-
-    // Attributes
-    std::shared_ptr<Shape> mesh_;
-    glm::vec4 color_;
-    float silhouette_;
-   
-};
-
+}
 #endif

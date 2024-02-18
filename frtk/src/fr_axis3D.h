@@ -36,61 +36,62 @@
 #include <fr_node.h>
 #include <fr_light.h>
 #include <fr_primatives.h>
+#include <fr_primativeShader.h>
 
 ////Temporary code - just for debuggin
 //std::shared_ptr<Transform>bunny();
 ////End Temporary code
+namespace FR {
+    typedef struct vert {
+        std::shared_ptr<Fr_PrimaitiveShader> Red;
+        std::shared_ptr<Fr_PrimaitiveShader> Green;
+        std::shared_ptr<Fr_PrimaitiveShader> Blue;
+        std::shared_ptr<Fr_PrimaitiveShader> ZBlue; //small lines
+    };
 
-typedef struct vert {
-    std::shared_ptr<Fr_PrimaitiveShader> Red;
-    std::shared_ptr<Fr_PrimaitiveShader> Green;
-    std::shared_ptr<Fr_PrimaitiveShader> Blue;
-    std::shared_ptr<Fr_PrimaitiveShader> ZBlue; //small lines
-};
+    class FRTK_API Axis3D :public Node
+    {
+    public:
+        /**
+         * class constructor.
+         *
+         */
 
-class FRTK_API Axis3D :public Node
-{
-public:
-    /**
-     * class constructor.
-     *
-     */
+        Axis3D();
 
-    Axis3D();
+        ~Axis3D();
+        /**
+         * .
+         */
 
-    ~Axis3D();
-    /**
-     * .
-     */
+        vert CreateAxis3D();
 
-    vert CreateAxis3D();
+        /**
+         * Sets the grid visibility.
+         *
+         * \param status boolean variable. If true: Grids shown, if false: Grid is not visible
+         */
+        void setVisible(bool status);
+        /**
+         * Sets grid size. This is the distance between each line in both axis
+         */
+        void setAxisZstepSize(float sizeINmm);
+        float getAxisZstepSize(void) const;
 
-    /**
-     * Sets the grid visibility.
-     *
-     * \param status boolean variable. If true: Grids shown, if false: Grid is not visible
-     */
-    void setVisible(bool status);
-    /**
-     * Sets grid size. This is the distance between each line in both axis
-     */
-    void setAxisZstepSize(float sizeINmm);
-    float getAxisZstepSize(void) const;
+        void setStepWidth(float sec);
+        float getStepWidth(void) const;
 
-    void setStepWidth(float sec);
-    float getStepWidth(void) const;
+        /**
+         * Create the Grid vertices.
+         *
+         * \return pointer to the created grid
+         */
 
-    /**
-     * Create the Grid vertices.
-     *
-     * \return pointer to the created grid
-     */
+    private:
 
-private:
-
-    float ZstepSize_;
-    glm::vec4 axis3DColor_;
-    float stepWidth_;
-};
-
+        float ZstepSize_;
+        glm::vec4 axis3DColor_;
+        float stepWidth_;
+    };
+}
 #endif

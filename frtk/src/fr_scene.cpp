@@ -27,6 +27,7 @@
 //
 
 #include <fr_scene.h>
+namespace FR{
 GLFWwindow* Scene::linkToglfw = nullptr;
 
 Scene::Scene() :
@@ -87,16 +88,9 @@ void Scene::add3DObject(std::string fName)
     rightlight_spot->SetDiffuse(0.0f, 0.0f, 0.0f);
     rightlight_spot->SetAmbient(0.42f, 0.42f, 0.42f);
     rightlight_spot->SetAttenuation(1.0f, 0.002f, 0.0f);
-    newObj_t->AddNode(rightlight_spot);
-    newObj_t->SetActive(true);
-    newObj_t->AddNode(newObj);
-    AddNode(newObj_t);
-}
 
-void Scene::delete3DObject(std::shared_ptr<Transform>& obj)
-{
 }
-
+ 
 /**
 * This is a general process  for drawing camera, shadow map, render shape /faces ..etc
 */
@@ -117,4 +111,5 @@ void Scene::RenderScene() {
     render_info.id = 0;
     render_info.render_transparent = true;
     Render(render_info, render_info.modelview);
+}
 }

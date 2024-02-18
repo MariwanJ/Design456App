@@ -31,7 +31,6 @@
 namespace FR {
     Light::Light(glm::vec4 lightColor_) :
         lightColor_(lightColor_),
-        light_id_(0),
         position_(0, 0, 0, 1),
         ambient_(0.2, 0.2, 0.2, 1),
         diffuse_(0.4, 0.4, 0.4, 1),

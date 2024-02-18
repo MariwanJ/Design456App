@@ -28,7 +28,7 @@
 #include <Fr_Log.h>
 
 #include <spdlog/sinks/stdout_color_sinks.h>
-
+namespace FR{
 std::shared_ptr<spdlog::logger> Fr_Log::s_FRTKLogger;
 std::shared_ptr<spdlog::logger> Fr_Log::s_APPLogger;
 
@@ -40,4 +40,5 @@ void Fr_Log::Init()
 
     s_APPLogger = spdlog::stdout_color_mt("APP");
     s_APPLogger->set_level(spdlog::level::trace);
+}
 }

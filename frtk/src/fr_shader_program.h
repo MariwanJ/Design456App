@@ -31,66 +31,66 @@
 #include<frtk.h>
 #include<fr_core.h>
 #include <glm/glm.hpp>
+namespace FR {
+    class FRTK_API ShaderProgram {
+    public:
+        /**
+         * Loads, compiles and links the shader program
+         * Expects a prefix (%) for the files: %_vs.glsl and %_fs.glsl
+         */
+        ShaderProgram(const std::string& prefix);
 
-class FRTK_API ShaderProgram {
-public:
-    /**
-     * Loads, compiles and links the shader program
-     * Expects a prefix (%) for the files: %_vs.glsl and %_fs.glsl
-     */
-    ShaderProgram(const std::string& prefix);
+        /**
+         * Destructor
+         */
+        ~ShaderProgram();
 
-    /**
-     * Destructor
-     */
-    ~ShaderProgram();
+        /**
+         * Enables or disables the program
+         */
+        void Enable();
+        void Disable();
 
-    /**
-     * Enables or disables the program
-     */
-    void Enable();
-    void Disable();
+        /**
+         * Sets an attribute location
+         */
+        void SetAttribLocation(const char* name, unsigned int location);
 
-    /**
-     * Sets an attribute location
-     */
-    void SetAttribLocation(const char* name, unsigned int location);
+        /**
+         * Sets an uniform variable
+         */
+        void SetUniformInteger(const std::string& name, int value);
+        void SetUniformFloat(const std::string& name, float value);
+        void SetUniformVec3(const std::string& name, const glm::vec3& value);
+        void SetUniformVec2Int(const std::string& name, const glm::ivec2& value);
 
-    /**
-     * Sets an uniform variable
-     */
-    void SetUniformInteger(const std::string& name, int value);
-    void SetUniformFloat(const std::string& name, float value);
-    void SetUniformVec3(const std::string& name, const glm::vec3& value);
-    void SetUniformVec2Int(const std::string& name, const glm::ivec2& value);
+        void SetUniformVec2(const std::string& name, const glm::vec2& value);
 
-    void SetUniformVec2(const std::string& name, const glm::vec2& value);
+        void SetUniformVec4(const std::string& name, const glm::vec4& value);
+        void SetUniformMat4(const std::string& name, const glm::mat4& value);
 
-    void SetUniformVec4(const std::string& name, const glm::vec4& value);
-    void SetUniformMat4(const std::string& name, const glm::mat4& value);
+        /**
+         * Obtains the shader program handle
+         */
+        unsigned int GetHandle();
 
-    /**
-     * Obtains the shader program handle
-     */
-    unsigned int GetHandle();
+    private:
+        /**
+         * Reads the whole file and returns it as a string
+         */
+        std::string ReadFile(const std::string& path);
 
-private:
-    /**
-     * Reads the whole file and returns it as a string
-     */
-    std::string ReadFile(const std::string& path);
+        /**
+         * Loads and compiles a shader from a file
+         */
+        void CompileShader(int shader_type, const std::string& path);
 
-    /**
-     * Loads and compiles a shader from a file
-     */
-    void CompileShader(int shader_type, const std::string& path);
+        /**
+         * Links the shader program
+         */
+        void LinkShader();
 
-    /**
-     * Links the shader program
-     */
-    void LinkShader();
-
-    unsigned int program_;
-};
-
+        unsigned int program_;
+    };
+}
 #endif

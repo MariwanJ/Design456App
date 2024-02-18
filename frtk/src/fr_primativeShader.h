@@ -28,89 +28,88 @@
 
 #include <memory>
 #include <fr_node.h>
+namespace FR {
+    class FRTK_API Fr_Primatives;
+    class FRTK_API ShaderProgram;
 
-class FRTK_API Fr_Primatives;
-class FRTK_API ShaderProgram;
+    class FRTK_API Fr_PrimaitiveShader : public Node {
+    public:
+        /**
+         * Constructor
+         */
+        Fr_PrimaitiveShader(unsigned int color = 0x111111, float silhouette = 0.005);
 
-class FRTK_API Fr_PrimaitiveShader : public Node {
-public:
-    /**
-     * Constructor
-     */
-    Fr_PrimaitiveShader(unsigned int color = 0x111111, float silhouette = 0.005);
+        Fr_PrimaitiveShader(glm::vec4 color, float silhouette = 0.005);
+        Fr_PrimaitiveShader(float color[4], float silhouette = 0.005);
+        /**
+         * Destructor
+         */
+        ~Fr_PrimaitiveShader();
 
-    Fr_PrimaitiveShader(glm::vec4 color, float silhouette = 0.005);
-    Fr_PrimaitiveShader(float color[4], float silhouette = 0.005);
-    /**
-     * Destructor
-     */
-    ~Fr_PrimaitiveShader();
+        void SetColor(glm::vec4 color);
 
-    void SetColor(glm::vec4 color);
+        /**
+         * Sets the color
+         */
+        void SetColor(unsigned int color, float alpha = 1.0f);
 
-    /**
-     * Sets the color
-     */
-    void SetColor(unsigned int color, float alpha = 1.0f);
+        /**
+         * Sets the opacity
+         */
+        void SetOpacity(float alpha);
 
-    /**
-     * Sets the opacity
-     */
-    void SetOpacity(float alpha);
+        /**
+         * Sets the mesh
+         */
+        void SetPrimative(std::shared_ptr <Fr_Primatives> primative);
 
-    /**
-     * Sets the mesh
-     */
-    void SetPrimative(std::shared_ptr <Fr_Primatives> primative);
+        /**
+         * Renders the node
+         */
 
+        void Render(RenderInfo& info, const glm::mat4& modelview) override;
 
-    /**
-     * Renders the node
-     */
+        std::shared_ptr< Fr_Texture2D> m_Texture2D;
 
-    void Render(RenderInfo& info, const glm::mat4& modelview) override;
+        void setObjectshader(const char* newValue);
+        void setSilhouette(const char* newValue);
 
-    std::shared_ptr< Fr_Texture2D> m_Texture2D;
+        GLuint getCurrentTexturer(void);
+    private:
+        /**
+         * Sets the uniform light data
+         */
+        void LoadLights(ShaderProgram* program, const std::vector<LightInfo>& lights);
 
-    void setObjectshader(const char* newValue);
-    void setSilhouette(const char* newValue);
+        /**
+         * Renders the silhouette
+         */
+        void RenderSilhouette(const glm::mat4& mvp);
 
-    GLuint getCurrentTexturer(void);
-private:
-    /**
-     * Sets the uniform light data
-     */
-    void LoadLights(ShaderProgram* program, const std::vector<LightInfo>& lights);
+        //void RenderTexture2D(const glm::mat4& mvp);
 
-    /**
-     * Renders the silhouette
-     */
-    void RenderSilhouette(const glm::mat4& mvp);
+        // Constants
+        const size_t kMaxLights = 8;
 
-    //void RenderTexture2D(const glm::mat4& mvp);
+        void defaultShaders();
+        // Shared between instances
+        struct Shared {
+            ShaderProgram* primative_program;
+            ShaderProgram* silhouette_program;          //the dark shape and outline of object
+            ShaderProgram* shadowmap_program;
+            ShaderProgram* texture_program;
+        };
+        static Shared* shared_;
 
-    // Constants
-    const size_t kMaxLights = 8;
+        // Attributes
+        std::shared_ptr <Fr_Primatives> m_Primative;
+        glm::vec4 m_Color;
+        float silhouette_;
+        std::string f_objectshader_;
+        std::string f_silhouette_;
+        std::string f_texture_;
 
-    void defaultShaders();
-    // Shared between instances
-    struct Shared {
-        ShaderProgram* primative_program;
-        ShaderProgram* silhouette_program;          //the dark shape and outline of object
-        ShaderProgram* shadowmap_program;
-        ShaderProgram* texture_program;
+        GLuint _texture; //used to return the texture for imgui rendering inside window.
     };
-    static Shared* shared_;
-
-    // Attributes
-    std::shared_ptr <Fr_Primatives> m_Primative;
-    glm::vec4 m_Color;
-    float silhouette_;
-    std::string f_objectshader_;
-    std::string f_silhouette_;
-    std::string f_texture_;
-
-    GLuint _texture; //used to return the texture for imgui rendering inside window.
-};
-
+}
 #endif
