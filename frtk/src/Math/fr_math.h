@@ -29,7 +29,7 @@
 
 #include<fr_constants.h>
 #include<Fr_Core.h>>
-
-bool ExtractTransformMatrix(const glm::mat4& transform, glm::vec3& translation, glm::vec4& rotation, glm::vec3& scale);
-
+namespace FR{
+    bool ExtractTransformMatrix(const glm::mat4& transform, glm::vec3& translation, glm::vec4& rotation, glm::vec3& scale);
+}
 #endif // !FR_MATH_H

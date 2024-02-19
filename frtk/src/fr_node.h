@@ -141,10 +141,6 @@ namespace FR {
 
         void Parent(int index);
 
-        Fr_GL3Window* ParentGL3Window();
-
-        static void setParentlink(Fr_GL3Window* p);
-
     protected:
 
         /**

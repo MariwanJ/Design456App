@@ -161,7 +161,6 @@ namespace FR {
                 CameraOptions();
             }
 
-            bool m;
             SunOptions();
             if (showOpenDialog) {
                 createOpenDialog();

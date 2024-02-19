@@ -85,8 +85,8 @@ namespace FR {
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
         Fr_GL3Window::GLFWCallbackWrapper::setGLFWwindow(this);
         WidgWindow = std::make_shared<FR::Fr_Window>(); //Create FR_WINDOW that keeps the widget system
-        WidgWindow->linkToMainWindow = this;
-        WidgWindow->setParentlink(this);
+        //WidgWindow->linkToMainWindow = (Fr_GL3Window*)this;             ----------------------------------------------->                                FIXME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!2024-02-19
+        // WidgWindow->setParentlink(this);     ----------------------------------------------->                                FIXME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!2024-02-19
         radiusXYZ = 0.0f;
         phi = theta = 0.f;
         runCode = true;
@@ -159,7 +159,7 @@ namespace FR {
     void Fr_GL3Window::CreateScene()
     {
         activeScene = std::make_shared<Fr_enttScene>();
- //       TODO CHECK ME !!
+        //       TODO CHECK ME !!
     }
 
     void Fr_GL3Window::resizeWindow(int xGl, int yGl, int wGl, int hGl)

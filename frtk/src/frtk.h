@@ -33,7 +33,6 @@
  * .
  */
 
-
 #define NOMINMAX    //Prevent min max of MS SDK macros to run
 
 #include <array>

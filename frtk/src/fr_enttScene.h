@@ -27,7 +27,7 @@
 #ifndef FR_ENTTSENE_H
 #define FR_ENTTSENE_H
 
-#include<entt.hpp>
+#include<../vendor/EnTT/entt.hpp>
 #include<fr_camera.h>
 #include<fr_light.h>
 #include<fr_genID.h>
@@ -38,7 +38,7 @@ namespace FR {
         friend Fr_GL3Window;
     public:
 
-        Fr_enttScene()  ;
+        Fr_enttScene();
         ~Fr_enttScene();
         Fr_enttScene(entt::entity ID, Fr_enttScene* scene);
         Fr_enttScene(const Fr_enttScene& other) = default;  //shallow copy of the member variables
@@ -67,13 +67,13 @@ namespace FR {
         Fr_Item& setupActiveCamera(CameraList val);
 
         void CreateDefaultCameras(void);
-        
+
         void Render(FR::Node::RenderInfo& info, const glm::mat4& modelview);
         void RenderPrimativeShapes(FR::Node::RenderInfo& info, const glm::mat4& modelview);
         void RenderWidgetToolkit(FR::Node::RenderInfo& info, const glm::mat4& modelview);
         void RenderSilhouette(const glm::mat4& mvp);
         void RenderIMGui(FR::Node::RenderInfo& info, const glm::mat4& modelview);
-        
+
         void CreateDefaultSunLight(void);
 
         std::vector<std::shared_ptr<Camera>> cameraList; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,

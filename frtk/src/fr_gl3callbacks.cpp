@@ -141,7 +141,7 @@ namespace FR {
     void Fr_GL3Window::mnuFileNew_cb(void* Data) {
         if (activeScene != NULL) {
             mnuFileSave_cb(Data);
-            delete activeScene;
+            activeScene = 0; //remove the scene from memory. It should be deleted automatically.
         }
 
         activeScene = std::make_shared<Fr_enttScene>();
@@ -216,7 +216,7 @@ namespace FR {
         if (fileDialog.HasSelected())
         {
             std::string fileName = fileDialog.GetSelected().string();
-            activeScene->add3DObject(fileName);
+            // activeScene->add3DObject(fileName);                                              FIXME OLD CODE --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
             fileDialog.ClearSelected();
             showOpenDialog = false;
         }

@@ -32,7 +32,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/norm.hpp>
-
+namespace FR{
 bool ExtractTransformMatrix(const glm::mat4& transform, glm::vec3& translation, glm::vec4& rotation, glm::vec3& scale)
 {
     // From glm::decompose in matrix_decompose.inl
@@ -120,4 +120,5 @@ bool ExtractTransformMatrix(const glm::mat4& transform, glm::vec3& translation, 
         // Now you have the angle and axis of rotation
     }
     return true;
+}
 }

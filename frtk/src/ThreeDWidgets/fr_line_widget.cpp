@@ -67,10 +67,10 @@ namespace FR {
 
     bool Fr_Line_Widget::PointOnLine() {
         // Perform geometric check
-        Fr_GL3Window* win = ParentGL3Window();
-        glfwMouseEvent mouse_evnets = win->getMouseEvents();
+        //Fr_GL3Window* win = ParentGL3Window();                        FIXME
+        //glfwMouseEvent mouse_evnets = win->getMouseEvents();         FIXME
         float distanceThreshold = 0.99f;
-        glm::vec3 mouseIn3D = win->computeSphereCoordinates(mouse_evnets.Old_x, mouse_evnets.Old_y, false, false);
+        //  glm::vec3 mouseIn3D = win->computeSphereCoordinates(mouse_evnets.Old_x, mouse_evnets.Old_y, false, false);               //FIXME!!!!!!!!!!!!!!!!!!!!2024-02-19
 
         for (int i = 0; i < m_verticies->size() / 3; i = i + 6) {
             float x1, x2, y1, y2, z1, z2;

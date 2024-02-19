@@ -131,25 +131,29 @@ namespace FR {
         auto primativeR = std::make_shared<Fr_Primatives>();
         primativeR->SetVertexes(verticesRed, indicesRed);
         primativeR->lineWidth(5); //THICKER LINE
-        auto axRed = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_RED), 0.005); //  color and
+        auto axRed = std::make_shared<Fr_PrimaitiveShader>(); //  color and
+        axRed->SetColor(glm::vec4(FR_RED));
         axRed->SetPrimative(primativeR);
 
         std::shared_ptr <Fr_Primatives>primativeG = std::shared_ptr<Fr_Primatives>(new Fr_Primatives());
         primativeG->SetVertexes(verticesGreen, indicesGreen);
         primativeG->lineWidth(5); //THICKER LINE
-        auto axGreen = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_GREEN), 0.005); //  color and
+        auto axGreen = std::make_shared<Fr_PrimaitiveShader>( ); //  color and
+        axGreen->SetColor(glm::vec4(FR_GREEN));
         axGreen->SetPrimative(primativeG);
 
         auto primativeB = std::make_shared<Fr_Primatives>();
         primativeB->SetVertexes(verticesBlue, indicesBlue);
         primativeB->lineWidth(5); //THICKER LINE
-        auto axBlue = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_BLUE), 0.005); //  color and
+        auto axBlue = std::make_shared<Fr_PrimaitiveShader>(); //  color and
+        axBlue->SetColor(glm::vec4(FR_BLUE));
         axBlue->SetPrimative(primativeB);
 
         auto primativeZB = std::make_shared<Fr_Primatives>();
         primativeZB->lineWidth(2);
         primativeZB->SetVertexes(verticesZBlue, indicesZBlue);
-        auto axZBlue = std::make_shared<Fr_PrimaitiveShader>(glm::vec4(FR_YELLOW), 0.005); //  color and
+        auto axZBlue = std::make_shared<Fr_PrimaitiveShader>(); //  color and
+        axZBlue->SetColor(glm::vec4(FR_YELLOW));
         vert answer = { axRed,axGreen, axBlue, axZBlue };
         return answer;
     }

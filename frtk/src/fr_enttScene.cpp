@@ -34,9 +34,12 @@
 #include<fr_grid.h>
 #include<fr_axis3D.h>
 #include<fr_node.h>
-GLFWwindow* FR::Fr_enttScene::linkToglfw = nullptr;
+
 
 namespace FR {
+    
+    GLFWwindow* Fr_enttScene::linkToglfw = nullptr;
+
     Fr_enttScene::Fr_enttScene() {
         //Add all cameras
         CreateDefaultSunLight();
@@ -226,11 +229,10 @@ namespace FR {
                     height 44.932899\n\n}\n'
                     */
                 trans.Rotate(glm::vec3(0.57f, -0.57f, -0.57f), 270.0f);
-                }break;
+            }break;
             }
         }
     }
- 
 
     void Fr_enttScene::CreateDefaultSunLight(void)
     {   //TODO : how many sun we should have???
@@ -245,20 +247,23 @@ namespace FR {
 
     void Fr_enttScene::CreateGrid() {
         auto gridsItem = createItem("Grid");
-        auto grid = gridsItem.addItem<Fr_PrimaitiveShader>(Grid::Grid());
+        Fr_Item cameraItem = { gridsItem ,this };
+        Grid gridO = Grid();
+        cameraItem.addItem<Fr_PrimaitiveShader>(gridO.CreateGrid());
     }
     void Fr_enttScene::CreateAxis() {
         auto axisItemsR = createItem("Axis3D_Red");
         auto axisItemsG = createItem("Axis3D_Green");
         auto axisItemsB = createItem("Axis3D_Blue");
         auto axisItemsZB = createItem("Axis3D_ZBlue");
-        
+
         auto ax = Axis3D();
-        vert axises= ax.CreateAxis3D();
-        auto axR = axisItemsR.addItem<Fr_PrimaitiveShader>(axises.Red);
-        auto axG = axisItemsG.addItem<Fr_PrimaitiveShader>(axises.Green);
-        auto axB = axisItemsB.addItem<Fr_PrimaitiveShader>(axises.Blue);
-        auto axZB = axisItemsZB.addItem<Fr_PrimaitiveShader>(axises.ZBlue);
+        vert axises = ax.CreateAxis3D();
+    
+        //auto axR = axisItemsR.addOrReplaceItem<Fr_PrimaitiveShader>(axises.Red);
+        //auto axG = axisItemsG.addOrReplaceItem<Fr_PrimaitiveShader>(axises.Green);
+        //auto axB = axisItemsB.addOrReplaceItem<Fr_PrimaitiveShader>(axises.Blue);
+        //auto axZB = axisItemsZB.addOrReplaceItem<Fr_PrimaitiveShader>(axises.ZBlue);
     }
 
     void Fr_enttScene::setupScene() {
@@ -284,7 +289,7 @@ namespace FR {
         auto tranform = trans.GetMatrix();
         render_info.modelview = render_info.modelview * trans.GetMatrix();
         render_info.projection = actCam.getPorjection();
-        
+
         //Light
         std::string_view str = "Sun";
         Fr_Item sun_item = findItemByName(str);
@@ -294,8 +299,8 @@ namespace FR {
         glCheckFunc(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &draw_framebuffer));
         glCheckFunc(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_framebuffer));
         glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-        
-        // Render all object here 
+
+        // Render all object here
         render_info.id = 0;
         render_info.render_transparent = false;
         Render(render_info, render_info.modelview);

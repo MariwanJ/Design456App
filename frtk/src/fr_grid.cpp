@@ -188,7 +188,8 @@ namespace FR {
         }
         std::shared_ptr<Fr_Primatives> primative = std::make_shared<Fr_Primatives>();
         primative->SetVertexes(vertices, indices);
-        std::shared_ptr gridS = std::make_shared<Fr_PrimaitiveShader>(gridColor_, 0.005); //  color and
+        std::shared_ptr gridS = std::make_shared<Fr_PrimaitiveShader>(); //  color and
+        gridS->SetColor(gridColor_);
         gridS->SetPrimative(primative);
         return gridS;
     }

@@ -30,7 +30,6 @@
 //TODO: I don't see any reason to have these functions here any more - move them to other place
 /* Scene and engine*/
 namespace FR {
-
     void Fr_GL3Window::framebuffer_size_callback(GLFWwindow* window, int width, int height)
     {
         this->_w = width;
@@ -222,7 +221,7 @@ namespace FR {
         auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->activeScene->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->activeScene->active_camera_];
         userData_ data;
 
-        activeScene-activeCamera->getUserData(data);
+        activeCamera->getUserData(data);
         if (activeCamera->getType() == CameraList::ORTHOGRAPHIC) {
             data.orthoSize_ = data.orthoSize_ + yoffset * mouseDefaults.MouseScrollScale;
         }

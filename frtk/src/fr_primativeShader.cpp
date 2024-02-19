@@ -60,18 +60,6 @@ namespace FR {
     {
         f_silhouette_ = newValue;
     }
-
-    Fr_PrimaitiveShader::Fr_PrimaitiveShader(unsigned int color, float silhouette) :
-        m_Primative{ nullptr }, silhouette_(silhouette) {
-        SetColor(color);
-        if (!shared_) {
-            shared_ = new Shared;
-            defaultShaders();
-            shared_->primative_program = new ShaderProgram(f_objectshader_);
-            shared_->silhouette_program = new ShaderProgram(f_silhouette_);
-        }
-        type(NODETYPE::FR_PRIMATIVESHADER);
-    }
     Fr_PrimaitiveShader::Fr_PrimaitiveShader(glm::vec4 color, float silhouette) :
         m_Primative{ nullptr }, silhouette_(silhouette) {
         SetColor(color);
@@ -81,12 +69,6 @@ namespace FR {
             shared_->primative_program = new ShaderProgram(f_objectshader_);
             shared_->silhouette_program = new ShaderProgram(f_silhouette_);
         }
-        type(NODETYPE::FR_PRIMATIVESHADER);
-    }
-
-    Fr_PrimaitiveShader::Fr_PrimaitiveShader(float color[4], float silhouette) :
-        m_Primative{ nullptr }, silhouette_(silhouette) {
-        Fr_PrimaitiveShader(glm::vec4{ *color });
         type(NODETYPE::FR_PRIMATIVESHADER);
     }
 

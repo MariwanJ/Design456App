@@ -1,3 +1,4 @@
+#include "fr_enttScene.h"
 //
 // This file is a part of the Open Source Design456App
 // MIT License
@@ -24,25 +25,35 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-#ifndef FR_COMMON_H
-#define FR_COMMAN_H
-#include <frtk.h>
-#include <Fr_Core.h>
 
-/**
+#include <fr_enttScene.h>
+//#include<fr_components.h>
+//#include<fr_transform.h>
+//#include<fr_item.h>
+//#include <glm/gtc/matrix_transform.hpp>
+//#include<fr_grid.h>
+//#include<fr_axis3D.h>
+//#include<fr_node.h>
 
-        x2 + y2 = a2                        //Circle
-        y = mx + c.*                        //Line
-         (1 + m2)x2 + 2cmx + c2 – a2­ = 0.  resolving
-         -b ±sqrt(b^2-4ac               Quadratic Formula
-    x = -----------------
-              2a
-    Sol: b*b -4*a*c >= 0;
-*/
+
 
 namespace FR {
-    extern float mouseClickCircleRadious;
-    bool intersectLine(glm::vec3 p1, glm::vec3 p2);
-}
+    
+ 
+    void Render(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
 
-#endif
+    }
+    void RenderPrimativeShapes(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
+
+    }
+    void RenderWidgetToolkit(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
+
+    }
+    void RenderSilhouette(const glm::mat4& mvp) {
+
+    }
+    void RenderIMGui(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
+
+    }
+
+}
