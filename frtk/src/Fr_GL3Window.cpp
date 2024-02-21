@@ -31,8 +31,12 @@
 #include<fr_mesh.h>
 #include<halfEdge/fr_new_mesh.h>
 #include<fr_modelnodeShader.h>
+
+
+
 //End remove me later
 namespace FR {
+    Fr_GL3Window* Fr_enttScene::linkToglfw = nullptr;
     GLuint m_QuadVA, m_QuadVB, m_QuadIB;
 
     bool Fr_GL3Window::s_GLFWInitialized = false;
@@ -159,6 +163,7 @@ namespace FR {
     void Fr_GL3Window::CreateScene()
     {
         activeScene = std::make_shared<Fr_enttScene>();
+        activeScene->linkToglfw = this;
         //       TODO CHECK ME !!
     }
 
@@ -311,7 +316,7 @@ namespace FR {
 
     int Fr_GL3Window::GLFWrun()
     {
-        userData_ data;
+
         glViewport(0, 0, _w, _h);
 
         clear_color = ImVec4(FR_WINGS3D); //ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -334,10 +339,8 @@ namespace FR {
             glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - defualt should be wings3D or FreeCAD
             glClear(GL_COLOR_BUFFER_BIT);
             glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
-            //Render GLFW stuff or Our 3D drawing
-            renderimGUI(data);
-            // Rendering IMGUI
-            layers_[0]->EndLayer();
+            activeScene->RenderScene();
+
             glCheckFunc(glfwPollEvents());
             glCheckFunc(glfwSwapBuffers(pWindow));
         }

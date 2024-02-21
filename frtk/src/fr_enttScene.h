@@ -81,7 +81,7 @@ namespace FR {
         void RenderScene();
 
     protected:
-        static GLFWwindow* linkToglfw;
+        static Fr_GL3Window* linkToglfw;
 
     private:
         void CreateGrid();

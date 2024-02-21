@@ -95,6 +95,7 @@ RIGHT
  height 44.932899\n\n}\n'
 */
 namespace FR {
+    const char* camNames[TOTAL_CAMS] = { "Perspective","Orthographic","Top","Bottom","Front","Rear","Right","Left" };
     float Camera::aspectRatio_ = 1.9;
 
     Camera::Camera() :

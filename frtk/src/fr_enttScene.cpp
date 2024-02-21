@@ -34,13 +34,14 @@
 #include<fr_grid.h>
 #include<fr_axis3D.h>
 #include<fr_node.h>
+#include<Fr_GL3Window.h>
 
 
 namespace FR {
     
-    GLFWwindow* Fr_enttScene::linkToglfw = nullptr;
+    
 
-    Fr_enttScene::Fr_enttScene() {
+    Fr_enttScene::Fr_enttScene() :active_camera_((CameraList)0){
         //Add all cameras
         CreateDefaultSunLight();
         CreateDefaultCameras();
@@ -247,10 +248,10 @@ namespace FR {
 
     void Fr_enttScene::CreateGrid() {
         auto gridsItem = createItem("Grid");
-        Fr_Item cameraItem = { gridsItem ,this };
-        Grid gridO = Grid();
-        cameraItem.addItem<Fr_PrimaitiveShader>(gridO.CreateGrid());
+        auto grid = Grid().CreateGrid();
+        auto gr= gridsItem.addItem<Fr_PrimaitiveShader>(*grid);
     }
+
     void Fr_enttScene::CreateAxis() {
         auto axisItemsR = createItem("Axis3D_Red");
         auto axisItemsG = createItem("Axis3D_Green");
@@ -259,11 +260,10 @@ namespace FR {
 
         auto ax = Axis3D();
         vert axises = ax.CreateAxis3D();
-    
-        //auto axR = axisItemsR.addOrReplaceItem<Fr_PrimaitiveShader>(axises.Red);
-        //auto axG = axisItemsG.addOrReplaceItem<Fr_PrimaitiveShader>(axises.Green);
-        //auto axB = axisItemsB.addOrReplaceItem<Fr_PrimaitiveShader>(axises.Blue);
-        //auto axZB = axisItemsZB.addOrReplaceItem<Fr_PrimaitiveShader>(axises.ZBlue);
+        auto g1 = axisItemsR.addItem<Fr_PrimaitiveShader>(*axises.Red);
+        auto g2 = axisItemsR.addItem<Fr_PrimaitiveShader>(*axises.Green);
+        auto g3 = axisItemsR.addItem<Fr_PrimaitiveShader>(*axises.Blue);
+        auto g4 = axisItemsR.addItem<Fr_PrimaitiveShader>(*axises.ZBlue);
     }
 
     void Fr_enttScene::setupScene() {
@@ -312,4 +312,7 @@ namespace FR {
         render_info.render_transparent = true;
         Render(render_info, render_info.modelview);
     }
+
+
+
 }

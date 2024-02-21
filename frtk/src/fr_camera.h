@@ -54,7 +54,7 @@ namespace FR {
     class Fr_GL3Window;
     constexpr unsigned char TOTAL_CAMS = 8;
 
-    const char* camNames[TOTAL_CAMS] = { "Perspective","Orthographic","Top","Bottom","Front","Rear","Right","Left" };
+    extern const char* camNames[TOTAL_CAMS];
     class FRTK_API Camera {
         friend class Fr_GL3Window;
     public:

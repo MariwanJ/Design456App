@@ -50,6 +50,12 @@ namespace FR {
             return component;
         }
 
+        //template<typename T>
+        //T addOrReplaceSharedItem(T item) {
+        //   T comp = m_enttScene->m_Registry.emplace_or_replace<T>(m_ID, item);
+        //   return comp;
+        //}
+
         template<typename T, typename... Args>
         T& addOrReplaceItem(Args&&... args)
         {

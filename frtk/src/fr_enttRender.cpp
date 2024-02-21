@@ -26,7 +26,7 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include <fr_enttScene.h>
+
 //#include<fr_components.h>
 //#include<fr_transform.h>
 //#include<fr_item.h>
@@ -34,26 +34,38 @@
 //#include<fr_grid.h>
 //#include<fr_axis3D.h>
 //#include<fr_node.h>
-
-
+#include<fr_primativeShader.h>
+#include<fr_components.h>
+#include <fr_enttScene.h>
+#include<Fr_GL3Window.h>
 
 namespace FR {
-    
  
-    void Render(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
+    void Fr_enttScene::Render(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
 
     }
-    void RenderPrimativeShapes(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
+    void Fr_enttScene::RenderPrimativeShapes(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
+        auto view = m_Registry.view<Fr_PrimaitiveShader, ItemName>();
+        for (auto it : view) {
+            auto [primative, name] = view.get<Fr_PrimaitiveShader, ItemName>(it);
+            if (name.m_Name.compare("Grid")) {
+                primative.Render(info,modelview);
+            }
+          }
+    }
+    void Fr_enttScene::RenderWidgetToolkit(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
 
     }
-    void RenderWidgetToolkit(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
+    void Fr_enttScene::RenderSilhouette(const glm::mat4& mvp) {
 
     }
-    void RenderSilhouette(const glm::mat4& mvp) {
-
-    }
-    void RenderIMGui(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
-
+  
+    void Fr_enttScene::RenderIMGui(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
+        userData_ data;
+        //Render GLFW stuff or Our 3D drawing
+        linkToglfw->renderimGUI(data);
+        // Rendering IMGUI
+        linkToglfw->layers_[0]->EndLayer();
     }
 
 }
