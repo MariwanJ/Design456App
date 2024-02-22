@@ -218,7 +218,7 @@ namespace FR {
 
     void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
     {
-        auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->activeScene->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->activeScene->active_camera_];
+        auto activeCamera =  activeScene->cameraList[(unsigned int)activeScene->active_camera_];
         userData_ data;
 
         activeCamera->getUserData(data);
@@ -256,7 +256,7 @@ namespace FR {
     void Fr_GL3Window::cameraPAN(GLFWwindow* win, double xpos, double ypos)
     {
         userData_ data;
-        auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->activeScene->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->activeScene->active_camera_];
+        auto activeCamera =  activeScene->cameraList[(unsigned int) activeScene->active_camera_];
         activeCamera->getUserData(data);
 
         if (mouseEvent.Old_x == 0 && mouseEvent.Old_y == 0) {

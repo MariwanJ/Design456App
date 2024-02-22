@@ -51,7 +51,19 @@ namespace FR {
             if (name.m_Name.compare("Grid")) {
                 primative.Render(info,modelview);
             }
-          }
+            if (name.m_Name.compare("Axis3D_Red")) {
+                primative.Render(info, modelview);
+            }
+            if (name.m_Name.compare("Axis3D_Green")) {
+                primative.Render(info, modelview);
+            }
+            if (name.m_Name.compare("Axis3D_Blue")) {
+                primative.Render(info, modelview);
+            }
+            if (name.m_Name.compare("Axis3D_ZBlue")) {
+                primative.Render(info, modelview);
+            }
+        }
     }
     void Fr_enttScene::RenderWidgetToolkit(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
 
@@ -64,8 +76,6 @@ namespace FR {
         userData_ data;
         //Render GLFW stuff or Our 3D drawing
         linkToglfw->renderimGUI(data);
-        // Rendering IMGUI
-        linkToglfw->layers_[0]->EndLayer();
     }
 
 }

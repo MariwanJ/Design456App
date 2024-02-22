@@ -132,10 +132,11 @@ namespace FR {
             std::string st = camNames[i];
             auto camMod = createItem(st);
             auto newCam = camMod.addItem<Camera>();
+            cameraList.push_back(std::make_shared<Camera>(newCam)); //TODO : Do we need the vector as this was used before??? !!!
             newCam.setType(CameraList(i));
             auto trans = camMod.GetItem<Transform>();
             newCam.setupCameraHomeValues();
-            trans.SetMatrix(newCam.GetInverseViewMatrix());
+            trans.SetMatrix(newCam.GetViewMatrix());
             switch (i) {
                 //TODO: FIXME: If you create more than 6, you should add it here
             case 0: {
@@ -303,8 +304,9 @@ namespace FR {
         // Render all object here
         render_info.id = 0;
         render_info.render_transparent = false;
-        Render(render_info, render_info.modelview);
+
         RenderIMGui(render_info, render_info.modelview);
+        Render(render_info, render_info.modelview);
         RenderPrimativeShapes(render_info, render_info.modelview);
         RenderWidgetToolkit(render_info, render_info.modelview);
         //Render transparent items

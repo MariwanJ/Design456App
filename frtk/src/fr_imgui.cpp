@@ -32,6 +32,7 @@
 #include<Math/fr_math.h>
 #include<fr_constants.h>
 #include<fr_camera.h>
+#include<fr_item.h>
 
 namespace FR {
     //TODO FIX ME DOSENT WORK DON'T KNOW WHY
@@ -50,6 +51,7 @@ namespace FR {
         auto getbu = Fr_GL3Window::getfr_Gl3Window()->tempBu;
         auto cameraView = (activeCamera->GetViewMatrix());
 
+#if 0    ///we can not use this part . later we fix it
         glm::mat4 trnasfrom_ = getbu->GetMatrix();
         if (getbu != NULL)
         {
@@ -84,6 +86,7 @@ namespace FR {
                 tempBu->Translate(trans);
             std::string resss = std::to_string(resu[0]) + " " + std::to_string(resu[1]) + " " + std::to_string(resu[2]);
         }
+#endif
         return 0;
     }
 
@@ -304,16 +307,17 @@ namespace FR {
 
         setPortViewDimension(ImVec4(Bound1.x, Bound1.y, Bound2.x, Bound2.y));
         auto win = getfr_Gl3Window();
-        auto activeCamera = win->activeScene->cameraList[(int)win->activeScene->active_camera_];
-        // activeCamera->aspectRatio_ = (Bound2.x - Bound1.x) / (Bound2.y - Bound1.y);    //Must be updated always
-        // activeCamera->updateViewMatrix();
+        Fr_Item cameraItem = win->activeScene->setupActiveCamera(win->activeScene->active_camera_);
+        auto activeCamera = cameraItem.GetItem<Camera>();
+        activeCamera.aspectRatio_ = (Bound2.x - Bound1.x) / (Bound2.y - Bound1.y);    //Must be updated always
+         activeCamera.updateViewMatrix();
          //WE MUST UPDATE THIS, OTHERWISE THE RENDERING WILL BE MISSING DATA, AND THE PICTURE SHOWN WILL BE WRONG!!
         if (lineAngl == 359) {
             lineAngl = 0;
         }
         sceneBuffer->RescaleFrameBuffer(wWidth, wHeight);
         sceneBuffer->Bind();
-        activeScene->RenderScene();
+        //activeScene->RenderScene();
         ImGui::Image(
             (ImTextureID)sceneBuffer->getFrameTexture(),
             ImGui::GetContentRegionAvail(),
@@ -323,6 +327,7 @@ namespace FR {
         imguimzo_init();
         ImGui::End();
         sceneBuffer->Unbind();
+#if 0   //we cannot use this part yet, we need to fix it as we will not load bunny as before
         if (++counter >= 35)
         {
             tempBu->Rotate(glm::vec3(0.0f, 0.0f, 1.0f), lineAngl);
@@ -331,6 +336,7 @@ namespace FR {
             lineAngl++;
             counter = 0;
         }
+#endif
         return 0;
     }
 
