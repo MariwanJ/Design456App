@@ -311,13 +311,15 @@ namespace FR {
         auto activeCamera = cameraItem.GetItem<Camera>();
         activeCamera.aspectRatio_ = (Bound2.x - Bound1.x) / (Bound2.y - Bound1.y);    //Must be updated always
          activeCamera.updateViewMatrix();
+         auto trans= cameraItem.GetItem<Transform>();
          //WE MUST UPDATE THIS, OTHERWISE THE RENDERING WILL BE MISSING DATA, AND THE PICTURE SHOWN WILL BE WRONG!!
         if (lineAngl == 359) {
             lineAngl = 0;
         }
-        sceneBuffer->RescaleFrameBuffer(wWidth, wHeight);
+
         sceneBuffer->Bind();
-        //activeScene->RenderScene();
+        activeScene->RenderScene();
+
         ImGui::Image(
             (ImTextureID)sceneBuffer->getFrameTexture(),
             ImGui::GetContentRegionAvail(),

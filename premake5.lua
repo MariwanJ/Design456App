@@ -12,6 +12,7 @@ workspace "Design456App"
 	flags
 	{
 		"MultiProcessorCompile",
+
 	}
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}" 

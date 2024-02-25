@@ -33,17 +33,31 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "fr_axis3D.h"
 namespace FR {
-    Axis3D::Axis3D()
-    {
-        ZstepSize_ = 10;  //Default value
-        stepWidth_ = 10;
-    }
-
-    Axis3D::~Axis3D()
+    Axis3D::Axis3D():ZstepSize_(10),stepWidth_ (10)
     {
     }
 
-    vert Axis3D::CreateAxis3D()
+    Axis3D::~Axis3D()  
+    {
+    }
+    std::shared_ptr<Fr_PrimaitiveShader> Axis3D::getRed()
+    {
+        return m_Red;
+    }
+    std::shared_ptr<Fr_PrimaitiveShader> Axis3D::getBlue()
+    {
+        return m_Blue;
+    }
+    std::shared_ptr<Fr_PrimaitiveShader> Axis3D::getGreen()
+    {
+        return m_Green;
+    }
+    std::shared_ptr<Fr_PrimaitiveShader> Axis3D::getZBlue()
+    {
+        return m_ZBlue;
+    }
+ 
+    void Axis3D::CreateAxis3D()
     {
         float start = 2000.0f;
         float end = -2000.0f;
@@ -51,7 +65,6 @@ namespace FR {
         float arrow2 = 5.0;
         float zBlueSize = 10;   //The small lines on the Z axis
 
-        vert axis_t;
         std::vector<float> verticesRed;
         std::vector<float> verticesGreen;
         std::vector<float> verticesBlue;
@@ -127,35 +140,32 @@ namespace FR {
         }
 
         //For the blue, we add also the vertical line
-
         auto primativeR = std::make_shared<Fr_Primatives>();
         primativeR->SetVertexes(verticesRed, indicesRed);
         primativeR->lineWidth(5); //THICKER LINE
-        auto axRed = std::make_shared<Fr_PrimaitiveShader>(); //  color and
-        axRed->SetColor(glm::vec4(FR_RED));
-        axRed->SetPrimative(primativeR);
+        m_Red = std::make_shared<Fr_PrimaitiveShader>(); //  color and
+        m_Red->SetColor(glm::vec4(FR_RED));
+        m_Red->SetPrimative(primativeR);
 
         std::shared_ptr <Fr_Primatives>primativeG = std::shared_ptr<Fr_Primatives>(new Fr_Primatives());
         primativeG->SetVertexes(verticesGreen, indicesGreen);
         primativeG->lineWidth(5); //THICKER LINE
-        auto axGreen = std::make_shared<Fr_PrimaitiveShader>( ); //  color and
-        axGreen->SetColor(glm::vec4(FR_GREEN));
-        axGreen->SetPrimative(primativeG);
+        m_Green = std::make_shared<Fr_PrimaitiveShader>( ); //  color and
+        m_Green->SetColor(glm::vec4(FR_GREEN));
+        m_Green->SetPrimative(primativeG);
 
         auto primativeB = std::make_shared<Fr_Primatives>();
         primativeB->SetVertexes(verticesBlue, indicesBlue);
         primativeB->lineWidth(5); //THICKER LINE
-        auto axBlue = std::make_shared<Fr_PrimaitiveShader>(); //  color and
-        axBlue->SetColor(glm::vec4(FR_BLUE));
-        axBlue->SetPrimative(primativeB);
+        m_Blue = std::make_shared<Fr_PrimaitiveShader>(); //  color and
+        m_Blue->SetColor(glm::vec4(FR_BLUE));
+        m_Blue->SetPrimative(primativeB);
 
         auto primativeZB = std::make_shared<Fr_Primatives>();
         primativeZB->lineWidth(2);
         primativeZB->SetVertexes(verticesZBlue, indicesZBlue);
-        auto axZBlue = std::make_shared<Fr_PrimaitiveShader>(); //  color and
-        axZBlue->SetColor(glm::vec4(FR_YELLOW));
-        vert answer = { axRed,axGreen, axBlue, axZBlue };
-        return answer;
+        m_ZBlue = std::make_shared<Fr_PrimaitiveShader>(); //  color and
+        m_ZBlue->SetColor(glm::vec4(FR_YELLOW));
     }
 
     void Axis3D::setVisible(bool status)

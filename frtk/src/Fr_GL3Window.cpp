@@ -333,16 +333,19 @@ namespace FR {
         CreateScene();   //Main drawing process.
         glfwGetFramebufferSize(pWindow, &_w, &_h);
         glViewport(_x, _y, _w, _h);
+
+        userData_ data;
         while (!glfwWindowShouldClose(pWindow))
         {
             layers_[0]->StartLayer();   //Default layer. This should always be there.
             glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - defualt should be wings3D or FreeCAD
             glClear(GL_COLOR_BUFFER_BIT);
             glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
-             activeScene->RenderScene();
+            renderimGUI(data);
+
+            layers_[0]->EndLayer();   //Default layer. This should always be there.       
             glCheckFunc(glfwPollEvents());
             glCheckFunc(glfwSwapBuffers(pWindow));
-            layers_[0]->EndLayer();   //Default layer. This should always be there.
         }
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();

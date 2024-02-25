@@ -38,16 +38,7 @@
 #include <fr_primatives.h>
 #include <fr_primativeShader.h>
 
-////Temporary code - just for debuggin
-//std::shared_ptr<Transform>bunny();
-////End Temporary code
 namespace FR {
-    typedef struct vert {
-        std::shared_ptr<Fr_PrimaitiveShader> Red;
-        std::shared_ptr<Fr_PrimaitiveShader> Green;
-        std::shared_ptr<Fr_PrimaitiveShader> Blue;
-        std::shared_ptr<Fr_PrimaitiveShader> ZBlue; //small lines
-    };
 
     class FRTK_API Axis3D :public Node
     {
@@ -63,8 +54,12 @@ namespace FR {
         /**
          * .
          */
-
-        vert CreateAxis3D();
+        std::shared_ptr<Fr_PrimaitiveShader> getRed();
+        std::shared_ptr<Fr_PrimaitiveShader> getBlue();
+        std::shared_ptr<Fr_PrimaitiveShader> getGreen();
+        std::shared_ptr<Fr_PrimaitiveShader> getZBlue();
+        
+        void CreateAxis3D();
 
         /**
          * Sets the grid visibility.
@@ -90,8 +85,11 @@ namespace FR {
     private:
 
         float ZstepSize_;
-        glm::vec4 axis3DColor_;
         float stepWidth_;
+        std::shared_ptr<Fr_PrimaitiveShader> m_Red;
+        std::shared_ptr<Fr_PrimaitiveShader> m_Green;
+        std::shared_ptr<Fr_PrimaitiveShader> m_Blue;
+        std::shared_ptr<Fr_PrimaitiveShader> m_ZBlue; //small lines
     };
 }
 #endif

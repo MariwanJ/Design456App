@@ -99,8 +99,8 @@ namespace FR {
         }
     private:
 
-        entt::entity m_ID;
-        Fr_enttScene* m_enttScene;
+        entt::entity m_ID{ entt::null };
+        Fr_enttScene* m_enttScene = nullptr;
     };
 }
 #endif

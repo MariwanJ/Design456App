@@ -41,11 +41,13 @@ namespace FR {
     
     
 
-    Fr_enttScene::Fr_enttScene() :active_camera_((CameraList)0){
+    Fr_enttScene::Fr_enttScene() :active_camera_((CameraList)4){
         //Add all cameras
         CreateDefaultSunLight();
+        CreateAxis();
+        //CreateGrid();
         CreateDefaultCameras();
-        CreateGrid();
+        
     }
     Fr_enttScene::~Fr_enttScene()
     {
@@ -249,22 +251,15 @@ namespace FR {
 
     void Fr_enttScene::CreateGrid() {
         auto gridsItem = createItem("Grid");
-        auto grid = Grid().CreateGrid();
-        auto gr= gridsItem.addItem<Fr_PrimaitiveShader>(*grid);
+        auto gr= gridsItem.addItem<Fr_Grid>();
+        gr.CreateGrid();
+        
     }
 
     void Fr_enttScene::CreateAxis() {
-        auto axisItemsR = createItem("Axis3D_Red");
-        auto axisItemsG = createItem("Axis3D_Green");
-        auto axisItemsB = createItem("Axis3D_Blue");
-        auto axisItemsZB = createItem("Axis3D_ZBlue");
-
-        auto ax = Axis3D();
-        vert axises = ax.CreateAxis3D();
-        auto g1 = axisItemsR.addItem<Fr_PrimaitiveShader>(*axises.Red);
-        auto g2 = axisItemsR.addItem<Fr_PrimaitiveShader>(*axises.Green);
-        auto g3 = axisItemsR.addItem<Fr_PrimaitiveShader>(*axises.Blue);
-        auto g4 = axisItemsR.addItem<Fr_PrimaitiveShader>(*axises.ZBlue);
+        auto axisItems = createItem("Axis3D_axis");
+        auto allAxis = axisItems.addItem<Axis3D>();
+        allAxis.CreateAxis3D();
     }
 
     void Fr_enttScene::setupScene() {
@@ -276,6 +271,9 @@ namespace FR {
      *
      */
     void Fr_enttScene::RenderScene() {
+        float wWidth = (float)ImGui::GetWindowWidth();
+        float wHeight = (float)ImGui::GetWindowHeight();
+        linkToglfw->sceneBuffer->RescaleFrameBuffer(wWidth, wHeight);
         glCheckFunc(glEnable(GL_DEPTH_TEST));
         glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
         glCheckFunc(glEnable(GL_BLEND));
@@ -305,14 +303,16 @@ namespace FR {
         render_info.id = 0;
         render_info.render_transparent = false;
 
-        RenderIMGui(render_info, render_info.modelview);
+        linkToglfw->sceneBuffer->Bind();
         Render(render_info, render_info.modelview);
         RenderPrimativeShapes(render_info, render_info.modelview);
         RenderWidgetToolkit(render_info, render_info.modelview);
+
         //Render transparent items
         render_info.id = 0;
         render_info.render_transparent = true;
         Render(render_info, render_info.modelview);
+        
     }
 
 

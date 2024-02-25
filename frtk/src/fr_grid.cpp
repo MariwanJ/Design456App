@@ -77,7 +77,7 @@
  */
 
 namespace FR {
-    Grid::Grid()
+    Fr_Grid::Fr_Grid():gridShader(0)
     {
         setGridParam();//default values. Otherwise you have to use setGridParam
         type(NODETYPE::FR_GRID);
@@ -87,11 +87,11 @@ namespace FR {
      *
      * \param sections No of line sections. default = 50
      * \param gridWidth Distance between each line. default = 1mm
-     * \param pos Center of the grid. Defualt is the origin (0,0,0)
-     * \param scale Scale of the grid - defualt is (1.0f,1.0f,1.0f)
+     * \param pos Center of the grid. Default is the origin (0,0,0)
+     * \param scale Scale of the grid - default is (1.0f,1.0f,1.0f)
      */
 
-    void Grid::setGridParam(unsigned int sections,
+    void Fr_Grid::setGridParam(unsigned int sections,
         unsigned int gridWidth,
         glm::vec3 pos,
         glm::vec3 scale) {
@@ -102,45 +102,47 @@ namespace FR {
         gridColor_ = (glm::vec4)FR_RED;
     }
 
-    Grid::~Grid()
+    Fr_Grid::~Fr_Grid()
     {
     }
 
-    void Grid::setCenterPosition(glm::vec3 pos)
+    void Fr_Grid::setCenterPosition(glm::vec3 pos)
     {
         centerPos_ = pos;
     }
 
-    void Grid::setAngle(float Angle)
+    void Fr_Grid::setAngle(float Angle)
     {
         gridRotation_[3] = glm::radians(Angle);
     }
 
-    void Grid::setRotation(glm::vec4 rotation)
+    void Fr_Grid::setRotation(glm::vec4 rotation)
     {
         gridRotation_ = rotation;
     }
 
-    glm::vec4 Grid::getRotation(void) {
+    glm::vec4 Fr_Grid::getRotation(void) {
         return gridRotation_;
     }
 
-    void Grid::setVisible(bool status)
+    void Fr_Grid::setVisible(bool status)
     {
         active_ = status;
     }
 
-    void Grid::setgridWidth(unsigned int sizeINmm)
+    void Fr_Grid::setgridWidth(unsigned int sizeINmm)
     {
         gridWidth_ = sizeINmm;
     }
 
-    unsigned int Grid::getgridWidth(void) const
+    unsigned int Fr_Grid::getgridWidth(void) const
     {
         return gridWidth_;
+    } 
+    std::shared_ptr<Fr_PrimaitiveShader> Fr_Grid::getGridShader() {
+        return gridShader;
     }
-
-    std::shared_ptr<Fr_PrimaitiveShader> Grid::CreateGrid()
+    void Fr_Grid::CreateGrid()
     {
         std::vector<float> vertices;
         float x, y, z;
@@ -188,9 +190,8 @@ namespace FR {
         }
         std::shared_ptr<Fr_Primatives> primative = std::make_shared<Fr_Primatives>();
         primative->SetVertexes(vertices, indices);
-        std::shared_ptr gridS = std::make_shared<Fr_PrimaitiveShader>(); //  color and
-        gridS->SetColor(gridColor_);
-        gridS->SetPrimative(primative);
-        return gridS;
+        gridShader = std::make_shared<Fr_PrimaitiveShader>(); //  color and
+        gridShader->SetColor(gridColor_);
+        gridShader->SetPrimative(primative);
     }
 }

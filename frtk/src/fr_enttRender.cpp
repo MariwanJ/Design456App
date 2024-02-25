@@ -38,6 +38,7 @@
 #include<fr_components.h>
 #include <fr_enttScene.h>
 #include<Fr_GL3Window.h>
+#include<fr_axis3D.h>
 
 namespace FR {
  
@@ -45,26 +46,31 @@ namespace FR {
 
     }
     void Fr_enttScene::RenderPrimativeShapes(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
-        auto view = m_Registry.view<Fr_PrimaitiveShader, ItemName>();
+        auto view = m_Registry.view<Fr_Grid, ItemName>();
         for (auto it : view) {
-            auto [primative, name] = view.get<Fr_PrimaitiveShader, ItemName>(it);
-            if (name.m_Name.compare("Grid")) {
-                primative.Render(info,modelview);
-            }
-            if (name.m_Name.compare("Axis3D_Red")) {
-                primative.Render(info, modelview);
-            }
-            if (name.m_Name.compare("Axis3D_Green")) {
-                primative.Render(info, modelview);
-            }
-            if (name.m_Name.compare("Axis3D_Blue")) {
-                primative.Render(info, modelview);
-            }
-            if (name.m_Name.compare("Axis3D_ZBlue")) {
-                primative.Render(info, modelview);
+            auto [primative, name] = view.get<Fr_Grid, ItemName>(it);
+            if (name.m_Name.compare("Grid")==0) {
+                auto gridshader = primative.getGridShader();
+                gridshader->Render(info,modelview);
             }
         }
+           
+            auto axisview = m_Registry.view<Axis3D>();
+            for (auto items : axisview) {
+                Axis3D axises = axisview.get<Axis3D>(items);
+ 
+                auto blue = axises.getBlue();
+                auto green = axises.getGreen();
+                auto red = axises.getRed();
+                auto zblue = axises.getZBlue();
+
+                blue->Render(info, modelview);
+                green->Render(info, modelview);
+                red->Render(info, modelview);
+                zblue->Render(info, modelview);
+            }
     }
+
     void Fr_enttScene::RenderWidgetToolkit(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
 
     }

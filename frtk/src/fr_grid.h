@@ -38,21 +38,21 @@
 #include <fr_primatives.h>
 #include <fr_primativeShader.h>
 namespace FR {
-    class FRTK_API Grid :public Node
+    class FRTK_API Fr_Grid :public Node
     {
     public:
         /**
          * class constructor.
          *
          */
-        Grid();
+        Fr_Grid();
 
         void setGridParam(unsigned int sections = 100, unsigned int gridWidth = 10, glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 scale = glm::vec3(0.0f, 0.0f, 0.0f));
         /**
          * Class destructor.
          *
          */
-        ~Grid();
+        ~Fr_Grid();
         /**
          * Sets the position of the grid.
          *
@@ -96,12 +96,14 @@ namespace FR {
          */
         unsigned int getgridWidth(void) const;
 
+        std::shared_ptr<Fr_PrimaitiveShader> getGridShader();
+
         /**
          * Create the Grid vertices.
          *
          * \return pointer to the created grid
          */
-        std::shared_ptr<Fr_PrimaitiveShader>CreateGrid();
+        void CreateGrid();
 
     private:
         int sections_; //No of lines in both directions
@@ -110,6 +112,7 @@ namespace FR {
         glm::vec3 centerPos_;//Center of the grid
         glm::vec4 gridRotation_; //(Axis, angle) 4 float values
         glm::vec4 gridColor_;
+        std::shared_ptr<Fr_PrimaitiveShader> gridShader;
     };
 }
 

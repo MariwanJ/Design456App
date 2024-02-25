@@ -61,7 +61,8 @@ namespace FR {
         f_silhouette_ = newValue;
     }
     Fr_PrimaitiveShader::Fr_PrimaitiveShader(glm::vec4 color, float silhouette) :
-        m_Primative{ nullptr }, silhouette_(silhouette) {
+        m_Primative{ nullptr },  
+        silhouette_(silhouette) {
         SetColor(color);
         defaultShaders();
         if (!shared_) {
@@ -72,37 +73,18 @@ namespace FR {
         type(NODETYPE::FR_PRIMATIVESHADER);
     }
 
-    Fr_PrimaitiveShader::Fr_PrimaitiveShader(const Fr_PrimaitiveShader& obj) :Node(obj),
-        m_Primative(obj.m_Primative), m_Color(obj.m_Color), silhouette_(obj.silhouette_),
-        f_objectshader_(obj.f_objectshader_), f_silhouette_(obj.f_silhouette_), f_texture_(obj.f_texture_),
-        _texture(obj._texture) {
-
-    }
-    //Copy constructor
-    Fr_PrimaitiveShader& Fr_PrimaitiveShader::operator=(const Fr_PrimaitiveShader& obj){
-        if (this != &obj) {
-            // Copy the member variables from the source object
-            m_Color = obj.m_Color;
-            silhouette_ = obj.silhouette_;
-            f_objectshader_ = obj.f_objectshader_;
-            f_silhouette_ = obj.f_silhouette_;
-            f_texture_ = obj.f_texture_;
-            _texture = obj._texture;
-
-            // Create a new shared_ptr for the Fr_Primatives object
-            if (obj.m_Primative) {
-                m_Primative = std::make_shared<Fr_Primatives>(*obj.m_Primative);
-            }
-            else {
-                m_Primative = nullptr;
-            }
-        }
-         return *this;
-    }
+    
 
     Fr_PrimaitiveShader::~Fr_PrimaitiveShader()
     {
-    }
+        if (shared_){
+            delete shared_->primative_program;
+            delete shared_->shadowmap_program;
+            delete shared_->silhouette_program;
+            delete shared_->texture_program;
+            delete shared_;
+            }
+        }
 
     void Fr_PrimaitiveShader::SetColor(glm::vec4 color) {
         m_Color = color;
