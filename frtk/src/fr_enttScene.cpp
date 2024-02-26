@@ -44,9 +44,10 @@ namespace FR {
     Fr_enttScene::Fr_enttScene() :active_camera_((CameraList)4){
         //Add all cameras
         CreateDefaultSunLight();
-        CreateAxis();
-        //CreateGrid();
         CreateDefaultCameras();
+        CreateAxis();
+        CreateGrid();
+
         
     }
     Fr_enttScene::~Fr_enttScene()
@@ -58,8 +59,8 @@ namespace FR {
         Fr_Item  newItem = { m_Registry.create(), this };
         newItem.addItem<ItemID>(id);
         newItem.addItem<Transform>();
-        auto& tag = newItem.addItem<ItemName>();
-        tag.m_Name = name.empty() ? "Item" : name;
+        auto& tempname = newItem.addItem<ItemName>();
+        tempname.m_Name = name.empty() ? "Item" : name;
         m_ItemMap[id] = newItem;
         return newItem;
     }
@@ -253,7 +254,6 @@ namespace FR {
         auto gridsItem = createItem("Grid");
         auto gr= gridsItem.addItem<Fr_Grid>();
         gr.CreateGrid();
-        
     }
 
     void Fr_enttScene::CreateAxis() {
