@@ -23,6 +23,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
+//  Inspired by Hazel engine
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
@@ -38,10 +39,8 @@
 
 
 namespace FR {
-    
-    
 
-    Fr_enttScene::Fr_enttScene() :active_camera_((CameraList)4){
+    Fr_enttScene::Fr_enttScene() :active_camera_((CameraList)1){
         //Add all cameras
         CreateDefaultSunLight();
         CreateDefaultCameras();
@@ -92,6 +91,7 @@ namespace FR {
             return { m_ItemMap.at(id), this };
         return {};
     }
+
 
     void Fr_enttScene::setBackgroud(float r, float g, float b, float alfa) {
         m_Background = glm::vec4(r, g, b, alfa);

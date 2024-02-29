@@ -94,9 +94,7 @@ namespace FR {
 
         glm::vec4 m_Background;
         entt::registry m_Registry;
-        //entt::registry m_CamRegistry;
         std::unordered_map<genID, entt::entity> m_ItemMap;
-        //std::unordered_map<genID, entt::entity> m_cameraGroupEnt; //TODO : do we need to use this??
     };
 }
 #endif

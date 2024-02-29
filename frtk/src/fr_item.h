@@ -47,6 +47,7 @@ namespace FR {
         T& addItem(Args&&... args)
         {
             T& component = m_enttScene->m_Registry.emplace<T>(m_ID, std::forward<Args>(args)...);
+ 
             return component;
         }
 
