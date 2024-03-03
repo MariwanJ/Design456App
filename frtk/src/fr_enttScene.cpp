@@ -37,25 +37,22 @@
 #include<fr_node.h>
 #include<Fr_GL3Window.h>
 
-
 namespace FR {
     testit::testit() {
         val = std::make_shared<int>(10);
-        std::make_shared<std::string> ("this is a test");
+        std::make_shared<std::string>("this is a test");
         std::shared_ptr<int> val;
         w = 1;
     };
     testit::~testit() {
     }
     void testit::printIt() {
-        std::cout << *test<<std::endl;
+        std::cout << *test << std::endl;
         std::cout << *val << std::endl;
         std::cout << w << std::endl;
-        }
+    }
 
-
-    Fr_enttScene::Fr_enttScene() :active_camera_((CameraList)1){
-       
+    Fr_enttScene::Fr_enttScene() :active_camera_((CameraList)1) {
     }
     Fr_enttScene::~Fr_enttScene()
     {
@@ -63,12 +60,12 @@ namespace FR {
 
     Fr_Item Fr_enttScene::createItemWithID(genID id, const std::string& name)
     {
-        Fr_Item  newItem = { m_Registry.create(), this };
+        Fr_Item  newItem = { m_world.entity(), this };
         newItem.addItem<ItemID>(id);
         newItem.addItem<Transform>();
         auto& tempname = newItem.addItem<ItemName>();
         tempname.m_Name = name.empty() ? "Item" : name;
-        m_ItemMap[id] = newItem;
+
         return newItem;
     }
 
@@ -83,20 +80,28 @@ namespace FR {
 
     Fr_Item Fr_enttScene::findItemByName(std::string_view name)
     {
-        auto view = m_Registry.view<ItemName>();
-        for (auto Item : view)
-        {
-            const ItemName& tc = view.get<ItemName>(Item);
-            if (tc.m_Name == name)
-                return Fr_Item{ Item, this };
-        }
+        auto filter = m_world.filter<ItemName>();
+        // Iterate over each entity matching the filter
+        filter.each([&](flecs::entity entity, ItemName& itemName) {
+        if (itemName.m_Name == name) {
+          // If the name matches, return a Fr_Item with the entity and scene pointer
+            return Fr_Item{ entity, this };
+           }
+         });
+
+        // Return an empty Fr_Item if not found
         return {};
+
     }
 
     Fr_Item Fr_enttScene::getItemByUUID(genID id)
     {
-        if (m_ItemMap.find(id) != m_ItemMap.end())
-            return { m_ItemMap.at(id), this };
+        // Check if the entity exists in the world
+        if (m_world.exists(id)) {
+            // Return a Fr_Item with the entity and the scene pointer
+            return Fr_Item{ m_world.entity(id), this };
+        }
+        // If the entity does not exist, return an empty Fr_Item
         return {};
     }
 
@@ -116,21 +121,32 @@ namespace FR {
      * \return a reference to the active camera
      */
     Fr_Item& Fr_enttScene::setupActiveCamera(std::string& name) {
-        auto cameraGroup = m_Registry.group<ItemName, Camera>();
-        for (auto ent : cameraGroup) {
-            Fr_Item cameraItem = { ent,this };
-            auto actCam = cameraItem.GetItem<Camera>();
-            actCam.isActive(true);
-            if (name.compare(cameraItem.GetName()) == 0) {
+        auto cameraFilter = m_world.filter<ItemName, Camera>();
+
+        // Initialize a reference to an Fr_Item, initially empty
+        static Fr_Item emptyFrItem;
+
+        // Iterate over entities matching the filter
+        cameraFilter.each([&](flecs::entity entity, ItemName& itemName, Camera& camera) {
+            Fr_Item cameraItem{ entity, this };
+            auto& actCam = cameraItem.GetItem<Camera>();
+
+            // Set the camera as active if its name matches the provided name
+            if (name == itemName.m_Name) {
                 actCam.isActive(true);
-                actCam.updateViewMatrix(); //TODO FIXME: TRANFORM MUST BE UPDATED ALSO.
-                return cameraItem;
+                actCam.updateViewMatrix(); // Update view matrix
+                // Return the Fr_Item with the active camera
+                emptyFrItem = cameraItem;
             }
             else {
                 actCam.isActive(false);
             }
-        }
+            });
+
+        // Return either the active camera Fr_Item or the empty Fr_Item // TODO: THIS SHOULD NEVER HAPPEN!!!
+        return emptyFrItem;
     }
+
     Fr_Item& Fr_enttScene::setupActiveCamera(CameraList  val)
     {
         std::string CamName = camNames[int(val)];
@@ -260,7 +276,7 @@ namespace FR {
 
     void Fr_enttScene::CreateGrid() {
         auto gridsItem = createItem("Grid");
-        auto gr= gridsItem.addItem<Fr_Grid>();
+        auto gr = gridsItem.addItem<Fr_Grid>();
         gr.CreateGrid();
     }
 
@@ -269,15 +285,8 @@ namespace FR {
         auto allAxis = axisItems.addItem<Axis3D>();
         allAxis.CreateAxis3D();
     }
-    Fr_Item Fr_enttScene::createtest() {
-        auto testItemm = createItem("testit");
-        auto gr = testItemm.addItem<testit>();
-        return testItemm;
-    }
     void Fr_enttScene::setupScene() {
-
         //Add all cameras
-        auto t= createtest();
 
         CreateDefaultSunLight();
         CreateDefaultCameras();
@@ -332,9 +341,5 @@ namespace FR {
         render_info.id = 0;
         render_info.render_transparent = true;
         Render(render_info, render_info.modelview);
-        
     }
-
-
-
 }

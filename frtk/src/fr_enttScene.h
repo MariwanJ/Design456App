@@ -27,7 +27,7 @@
 #ifndef FR_ENTTSENE_H
 #define FR_ENTTSENE_H
 
-#include<../vendor/EnTT/entt.hpp>
+#include<../vendor/Flecs/src/flecs.h>
 #include<fr_camera.h>
 #include<fr_light.h>
 #include<fr_genID.h>
@@ -49,7 +49,7 @@ namespace FR {
 
         Fr_enttScene();
         ~Fr_enttScene();
-        Fr_enttScene(entt::entity ID, Fr_enttScene* scene);
+        Fr_enttScene(flecs::entity ID, Fr_enttScene* scene);
         Fr_enttScene(const Fr_enttScene& other) = default;  //shallow copy of the member variables
 
         Fr_Item createItem(const std::string& name = std::string());
@@ -96,16 +96,13 @@ namespace FR {
         void CreateGrid();
         void CreateAxis();
 
-        Fr_Item createtest();
-
         //Grid, Axis, Camera which is always created automatically.User shouldn't need to do anything
         void setupScene();
 
     private:
 
         glm::vec4 m_Background;
-        entt::registry m_Registry;
-        std::unordered_map<genID, entt::entity> m_ItemMap;
+        flecs::world m_world;
     };
 }
 #endif

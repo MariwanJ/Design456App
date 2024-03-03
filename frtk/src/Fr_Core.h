@@ -45,7 +45,7 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
 #include <../instrumentation/Instrumentor.h>
-#include<../EnTT/entt.hpp>
+#include<../Flecs/src/flecs.h>
 //imGUI
 #include <imgui.h>
 #include <imgui_impl_glfw.h>

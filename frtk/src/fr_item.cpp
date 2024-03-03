@@ -28,7 +28,7 @@
 #include "fr_item.h"
 
 namespace FR {
-    FR::Fr_Item::Fr_Item(entt::entity IDval, Fr_enttScene* enttScene_val) :
+    FR::Fr_Item::Fr_Item(flecs::entity IDval, Fr_enttScene* enttScene_val) :
         m_ID(IDval), m_enttScene(enttScene_val)
     {
     }

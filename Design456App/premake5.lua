@@ -39,6 +39,7 @@ To use /MTd in premake:
 		"%{IncludeDir.ImGuizmo}",
         "%{IncludeDir.GLFW}",
 		"%{IncludeDir.glm}",
+		"%{IncludeDir.Flecs}",
         "%{IncludeDir.freeImage}",
         "%{IncludeDir.stb_image}",
         "%{IncludeDir.objloader}",
@@ -74,7 +75,8 @@ To use /MTd in premake:
 			"GLFW",
             "stb_image",
 			"opengl32.lib",
-            "objloader"
+            "objloader",
+			"Flecs"
 		}
 	
 	filter "configurations:Release"
@@ -90,6 +92,7 @@ To use /MTd in premake:
 			"GLFW",
 			"opengl32.lib",
             "objloader",
+			"Flecs"
 		}
 	
 

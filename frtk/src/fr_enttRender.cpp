@@ -46,29 +46,30 @@ namespace FR {
 
     }
     void Fr_enttScene::RenderPrimativeShapes(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
-        auto view = m_Registry.view<Fr_Grid, ItemName>();
-        for (auto it : view) {
-            auto [primative, name] = view.get<Fr_Grid, ItemName>(it);
-            if (name.m_Name.compare("Grid")==0) {
-                auto gridshader = primative.getGridShader();
-                gridshader->Render(info,modelview);
-            }
-        }
-           
-            auto axisview = m_Registry.view<Axis3D>();
-            for (auto items : axisview) {
-                Axis3D axises = axisview.get<Axis3D>(items);
- 
-                auto blue = axises.getBlue();
-                auto green = axises.getGreen();
-                auto red = axises.getRed();
-                auto zblue = axises.getZBlue();
+
+    // Iterate over entities with Fr_Grid and ItemName components
+            m_world.each([&](flecs::entity entity, Fr_Grid& primitive, ItemName& name) {
+                // Check if the name matches "Grid"
+                if (name.m_Name == "Grid") {
+                    auto gridShader = primitive.getGridShader();
+                    gridShader->Render(info, modelview);
+                }
+                });
+
+            // Iterate over entities with Axis3D component
+            m_world.each([&](flecs::entity entity, Axis3D& axes) {
+                auto blue = axes.getBlue();
+                auto green = axes.getGreen();
+                auto red = axes.getRed();
+                auto zblue = axes.getZBlue();
 
                 blue->Render(info, modelview);
                 green->Render(info, modelview);
                 red->Render(info, modelview);
                 zblue->Render(info, modelview);
-            }
+                });
+
+
     }
 
     void Fr_enttScene::RenderWidgetToolkit(FR::Node::RenderInfo& info, const glm::mat4& modelview) {

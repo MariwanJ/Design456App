@@ -124,6 +124,9 @@
     <ProjectReference Include="..\frtk\vendor\objloader\objloader.vcxproj">
       <Project>{97DBDEC8-0346-933F-4C84-44E5B82D7194}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\frtk\vendor\Flecs\Flecs.vcxproj">
+      <Project>{32A72E0D-9EBB-56BE-673D-FA1DD31053EF}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

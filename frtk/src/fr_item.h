@@ -24,66 +24,57 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-#ifndef FR_MODULE_H
-#define FR_MODULE_H
+#ifndef FR_ITEM_H
+#define FR_ITEM_H
 
-#include<entt.hpp>
-#include<fr_enttScene.h>
+#include <../vendor/Flecs/src/flecs.h>
+#include <fr_enttScene.h>
 #include <fr_components.h>
 
 namespace FR {
-    /**
-     * Class to make it easy to treat entt
-     * since entt is just only an id, we need to convert that to a container.
-     */
+
     class FRTK_API Fr_Item
     {
     public:
         Fr_Item() = default;
-        Fr_Item(entt::entity IDval, Fr_enttScene* Scene_val);
+        Fr_Item(flecs::entity IDval, Fr_enttScene* Scene_val);
         Fr_Item(const Fr_Item& other) = default;
 
         template<typename T, typename... Args>
-        T& addItem(Args&&... args)
-        {
-            T& component = m_enttScene->m_Registry.emplace<T>(m_ID, std::forward<Args>(args)...);
-             return component;
+        T& addItem(Args&&... args) {
+            return m_enttScene->m_world.emplace<T>(m_ID, std::forward<Args>(args)...);
         }
 
-        //template<typename T>
-        //T addOrReplaceSharedItem(T item) {
-        //   T comp = m_enttScene->m_Registry.emplace_or_replace<T>(m_ID, item);
-        //   return comp;
-        //}
 
         template<typename T, typename... Args>
         T& addOrReplaceItem(Args&&... args)
         {
-            T& component = m_enttScene->m_Registry.emplace_or_replace<T>(m_ID, std::forward<Args>(args)...);
+            T& component = m_enttScene->get_registry().set<T>(m_ID, std::forward<Args>(args)...);
             return component;
         }
 
+
         template<typename T>
-        T& GetItem()
-        {
-            return m_enttScene->m_Registry.get<T>(m_ID);
+        T& GetItem() {
+            return m_enttScene->m_world.get<T>(m_ID);
+        }
+
+
+
+
+        template<typename T>
+        bool HasItem() {
+            return m_enttScene->m_world.has<T>(m_ID);
         }
 
         template<typename T>
-        bool HasItem()
-        {
-            return m_enttScene->m_Registry.has<T>(m_ID);
+        void delItem() {
+            m_enttScene->m_world.remove<T>(m_ID);
         }
 
-        template<typename T>
-        void delItem()
-        {
-            m_enttScene->m_Registry.remove<T>(m_ID);
-        }
-
-        operator bool() const { return m_ID != entt::null; }
-        operator entt::entity() const { return m_ID; }
-        operator uint32_t() const { return (uint32_t)m_ID; }
+        operator bool() const { return m_ID.is_valid(); }
+        operator flecs::entity() const { return m_ID; }
+        operator uint32_t() const { return m_ID; }
 
         genID GetUUID() { return GetItem<ItemID>().ID; }
         const std::string& GetName() { return GetItem<ItemName>().m_Name; }
@@ -97,9 +88,9 @@ namespace FR {
         {
             return !(*this == other);
         }
-    private:
 
-        entt::entity m_ID{ entt::null };
+    private:
+        flecs::entity m_ID;
         Fr_enttScene* m_enttScene = nullptr;
     };
 }
