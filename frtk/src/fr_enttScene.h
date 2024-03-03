@@ -33,6 +33,15 @@
 #include<fr_genID.h>
 
 namespace FR {
+    class testit {
+    public:
+        testit();
+        ~testit();
+        std::shared_ptr<std::string> test;
+        void printIt();
+        std::shared_ptr<int> val;
+        int w;
+    };
     class FRTK_API Fr_enttScene {
         friend class Fr_Item;
         friend Fr_GL3Window;
@@ -86,6 +95,8 @@ namespace FR {
     private:
         void CreateGrid();
         void CreateAxis();
+
+        Fr_Item createtest();
 
         //Grid, Axis, Camera which is always created automatically.User shouldn't need to do anything
         void setupScene();

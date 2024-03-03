@@ -39,15 +39,23 @@
 
 
 namespace FR {
+    testit::testit() {
+        val = std::make_shared<int>(10);
+        std::make_shared<std::string> ("this is a test");
+        std::shared_ptr<int> val;
+        w = 1;
+    };
+    testit::~testit() {
+    }
+    void testit::printIt() {
+        std::cout << *test<<std::endl;
+        std::cout << *val << std::endl;
+        std::cout << w << std::endl;
+        }
+
 
     Fr_enttScene::Fr_enttScene() :active_camera_((CameraList)1){
-        //Add all cameras
-        CreateDefaultSunLight();
-        CreateDefaultCameras();
-        CreateAxis();
-        CreateGrid();
-
-        
+       
     }
     Fr_enttScene::~Fr_enttScene()
     {
@@ -261,8 +269,20 @@ namespace FR {
         auto allAxis = axisItems.addItem<Axis3D>();
         allAxis.CreateAxis3D();
     }
-
+    Fr_Item Fr_enttScene::createtest() {
+        auto testItemm = createItem("testit");
+        auto gr = testItemm.addItem<testit>();
+        return testItemm;
+    }
     void Fr_enttScene::setupScene() {
+
+        //Add all cameras
+        auto t= createtest();
+
+        CreateDefaultSunLight();
+        CreateDefaultCameras();
+        CreateAxis();
+        CreateGrid();
     }
 
     /**

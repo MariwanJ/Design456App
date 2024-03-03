@@ -331,6 +331,7 @@ namespace FR {
         layers_.push_back(mlayer);
         layers_[0]->createLayer();
         CreateScene();   //Main drawing process.
+        activeScene->setupScene();
         glfwGetFramebufferSize(pWindow, &_w, &_h);
         glViewport(_x, _y, _w, _h);
 
