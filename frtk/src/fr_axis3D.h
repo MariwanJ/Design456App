@@ -51,6 +51,52 @@ namespace FR {
         Axis3D();
 
         ~Axis3D();
+        // Copy constructor
+        Axis3D(const Axis3D& other)
+            : Node(other), ZstepSize_(other.ZstepSize_), stepWidth_(other.stepWidth_)
+        {
+            // Copy the shared pointers
+            m_Red = std::make_shared<Fr_PrimaitiveShader>(*other.m_Red);
+            m_Green = std::make_shared<Fr_PrimaitiveShader>(*other.m_Green);
+            m_Blue = std::make_shared<Fr_PrimaitiveShader>(*other.m_Blue);
+            m_ZBlue = std::make_shared<Fr_PrimaitiveShader>(*other.m_ZBlue);
+        }
+
+        // Assignment operator
+        Axis3D& operator=(const Axis3D& other)
+        {
+            if (this != &other) // self-assignment check
+            {
+                Node::operator=(other); // call the base class assignment operator
+
+                // Copy the simple members
+                ZstepSize_ = other.ZstepSize_;
+                stepWidth_ = other.stepWidth_;
+
+                // Copy the shared pointers
+                m_Red = std::make_shared<Fr_PrimaitiveShader>(*other.m_Red);
+                m_Green = std::make_shared<Fr_PrimaitiveShader>(*other.m_Green);
+                m_Blue = std::make_shared<Fr_PrimaitiveShader>(*other.m_Blue);
+                m_ZBlue = std::make_shared<Fr_PrimaitiveShader>(*other.m_ZBlue);
+            }
+            return *this;
+        }
+        // Move constructor for Axis3D
+        Axis3D(Axis3D&& other) noexcept
+            : Node(std::move(other)), ZstepSize_(std::exchange(other.ZstepSize_, 0.0f)),
+            stepWidth_(std::exchange(other.stepWidth_, 0.0f)),
+            m_Red(std::move(other.m_Red)),
+            m_Green(std::move(other.m_Green)),
+            m_Blue(std::move(other.m_Blue)),
+            m_ZBlue(std::move(other.m_ZBlue))
+        {
+            // Set the moved-from pointers to null or default values as needed
+            other.m_Red = nullptr;
+            other.m_Green = nullptr;
+            other.m_Blue = nullptr;
+            other.m_ZBlue = nullptr;
+        }
+
         /**
          * .
          */

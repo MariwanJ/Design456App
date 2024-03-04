@@ -47,6 +47,50 @@ namespace FR {
          */
         Fr_Grid();
 
+        // Copy constructor
+        Fr_Grid(const Fr_Grid& other)
+            : Node(other), sections_(other.sections_), gridWidth_(other.gridWidth_),
+            scale_(other.scale_), centerPos_(other.centerPos_),
+            gridRotation_(other.gridRotation_), gridColor_(other.gridColor_)
+        {
+            // Copy the shared pointer
+            gridShader = std::make_shared<Fr_PrimaitiveShader>(*other.gridShader);
+        }
+
+        // Assignment operator
+        Fr_Grid& operator=(const Fr_Grid& other)
+        {
+            if (this != &other) // self-assignment check
+            {
+                Node::operator=(other); // call the base class assignment operator
+
+                // Copy the simple members
+                sections_ = other.sections_;
+                gridWidth_ = other.gridWidth_;
+                scale_ = other.scale_;
+                centerPos_ = other.centerPos_;
+                gridRotation_ = other.gridRotation_;
+                gridColor_ = other.gridColor_;
+
+                // Copy the shared pointer
+                gridShader = std::make_shared<Fr_PrimaitiveShader>(*other.gridShader);
+            }
+            return *this;
+        }
+        // Move constructor for Fr_Grid
+        Fr_Grid(Fr_Grid&& other) noexcept
+            : Node(std::move(other)), sections_(std::exchange(other.sections_, 0)),
+            gridWidth_(std::exchange(other.gridWidth_, 0)),
+            scale_(std::move(other.scale_)),
+            centerPos_(std::move(other.centerPos_)),
+            gridRotation_(std::move(other.gridRotation_)),
+            gridColor_(std::move(other.gridColor_)),
+            gridShader(std::move(other.gridShader))
+        {
+            // Set the moved-from pointers to null or default values as needed
+            other.gridShader = nullptr;
+        }
+
         void setGridParam(unsigned int sections = 100, unsigned int gridWidth = 10, glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 scale = glm::vec3(0.0f, 0.0f, 0.0f));
         /**
          * Class destructor.
