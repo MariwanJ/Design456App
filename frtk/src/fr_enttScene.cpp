@@ -90,7 +90,6 @@ namespace FR {
 		return resultEntity;
 	}
 
-
 	flecs::entity  Fr_enttScene::getItemByUUID(genID id)
 	{
 		// Check if the entity exists in the world

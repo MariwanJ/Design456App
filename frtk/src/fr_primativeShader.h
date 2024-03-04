@@ -38,8 +38,8 @@ namespace FR {
          * Constructor
          */
         Fr_PrimaitiveShader(glm::vec4 color=glm::vec4(FR_RED), float silhouette = 0.005);
-        Fr_PrimaitiveShader(const Fr_PrimaitiveShader& obj) =delete;
-        Fr_PrimaitiveShader& operator=(const Fr_PrimaitiveShader& obj)=delete;
+      //  Fr_PrimaitiveShader(const Fr_PrimaitiveShader& obj) =delete;
+       // Fr_PrimaitiveShader& operator=(const Fr_PrimaitiveShader& obj)=delete;
 
         /**
          * Destructor

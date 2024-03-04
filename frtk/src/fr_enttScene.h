@@ -139,7 +139,6 @@ namespace FR {
 			}
 		}
 
-
 		template<typename T>
 		bool HasItem() {
 			return m_world.has<T>(m_ID);
