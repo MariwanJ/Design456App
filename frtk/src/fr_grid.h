@@ -48,14 +48,24 @@ namespace FR {
 		Fr_Grid();
 
 		// Copy constructor
+// Copy constructor
 		Fr_Grid(const Fr_Grid& other)
 			: Node(other), sections_(other.sections_), gridWidth_(other.gridWidth_),
 			scale_(other.scale_), centerPos_(other.centerPos_),
 			gridRotation_(other.gridRotation_), gridColor_(other.gridColor_)
 		{
-			// Copy the shared pointer
-			gridShader = std::make_shared<Fr_PrimaitiveShader>(*other.gridShader);
+			// Check if other is not null
+			if (other.gridShader) {
+				// Copy the shared pointer
+				gridShader = std::make_shared<Fr_PrimaitiveShader>(*other.gridShader);
+			}
+			else {
+				// Handle the case where other is null (nullptr)
+				// You can choose to set gridShader to nullptr or take some other action.
+				gridShader = nullptr; // For example, setting it to nullptr.
+			}
 		}
+
 
 		// Assignment operator
 		Fr_Grid& operator=(const Fr_Grid& other)

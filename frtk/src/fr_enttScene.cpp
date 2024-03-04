@@ -272,14 +272,14 @@ namespace FR {
 		auto gridsItem = createItem("Grid");
 		gridsItem.add<Fr_Grid>();
 		auto gr = *gridsItem.get<Fr_Grid>();
-		gr.CreateGrid();
+		 gr.CreateGrid();
 	}
 
 	void Fr_enttScene::CreateAxis() {
 		auto axisItems = createItem("Axis3D_axis");
 		axisItems.add<Axis3D>();
 		auto allAxis = *axisItems.get<Axis3D>();
-		allAxis.CreateAxis3D();
+		 allAxis.CreateAxis3D();
 	}
 	void Fr_enttScene::setupScene() {
 		//Add all cameras
