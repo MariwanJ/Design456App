@@ -59,10 +59,9 @@ namespace FR {
 
 	flecs::entity Fr_enttScene::createItemWithID(genID id, const std::string& name)
 	{
-		flecs::entity  newItem = m_world.entity();
+		flecs::entity  newItem = m_world.entity(name.c_str());
 		newItem.add<ItemID>(id);
 		newItem.add<Transform>();
-		addItem<ItemName>(newItem, name);
 		return newItem;
 	}
 
@@ -71,19 +70,26 @@ namespace FR {
 		return createItemWithID(genID(), name);
 	}
 
-	flecs::entity  Fr_enttScene::findItemByName(std::string_view name)
-	{
-		auto filter = m_world.filter<ItemName>();
-		// Iterate over each entity matching the filter
-		filter.each([&](flecs::entity entity, ItemName& itemName) {
-			if (itemName.m_Name == name) {
-				// If the name matches, return a Fr_Item with the entity and scene pointer
-				return entity;
+	flecs::entity Fr_enttScene::findItemByName(std::string_view name) {
+		flecs::entity resultEntity;
+
+		// Iterate over all entities
+		m_world.each([&](flecs::entity entity) {
+			// Check if the entity has a name component (or any other criteria)
+			auto entityName = entity.name();
+
+			// Compare the entity's name with the target name
+			if (entityName && std::string_view(entityName) == name) {
+				// If names match, set the resultEntity and break out of the loop
+				resultEntity = entity;
+				return;
 			}
 			});
-		// Return an empty Fr_Item if not found
-		return {};
+
+		// Return the resultEntity (which may be an empty entity)
+		return resultEntity;
 	}
+
 
 	flecs::entity  Fr_enttScene::getItemByUUID(genID id)
 	{

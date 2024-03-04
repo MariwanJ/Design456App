@@ -64,28 +64,34 @@ namespace FR {
 
 		//Templates
 		template<typename... Components>
-		auto GetAllEntitiesWith()
-		{
-			return m_Registry.view<Components...>();
+		auto GetAllEntitiesWith(flecs::world& world, bool includeChildren = false) {
+			if (includeChildren) {
+				return flecs::query<Components...>(world).iter(world, flecs::ChildOf);
+			}
+			else {
+				return flecs::query<Components...>(world);
+			}
 		}
 
 		template<typename T, typename... Args>
-		T& addItem(flecs::entity parentEntity, Args&&... args) {
-			// Check if a parent entity is provided
-			if (parentEntity) {
-				// Add the component to the parent entity
-				parentEntity.set<T>(std::forward<Args>(args)...);
-				return *parentEntity.get_mut<T>();
+		T& addItem(flecs::world& w, std::string name, Args&&... args) {
+			// Check if a name is provided
+			if (!name.empty()) {
+				// Create an entity with the given name
+				flecs::entity t = w.entity(name.c_str());
+				// Add the component to the entity
+				t.set<T>(std::forward<Args>(args)...);
+				return *t.get_mut<T>();
 			}
 			else {
 				// Add the component to the world and return a mutable reference
-				m_world.set<T>(std::forward<Args>(args)...);
-				return *m_world.get_mut<T>();
+				w.set<T>(std::forward<Args>(args)...);
+				return *w.get_mut<T>();
 			}
 		}
 
 		template<typename T, typename... Args>
-		T& addOrReplaceItem(flecs::entity parentEntity, Args&&... args) {
+		T& addOrReplaceItem(flecs::world& w, flecs::entity parentEntity, std::string name, Args&&... args) {
 			// Check if a parent entity is provided
 			if (parentEntity) {
 				// Check if the component already exists in the parent entity
@@ -96,24 +102,43 @@ namespace FR {
 				}
 				else {
 					// Add the component to the parent entity
-					parentEntity.assign<T>(std::forward<Args>(args)...);
-					return *parentEntity.get_mut<T>();
+					if (!name.empty()) {
+						// Create an entity with the given name
+						flecs::entity t = w.entity(name.c_str());
+						// Add the component to the entity
+						t.set<T>(std::forward<Args>(args)...);
+						return *t.get_mut<T>();
+					}
+					else {
+						parentEntity.assign<T>(std::forward<Args>(args)...);
+						return *parentEntity.get_mut<T>();
+					}
 				}
 			}
 			else {
 				// Check if the component already exists in the world
-				if (world.has<T>()) {
+				if (w.has<T>()) {
 					// Replace the existing component with the new one
-					m_world.set<T>(std::forward<Args>(args)...);
-					return *m_world.get_mut<T>();
+					w.set<T>(std::forward<Args>(args)...);
+					return *w.get_mut<T>();
 				}
 				else {
 					// Add the component to the world
-					m_world.emplace<T>(std::forward<Args>(args)...);
-					return *m_world.get_mut<T>();
+					if (!name.empty()) {
+						// Create an entity with the given name
+						flecs::entity t = w.entity(name.c_str());
+						// Add the component to the entity
+						t.set<T>(std::forward<Args>(args)...);
+						return *t.get_mut<T>();
+					}
+					else {
+						w.emplace<T>(std::forward<Args>(args)...);
+						return *w.get_mut<T>();
+					}
 				}
 			}
 		}
+
 
 		template<typename T>
 		bool HasItem() {
