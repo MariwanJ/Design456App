@@ -34,7 +34,7 @@
 #include "fr_axis3D.h"
 namespace FR {
 	Axis3D::Axis3D() :ZstepSize_(10), stepWidth_(10)
-	{
+	{	
 	}
 
 	Axis3D::~Axis3D()

@@ -73,7 +73,73 @@ namespace FR {
         type(NODETYPE::FR_PRIMATIVESHADER);
     }
 
-    
+    // Copy constructor
+    Fr_PrimaitiveShader::Fr_PrimaitiveShader(const Fr_PrimaitiveShader& other)
+        : Node(other), m_Color(other.m_Color), silhouette_(other.silhouette_), f_objectshader_(other.f_objectshader_), f_silhouette_(other.f_silhouette_), f_texture_(other.f_texture_), _texture(other._texture)
+    {
+        // Deep copy the shared_ptr members
+        if (other.m_Primative)
+            m_Primative = std::make_shared<Fr_Primatives>(*other.m_Primative);
+        if (other.m_Texture2D)
+            m_Texture2D = std::make_shared<Fr_Texture2D>(*other.m_Texture2D);
+    }
+
+    // Move constructor
+    Fr_PrimaitiveShader::Fr_PrimaitiveShader(Fr_PrimaitiveShader&& other) noexcept
+        : Node(std::move(other)), m_Color(std::move(other.m_Color)), silhouette_(std::move(other.silhouette_)), f_objectshader_(std::move(other.f_objectshader_)), f_silhouette_(std::move(other.f_silhouette_)), f_texture_(std::move(other.f_texture_)), _texture(std::move(other._texture))
+    {
+        // Move the shared_ptr members
+        m_Primative = std::move(other.m_Primative);
+        m_Texture2D = std::move(other.m_Texture2D);
+    }
+
+    // Copy assignment operator
+    Fr_PrimaitiveShader& Fr_PrimaitiveShader::operator=(const Fr_PrimaitiveShader& other)
+    {
+        if (this != &other)
+        {
+            Node::operator=(other);
+            m_Color = other.m_Color;
+            silhouette_ = other.silhouette_;
+            f_objectshader_ = other.f_objectshader_;
+            f_silhouette_ = other.f_silhouette_;
+            f_texture_ = other.f_texture_;
+            _texture = other._texture;
+
+            // Deep copy the shared_ptr members
+            if (other.m_Primative)
+                m_Primative = std::make_shared<Fr_Primatives>(*other.m_Primative);
+            else
+                m_Primative.reset();
+
+            if (other.m_Texture2D)
+                m_Texture2D = std::make_shared<Fr_Texture2D>(*other.m_Texture2D);
+            else
+                m_Texture2D.reset();
+        }
+        return *this;
+    }
+
+    // Move assignment operator
+    Fr_PrimaitiveShader& Fr_PrimaitiveShader::operator=(Fr_PrimaitiveShader&& other) noexcept
+    {
+        if (this != &other)
+        {
+            Node::operator=(std::move(other));
+            m_Color = std::move(other.m_Color);
+            silhouette_ = std::move(other.silhouette_);
+            f_objectshader_ = std::move(other.f_objectshader_);
+            f_silhouette_ = std::move(other.f_silhouette_);
+            f_texture_ = std::move(other.f_texture_);
+            _texture = std::move(other._texture);
+
+            // Move the shared_ptr members
+            m_Primative = std::move(other.m_Primative);
+            m_Texture2D = std::move(other.m_Texture2D);
+        }
+        return *this;
+    }
+
 
     Fr_PrimaitiveShader::~Fr_PrimaitiveShader()
     {

@@ -37,19 +37,6 @@
 #include<Fr_GL3Window.h>
 
 namespace FR {
-	testit::testit() {
-		val = std::make_shared<int>(10);
-		std::make_shared<std::string>("this is a test");
-		std::shared_ptr<int> val;
-		w = 1;
-	};
-	testit::~testit() {
-	}
-	void testit::printIt() {
-		std::cout << *test << std::endl;
-		std::cout << *val << std::endl;
-		std::cout << w << std::endl;
-	}
 
 	Fr_enttScene::Fr_enttScene() :active_camera_((CameraList)1) {
 	}
@@ -116,14 +103,15 @@ namespace FR {
 	 * \return a reference to the active camera
 	 */
 	flecs::entity& Fr_enttScene::setupActiveCamera(std::string& name) {
-		auto cameraFilter = m_world.filter<ItemName, Camera>();
+		auto cameraFilter = m_world.filter<ItemName>();
 
 		// Initialize a reference to an Fr_Item, initially empty
 		static flecs::entity emptyFrItem;
 
 		// Iterate over entities matching the filter
-		cameraFilter.each([&](flecs::entity entity, ItemName& itemName, Camera& camera) {
+		cameraFilter.each([&](flecs::entity entity, ItemName& itemName) {
 			// Set the camera as active if its name matches the provided name
+			auto camera = *entity.parent().get_mut<Camera>();
 			if (name == itemName.m_Name) {
 				camera.isActive(true);
 				camera.updateViewMatrix(); // Update view matrix
@@ -272,17 +260,27 @@ namespace FR {
 		auto gridsItem = createItem("Grid");
 		gridsItem.add<Fr_Grid>();
 		auto gr = *gridsItem.get<Fr_Grid>();
-		 gr.CreateGrid();
+		// gr.CreateGrid();
 	}
 
 	void Fr_enttScene::CreateAxis() {
 		auto axisItems = createItem("Axis3D_axis");
 		axisItems.add<Axis3D>();
 		auto allAxis = *axisItems.get<Axis3D>();
-		 allAxis.CreateAxis3D();
+		//allAxis.CreateAxis3D();
+	}
+	flecs::entity& Fr_enttScene::addTest()
+	{
+	 
+			flecs::entity t = m_world.entity("test");
+			flecs::entity t1 = t.add<test>();
+			return  t;
 	}
 	void Fr_enttScene::setupScene() {
 		//Add all cameras
+		//auto t= addTest();
+		//auto f = t.get_mut<test>(); // Now this should work
+		//f->printme();
 
 		CreateDefaultSunLight();
 		CreateDefaultCameras();

@@ -35,6 +35,36 @@ namespace FR {
             glCheckFunc(glDeleteBuffers(3, vbo_));
         }
     }
+    // Copy constructor
+    Fr_Primatives::Fr_Primatives(const Fr_Primatives& other) {
+        // Copy member variables from 'other' to 'this'
+        // Implement the necessary logic to perform a deep copy
+    }
+
+    // Move constructor
+    Fr_Primatives::Fr_Primatives(Fr_Primatives&& other) noexcept {
+        // Move member variables from 'other' to 'this'
+        // Implement the necessary logic to perform a move
+    }
+
+
+    // Copy assignment operator
+    Fr_Primatives& Fr_Primatives::operator=(const Fr_Primatives& other) {
+        if (this != &other) {
+            // Copy member variables from 'other' to 'this'
+            // Implement the necessary logic to perform a deep copy
+        }
+        return *this;
+    }
+
+    // Move assignment operator
+    Fr_Primatives& Fr_Primatives::operator=(Fr_Primatives&& other) noexcept {
+        if (this != &other) {
+            // Move member variables from 'other' to 'this'
+            // Implement the necessary logic to perform a move
+        }
+        return *this;
+    }
 
     void Fr_Primatives::Draw()
     {

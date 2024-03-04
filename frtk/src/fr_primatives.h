@@ -36,6 +36,15 @@ namespace FR {
     public:
         Fr_Primatives();
         ~Fr_Primatives();
+        // Copy constructor
+        Fr_Primatives(const Fr_Primatives& other);
+        // Move constructor
+        Fr_Primatives(Fr_Primatives&& other) noexcept;
+        // Assignment operator
+        Fr_Primatives& operator=(const Fr_Primatives& other);
+        // Move assignment operator
+        Fr_Primatives& operator=(Fr_Primatives&& other) noexcept;
+
 
         void Draw();
 

@@ -62,6 +62,9 @@ namespace FR {
          * Constructor
          */
         Camera();
+        Camera(const Camera& other);
+        Camera(Camera&& other);
+        Camera& operator=(const Camera& other);
 
         /**
          * Sets the eye coordinates

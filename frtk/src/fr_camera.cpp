@@ -114,6 +114,62 @@ namespace FR {
         aspectRatio_ = float(width) / float(height);
     }
 
+    Camera::Camera(const Camera& other)
+    {
+        // Copy the member variables from the other Camera object
+        camType_ = other.camType_;
+        camPosition_ = other.camPosition_;
+        direction_ = other.direction_;
+        up_ = other.up_;
+        fovy_ = other.fovy_;
+        znear_ = other.znear_;
+        zfar_ = other.zfar_;
+        aspectRatio_ = other.aspectRatio_;
+        m_ProjectionMatrix = other.m_ProjectionMatrix;
+        m_OrthographicSize = other.m_OrthographicSize;
+        v_ = other.v_;
+        m_Active = other.m_Active;
+        m_ModelView = other.m_ModelView;
+    }
+    Camera::Camera(Camera&& other)
+    {
+        // Move the member variables from the other Camera object
+        camType_ = std::move(other.camType_);
+        camPosition_ = std::move(other.camPosition_);
+        direction_ = std::move(other.direction_);
+        up_ = std::move(other.up_);
+        fovy_ = std::move(other.fovy_);
+        znear_ = std::move(other.znear_);
+        zfar_ = std::move(other.zfar_);
+        aspectRatio_ = std::move(other.aspectRatio_);
+        m_ProjectionMatrix = std::move(other.m_ProjectionMatrix);
+        m_OrthographicSize = std::move(other.m_OrthographicSize);
+        v_ = std::move(other.v_);
+        m_Active = std::move(other.m_Active);
+        m_ModelView = std::move(other.m_ModelView);
+    }
+
+    Camera& Camera::operator=(const Camera& other)
+    {
+        if (this != &other)
+        {
+            // Copy the member variables from the other Camera object
+            camType_ = other.camType_;
+            camPosition_ = other.camPosition_;
+            direction_ = other.direction_;
+            up_ = other.up_;
+            fovy_ = other.fovy_;
+            znear_ = other.znear_;
+            zfar_ = other.zfar_;
+            aspectRatio_ = other.aspectRatio_;
+            m_ProjectionMatrix = other.m_ProjectionMatrix;
+            m_OrthographicSize = other.m_OrthographicSize;
+            v_ = other.v_;
+            m_Active = other.m_Active;
+            m_ModelView = other.m_ModelView;
+        }
+        return *this;
+    }
     void Camera::SetCamPosition(float x, float y, float z) {
         camPosition_ = glm::vec3(x, y, z);
     }

@@ -38,6 +38,36 @@ namespace FR {
         LinkShader();
     }
 
+
+    // Copy Constructor
+    ShaderProgram::ShaderProgram(const ShaderProgram& other)
+        : program_(other.program_) {
+        // Copy the program handle
+    }
+
+    // Move Constructor
+    ShaderProgram::ShaderProgram(ShaderProgram&& other) noexcept
+        : program_(std::exchange(other.program_, 0)) {
+        // Move the program handle
+    }
+
+    // Copy Assignment Operator
+    ShaderProgram& ShaderProgram::operator=(const ShaderProgram& other) {
+        if (this != &other) {
+            program_ = other.program_;
+        }
+        return *this;
+    }
+
+    // Move Assignment Operator
+    ShaderProgram& ShaderProgram::operator=(ShaderProgram&& other) noexcept {
+        if (this != &other) {
+            program_ = std::exchange(other.program_, 0);
+        }
+        return *this;
+    }
+
+
     ShaderProgram::~ShaderProgram() {
         glCheckFunc(glDeleteProgram(program_));
     }

@@ -31,6 +31,62 @@
 #include<fr_genID.h>
 namespace FR {
 
+    class test {
+    public:
+        // Default constructor
+        test() {
+            ttt = std::make_shared<std::string>("testme \n");
+        }
+
+        // Copy constructor
+        test(const test& other) {
+            // Perform a deep copy of the shared_ptr content
+            if (other.ttt) {
+                ttt = std::make_shared<std::string>(*other.ttt);
+            }
+        }
+
+        // Move constructor
+        test(test&& other) noexcept {
+            // Move the shared_ptr content
+            ttt = std::move(other.ttt);
+            // Set the source shared_ptr to null to avoid double deletion
+            other.ttt = nullptr;
+        }
+
+        // Move assignment operator
+        test& operator=(test&& other) noexcept {
+            if (this != &other) {
+                // Release the current shared_ptr content
+                ttt = nullptr;
+
+                // Move the shared_ptr content
+                ttt = std::move(other.ttt);
+
+                // Set the source shared_ptr to null to avoid double deletion
+                other.ttt = nullptr;
+            }
+            return *this;
+        }
+
+        // Destructor
+        ~test() {
+            std::cout << "end of project";
+        }
+
+        void printme() {
+            if (ttt) {
+                std::cout << *ttt << std::endl;
+                return;
+            }
+        }
+
+    private:
+        std::shared_ptr<std::string> ttt;
+    };
+
+
+
 	class FRTK_API ItemID
 	{
 	public:

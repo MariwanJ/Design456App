@@ -36,7 +36,7 @@ namespace FR {
         _h = height;
         if (s_GladInitialized && s_GLFWInitialized) {
             glViewport(_x, _y, _w, _h);
-            auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->activeScene->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->activeScene->active_camera_];
+            auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->activeScene->m_cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->activeScene->active_camera_];
         }
         WidgWindow->handle(FR::FR_WINDOW_RESIZE);
     }
@@ -218,7 +218,7 @@ namespace FR {
 
     void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
     {
-        auto activeCamera =  activeScene->cameraList[(unsigned int)activeScene->active_camera_];
+        auto activeCamera =  activeScene->m_cameraList[(unsigned int)activeScene->active_camera_];
         userData_ data;
 
         activeCamera->getUserData(data);
@@ -256,7 +256,7 @@ namespace FR {
     void Fr_GL3Window::cameraPAN(GLFWwindow* win, double xpos, double ypos)
     {
         userData_ data;
-        auto activeCamera =  activeScene->cameraList[(unsigned int) activeScene->active_camera_];
+        auto activeCamera =  activeScene->m_cameraList[(unsigned int) activeScene->active_camera_];
         activeCamera->getUserData(data);
 
         if (mouseEvent.Old_x == 0 && mouseEvent.Old_y == 0) {
@@ -289,7 +289,7 @@ namespace FR {
     {
         userData_ data;
 
-        auto activeCamera = activeScene->cameraList[(unsigned int)activeScene->active_camera_];
+        auto activeCamera = activeScene->m_cameraList[(unsigned int)activeScene->active_camera_];
         activeCamera->getUserData(data);
         //// ImVec4 viewPortDim = getPortViewDimensions();
         //// ImVec2 center = ImVec2((viewPortDim.z ) / 2,(viewPortDim.w )/ 2);
@@ -372,7 +372,7 @@ namespace FR {
         float width, height;
         ImVec4 viewPortDim = getPortViewDimensions();
 
-        auto activeCamera = activeScene->cameraList[(unsigned int)activeScene->active_camera_];
+        auto activeCamera = activeScene->m_cameraList[(unsigned int)activeScene->active_camera_];
         width = viewPortDim.z - viewPortDim.x;
         height = viewPortDim.w - viewPortDim.y;
 

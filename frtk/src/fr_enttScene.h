@@ -33,15 +33,6 @@
 #include<fr_genID.h>
 
 namespace FR {
-	class testit {
-	public:
-		testit();
-		~testit();
-		std::shared_ptr<std::string> test;
-		void printIt();
-		std::shared_ptr<int> val;
-		int w;
-	};
 	class FRTK_API Fr_enttScene {
 		friend Fr_GL3Window;
 	public:
@@ -180,7 +171,7 @@ namespace FR {
 
 		void CreateDefaultSunLight(void);
 
-		std::vector<std::shared_ptr<Camera>> cameraList; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
+		std::vector<std::shared_ptr<Camera>> m_cameraList; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
 		CameraList active_camera_;
 		void RenderScene();
 
@@ -190,6 +181,7 @@ namespace FR {
 	private:
 		void CreateGrid();
 		void CreateAxis();
+		flecs::entity& addTest();
 
 		//Grid, Axis, Camera which is always created automatically.User shouldn't need to do anything
 		void setupScene();

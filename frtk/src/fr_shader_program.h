@@ -39,6 +39,10 @@ namespace FR {
          * Expects a prefix (%) for the files: %_vs.glsl and %_fs.glsl
          */
         ShaderProgram(const std::string& prefix);
+        ShaderProgram(const ShaderProgram& other); // Copy Constructor
+        ShaderProgram(ShaderProgram&& other) noexcept; // Move Constructor
+        ShaderProgram& operator=(const ShaderProgram& other); // Copy Assignment Operator
+        ShaderProgram& operator=(ShaderProgram&& other) noexcept; // Move Assignment Operator
 
         /**
          * Destructor

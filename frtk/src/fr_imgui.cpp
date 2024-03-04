@@ -305,12 +305,12 @@ namespace FR {
         ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 
         setPortViewDimension(ImVec4(Bound1.x, Bound1.y, Bound2.x, Bound2.y));
-        auto win = getfr_Gl3Window();
-        auto cameraItem = win->activeScene->setupActiveCamera(win->activeScene->active_camera_);
-        auto activeCamera = *cameraItem.get<Camera>();
+        auto activeCamera = activeScene->m_cameraList[CameraList (activeScene->active_camera_)];
+       // auto cameraItem = win->activeScene->setupActiveCamera(win->activeScene->active_camera_);
+       // auto activeCamera = *cameraItem.get_mut<Camera>();
         activeCamera.aspectRatio_ = (Bound2.x - Bound1.x) / (Bound2.y - Bound1.y);    //Must be updated always
          activeCamera.updateViewMatrix();
-         auto trans= *cameraItem.get<Transform>();
+        // auto trans= *cameraItem.get<Transform>();
          //WE MUST UPDATE THIS, OTHERWISE THE RENDERING WILL BE MISSING DATA, AND THE PICTURE SHOWN WILL BE WRONG!!
         if (lineAngl == 359) {
             lineAngl = 0;
