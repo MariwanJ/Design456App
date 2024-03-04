@@ -44,15 +44,15 @@ namespace FR {
 	{
 	}
 
-	flecs::entity Fr_enttScene::createItemWithID(genID id, const std::string& name)
+	flecs::entity& Fr_enttScene::createItemWithID(genID id, const std::string& name)
 	{
 		flecs::entity  newItem = m_world.entity(name.c_str());
-		newItem.add<ItemID>(id);
-		newItem.add<Transform>();
+		newItem.emplace<ItemID>(id);
+		auto t=	newItem.emplace<Transform>();
 		return newItem;
 	}
 
-	flecs::entity  Fr_enttScene::createItem(const std::string& name)
+	flecs::entity& Fr_enttScene::createItem(const std::string& name)
 	{
 		return createItemWithID(genID(), name);
 	}
@@ -133,16 +133,20 @@ namespace FR {
 		return setupActiveCamera(CamName);
 	}
 
-	void Fr_enttScene::CreateDefaultCameras(void)
+	flecs::entity& Fr_enttScene::CreateDefaultCameras(void)
 	{
+		std::string st;
+		flecs::entity saveit;
 		for (int i = 0; i < TOTAL_CAMS; i++) {
+			auto camMods = createItem(st);
+			if (i == 0)
+				saveit = camMods;
 			std::string st = camNames[i];
-			auto camMod = createItem(st);
-			camMod.add<Camera>();
-			auto newCam = *camMod.get<Camera>();
-			cameraList.push_back(std::make_shared<Camera>(newCam)); //TODO : Do we need the vector as this was used before??? !!!
+			auto nCam = camMods.emplace<Camera>();
+			auto newCam = *nCam.get<Camera>();
+			m_cameraList.push_back(std::make_shared<Camera>(newCam)); //TODO : Do we need the vector as this was used before??? !!!
 			newCam.setType(CameraList(i));
-			auto trans = *camMod.get<Transform>();
+			auto trans = *nCam.get<Transform>();
 			newCam.setupCameraHomeValues();
 			trans.SetMatrix(newCam.GetViewMatrix());
 			switch (i) {
@@ -242,9 +246,10 @@ namespace FR {
 			}break;
 			}
 		}
+		return saveit;
 	}
 
-	void Fr_enttScene::CreateDefaultSunLight(void)
+	flecs::entity& Fr_enttScene::CreateDefaultSunLight(void)
 	{   //TODO : how many sun we should have???
 		auto sunItem = createItem("Sun");
 		sunItem.add<Light>();
@@ -254,20 +259,24 @@ namespace FR {
 		sun.SetAmbient(0.2f, 0.2f, 0.2f);
 		sun.EnableShadowMap(glm::vec3(0, 0, 1), glm::vec3(0, 0, 4), glm::ortho<float>(-10, 10, -10, 10, 100, 114));
 		sun.SetActive(true);
+		return sunItem;
 	}
 
-	void Fr_enttScene::CreateGrid() {
+	flecs::entity& Fr_enttScene::CreateGrid() {
 		auto gridsItem = createItem("Grid");
 		gridsItem.add<Fr_Grid>();
 		auto gr = *gridsItem.get<Fr_Grid>();
-		// gr.CreateGrid();
+		//gr.CreateGrid();
+		return gridsItem;
 	}
 
-	void Fr_enttScene::CreateAxis() {
+	flecs::entity& Fr_enttScene::CreateAxis() {
 		auto axisItems = createItem("Axis3D_axis");
-		axisItems.add<Axis3D>();
-		auto allAxis = *axisItems.get<Axis3D>();
+		auto t= axisItems.emplace<Axis3D>();
+		auto allAxis = *m_world.get_mut<Axis3D>();
+		std::cout << t.has<Axis3D>() << std::endl;
 		//allAxis.CreateAxis3D();
+		return axisItems;
 	}
 	flecs::entity& Fr_enttScene::addTest()
 	{
@@ -282,10 +291,10 @@ namespace FR {
 		//auto f = t.get_mut<test>(); // Now this should work
 		//f->printme();
 
-		CreateDefaultSunLight();
-		CreateDefaultCameras();
-		CreateAxis();
-		CreateGrid();
+	 auto t1=	CreateDefaultSunLight();
+	 auto t2=	CreateDefaultCameras();
+	 auto t3=	CreateAxis();
+	 auto t4=	CreateGrid();
 	}
 
 	/**
@@ -304,13 +313,15 @@ namespace FR {
 
 		//Camera
 		Node::RenderInfo render_info;
+		//auto cam =linkToglfw->activeScene->m_cameraList[(unsigned int)linkToglfw->activeScene->active_camera_];
 		auto cam = setupActiveCamera(active_camera_);
 		auto actCam = *cam.get<Camera>();
 		render_info.modelview = actCam.GetViewMatrix();
 
 		auto trans = *cam.get<Transform>();
 		auto tranform = trans.GetMatrix();
-		render_info.modelview = render_info.modelview * trans.GetMatrix();
+		//render_info.modelview = render_info.modelview * trans.GetMatrix();
+		render_info.modelview = render_info.modelview;//temp code
 		render_info.projection = actCam.getPorjection();
 
 		//Light
@@ -329,7 +340,7 @@ namespace FR {
 
 		linkToglfw->sceneBuffer->Bind();
 		Render(render_info, render_info.modelview);
-		RenderPrimativeShapes(render_info, render_info.modelview);
+	    RenderPrimativeShapes(render_info, render_info.modelview);
 		RenderWidgetToolkit(render_info, render_info.modelview);
 
 		//Render transparent items

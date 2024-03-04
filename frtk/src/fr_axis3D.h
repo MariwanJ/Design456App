@@ -52,7 +52,7 @@ namespace FR {
 		~Axis3D();
 		// Copy constructor
 		Axis3D(const Axis3D& other)
-			: Node(other), ZstepSize_(other.ZstepSize_), stepWidth_(other.stepWidth_)
+			:  ZstepSize_(other.ZstepSize_), stepWidth_(other.stepWidth_)
 		{
 			// Copy the shared pointers if they are not NULL
 			m_Red = (other.m_Red != nullptr) ? std::make_shared<Fr_PrimaitiveShader>(*other.m_Red) : nullptr;
@@ -84,7 +84,7 @@ namespace FR {
 
 		// Move constructor
 		Axis3D(Axis3D&& other) noexcept
-			: Node(std::move(other)), ZstepSize_(std::exchange(other.ZstepSize_, 0.0f)),
+			:  ZstepSize_(std::exchange(other.ZstepSize_, 0.0f)),
 			stepWidth_(std::exchange(other.stepWidth_, 0.0f)),
 			m_Red(std::move(other.m_Red)),
 			m_Green(std::move(other.m_Green)),

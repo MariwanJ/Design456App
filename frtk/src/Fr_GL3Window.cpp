@@ -247,9 +247,9 @@ namespace FR {
     {
         activeScene->active_camera_ = _type;
         for (int i = 0; i < MAX_CAMERAS; i++) {
-            (activeScene->cameraList[i])->isActive(false);
+            (activeScene->m_cameraList[i])->isActive(false);
         }
-        (activeScene->cameraList[(int)activeScene->active_camera_])->isActive(true);
+        (activeScene->m_cameraList[(int)activeScene->active_camera_])->isActive(true);
     }
 
     CameraList Fr_GL3Window::getCameraType()

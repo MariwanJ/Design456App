@@ -49,7 +49,7 @@ namespace FR {
 
 	public:
 		Fr_GL3Window* win = Fr_GL3Window::getfr_Gl3Window();
-		// std::shared_ptr<Camera> activeCamera = win->cameraList[(unsigned int)win->active_camera_];
+		// std::shared_ptr<Camera> activeCamera = win->m_cameraList[(unsigned int)win->active_camera_];
 
 		 //MousePicker(Camera cam, glm::mat4 projection, glm::vec2 mosueCursor) :mousePos(mosueCursor) {
 		 //    camera = cam;

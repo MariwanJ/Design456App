@@ -38,7 +38,7 @@ namespace FR {
     int Fr_GL3Window::imguimzo_init()
     {
         ImGuizmo::BeginFrame();
-        std::shared_ptr<Camera> activeCamera = activeScene->cameraList[(unsigned int)activeScene->active_camera_];
+        std::shared_ptr<Camera> activeCamera = activeScene->m_cameraList[(unsigned int)activeScene->active_camera_];
 
         if (activeCamera->getType() == CameraList::ORTHOGRAPHIC)
             ImGuizmo::SetOrthographic(true);
@@ -253,7 +253,7 @@ namespace FR {
 
         if (ImGui::Button("Reset Camera to defaults")) {                            // Buttons return true when clicked (most widgets return true when edited/activated)
             counter++;
-            auto camm = activeScene->cameraList[(int)activeScene->active_camera_];
+            auto camm = activeScene->m_cameraList[(int)activeScene->active_camera_];
             camm->setupCameraHomeValues();
             camm->getUserData(data);
         }
@@ -305,11 +305,11 @@ namespace FR {
         ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 
         setPortViewDimension(ImVec4(Bound1.x, Bound1.y, Bound2.x, Bound2.y));
-        auto activeCamera = activeScene->m_cameraList[CameraList (activeScene->active_camera_)];
+        auto activeCamera = activeScene->m_cameraList[(unsigned int)activeScene->active_camera_];
        // auto cameraItem = win->activeScene->setupActiveCamera(win->activeScene->active_camera_);
        // auto activeCamera = *cameraItem.get_mut<Camera>();
-        activeCamera.aspectRatio_ = (Bound2.x - Bound1.x) / (Bound2.y - Bound1.y);    //Must be updated always
-         activeCamera.updateViewMatrix();
+        activeCamera->aspectRatio_ = (Bound2.x - Bound1.x) / (Bound2.y - Bound1.y);    //Must be updated always
+         activeCamera->updateViewMatrix();
         // auto trans= *cameraItem.get<Transform>();
          //WE MUST UPDATE THIS, OTHERWISE THE RENDERING WILL BE MISSING DATA, AND THE PICTURE SHOWN WILL BE WRONG!!
         if (lineAngl == 359) {
@@ -410,13 +410,13 @@ namespace FR {
           //| ImGuiWindowFlags_NoSavedSettings
             ;
 
-        auto camm = activeScene->cameraList[(int)activeScene->active_camera_];
+        auto camm = activeScene->m_cameraList[(int)activeScene->active_camera_];
         camm->getUserData(data);
         imgui_CameraConfiguration(data);
         if (activeScene->active_camera_ != data.camType_) {
             camm->isActive(false);
             activeScene->active_camera_ = data.camType_;
-            camm = activeScene->cameraList[(int)activeScene->active_camera_];
+            camm = activeScene->m_cameraList[(int)activeScene->active_camera_];
             camm->getUserData(data);
         }
         camm->setUserData(data);

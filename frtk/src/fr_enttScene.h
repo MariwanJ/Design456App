@@ -42,8 +42,8 @@ namespace FR {
 		Fr_enttScene(flecs::entity ID, Fr_enttScene* scene);
 		Fr_enttScene(const Fr_enttScene& other) = default;  //shallow copy of the member variables
 
-		flecs::entity  createItem(const std::string& name = std::string());
-		flecs::entity createItemWithID(genID id, const std::string& name = std::string());
+		flecs::entity& createItem(const std::string& name = std::string());
+		flecs::entity& createItemWithID(genID id, const std::string& name = std::string());
 
 		//void removeItem(flecs::entity ItemVal);
 		//Item DuplicateItem(Item ItemVal);
@@ -161,7 +161,7 @@ namespace FR {
 		flecs::entity& setupActiveCamera(std::string& name);
 		flecs::entity& setupActiveCamera(CameraList val);
 
-		void CreateDefaultCameras(void);
+		flecs::entity& CreateDefaultCameras(void);
 
 		void Render(FR::Node::RenderInfo& info, const glm::mat4& modelview);
 		void RenderPrimativeShapes(FR::Node::RenderInfo& info, const glm::mat4& modelview);
@@ -169,7 +169,7 @@ namespace FR {
 		void RenderSilhouette(const glm::mat4& mvp);
 		void RenderIMGui(FR::Node::RenderInfo& info, const glm::mat4& modelview);
 
-		void CreateDefaultSunLight(void);
+		flecs::entity& CreateDefaultSunLight(void);
 
 		std::vector<std::shared_ptr<Camera>> m_cameraList; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
 		CameraList active_camera_;
@@ -179,8 +179,8 @@ namespace FR {
 		static Fr_GL3Window* linkToglfw;
 
 	private:
-		void CreateGrid();
-		void CreateAxis();
+		flecs::entity& CreateGrid();
+		flecs::entity& CreateAxis();
 		flecs::entity& addTest();
 
 		//Grid, Axis, Camera which is always created automatically.User shouldn't need to do anything
