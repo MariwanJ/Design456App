@@ -32,7 +32,6 @@
 #include<Math/fr_math.h>
 #include<fr_constants.h>
 #include<fr_camera.h>
-#include<fr_item.h>
 
 namespace FR {
     //TODO FIX ME DOSENT WORK DON'T KNOW WHY
@@ -307,11 +306,11 @@ namespace FR {
 
         setPortViewDimension(ImVec4(Bound1.x, Bound1.y, Bound2.x, Bound2.y));
         auto win = getfr_Gl3Window();
-        Fr_Item cameraItem = win->activeScene->setupActiveCamera(win->activeScene->active_camera_);
-        auto activeCamera = cameraItem.GetItem<Camera>();
+        auto cameraItem = win->activeScene->setupActiveCamera(win->activeScene->active_camera_);
+        auto activeCamera = *cameraItem.get<Camera>();
         activeCamera.aspectRatio_ = (Bound2.x - Bound1.x) / (Bound2.y - Bound1.y);    //Must be updated always
          activeCamera.updateViewMatrix();
-         auto trans= cameraItem.GetItem<Transform>();
+         auto trans= *cameraItem.get<Transform>();
          //WE MUST UPDATE THIS, OTHERWISE THE RENDERING WILL BE MISSING DATA, AND THE PICTURE SHOWN WILL BE WRONG!!
         if (lineAngl == 359) {
             lineAngl = 0;

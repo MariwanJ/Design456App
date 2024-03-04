@@ -30,7 +30,6 @@
 #include <fr_enttScene.h>
 #include<fr_components.h>
 #include<fr_transform.h>
-#include<fr_item.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include<fr_grid.h>
 #include<fr_axis3D.h>
@@ -58,53 +57,44 @@ namespace FR {
     {
     }
 
-    Fr_Item Fr_enttScene::createItemWithID(genID id, const std::string& name)
+    flecs::entity Fr_enttScene::createItemWithID(genID id, const std::string& name)
     {
-        Fr_Item  newItem = { m_world.entity(), this };
-        newItem.addItem<ItemID>(id);
-        newItem.addItem<Transform>();
-        auto& tempname = newItem.addItem<ItemName>();
-        tempname.m_Name = name.empty() ? "Item" : name;
-
+        flecs::entity  newItem = m_world.entity();
+        newItem.add<ItemID>(id);
+        newItem.add<Transform>();
+        newItem.add<ItemName>(name);
         return newItem;
     }
 
-    Fr_Item Fr_enttScene::createItem(const std::string& name)
+    flecs::entity  Fr_enttScene::createItem(const std::string& name)
     {
         return createItemWithID(genID(), name);
     }
 
-    void Fr_enttScene::removeItem(Fr_Item ItemVal)
-    {
-    }
-
-    Fr_Item Fr_enttScene::findItemByName(std::string_view name)
+    flecs::entity  Fr_enttScene::findItemByName(std::string_view name)
     {
         auto filter = m_world.filter<ItemName>();
         // Iterate over each entity matching the filter
         filter.each([&](flecs::entity entity, ItemName& itemName) {
         if (itemName.m_Name == name) {
           // If the name matches, return a Fr_Item with the entity and scene pointer
-            return Fr_Item{ entity, this };
+            return entity;
            }
          });
-
         // Return an empty Fr_Item if not found
         return {};
-
     }
 
-    Fr_Item Fr_enttScene::getItemByUUID(genID id)
+    flecs::entity  Fr_enttScene::getItemByUUID(genID id)
     {
         // Check if the entity exists in the world
         if (m_world.exists(id)) {
             // Return a Fr_Item with the entity and the scene pointer
-            return Fr_Item{ m_world.entity(id), this };
+            return m_world.entity(id);
         }
         // If the entity does not exist, return an empty Fr_Item
         return {};
     }
-
 
     void Fr_enttScene::setBackgroud(float r, float g, float b, float alfa) {
         m_Background = glm::vec4(r, g, b, alfa);
@@ -120,26 +110,23 @@ namespace FR {
      * \param name  Reference to a string which is the name of the camera Perspective,Orthographic, Top, Bottom, ..etc
      * \return a reference to the active camera
      */
-    Fr_Item& Fr_enttScene::setupActiveCamera(std::string& name) {
+    flecs::entity& Fr_enttScene::setupActiveCamera(std::string& name) {
         auto cameraFilter = m_world.filter<ItemName, Camera>();
 
         // Initialize a reference to an Fr_Item, initially empty
-        static Fr_Item emptyFrItem;
+        static flecs::entity emptyFrItem;
 
         // Iterate over entities matching the filter
         cameraFilter.each([&](flecs::entity entity, ItemName& itemName, Camera& camera) {
-            Fr_Item cameraItem{ entity, this };
-            auto& actCam = cameraItem.GetItem<Camera>();
-
             // Set the camera as active if its name matches the provided name
             if (name == itemName.m_Name) {
-                actCam.isActive(true);
-                actCam.updateViewMatrix(); // Update view matrix
+                camera.isActive(true);
+                camera.updateViewMatrix(); // Update view matrix
                 // Return the Fr_Item with the active camera
-                emptyFrItem = cameraItem;
+                emptyFrItem = entity;
             }
             else {
-                actCam.isActive(false);
+                camera.isActive(false);
             }
             });
 
@@ -147,7 +134,7 @@ namespace FR {
         return emptyFrItem;
     }
 
-    Fr_Item& Fr_enttScene::setupActiveCamera(CameraList  val)
+    flecs::entity& Fr_enttScene::setupActiveCamera(CameraList  val)
     {
         std::string CamName = camNames[int(val)];
         return setupActiveCamera(CamName);
@@ -158,10 +145,11 @@ namespace FR {
         for (int i = 0; i < TOTAL_CAMS; i++) {
             std::string st = camNames[i];
             auto camMod = createItem(st);
-            auto newCam = camMod.addItem<Camera>();
+            camMod.add<Camera>();
+            auto newCam = *camMod.get<Camera>();
             cameraList.push_back(std::make_shared<Camera>(newCam)); //TODO : Do we need the vector as this was used before??? !!!
             newCam.setType(CameraList(i));
-            auto trans = camMod.GetItem<Transform>();
+            auto trans = *camMod.get<Transform>();
             newCam.setupCameraHomeValues();
             trans.SetMatrix(newCam.GetViewMatrix());
             switch (i) {
@@ -266,7 +254,9 @@ namespace FR {
     void Fr_enttScene::CreateDefaultSunLight(void)
     {   //TODO : how many sun we should have???
         auto sunItem = createItem("Sun");
-        auto sun = sunItem.addItem<Light>();
+        sunItem.add<Light>();
+        sunItem.add<Light>();
+        auto sun= *sunItem.get<Light>();
         sun.SetPosition(0.0f, 0.0f, 1000.0f);
         sun.SetDiffuse(0.25f, 0.25f, 0.25f);
         sun.SetAmbient(0.2f, 0.2f, 0.2f);
@@ -276,13 +266,15 @@ namespace FR {
 
     void Fr_enttScene::CreateGrid() {
         auto gridsItem = createItem("Grid");
-        auto gr = gridsItem.addItem<Fr_Grid>();
+        gridsItem.add<Fr_Grid>();
+        auto gr = *gridsItem.get<Fr_Grid>();
         gr.CreateGrid();
     }
 
     void Fr_enttScene::CreateAxis() {
         auto axisItems = createItem("Axis3D_axis");
-        auto allAxis = axisItems.addItem<Axis3D>();
+        axisItems.add<Axis3D>();
+        auto allAxis = *axisItems.get<Axis3D>();
         allAxis.CreateAxis3D();
     }
     void Fr_enttScene::setupScene() {
@@ -311,17 +303,18 @@ namespace FR {
         //Camera
         Node::RenderInfo render_info;
         auto cam = setupActiveCamera(active_camera_);
-        auto actCam = cam.GetItem<Camera>();
+        auto actCam = *cam.get<Camera>();
         render_info.modelview = actCam.GetViewMatrix();
-        auto trans = cam.GetItem<Transform>();
+
+        auto trans = *cam.get<Transform>();
         auto tranform = trans.GetMatrix();
         render_info.modelview = render_info.modelview * trans.GetMatrix();
         render_info.projection = actCam.getPorjection();
 
         //Light
         std::string_view str = "Sun";
-        Fr_Item sun_item = findItemByName(str);
-        auto sun = sun_item.GetItem<Light>();
+        auto sun_item = findItemByName(str);
+        auto sun = *sun_item.get<Light>();
         sun.SetupLight(render_info.modelview, render_info.lights);
         int draw_framebuffer = 0;
         glCheckFunc(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &draw_framebuffer));

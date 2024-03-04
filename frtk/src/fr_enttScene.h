@@ -43,7 +43,6 @@ namespace FR {
         int w;
     };
     class FRTK_API Fr_enttScene {
-        friend class Fr_Item;
         friend Fr_GL3Window;
     public:
 
@@ -52,28 +51,101 @@ namespace FR {
         Fr_enttScene(flecs::entity ID, Fr_enttScene* scene);
         Fr_enttScene(const Fr_enttScene& other) = default;  //shallow copy of the member variables
 
-        Fr_Item createItem(const std::string& name = std::string());
-        Fr_Item createItemWithID(genID id, const std::string& name = std::string());
+        flecs::entity  createItem(const std::string& name = std::string());
+        flecs::entity createItemWithID(genID id, const std::string& name = std::string());
 
-        void removeItem(Fr_Item ItemVal);
+        //void removeItem(flecs::entity ItemVal);
         //Item DuplicateItem(Item ItemVal);
         //Item copy(Item ItemVal);
         //void paste(Item ItemVal);
 
-        Fr_Item findItemByName(std::string_view name);
-        Fr_Item getItemByUUID(genID uuid);
+        flecs::entity  findItemByName(std::string_view name);
+        flecs::entity  getItemByUUID(genID uuid);
 
+        //Templates 
         template<typename... Components>
         auto GetAllEntitiesWith()
         {
             return m_Registry.view<Components...>();
         }
 
+        template<typename T, typename... Args>
+        T& addItem(flecs::entity parentEntity, Args&&... args) {
+            // Check if a parent entity is provided
+            if (parentEntity) {
+                // Add the component to the parent entity
+                return parentEntity.set<T>(std::forward<Args>(args)...);
+            }
+            else {
+                // Add the component to the world
+                return m_enttScene->m_world.emplace<T>(std::forward<Args>(args)...);
+            }
+        }
+
+
+        template<typename T, typename... Args>
+        T& addOrReplaceItem(flecs::entity parentEntity, Args&&... args) {
+            // Check if a parent entity is provided
+            if (parentEntity) {
+                // Check if the component already exists in the parent entity
+                if (parentEntity.has<T>()) {
+                    // Replace the existing component with the new one
+                    return parentEntity.set<T>(std::forward<Args>(args)...);
+                }
+                else {
+                    // Add the component to the parent entity
+                    return parentEntity.assign<T>(std::forward<Args>(args)...);
+                }
+            }
+            else {
+                // Check if the component already exists in the world
+                if (world.has<T>()) {
+                    // Replace the existing component with the new one
+                    return m_enttScene->m_world.set<T>(std::forward<Args>(args)...);
+                }
+                else {
+                    // Add the component to the world
+                    return m_enttScene->m_world.emplace<T>(std::forward<Args>(args)...);
+                }
+            }
+        }
+
+        template<typename T>
+        bool HasItem() {
+            return m_enttScene->m_world.has<T>(m_ID);
+        }
+
+        template<typename T>
+        void delItem() {
+            m_enttScene->m_world.remove<T>(m_ID);
+        }
+/*
+        operator bool() const { return m_ID.is_valid(); }
+        operator flecs::entity() const { return m_ID; }
+        operator uint32_t() const { return m_ID; }
+
+        bool operator==(const Fr_Item& val) const
+        {
+            return m_ID == val.m_ID && m_enttScene == val.m_enttScene;
+        }
+
+        bool operator!=(const Fr_Item& other) const
+        {
+            return !(*this == other);
+        }
+*/
+
+
+
+
+
+
+
         void setBackgroud(float r, float g, float b, float alfa);
         void setBackgroud(glm::vec4 color);
 
-        Fr_Item& setupActiveCamera(std::string& name);
-        Fr_Item& setupActiveCamera(CameraList val);
+        flecs::entity& setupActiveCamera(std::string& name);
+        flecs::entity& setupActiveCamera(CameraList val);
 
         void CreateDefaultCameras(void);
 
