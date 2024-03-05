@@ -45,7 +45,7 @@ namespace FR {
 		void setBackgroud(float r, float g, float b, float alfa);
 		void setBackgroud(glm::vec4 color);
 
-		SceneItemStruct<Camera> setupActiveCamera(std::string& name);
+		SceneItemStruct<Camera> setupActiveCamera(std::string_view name);
 		SceneItemStruct<Camera> setupActiveCamera(CameraList val);
 
 		SceneItemStruct<T> CreateDefaultCameras(void);
@@ -65,14 +65,18 @@ namespace FR {
 		template<typename T, typename ...Args>
 		SceneItemStruct<T> createItem(std::string&& name, Args && ...args);
 
-		SceneItemStruct<T>* findItemByID(int id);
+		template<typename T>
+		SceneItemStruct<T> findItemByName(std::string_view name);
 
-		bool replaceItemByID(int id, const T& newItem);
+		template<typename T>
+		SceneItemStruct<T> findItemByID(genID id);
+ 
+		
+		template<typename T, typename ...Args>
+		bool replaceItemByID(int id, const T& newItem, Args && ...args);
 
 		bool deleteItemByID(int id);
-
-		SceneItemStruct<T>* findItemByName(const std::string& name);
-
+		
 		bool replaceItemByName(const std::string& name, const T& newItem);
 
 		const std::vector<SceneItemStruct<T>>& getAllItems() const;
@@ -88,11 +92,11 @@ namespace FR {
 		void setupScene();
 
 	private:
-
 		glm::vec4 m_Background;
-		std::vector<SceneItemStruct<T>> m_World;
 
-
+		template <typename T>
+		using SceneItemVector = std::vector<SceneItemStruct<T>>;
+		SceneItemVector<T> m_world;
 	};
 }
 #endif

@@ -44,15 +44,15 @@ namespace FR {
 	{
 	}
 	template <typename T, typename... Args>
-	SceneObjStruct<T> Fr_enttScene::createItem(std::string&& name, Args&&... args) {
-		SceneObjStruct<T> newItem;
+	SceneItemStruct<T> Fr_enttScene::createItem(std::string&& name, Args&&... args) {
+		SceneItemStruct<T> newItem;
 		newItem.name = std::move(name);
 		newItem.SceneObj = std::make_shared<T>(std::forward<Args>(args)...); // Initialize the shared_ptr with a new instance
 		return newItem;
 	}
-
-	flecs::entity Fr_enttScene::findItemByName(std::string_view name) {
-		flecs::entity resultEntity;
+	template <typename T>
+	SceneItemStruct<T> Fr_enttScene::findItemByName(std::string_view name) {
+		SceneItemStruct<T> resultEntity;
 
 		// Iterate over all entities
 		m_world.each([&](flecs::entity entity) {
@@ -71,7 +71,8 @@ namespace FR {
 		return resultEntity;
 	}
 
-	flecs::entity  Fr_enttScene::getItemByUUID(genID id)
+	template <typename T>
+	SceneItemStruct<T>  Fr_enttScene::findItemByID(genID id)
 	{
 		// Check if the entity exists in the world
 		if (m_world.exists(id)) {
@@ -96,41 +97,23 @@ namespace FR {
 	 * \param name  Reference to a string which is the name of the camera Perspective,Orthographic, Top, Bottom, ..etc
 	 * \return a reference to the active camera
 	 */
-	SceneObjStruct<Camera> Fr_enttScene::setupActiveCamera(std::string& name) {
-		auto cameraFilter = m_world.filter<ItemName>();
-
-		// Initialize a reference to an Fr_Item, initially empty
-		static flecs::entity emptyFrItem;
-
-		// Iterate over entities matching the filter
-		cameraFilter.each([&](flecs::entity entity, ItemName& itemName) {
-			// Set the camera as active if its name matches the provided name
-			auto camera = *entity.parent().get_mut<Camera>();
-			if (name == itemName.m_Name) {
-				camera.isActive(true);
-				camera.updateViewMatrix(); // Update view matrix
-				// Return the Fr_Item with the active camera
-				emptyFrItem = entity;
-			}
-			else {
-				camera.isActive(false);
-			}
-			});
-
-		// Return either the active camera Fr_Item or the empty Fr_Item // TODO: THIS SHOULD NEVER HAPPEN!!!
-		return emptyFrItem;
+	SceneItemStruct<Camera> Fr_enttScene::setupActiveCamera(std::string_view name) {
+		auto camera = findItemByName(name);
+		
+		
+		return nullptr;
 	}
 
-	SceneObjStruct<Camera> Fr_enttScene::setupActiveCamera(CameraList  val)
+	SceneItemStruct<Camera> Fr_enttScene::setupActiveCamera(CameraList  val)
 	{
 		std::string CamName = camNames[int(val)];
 		return setupActiveCamera(CamName);
 	}
 
-	SceneObjStruct<Camera> Fr_enttScene::CreateDefaultCameras(void)
+	SceneItemStruct<Camera> Fr_enttScene::CreateDefaultCameras(void)
 	{
 		std::string st;
-		SceneObjStruct<Camera> saveit;
+		SceneItemStruct<Camera> saveit;
 		for (int i = 0; i < TOTAL_CAMS; i++) {
 			auto camMods = createItem(st);
 			if (i == 0)
@@ -242,7 +225,7 @@ namespace FR {
 		return saveit;
 	}
 
-	flecs::entity& Fr_enttScene::CreateDefaultSunLight(void)
+	SceneItemStruct<Light> Fr_enttScene::CreateDefaultSunLight(void)
 	{   //TODO : how many sun we should have???
 		auto sunItem = createItem("Sun");
 		sunItem.add<Light>();
@@ -255,7 +238,7 @@ namespace FR {
 		return sunItem;
 	}
 
-	flecs::entity& Fr_enttScene::CreateGrid() {
+	SceneItemStruct<Fr_Grid> Fr_enttScene::CreateGrid() {
 		auto gridsItem = createItem("Grid");
 		gridsItem.add<Fr_Grid>();
 		auto gr = *gridsItem.get<Fr_Grid>();
@@ -263,7 +246,7 @@ namespace FR {
 		return gridsItem;
 	}
 
-	flecs::entity& Fr_enttScene::CreateAxis() {
+	SceneItemStruct<Axis3D> Fr_enttScene::CreateAxis() {
 		auto axisItems = createItem("Axis3D_axis");
 		auto t= axisItems.emplace<Axis3D>();
 		auto allAxis = *m_world.get_mut<Axis3D>();
@@ -271,13 +254,7 @@ namespace FR {
 		//allAxis.CreateAxis3D();
 		return axisItems;
 	}
-	flecs::entity& Fr_enttScene::addTest()
-	{
-	 
-			flecs::entity t = m_world.entity("test");
-			flecs::entity t1 = t.add<test>();
-			return  t;
-	}
+	
 	void Fr_enttScene::setupScene() {
 		//Add all cameras
 		//auto t= addTest();
@@ -344,26 +321,20 @@ namespace FR {
 
 	// Scene Items organizer 
 
-	  // Add a new SceneObjStruct to the collection
-	void Fr_enttScene::addItem(const T& Item) {
-		SceneObjStruct<T> sceneItem;
-		sceneItem.SceneObj = std::make_shared<T>(Item);
-		sceneItem.m_World.id = genID();
-		m_World.push_back(sceneItem);
-	}
-
-	// Find a SceneObjStruct by its unique identifier
-	SceneObjStruct<T>* Fr_enttScene::findItemByID(int id) {
+	// Find a SceneItemStruct by its unique identifier
+	SceneItemStruct<T>* Fr_enttScene::findItemByID(int id) {
 		auto it = std::find_if(m_World.begin(), m_World.end(),
-			[id](const SceneObjStruct<T>& obj) { return obj.id == id; });
+			[id](const SceneItemStruct<T>& obj) { return obj.id == id; });
 
 		return (it != m_World.end()) ? &(*it) : nullptr;
 	}
 
-	// Replace a SceneObjStruct with a new one based on its unique identifier
-	bool Fr_enttScene::replaceItemByID(int id, const T& newItem) {
+	// Replace a SceneItemStruct with a new one based on its unique identifier
+	template<typename T, typename ...Args>
+	bool Fr_enttScene::replaceItemByID(int id, const T& newItem, Args && ...args)
+	{
 		auto it = std::find_if(m_World.begin(), m_World.end(),
-			[id](const SceneObjStruct<T>& obj) { return obj.id == id; });
+			[id](const SceneItemStruct<T>& obj) { return obj.id == id; });
 
 		if (it != m_World.end()) {
 			it->SceneObj = std::make_shared<T>(newItem);
@@ -373,10 +344,10 @@ namespace FR {
 		return false;
 	}
 
-	// Delete a SceneObjStruct by its unique identifier
+	// Delete a SceneItemStruct by its unique identifier
 	bool Fr_enttScene::deleteItemByID(int id) {
 		auto it = std::remove_if(m_World.begin(), m_World.end(),
-			[id](const SceneObjStruct<T>& obj) { return obj.id == id; });
+			[id](const SceneItemStruct<T>& obj) { return obj.id == id; });
 
 		if (it != m_World.end()) {
 			m_World.erase(it, m_World.end());
@@ -385,18 +356,19 @@ namespace FR {
 
 		return false;
 	}
-	// Find a SceneObjStruct by its name
-	SceneObjStruct<T>* Fr_enttScene::findItemByName(const std::string& name) {
+
+	// Find a SceneItemStruct by its name
+	SceneItemStruct<T>* Fr_enttScene::findItemByName(const std::string& name) {
 		auto it = std::find_if(m_World.begin(), m_World.end(),
-			[name](const SceneObjStruct<T>& obj) { return obj.name == name; });
+			[name](const SceneItemStruct<T>& obj) { return obj.name == name; });
 
 		return (it != m_World.end()) ? &(*it) : nullptr;
 	}
 
-	// Replace a SceneObjStruct with a new one based on its name
+	// Replace a SceneItemStruct with a new one based on its name
 	bool Fr_enttScene::replaceItemByName(const std::string& name, const T& newItem) {
 		auto it = std::find_if(m_World.begin(), m_World.end(),
-			[name](const SceneObjStruct<T>& obj) { return obj.name == name; });
+			[name](const SceneItemStruct<T>& obj) { return obj.name == name; });
 
 		if (it != m_World.end()) {
 			it->SceneObj = std::make_shared<T>(newItem);
@@ -407,8 +379,8 @@ namespace FR {
 	}
 
 
-	// Get all SceneObjStruct instances
-	const std::vector<SceneObjStruct<T>>& Fr_enttScene::getAllItems() const {
+	// Get all SceneItemStruct instances
+	const std::vector<SceneItemStruct<T>>& Fr_enttScene::getAllItems() const {
 		return m_World;
 	}
 
