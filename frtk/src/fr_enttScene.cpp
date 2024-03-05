@@ -103,15 +103,15 @@ namespace FR {
 	 * \return a reference to the active camera
 	 */
 	flecs::entity& Fr_enttScene::setupActiveCamera(std::string& name) {
-		auto cameraFilter = m_world.filter<ItemName>();
+		auto cameraFilter = m_world.filter<Camera>();
 
 		// Initialize a reference to an Fr_Item, initially empty
 		static flecs::entity emptyFrItem;
 
 		// Iterate over entities matching the filter
-		cameraFilter.each([&](flecs::entity entity, ItemName& itemName) {
+		cameraFilter.each([&](flecs::entity entity, Camera& camera) {
 			// Set the camera as active if its name matches the provided name
-			auto camera = *entity.parent().get_mut<Camera>();
+			auto itemName = *entity.parent().get_mut<ItemName>();
 			if (name == itemName.m_Name) {
 				camera.isActive(true);
 				camera.updateViewMatrix(); // Update view matrix
@@ -138,10 +138,10 @@ namespace FR {
 		std::string st;
 		flecs::entity saveit;
 		for (int i = 0; i < TOTAL_CAMS; i++) {
+			std::string st = camNames[i];
 			auto camMods = createItem(st);
 			if (i == 0)
 				saveit = camMods;
-			std::string st = camNames[i];
 			auto nCam = camMods.emplace<Camera>();
 			auto newCam = *nCam.get<Camera>();
 			m_cameraList.push_back(std::make_shared<Camera>(newCam)); //TODO : Do we need the vector as this was used before??? !!!
