@@ -58,7 +58,6 @@ project "frtk"
         "%{IncludeDir.ImGuizmo}",
 		"%{IncludeDir.glm}",
         "%{IncludeDir.objloader}",
-		"%{IncludeDir.Flecs}",
         "$(SolutionDir)frtk/vendor/spdlog/include",
 		"$(SolutionDir)frtk/vendor/instrumentation",
         "src",
@@ -104,7 +103,6 @@ project "frtk"
 			"GLFW",
 			"Glad",
             "objloader",
-			"Flecs"
 		}
 
 	filter "configurations:Release"
@@ -135,7 +133,6 @@ project "frtk"
 			"GLFW",
 			"Glad",
             "objloader",
-			"Flecs"
     }
    
 ---Dependencies should be under FRTK not Design456App. We hide them inside FRTK lib. 

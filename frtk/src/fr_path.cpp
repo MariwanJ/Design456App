@@ -36,11 +36,11 @@ namespace ResourcePath {
 
     std::string getExecutableDir() {
         std::string executablePath = getExecutablePath();
-        char* exePath = new char[executablePath.length()];
-        strcpy(exePath, executablePath.c_str());
-        PathRemoveFileSpecA(exePath);
-        std::string directory = std::string(exePath);
-        delete[] exePath;
+        char* exePath_ = new char[executablePath.length()];
+        strcpy(exePath_, executablePath.c_str());
+        PathRemoveFileSpecA(exePath_);
+        std::string directory = std::string(exePath_);
+        delete[] exePath_;
         return directory;
     }
 
