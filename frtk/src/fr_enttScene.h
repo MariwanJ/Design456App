@@ -31,72 +31,70 @@
 #include<fr_light.h>
 #include<fr_genID.h>
 #include <sceneItem/fr_sceneItem.h>
+#include <fr_grid.h>
+#include <fr_axis3D.h>
 
 namespace FR {
+    class FRTK_API Fr_enttScene {
+        friend Fr_GL3Window;
+    public:
 
-	class FRTK_API Fr_enttScene {
-		friend Fr_GL3Window;
-	public:
+        Fr_enttScene();
+        ~Fr_enttScene();
+        Fr_enttScene(const Fr_enttScene& other) = default;  //shallow copy of the member variables
 
-		Fr_enttScene();
-		~Fr_enttScene();
-		Fr_enttScene(const Fr_enttScene& other) = default;  //shallow copy of the member variables
+        void setBackgroud(float r, float g, float b, float alfa);
+        void setBackgroud(glm::vec4 color);
 
-		void setBackgroud(float r, float g, float b, float alfa);
-		void setBackgroud(glm::vec4 color);
+        SceneItemStruct<Camera> setupActiveCamera(std::string_view name, Node::RenderInfo& info);
+        SceneItemStruct<Camera> setupActiveCamera(CameraList val, Node::RenderInfo& info);
 
-		SceneItemStruct<Camera> setupActiveCamera(std::string_view name);
-		SceneItemStruct<Camera> setupActiveCamera(CameraList val);
+        void CreateDefaultCameras(void);
 
-		SceneItemStruct<T> CreateDefaultCameras(void);
+        void Render(FR::Node::RenderInfo& info, const glm::mat4& modelview);
+        void RenderPrimativeShapes(FR::Node::RenderInfo& info, const glm::mat4& modelview);
+        void RenderWidgetToolkit(FR::Node::RenderInfo& info, const glm::mat4& modelview);
+        void RenderSilhouette(const glm::mat4& mvp);
+        void RenderIMGui(FR::Node::RenderInfo& info, const glm::mat4& modelview);
 
-		void Render(FR::Node::RenderInfo& info, const glm::mat4& modelview);
-		void RenderPrimativeShapes(FR::Node::RenderInfo& info, const glm::mat4& modelview);
-		void RenderWidgetToolkit(FR::Node::RenderInfo& info, const glm::mat4& modelview);
-		void RenderSilhouette(const glm::mat4& mvp);
-		void RenderIMGui(FR::Node::RenderInfo& info, const glm::mat4& modelview);
+        SceneItemStruct<Light> CreateDefaultSunLight(void);        
+        CameraList active_camera_;
+        void RenderScene();
 
-		SceneItemStruct<Light> CreateDefaultSunLight(void);
+        template<typename T, typename ...Args>
+        SceneItemStruct<T> createItem(std::string&& name, Args && ...args);
 
-		//std::vector<std::shared_ptr<Camera>> m_cameraList; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
-		CameraList active_camera_;
-		void RenderScene();
+        template<typename T>
+        SceneItemStruct<T> findItemByName(std::string_view name);
 
-		template<typename T, typename ...Args>
-		SceneItemStruct<T> createItem(std::string&& name, Args && ...args);
+        template<typename T>
+        SceneItemStruct<T> findItemByID(genID id);
 
-		template<typename T>
-		SceneItemStruct<T> findItemByName(std::string_view name);
+        template<typename T, typename ...Args>
+        bool replaceItemByID(int id, const T& newItem, Args && ...args);
 
-		template<typename T>
-		SceneItemStruct<T> findItemByID(genID id);
- 
-		
-		template<typename T, typename ...Args>
-		bool replaceItemByID(int id, const T& newItem, Args && ...args);
+        bool deleteItemByID(int id);
 
-		bool deleteItemByID(int id);
-		
-		bool replaceItemByName(const std::string& name, const T& newItem);
+        bool replaceItemByName(const std::string& name, const T& newItem);
 
-		const std::vector<SceneItemStruct<T>>& getAllItems() const;
+        const std::vector<SceneItemStruct<T>>& getAllItems() const;
 
-	protected:
-		static Fr_GL3Window* linkToglfw;
+    protected:
+        static Fr_GL3Window* linkToglfw;
 
-	private:
-		SceneItemStruct<Fr_Grid> CreateGrid();
-		SceneItemStruct<Axis3D> CreateAxis();
+    private:
+        SceneItemStruct<Fr_Grid> CreateGrid();
+        SceneItemStruct<Axis3D> CreateAxis();
 
-		//Grid, Axis, Camera which is always created automatically.User shouldn't need to do anything
-		void setupScene();
+        //Grid, Axis, Camera which is always created automatically.User shouldn't need to do anything
+        void setupScene();
 
-	private:
-		glm::vec4 m_Background;
+    private:
+        glm::vec4 m_Background;
 
-		template <typename T>
-		using SceneItemVector = std::vector<SceneItemStruct<T>>;
-		SceneItemVector<T> m_world;
-	};
+        template <typename T>
+        using SceneItemVector = std::vector<SceneItemStruct<T>>;
+        SceneItemVector<T> m_world;
+    };
 }
 #endif

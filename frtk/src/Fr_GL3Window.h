@@ -235,11 +235,7 @@ namespace FR {
 
         glfwMouseEvent getMouseEvents();
     protected:
-        /**
-         * Function to create all cameras listed in CameraList.
-         *
-         */
-        void CreateCameras();
+     
 
         /**
          *
@@ -529,12 +525,6 @@ namespace FR {
 
         void flush();
 
-        /**
-         * Transform pointer used to keep track to the scene graph SUN
-         * .
-         */
-        std::shared_ptr<Light> sun;
-        std::shared_ptr<Transform> sunT;
         /**
         * low level variable to keep the id of the GLFW window
          * HWND .

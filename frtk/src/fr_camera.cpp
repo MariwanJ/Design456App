@@ -103,7 +103,7 @@ namespace FR {
         direction_{ -.098f, -1.372f, 0.0f },
         up_{ -58.84f, 628.451f, 29.412f }, m_ModelView{ 1 },
         fovy_{ 102.f }, m_Active(false),
-        znear_{ 0.01 },  
+        znear_{ 0.01 },
         zfar_{ 100000 },
         m_OrthographicSize{ 10 },
         m_ProjectionMatrix(glm::perspective(glm::radians(fovy_), aspectRatio_, znear_, zfar_)),     //default
@@ -404,7 +404,7 @@ namespace FR {
         camType_ = camTyp;
         m_Active = true;
     }
- 
+
     /**
      *
      * Set camera type which affects the setup function.

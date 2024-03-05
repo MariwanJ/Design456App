@@ -48,27 +48,24 @@ namespace FR {
     void Fr_enttScene::RenderPrimativeShapes(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
 
     // Iterate over entities with Fr_Grid and ItemName components
-            m_world.each([&](flecs::entity entity, Fr_Grid& primitive, ItemName& name) {
-                // Check if the name matches "Grid"
-                if (name.m_Name == "Grid") {
-                    auto gridShader = primitive.getGridShader();
-                    gridShader->Render(info, modelview);
-                }
-                });
+        for (int i = 0; i < m_world.size(); i++) {
+            if (m_world[i].name == "Grid") {
+                auto t = m_world[i].Sceneitem;
+                /* Sceneitem->getGridShader()->Render(info,modelview);
+                 }
 
-            // Iterate over entities with Axis3D component
-            m_world.each([&](flecs::entity entity, Axis3D& axes) {
-                auto blue = axes.getBlue();
-                auto green = axes.getGreen();
-                auto red = axes.getRed();
-                auto zblue = axes.getZBlue();
+                 auto blue = axes.getBlue();
+                 auto green = axes.getGreen();
+                 auto red = axes.getRed();
+                 auto zblue = axes.getZBlue();
 
-                blue->Render(info, modelview);
-                green->Render(info, modelview);
-                red->Render(info, modelview);
-                zblue->Render(info, modelview);
-                });
-
+                 blue->Render(info, modelview);
+                 green->Render(info, modelview);
+                 red->Render(info, modelview);
+                 zblue->Render(info, modelview);*/
+                ;
+            }
+        }
 
     }
 
