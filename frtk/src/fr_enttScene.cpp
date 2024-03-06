@@ -51,28 +51,28 @@ namespace FR {
         return newItem;
     }
     template <typename T>
-    SceneItemStruct<T> Fr_enttScene::findItemByName(std::string_view name) {
-        SceneItemStruct<T> resultEntity;
-
-        // Iterate over the scene items
-        for (const auto& item : m_world) {  
-            if (item.name == name) { // Check if the name matches
-                resultEntity = item;
-                break; // Stop iteration if found
+    SceneItemStruct<typename std::remove_reference<T>::type>& Fr_enttScene::findItemByName(std::string_view name) {
+        for (int i=0;i<m_world.size();i++){
+        //for (auto& item : m_world) {
+            if (m_world[i].name == name) {
+                return (std::remove_reference<T>::type)m_world[i];
             }
         }
+
+        // If the item is not found, you can create a default SceneItemStruct<T> or throw an exception based on your requirements.
+        // Here, a default-constructed object is created for demonstration purposes.
+        static SceneItemStruct<typename std::remove_reference<T>::type> resultEntity;
         return resultEntity;
-    }
+     }
 
     template <typename T>
-    SceneItemStruct<T>  Fr_enttScene::findItemByID(genID id)
+    SceneItemStruct<T> &Fr_enttScene::findItemByID(genID id)
     {
         SceneItemStruct<T> resultEntity;
         // Iterate over the scene items
         for (const auto& item : sceneItems) { // Assuming sceneItems is a container holding SceneItemStruct<T> objects
             if (item.id == id) { // Check if the name matches
-                resultEntity = item;
-                break; // Stop iteration if found
+                return const_cast<SceneItemStruct<T>&>(item);
             }
         }
         return resultEntity;

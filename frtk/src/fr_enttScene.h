@@ -65,10 +65,10 @@ namespace FR {
         SceneItemStruct<T> createItem(std::string&& name, Args && ...args);
 
         template<typename T>
-        SceneItemStruct<T> findItemByName(std::string_view name);
+        SceneItemStruct<typename std::remove_reference<T>::type>& findItemByName(std::string_view name);
 
         template<typename T>
-        SceneItemStruct<T> findItemByID(genID id);
+        SceneItemStruct<T> &findItemByID(genID id);
 
         template<typename T, typename ...Args>
         bool replaceItemByID(int id, const T& newItem, Args && ...args);

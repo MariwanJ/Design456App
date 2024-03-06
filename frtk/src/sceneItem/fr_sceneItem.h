@@ -31,7 +31,19 @@
 #include <fr_transform.h>
 #include <fr_genID.h>
 namespace FR {
-    // Template for SceneItemStruct with shared_ptr
+    //    // Template for SceneItemStruct with shared_ptr
+    //    template <typename T>
+    //    struct SceneItemStruct {
+    //        std::shared_ptr<T> Sceneitem;
+    //        uint64_t id;
+    //        std::string name;
+    //        Transform trans;
+    //        SceneItemStruct(std::shared_ptr<T> item = nullptr, const std::string& itemName = "", const Transform& itemTrans = Transform(), uint64_t itemId = genID())
+    //            : Sceneitem(item), id(itemId), name(itemName), trans(itemTrans) {
+    //        }
+    //    };
+    //}
+
     template <typename T>
     struct SceneItemStruct {
         std::shared_ptr<T> Sceneitem;
@@ -43,6 +55,7 @@ namespace FR {
             : Sceneitem(item), id(itemId), name(itemName), trans(itemTrans) {
         }
     };
+
 
 }
 
