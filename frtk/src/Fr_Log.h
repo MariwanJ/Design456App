@@ -31,20 +31,20 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
 #include<fr_constants.h>
+namespace FR {
+    class Fr_Log
+    {
+    public:
+        static void Init();
+        inline static std::shared_ptr<spdlog::logger>& GetFRTKLogger() { return s_FRTKLogger; }
+        inline static std::shared_ptr<spdlog::logger>& GetAPPLogger() { return s_APPLogger; }
 
-class Fr_Log
-{
-public:
-    static void Init();
-    inline static std::shared_ptr<spdlog::logger>& GetFRTKLogger() { return s_FRTKLogger; }
-    inline static std::shared_ptr<spdlog::logger>& GetAPPLogger() { return s_APPLogger; }
+    private:
+        static std::shared_ptr<spdlog::logger> s_FRTKLogger;
+        static std::shared_ptr<spdlog::logger> s_APPLogger;
+    };
 
-private:
-    static std::shared_ptr<spdlog::logger> s_FRTKLogger;
-    static std::shared_ptr<spdlog::logger> s_APPLogger;
-};
-
-// log macros
+    // log macros
 #define FRTK_CORE_TRACE(...)    Fr_Log::GetFRTKLogger()->trace(__VA_ARGS__)
 #define FRTK_CORE_INFO(...)     Fr_Log::GetFRTKLogger()->info(__VA_ARGS__)
 #define FRTK_CORE_WARN(...)     Fr_Log::GetFRTKLogger()->warn(__VA_ARGS__)
@@ -57,5 +57,5 @@ private:
 #define APP_APP_WARN(...)	   Fr_Log::GetAPPLogger()->warn(__VA_ARGS__)
 #define APP_APP_ERROR(...)	   Fr_Log::GetAPPLogger()->error(__VA_ARGS__)
 #define APP_APP_FATAL(...)	   Fr_Log::GetAPPLogger()->fatal(__VA_ARGS__)
-
+}
 #endif

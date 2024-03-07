@@ -27,51 +27,51 @@
 //
 
 #include <fr_group.h>
-Group::Group()
-{
-    type(NODETYPE::FR_GROUP);
-}
+namespace FR {
+    Group::Group()
+    {
+        type(NODETYPE::FR_GROUP);
+    }
 
-Group::~Group() {
-}
+    Group::~Group() {
+    }
 
-void Group::AddNode(std::shared_ptr<Node> node) {
-    nodes_.push_back(node);
-}
+    void Group::AddNode(std::shared_ptr<Node> node) {
+        nodes_.push_back(node);
+    }
 
+    bool Group::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
+        if (active_)
+            for (auto& node : nodes_)
+                //If the node is not subclassed and it is only a node, this will always return false.
+                if (node->SetupCamera(projection, modelview))
+                    return true;
+        return false;
+    }
 
-bool Group::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
-    if (active_)
-        for (auto& node : nodes_)
-            //If the node is not subclassed and it is only a node, this will always return false.
-            if (node->SetupCamera(projection, modelview))
-                return true;
-    return false;
-}
+    void Group::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) {
+        if (active_)
+            for (auto& node : nodes_)
+                node->SetupLight(modelview, lights);
+    }
 
-void Group::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) {
-    if (active_)
-        for (auto& node : nodes_)
-            node->SetupLight(modelview, lights);
-}
+    void Group::Render(RenderInfo& info, const glm::mat4& modelview) {
+        if (active_)
+            for (auto& node : nodes_)
+                node->Render(info, modelview);
+    }
 
+    std::shared_ptr<Node> Group::getNode(int id)
+    {
+        if (nodes_.size() > 0)
+            return nodes_[id];
+        else
+            return nullptr;
+    }
 
-void Group::Render(RenderInfo& info, const glm::mat4& modelview) {
-    if (active_)
-        for (auto& node : nodes_)
-            node->Render(info, modelview);
-}
-
-std::shared_ptr<Node> Group::getNode(int id)
-{
-    if (nodes_.size() > 0)
-        return nodes_[id];
-    else
-        return nullptr;
-}
-
-std::vector<std::shared_ptr<Node>> Group::getNodes()
-{
-    //We don't care if nodes doesn't contain any children. Developer must know to deal with that.
-    return nodes_;
+    std::vector<std::shared_ptr<Node>> Group::getNodes()
+    {
+        //We don't care if nodes doesn't contain any children. Developer must know to deal with that.
+        return nodes_;
+    }
 }

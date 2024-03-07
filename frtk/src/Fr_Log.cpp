@@ -28,16 +28,17 @@
 #include <Fr_Log.h>
 
 #include <spdlog/sinks/stdout_color_sinks.h>
+namespace FR {
+    std::shared_ptr<spdlog::logger> Fr_Log::s_FRTKLogger;
+    std::shared_ptr<spdlog::logger> Fr_Log::s_APPLogger;
 
-std::shared_ptr<spdlog::logger> Fr_Log::s_FRTKLogger;
-std::shared_ptr<spdlog::logger> Fr_Log::s_APPLogger;
+    void Fr_Log::Init()
+    {
+        spdlog::set_pattern("%^[%T] %n: %v%$");
+        s_FRTKLogger = spdlog::stdout_color_mt("FRTK");
+        s_FRTKLogger->set_level(spdlog::level::trace);
 
-void Fr_Log::Init()
-{
-    spdlog::set_pattern("%^[%T] %n: %v%$");
-    s_FRTKLogger = spdlog::stdout_color_mt("FRTK");
-    s_FRTKLogger->set_level(spdlog::level::trace);
-
-    s_APPLogger = spdlog::stdout_color_mt("APP");
-    s_APPLogger->set_level(spdlog::level::trace);
+        s_APPLogger = spdlog::stdout_color_mt("APP");
+        s_APPLogger->set_level(spdlog::level::trace);
+    }
 }

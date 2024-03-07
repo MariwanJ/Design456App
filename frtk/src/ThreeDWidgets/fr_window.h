@@ -27,7 +27,6 @@
 #ifndef FR_WINDOW_H
 #define FR_WINDOW_H
 
-
 #include <ThreeDWidgets/fr_wgroup.h>
 #include <fr_ImGuiLayer.h>
 
@@ -39,22 +38,22 @@ namespace FR {
          * Class constructor for main dummy window object that holds the FR_WIDGET system objects and their properties.
          */
 
-        Fr_Window(glm::vec3 position, std::shared_ptr<std::vector <float>> verticies, 
-            std::shared_ptr<std::vector <unsigned int>> indicies, 
+        Fr_Window(glm::vec3 position, std::shared_ptr<std::vector <float>> verticies,
+            std::shared_ptr<std::vector <unsigned int>> indicies,
             std::string label);
         Fr_Window();
-/**
- * Class deconstructor.
- */
+        /**
+         * Class deconstructor.
+         */
         ~Fr_Window();
         /**
          * Show the window and it's children by enabling the layer.
-         * 
+         *
          */
         void show();
         /**
          * Hide the window and it's children by disabling the layer.
-         * 
+         *
          */
         void hide();
 
@@ -75,7 +74,7 @@ namespace FR {
          * Renders the node
          */
         virtual void Render(RenderInfo& info, const glm::mat4& modelview) override;
-        
+
     protected:
 
         Fr_GL3Window* linkToMainWindow;  //Row pointer otherwise we will not be able to set

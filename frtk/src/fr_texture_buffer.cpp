@@ -1,5 +1,5 @@
 #include <fr_texture_buffer.h>
-
+namespace FR{
 Fr_TextureFrameBuffer::Fr_TextureFrameBuffer(int width, int height)
 {
     glGenFramebuffers(1, &fbo);
@@ -59,4 +59,5 @@ void Fr_TextureFrameBuffer::Bind() const
 void Fr_TextureFrameBuffer::Unbind() const
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+} 
 }

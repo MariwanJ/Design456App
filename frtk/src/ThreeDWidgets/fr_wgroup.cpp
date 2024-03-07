@@ -28,7 +28,7 @@
 #include <../src/ThreeDWidgets/fr_wgroup.h>
 
 namespace FR {
-    int FR::Fr_WGroup::handle(int events)
+    int Fr_WGroup::handle(int events)
     {
         for (auto& widget : m_children) {
             if (widget->handle(events) != 0) {

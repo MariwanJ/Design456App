@@ -3,5 +3,6 @@
 #include <frtk.h>
 #include<fr_camera.h>
 #include <fr_gl3callbacks.h>
-
+namespace FR{
+}
 #endif

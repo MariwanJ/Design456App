@@ -27,4 +27,5 @@
 
 #include<fr_constants.h>
 
- 
+namespace FR {
+}

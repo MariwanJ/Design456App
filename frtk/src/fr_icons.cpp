@@ -33,22 +33,22 @@
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <Fr_Core.h>
-
-loadImage::loadImage(std::string fName) :_fName(fName)
-{
-}
-
-std::shared_ptr < unsigned char> loadImage::getImage(std::string img) {
-    int width, height, channels;
-   // unsigned char* imgg = stbi_load("../resources/48/home.png", &width, &height, &channels, 0);
-    unsigned char* imgg = stbi_load("E:/Projects/Design456App/resources/48/home.png", &width, &height, &channels, 0);
-       if (imgg == NULL) {
-            printf("Error in loading the image\n");
-                exit(1);
-      
+namespace FR {
+    loadImage::loadImage(std::string fName) :_fName(fName)
+    {
     }
-       return ((std::shared_ptr<unsigned char>)imgg);
-}
-loadImage::~loadImage()
-{
+
+    std::shared_ptr < unsigned char> loadImage::getImage(std::string img) {
+        int width, height, channels;
+        // unsigned char* imgg = stbi_load("../resources/48/home.png", &width, &height, &channels, 0);
+        unsigned char* imgg = stbi_load("E:/Projects/Design456App/resources/48/home.png", &width, &height, &channels, 0);
+        if (imgg == NULL) {
+            printf("Error in loading the image\n");
+            exit(1);
+        }
+        return ((std::shared_ptr<unsigned char>)imgg);
+    }
+    loadImage::~loadImage()
+    {
+    }
 }

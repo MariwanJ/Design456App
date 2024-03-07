@@ -30,8 +30,8 @@
 #include <Fr_Core.h>
 
 /**
-         
-        x2 + y2 = a2                        //Circle 
+
+        x2 + y2 = a2                        //Circle
         y = mx + c.*                        //Line
          (1 + m2)x2 + 2cmx + c2 – a2­ = 0.  resolving
          -b ±sqrt(b^2-4ac               Quadratic Formula
@@ -43,7 +43,6 @@
 namespace FR {
     extern float mouseClickCircleRadious;
     bool intersectLine(glm::vec3 p1, glm::vec3 p2);
-
 }
 
 #endif

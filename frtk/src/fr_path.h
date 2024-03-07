@@ -32,7 +32,7 @@
 #include <windows.h>
 #include <Shlwapi.h>
 #include <io.h>
-
+namespace FR{
 #define access _access_s
 #endif
 
@@ -68,5 +68,6 @@ namespace ResourcePath {
     std::string shaderPath();
     std::string imgPath();
 
-};
+}; 
+}
 //end for ResourcePath

@@ -30,7 +30,7 @@
 
 #include<fr_constants.h>
 #include <Fr_Core.h>
-
+namespace FR{
 class  Fr_TextureFrameBuffer
 {
 public:
@@ -45,5 +45,5 @@ private:
     unsigned int texture;
     unsigned int rbo;
 };
-
+}
 #endif // FR_TEXTURE_BUFFER_H

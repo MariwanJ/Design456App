@@ -28,19 +28,20 @@
 #define FR_GENID_H
 #include <../src/frtk.h>
 #include< ../src/Fr_Core.h>
-
+namespace FR {
 #define SEGMENT_SIZE 1024
 
-class genID {
-public:
-    genID();
-    ~genID();
-    int getID();
-    bool isUsed(int id);
-    void freeID(int id);
-private:
-    std::vector <bool> used_;
-    int  lastID; //This is a sequential
-    int   usedSize; //No of use ID:s
-};
+    class genID {
+    public:
+        genID();
+        ~genID();
+        int getID();
+        bool isUsed(int id);
+        void freeID(int id);
+    private:
+        std::vector <bool> used_;
+        int  lastID; //This is a sequential
+        int   usedSize; //No of use ID:s
+    };
+}
 #endif

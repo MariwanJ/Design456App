@@ -30,111 +30,113 @@
 
 #include <memory>
 #include <fr_group.h>
+namespace FR {
+    class FRTK_API Transform : public Group {
+    public:
+        /**
+         * Constructor
+         * Loads the identity by default
+         */
+        Transform();
 
-class FRTK_API Transform : public Group {
-public:
-    /**
-     * Constructor
-     * Loads the identity by default
-     */
-    Transform();
+        /**
+         * Multiply the current matrix by a rotation matrix
+         */
+        virtual void Rotate(float x, float y, float z, float angle);
 
-    /**
-     * Multiply the current matrix by a rotation matrix
-     */
-    virtual void Rotate(float x, float y, float z, float angle);
+        /**
+         * Multiply the current matrix by a rotation matrix
+         */
+        virtual void Rotate(glm::vec3 axis, float angle);
 
-    /**
-     * Multiply the current matrix by a rotation matrix
-     */
-    virtual void Rotate(glm::vec3 axis, float angle);
+        virtual void Translate(glm::vec3 v);
 
-    virtual void Translate(glm::vec3 v);
+        /**
+         * Multiply the current matrix by a translation matrix
+         */
+        void Translate(float x, float y, float z);
 
-    /**
-     * Multiply the current matrix by a translation matrix
-     */
-    void Translate(float x, float y, float z);
+        /**
+         * Multiply the current matrix by a translation matrix
+         */
+        virtual void Scale(float x, float y, float z);
 
-    /**
-     * Multiply the current matrix by a translation matrix
-     */
-    virtual void Scale(float x, float y, float z);
-
-    virtual void Scale(glm::vec3 value);
-
- 
- 
-protected:
-
-    glm::mat4 m_Matrix;
-    glm::mat4 m_Inverse;
-
-    //From maniupulator
-
-public:
-
-    /**
-    * Accumulates the manipulator matrix
-    */
-   // glm::mat4 GetMatrix(const glm::vec3& look_dir = glm::vec3(0, 0, -1));
-
-    /**
-     * Accumulates the inverse of the manipulator matrix
-     */
-   virtual glm::mat4 GetMatrix();
-   virtual glm::mat4 GetInverse();
-
-    /**
-     * Sets the reference point (world center)
-     */
-    void SetPosition(float x, float y, float z);
-
-    void SetPosition(glm::vec3 pos);
+        virtual void Scale(glm::vec3 value);
 
 
-    /**
-     * Sets whether each axis is inverted or not
-     */
-    void SetInvertAxis(bool invertX, bool invertY = false);
 
-    void GLFWMotion(int x, int y);
+    protected:
 
-    /**
-     * Mouse button function
-     */
-    void GLFWMouse(int button, int state, double x, double y);
+        glm::mat4 m_Matrix;
+        glm::mat4 m_Inverse;
 
-    float get_X()const;
-    float get_Y()const;
-    float get_Z() const;
-    void setZommingScale(float scale);
+        //From maniupulator
 
-private:
-    enum class Operation {
-        kRotation,  //Mouse click and drag
-        kZoom,       //Left mouse and drag
-        kNone       //nothing
+    public:
+
+        /**
+        * Accumulates the manipulator matrix
+        */
+        // glm::mat4 GetMatrix(const glm::vec3& look_dir = glm::vec3(0, 0, -1));
+
+         /**
+          * Accumulates the inverse of the manipulator matrix
+          */
+        virtual glm::mat4 GetMatrix();
+        virtual glm::mat4 GetInverse();
+
+        /**
+         * Sets the reference point (world center)
+         */
+        void SetPosition(float x, float y, float z);
+
+        void SetPosition(glm::vec3 pos);
+
+
+        /**
+         * Sets whether each axis is inverted or not
+         */
+        void SetInvertAxis(bool invertX, bool invertY = false);
+
+        void GLFWMotion(int x, int y);
+
+        /**
+         * Mouse button function
+         */
+        void GLFWMouse(int button, int state, double x, double y);
+
+        float get_X()const;
+        float get_Y()const;
+        float get_Z() const;
+        void setZommingScale(float scale);
+
+    private:
+        enum class Operation {
+            kRotation,  //Mouse click and drag
+            kZoom,       //Left mouse and drag
+            kNone       //nothing
+        };
+
+        static float kZoomScale;
+
+        /** Verifies the k_button state and sets the k_operation */
+        template<int k_button, Operation k_operation>
+        void SetOperation(int button, int state, double x, double y);
+
+        /** Computes the sphere vector for rotation */
+        glm::vec3 computeSphereCoordinate(double x, double y);
+
+        void Render(RenderInfo& info, const glm::mat4& modelview);
+
+        void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights);
+
+        glm::vec3 m_Position;
+        Operation operation_;
+        float x_, y_, z_;
+        glm::vec3 v_;
+        bool invertX_, invertY_;
     };
 
-    static float kZoomScale;
-
-    /** Verifies the k_button state and sets the k_operation */
-    template<int k_button, Operation k_operation>
-    void SetOperation(int button, int state, double x, double y);
-
-    /** Computes the sphere vector for rotation */
-    glm::vec3 computeSphereCoordinate(double x, double y);
-
-    void Render(RenderInfo& info, const glm::mat4& modelview);
-
-    void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights);
-
-    glm::vec3 m_Position;
-    Operation operation_;
-    float x_, y_, z_;
-    glm::vec3 v_;
-    bool invertX_, invertY_;
-};
+}
 
 #endif

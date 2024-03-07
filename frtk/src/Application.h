@@ -30,13 +30,13 @@
 
 #include<fr_core.h>
 #include<Fr_GL3Window.h>
+namespace FR {
+    class Application : public Fr_GL3Window {
+    public:
+        Application(int x = 0, int y = 0, int w = 1530, int h = 800, const char* l = "Design456App");
+        ~Application();
 
-class Application : public Fr_GL3Window {
-public:
-    Application(int x = 0, int y = 0, int w = 1530, int h = 800, const char* l = "Design456App");
-    ~Application();
-
-    int run(int argc, char** argv);
-};
-
+        int run(int argc, char** argv);
+    };
+}
 #endif

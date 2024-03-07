@@ -35,26 +35,26 @@
 #include <fr_core.h>
 #include <glm/glm.hpp>
 #include <fr_texture2d.h>
-
+namespace FR{
 
 
 typedef enum class NODETYPE {
-    FR_NODE				= 0,
-    FR_GROUP 			= 1,
-    FR_TRANSFORM 		= 2,
-    FR_MANIPULATOR 		= 3,
-    FR_PRIMATIVESHADER 	= 4,
-    FR_LIGHT 			= 5,
-    FR_CAMERA 			= 6,
-    FR_ModelNode 		= 7,
-    FR_SCENE 			= 8,
-    FR_MESH 			= 9,
-    FR_GRID 			= 10,
+    FR_NODE = 0,
+    FR_GROUP = 1,
+    FR_TRANSFORM = 2,
+    FR_MANIPULATOR = 3,
+    FR_PRIMATIVESHADER = 4,
+    FR_LIGHT = 5,
+    FR_CAMERA = 6,
+    FR_ModelNode = 7,
+    FR_SCENE = 8,
+    FR_MESH = 9,
+    FR_GRID = 10,
     //FR WIDGETS
-    FR_WIDGET 			= 11,
-    FR_WGROUP 			= 12,
-    FR_WINDOW 			= 13,
-    FR_LINE_WIDGET      = 14,
+    FR_WIDGET = 11,
+    FR_WGROUP = 12,
+    FR_WINDOW = 13,
+    FR_LINE_WIDGET = 14,
 }NODETYPE;
 
 /**
@@ -93,7 +93,7 @@ public:
         //ShadowMapInfo shadowmap;
         bool render_transparent;
     };
-    
+
     /**
      * Constructor
      */
@@ -118,7 +118,7 @@ public:
     virtual void SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights);
 
 
-    virtual bool SetupTexture2D( );
+    virtual bool SetupTexture2D();
 
     //virtual void RenderTexture2D();
 
@@ -154,19 +154,19 @@ protected:
     NODETYPE type_;
     bool active_;
     /**
-     * //This will be used to retrieve the objects. 
+     * //This will be used to retrieve the objects.
      *   A unique ID which will hold the index of the node.
-     *  The -1 indicate that the uniqueIndex is abstract. 
+     *  The -1 indicate that the uniqueIndex is abstract.
      *  Whenever the new node addes to the system vector server, the index of the node is what will be here in the uniqueIndex.
      *  children will have the index of the parent. and so on.
      */
-    int uniqueIndex; 
+    int uniqueIndex;
 
     int m_Parent; //-1 for Abstract class that doesn't have parent. and for the Root classS
 
- 
 
-   static Fr_GL3Window *m_parentGl3Win;
+
+   static Fr_GL3Window* m_parentGl3Win;
 };
-
+}
 #endif

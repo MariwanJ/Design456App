@@ -41,6 +41,9 @@
 /**
  * The scene root
  */
+
+namespace FR{
+
 typedef struct {
     float r;
     float g;
@@ -74,5 +77,5 @@ private:
     bkgC  background_;
 
 };
-
+}
 #endif

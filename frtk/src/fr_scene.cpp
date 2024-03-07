@@ -27,7 +27,8 @@
 //
 
 #include <fr_scene.h>
-GLFWwindow* Scene::linkToglfw = nullptr;
+namespace FR{
+GLFWwindow * Scene::linkToglfw = nullptr;
 
 Scene::Scene() :
     background_{ 0.9, 0.9, 0.9,1.0 } {
@@ -68,7 +69,7 @@ void Scene::add3DObject(std::string fName)
     //std::string imag = ("E:/Projects/Design456App/resources/Texture/2.png");
     //std::string imag = ("E:/Projects/Design456App/resources/Texture/3.png");
     //std::string imag = ("E:/Projects/Design456App/resources/Texture/default.png");
-    
+
     //if (newObj->m_Texture2D->set2DTexture(imag))
     //{
     //        newObj->m_Texture2D->setup2DTexture();      //Don't forget to do this always
@@ -102,7 +103,7 @@ void Scene::delete3DObject(std::shared_ptr<Transform>& obj)
 * This is a general process  for drawing camera, shadow map, render shape /faces ..etc
 */
 void Scene::RenderScene() {
-    
+
     RenderInfo render_info;
     if (!SetupCamera(render_info.projection, render_info.modelview))
         throw std::runtime_error("Scene::Render(): Camera not found");
@@ -119,4 +120,5 @@ void Scene::RenderScene() {
     render_info.id = 0;
     render_info.render_transparent = true;
     Render(render_info, render_info.modelview);
+} 
 }

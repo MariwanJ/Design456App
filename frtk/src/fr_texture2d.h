@@ -2,11 +2,11 @@
 #define FR_TEXTURE2D_H
 
 #include<Fr_Core.h>
-
+namespace FR{
 class Fr_Texture2D {
 public:
     Fr_Texture2D();
-    bool set2DTexture(std::string path="");
+    bool set2DTexture(std::string path = "");
     ~Fr_Texture2D();
     bool setup2DTexture();
     void Bind(unsigned int slot = 0);
@@ -21,5 +21,5 @@ private:
     unsigned char* m_LocalBuffer;
     int m_width, m_height, m_BPP, numComponents; // bpp : Bit per pixel (RGB or RGBA) in the file
 };
-
+}
 #endif

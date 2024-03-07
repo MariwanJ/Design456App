@@ -25,10 +25,15 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
+#ifndef FR_GL3CALLBACKS_H
+#define FR_GL3CALLBACKS_H
 #include <frtk.h>
 #include<fr_constants.h>
 #include<Fr_Core.h>
 
-//File menu toolbar
+namespace FR {
+    //File menu toolbar
 
 //Edit menu and toolbars
+}
+#endif

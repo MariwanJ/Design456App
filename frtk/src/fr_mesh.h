@@ -33,114 +33,113 @@
 #include<fr_core.h>
 
 #include <glm/glm.hpp>
-
+namespace FR {
 #define NUM_OF_VBO_BUFFERS 4 //ONE FOR THE MESH, OTHER FOR TEXTURE: This might change
 #define FR_POSITION_VB 0
 #define FR_TEXCOORD_VB 1
 
-class FRTK_API Mesh {
-public:
-    /**
-     * Default Constructor
-     * Receives the path to the .off file
-     * throws runtime_error if there is any io error or opengl error
-     */
-    Mesh(const std::string& path);
+    class FRTK_API Mesh {
+    public:
+        /**
+         * Default Constructor
+         * Receives the path to the .off file
+         * throws runtime_error if there is any io error or opengl error
+         */
+        Mesh(const std::string& path);
 
-    /**
-    *   This will be used to create an instance of the mesh without a file.
-    *  Data should be entered to the class using SetVertex
-    */
-    Mesh();
+        /**
+        *   This will be used to create an instance of the mesh without a file.
+        *  Data should be entered to the class using SetVertex
+        */
+        Mesh();
 
-    /**
-     * Destructor
-     */
-    ~Mesh();
+        /**
+         * Destructor
+         */
+        ~Mesh();
 
-    /**
-     * Draws the shape
-     */
-    void Draw();
+        /**
+         * Draws the shape
+         */
+        void Draw();
 
-    /**
-     * Obtains the mesh information
-     */
-    void GetMesh(std::vector<float>& vertices, std::vector<float>& normals,
-        std::vector<unsigned int>& indices);
+        /**
+         * Obtains the mesh information
+         */
+        void GetMesh(std::vector<float>& vertices, std::vector<float>& normals,
+            std::vector<unsigned int>& indices);
 
-    /**
-    *   Set the mesh information
-    */
-    void SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices);
+        /**
+        *   Set the mesh information
+        */
+        void SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices);
 
-    void SetNormalizeMesh(bool value);
-    bool getNormalizeMesh();
-    int hasTexture();
-    void hasTexture(int val);
+        void SetNormalizeMesh(bool value);
+        bool getNormalizeMesh();
+        int hasTexture();
+        void hasTexture(int val);
 
-private:
-    /**
-     * Receives an index and returns the vertex
-     */
-    glm::vec3 GetVertex(unsigned int index, const float vertices[]);
+    private:
+        /**
+         * Receives an index and returns the vertex
+         */
+        glm::vec3 GetVertex(unsigned int index, const float vertices[]);
 
-    /**
-     * Receives an index and sets the vertices
-     */
-    void SetVertex(unsigned int index, float vertices[],
-        const glm::vec3& vertex);
+        /**
+         * Receives an index and sets the vertices
+         */
+        void SetVertex(unsigned int index, float vertices[],
+            const glm::vec3& vertex);
 
-    /**
-     * Reads the vertex information and the point information from file
-     */
-    void ReadFile(const std::string& path, std::vector<float>& vertices,
-        std::vector<float>& normals, std::vector<unsigned int>& indices);
+        /**
+         * Reads the vertex information and the point information from file
+         */
+        void ReadFile(const std::string& path, std::vector<float>& vertices,
+            std::vector<float>& normals, std::vector<unsigned int>& indices);
 
-    /**
-     * Reads a .off file
-     */
-    void ReadOFF(const std::string& path, std::vector<float>& vertices,
-        std::vector<unsigned int>& indices);
+        /**
+         * Reads a .off file
+         */
+        void ReadOFF(const std::string& path, std::vector<float>& vertices,
+            std::vector<unsigned int>& indices);
 
-    /**
-     * Reads a .msh file
-     */
-    void ReadMSH(const std::string& path, std::vector<float>& vertices,
-        std::vector<float>& normals, std::vector<unsigned int>& indices);
+        /**
+         * Reads a .msh file
+         */
+        void ReadMSH(const std::string& path, std::vector<float>& vertices,
+            std::vector<float>& normals, std::vector<unsigned int>& indices);
 
-    /**
-     * Normalize the mesh in the range -0.5, 0.5 and center it in 0, 0, 0
-     */
-    void NormalizeVertices(std::vector<float>& vertices);
+        /**
+         * Normalize the mesh in the range -0.5, 0.5 and center it in 0, 0, 0
+         */
+        void NormalizeVertices(std::vector<float>& vertices);
 
-    /**
-     * Calculate the normals based on the triangles
-     */
-    void CalculateNormals(const std::vector<float>& vertices,
-        const std::vector<unsigned int>& indices,
-        std::vector<float>& normals);
+        /**
+         * Calculate the normals based on the triangles
+         */
+        void CalculateNormals(const std::vector<float>& vertices,
+            const std::vector<unsigned int>& indices,
+            std::vector<float>& normals);
 
-    std::shared_ptr<std::vector<float>> ConcatenateVectors(const std::vector<float>& v1, const std::vector<float>& v2);
+        std::shared_ptr<std::vector<float>> ConcatenateVectors(const std::vector<float>& v1, const std::vector<float>& v2);
 
+        /**
+         * Creates the vertex buffer object
+         */
+        void InitializeVBO();
 
-    /**
-     * Creates the vertex buffer object
-     */
-    void InitializeVBO();
+        meshType getMeshType();
 
-    meshType getMeshType();
+        std::vector<float> vertices_;
+        std::vector<float>textcoord_; //Texture Coordinates
+        std::vector<float> normals_;
+        std::vector<unsigned int> indices_;
 
-    std::vector<float> vertices_;
-    std::vector<float>textcoord_; //Texture Coordinates
-    std::vector<float> normals_;
-    std::vector<unsigned int> indices_;
-
-    unsigned int vbo_[NUM_OF_VBO_BUFFERS];
-    unsigned int vao_;
-    bool normalized_;
-    meshType m_MeshType;
-    bool m_hasTexture;    ///Allow not using texture
-};
-
+        unsigned int vbo_[NUM_OF_VBO_BUFFERS];
+        unsigned int vao_;
+        bool normalized_;
+        meshType m_MeshType;
+        bool m_hasTexture;    ///Allow not using texture
+    };
+}
 #endif

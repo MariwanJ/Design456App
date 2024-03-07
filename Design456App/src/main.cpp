@@ -29,8 +29,10 @@
 #include<Application.h>
 int main(int argc, char** argv)
 {
-    Application* Design456App = new Application();
-    Fr_Log::Init();
-    Fr_Log::GetAPPLogger()->info("App Started!");
-    return Design456App->run(argc,argv);
-}
+ 
+        FR::Application* Design456App = new FR::Application();
+        FR::Fr_Log::Init();
+        FR::Fr_Log::GetAPPLogger()->info("App Started!");
+        return Design456App->run(argc, argv);
+    }
+ 

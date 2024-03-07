@@ -27,10 +27,11 @@
 
 #ifndef FR_CORE_H
 #define FR_CORE_H
+
 #include <frtk.h>
 #include<fr_constants.h>
 #include<Fr_Log.h>
-
+ 
 #if defined(__APPLE__)
 #  include <OpenGL/gl3.h> // defines OpenGL 3.0+ functions
 #else
@@ -45,14 +46,13 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
 #include <../instrumentation/Instrumentor.h>
- 
-//imGUI
+
+    //imGUI
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 #include <widgets/imgui_toolbars.h>
 #include <ImGuizmo.h>
-
 
 //imGUI fonts
 
@@ -66,68 +66,28 @@
 #include<glm/glm.hpp>
 
 #include <../vendor/stb_image/src/stb_image.h>
-class Fr_GL3Window;
-
-
-
-
-//PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
-enum class CameraList {
-    PERSPECTIVE = 0, //This is not fixed and can be moved , others are not.
-    ORTHOGRAPHIC,
-
-    TOP,
-    BOTTOM,
-    FRONT,
-    BACK,
-    RIGHT,
-    LEFT,
-};
-
+namespace FR {
+    
 #define NUM_OF_VBO_BUFFERS 4 //ONE FOR THE MESH, OTHER FOR TEXTURE: This might change
 #define POSITION_VB 0
 #define TEXCOORD_VB 1
 
-typedef enum meshType { FR_QUAD, FR_POLYGON };
-
-
-typedef struct userData_ {
-    glm::vec3 camPosition_;
-    glm::vec3 direction_;
-    glm::vec3 up_;
-    float fovy_;
-    float znear_;
-    float zfar_;
-    float aspectRatio_;
-    float orthoSize_;
-    //        projectionm_Matrix(glm::ortho(-600, 600, -600, 600, -1, 1)),
-    CameraList camType_;
-};
-
 #ifdef _WIN32
 #define DEBUG_BREAK __debugbreak()
 #elif defined(__APPLE__)
-DEBUG_BRAK  raise(SIGTRAP)   //Not sure if it works TODO : CHECKME
+    DEBUG_BRAK  raise(SIGTRAP)   //Not sure if it works TODO : CHECKME
 #elif define(__linux__)
-DEBUG_BRAK  raise(SIGTRAP)   //ALL POSIX OS
+    DEBUG_BRAK  raise(SIGTRAP)   //ALL POSIX OS
 #endif
 
-/* Use this only for GLAD - Not used with GLFW calls
-*  You should also have a valid GLAD initialization
-*/
+        /* Use this only for GLAD - Not used with GLFW calls
+        *  You should also have a valid GLAD initialization
+        */
 #ifdef FRTK_ENABLE_ASSERTS
 #define FRTK_CORE_APP_ASSERT(x, ...)  if(!(x)) DEBUG_BREAK;
 #else
 #define FRTK_CORE_APP_ASSERT(x, ...)
 #endif
-static unsigned char GLLogCall() {
-    while (GLenum error = glGetError()) {
-        std::cout << "[OpenGL Error] {" << error << "}\n";
-        std::flush(std::cout);
-        return 0;
-    }
-    return 1;
-}
 #define GLResetError {while(glGetError() != GL_NO_ERROR);}
 #ifdef _DEBUG
 #define glCheckFunc(x) GLResetError;x; FRTK_CORE_APP_ASSERT(GLLogCall());
@@ -135,7 +95,7 @@ static unsigned char GLLogCall() {
 #define glCheckFunc(x)  x;
 #endif
 
-//Create DLL/SO or link statically ?
+        //Create DLL/SO or link statically ?
 
 #ifdef FRTK_PLATFORM_WINDOWS  //PLATFORM CHECK
 #ifdef FR_BUILD_STATIC
@@ -156,42 +116,76 @@ static unsigned char GLLogCall() {
 #define setBIT(x) (1 << x)
 #define clearBIT(x) (0 << x)
 
-namespace FR {
-    enum FR_EVENTS {
-        FR_NO_EVENT = 0,     //DONT CARE EVENT
-        FR_PUSH,
-        FR_RELEASE,
-        FR_ENTER,
-        FR_DRAG,
-        FR_FOCUS,
-        FR_KEYBOARD,
-        FR_CLOSE,
-        FR_MOVE,
-        FR_DEACIVATE,
-        FR_ACTIVE,
-        FR_HIDE,
-        FR_SHOW,
-        FR_LEFT_DRAG_PUSH,
-        FR_LEFT_DRAG_RELEASE,
+    class Fr_GL3Window;
+    //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
+    enum class CameraList {
+        PERSPECTIVE = 0, //This is not fixed and can be moved , others are not.
+        ORTHOGRAPHIC,
 
-        FR_MIDDLE_DRAG_PUSH,
-        FR_MIDDLE_DRAG_RELEASE,
-
-        FR_RIGHT_DRAG_PUSH,
-        FR_RIGHT_DRAG_RELEASE,
-
-        FR_WINDOW_RESIZE,
-        FR_WINDOW_MINIMIZE,
-        FR_MOUSE_RIGHT,
-        FR_MOUSE_MIDDLE,
-        FR_MOUSE_LEFT,
-        FR_MOUSE_MOVE,
+        TOP,
+        BOTTOM,
+        FRONT,
+        BACK,
+        RIGHT,
+        LEFT,
     };
 
+    typedef enum meshType { FR_QUAD, FR_POLYGON };
+
+    typedef struct userData_ {
+        glm::vec3 camPosition_;
+        glm::vec3 direction_;
+        glm::vec3 up_;
+        float fovy_;
+        float znear_;
+        float zfar_;
+        float aspectRatio_;
+        float orthoSize_;
+        //        projectionm_Matrix(glm::ortho(-600, 600, -600, 600, -1, 1)),
+        CameraList camType_;
+    };
+
+        static unsigned char GLLogCall() {
+        while (GLenum error = glGetError()) {
+            std::cout << "[OpenGL Error] {" << error << "}\n";
+            std::flush(std::cout);
+            return 0;
+        }
+        return 1;
+    }
 
 
-};
 
+        enum FR_EVENTS {
+            FR_NO_EVENT = 0,     //DONT CARE EVENT
+            FR_PUSH,
+            FR_RELEASE,
+            FR_ENTER,
+            FR_DRAG,
+            FR_FOCUS,
+            FR_KEYBOARD,
+            FR_CLOSE,
+            FR_MOVE,
+            FR_DEACIVATE,
+            FR_ACTIVE,
+            FR_HIDE,
+            FR_SHOW,
+            FR_LEFT_DRAG_PUSH,
+            FR_LEFT_DRAG_RELEASE,
 
+            FR_MIDDLE_DRAG_PUSH,
+            FR_MIDDLE_DRAG_RELEASE,
 
+            FR_RIGHT_DRAG_PUSH,
+            FR_RIGHT_DRAG_RELEASE,
+
+            FR_WINDOW_RESIZE,
+            FR_WINDOW_MINIMIZE,
+            FR_MOUSE_RIGHT,
+            FR_MOUSE_MIDDLE,
+            FR_MOUSE_LEFT,
+            FR_MOUSE_MOVE,
+        };
+ 
+}
 #endif

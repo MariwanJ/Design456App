@@ -53,8 +53,8 @@ namespace FR {
     {
         m_Vertices = std::move(verticies);
         m_Indices = std::move(indicies);
-        m_Normals= std::make_shared<std::vector<float>>();
-        m_Textcoord= std::make_shared<std::vector<float>>();
+        m_Normals = std::make_shared<std::vector<float>>();
+        m_Textcoord = std::make_shared<std::vector<float>>();
         m_Type = type;
         m_Color = color;
     }
@@ -125,7 +125,7 @@ namespace FR {
             glCheckFunc(glBindVertexArray(0));
             break;
         }
-        case FR_CLOSED_LOOP:  //This includes square, rectangle, triangle,pentagon, hexagon, star ..etc 
+        case FR_CLOSED_LOOP:  //This includes square, rectangle, triangle,pentagon, hexagon, star ..etc
         {
             glCheckFunc(glBindVertexArray(m_vao));
             glCheckFunc(glDrawElements(GL_TRIANGLE_FAN, m_Indices->size(), GL_UNSIGNED_INT, 0));    //TODO: Check if this is correct!!
@@ -172,34 +172,33 @@ namespace FR {
 
     int Fr_TwoD_Drawing::initializeVBO()
     {
-             
-            glCheckFunc(glGenBuffers(4, m_vbo));
-            glCheckFunc(glGenVertexArrays(1, &m_vao));
-            glCheckFunc(glBindVertexArray(m_vao));       //Keeps all instructions related this object
+        glCheckFunc(glGenBuffers(4, m_vbo));
+        glCheckFunc(glGenVertexArrays(1, &m_vao));
+        glCheckFunc(glBindVertexArray(m_vao));       //Keeps all instructions related this object
 
-            //VERTICIES
-            glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_vbo[0]));
-            glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_Vertices->size(), m_Vertices->data(), GL_STATIC_DRAW));
-            glCheckFunc(glEnableVertexAttribArray(POSITION_VB));
-            glCheckFunc(glVertexAttribPointer(POSITION_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL));                //POSITION_VB = 0
+        //VERTICIES
+        glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_vbo[0]));
+        glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_Vertices->size(), m_Vertices->data(), GL_STATIC_DRAW));
+        glCheckFunc(glEnableVertexAttribArray(POSITION_VB));
+        glCheckFunc(glVertexAttribPointer(POSITION_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL));                //POSITION_VB = 0
 
-            glCheckFunc(glEnableVertexAttribArray(1));
-            glCheckFunc(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL));
-            glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vbo[3]));
-            glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Indices->size() * sizeof(unsigned int), m_Indices->data(), GL_STATIC_DRAW));
+        glCheckFunc(glEnableVertexAttribArray(1));
+        glCheckFunc(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL));
+        glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vbo[3]));
+        glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Indices->size() * sizeof(unsigned int), m_Indices->data(), GL_STATIC_DRAW));
 
-            ///Texture
-            glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]));
-            glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_Textcoord->size(), m_Textcoord->data(), GL_STATIC_DRAW));
-            glCheckFunc(glEnableVertexAttribArray(TEXCOORD_VB));
-            glCheckFunc(glVertexAttribPointer(TEXCOORD_VB, 2, GL_FLOAT, GL_FALSE, 0, NULL));        //TEXCOORD_VB=1   NOTE: SHADER MUST HAVE THE SAME SEQUENCE
+        ///Texture
+        glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]));
+        glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_Textcoord->size(), m_Textcoord->data(), GL_STATIC_DRAW));
+        glCheckFunc(glEnableVertexAttribArray(TEXCOORD_VB));
+        glCheckFunc(glVertexAttribPointer(TEXCOORD_VB, 2, GL_FLOAT, GL_FALSE, 0, NULL));        //TEXCOORD_VB=1   NOTE: SHADER MUST HAVE THE SAME SEQUENCE
 
-            //this is the object shader - look at the shader, it uses uniform. so the binding MUST be uniform
-            //NORMALS
-            glCheckFunc(glBindBuffer(GL_UNIFORM_BUFFER, m_vbo[2]));          //Using GL_UNIFORM_BUFFER draw the line around the object but now nothing? why?
-            glCheckFunc(glBufferData(GL_UNIFORM_BUFFER, sizeof(float) * m_Normals->size(), m_Normals->data(), GL_STATIC_DRAW));
+        //this is the object shader - look at the shader, it uses uniform. so the binding MUST be uniform
+        //NORMALS
+        glCheckFunc(glBindBuffer(GL_UNIFORM_BUFFER, m_vbo[2]));          //Using GL_UNIFORM_BUFFER draw the line around the object but now nothing? why?
+        glCheckFunc(glBufferData(GL_UNIFORM_BUFFER, sizeof(float) * m_Normals->size(), m_Normals->data(), GL_STATIC_DRAW));
 
-            glCheckFunc(glBindVertexArray(0));
+        glCheckFunc(glBindVertexArray(0));
         return 0;//todo fixme
     }
 }

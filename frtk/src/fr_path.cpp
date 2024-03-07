@@ -26,6 +26,7 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 #include <fr_path.h>
+namespace FR{
 namespace ResourcePath {
 #if defined(_WIN32)
 
@@ -118,4 +119,5 @@ namespace ResourcePath {
 		return pathA + "/" + pathB;
 	}
 #endif
+}
 };

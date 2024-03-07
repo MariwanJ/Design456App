@@ -27,78 +27,77 @@
 //
 
 #include <Fr_GL3Window.h>
-
-
-genID::genID()
-{
-    used_.reserve(SEGMENT_SIZE); //At the beginning
-    for (unsigned long i = 0; i < SEGMENT_SIZE; i++) {
-        used_.push_back(false);
-    }
-   lastID = 0; //This is a sequential
-   usedSize = 0; //No of use ID:s
-}
-genID::~genID()
-{
-
-}
- int   genID::getID()
-{	//TODO:FIXME - THIS IS NOT CORRECT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if (usedSize < used_.size()) {
-        //We have fragmentation. search for not used id
-        unsigned int x = 0;
-        while (used_[x] != false) {
-            x++;
-            if (x > (used_.size()))
-                break; //not found all is used_. Here we have a problem.
+namespace FR {
+    genID::genID()
+    {
+        used_.reserve(SEGMENT_SIZE); //At the beginning
+        for (unsigned long i = 0; i < SEGMENT_SIZE; i++) {
+            used_.push_back(false);
         }
-        if (used_[x] == false) {
-            used_[x] = true;
+        lastID = 0; //This is a sequential
+        usedSize = 0; //No of use ID:s
+    }
+    genID::~genID()
+    {
+    }
+    int   genID::getID()
+    {	//TODO:FIXME - THIS IS NOT CORRECT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if (usedSize < used_.size()) {
+            //We have fragmentation. search for not used id
+            unsigned int x = 0;
+            while (used_[x] != false) {
+                x++;
+                if (x > (used_.size()))
+                    break; //not found all is used_. Here we have a problem.
+            }
+            if (used_[x] == false) {
+                used_[x] = true;
+                usedSize++;
+                lastID++;
+                return x;
+            }
+        }if (lastID > (used_.size() - 1)) {
+            //should never be grater but just in case
+            //resize and create new item we reached the last item
+            unsigned int oldSize = used_.size();
+            used_.resize(oldSize + SEGMENT_SIZE);//add 1k values
+            std::fill(used_.begin() + oldSize, used_.end(), false);
+            used_[lastID] = true;
+            lastID++;
+            usedSize++;
+            return (lastID - 1);
+        }
+        else {
+            //This should work if other conditions fails
+            used_[lastID] = true;
             usedSize++;
             lastID++;
-            return x;
+            return(lastID - 1);
         }
-    }if (lastID > (used_.size()-1)) {	
-    	//should never be grater but just in case
-        //resize and create new item we reached the last item
-        unsigned int oldSize = used_.size();
-        used_.resize(oldSize+ SEGMENT_SIZE);//add 1k values
-        std::fill(used_.begin() + oldSize, used_.end(), false);
-        used_[lastID] = true;
-        lastID++;
-        usedSize++;
-        return (lastID-1);
     }
-    else {
-        //This should work if other conditions fails
-        used_[lastID] = true;
-        usedSize++;
-        lastID++;
-        return(lastID - 1);
-    }
-}
 
-bool genID::isUsed( int id)
-{
-    return used_[id]; //True if it is used, false if it is not used by any object
-}
+    bool genID::isUsed(int id)
+    {
+        return used_[id]; //True if it is used, false if it is not used by any object
+    }
 
-void genID::freeID( int id)
-{
-    if (id > used_.size()) {
-        throw ("ID not found");
-        return;
-    }
-    usedSize--; //always decrease
-    if (id== lastID){
-        lastID--;
-    }
-    else {
-        /*We cannot change lastID since the removed id is not the last item in the vector.
-            This will cause fragmentation which genID should take care of it
-        */
+    void genID::freeID(int id)
+    {
+        if (id > used_.size()) {
+            throw ("ID not found");
+            return;
+        }
+        usedSize--; //always decrease
+        if (id == lastID) {
+            lastID--;
+        }
+        else {
+            /*We cannot change lastID since the removed id is not the last item in the vector.
+                This will cause fragmentation which genID should take care of it
+            */
 
-        usedSize--;
+            usedSize--;
+        }
+        used_[id] = false;
     }
-    used_[id] = false;
 }

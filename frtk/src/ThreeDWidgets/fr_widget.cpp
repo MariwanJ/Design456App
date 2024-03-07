@@ -31,12 +31,8 @@
 #include<fr_shader_program.h>
 
 namespace FR {
-
-
-  
-
-    Fr_Widget::Fr_Widget(const Fr_Widget& t) :m_position{ 0.f,0.f,0.f }, 
-        m_callback_(t.m_callback_), 
+    Fr_Widget::Fr_Widget(const Fr_Widget& t) :m_position{ 0.f,0.f,0.f },
+        m_callback_(t.m_callback_),
         m_verticies(std::move(t.m_verticies)), m_indicies(std::move(t.m_indicies))
     {
         m_label = t.m_label;
@@ -45,16 +41,14 @@ namespace FR {
         m_Matrix = glm::mat4(1.0f);
         m_color = glm::vec4(FR_ANTIQUEWHITE);
         type(NODETYPE::FR_WIDGET);
-      
     }
 
     Fr_Widget::Fr_Widget(glm::vec3 position,
         std::shared_ptr<std::vector <float>> verticies,
         std::shared_ptr<std::vector <unsigned int>> indicies,
         std::string label) :m_callback_{ NULL },
-        m_label(""), m_draw{0}, m_verticies(std::move(verticies)), m_indicies(std::move(m_indicies))
+        m_label(""), m_draw{ 0 }, m_verticies(std::move(verticies)), m_indicies(std::move(m_indicies))
     {
-       
     }
 
     Fr_Widget::~Fr_Widget()
@@ -74,7 +68,6 @@ namespace FR {
     {
         return; //You should override this
     }
-
 
     void Fr_Widget::Render(RenderInfo& info, const glm::mat4& modelview)
     {
@@ -135,8 +128,8 @@ namespace FR {
     {
         m_fontSize = size_;
     }
-    void Fr_Widget::resize(std::shared_ptr<std::vector<float>>verticies_, 
-                           std::shared_ptr<std::vector <unsigned int>> m_indicies)
+    void Fr_Widget::resize(std::shared_ptr<std::vector<float>>verticies_,
+        std::shared_ptr<std::vector <unsigned int>> m_indicies)
     {
         m_verticies = std::move(verticies_);
         m_indicies = std::move(m_indicies);
@@ -151,7 +144,7 @@ namespace FR {
     {
         return m_active;
     }
-    
+
     void Fr_Widget::activate(bool value)
     {
         m_active = value;
@@ -180,13 +173,13 @@ namespace FR {
     int Fr_Widget::handle(int handel)
     {
         throw NotImplementedException();
-        //This must be sub-classed. 
+        //This must be sub-classed.
         return 0;
     }
 
     void Fr_Widget::show()
     {
-        //This must be sub-classed. 
+        //This must be sub-classed.
         m_visible = true;
     }
 
@@ -204,7 +197,6 @@ namespace FR {
     {
         return m_position;
     }
-
 
     void Fr_Widget::WidgetShader(glm::vec4 color, float silhouette)
     {
@@ -237,34 +229,30 @@ namespace FR {
     }
     void Fr_Widget::tabIndex(int index)
     {
-        m_tabIndex =index;
+        m_tabIndex = index;
     }
     void Fr_Widget::hasTexture(int val) {
         m_hasTexture = val;
     }
     int Fr_Widget::hasTexture() {
-        return m_hasTexture; 
+        return m_hasTexture;
     }
     void Fr_Widget::Rotate(float x, float y, float z, float angle)
     {
         m_Matrix = glm::rotate(glm::mat4{ 1 }, glm::radians(angle), glm::vec3(x, y, z));
-
     }
     void Fr_Widget::Rotate(glm::vec3 axis, float angle)
     {
         m_Matrix = glm::rotate(glm::mat4{ 1 }, glm::radians(angle), axis);
-
     }
     void Fr_Widget::Translate(glm::vec3 v)
     {
         m_Matrix = glm::translate(glm::mat4{ 1 }, v);
-
     }
     void Fr_Widget::Translate(float x, float y, float z)
     {
         m_position = glm::vec3(x, y, z);
         m_Matrix = glm::translate(glm::mat4{ 1 }, m_position);
-
     }
     void Fr_Widget::Scale(float x, float y, float z)
     {
@@ -273,7 +261,6 @@ namespace FR {
     void Fr_Widget::Scale(glm::vec3 value)
     {
         m_Matrix = glm::scale(m_Matrix, value);
-
     }
     glm::mat4 Fr_Widget::GetMatrix()
     {
@@ -284,7 +271,7 @@ namespace FR {
     {
         return (glm::inverse(m_Matrix));
     }
- 
+
     void Fr_Widget::SetPosition(float x, float y, float z)
     {
         m_position = glm::vec3(x, y, z);
@@ -301,8 +288,7 @@ namespace FR {
         glm::vec3 m_max(std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min());
         for (size_t i = 0; i < m_verticies->size(); i += 3) {
             for (size_t j = 0; j < 3; ++j) {
-                
-                m_min[j] = std::min(m_min[j], m_verticies->at(i + j) );
+                m_min[j] = std::min(m_min[j], m_verticies->at(i + j));
                 m_max[j] = std::max(m_max[j], m_verticies->at(i + j) - m_min[j]);
             }
         }
@@ -325,12 +311,12 @@ namespace FR {
     }
 
     glm::vec3 Fr_Widget::GetVertex(unsigned int ind)
-    {            return glm::vec3(
-                (*m_verticies.get())[ind * 3],
-                (*m_verticies.get())[ind * 3 + 1],
-                (*m_verticies.get())[ind * 3 + 2]);
-        
-     }
+    {
+        return glm::vec3(
+            (*m_verticies.get())[ind * 3],
+            (*m_verticies.get())[ind * 3 + 1],
+            (*m_verticies.get())[ind * 3 + 2]);
+    }
 
     void Fr_Widget::SetVertex(unsigned int index, float vertices[], const glm::vec3& vertex) {
         vertices[index * 3] = vertex[0];
@@ -341,8 +327,8 @@ namespace FR {
     void Fr_Widget::SetVertex(unsigned int ind, const glm::vec3& vertex)
     {
         (*m_verticies.get())[ind * 3] = vertex[0];
-        (*m_verticies.get())[ind * 3+1] = vertex[1];
-        (*m_verticies.get())[ind * 3+2] = vertex[2];
+        (*m_verticies.get())[ind * 3 + 1] = vertex[1];
+        (*m_verticies.get())[ind * 3 + 2] = vertex[2];
     }
 
     void Fr_Widget::calcualteTextCoor(int width, int height) {
@@ -364,7 +350,6 @@ namespace FR {
             //   Store the texture coordinates in the vertices array
             m_textCoord->push_back(u);
             m_textCoord->push_back(v);
-
         }
     }
 }

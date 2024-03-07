@@ -28,7 +28,7 @@
 #include <cmath>
 #include <glm/gtx/transform.hpp>
 #include <fr_transform.h>
-
+namespace FR{
 Transform::Transform() :
     m_Position(0, 0, 0),
     operation_{ Operation::kNone },
@@ -180,4 +180,5 @@ void Transform::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& l
 
     glm::mat4 sub_mv = modelview;
     Group::SetupLight(sub_mv * m_Matrix, lights);
+} 
 }

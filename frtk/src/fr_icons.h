@@ -28,11 +28,9 @@
 #ifndef FR_CONVERTIMAGE_H
 #define FR_CONVERTIMAGE_H
 
-
-
 #include<Fr_Core.h>
-
-namespace ICONS {
+namespace FR {
+    namespace ICONS {
 #define HOME                          "../resources/48/home.png"
 #define FILE_NEW                      "../resources/48/new.png"
 #define FILE_CLOSE                    "../resources/48/close.png"
@@ -40,22 +38,22 @@ namespace ICONS {
 #define FILE_SAVEAS                   "../resources/48/saveas.png"
 #define FILE_IMPORT                   "../resources/48/import.png"
 #define FILE_EXPORT                   "../resources/48/export.png"
+    }
+
+    class FRTK_API loadImage {
+    public:
+        /**
+         * Class constructor.
+         *
+         * \param image file name - and path
+         */
+        loadImage(std::string  image = "");
+        std::shared_ptr < unsigned char> getImage(std::string img);
+        ~loadImage();
+
+        //Maybe we don't use it?
+    private:
+        std::string _fName;
+    };
 }
-
-class FRTK_API loadImage {
-public:
-    /**
-     * Class constructor.
-     *
-     * \param image file name - and path
-     */
-    loadImage(std::string  image = "");
-    std::shared_ptr < unsigned char> getImage(std::string img);
-    ~loadImage();
-
-    //Maybe we don't use it?
-private:
-    std::string _fName;
-};
-
 #endif

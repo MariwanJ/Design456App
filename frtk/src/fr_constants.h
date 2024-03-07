@@ -31,21 +31,21 @@
 
 #ifndef FR_CONSTANTS_H
 #define FR_CONSTANTS_H
-
- /**
-    The major release version
-  */
+namespace FR {
+    /**
+       The major release version
+     */
 
 #define FR_MAJOR_VERSION        0
 
-  /**
-     The minor release version for this library.
-   */
+     /**
+        The minor release version for this library.
+      */
 #define FR_MINOR_VERSION        0
 
-   /**
-      The patch version for this library.
-    */
+      /**
+         The patch version for this library.
+       */
 #define FR_PATCH_VERSION        1
 
 #define FR_VERSION      ( (double)FL_MAJOR_VERSION + \
@@ -56,20 +56,20 @@
 #define ICON_FONT_SIZE 24
 #define MAX_FOV_ZOOM 165
 
-    // Transparency - No color will be applied
+       // Transparency - No color will be applied
 
- /* [Color definition used in all widgets consist of
-     a tuple of three float values between 0.0 and 1.0]
- */
-struct T {
-    float R = 1.0;
-    float G = 1.0;
-    float B = 1.0;
-    float A = 1.0;
-};
+    /* [Color definition used in all widgets consist of
+        a tuple of three float values between 0.0 and 1.0]
+    */
+    struct T {
+        float R = 1.0;
+        float G = 1.0;
+        float B = 1.0;
+        float A = 1.0;
+    };
 
-typedef T FR_COLOR;
-namespace COLOR {
+    typedef T FR_COLOR;
+    namespace COLOR {
 #define FR_TRANSPARENCY         -1.0000f, -1.0000f, -1.0000f,  1.0000f		   // No color
 #define FR_IRON                  0.5600f,  0.5700f,  0.58000f, 1.0000f
 #define FR_SILVER                0.9720f,  0.9600f,  0.91500f, 1.0000f
@@ -235,51 +235,49 @@ namespace COLOR {
 #define FR_GLASS                 0.3300f,  1.0000f,  1.0000f,  1.0000f
 #define FR_WINGS3D				 0.3800f,  0.3800f,  0.3800f,  0.5000f
 #define FR_123D                  0.0117f,  0.6392f,  0.8470f,  1.0000f
-};
-namespace SPECULAR {    
-    //Material             BaseColor(R, G, B)
+    };
+    namespace SPECULAR {
+        //Material             BaseColor(R, G, B)
 #define FR_METAL           0.50f, 0.50f, 0.50f,  1.0
 #define FR_PLASTIC         0.250f, 0.250f, 0.250f , 1.0
+    };
+    class Fr_GL3Window; // compiler should define that later.
 
-};
-class Fr_GL3Window; // compiler should define that later.
+    //static variables used for mouse events inside fr_glw.
+    //TODO : FIXME : Remove these .. we shouldn't have them here.
+    static bool CamerOptionVisible = false;
 
-//static variables used for mouse events inside fr_glw.
-//TODO : FIXME : Remove these .. we shouldn't have them here. 
-static bool CamerOptionVisible=false;
+    const char fontPath[] = "../frtk/vendor/imGui/src/imguiFont/";
 
+    enum {
+        GLFW_WINDOW_CLOSE,
+        GLFW_WINDOW_RESIZE,
+        GLFW_FOCUSE,
+        GLFW_APP_RENDER,
+        GLFW_KEY_PRESSED,
+        GLFW_KEY_RELEASED,
+        GLFW_KEY_TYPED,
 
-const char fontPath[] = "../frtk/vendor/imGui/src/imguiFont/";
+        //MOUSE
+        GLFW_MOUSE_LEFT_PUSH,
+        GLFW_MOUSE_RIGHT_PUSH,
+        GLFW_MOUSE_LEFT_RELEASE,
+        GLFW_MOUSE_RIGHT_RELEASE,
+        GLFW_MOUSE_MIDDLE_PUSH,
+        GLFW_MOUSE_MIDDLE_RELEASE,
+        GLFW_MOUSE_DOUBLE_CLICK,   //ONE CLICK IS JUST PUSH
 
-enum {
-    GLFW_WINDOW_CLOSE,
-    GLFW_WINDOW_RESIZE,
-    GLFW_FOCUSE,
-    GLFW_APP_RENDER,
-    GLFW_KEY_PRESSED,
-    GLFW_KEY_RELEASED,
-    GLFW_KEY_TYPED,
+        GLFW_MOUSE_MOVE,
+        GLFW_MOUSE_SCROLL,
+    };
 
-    //MOUSE
-    GLFW_MOUSE_LEFT_PUSH,
-    GLFW_MOUSE_RIGHT_PUSH,
-    GLFW_MOUSE_LEFT_RELEASE,
-    GLFW_MOUSE_RIGHT_RELEASE,
-    GLFW_MOUSE_MIDDLE_PUSH,
-    GLFW_MOUSE_MIDDLE_RELEASE,
-    GLFW_MOUSE_DOUBLE_CLICK,   //ONE CLICK IS JUST PUSH
-
-    GLFW_MOUSE_MOVE,
-    GLFW_MOUSE_SCROLL,
-};
-
-enum {
-    FR_ABSTRACT_WIDGET = 0,
-    FR_GROUP_WIDGET = 1,
-    FR_BOX_WIDGET = 2,
-    FR_LBL_WIDGET = 3,
-    FR_BUTTON_WIDGET = 4,
-    //More will be added later
-
-};
+    enum {
+        FR_ABSTRACT_WIDGET = 0,
+        FR_GROUP_WIDGET = 1,
+        FR_BOX_WIDGET = 2,
+        FR_LBL_WIDGET = 3,
+        FR_BUTTON_WIDGET = 4,
+        //More will be added later
+    };
+}
 #endif // !FR_H

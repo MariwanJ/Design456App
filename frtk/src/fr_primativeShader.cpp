@@ -31,8 +31,8 @@
 #include <fr_shader_program.h>
 #include <fr_primativeShader.h>
 #include <glad/glad.h>
-
-Fr_PrimaitiveShader::Shared* Fr_PrimaitiveShader::shared_ = nullptr;
+namespace FR{
+Fr_PrimaitiveShader::Shared * Fr_PrimaitiveShader::shared_ = nullptr;
 
 //static const glm::mat4 kShadowMapBiasMatrix(
 //    0.5, 0.0, 0.0, 0.0,
@@ -176,4 +176,4 @@ void Fr_PrimaitiveShader::RenderSilhouette(const glm::mat4& mvp) {
     m_Primative->Draw();
     program->Disable();
 }
- 
+}

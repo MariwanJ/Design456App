@@ -27,113 +27,112 @@
 #ifndef FR_BOUNDBOX_H
 #define FR_BOUNDBOX_H
 
-
 #include <glm/glm.hpp>
 #include<frtk.h>
 /**
  * 2D BoundBox class definition.
  */
-class cBoundBox2D {
-public:
-    /**
-     * Class constructor.
-     * 
-     */
-    cBoundBox2D();
-    ~cBoundBox2D();
+namespace FR {
+    class cBoundBox2D {
+    public:
+        /**
+         * Class constructor.
+         *
+         */
+        cBoundBox2D();
+        ~cBoundBox2D();
 
-public:
-    //functions:
-    /**
-     * Boolean function return true if a point is inside the polygon.
-     * 
-     * \param point 2D vertex 
-     * \return true if the vertex inside the polygon, false if not
-     */
-    virtual bool isInside(glm::vec2 point);
-    /**
-     * .
-     * 
-     * \return 
-     */
-    /**
-     * Calculate diagonal length of the 2D polygon.
-     * 
-     * \return diagonal length of the 2D polygon
-     */
-    virtual float DiagonalLength();
-    /**
-     * .
-     * 
-     * \return 
-     */
-    /**
-     * Get max value of X in the vertices (Boundbox).
-     * 
-     * \return float value represent max X
-     */
-    virtual float XgetMax();
-    /**
-     * Get max value of Y in the vertices (Boundbox).
-     * 
-     * \return float value represent max Y
-     */
-    virtual float YgetMax();
-    /**
-     * Calculate boundbox which is all max,min, diagonal length, ..etc  values .
-     * 
-     */
-    virtual void calBoundBox();
-    /**
-     * .
-     * 
-     * \param points
-     */
-    virtual void setVertices(std::shared_ptr<std::vector<float>>points);
-    float minX();  
-    float maxX();  
-    float minY(); 
-    float maxY(); 
+    public:
+        //functions:
+        /**
+         * Boolean function return true if a point is inside the polygon.
+         *
+         * \param point 2D vertex
+         * \return true if the vertex inside the polygon, false if not
+         */
+        virtual bool isInside(glm::vec2 point);
+        /**
+         * .
+         *
+         * \return
+         */
+         /**
+          * Calculate diagonal length of the 2D polygon.
+          *
+          * \return diagonal length of the 2D polygon
+          */
+        virtual float DiagonalLength();
+        /**
+         * .
+         *
+         * \return
+         */
+         /**
+          * Get max value of X in the vertices (Boundbox).
+          *
+          * \return float value represent max X
+          */
+        virtual float XgetMax();
+        /**
+         * Get max value of Y in the vertices (Boundbox).
+         *
+         * \return float value represent max Y
+         */
+        virtual float YgetMax();
+        /**
+         * Calculate boundbox which is all max,min, diagonal length, ..etc  values .
+         *
+         */
+        virtual void calBoundBox();
+        /**
+         * .
+         *
+         * \param points
+         */
+        virtual void setVertices(std::shared_ptr<std::vector<float>>points);
+        float minX();
+        float maxX();
+        float minY();
+        float maxY();
 
-    float Xlength();
-    float Ylength();
-    glm::vec2 Center();
+        float Xlength();
+        float Ylength();
+        glm::vec2 Center();
 
-protected:
+    protected:
 
-    float m_minX; //Min X value of the BoundBox
-    float m_maxX; //Max X value of the BoundBox
-    float m_minY; //Min Y value of the BoundBox
-    float m_maxY; //Max Y value of the BoundBox
-    
-    float m_Xlength;
-    float m_Ylength;
-    float m_DiagonalLength;
-    std::shared_ptr<std::vector<float>>m_points;
+        float m_minX; //Min X value of the BoundBox
+        float m_maxX; //Max X value of the BoundBox
+        float m_minY; //Min Y value of the BoundBox
+        float m_maxY; //Max Y value of the BoundBox
 
-private: 
-    glm::vec2 m_center;
-};
+        float m_Xlength;
+        float m_Ylength;
+        float m_DiagonalLength;
+        std::shared_ptr<std::vector<float>>m_points;
 
+    private:
+        glm::vec2 m_center;
+    };
 
-class cBoundBox :public cBoundBox2D{
-public:
+    class cBoundBox :public cBoundBox2D {
+    public:
 
-    cBoundBox();
-     ~cBoundBox();
-     void calBoundBox();
- public:
-     virtual bool isInside(glm::vec3 point);
-     virtual float DiagonalLength();
-     virtual float ZgetMax();
-     glm::vec3 Center();
-protected:
-    float m_minZ;
-    float m_maxZ;
+        cBoundBox();
+        ~cBoundBox();
+        void calBoundBox();
+    public:
+        virtual bool isInside(glm::vec3 point);
+        virtual float DiagonalLength();
+        virtual float ZgetMax();
+        glm::vec3 Center();
+    protected:
+        float m_minZ;
+        float m_maxZ;
 
-    float m_Zlength;
-private:
-    glm::vec3 m_center;
-};
-
+        float m_Zlength;
+    private:
+        glm::vec3 m_center;
+    };
+}
 #endif
