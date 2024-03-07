@@ -5,8 +5,7 @@ Turn Design456 Workbench to more powerful software. Combine GLFW, Imgui ImGuimzo
 
 # Notes:
 This is an expermental pieces of code. Please don't use it in any serious application. 
-It is still in very earliy development phase and I need more time to make it useful. 
-Only Windows is supported at the moment. Glad is 4.3. My laptop dosen't support the latest version. 
+In this version, I tried to add EnTT and Flecs. Both failed. I keep the try for future usagse.
 
 # Status:
 This version is a failure in trying to use ECS system. I coulnd't figure out why objects get destructed while they are created. 
