@@ -27,7 +27,6 @@ IncludeDir["yaml-cpp"] = "../frtk/vendor/yaml-cpp"
 IncludeDir["GLFW"] = "../frtk/vendor/GLFW/include"
 IncludeDir["stb_image"] = "../frtk/vendor/stb_image/src"
 IncludeDir["objloader"] = "../frtk/vendor/objloader"
-IncludeDir["EnTT"] = "../frtk/vendor/EnTT"
 
 --Projects
 --Include other lua scripts and group them as dependencies
