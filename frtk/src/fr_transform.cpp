@@ -166,7 +166,7 @@ glm::vec3 Transform::computeSphereCoordinate(double x, double y) {
 
 
 void Transform::Render(RenderInfo& info, const glm::mat4& modelview) {
-    if (!active_)
+    if (!m_active)
         return;
 
     glm::mat4 sub_modelview = modelview;
@@ -175,7 +175,7 @@ void Transform::Render(RenderInfo& info, const glm::mat4& modelview) {
 }
 
 void Transform::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) {
-    if (!active_)
+    if (!m_active)
         return;
 
     glm::mat4 sub_mv = modelview;

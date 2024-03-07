@@ -189,7 +189,7 @@ namespace FR {
         /**
          * Pointer to link to the scene.
          */
-        static Scene* scene;
+        static Fr_Scene* scene;
 
         /**
          * Vector of shared pointers for Transform object.

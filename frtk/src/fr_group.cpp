@@ -41,7 +41,7 @@ namespace FR {
     }
 
     bool Group::SetupCamera(glm::mat4& projection, glm::mat4& modelview) {
-        if (active_)
+        if (m_active)
             for (auto& node : nodes_)
                 //If the node is not subclassed and it is only a node, this will always return false.
                 if (node->SetupCamera(projection, modelview))
@@ -50,13 +50,13 @@ namespace FR {
     }
 
     void Group::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights) {
-        if (active_)
+        if (m_active)
             for (auto& node : nodes_)
                 node->SetupLight(modelview, lights);
     }
 
     void Group::Render(RenderInfo& info, const glm::mat4& modelview) {
-        if (active_)
+        if (m_active)
             for (auto& node : nodes_)
                 node->Render(info, modelview);
     }

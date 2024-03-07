@@ -124,7 +124,7 @@ namespace FR {
 
     void Light::SetupLight(const glm::mat4& modelview,
         std::vector<LightInfo>& lights) {
-        if (!active_)
+        if (!m_active)
             return;
 
         auto normalmatrix = glm::transpose(glm::inverse(modelview));

@@ -33,7 +33,7 @@
 #include<../src/fr_core.h>
 #include<../vendor/glm/glm/glm.hpp>
 #include<../src/fr_transform.h>
-#include<../src/halfedge/fr_genID.h>
+#include<fr_genID.h>
 #include <fr_boundbox.h>
 
 namespace FR {

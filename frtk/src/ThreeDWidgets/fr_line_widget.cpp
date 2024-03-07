@@ -98,7 +98,7 @@ namespace FR {
     }
     int Fr_Line_Widget::handle(int e)
     {
-        if (!active_)
+        if (!m_active)
             return 0; //we don't use the event/we don't care
 
         switch (e) {
@@ -133,7 +133,7 @@ namespace FR {
     }
 
     void Fr_Line_Widget::Render(RenderInfo& info, const glm::mat4& modelview) {
-        if (!active_)
+        if (!m_active)
             return;
 
         auto mvp = info.projection * modelview * m_Matrix;

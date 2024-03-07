@@ -21,15 +21,13 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//  Original Author : Gabriel de Quadros  https://github.com/gligneul
-//  Modified to use with this project by :
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 #include <fr_node.h>
 #include <Fr_GL3Window.h>
 namespace FR{
-Node::Node() :type_(NODETYPE::FR_NODE), m_Parent(-1),
-active_{ true}
+Node::Node() :m_type(NODETYPE::FR_NODE), m_Parent(-1),
+m_active{ true}
 {
 
 }
@@ -68,22 +66,22 @@ void Node::Render(RenderInfo& info, const glm::mat4& modelview) {
     (void)modelview;*/
 }
 
-void Node::SetActive(bool active) {
-    active_ = active;
+void Node::isActive(bool active) {
+    m_active = active;
 }
 
-bool Node::GetActive() {
-    return active_;
+bool Node::isActive() {
+    return m_active;
 }
 
 NODETYPE Node::type()
 {
-    return type_;
+    return m_type;
 }
 
 void Node::type(NODETYPE newVal)
 {
-    type_ = newVal;
+    m_type = newVal;
 }
 int Node::Parent() {
     return m_Parent;

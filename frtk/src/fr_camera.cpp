@@ -125,7 +125,7 @@ namespace FR {
     }
     bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
     {
-        if (!active_)
+        if (!m_active)
             return false;
 
         //FRTK_CORE_INFO(aspectRatio_);
@@ -349,7 +349,7 @@ namespace FR {
     void Camera::setType(CameraList camTyp)
     {
         camType_ = camTyp;
-        active_ = true;
+        m_active= true;
     }
     /**
      *

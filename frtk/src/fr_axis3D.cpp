@@ -167,7 +167,7 @@ namespace FR {
 
     void Axis3D::setVisible(bool status)
     {
-        active_ = status;
+        m_active = status;
     }
 
     void Axis3D::setAxisZstepSize(float sizeINmm)

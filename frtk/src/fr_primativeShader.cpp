@@ -135,7 +135,7 @@ void Fr_PrimaitiveShader::LoadLights(ShaderProgram* program, const std::vector<L
 }
 
 void Fr_PrimaitiveShader::Render(RenderInfo& info, const glm::mat4& modelview) {
-    if (!active_ ||
+    if (!m_active ||
         (info.render_transparent && m_Color.a == 1) ||
         (!info.render_transparent && m_Color.a < 1))
         return;

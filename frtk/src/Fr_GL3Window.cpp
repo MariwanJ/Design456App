@@ -46,7 +46,7 @@ namespace FR {
 
     glfwMouseEvent Fr_GL3Window::mouseEvent = { 0,0,0,0,false,0 };
 
-    Scene* Fr_GL3Window::scene = nullptr;
+    Fr_Scene* Fr_GL3Window::scene = nullptr;
     bool Fr_GL3Window::MouseOnce = true;
 
     static void error_callback(int error, const char* description)
@@ -275,9 +275,9 @@ namespace FR {
     {
         active_camera_ = _type;
         for (int i = 0; i < MAX_CAMERAS; i++) {
-            (cameraList[i])->SetActive(false);
+            (cameraList[i])->isActive(false);
         }
-        (cameraList[(int)active_camera_])->SetActive(true);
+        (cameraList[(int)active_camera_])->isActive(true);
     }
 
     CameraList Fr_GL3Window::getCameraType()
@@ -295,7 +295,7 @@ namespace FR {
         for (int i = 0; i < MAX_CAMERAS; i++) {
             auto camera_ = std::make_shared < Camera>();   //Shared pointer to the created camera,
             //By default no camera is active, developer MUST define one after creating cameras
-            camera_->SetActive(false);
+            camera_->isActive(false);
             cameraList.push_back(camera_);
             scene->AddNode(camera_);  //Add it to the scene graph, but only active one will render.
             camera_->setType((CameraList)i);   //Depending on the list it should be as the enum defined
@@ -506,7 +506,7 @@ namespace FR {
         sun->SetAmbient(0.2f, 0.2f, 0.2f);
         sun->EnableShadowMap(glm::vec3(0, 0, 1), glm::vec3(0, 0, 4), glm::ortho<float>(-10, 10, -10, 10, 100, 114));
         sun_->AddNode(sun);
-        sun->SetActive(true);   //A must to have otherwise everything is black.
+        sun->isActive(true);   //A must to have otherwise everything is black.
         sunT = std::move(sun_);
         return sunT;
     }
@@ -520,7 +520,7 @@ namespace FR {
         sun->SetAmbient(0.2f, 0.2f, 0.2f);
         //sun->EnableShadowMap(glm::vec3(0, -1, 0), glm::vec3(1, 0, 0), glm::ortho<float>(-50, 50, -50, 50, 400, 600));
         sun_->AddNode(sun);
-        sun->SetActive(false);   //A must to have otherwise everything is black.
+        sun->isActive(false);   //A must to have otherwise everything is black.
         sunT = std::move(sun_);
         return sunT;
     }

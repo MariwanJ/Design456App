@@ -409,13 +409,13 @@ namespace FR {
         camm->getUserData(data);
         imgui_CameraConfiguration(data);
         if (active_camera_ != data.camType_) {
-            camm->SetActive(false);
+            camm->isActive(false);
             active_camera_ = data.camType_;
             camm = cameraList[(int)active_camera_];
             camm->getUserData(data);
         }
         camm->setUserData(data);
-        camm->SetActive(true);
+        camm->isActive(true);
     }
 
     void Fr_GL3Window::SunOptions() {

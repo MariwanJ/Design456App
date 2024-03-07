@@ -30,7 +30,7 @@
 //TODO: I don't see any reason to have these functions here any more - move them to other place
 /* Scene and engine*/
 namespace FR {
-    static Scene* scene = nullptr;
+    static Fr_Scene* scene = nullptr;
 
     void Fr_GL3Window::framebuffer_size_callback(GLFWwindow* window, int width, int height)
     {

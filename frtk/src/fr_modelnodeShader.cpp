@@ -129,7 +129,7 @@ namespace FR {
     }
 
     void ModelNode::Render(RenderInfo& info, const glm::mat4& modelview) {
-        if (!active_ ||
+        if (!m_active ||
             (info.render_transparent && color_.a == 1) ||
             (!info.render_transparent && color_.a < 1))
             return;
@@ -169,7 +169,7 @@ namespace FR {
     }
 
     void ModelNode::RenderSilhouette(const glm::mat4& mvp) {
-        if (!active_)
+        if (!m_active)
             return;
         if (!(mesh_))//Not defined
             return;

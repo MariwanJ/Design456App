@@ -58,7 +58,7 @@ namespace FR {
         bunny->m_Texture2D->setup2DTexture();
         //bunny->SetMesh(std::make_shared<Shape>("E:/Projects/Design456App/resources/mesh/Wedge.off"));
         auto Bunny_spot = std::make_shared<Light>();
-        Bunny_spot->SetActive(true);
+        Bunny_spot->isActive(true);
         Bunny_spot->SetPosition(0.f, 2.f, 5.0f);
         // Bunny_spot->SetupSpot(-1.0f, -10.0f, 5.0f, 25.0f, 1.0f);
         Bunny_spot->SetDiffuse(.2f, .2f, 0.2);
@@ -67,7 +67,7 @@ namespace FR {
         Bunny_spot->SetSpecular(FR_METAL);
         bunny_t->AddNode(Bunny_spot);
         bunny_t->AddNode(bunny);
-        bunny->SetActive(true);
+        bunny->isActive(true);
 
         //bunny->calculateTextureCoord();
         return bunny_t;
@@ -126,7 +126,7 @@ namespace FR {
 
     void Grid::setVisible(bool status)
     {
-        active_ = status;
+        m_active = status;
     }
 
     void Grid::setgridWidth(unsigned int sizeINmm)

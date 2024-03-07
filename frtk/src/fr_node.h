@@ -130,12 +130,12 @@ public:
     /**
      * Sets whether the node is active
      */
-    void SetActive(bool active);
+    void isActive(bool active);
 
     /**
      * Gets whether the node is active
      */
-    bool GetActive();
+    bool isActive();
 
     NODETYPE type();
 
@@ -151,8 +151,8 @@ protected:
     /**
      *  Object type name use the Enum values to hold the type. Must be given.
      */
-    NODETYPE type_;
-    bool active_;
+    NODETYPE m_type;
+    bool m_active;
     /**
      * //This will be used to retrieve the objects.
      *   A unique ID which will hold the index of the node.
