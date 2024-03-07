@@ -6,24 +6,13 @@ Turn Design456 Workbench to more powerful software. Combine GLFW, Imgui ImGuimzo
 # Notes:
 This is an expermental pieces of code. Please don't use it in any serious application. 
 It is still in very earliy development phase and I need more time to make it useful. 
-Only Windows is supported at the moment. Glad is 4.3. My laptop dosen't support the latest version. 
+Only Windows is supported at the moment. Glad is 4.x.
 
 # Status:
-1-ImGui is used for creating the GUI interface
-
-2-ImGuimzo still not working  
-
-2-Some issues with the LOG system. (low priority) 
-
-3-Code might change alot. So be patient
-
-4-XY-Plane is somehow working now. Needs more turning. The problem is with the camera, light ..etc 
-
-5-Since I am submoduling some libraries, lua files are not included with these submodules. At the moment I don't know how to get that fixed. You find the files under the folder Resources for each module.
-
-6-Always devbranch is the active development brnach .. But from time to time I merge what I think are good to have them in main. 
-
-7-After making a stable cameras (6 cameras), I will release this version as a base code for any other project you might need such a setup. But for now the development is continuing. 
+After a failure try to add ECS both EnTT and Flecs, I returned back the code to the position before adding them. 
+Now I have to find another way to add a container that is more powerful than just a vector. 
+The code will not compile for a while. So please notice that. 
+For the trial codes regarding EnTT or Flecs, you find diff branches. I will keep these branches if anyone would like to know why they failed. In short, objects gets deleted even so they added to the ECS system.
 
 Don't forget that you need to download preemake5.exe 
 
