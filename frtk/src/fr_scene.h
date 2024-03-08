@@ -78,7 +78,7 @@ namespace FR {
          * Throws runtime_error if there's no camera
          */
         virtual void RenderScene();
-        static GLFWwindow* linkToglfw;
+ 
 
     private:
         bkgC  background_;
@@ -86,8 +86,8 @@ namespace FR {
         void setBackgroud(float r, float g, float b, float alfa);
         void setBackgroud(glm::vec4 color);
 
-        SceneItemStruct& setupActiveCamera(std::string_view name, Node::RenderInfo& info);
-        SceneItemStruct& setupActiveCamera(CameraList val, Node::RenderInfo& info);
+        std::shared_ptr<Camera> setupActiveCamera(std::string_view name, Node::RenderInfo& info);
+        std::shared_ptr<Camera> setupActiveCamera(CameraList val, Node::RenderInfo& info);
 
         void CreateDefaultCameras(void);
 
@@ -99,21 +99,64 @@ namespace FR {
 
         SceneItemStruct CreateDefaultSunLight(void);
         CameraList active_camera_;
- 
 
         // Function to find all occurrences of a specific type in the m_world vector
-        std::vector<std::shared_ptr<Node>> findOccurrencesOfType(const std::type_index& type);
 
-        std::optional<SceneItemStruct> findItemByName(std::string_view name);
-        std::optional<SceneItemStruct> findItemByID(genID id);
-        bool replaceItemByName(const std::string& name, SceneItemStruct& newItem);
         bool replaceItemByID(int id, SceneItemStruct& newItem);
         bool deleteItemByID(int id);
         bool deleteItemByID(std::string_view str);
 
-        const std::vector<SceneItemStruct>& getAllItems() const;
+        // find all occurrences of a specific type of object
+        template <typename T>
+        void  findOccurrencesOfType(std::vector<T>& vect, const NODETYPE& type) {
+            for (size_t i = 0; i < m_world.size(); ++i) {
+                const auto& sceneItem = m_world[i];
+                if (sceneItem.Sceneitem->isOfType(type)) {
+                    vect.push_back(sceneItem.Sceneitem);
+                }
+            }
+        }
+
+        template <typename T>
+        void replaceItemByName(std::shared_ptr<T>other, std::string_view name) {
+            for (int i = 0; i < m_world.size(); i++) {
+                if (m_world[i].name == name) {
+                    m_world[i] = other;
+                }
+            }
+            answer = std::nullptr_t; // item was not found
+        }
+
+        template <typename T>
+        void replaceItemByName(std::shared_ptr<T>other, genID id) {
+            for (int i = 0; i < m_world.size(); i++) {
+                if (m_world[i].id == id) {
+                    m_world[i] = other;
+                }
+            }
+            answer = std::nullptr_t; // item was not found
+        }
+
+        template <typename T>
+        void findItemByName(std::shared_ptr<T>answer, std::string_view name) {
+            for (int i = 0; i < m_world->size(); i++) {
+                if (m_world[i]->name == name) {
+                    answer<T> = m_world[i];
+                }
+            }
+            answer =nullptr_t; // item was not found
+        }
+
+        template <typename T>
+        void Fr_Scene::findItemByName(std::shared_ptr<T>answer, genID id) {
+            for (int i = 0; i < m_world.size(); i++) {
+                if (m_world[i]->id == id) {
+                    answer<T> = m_world[i];
+                }
+            }
+            answer = std::nullptr_t; // item was not found
+        }
         void addObject(SceneItemStruct&& item);
- 
 
     private:
         SceneItemStruct CreateGrid();
@@ -124,7 +167,7 @@ namespace FR {
 
     private:
         glm::vec4 m_Background;
-        std::vector<SceneItemStruct> m_world;
+        std::shared_ptr<std::vector<SceneItemStruct>> m_world;
     };
 }
 #endif

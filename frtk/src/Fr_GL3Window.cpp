@@ -160,8 +160,8 @@ namespace FR {
 #include<ThreeDWidgets/fr_line_widget.h> ///this is a test TODO : REMOVE ME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
     void Fr_GL3Window::CreateScene()
     {
-        scene = new Scene();//Save a link to the windows also.
-        scene->linkToglfw = pWindow;
+        scene = new Fr_Scene();//Save a link to the windows also.
+ 
 
         CreateCameras();
         setCameraType(CameraList::PERSPECTIVE);

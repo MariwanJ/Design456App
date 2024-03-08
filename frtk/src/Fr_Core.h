@@ -31,7 +31,7 @@
 #include <frtk.h>
 #include<fr_constants.h>
 #include<Fr_Log.h>
- 
+
 #if defined(__APPLE__)
 #  include <OpenGL/gl3.h> // defines OpenGL 3.0+ functions
 #else
@@ -67,7 +67,6 @@
 
 #include <../vendor/stb_image/src/stb_image.h>
 namespace FR {
-    
 #define NUM_OF_VBO_BUFFERS 4 //ONE FOR THE MESH, OTHER FOR TEXTURE: This might change
 #define POSITION_VB 0
 #define TEXCOORD_VB 1
@@ -116,7 +115,7 @@ namespace FR {
 #define setBIT(x) (1 << x)
 #define clearBIT(x) (0 << x)
 
-    class Fr_GL3Window;
+        class Fr_GL3Window;
     //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
     enum class CameraList {
         PERSPECTIVE = 0, //This is not fixed and can be moved , others are not.
@@ -145,7 +144,7 @@ namespace FR {
         CameraList camType_;
     };
 
-        static unsigned char GLLogCall() {
+    static unsigned char GLLogCall() {
         while (GLenum error = glGetError()) {
             std::cout << "[OpenGL Error] {" << error << "}\n";
             std::flush(std::cout);
@@ -154,38 +153,55 @@ namespace FR {
         return 1;
     }
 
+    enum FR_EVENTS {
+        FR_NO_EVENT = 0,     //DONT CARE EVENT
+        FR_PUSH,
+        FR_RELEASE,
+        FR_ENTER,
+        FR_DRAG,
+        FR_FOCUS,
+        FR_KEYBOARD,
+        FR_CLOSE,
+        FR_MOVE,
+        FR_DEACIVATE,
+        FR_ACTIVE,
+        FR_HIDE,
+        FR_SHOW,
+        FR_LEFT_DRAG_PUSH,
+        FR_LEFT_DRAG_RELEASE,
 
+        FR_MIDDLE_DRAG_PUSH,
+        FR_MIDDLE_DRAG_RELEASE,
 
-        enum FR_EVENTS {
-            FR_NO_EVENT = 0,     //DONT CARE EVENT
-            FR_PUSH,
-            FR_RELEASE,
-            FR_ENTER,
-            FR_DRAG,
-            FR_FOCUS,
-            FR_KEYBOARD,
-            FR_CLOSE,
-            FR_MOVE,
-            FR_DEACIVATE,
-            FR_ACTIVE,
-            FR_HIDE,
-            FR_SHOW,
-            FR_LEFT_DRAG_PUSH,
-            FR_LEFT_DRAG_RELEASE,
+        FR_RIGHT_DRAG_PUSH,
+        FR_RIGHT_DRAG_RELEASE,
 
-            FR_MIDDLE_DRAG_PUSH,
-            FR_MIDDLE_DRAG_RELEASE,
+        FR_WINDOW_RESIZE,
+        FR_WINDOW_MINIMIZE,
+        FR_MOUSE_RIGHT,
+        FR_MOUSE_MIDDLE,
+        FR_MOUSE_LEFT,
+        FR_MOUSE_MOVE,
+    };
 
-            FR_RIGHT_DRAG_PUSH,
-            FR_RIGHT_DRAG_RELEASE,
-
-            FR_WINDOW_RESIZE,
-            FR_WINDOW_MINIMIZE,
-            FR_MOUSE_RIGHT,
-            FR_MOUSE_MIDDLE,
-            FR_MOUSE_LEFT,
-            FR_MOUSE_MOVE,
-        };
- 
+    //Define all kind of widgets here, YOU MUST DO THIS!!
+    typedef enum class NODETYPE {
+        FR_NODE = 0,
+        FR_GROUP = 1,
+        FR_TRANSFORM = 2,
+        FR_MANIPULATOR = 3,
+        FR_PRIMATIVESHADER = 4,
+        FR_LIGHT = 5,
+        FR_CAMERA = 6,
+        FR_ModelNode = 7,
+        FR_SCENE = 8,
+        FR_MESH = 9,
+        FR_GRID = 10,
+        //FR WIDGETS
+        FR_WIDGET = 11,
+        FR_WGROUP = 12,
+        FR_WINDOW = 13,
+        FR_LINE_WIDGET = 14,
+    }NODETYPE;
 }
 #endif

@@ -83,6 +83,13 @@ void Node::type(NODETYPE newVal)
 {
     m_type = newVal;
 }
+
+bool Node::isOfType(const NODETYPE& newVal)
+{
+    return m_type==newVal;
+}
+
+
 int Node::Parent() {
     return m_Parent;
 }

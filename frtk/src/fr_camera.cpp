@@ -34,6 +34,7 @@
 #include <Fr_GL3Window.h>
 
 namespace FR {
+    
     /*
     Normal view - home FreeCAD
     ,top
@@ -349,7 +350,7 @@ namespace FR {
     void Camera::setType(CameraList camTyp)
     {
         camType_ = camTyp;
-        m_active= true;
+        m_active = true;
     }
     /**
      *
