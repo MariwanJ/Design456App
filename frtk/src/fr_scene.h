@@ -78,9 +78,8 @@ namespace FR {
          * Throws runtime_error if there's no camera
          */
         virtual void RenderScene();
- 
 
-    private:
+   
         bkgC  background_;
 
         void setBackgroud(float r, float g, float b, float alfa);
@@ -91,11 +90,11 @@ namespace FR {
 
         void CreateDefaultCameras(void);
 
-        void Render(FR::Node::RenderInfo& info, const glm::mat4& modelview);
-        void RenderPrimativeShapes(FR::Node::RenderInfo& info, const glm::mat4& modelview);
-        void RenderWidgetToolkit(FR::Node::RenderInfo& info, const glm::mat4& modelview);
+        void Render(Node::RenderInfo& info, const glm::mat4& modelview);
+        void RenderPrimativeShapes(Node::RenderInfo& info, const glm::mat4& modelview);
+        void RenderWidgetToolkit(Node::RenderInfo& info, const glm::mat4& modelview);
         void RenderSilhouette(const glm::mat4& mvp);
-        void RenderIMGui(FR::Node::RenderInfo& info, const glm::mat4& modelview);
+        void RenderIMGui(RenderInfo& info, const glm::mat4& modelview);
 
         SceneItemStruct CreateDefaultSunLight(void);
         CameraList active_camera_;
@@ -138,27 +137,34 @@ namespace FR {
         }
 
         template <typename T>
-        void findItemByName(std::shared_ptr<T>answer, std::string_view name) {
-            for (int i = 0; i < m_world->size(); i++) {
-                if (m_world[i]->name == name) {
-                    answer<T> = m_world[i];
+        void findItemByName(std::shared_ptr<T>& answer, const std::string_view& name) {
+            for (int i = 0; i < m_world.size(); i++) {
+                if (std::string_view(m_world[i].name) == name) {
+                    std::shared_ptr<T> temp = std::static_pointer_cast<T>(m_world[i].Sceneitem);
+
+                    if (temp) {
+                        answer = temp;
+                        return; // Found the item, so no need to continue searching
+                    }
                 }
             }
-            answer =nullptr_t; // item was not found
         }
 
         template <typename T>
-        void Fr_Scene::findItemByName(std::shared_ptr<T>answer, genID id) {
+        void findItemByID(std::shared_ptr<T>& answer, const genID id) {
             for (int i = 0; i < m_world.size(); i++) {
-                if (m_world[i]->id == id) {
-                    answer<T> = m_world[i];
+                if (std::string_view(m_world[i].id) == id) {
+                    std::shared_ptr<T> temp = std::static_pointer_cast<T>(m_world[i].Sceneitem);
+
+                    if (temp) {
+                        answer = temp;
+                        return; // Found the item, so no need to continue searching
+                    }
                 }
             }
-            answer = std::nullptr_t; // item was not found
         }
-        void addObject(SceneItemStruct&& item);
 
-    private:
+        void addObject(SceneItemStruct&& item);
         SceneItemStruct CreateGrid();
         SceneItemStruct CreateAxis();
 
@@ -167,7 +173,7 @@ namespace FR {
 
     private:
         glm::vec4 m_Background;
-        std::shared_ptr<std::vector<SceneItemStruct>> m_world;
+        std::vector<SceneItemStruct>  m_world;
     };
 }
 #endif

@@ -249,6 +249,10 @@ namespace FR {
 
     const char fontPath[] = "../frtk/vendor/imGui/src/imguiFont/";
 
+    //cameras
+    constexpr unsigned char TOTAL_CAMS = 8;
+    extern const char* camNames[];
+
     enum {
         GLFW_WINDOW_CLOSE,
         GLFW_WINDOW_RESIZE,

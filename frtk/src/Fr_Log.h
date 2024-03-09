@@ -30,7 +30,7 @@
 
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
-#include<fr_constants.h>
+
 namespace FR {
     class Fr_Log
     {

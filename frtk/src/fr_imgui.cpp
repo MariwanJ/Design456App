@@ -36,7 +36,8 @@ namespace FR {
     int Fr_GL3Window::imguimzo_init()
     {
         ImGuizmo::BeginFrame();
-        auto activeCamera = cameraList[(unsigned int)active_camera_];
+        std::shared_ptr<Camera>activeCamera;
+        activeScene->findItemByName<Camera>(activeCamera, camNames[(unsigned int)activeScene->active_camera_]);
 
         if (activeCamera->getType() == CameraList::ORTHOGRAPHIC)
             ImGuizmo::SetOrthographic(true);
@@ -48,41 +49,41 @@ namespace FR {
         auto getbu = Fr_GL3Window::getfr_Gl3Window()->tempBu;
         auto cameraView = (activeCamera->GetMatrix());
 
-        glm::mat4 trnasfrom_ = getbu->GetMatrix();
-        if (getbu != NULL)
-        {
-            auto Camproj = activeCamera->getPorjection();
-            //float wWidth = (float)ImGui::GetWindowWidth();
-            //float wHeight= (float)ImGui::GetWindowHeight();
-            ImVec4 dim = getPortViewDimensions();
+        //glm::mat4 trnasfrom_ = getbu->GetMatrix();
+        //if (getbu != NULL)
+        //{
+        //    auto Camproj = activeCamera->getPorjection();
+        //    //float wWidth = (float)ImGui::GetWindowWidth();
+        //    //float wHeight= (float)ImGui::GetWindowHeight();
+        //    ImVec4 dim = getPortViewDimensions();
 
 
-            ImVec4 rect = ImVec4(dim.x, dim.y, dim.z - dim.x, dim.w - dim.y);
+        //    ImVec4 rect = ImVec4(dim.x, dim.y, dim.z - dim.x, dim.w - dim.y);
 
-            ImGuizmo::SetRect(rect.x, rect.y, rect.z, rect.w);
-            ImGuizmo::SetDrawlist();
-            //ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::ROTATE, ImGuizmo::LOCAL, glm::value_ptr(trnasfrom_));
-            ImGuizmo::Manipulate(glm::value_ptr(cameraView),
-                glm::value_ptr(Camproj),
-                ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL,
-                glm::value_ptr(trnasfrom_));
-            //ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::SCALE, ImGuizmo::LOCAL, glm::value_ptr(trnasfrom_));
-        }
+        //    ImGuizmo::SetRect(rect.x, rect.y, rect.z, rect.w);
+        //    ImGuizmo::SetDrawlist();
+        //    //ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::ROTATE, ImGuizmo::LOCAL, glm::value_ptr(trnasfrom_));
+        //    ImGuizmo::Manipulate(glm::value_ptr(cameraView),
+        //        glm::value_ptr(Camproj),
+        //        ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL,
+        //        glm::value_ptr(trnasfrom_));
+        //    //ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(Camproj), ImGuizmo::OPERATION::SCALE, ImGuizmo::LOCAL, glm::value_ptr(trnasfrom_));
+        //}
 
-        if (ImGuizmo::IsUsing()) {
-            auto resu = trnasfrom_[3];
-            //tempBu->SetPosition(transform[3]);
-            glm::vec3 trans, scaling;
-            glm::vec4 rot;
-            ExtractTransformMatrix(trnasfrom_, trans, rot, scaling);
-            if (0)
-                tempBu->Rotate(rot.x, rot.y, rot.z, rot.w);
-            if (0)
-                tempBu->Scale(scaling);
-            if (1)
-                tempBu->Translate(trans);
-            std::string resss = std::to_string(resu[0]) + " " + std::to_string(resu[1]) + " " + std::to_string(resu[2]);
-        }
+        //if (ImGuizmo::IsUsing()) {
+        //    auto resu = trnasfrom_[3];
+        //    //tempBu->SetPosition(transform[3]);
+        //    glm::vec3 trans, scaling;
+        //    glm::vec4 rot;
+        //    ExtractTransformMatrix(trnasfrom_, trans, rot, scaling);
+        //    if (0)
+        //        tempBu->Rotate(rot.x, rot.y, rot.z, rot.w);
+        //    if (0)
+        //        tempBu->Scale(scaling);
+        //    if (1)
+        //        tempBu->Translate(trans);
+        //    std::string resss = std::to_string(resu[0]) + " " + std::to_string(resu[1]) + " " + std::to_string(resu[2]);
+        //}
         return 0;
     }
 
@@ -251,9 +252,10 @@ namespace FR {
 
         if (ImGui::Button("Reset Camera to defaults")) {                            // Buttons return true when clicked (most widgets return true when edited/activated)
             counter++;
-            auto camm = cameraList[(int)active_camera_];
-            camm->setupCameraHomeValues();
-            camm->getUserData(data);
+            std::shared_ptr<Camera>activeCamera;
+            activeScene->findItemByName<Camera>(activeCamera, camNames[(unsigned int)activeScene->active_camera_]);
+            activeCamera->setupCameraHomeValues();
+            activeCamera->getUserData(data);
         }
         ImGui::SameLine();
         ImGui::Text("counter = %d", counter);
@@ -306,7 +308,8 @@ namespace FR {
 
         setPortViewDimension(ImVec4(Bound1.x, Bound1.y, Bound2.x, Bound2.y));
         auto win = getfr_Gl3Window();
-        auto activeCamera = win->cameraList[(int)win->active_camera_];
+        std::shared_ptr<Camera>activeCamera;
+        activeScene->findItemByName<Camera>(activeCamera, camNames[(unsigned int)activeScene->active_camera_]);
         // activeCamera->aspectRatio_ = (Bound2.x - Bound1.x) / (Bound2.y - Bound1.y);    //Must be updated always
         // activeCamera->updateViewMatrix();
          //WE MUST UPDATE THIS, OTHERWISE THE RENDERING WILL BE MISSING DATA, AND THE PICTURE SHOWN WILL BE WRONG!!
@@ -315,7 +318,7 @@ namespace FR {
         }
         sceneBuffer->RescaleFrameBuffer(wWidth, wHeight);
         sceneBuffer->Bind();
-        scene->RenderScene();
+        activeScene->RenderScene();
         ImGui::Image(
             (ImTextureID)sceneBuffer->getFrameTexture(),
             ImGui::GetContentRegionAvail(),
@@ -325,14 +328,14 @@ namespace FR {
         imguimzo_init();
         ImGui::End();
         sceneBuffer->Unbind();
-        if (++counter >= 35)
-        {
-            tempBu->Rotate(glm::vec3(0.0f, 0.0f, 1.0f), lineAngl);
-            lineMain->Rotate(glm::vec3(0.0f, 0.0f, 1.0f), 0);
-            //FRTK_CORE_INFO("{}", lineAngl);
-            lineAngl++;
-            counter = 0;
-        }
+        //if (++counter >= 35)
+        //{
+        //    tempBu->Rotate(glm::vec3(0.0f, 0.0f, 1.0f), lineAngl);
+        //    lineMain->Rotate(glm::vec3(0.0f, 0.0f, 1.0f), 0);
+        //    //FRTK_CORE_INFO("{}", lineAngl);
+        //    lineAngl++;
+        //    counter = 0;
+        //}
         return 0;
     }
 
@@ -404,18 +407,21 @@ namespace FR {
           //| ImGuiWindowFlags_NoScrollbar
           //| ImGuiWindowFlags_NoSavedSettings
             ;
+        
+        std::shared_ptr<Camera>activeCamera;
+        activeScene->findItemByName<Camera>(activeCamera, camNames[(unsigned int)activeScene->active_camera_]);
 
-        auto camm = cameraList[(int)active_camera_];
-        camm->getUserData(data);
+         
+        activeCamera->getUserData(data);
         imgui_CameraConfiguration(data);
-        if (active_camera_ != data.camType_) {
-            camm->isActive(false);
-            active_camera_ = data.camType_;
-            camm = cameraList[(int)active_camera_];
-            camm->getUserData(data);
+        if (activeScene->active_camera_!= data.camType_) {
+            activeCamera->isActive(false);
+            activeScene->active_camera_ = data.camType_;
+            activeScene->findItemByName<Camera>(activeCamera, camNames[(unsigned int)activeScene->active_camera_]);
+            activeCamera->getUserData(data);
         }
-        camm->setUserData(data);
-        camm->isActive(true);
+        activeCamera->setUserData(data);
+        activeCamera->isActive(true);
     }
 
     void Fr_GL3Window::SunOptions() {

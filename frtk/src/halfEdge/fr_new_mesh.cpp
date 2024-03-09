@@ -317,8 +317,11 @@ namespace FR {
         }
         if (normals_.size() == 0)
             normals_.reserve(vertices_.size());
+
         normals_.resize(vertices_.size());
-        std::fill(normals_.begin(), normals_.end(), 0);
+        for (auto item : normals_) {
+            item = 0;
+        }
         for (size_t i = 0; i < vertices_.size() / 3; ++i) {
             glm::vec3 vertex = GetVertex(i, vertices_.data());
             glm::vec3 normalized = (vertex / (m_max - m_min));

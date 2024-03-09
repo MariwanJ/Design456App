@@ -30,17 +30,16 @@
 //TODO: I don't see any reason to have these functions here any more - move them to other place
 /* Scene and engine*/
 namespace FR {
-    static Fr_Scene* scene = nullptr;
-
     void Fr_GL3Window::framebuffer_size_callback(GLFWwindow* window, int width, int height)
     {
         this->_w = width;
         _h = height;
         if (s_GladInitialized && s_GLFWInitialized) {
             glViewport(_x, _y, _w, _h);
-            auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
+            std::shared_ptr<Camera>activeCamera;
+            activeScene->findItemByName<Camera>(activeCamera,camNames[(unsigned int)activeScene->active_camera_]);
         }
-        WidgWindow->handle(FR::FR_WINDOW_RESIZE);
+        WidgWindow->handle(FR_WINDOW_RESIZE);
     }
 
     /*
@@ -65,7 +64,7 @@ namespace FR {
         m_GLFWevents.lastAction = action;
         m_GLFWevents.lastMod = mods;
         m_GLFWevents.scancode = scancode;
-        if (WidgWindow->handle(FR::FR_KEYBOARD) == 0) {
+        if (WidgWindow->handle( FR_KEYBOARD) == 0) {
             m_GLFWevents = { -1,-1,-1,-1,-1 };
             return;
         }
@@ -92,34 +91,34 @@ namespace FR {
         if (mouseEvent.Button == GLFW_MOUSE_BUTTON_LEFT && mouseEvent.Pressed == 1)
         {        //FRTK_CORE_INFO("MOUSE LEFT");
             LeftMouseClick(win);
-            if (WidgWindow->handle(FR::FR_PUSH) == 0) //Mouse click
+            if (WidgWindow->handle(FR_PUSH) == 0) //Mouse click
                 return;  //Events is consumed - no more action required
         }
         else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_LEFT && mouseEvent.Pressed == 0)
         {
             //FRTK_CORE_INFO("MOUSE LEFT");
             LeftMouseRelease(win);
-            if (WidgWindow->handle(FR::FR_RELEASE) == 0) //Mouse click
+            if (WidgWindow->handle( FR_RELEASE) == 0) //Mouse click
                 return;  //Events is consumed - no more action required
         }
 
         else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_RIGHT && mouseEvent.Pressed == 1)
         {
             RightMouseClick(win);
-            if (WidgWindow->handle(FR::FR_PUSH) == 0) //Mouse click
+            if (WidgWindow->handle(FR_PUSH) == 0) //Mouse click
                 return;  //Events is consumed - no more action required
         }
         else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_RIGHT && mouseEvent.Pressed == 0)
         {
             RightMouseRelease(win);
-            if (WidgWindow->handle(FR::FR_RELEASE) == 0) //Mouse click
+            if (WidgWindow->handle(FR_RELEASE) == 0) //Mouse click
                 return;  //Events is consumed - no more action required
         }
 
         else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_MIDDLE && mouseEvent.Pressed == 1)
         {
             MiddMouseClick(win);
-            if (WidgWindow->handle(FR::FR_PUSH) == 0) //Mouse click
+            if (WidgWindow->handle(FR_PUSH) == 0) //Mouse click
                 return;
         }
 
@@ -127,7 +126,7 @@ namespace FR {
         {
             //TODO : Not sure if widgets needs this event
             MiddMouseRelease(win);
-            if (WidgWindow->handle(FR::FR_RELEASE) == 0) //Mouse click
+            if (WidgWindow->handle(FR_RELEASE) == 0) //Mouse click
                 return;
         }
     }
@@ -145,7 +144,7 @@ namespace FR {
             mouseEvent.Old_y = ypos;
 
             LeftMouseDRAG(win, xpos, ypos);
-            if (WidgWindow->handle(FR::FR_LEFT_DRAG_PUSH) == 0) //Mouse click
+            if (WidgWindow->handle(FR_LEFT_DRAG_PUSH) == 0) //Mouse click
                 return;  //Events is consumed - no more action required
         }
         else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_LEFT && mouseEvent.Pressed == 0)
@@ -153,7 +152,7 @@ namespace FR {
             mouseEvent.Old_x = xpos;
             mouseEvent.Old_y = ypos;
             LeftMouseDRAGrelease(win, xpos, ypos);
-            if (WidgWindow->handle(FR::FR_LEFT_DRAG_RELEASE) == 0) //Mouse click
+            if (WidgWindow->handle(FR_LEFT_DRAG_RELEASE) == 0) //Mouse click
                 m_GLFWevents = { -1,-1,-1,-1,-1 };
             return;  //Events is consumed - no more action required
         }
@@ -163,7 +162,7 @@ namespace FR {
             mouseEvent.Old_x = xpos;
             mouseEvent.Old_y = ypos;
             RightMouseDRAG(win, xpos, ypos);
-            if (WidgWindow->handle(FR::FR_RIGHT_DRAG_PUSH) == 0) //Mouse click
+            if (WidgWindow->handle(FR_RIGHT_DRAG_PUSH) == 0) //Mouse click
                 return;  //Events is consumed - no more action required
         }
         else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_RIGHT && mouseEvent.Pressed == 0)
@@ -171,7 +170,7 @@ namespace FR {
             mouseEvent.Old_x = xpos;
             mouseEvent.Old_y = ypos;
             RightMouseDRAGrelease(win, xpos, ypos);
-            if (WidgWindow->handle(FR::FR_RIGHT_DRAG_RELEASE) == 0) //Mouse click
+            if (WidgWindow->handle(FR_RIGHT_DRAG_RELEASE) == 0) //Mouse click
                 m_GLFWevents = { -1,-1,-1,-1,-1 };
             return;  //Events is consumed - no more action required
         }
@@ -205,7 +204,7 @@ namespace FR {
             mouseEvent.Old_x = mouseEvent.Old_y = 0;
             MiddMouseDRAGrelease(win, xpos, ypos);
 
-            if (WidgWindow->handle(FR::FR_RELEASE) == 0) //Mouse click
+            if (WidgWindow->handle(FR_RELEASE) == 0) //Mouse click
                 m_GLFWevents = { -1,-1,-1,-1,-1 };
             phi = theta = 0.0f;
             mouseEvent.Button = -1;
@@ -220,7 +219,8 @@ namespace FR {
 
     void Fr_GL3Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
     {
-        auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
+        std::shared_ptr<Camera>activeCamera;
+        activeScene->findItemByName<Camera>(activeCamera, camNames[(unsigned int)activeScene->active_camera_]);
         userData_ data;
 
         activeCamera->getUserData(data);
@@ -258,7 +258,8 @@ namespace FR {
     void Fr_GL3Window::cameraPAN(GLFWwindow* win, double xpos, double ypos)
     {
         userData_ data;
-        auto activeCamera = Fr_GL3Window::getfr_Gl3Window()->cameraList[(unsigned int)Fr_GL3Window::getfr_Gl3Window()->active_camera_];
+        std::shared_ptr<Camera>activeCamera;
+        activeScene->findItemByName<Camera>(activeCamera, camNames[(unsigned int)activeScene->active_camera_]);
         activeCamera->getUserData(data);
 
         if (mouseEvent.Old_x == 0 && mouseEvent.Old_y == 0) {
@@ -291,7 +292,8 @@ namespace FR {
     {
         userData_ data;
 
-        auto activeCamera = cameraList[(unsigned int)active_camera_];
+        std::shared_ptr<Camera>activeCamera;
+        activeScene->findItemByName<Camera>(activeCamera, camNames[(unsigned int)activeScene->active_camera_]);
         activeCamera->getUserData(data);
         //// ImVec4 viewPortDim = getPortViewDimensions();
         //// ImVec2 center = ImVec2((viewPortDim.z ) / 2,(viewPortDim.w )/ 2);
@@ -374,7 +376,8 @@ namespace FR {
         float width, height;
         ImVec4 viewPortDim = getPortViewDimensions();
 
-        auto activeCamera = cameraList[(unsigned int)active_camera_];
+        std::shared_ptr<Camera>activeCamera;
+        activeScene->findItemByName<Camera>(activeCamera, camNames[(unsigned int)activeScene->active_camera_]);
         width = viewPortDim.z - viewPortDim.x;
         height = viewPortDim.w - viewPortDim.y;
 

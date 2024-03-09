@@ -34,7 +34,7 @@
 #include <Fr_GL3Window.h>
 
 namespace FR {
-    
+    const  char* camNames[TOTAL_CAMS] = { "Perspective","Orthographic","Top","Bottom","Front","Rear","Right","Left" };
     /*
     Normal view - home FreeCAD
     ,top

@@ -52,8 +52,7 @@ namespace FR {
     /**
      * Scene's camera- Must be a subclass of Transform to achive translation
      */
-    constexpr unsigned char TOTAL_CAMS = 8;
-    const char* camNames[TOTAL_CAMS] = { "Perspective","Orthographic","Top","Bottom","Front","Rear","Right","Left" };
+
     class FRTK_API Camera : public Transform {
         friend Fr_GL3Window;
     public:

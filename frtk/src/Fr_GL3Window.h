@@ -28,7 +28,7 @@
 #ifndef FR_GL3WINDOW_H
 #define FR_GL3WINDOW_H
 
-#include<fr_scene.h>
+#include<Fr_Scene.h>
 #include<fr_camera.h>
 #include<fr_light.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -44,6 +44,7 @@
 #include <fr_filebrowser.h>
 #include <ThreeDWidgets/fr_window.h>
 #include <ThreeDWidgets/fr_line_widget.h>
+#include<Fr_Scene.h>
 
 namespace FR {
     //Mouse picking - ray casting
@@ -84,6 +85,7 @@ namespace FR {
      *  Fr_GL3Windows class definition and methods.
      */
     class FRTK_API Fr_GL3Window {
+        friend Fr_Scene;
     public:
         /**
          * class constructors.
@@ -154,17 +156,15 @@ namespace FR {
          *
          * \return
          */
-        virtual std::shared_ptr<Transform> CreateSunTop();
-        virtual std::shared_ptr<Transform> CreateSunBottom();  //TODO: NOT SURE IF WE NEED 2??
 
-        /**
-         * Resize Fr_GL3Window size which affects glfw windows.
-         *
-         * \param x left-start position of the window
-         * \param y top-start position of the window
-         * \param w width of the window
-         * \param h height of the window
-         */
+         /**
+          * Resize Fr_GL3Window size which affects glfw windows.
+          *
+          * \param x left-start position of the window
+          * \param y top-start position of the window
+          * \param w width of the window
+          * \param h height of the window
+          */
         virtual void resize(int x, int y, int w, int h);
         /**
          * Show the window. This will also create different objects - See implementation
@@ -189,7 +189,7 @@ namespace FR {
         /**
          * Pointer to link to the scene.
          */
-        static Fr_Scene* scene;
+        std::shared_ptr<Fr_Scene> activeScene;
 
         /**
          * Vector of shared pointers for Transform object.
@@ -197,11 +197,10 @@ namespace FR {
          * 6 types of cameras are created by the window
          * see CameraList
          */
-        std::vector<std::shared_ptr<Camera>> cameraList; //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
 
-        /**
-         * Static pointer used to access the GLFW window.
-         */
+         /**
+          * Static pointer used to access the GLFW window.
+          */
         GLFWwindow* pWindow;
 
         /**
@@ -228,7 +227,6 @@ namespace FR {
         void setCameraType(CameraList typOfCamera);
         CameraList getCameraType();
         int imgui_CameraConfiguration(userData_& data);
-        genID idGen_; //Keeps the id generator - used to generate shape/objects unique ID
         float getAspectRation() const;
         eventData GLFWevents() const;
 
@@ -236,11 +234,6 @@ namespace FR {
 
         glfwMouseEvent getMouseEvents();
     protected:
-        /**
-         * Function to create all cameras listed in CameraList.
-         *
-         */
-        void CreateCameras();
 
         /**
          *
@@ -531,12 +524,6 @@ namespace FR {
         void flush();
 
         /**
-         * Transform pointer used to keep track to the scene graph SUN
-         * .
-         */
-        std::shared_ptr<Light> sun;
-        std::shared_ptr<Transform> sunT;
-        /**
         * low level variable to keep the id of the GLFW window
          * HWND .
          * TODO: Implement the Linux and other OS
@@ -582,10 +569,8 @@ namespace FR {
         ImVec2 mousePos; // Just for debug purpose
 
         //Dummy CODE - TODO REMOVE ME WHEN TEST IS FINISHD :
-        std::shared_ptr< Fr_Line_Widget> lineMain;
+        std::shared_ptr<Fr_Line_Widget> lineMain;
 #endif
-    public:
-        CameraList active_camera_;
     };
 }
 

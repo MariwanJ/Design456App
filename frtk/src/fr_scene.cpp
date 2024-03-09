@@ -29,10 +29,7 @@
 #include <fr_scene.h>
 #include <Fr_GL3Window.h>
 namespace FR {
- 
-    
-
-    Fr_Scene::Fr_Scene() :m_world(std::make_shared<std::vector< SceneItemStruct>>()),
+    Fr_Scene::Fr_Scene() :active_camera_(CameraList(0)),
         background_{ 0.9, 0.9, 0.9,1.0 } {
         type(NODETYPE::FR_SCENE);
 
@@ -261,8 +258,9 @@ namespace FR {
                 nItem->Rotate(glm::vec3(0.57f, -0.57f, -0.57f), 270.0f);
             }break;
             }
-            camMods.name=st;
+            camMods.name = st;
             camMods.Sceneitem = nItem;
+            m_world.push_back(camMods);
         }
     }
 
@@ -305,7 +303,7 @@ namespace FR {
      * This should render everything we have inside the scene.
      *
      */
- 
+
     void Fr_Scene::RenderScene() {
         float wWidth = (float)ImGui::GetWindowWidth();
         float wHeight = (float)ImGui::GetWindowHeight();
@@ -354,19 +352,19 @@ namespace FR {
     ///
 
     bool Fr_Scene::deleteItemByID(std::string_view str) {
-        auto it = std::remove_if(m_world->begin(), m_world->end(),
+        auto it = std::remove_if(m_world.begin(), m_world.end(),
             [str](const SceneItemStruct& obj) { return obj.name == str; });
-        if (it != m_world->end()) {
-            m_world->erase(it, m_world->end());
+        if (it != m_world.end()) {
+            m_world.erase(it, m_world.end());
             return true;
         }
         return false;
     }
 
     bool Fr_Scene::replaceItemByID(int id, SceneItemStruct& newItem) {
-        auto it = std::find_if(m_world->begin(), m_world->end(),
+        auto it = std::find_if(m_world.begin(), m_world.end(),
             [id](const SceneItemStruct& obj) { return obj.id == id; });
-        if (it != m_world->end()) {
+        if (it != m_world.end()) {
             *it = std::move(newItem);
             return true;
         }
@@ -376,18 +374,53 @@ namespace FR {
     // Item management functions
 
     void Fr_Scene::addObject(SceneItemStruct&& item) {
-        m_world->push_back(std::move(item));
+        m_world.push_back(std::move(item));
     }
 
     // Delete a SceneItemStruct by its unique identifier
     bool Fr_Scene::deleteItemByID(int id) {
-        auto it = std::remove_if(m_world->begin(), m_world->end(),
+        auto it = std::remove_if(m_world.begin(), m_world.end(),
             [id](const SceneItemStruct& obj) { return obj.id == id; });
 
-        if (it != m_world->end()) {
-            m_world->erase(it, m_world->end());
+        if (it != m_world.end()) {
+            m_world.erase(it, m_world.end());
             return true;
         }
         return false;
+    }
+
+    void Fr_Scene::Render(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
+    }
+    void Fr_Scene::RenderPrimativeShapes(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
+        // Iterate over entities with Fr_Grid and ItemName components
+        for (int i = 0; i < m_world.size(); i++) {
+            if (m_world[i].name == "Grid") {
+                auto t = m_world[i].Sceneitem;
+                /* Sceneitem->getGridShader()->Render(info,modelview);
+                 }
+
+                 auto blue = axes.getBlue();
+                 auto green = axes.getGreen();
+                 auto red = axes.getRed();
+                 auto zblue = axes.getZBlue();
+
+                 blue->Render(info, modelview);
+                 green->Render(info, modelview);
+                 red->Render(info, modelview);
+                 zblue->Render(info, modelview);*/
+                ;
+            }
+        }
+    }
+
+    void Fr_Scene::RenderWidgetToolkit(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
+    }
+    void Fr_Scene::RenderSilhouette(const glm::mat4& mvp) {
+    }
+
+    void Fr_Scene::RenderIMGui(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
+        userData_ data;
+        //Render GLFW stuff or Our 3D drawing
+        Fr_GL3Window::getfr_Gl3Window()->renderimGUI(data);
     }
 }

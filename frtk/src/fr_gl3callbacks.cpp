@@ -210,7 +210,7 @@ namespace FR {
         if (fileDialog.HasSelected())
         {
             std::string fileName = fileDialog.GetSelected().string();
-            scene->add3DObject(fileName);
+            activeScene->add3DObject(fileName);
             fileDialog.ClearSelected();
             showOpenDialog = false;
         }

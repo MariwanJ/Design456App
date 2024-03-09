@@ -99,7 +99,7 @@ namespace FR {
          */
         ~Shape();
         /**
-        *   Construct the helf-edged data structre for the shape
+        *   Construct the helf-edged data structure for the shape
 
         */
         int build();
