@@ -79,7 +79,7 @@ namespace FR {
         bool      visible;
     };
 
-    class Shape {
+    class Shape : public Transform {
     public:
         /**
          * Default Constructor

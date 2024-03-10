@@ -80,7 +80,7 @@ namespace FR {
         faces[nTriangles - 1]->next = faces[0];
         faces[0]->prev = faces[nTriangles - 1];
 
-        //create the vertexes in the same order as the verticies
+        //create the vertexes in the same order as the vertices
         unsigned int faceNo = 0;
         for (unsigned int i = 0; i < nVertexes; i++) {
             vert_e[i]->vertexValue = glm::vec3(vertices_[i * 3 + 1], vertices_[i * 3 + 1], vertices_[i * 3 + 2]);

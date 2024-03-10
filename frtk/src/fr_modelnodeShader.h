@@ -37,12 +37,12 @@ namespace FR {
     class Mesh;
     class ShaderProgram;
 
-    class FRTK_API ModelNode : public Node {
+    class FRTK_API ModelNode : public Transform {
     public:
         /**
          * Constructor
          */
-        ModelNode(unsigned int color = 0x111111, float silhouette = 0.005);
+        ModelNode(unsigned int color, float silhouette );
         ModelNode(glm::vec4 color = glm::vec4(FR_WHITE), float silhouette = 0.005);
 
         /**

@@ -193,7 +193,7 @@ namespace FR {
         FR_PRIMATIVESHADER  ,
         FR_LIGHT            ,
         FR_CAMERA           ,
-        FR_ModelNode        ,
+        FR_MODEL_NODE        ,
         FR_SCENE            ,
         FR_MESH             ,
         FR_GRID             ,

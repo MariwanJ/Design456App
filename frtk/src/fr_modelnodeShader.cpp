@@ -59,7 +59,7 @@ namespace FR {
             shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
             // shared_->texture_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/texture");
         }
-        type(NODETYPE::FR_ModelNode);
+        type(NODETYPE::FR_MODEL_NODE);
     }
 
     ModelNode::ModelNode(glm::vec4 color, float silhouette) :mesh_{ nullptr },
@@ -71,7 +71,7 @@ namespace FR {
             shared_->silhouette_program = new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/silhouette");
             // shared_->texture_program= new ShaderProgram("E:/Projects/Design456App/frtk/src/shaders/texture");
         }
-        type(NODETYPE::FR_ModelNode);
+        type(NODETYPE::FR_MODEL_NODE);
     }
 
     ModelNode::~ModelNode() {

@@ -71,7 +71,8 @@ namespace FR {
         void SetBackgroud(float r, float g, float b, float alfa);
 
         void add3DObject(std::string fName);
-        void delete3DObject(std::shared_ptr<Transform>& obj);
+ 
+        void  delete3DObject(SceneItemStruct& obj);
 
         /**
          * Renders the scene
@@ -81,6 +82,8 @@ namespace FR {
 
    
         bkgC  background_;
+
+        void Fr_Scene::delete3DObject(std::shared_ptr<Node> obj);
 
         void setBackgroud(float r, float g, float b, float alfa);
         void setBackgroud(glm::vec4 color);
@@ -166,6 +169,7 @@ namespace FR {
         }
 
         void addObject(SceneItemStruct&& item);
+
         SceneItemStruct CreateGrid();
         SceneItemStruct CreateAxis();
 

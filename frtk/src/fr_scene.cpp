@@ -29,7 +29,7 @@
 #include <fr_scene.h>
 #include <Fr_GL3Window.h>
 namespace FR {
-    Fr_Scene::Fr_Scene() :active_camera_(CameraList(0)),
+    Fr_Scene::Fr_Scene() : active_camera_(CameraList(0)),
         background_{ 0.9, 0.9, 0.9,1.0 } {
         type(NODETYPE::FR_SCENE);
 
@@ -54,12 +54,10 @@ namespace FR {
 
     void Fr_Scene::add3DObject(std::string fName)
     {
-        auto newObj_t = std::make_shared<Transform>();
-        newObj_t->Translate(0, 0, 0);
-        newObj_t->Scale(1, 1, 1);
-        newObj_t->Rotate(0, 1, 0, 0); //TODO CHECK ME
-        auto newObj = std::make_shared<ModelNode>(glm::vec4(FR_BISQUE), 0.0005f); //  color and
-
+        std::shared_ptr<ModelNode> newObj = std::make_shared<ModelNode>(); //  color and
+        newObj->Translate(0, 0, 0);
+        newObj->Scale(1, 1, 1);
+        newObj->Rotate(0, 1, 0, 0); //TODO CHECK ME
         //texture
         newObj->m_Texture2D = std::make_shared<Fr_Texture2D>();
         //std::string imag = ("E:/Projects/Design456App/resources/Texture/test.png");
@@ -87,39 +85,40 @@ namespace FR {
         rightlight_spot->SetDiffuse(0.0f, 0.0f, 0.0f);
         rightlight_spot->SetAmbient(0.42f, 0.42f, 0.42f);
         rightlight_spot->SetAttenuation(1.0f, 0.002f, 0.0f);
-        newObj_t->AddNode(rightlight_spot);
-        newObj_t->isActive(true);
-        newObj_t->AddNode(newObj);
-        AddNode(newObj_t);
+        newObj->AddNode(rightlight_spot);
+        newObj->isActive(true);
+        newObj->AddNode(newObj);
+
+        SceneItemStruct newtT(newObj, fName);
+        m_world.push_back(newtT);
     }
 
-    void Fr_Scene::delete3DObject(std::shared_ptr<Transform>& obj)
+    void Fr_Scene::delete3DObject(SceneItemStruct& obj)
     {
+        auto it = std::find(m_world.begin(), m_world.end(), obj);
+        if (it != m_world.end()) {
+            m_world.erase(it); // Erase the item if found
+        }
+        else {
+            std::cout << "Item not found." << std::endl;
+        }
     }
 
-    ///////**
-    //////* This is a general process  for drawing camera, shadow map, render shape /faces ..etc
-    //////*/
-    //////void Fr_Scene::RenderScene() {
-    //////
-    //////    RenderInfo render_info;
-    //////    if (!SetupCamera(render_info.projection, render_info.modelview))
-    //////        throw std::runtime_error("Scene::Render(): Camera not found");
-    //////
-    //////    SetupLight(render_info.modelview, render_info.lights);
-    //////    int draw_framebuffer = 0;
-    //////    glCheckFunc(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &draw_framebuffer));
-    //////    glCheckFunc(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_framebuffer));
-    //////    glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-    //////
-    //////    render_info.id = 0;
-    //////    render_info.render_transparent = false;
-    //////    Render(render_info, render_info.modelview);
-    //////    render_info.id = 0;
-    //////    render_info.render_transparent = true;
-    //////    Render(render_info, render_info.modelview);
-    //////}
-    //////
+    void Fr_Scene::delete3DObject(std::shared_ptr<Node> obj)
+    {
+        auto it = std::find_if(m_world.begin(), m_world.end(), [&](const SceneItemStruct& item) {
+
+            return item.Sceneitem==obj;
+            });
+        if (it != m_world.end()) {
+            m_world.erase(it); // Erase the item if found
+        }
+        else {
+            std::cout << "Item not found." << std::endl;
+        }
+    }
+    
+
     void Fr_Scene::setBackgroud(float r, float g, float b, float alfa) {
         m_Background = glm::vec4(r, g, b, alfa);
     }
@@ -394,7 +393,14 @@ namespace FR {
     }
 
     void Fr_Scene::Render(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
-
+        //3D Mesh model
+        std::vector<std::shared_ptr<ModelNode>> model;
+        findOccurrencesOfType(model, NODETYPE::FR_MODEL_NODE);
+        if (model.size()>0){
+        for (auto item : model) {
+            item->Render(info, modelview);
+            }
+        }
     }
 
     void Fr_Scene::RenderPrimativeShapes(FR::Node::RenderInfo& info, const glm::mat4& modelview) {

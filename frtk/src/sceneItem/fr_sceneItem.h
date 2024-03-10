@@ -49,6 +49,10 @@ namespace FR {
             uint64_t itemId = genID())
             : Sceneitem(item),id(itemId), name(itemName){
         }
+        // Define operator== for comparing SceneItemStruct objects
+        bool operator==(const SceneItemStruct& other) const {
+            return (id == other.id );
+        }
     };
 }
 
