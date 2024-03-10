@@ -79,7 +79,7 @@ namespace FR {
         /**
          * Sets the uniform light data
          */
-        void LoadLights(ShaderProgram* program, const std::vector<LightInfo>& lights);
+        void LoadLights(std::shared_ptr<ShaderProgram> program, const std::vector<LightInfo>& lights);
 
         /**
          * Renders the silhouette
@@ -94,12 +94,12 @@ namespace FR {
         void defaultShaders();
         // Shared between instances
         struct Shared {
-            ShaderProgram* primative_program;
-            ShaderProgram* silhouette_program;          //the dark shape and outline of object
-            ShaderProgram* shadowmap_program;
-            ShaderProgram* texture_program;
+            std::shared_ptr<ShaderProgram>  primative_program;
+            std::shared_ptr<ShaderProgram>  silhouette_program;          //the dark shape and outline of object
+            std::shared_ptr<ShaderProgram>  shadowmap_program;
+            std::shared_ptr<ShaderProgram>  texture_program;
         };
-        static Shared* shared_;
+        Shared shared_;
 
         // Attributes
         std::shared_ptr <Fr_Primatives> m_Primative;

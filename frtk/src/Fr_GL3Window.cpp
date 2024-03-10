@@ -317,13 +317,12 @@ namespace FR {
          *  Main layer which has the dockspace and all other GUI parts and will be default visible object layer
          */
         std::shared_ptr<Fr_ImGuiLayer> mlayer = std::make_shared<Fr_ImGuiLayer>();
-        layers_.push_back(mlayer);
-        layers_[0]->createLayer();
         CreateScene();   //Main drawing process.
         activeScene->setupScene();
+        layers_.push_back(mlayer);
+        layers_[0]->createLayer();
         glfwGetFramebufferSize(pWindow, &_w, &_h);
         glViewport(_x, _y, _w, _h);
-
         userData_ data;
         while (!glfwWindowShouldClose(pWindow))
         {

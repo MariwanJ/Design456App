@@ -32,8 +32,7 @@
 #include <fr_primativeShader.h>
 #include <glad/glad.h>
 namespace FR{
-Fr_PrimaitiveShader::Shared * Fr_PrimaitiveShader::shared_ = nullptr;
-
+ 
 //static const glm::mat4 kShadowMapBiasMatrix(
 //    0.5, 0.0, 0.0, 0.0,
 //    0.0, 0.5, 0.0, 0.0,
@@ -61,26 +60,22 @@ void Fr_PrimaitiveShader::setSilhouette(const char* newValue)
     f_silhouette_ = newValue;
 }
 
-Fr_PrimaitiveShader::Fr_PrimaitiveShader(unsigned int color, float silhouette) :
+Fr_PrimaitiveShader::Fr_PrimaitiveShader(unsigned int color, float silhouette) :shared_{0,0,0,0},
     m_Primative{ nullptr }, silhouette_(silhouette) {
     SetColor(color);
-    if (!shared_) {
-        shared_ = new Shared;
-        defaultShaders();
-        shared_->primative_program = new ShaderProgram(f_objectshader_);
-        shared_->silhouette_program = new ShaderProgram(f_silhouette_);
-    }
+    defaultShaders();
+    shared_.primative_program = std::make_shared<ShaderProgram>(f_objectshader_);
+    shared_.silhouette_program = std::make_shared<ShaderProgram>(f_silhouette_);
+ 
     type(NODETYPE::FR_PRIMATIVESHADER);
 }
 Fr_PrimaitiveShader::Fr_PrimaitiveShader(glm::vec4 color, float silhouette) :
     m_Primative{ nullptr }, silhouette_(silhouette) {
     SetColor(color);
     defaultShaders();
-    if (!shared_) {
-        shared_ = new Shared;
-        shared_->primative_program = new ShaderProgram(f_objectshader_);
-        shared_->silhouette_program = new ShaderProgram(f_silhouette_);
-    }
+    shared_.primative_program = std::make_shared<ShaderProgram>(f_objectshader_);
+    shared_.silhouette_program = std::make_shared<ShaderProgram>(f_silhouette_);
+    
     type(NODETYPE::FR_PRIMATIVESHADER);
 }
 
@@ -91,9 +86,6 @@ Fr_PrimaitiveShader::Fr_PrimaitiveShader(float color[4], float silhouette) :
 }
 
 Fr_PrimaitiveShader::~Fr_PrimaitiveShader() {
-    delete shared_->primative_program;
-    delete shared_->silhouette_program;
-    delete shared_;
 }
 
 void Fr_PrimaitiveShader::SetColor(glm::vec4 color) {
@@ -117,7 +109,7 @@ void Fr_PrimaitiveShader::SetPrimative(std::shared_ptr<Fr_Primatives> primative)
     m_Primative = primative;
 }
 
-void Fr_PrimaitiveShader::LoadLights(ShaderProgram* program, const std::vector<LightInfo>& lights) {
+void Fr_PrimaitiveShader::LoadLights(std::shared_ptr<ShaderProgram> program, const std::vector<LightInfo>& lights) {
     unsigned int nlights = std::min(lights.size(), kMaxLights);
     program->SetUniformInteger("nlights", nlights);
     for (size_t i = 0; i < nlights; ++i) {
@@ -145,7 +137,7 @@ void Fr_PrimaitiveShader::Render(RenderInfo& info, const glm::mat4& modelview) {
     if (m_Color.a == 1)
         RenderSilhouette(mvp);
 
-    ShaderProgram* program = shared_->primative_program;
+    std::shared_ptr<ShaderProgram> program = shared_.primative_program;
     program->Enable();
 
 
@@ -166,7 +158,7 @@ void Fr_PrimaitiveShader::Render(RenderInfo& info, const glm::mat4& modelview) {
 }
 
 void Fr_PrimaitiveShader::RenderSilhouette(const glm::mat4& mvp) {
-    ShaderProgram* program = shared_->silhouette_program;
+    std::shared_ptr<ShaderProgram> program = shared_.silhouette_program;
     program->Enable();
     program->SetAttribLocation("position", 0);
     program->SetAttribLocation("texCoord", 1);

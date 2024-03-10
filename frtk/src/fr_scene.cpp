@@ -153,9 +153,7 @@ namespace FR {
 
     void Fr_Scene::CreateDefaultCameras(void)
     {
-        for (int i = 0; i < TOTAL_CAMS; i++) {
-            std::string st = camNames[i];
-            SceneItemStruct camMods = SceneItemStruct();
+        for (int i = 0; i < TOTAL_CAMS; i++) {         
             std::shared_ptr<Camera> nItem = std::make_shared<Camera>();
             nItem->setType(CameraList(i));
             nItem->type(NODETYPE::FR_CAMERA);
@@ -258,31 +256,38 @@ namespace FR {
                 nItem->Rotate(glm::vec3(0.57f, -0.57f, -0.57f), 270.0f);
             }break;
             }
-            camMods.name = st;
-            camMods.Sceneitem = nItem;
+
+            SceneItemStruct camMods = SceneItemStruct(nItem, camNames[i]);
             m_world.push_back(camMods);
         }
     }
 
     SceneItemStruct Fr_Scene::CreateDefaultSunLight(void)
     {   //TODO : how many sun we should have???
-        SceneItemStruct sunItem;
-        //sunItem.Sceneitem->SetPosition(0.0f, 0.0f, 1000.0f);
-        //sunItem.Sceneitem->SetDiffuse(0.25f, 0.25f, 0.25f);
-        //sunItem.Sceneitem->SetAmbient(0.2f, 0.2f, 0.2f);
-        //sunItem.Sceneitem->EnableShadowMap(glm*/::vec3(0, 0, 1), glm::vec3(0, 0, 4), glm::ortho<float>(-10, 10, -10, 10, 100, 114));
-        //sunItem.Sceneitem->isActive(true);
+        std::shared_ptr<Light> sun = std::shared_ptr<Light>(new Light);
+        sun->SetPosition(0.0f, 0.0f, 1000.0f);
+        sun->SetDiffuse(0.25f, 0.25f, 0.25f);
+        sun->SetAmbient(0.2f, 0.2f, 0.2f);
+        sun->EnableShadowMap(glm::vec3(0, 0, 1), glm::vec3(0, 0, 4), glm::ortho<float>(-10, 10, -10, 10, 100, 114));
+        sun->isActive(true);
+        SceneItemStruct sunItem(sun, "Sun");
+        m_world.push_back(sunItem);
         return sunItem;
     }
 
     SceneItemStruct  Fr_Scene::CreateGrid() {
-        SceneItemStruct gridsItem;
-
+        auto gr = std::shared_ptr<Fr_Grid>(new Fr_Grid);
+        SceneItemStruct gridsItem(gr, "Grid");
+        gr->CreateGrid();
+        m_world.push_back(gridsItem);
         return gridsItem;
     }
 
     SceneItemStruct  Fr_Scene::CreateAxis() {
-        SceneItemStruct  allAxis;
+        auto ax = std::shared_ptr<Fr_Axis3D>(new Fr_Axis3D);
+        SceneItemStruct   allAxis(ax, "Axis3D"); 
+        ax->CreateAxis3D();
+        m_world.push_back(allAxis);
         return allAxis;
     }
 
@@ -291,9 +296,8 @@ namespace FR {
         //auto t= addTest();
         //auto f = t.get_mut<test>(); // Now this should work
         //f->printme();
-
-        CreateDefaultSunLight();
         CreateDefaultCameras();
+        CreateDefaultSunLight();
         CreateAxis();
         CreateGrid();
     }
@@ -390,27 +394,29 @@ namespace FR {
     }
 
     void Fr_Scene::Render(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
+
     }
+
     void Fr_Scene::RenderPrimativeShapes(FR::Node::RenderInfo& info, const glm::mat4& modelview) {
         // Iterate over entities with Fr_Grid and ItemName components
-        for (int i = 0; i < m_world.size(); i++) {
-            if (m_world[i].name == "Grid") {
-                auto t = m_world[i].Sceneitem;
-                /* Sceneitem->getGridShader()->Render(info,modelview);
-                 }
+        std::vector<std::shared_ptr<Fr_Grid>> grid;
+        findOccurrencesOfType(grid, NODETYPE::FR_GRID);
 
-                 auto blue = axes.getBlue();
-                 auto green = axes.getGreen();
-                 auto red = axes.getRed();
-                 auto zblue = axes.getZBlue();
-
-                 blue->Render(info, modelview);
-                 green->Render(info, modelview);
-                 red->Render(info, modelview);
-                 zblue->Render(info, modelview);*/
-                ;
-            }
+        for (int i = 0; i < grid.size(); i++) {
+            grid[i]->getGridShader()->Render(info, modelview);
         }
+         std::shared_ptr<Fr_Axis3D>  axis;
+         findItemByName(axis, "Axis3D");
+
+        auto blue = axis->getBlue();
+        auto green = axis->getGreen();
+        auto red = axis->getRed();
+        auto zblue = axis->getZBlue();
+
+        blue->Render(info, modelview);
+        green->Render(info, modelview);
+        red->Render(info, modelview);
+        zblue->Render(info, modelview);
     }
 
     void Fr_Scene::RenderWidgetToolkit(FR::Node::RenderInfo& info, const glm::mat4& modelview) {

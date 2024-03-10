@@ -186,22 +186,23 @@ namespace FR {
 
     //Define all kind of widgets here, YOU MUST DO THIS!!
     typedef enum class NODETYPE {
-        FR_NODE = 0,
-        FR_GROUP = 1,
-        FR_TRANSFORM = 2,
-        FR_MANIPULATOR = 3,
-        FR_PRIMATIVESHADER = 4,
-        FR_LIGHT = 5,
-        FR_CAMERA = 6,
-        FR_ModelNode = 7,
-        FR_SCENE = 8,
-        FR_MESH = 9,
-        FR_GRID = 10,
-        //FR WIDGETS
-        FR_WIDGET = 11,
-        FR_WGROUP = 12,
-        FR_WINDOW = 13,
-        FR_LINE_WIDGET = 14,
+        FR_NODE             = 0,
+        FR_GROUP            ,
+        FR_TRANSFORM        ,
+        FR_MANIPULATOR      ,
+        FR_PRIMATIVESHADER  ,
+        FR_LIGHT            ,
+        FR_CAMERA           ,
+        FR_ModelNode        ,
+        FR_SCENE            ,
+        FR_MESH             ,
+        FR_GRID             ,
+        FR_AXIS3D           ,
+        //FR WIDGETS           
+        FR_WIDGET           ,
+        FR_WGROUP           ,
+        FR_WINDOW           ,
+        FR_LINE_WIDGET      ,
     }NODETYPE;
 }
 #endif

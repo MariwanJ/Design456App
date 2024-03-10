@@ -39,10 +39,15 @@ namespace FR {
         uint64_t id;
         std::string name;
         //Default constructor
-        SceneItemStruct(std::shared_ptr<std::any> item = nullptr,
+        SceneItemStruct(std::shared_ptr<Node> item = nullptr,
             const std::string& itemName = "NoName",
             uint64_t itemId = genID())
             : id(itemId), name(itemName) {
+        }
+        SceneItemStruct(std::shared_ptr<Node> item = nullptr,
+            const char* itemName = "NoName",
+            uint64_t itemId = genID())
+            : Sceneitem(item),id(itemId), name(itemName){
         }
     };
 }

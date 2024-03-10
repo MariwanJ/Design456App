@@ -107,14 +107,15 @@ namespace FR {
 
         // find all occurrences of a specific type of object
         template <typename T>
-        void  findOccurrencesOfType(std::vector<T>& vect, const NODETYPE& type) {
+        void  findOccurrencesOfType(std::vector<std::shared_ptr<T>>& vect, const NODETYPE&& type) {
             for (size_t i = 0; i < m_world.size(); ++i) {
                 const auto& sceneItem = m_world[i];
                 if (sceneItem.Sceneitem->isOfType(type)) {
-                    vect.push_back(sceneItem.Sceneitem);
+                    std::shared_ptr<T> ptr = std::static_pointer_cast<T>(sceneItem.Sceneitem);
+                    vect.push_back(ptr);
                 }
             }
-        }
+        }   
 
         template <typename T>
         void replaceItemByName(std::shared_ptr<T>other, std::string_view name) {

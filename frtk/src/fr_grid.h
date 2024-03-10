@@ -36,80 +36,139 @@
 #include <fr_node.h>
 #include <fr_light.h>
 #include <fr_primatives.h>
-
+#include <fr_primativeShader.h>
 namespace FR {
-    class FRTK_API Grid :public Node
-    {
-    public:
-        /**
-         * class constructor.
-         *
-         */
-        Grid();
+	class FRTK_API Fr_Grid :public Node
+	{
+	public:
+		/**
+		 * class constructor.
+		 *
+		 */
+		Fr_Grid();
 
-        void setGridParam(unsigned int sections = 100, unsigned int gridWidth = 10, glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 scale = glm::vec3(0.0f, 0.0f, 0.0f));
-        /**
-         * Class destructor.
-         *
-         */
-        ~Grid();
-        /**
-         * Sets the position of the grid.
-         *
-         * \param pos Vertext that is the center of the grid
-         */
-        void setCenterPosition(glm::vec3 pos);
-        /**
-         * Sets Angle of rotation and the axis of rotation.
-         *
-         * \param axis 3 floats - Axis of rotation
-         * \param angle Angle of rotation in degrees
-         */
-        void setAngle(float Angle);
+		// Copy constructor
+// Copy constructor
+		Fr_Grid(const Fr_Grid& other)
+			: Node(other), sections_(other.sections_), gridWidth_(other.gridWidth_),
+			scale_(other.scale_), centerPos_(other.centerPos_),
+			gridRotation_(other.gridRotation_), gridColor_(other.gridColor_)
+		{
+			// Check if other is not null
+			if (other.gridShader) {
+				// Copy the shared pointer
+				gridShader = std::make_shared<Fr_PrimaitiveShader>(*other.gridShader);
+			}
+			else {
+				// Handle the case where other is null (nullptr)
+				// You can choose to set gridShader to nullptr or take some other action.
+				gridShader = nullptr; // For example, setting it to nullptr.
+			}
+		}
 
-        /**
-         * Set Grid rotation.
-         *
-         * \param rotation 4 float : axis and an angle
-         */
-        void setRotation(glm::vec4 rotation);
-        /**
-         * Get rotation axis and angle in radians.
-         *
-         * \return
-         */
-        glm::vec4 getRotation(void);
-        /**
-         * Sets the grid visibility.
-         *
-         * \param status boolean variable. If ture: Grids shown, if false: Grid is not visible
-         */
-        void setVisible(bool status);
-        /**
-         * Sets grid size. This is the distance between each line in both axis
-         */
-        void setgridWidth(unsigned int sizeINmm);
-        /**
-         * Returns the grid size.
-         *
-         * \return gird size defined previously
-         */
-        unsigned int getgridWidth(void) const;
 
-        /**
-         * Create the Grid verticies.
-         *
-         * \return pointer to the created grid
-         */
-        std::shared_ptr<Transform>CreateGrid();
-    private:
+		// Assignment operator
+		Fr_Grid& operator=(const Fr_Grid& other)
+		{
+			if (this != &other) // self-assignment check
+			{
+				Node::operator=(other); // call the base class assignment operator
 
-        int sections_; //No of lines in both directions
-        int gridWidth_; //Distance between each line in mm. This will be affected by the scale
-        glm::vec3 scale_; //Scale the whole grid - Be careful this affects the distance value.
-        glm::vec3 centerPos_;//Center of the grid
-        glm::vec4 gridRotation_; //(Axis, angle) 4 float values
-        glm::vec4 gridColor_;
-    };
+				// Copy the simple members
+				sections_ = other.sections_;
+				gridWidth_ = other.gridWidth_;
+				scale_ = other.scale_;
+				centerPos_ = other.centerPos_;
+				gridRotation_ = other.gridRotation_;
+				gridColor_ = other.gridColor_;
+
+				// Copy the shared pointer if it is not NULL
+				gridShader = (other.gridShader != nullptr) ? std::make_shared<Fr_PrimaitiveShader>(*other.gridShader) : nullptr;
+			}
+			return *this;
+		}
+		// Move constructor 
+		Fr_Grid(Fr_Grid&& other) noexcept
+			: Node(std::move(other)), sections_(std::exchange(other.sections_, 0)),
+			gridWidth_(std::exchange(other.gridWidth_, 0)),
+			scale_(std::move(other.scale_)),
+			centerPos_(std::move(other.centerPos_)),
+			gridRotation_(std::move(other.gridRotation_)),
+			gridColor_(std::move(other.gridColor_)),
+			gridShader(std::move(other.gridShader))
+		{
+			// Set the moved-from pointer to null
+			other.gridShader = nullptr;
+		}
+
+
+		void setGridParam(unsigned int sections = 100, unsigned int gridWidth = 10, glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 scale = glm::vec3(0.0f, 0.0f, 0.0f));
+		/**
+		 * Class destructor.
+		 *
+		 */
+		~Fr_Grid();
+		/**
+		 * Sets the position of the grid.
+		 *
+		 * \param pos Vertex that is the center of the grid
+		 */
+		void setCenterPosition(glm::vec3 pos);
+		/**
+		 * Sets Angle of rotation and the axis of rotation.
+		 *
+		 * \param axis 3 floats - Axis of rotation
+		 * \param angle of rotation in degrees
+		 */
+		void setAngle(float Angle);
+
+		/**
+		 * Set Grid rotation.
+		 *
+		 * \param rotation 4 float : axis and an angle
+		 */
+		void setRotation(glm::vec4 rotation);
+		/**
+		 * Get rotation axis and angle in radians.
+		 *
+		 * \return
+		 */
+		glm::vec4 getRotation(void);
+		/**
+		 * Sets the grid visibility.
+		 *
+		 * \param status boolean variable. If true: Grids shown, if false: Grid is not visible
+		 */
+		void setVisible(bool status);
+		/**
+		 * Sets grid size. This is the distance between each line in both axis
+		 */
+		void setgridWidth(unsigned int sizeINmm);
+		/**
+		 * Returns the grid size.
+		 *
+		 * \return gird size defined previously
+		 */
+		unsigned int getgridWidth(void) const;
+
+		std::shared_ptr<Fr_PrimaitiveShader> getGridShader();
+
+		/**
+		 * Create the Grid vertices.
+		 *
+		 * \return pointer to the created grid
+		 */
+		void CreateGrid();
+
+	private:
+		int sections_; //No of lines in both directions
+		int gridWidth_; //Distance between each line in mm. This will be affected by the scale
+		glm::vec3 scale_; //Scale the whole grid - Be careful this affects the distance value.
+		glm::vec3 centerPos_;//Center of the grid
+		glm::vec4 gridRotation_; //(Axis, angle) 4 float values
+		glm::vec4 gridColor_;
+		std::shared_ptr<Fr_PrimaitiveShader> gridShader;
+	};
 }
+
 #endif
