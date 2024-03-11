@@ -58,7 +58,7 @@ namespace FR {
         for (unsigned int i = 0; i < nTriangles; i++) {
             std::shared_ptr <mesh_face>tempSh = std::make_shared <mesh_face>();
             tempSh->fshape = this;
-            faces.push_back(tempSh);
+            faces.push_back(std::move(tempSh));
         }
         for (unsigned int i = 0; i < nTriangles - 1; i++) {
             faces[i]->next = faces[i + 1];
@@ -95,8 +95,6 @@ namespace FR {
         for (unsigned int i = 0; i < nTriangles; i++) {
             for (unsigned int j = 0; j < 3; j++) {
                 //half edges connection to vertexes
-                hedg[i + j]->face = faces[i];
-                hedg[i + j]->face = faces[i];
                 hedg[i + j]->face = faces[i];
             }
         }

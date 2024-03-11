@@ -42,7 +42,7 @@ namespace FR {
         SceneItemStruct(std::shared_ptr<Node> item = nullptr,
             const std::string& itemName = "NoName",
             uint64_t itemId = genID())
-            : id(itemId), name(itemName) {
+            : Sceneitem(item),id(itemId), name(itemName) {
         }
         SceneItemStruct(std::shared_ptr<Node> item = nullptr,
             const char* itemName = "NoName",
