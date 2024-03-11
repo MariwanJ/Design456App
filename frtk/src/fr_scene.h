@@ -99,6 +99,8 @@ namespace FR {
         void RenderSilhouette(const glm::mat4& mvp);
         void RenderIMGui(RenderInfo& info, const glm::mat4& modelview);
 
+        std::string getUniqueName(const std::string& name, const std::vector<std::string>& names);
+
         SceneItemStruct CreateDefaultSunLight(void);
         CameraList active_camera_;
 

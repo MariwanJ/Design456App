@@ -60,6 +60,7 @@
 #include <variant>
 #include <vector>
 #include <string>
+#include <filesystem>
 
  //for ResourcePath
 #if defined(_WIN32)

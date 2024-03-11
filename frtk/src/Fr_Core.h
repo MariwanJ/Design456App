@@ -47,7 +47,7 @@
 #include <spdlog/fmt/ostr.h>
 #include <../instrumentation/Instrumentor.h>
 
-    //imGUI
+	//imGUI
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -74,14 +74,14 @@ namespace FR {
 #ifdef _WIN32
 #define DEBUG_BREAK __debugbreak()
 #elif defined(__APPLE__)
-    DEBUG_BRAK  raise(SIGTRAP)   //Not sure if it works TODO : CHECKME
+	DEBUG_BRAK  raise(SIGTRAP)   //Not sure if it works TODO : CHECKME
 #elif define(__linux__)
-    DEBUG_BRAK  raise(SIGTRAP)   //ALL POSIX OS
+	DEBUG_BRAK  raise(SIGTRAP)   //ALL POSIX OS
 #endif
 
-        /* Use this only for GLAD - Not used with GLFW calls
-        *  You should also have a valid GLAD initialization
-        */
+		/* Use this only for GLAD - Not used with GLFW calls
+		*  You should also have a valid GLAD initialization
+		*/
 #ifdef FRTK_ENABLE_ASSERTS
 #define FRTK_CORE_APP_ASSERT(x, ...)  if(!(x)) DEBUG_BREAK;
 #else
@@ -94,7 +94,7 @@ namespace FR {
 #define glCheckFunc(x)  x;
 #endif
 
-        //Create DLL/SO or link statically ?
+		//Create DLL/SO or link statically ?
 
 #ifdef FRTK_PLATFORM_WINDOWS  //PLATFORM CHECK
 #ifdef FR_BUILD_STATIC
@@ -115,94 +115,96 @@ namespace FR {
 #define setBIT(x) (1 << x)
 #define clearBIT(x) (0 << x)
 
-        class Fr_GL3Window;
-    //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
-    enum class CameraList {
-        PERSPECTIVE = 0, //This is not fixed and can be moved , others are not.
-        ORTHOGRAPHIC,
+	std::string separateFN(std::string& st);
 
-        TOP,
-        BOTTOM,
-        FRONT,
-        BACK,
-        RIGHT,
-        LEFT,
-    };
+	class Fr_GL3Window;
+	//PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
+	enum class CameraList {
+		PERSPECTIVE = 0, //This is not fixed and can be moved , others are not.
+		ORTHOGRAPHIC,
 
-    typedef enum meshType { FR_QUAD, FR_POLYGON };
+		TOP,
+		BOTTOM,
+		FRONT,
+		BACK,
+		RIGHT,
+		LEFT,
+	};
 
-    typedef struct userData_ {
-        glm::vec3 camPosition_;
-        glm::vec3 direction_;
-        glm::vec3 up_;
-        float fovy_;
-        float znear_;
-        float zfar_;
-        float aspectRatio_;
-        float orthoSize_;
-        //        projectionm_Matrix(glm::ortho(-600, 600, -600, 600, -1, 1)),
-        CameraList camType_;
-    };
+	typedef enum meshType { FR_QUAD, FR_POLYGON };
 
-    static unsigned char GLLogCall() {
-        while (GLenum error = glGetError()) {
-            std::cout << "[OpenGL Error] {" << error << "}\n";
-            std::flush(std::cout);
-            return 0;
-        }
-        return 1;
-    }
+	typedef struct userData_ {
+		glm::vec3 camPosition_;
+		glm::vec3 direction_;
+		glm::vec3 up_;
+		float fovy_;
+		float znear_;
+		float zfar_;
+		float aspectRatio_;
+		float orthoSize_;
+		//        projectionm_Matrix(glm::ortho(-600, 600, -600, 600, -1, 1)),
+		CameraList camType_;
+	};
 
-    enum FR_EVENTS {
-        FR_NO_EVENT = 0,     //DONT CARE EVENT
-        FR_PUSH,
-        FR_RELEASE,
-        FR_ENTER,
-        FR_DRAG,
-        FR_FOCUS,
-        FR_KEYBOARD,
-        FR_CLOSE,
-        FR_MOVE,
-        FR_DEACIVATE,
-        FR_ACTIVE,
-        FR_HIDE,
-        FR_SHOW,
-        FR_LEFT_DRAG_PUSH,
-        FR_LEFT_DRAG_RELEASE,
+	static unsigned char GLLogCall() {
+		while (GLenum error = glGetError()) {
+			std::cout << "[OpenGL Error] {" << error << "}\n";
+			std::flush(std::cout);
+			return 0;
+		}
+		return 1;
+	}
 
-        FR_MIDDLE_DRAG_PUSH,
-        FR_MIDDLE_DRAG_RELEASE,
+	enum FR_EVENTS {
+		FR_NO_EVENT = 0,     //DONT CARE EVENT
+		FR_PUSH,
+		FR_RELEASE,
+		FR_ENTER,
+		FR_DRAG,
+		FR_FOCUS,
+		FR_KEYBOARD,
+		FR_CLOSE,
+		FR_MOVE,
+		FR_DEACIVATE,
+		FR_ACTIVE,
+		FR_HIDE,
+		FR_SHOW,
+		FR_LEFT_DRAG_PUSH,
+		FR_LEFT_DRAG_RELEASE,
 
-        FR_RIGHT_DRAG_PUSH,
-        FR_RIGHT_DRAG_RELEASE,
+		FR_MIDDLE_DRAG_PUSH,
+		FR_MIDDLE_DRAG_RELEASE,
 
-        FR_WINDOW_RESIZE,
-        FR_WINDOW_MINIMIZE,
-        FR_MOUSE_RIGHT,
-        FR_MOUSE_MIDDLE,
-        FR_MOUSE_LEFT,
-        FR_MOUSE_MOVE,
-    };
+		FR_RIGHT_DRAG_PUSH,
+		FR_RIGHT_DRAG_RELEASE,
 
-    //Define all kind of widgets here, YOU MUST DO THIS!!
-    typedef enum class NODETYPE {
-        FR_NODE             = 0,
-        FR_GROUP            ,
-        FR_TRANSFORM        ,
-        FR_MANIPULATOR      ,
-        FR_PRIMATIVESHADER  ,
-        FR_LIGHT            ,
-        FR_CAMERA           ,
-        FR_MODEL_NODE        ,
-        FR_SCENE            ,
-        FR_MESH             ,
-        FR_GRID             ,
-        FR_AXIS3D           ,
-        //FR WIDGETS           
-        FR_WIDGET           ,
-        FR_WGROUP           ,
-        FR_WINDOW           ,
-        FR_LINE_WIDGET      ,
-    }NODETYPE;
+		FR_WINDOW_RESIZE,
+		FR_WINDOW_MINIMIZE,
+		FR_MOUSE_RIGHT,
+		FR_MOUSE_MIDDLE,
+		FR_MOUSE_LEFT,
+		FR_MOUSE_MOVE,
+	};
+
+	//Define all kind of widgets here, YOU MUST DO THIS!!
+	typedef enum class NODETYPE {
+		FR_NODE = 0,
+		FR_GROUP,
+		FR_TRANSFORM,
+		FR_MANIPULATOR,
+		FR_PRIMATIVESHADER,
+		FR_LIGHT,
+		FR_CAMERA,
+		FR_MODEL_NODE,
+		FR_SCENE,
+		FR_MESH,
+		FR_GRID,
+		FR_AXIS3D,
+		//FR WIDGETS
+		FR_WIDGET,
+		FR_WGROUP,
+		FR_WINDOW,
+		FR_LINE_WIDGET,
+	}NODETYPE;
 }
 #endif
