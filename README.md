@@ -12,6 +12,8 @@ Please notice that the main will not be updated until I get a working scene, wit
 
 
 # Status:
+NOTE : DUE TO A PRIVATE ISSUE, I AM CURRENTLY UNABLE TO ENGAGE IN ANY CODING ACTIVITIES AT THIS TIME FOR ANY OF MY PROJECTS.
+
 1-ImGui is used for creating the GUI interface
 
 2-ImGuimzo still not working  
