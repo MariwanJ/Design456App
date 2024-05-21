@@ -13,7 +13,7 @@ Please notice that the main will not be updated until I get a working scene, wit
 
 # Status:
 **************************************************************************************************************************************
-* NOTE : DUE TO A PRIVATE ISSUE, I AM CURRENTLY UNABLE TO ENGAGE IN ANY CODING ACTIVITIES AT THIS TIME FOR ANY OF MY PROJECTS.        *
+ NOTE :DUE TO A PRIVATE MATTER, I WILL BE UNABLE TO ENGAGE IN ANY CODING ACTIVITIES FOR MY PROJECTS AT THIS TIME.  
 **************************************************************************************************************************************
 1-ImGui is used for creating the GUI interface
 
