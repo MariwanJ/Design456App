@@ -68,6 +68,8 @@ project "frtk"
 	}
 	filter "system:windows"
 		systemversion "latest"
+		characterset "Unicode" -- Use Unicode character set
+		buildoptions { "/utf-8" } -- Enable UTF-8 support
 		defines
 		{
             "FRTK_PLATFORM_WINDOWS",
@@ -75,7 +77,8 @@ project "frtk"
 			"FR_BUILD_STATIC",
 			"GLFW_EXPOSE_NATIVE_WIN32",
 			'GLFW_INCLUDE_NONE ',
-			"FRTK_ENABLE_ASSERTS"
+			"FRTK_ENABLE_ASSERTS",
+			"GLM_ENABLE_EXPERIMENTAL"
 		}
 
 	filter "configurations:Debug"

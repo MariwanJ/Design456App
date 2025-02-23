@@ -1,9 +1,11 @@
 #ifndef FR_PRIMATIVES_H
 #define FR_PRIMATIVES_H
 
+#define GLM_ENABLE_EXPERIMENTAL
 #include <FR.h>
+#include<glm/glm.hpp>
 #include <fr_core.h>
-#include <glm/glm.hpp>
+
 
 class Fr_Primatives
 {

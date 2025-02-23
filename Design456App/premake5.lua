@@ -95,7 +95,8 @@ To use /MTd in premake:
 
 	filter "system:windows"
 		systemversion "latest"
-
+		buildoptions { "/utf-8" } -- Enable UTF-8 support
+		
 		defines
 		{
 			"FRTK_PLATFORM_WINDOWS"
