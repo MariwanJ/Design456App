@@ -35,7 +35,7 @@ int main(int argc, char** argv)
     Design456App->GLFWrun();
 
     //return FakeMain(argc, argv);
-//}
+}
 //#include <FL/Fl.H>
 //#include <FL/Fl_Window.H>
 //#include <FL/Fl_Button.H>
