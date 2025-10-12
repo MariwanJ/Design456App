@@ -305,7 +305,7 @@ private:
      * Update immediatly both FLTK and GLFW windows.
      * see FLTK for further info
      */
-    void flush();
+   // void flush();
     
     /**
      * Transform pointer used to keep track to the scene graph SUN.

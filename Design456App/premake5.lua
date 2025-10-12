@@ -36,7 +36,7 @@ To use /MTd in premake:
 	{
 		"%{IncludeDir.Glad}",
         "../frtk/vendor/spdlog/include",
-        "../frtk/vendor/fltk",
+        "E:/Projects/fltk",
 		"../frtk/src",
         "%{IncludeDir.GLFW}",
 		"%{IncludeDir.glm}",
@@ -58,7 +58,7 @@ To use /MTd in premake:
 		"MultiProcessorCompile",
 	}
 	filter "configurations:Debug"
-		libdirs {"../frtk/vendor/fltk/build/lib/Debug"}
+		libdirs {"E:/Projects/fltk/build/lib/Debug"}
 		links 
 		{   "frtk",
 			"fltkd",

@@ -59,7 +59,7 @@ project "frtk"
         "%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.glm}",
-        "$(SolutionDir)frtk/vendor/fltk/",
+        "E:/Projects/fltk",
 		"$(SolutionDir)frtk/vendor/spdlog/include",
 		"src",
 		"$(SolutionDir)frtk/vendor/instrumentation",
@@ -85,7 +85,7 @@ project "frtk"
 		defines "FR_DEBUG"
 		runtime "Debug"
 		symbols "on"
-		libdirs {"$(SolutionDir)frtk/vendor/fltk/build/lib/Debug",
+		libdirs {"E:/Projects/fltk/build/lib/Debug",
 		links 
 		{   
             "opengl32",
@@ -122,7 +122,7 @@ project "frtk"
 		defines "FR_RELEASE"
 		runtime "Release"
 		optimize "on"
-        libdirs {"$(SolutionDir)frtk/vendor/fltk/build/lib/Release",
+        libdirs {"E:/Projects/fltk/build/lib/Release",
 		links 
 		{   "opengl32",
             "glu32",
