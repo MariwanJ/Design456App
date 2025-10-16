@@ -27,6 +27,7 @@
 #define FR_PRIMATIVESHADER_H
 
 #include <memory>
+#include <fr_shader_program.h>
 #include <fr_widget.h>
 namespace FR {
     class FRTK_API Fr_Primatives;
@@ -34,13 +35,15 @@ namespace FR {
 
     class FRTK_API Fr_PrimaitiveShader   {
     public:
+        void setText(const char* newValue);
+        void setTexture(const char* newValue);
         /**
          * Constructor
          */
         Fr_PrimaitiveShader(unsigned int color = 0x111111, float silhouette = 0.005);
-
         Fr_PrimaitiveShader(glm::vec4 color, float silhouette = 0.005);
         Fr_PrimaitiveShader(float color[4], float silhouette = 0.005);
+
         /**
          * Destructor
          */
@@ -69,7 +72,7 @@ namespace FR {
 
         void Render(RenderInfo& info) ;
 
-        std::shared_ptr< Fr_Texture2D> m_Texture2D;
+        std::shared_ptr <Fr_Texture2D> m_Texture2D;
 
         void setObjectshader(const char* newValue);
         void setSilhouette(const char* newValue);
@@ -91,24 +94,22 @@ namespace FR {
 
         // Constants
         const size_t kMaxLights = 8;
+        
+        void InitializeSharedPrograms();
 
         void defaultShaders();
         // Shared between instances
-        struct Shared {
-            std::shared_ptr<ShaderProgram>  primative_program;
-            std::shared_ptr<ShaderProgram>  silhouette_program;          //the dark shape and outline of object
-            std::shared_ptr<ShaderProgram>  shadowmap_program;
-            std::shared_ptr<ShaderProgram>  texture_program;
-        };
-        Shared shared_;
+
+        Shader_t m_shared;
 
         // Attributes
         std::shared_ptr <Fr_Primatives> m_Primative;
         glm::vec4 m_Color;
         float silhouette_;
-        std::string f_objectshader_;
-        std::string f_silhouette_;
-        std::string f_texture_;
+        std::string m_f_objectshader;
+        std::string m_f_silhouette;
+        std::string m_f_texture;
+        std::string m_f_text;
 
         GLuint _texture; //used to return the texture for imgui rendering inside window.
     };

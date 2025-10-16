@@ -39,15 +39,15 @@ namespace FR {
 		if (!m_shader) {
 			m_shader = std::make_shared<Shader_t>();
 			std::string shaderpath = EXE_CURRENT_DIR + "/resources/shaders/";
-			m_shader->wdg_prog = std::make_shared<ShaderProgram>       (shaderpath+"objectshader");
-			m_shader->silhouette_prog = std::make_shared<ShaderProgram>(shaderpath+"silhouette");
-			m_shader->texture_prog = std::make_shared<ShaderProgram>   (shaderpath+"texture");
-			m_shader->widgPoits_prog= std::make_shared<ShaderProgram>  (shaderpath+"widgPoints");
+			m_shader->wdg_prog = std::make_shared <ShaderProgram>       (shaderpath+"objectshader");
+			m_shader->silhouette_prog = std::make_shared <ShaderProgram>(shaderpath+"silhouette");
+			m_shader->texture_prog = std::make_shared <ShaderProgram>   (shaderpath+"texture");
+			m_shader->widgPoits_prog= std::make_shared <ShaderProgram>  (shaderpath+"widgPoints");
+			m_shader->txtFont_program = std::make_shared <ShaderProgram>(shaderpath + "txtFont");
 		}
 		ReadFile(path);
-		std::shared_ptr<std::vector<float>> t = m_vertices;
-		m_boundBox = std::make_shared<cBoundBox3D>();
-		m_boundBox->setVertices(t);
+		m_boundBox = std::make_shared <cBoundBox3D>();
+		m_boundBox->setVertices(m_vertices);
 		calcualteTextCoor(1024, 1024);
 		initializeVBO();
 		CreateShader();

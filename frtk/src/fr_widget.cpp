@@ -28,7 +28,6 @@
  
 #include <cmath>
 #include <glm/gtx/transform.hpp>
-#include <fr_shader_program.h>
 #include <fr_widget.h>
 
 

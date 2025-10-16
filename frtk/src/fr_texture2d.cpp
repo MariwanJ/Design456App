@@ -1,5 +1,7 @@
 #include <../../src/fr_texture2d.h>
 #include <../../vendor/stb_image/src/stb_image.h>
+#include <fr_core.h>
+
 namespace FR {
     /** Default constructor */
     Fr_Texture2D::Fr_Texture2D() {

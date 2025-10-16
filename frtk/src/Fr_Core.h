@@ -294,5 +294,7 @@ namespace FR {
 		FR_LINE_WIDGET = 15,
 		FR_FACE_WIDGET = 16,
 	}NODETYPE;
+
+
 } //FR
 #endif

@@ -1,7 +1,7 @@
 #ifndef FR_TEXTURE2D_H
 #define FR_TEXTURE2D_H
+#include <frtk.h>
 
-#include<fr_core.h>
 namespace FR {
     class Fr_Texture2D {
     public:

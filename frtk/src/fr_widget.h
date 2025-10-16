@@ -71,14 +71,6 @@ namespace FR {
         //ShadowMapInfo shadowmap;
         bool render_transparent;
     };
-    //diff shader program
-    typedef struct {
-        std::shared_ptr<ShaderProgram> wdg_prog;        //for the widget itself
-        std::shared_ptr<ShaderProgram> widgPoits_prog; //for points
-        std::shared_ptr<ShaderProgram> silhouette_prog; // Dark shape and outline of object
-        std::shared_ptr<ShaderProgram> texture_prog;
-    }Shader_t;
-
 
     const size_t kMaxLights = 8;        //This is important to consider. This is also defined in the   objectshader_fs.glsl as MAX_LIGHTS
 
@@ -89,6 +81,16 @@ namespace FR {
             int val;
         };
     } userWidgetData;
+
+
+    //diff shader program
+    typedef struct {
+        std::shared_ptr <ShaderProgram> wdg_prog;        //for the widget itself
+        std::shared_ptr <ShaderProgram> widgPoits_prog; //for points
+        std::shared_ptr <ShaderProgram> silhouette_prog; // Dark shape and outline of object
+        std::shared_ptr <ShaderProgram> texture_prog;
+        std::shared_ptr <ShaderProgram> txtFont_program;
+    }Shader_t;
 
     class NotImplementedException : public std::logic_error
     {
@@ -121,8 +123,8 @@ namespace FR {
 
         // Default constructor is disallowed
         Fr_Widget() = delete;
-        Fr_Widget(std::shared_ptr<std::vector<float>> verticies,
-            std::shared_ptr<std::vector<unsigned int>> indicies,
+        Fr_Widget(std::shared_ptr <std::vector<float>> verticies,
+            std::shared_ptr <std::vector<unsigned int>> indicies,
             std::string label);
 
         virtual void init(void); //We need this if the widget is created (subclassed) without verticies, like in reading files.
