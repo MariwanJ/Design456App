@@ -23,8 +23,8 @@
 // SOFTWARE.
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-#ifndef FR_PRIMATIVESHADER_H
-#define FR_PRIMATIVESHADER_H
+#ifndef FR_GRID_SHADER_H
+#define FR_GRID_SHADER_H
 
 #include <memory>
 #include <fr_shader_program.h>
@@ -33,21 +33,21 @@ namespace FR {
     class FRTK_API Fr_Primatives;
     class FRTK_API ShaderProgram;
 
-    class FRTK_API Fr_PrimaitiveShader   {
+    class FRTK_API Fr_GridShader   {
     public:
         void setText(const char* newValue);
         void setTexture(const char* newValue);
         /**
          * Constructor
          */
-        Fr_PrimaitiveShader(unsigned int color = 0x111111, float silhouette = 0.005);
-        Fr_PrimaitiveShader(glm::vec4 color, float silhouette = 0.005);
-        Fr_PrimaitiveShader(float color[4], float silhouette = 0.005);
+        Fr_GridShader(unsigned int color = 0x111111, float silhouette = 0.005);
+        Fr_GridShader(glm::vec4 color, float silhouette = 0.005);
+        Fr_GridShader(float color[4], float silhouette = 0.005);
 
         /**
          * Destructor
          */
-        ~Fr_PrimaitiveShader();
+        ~Fr_GridShader();
 
         void SetColor(glm::vec4 color);
 
@@ -114,4 +114,4 @@ namespace FR {
         GLuint _texture; //used to return the texture for imgui rendering inside window.
     };
 }
-#endif
+#endif //FR_GRID_SHADER_H

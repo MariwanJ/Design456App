@@ -34,10 +34,7 @@ int main(int argc, char** argv)
     //    }
     std::string path;
         //FR_PROFILE_BEGIN_SESSION("Startup", "Design456Profile-Startup.json");
-    FR::Fr_Application* Design456App = new FR::Fr_Application();
-    
-   
-
+    std::shared_ptr<FR::Fr_Application> Design456App =std::make_shared<FR::Fr_Application>();
     FR::Fr_Log::Init();
     FR::Fr_Log::GetAPPLogger()->info("App Started!");
     // FR_PROFILE_END_SESSION();

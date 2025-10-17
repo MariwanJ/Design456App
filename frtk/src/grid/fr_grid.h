@@ -28,15 +28,15 @@
 #ifndef FR_GRID_H
 #define FR_GRID_H
 
-#include<frtk.h>
-#include<fr_core.h>
+#include <frtk.h>
+#include <fr_core.h>
 #include <fr_transform.h>
 
 #include<halfedge/fr_shape.h>
 #include <fr_widget.h>
 #include <fr_light.h>
-#include <fr_primatives.h>
-#include <fr_primativeShader.h>
+#include <grid/fr_primatives.h>
+#include <grid/fr_grid_shader.h>
 namespace FR {
     class FRTK_API Fr_Grid :public Fr_Widget
     {
@@ -57,7 +57,7 @@ namespace FR {
             // Check if other is not null
             if (other.gridShader) {
                 // Copy the shared pointer
-                gridShader = std::make_shared<Fr_PrimaitiveShader>(*other.gridShader);
+                gridShader = std::make_shared<Fr_GridShader>(*other.gridShader);
             }
             else {
                 // Handle the case where other is null (nullptr)
@@ -82,7 +82,7 @@ namespace FR {
                 gridColor_ = other.gridColor_;
 
                 // Copy the shared pointer if it is not NULL
-                gridShader = (other.gridShader != nullptr) ? std::make_shared<Fr_PrimaitiveShader>(*other.gridShader) : nullptr;
+                gridShader = (other.gridShader != nullptr) ? std::make_shared<Fr_GridShader>(*other.gridShader) : nullptr;
             }
             return *this;
         }
@@ -149,7 +149,7 @@ namespace FR {
          */
         unsigned int getgridWidth(void) const;
 
-        std::shared_ptr<Fr_PrimaitiveShader> getGridShader();
+        std::shared_ptr<Fr_GridShader> getGridShader();
 
         /**
          * Create the Grid vertices.
@@ -165,7 +165,7 @@ namespace FR {
         glm::vec3 centerPos_;//Center of the grid
         glm::vec4 gridRotation_; //(Axis, angle) 4 float values
         glm::vec4 gridColor_;
-        std::shared_ptr<Fr_PrimaitiveShader> gridShader;
+        std::shared_ptr<Fr_GridShader> gridShader;
     };
 }
 

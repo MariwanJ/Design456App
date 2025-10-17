@@ -58,15 +58,20 @@ namespace FR {
     GLFWwindow* Fr_Window::pGLFWWindow = nullptr;
     bool Fr_Window::MouseOnce = true;
 
+    const screenDim_t Fr_Window::getScreenDim(void) {
+        return m_ViewPort;
+    }
+
     static void error_callback(int error, const char* description)
     {
         fprintf(stderr, "Error: %s\n", description);
     }
 
     /** end Fr_Window */
+    screenDim_t Fr_Window::m_ViewPort{ 50,50, 800,600 };
 
     Fr_Window::Fr_Window(int x, int y, int w, int h, std::string label) :
-        activeScene(nullptr), m_ViewPort{ x,y,w,h },
+        activeScene(nullptr),
         MainWinCursor(0), panelWidth(0.f),
         gl_version_major(4), gl_version_minor(6),
         mouseDefaults{0},showOpenDialog(false),
@@ -103,6 +108,10 @@ namespace FR {
         cursorHand = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
         cursorCrosshair = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
 
+        m_ViewPort.x = x;
+        m_ViewPort.y = y;
+        m_ViewPort.h = h;
+        m_ViewPort.w = w;
 #if 1 //just for debug purpose
     
         RayMousePos.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -394,7 +403,7 @@ namespace FR {
      *
      */
      //TODO: Dont know if it is correct
-    Fr_Window::Fr_Window():m_ViewPort { 0,0,800,600 }
+    Fr_Window::Fr_Window()
     {
 
     }

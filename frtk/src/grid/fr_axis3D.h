@@ -27,16 +27,15 @@
 
 #ifndef FR_Fr_Axis3D_H
 #define FR_Fr_Axis3D_H
-
-#include<frtk.h>
-#include<fr_core.h>
+#include <frtk.h>
+#include <fr_core.h>
 #include <fr_transform.h>
 
-#include<halfedge/fr_shape.h>
+#include <halfedge/fr_shape.h>
 #include <fr_widget.h>
 #include <fr_light.h>
-#include <fr_primatives.h>
-#include <fr_primativeShader.h>
+#include <grid/fr_primatives.h>
+#include <grid/fr_grid_shader.h>
 
 namespace FR {
     class FRTK_API Fr_Axis3D :public Fr_Widget
@@ -50,10 +49,10 @@ namespace FR {
         Fr_Axis3D();
 
         ~Fr_Axis3D();
-        std::shared_ptr<Fr_PrimaitiveShader> getRed();
-        std::shared_ptr<Fr_PrimaitiveShader> getBlue();
-        std::shared_ptr<Fr_PrimaitiveShader> getGreen();
-        std::shared_ptr<Fr_PrimaitiveShader> getZBlue();
+        std::shared_ptr<Fr_GridShader> getRed();
+        std::shared_ptr<Fr_GridShader> getBlue();
+        std::shared_ptr<Fr_GridShader> getGreen();
+        std::shared_ptr<Fr_GridShader> getZBlue();
 
         void CreateAxis3D();
 
@@ -77,10 +76,10 @@ namespace FR {
 
         int ZstepSize_;
         int stepWidth_;
-        std::shared_ptr<Fr_PrimaitiveShader> m_Red;
-        std::shared_ptr<Fr_PrimaitiveShader> m_Green;
-        std::shared_ptr<Fr_PrimaitiveShader> m_Blue;
-        std::shared_ptr<Fr_PrimaitiveShader> m_ZBlue; //small lines
+        std::shared_ptr<Fr_GridShader> m_Red;
+        std::shared_ptr<Fr_GridShader> m_Green;
+        std::shared_ptr<Fr_GridShader> m_Blue;
+        std::shared_ptr<Fr_GridShader> m_ZBlue; //small lines
     };
 }
 #endif

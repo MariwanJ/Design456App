@@ -26,9 +26,8 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 #include <glm/gtx/transform.hpp>
-#include <fr_primatives.h>
+#include <grid/fr_grid_shader.h>
 #include <fr_shader_program.h>
-#include <fr_primativeShader.h>
 #include <glad/glad.h>
 #include <fr_window.h>
 namespace FR {
@@ -43,7 +42,7 @@ namespace FR {
         0.0, 0.0, 0.25, 0.0,
         0.25, 0.25, 0.25, 1.0);
 
-    void Fr_PrimaitiveShader::defaultShaders()
+    void Fr_GridShader::defaultShaders()
     {
         //Default programs
         std::string shaderpath= EXE_CURRENT_DIR + "/resources/shaders/";
@@ -53,29 +52,29 @@ namespace FR {
         m_f_text = shaderpath + "txtshader";
     }
     /** Shader file name and path */
-    void Fr_PrimaitiveShader::setObjectshader(const char* newValue)
+    void Fr_GridShader::setObjectshader(const char* newValue)
     {
         m_f_objectshader = newValue;
     }
     /** Silhouette Shader file name and path */
-    void Fr_PrimaitiveShader::setSilhouette(const char* newValue)
+    void Fr_GridShader::setSilhouette(const char* newValue)
     {
         m_f_silhouette = newValue;
     }
     /** Text (font rendering) Shader file name and path */
-    void Fr_PrimaitiveShader::setText(const char* newValue)
+    void Fr_GridShader::setText(const char* newValue)
     {
         m_f_text = newValue;
 
     }
     
-    void Fr_PrimaitiveShader::setTexture(const char* newValue)
+    void Fr_GridShader::setTexture(const char* newValue)
     {
         m_f_texture = newValue;
     }
 
         // Constructor with unsigned int color
-    Fr_PrimaitiveShader::Fr_PrimaitiveShader(unsigned int color, float silhouette) :
+    Fr_GridShader::Fr_GridShader(unsigned int color, float silhouette) :
             m_shared{ 0, 0, 0, 0, 0 },
             m_Primative{ nullptr }, silhouette_(silhouette) {
             SetColor(color);
@@ -83,19 +82,19 @@ namespace FR {
         }
 
         // Constructor with glm::vec4 color
-    Fr_PrimaitiveShader::Fr_PrimaitiveShader(glm::vec4 color, float silhouette) :
+    Fr_GridShader::Fr_GridShader(glm::vec4 color, float silhouette) :
             m_Primative{ nullptr }, silhouette_(silhouette) {
             SetColor(color);
             InitializeSharedPrograms();
         }
 
         // Constructor with float array color
-    Fr_PrimaitiveShader::Fr_PrimaitiveShader(float color[4], float silhouette) :
+    Fr_GridShader::Fr_GridShader(float color[4], float silhouette) :
             m_Primative{ nullptr }, silhouette_(silhouette), m_Color{ color[0], color[1], color[2], color[3] } {
             InitializeSharedPrograms();
         }
  
-     void Fr_PrimaitiveShader::InitializeSharedPrograms() {
+     void Fr_GridShader::InitializeSharedPrograms() {
             defaultShaders();
             m_shared.wdg_prog = std::make_shared <ShaderProgram>(m_f_objectshader);
             m_shared.silhouette_prog= std::make_shared <ShaderProgram>(m_f_silhouette);
@@ -103,14 +102,14 @@ namespace FR {
             m_shared.txtFont_program= std::make_shared <ShaderProgram>(m_f_text);
         }
 
-    Fr_PrimaitiveShader::~Fr_PrimaitiveShader() {
+    Fr_GridShader::~Fr_GridShader() {
     }
 
-    void Fr_PrimaitiveShader::SetColor(glm::vec4 color) {
+    void Fr_GridShader::SetColor(glm::vec4 color) {
         m_Color = color;
     }
 
-    void Fr_PrimaitiveShader::SetColor(unsigned int color, float alpha) {
+    void Fr_GridShader::SetColor(unsigned int color, float alpha) {
         m_Color = glm::vec4(
             ((color >> 16) & 0xFF) / 255.0f,
             ((color >> 8) & 0xFF) / 255.0f,
@@ -119,15 +118,15 @@ namespace FR {
         );
     }
 
-    void Fr_PrimaitiveShader::SetOpacity(float alpha) {
+    void Fr_GridShader::SetOpacity(float alpha) {
         m_Color.a = alpha;
     }
 
-    void Fr_PrimaitiveShader::SetPrimative(std::shared_ptr<Fr_Primatives> primative) {
+    void Fr_GridShader::SetPrimative(std::shared_ptr<Fr_Primatives> primative) {
         m_Primative = primative;
     }
 
-    void Fr_PrimaitiveShader::LoadLights(std::shared_ptr<ShaderProgram> program, const std::vector<LightInfo>& lights) {
+    void Fr_GridShader::LoadLights(std::shared_ptr<ShaderProgram> program, const std::vector<LightInfo>& lights) {
         unsigned int nlights = std::min(lights.size(), kMaxLights);
         program->SetUniformInteger("nlights", nlights);
         for (size_t i = 0; i < nlights; ++i) {
@@ -146,7 +145,7 @@ namespace FR {
         }
     }
 
-    void Fr_PrimaitiveShader::Render(RenderInfo& info) {
+    void Fr_GridShader::Render(RenderInfo& info) {
         if (/*!m_active ||*/
             (info.render_transparent && m_Color.a == 1) ||
             (!info.render_transparent && m_Color.a < 1))
@@ -174,7 +173,7 @@ namespace FR {
         info.id++;
     }
 
-    void Fr_PrimaitiveShader::RenderSilhouette(const glm::mat4& mvp) {
+    void Fr_GridShader::RenderSilhouette(const glm::mat4& mvp) {
         m_shared.silhouette_prog->Enable();
         m_shared.silhouette_prog->SetAttribLocation("position", 0);
         m_shared.silhouette_prog->SetAttribLocation("texCoord", 1);

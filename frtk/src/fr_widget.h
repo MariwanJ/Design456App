@@ -41,8 +41,6 @@
 #include <OpenMesh/Core/IO/MeshIO.hh>
 #include <OpenMesh/Core/Mesh/PolyMesh_ArrayKernelT.hh>
 
- 
-
 namespace FR {
     /**
   * Holds the light information
@@ -70,6 +68,7 @@ namespace FR {
         std::vector<LightInfo> lights;
         //ShadowMapInfo shadowmap;
         bool render_transparent;
+        screenDim_t screenDim;
     };
 
     const size_t kMaxLights = 8;        //This is important to consider. This is also defined in the   objectshader_fs.glsl as MAX_LIGHTS
@@ -81,6 +80,19 @@ namespace FR {
             int val;
         };
     } userWidgetData;
+
+
+    typedef struct {
+        glm::vec3 position;        // Position relative to the widget,TODO: SHOULD BE RELATIVE OR ABS
+        std::string text;
+        std::shared_ptr<std::string> fnFont; // freetype Font used for rendering, filepath
+        float size;
+        glm::vec4 color;
+        bool visible;              // Visibility flag
+        uint8_t type;               //ORTHO - PERSPECTIVE 
+        size_t pixelSize;
+    }label_t;
+
 
 
     //diff shader program
@@ -146,6 +158,9 @@ namespace FR {
         /** Renders Vertexes in orthographic projection separate from normal rendering */
         virtual void RenderVertexes(RenderInfo& info);
 
+        /** Renders Text (Freetype Font)*/
+        virtual void RenderText(RenderInfo& info);
+        
         virtual bool SetupTexture2D();
         virtual void RenderTexture2D();
 
@@ -171,7 +186,7 @@ namespace FR {
         virtual void redraw();
 
         /** Label draw function */
-        virtual void lbl_draw();
+
         virtual void lbl_redraw();
 
         /** Initializes VBO and other stuff */
@@ -179,14 +194,27 @@ namespace FR {
 
         /** Sets the label */
         void label(std::string& lbl);
+
+        void lbl_visible(bool v);
+        bool lbl_visible();
+
+        void lblType(uint8_t lbltype);
+        const uint8_t lblType(void);
+
         std::string label() const;
 
         /** Sets the font */
         void font(std::string& forntName);
-        std::string font() const;
+        std::shared_ptr<std::string> font() const;
 
         /** Sets the font size */
         void fontSize(int size_);
+
+        void fontColor(glm::vec4 col);
+
+        void fontColor(float r, float g, float b, float a);
+
+        void lblPosition(glm::vec3 nval);
 
         /** Resizes the widget */
         virtual void resize(std::shared_ptr<std::vector<float>> verticies,
@@ -289,6 +317,9 @@ namespace FR {
         std::shared_ptr<cBoundBox3D> m_boundBox;
  
     protected:
+        
+        virtual void lbl_draw();
+
         virtual void do_callback();
         virtual void calculateTextCoor(); //might needs to be overridden
 
@@ -322,9 +353,7 @@ namespace FR {
 
         Fr_Callback* m_callback_;
 
-        std::string m_label;
-        std::string m_fontName;
-        int m_fontSize;
+        label_t m_label;
 
         bool m_visible;
         bool m_focus;
@@ -344,10 +373,14 @@ namespace FR {
         unsigned int m_vbo[NUM_OF_VBO_BUFFERS]; 
         unsigned int m_vao;
         unsigned int m_vao_points;
+        unsigned int m_vao_txt;
         unsigned int m_lineWidth;
         unsigned int m_pointSize;
-      
+
+
     };
+
+
 
 }
 #endif

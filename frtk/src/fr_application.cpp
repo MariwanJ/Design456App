@@ -35,6 +35,7 @@ namespace FR {
 
    std::string EXE_CURRENT_DIR;
    std::string fontPath;
+   std::string DEFAULT_FONT;
 
     Fr_Application::Fr_Application(int x, int y, int w, int h, const char* l) :Fr_Window(x, y, w, h, l)
     {
@@ -61,7 +62,8 @@ namespace FR {
         else{
             EXE_CURRENT_DIR.erase(it);
         }
-        fontPath = EXE_CURRENT_DIR + "/frtk/vendor/imGui/src/imguiFont/";
+        fontPath = EXE_CURRENT_DIR + "/resources/fonts/";
+        DEFAULT_FONT = fontPath + "Orbix-Regular.ttf";
 
         while (true) {
             size_t it = EXE_CURRENT_DIR.find("\\"); // Find the backslash

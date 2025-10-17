@@ -1,3 +1,4 @@
+#include "fr_widget.h"
 //
 // This file is a part of the Open Source Design456App
 // MIT License
@@ -47,9 +48,17 @@ namespace FR {
         m_shader = {0};
         m_callback_ = NULL;
         m_boundBox = nullptr;
-        m_label = "";
-        m_fontName = "Arial";
-        m_fontSize = 10;
+        
+        m_label.text = "";
+        m_label.fnFont = NULL;// we cannot define it here
+        m_label.size = 10;
+        m_label.color = glm::vec4(FR_BLACK);
+        m_label.position = glm::vec3( 0.0f );
+        m_label.visible = false; //we dont have font .. disable it
+        m_label.pixelSize = 18;  //size of the pixesl -- TODO : HOW MUCH WE SHOULD PUT HERE !!!!!!!!!!!
+        m_label.text = "Change me - Widget say hello";
+        m_label.type = ORTHOGRAPHIC;
+
         m_active = true;
         m_visible = true;
         m_focus = false;
@@ -120,6 +129,10 @@ namespace FR {
         return; //do nothing should be subclassed
     }
 
+    void RenderText(RenderInfo& info) {
+        return;//do nothing should be subclassed
+    }
+
     GLuint Fr_Widget::getCurrentTexturer(void)
     {
         return GLuint();
@@ -135,11 +148,6 @@ namespace FR {
         return; //do nothing should be subclassed
     }
 
-    void Fr_Widget::lbl_draw()
-    {
-        return; //do nothing should be subclassed
-    }
-
     void Fr_Widget::lbl_redraw()
     {
         return; //do nothing should be subclassed
@@ -150,30 +158,65 @@ namespace FR {
         return false;   //Should be sub-classed to change that.
     }
 
+    void Fr_Widget::lblType(uint8_t lbltype) {
+        m_label.type = lbltype;
+    }
+    const uint8_t Fr_Widget::lblType(void) {
+        return m_label.type;
+    }
+
+    void Fr_Widget::RenderText(RenderInfo& info) {
+        return; //should be sub-classed to define this
+    }
+
     void Fr_Widget::label(std::string& lbl)
     {
-        m_label = lbl;
+        m_label.text = lbl;
     }
 
     std::string Fr_Widget::label() const
     {
-        return m_label;
+        return m_label.text;
     }
 
     void Fr_Widget::font(std::string& forntName)
     {
-        m_fontName = forntName;
+        m_label.fnFont = std::make_shared<std::string>(forntName);
     }
 
-    std::string Fr_Widget::font() const
+    std::shared_ptr<std::string> Fr_Widget::font() const
     {
-        return m_fontName;
+        return m_label.fnFont;
     }
 
     void Fr_Widget::fontSize(int size_)
     {
-        m_fontSize = size_;
+        m_label.size = size_;
     }
+
+    void Fr_Widget::fontColor(glm::vec4 col)
+    {
+        m_label.color = col;
+    }
+    void Fr_Widget::fontColor(float r, float g, float b, float a)
+    {
+        m_label.color = glm::vec4(r, g, b, a);
+        m_label.position;
+    }
+
+    void Fr_Widget::lblPosition(glm::vec3 nval)
+    {
+        m_label.position = nval;
+    }
+
+    void Fr_Widget::lbl_visible(bool v) {
+        m_label.visible = v;
+    }
+
+    bool Fr_Widget::lbl_visible() {
+        return m_label.visible;
+    }
+
     void Fr_Widget::resize(std::shared_ptr<std::vector<float>>verticies_,
         std::shared_ptr<std::vector <unsigned int>> indicies_)
     {

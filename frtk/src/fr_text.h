@@ -33,4 +33,53 @@ namespace FR{
     };
 }
 */
+
+
+
+
+
+
+
+
+
+
+
+
+#include <frtk.h>
+#include <fr_core.h>
+#include <map>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+namespace FR {
+    struct Character {
+        GLuint TextureID;
+        glm::ivec2 Size;
+        glm::ivec2 Bearing;
+        GLuint Advance;
+    };
+
+    class TextRenderer {
+    public:
+        TextRenderer(unsigned int screenWidth, unsigned int screenHeight);
+        ~TextRenderer();
+
+        bool LoadFont(const std::string& fontPath, unsigned int pixelSize);
+        void RenderText(const std::string& text, float x, float y, float scale, const glm::vec3& color);
+        void SetProjection(unsigned int screenWidth, unsigned int screenHeight);
+
+    private:
+        unsigned int Width, Height;
+        std::map<char, Character> Characters;
+        GLuint VAO, VBO, shaderProgram;
+
+        GLuint CreateShaderProgram(const char* vertSrc, const char* fragSrc);
+        bool CheckCompileErrors(GLuint shader, const std::string& type);
+
+        static const char* vertexShaderSrc;
+        static const char* fragmentShaderSrc;
+    };
+
+}
+
 #endif //FR_TEXT_H

@@ -16,7 +16,7 @@ Design456App.make
 *.vcxproj
 
 Design456App/*.json
-Design456App/imgui.ini
+#Design456App/imgui.ini
 Design456App/*.vcxproj
 Design456App/Makefile
 Design456App/Design456App.vcxproj
@@ -95,3 +95,10 @@ frtk/vendor/yaml-cpp/bin/
 frtk/vendor/yaml-cpp/Makefile
 frtk/vendor/yaml-cpp/*.vcxproj
 frtk/vendor/yaml-cpp/*.vcxproj.filters
+
+
+frtk/vendor/freetyp/bin-int/
+frtk/vendor/freetyp/bin/
+frtk/vendor/freetyp/Makefile
+frtk/vendor/freetyp/*.vcxproj
+frtk/vendor/freetyp/*.vcxproj.filters

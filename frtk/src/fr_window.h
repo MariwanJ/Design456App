@@ -47,8 +47,8 @@
 #include <imguiFont/IconsFontAwesome6.h>
  
 #include <fr_filebrowser.h>
-#include <fr_line_widget.h>  //TODO: Put me somewhere else
-#include <fr_face_widget.h>  //TODO: Put me somewhere else
+#include <widget/fr_line_widget.h>  //TODO: Put me somewhere else
+#include <widget/fr_face_widget.h>  //TODO: Put me somewhere else
 
 #include<fr_checkIntersection.h>
 
@@ -66,12 +66,7 @@ namespace FR {
         int Button = 0;
     }glfwMouseEvent;
 
-    typedef struct {
-        int x;
-        int y;
-        int w;
-        int h;
-    }screenDim_t;
+
  
     typedef struct  {
         float MouseXYScale;
@@ -236,6 +231,8 @@ namespace FR {
 
         void setCameraType(uint8_t typOfCamera);
         uint8_t getCameraType();
+        
+        static const screenDim_t getScreenDim(void);
 
 #if 1//Experimental code - will be removed
         std::shared_ptr <Fr_Transform> tempBu;
@@ -269,7 +266,7 @@ namespace FR {
 
         static glfwMouseEvent mouseEvent;
         
-        screenDim_t m_ViewPort;
+        static screenDim_t m_ViewPort;
 
         GLFWcursor* cursorHand = nullptr;
         GLFWcursor* cursorCrosshair = nullptr;
@@ -277,7 +274,7 @@ namespace FR {
         static void glfwWindosResize(GLFWwindow* window, int width, int height);
         static void glfwWindPos(GLFWwindow* window, int pos_x, int pos_y);
 
-
+      
 
         static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 

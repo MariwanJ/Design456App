@@ -124,7 +124,7 @@ namespace FR {
 	//used to find path for diff resources
 	extern std::string EXE_CURRENT_DIR;
 	extern std::string fontPath;
-
+	extern std::string DEFAULT_FONT;
 
 	// Debug break
 #if defined(_WIN32)
@@ -201,6 +201,13 @@ namespace FR {
 		glm::vec3 position;
 		glm::vec3 direction;
 	}ray_t;
+
+	typedef struct {
+		int x;
+		int y;
+		int w;
+		int h;
+	}screenDim_t;
 
 	struct userData_S {
 		glm::vec3 camm_position;

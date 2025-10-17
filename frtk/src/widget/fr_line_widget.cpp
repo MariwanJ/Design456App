@@ -24,7 +24,7 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-#include <fr_line_widget.h>
+#include <widget/fr_line_widget.h>
 #include <glm/gtx/transform.hpp>
 #include <fr_window.h>
 namespace FR {

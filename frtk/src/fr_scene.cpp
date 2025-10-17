@@ -29,6 +29,11 @@
 #include <fr_scene.h>
 #include <fr_window.h>
 
+#include <fr_log.h>
+
+//Experimental code 
+#include <fr_text.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
 
@@ -130,6 +135,7 @@ namespace FR {
     {
         m_cameras[val].isActive(true);
         m_cameras[val].SetupCamera(info.projection, info.modelview);
+        info.screenDim = Fr_Window::getScreenDim();
     }
 
     void Fr_Scene::CreateDefaultCameras(void)
@@ -342,10 +348,29 @@ namespace FR {
             win->clear_color.w);
         glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
+
         RenderPrimativeShapes(render_info);
         // Render 3D objects
         Render(render_info);
         //// Render transparent items
+
+
+
+#if 1   //EXPERIMENTAL CODE - TEXT RENDERING 
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        TextRenderer text(800, 600);
+        if (text.LoadFont("C:/Windows/Fonts/ALGER.ttf", 48)) {
+            text.RenderText("Hello, OpenGL!", 25.0f, 300.0f, 1.0f, glm::vec3(0.8f, 0.8f, 0.1f));
+        }
+        else
+        {
+            FRTK_CORE_INFO("FONT NOT FOUND");
+        }
+
+#endif  //EXPERIMENTAL CODE - TEXT RENDERING 
+
+
         render_info.render_transparent = true;
         Render(render_info);
     }
@@ -396,6 +421,14 @@ namespace FR {
     void Fr_Scene::Render(FR::RenderInfo& info) {
         for (size_t i = 0; i < m_world.size(); ++i) {
             m_world[i].Sceneitem->Render(info);
+        }
+        RenderText(info);
+
+    }
+    void Fr_Scene::RenderText(FR::RenderInfo& info) {
+        for (size_t i = 0; i < m_world.size(); ++i) {
+            if(m_world[i].Sceneitem->lbl_visible())
+                m_world[i].Sceneitem->RenderText(info);
         }
     }
 

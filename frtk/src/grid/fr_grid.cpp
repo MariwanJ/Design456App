@@ -25,8 +25,8 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include <fr_grid.h>
-#include <fr_primativeShader.h>
+#include <grid/fr_grid.h>
+#include <grid/fr_grid_shader.h>
 //Temporary code to have something to show.
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -95,7 +95,7 @@ namespace FR {
 	{
 		return gridWidth_;
 	}
-	std::shared_ptr<Fr_PrimaitiveShader> Fr_Grid::getGridShader() {
+	std::shared_ptr<Fr_GridShader> Fr_Grid::getGridShader() {
 		return gridShader;
 	}
 	void Fr_Grid::CreateGrid()
@@ -146,7 +146,7 @@ namespace FR {
 		}
 		std::shared_ptr<Fr_Primatives> primative = std::make_shared<Fr_Primatives>();
 		primative->SetVertexes(vertices, indices);
-		gridShader = std::make_shared<Fr_PrimaitiveShader>(); //  color and
+		gridShader = std::make_shared<Fr_GridShader>(); //  color and
 		gridShader->SetColor(gridColor_);
 		gridShader->SetPrimative(primative);
 	}

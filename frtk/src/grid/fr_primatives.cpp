@@ -24,7 +24,7 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-#include <fr_primatives.h>
+#include <grid/fr_primatives.h>
 namespace FR {
     Fr_Primatives::Fr_Primatives() :vbo_{ 0, 0, 0 }, vao_(0), drawType(GL_LINES), m_lineWidth(1) {
     }

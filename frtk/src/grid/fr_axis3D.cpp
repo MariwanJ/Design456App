@@ -25,7 +25,7 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include <fr_primativeShader.h>
+#include <grid/fr_grid_shader.h>
 //Temporary code to have something to show.
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -39,19 +39,19 @@ namespace FR {
 	Fr_Axis3D::~Fr_Axis3D()
 	{
 	}
-	std::shared_ptr<Fr_PrimaitiveShader> Fr_Axis3D::getRed()
+	std::shared_ptr<Fr_GridShader> Fr_Axis3D::getRed()
 	{
 		return m_Red;
 	}
-	std::shared_ptr<Fr_PrimaitiveShader> Fr_Axis3D::getBlue()
+	std::shared_ptr<Fr_GridShader> Fr_Axis3D::getBlue()
 	{
 		return m_Blue;
 	}
-	std::shared_ptr<Fr_PrimaitiveShader> Fr_Axis3D::getGreen()
+	std::shared_ptr<Fr_GridShader> Fr_Axis3D::getGreen()
 	{
 		return m_Green;
 	}
-	std::shared_ptr<Fr_PrimaitiveShader> Fr_Axis3D::getZBlue()
+	std::shared_ptr<Fr_GridShader> Fr_Axis3D::getZBlue()
 	{
 		return m_ZBlue;
 	}
@@ -142,28 +142,28 @@ namespace FR {
 		auto primativeR = std::make_shared<Fr_Primatives>();
 		primativeR->SetVertexes(verticesRed, indicesRed);
 		primativeR->lineWidth(5); //THICKER LINE
-		m_Red = std::make_shared<Fr_PrimaitiveShader>(); //  color and
+		m_Red = std::make_shared<Fr_GridShader>(); //  color and
 		m_Red->SetColor(glm::vec4(FR_RED));
 		m_Red->SetPrimative(primativeR);
 
 		std::shared_ptr <Fr_Primatives>primativeG = std::shared_ptr<Fr_Primatives>(new Fr_Primatives());
 		primativeG->SetVertexes(verticesGreen, indicesGreen);
 		primativeG->lineWidth(5); //THICKER LINE
-		m_Green = std::make_shared<Fr_PrimaitiveShader>(); //  color and
+		m_Green = std::make_shared<Fr_GridShader>(); //  color and
 		m_Green->SetColor(glm::vec4(FR_GREEN));
 		m_Green->SetPrimative(primativeG);
 
 		auto primativeB = std::make_shared<Fr_Primatives>();
 		primativeB->SetVertexes(verticesBlue, indicesBlue);
 		primativeB->lineWidth(5); //THICKER LINE
-		m_Blue = std::make_shared<Fr_PrimaitiveShader>(); //  color and
+		m_Blue = std::make_shared<Fr_GridShader>(); //  color and
 		m_Blue->SetColor(glm::vec4(FR_BLUE));
 		m_Blue->SetPrimative(primativeB);
 
 		auto primativeZB = std::make_shared<Fr_Primatives>();
 		primativeZB->SetVertexes(verticesZBlue, indicesZBlue);
 		primativeZB->lineWidth(2);
-		m_ZBlue = std::make_shared<Fr_PrimaitiveShader>(); //  color and
+		m_ZBlue = std::make_shared<Fr_GridShader>(); //  color and
 		m_ZBlue->SetColor(glm::vec4(FR_YELLOW));
 		m_ZBlue->SetPrimative(primativeZB);
 	}

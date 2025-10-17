@@ -26,13 +26,21 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include <../src/halfedge/fr_shape.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <halfedge/fr_shape.h>
+
+#include <ft2build.h>
+#include FT_FREETYPE_H 
+
+
 namespace FR {
 	static const glm::mat4 kShadowMapBiasMatrix(
 		0.5, 0.0, 0.0, 0.0,
 		0.0, 0.5, 0.0, 0.0,
 		0.0, 0.0, 0.5, 0.0,
 		0.5, 0.5, 0.5, 1.0);
+
 
 	Fr_Shape::Fr_Shape(const std::string& path, glm::vec4 color, float silhouette) :Fr_Widget(NULL, NULL, path)
 		{
@@ -48,14 +56,68 @@ namespace FR {
 		ReadFile(path);
 		m_boundBox = std::make_shared <cBoundBox3D>();
 		m_boundBox->setVertices(m_vertices);
+		m_label.fnFont = std::make_shared<std::string>(fontPath + "OpenSansRegular.ttf");
+
+		bool resultText = true;
+
+
+
 		calcualteTextCoor(1024, 1024);
 		initializeVBO();
 		CreateShader();
+
+
+		FT_Library ft = NULL;
+		assert(FT_Init_FreeType(&ft) == 0, "ERROR::FREETYPE: Could not init FreeType Library\n");
+
+		FT_Face face = NULL;
+		if (FT_New_Face(ft, m_label.fnFont->c_str(), 0, &face)) {
+			FT_Done_FreeType(ft);
+			assert("ERROR::FREETYPE: Failed to load font\n");
+		}
+
+		FT_Set_Pixel_Sizes(face, 0, m_label.pixelSize);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+		for (unsigned char c = 0; c < 128; ++c) {
+			if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
+				FRTK_CORE_ERROR("Failed to load Glyph:{} ", c);
+				continue;
+			}
+			GLuint tex;
+			glGenTextures(1, &tex);
+			glBindTexture(GL_TEXTURE_2D, tex);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, face->glyph->bitmap.width,
+				face->glyph->bitmap.rows, 0, GL_RED, GL_UNSIGNED_BYTE,
+				face->glyph->bitmap.buffer);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+			Character_t ch = {
+				tex,
+				glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+				glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+				(GLuint)face->glyph->advance.x
+			};
+			Characters.insert(std::pair<char, Character_t>(c, ch));
+		}
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+		FT_Done_Face(face);
+		FT_Done_FreeType(ft);
+
+
 	}
 	//Default constructor with no vertices defined
 	Fr_Shape::Fr_Shape() : Fr_Widget(NULL, NULL, "") {
 
 		//TODO: Dont know if we should have this. you should create shaders, boundbox, caculate texture coord, and initialize vbo by yourself.
+	
+		for (auto& pair : Characters)
+			glDeleteTextures(1, &pair.second.TextureID);
+		//TODO : I THINK WE SHOULD REMOVE ALL VBO VBA 
 	}
 
 	Fr_Shape::~Fr_Shape() {
@@ -205,4 +267,62 @@ namespace FR {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // ensure back to normal
 		glDepthFunc(GL_LESS);         // default depth test
 	}
+
+	void Fr_Shape::lbl_redraw()
+	{
+		if (!m_label.fnFont) {
+			//Font is not defined, do nothing 
+			FRTK_CORE_ERROR("ERROR: Label draw when font is not defined\n");
+			return;// do nothing
+		}
+
+	}
+
+	//TODO: It is a problem to get the projection, think how to solve this for text :
+	void Fr_Shape::RenderText(RenderInfo& info) {
+		m_shader->txtFont_program->Enable();
+		glm::mat4 proj;
+		if(m_label.type==ORTHOGRAPHIC){
+			glm::mat4 proj = glm::ortho(0.0f, (float)info.screenDim.w, 0.0f, (float)info.screenDim.h);
+		}
+		else
+		{
+			glm::mat4 proj = info.projection;
+		}
+		
+		m_shader->txtFont_program->SetUniformMat4("projection", proj);
+		m_shader->txtFont_program->SetUniformVec3("textColor",m_label.color);
+		glActiveTexture(GL_TEXTURE0);
+		glBindVertexArray(m_vao_txt);
+		for (auto c : m_label.text) {
+			Character_t ch = Characters[c];
+			float xpos = m_label.position.x + ch.Bearing.x * m_label.pixelSize;
+			float ypos = m_label.position.y - (ch.Size.y - ch.Bearing.y) * m_label.pixelSize;
+			float w = ch.Size.x * m_label.pixelSize;
+			float h = ch.Size.y * m_label.pixelSize;
+
+			float vertices[6][4] = {
+				{ xpos,     ypos + h,   0.0f, 0.0f },
+				{ xpos,     ypos,       0.0f, 1.0f },
+				{ xpos + w, ypos,       1.0f, 1.0f },
+				{ xpos,     ypos + h,   0.0f, 0.0f },
+				{ xpos + w, ypos,       1.0f, 1.0f },
+				{ xpos + w, ypos + h,   1.0f, 0.0f }
+			};
+
+			glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+			glBindBuffer(GL_ARRAY_BUFFER, m_vbo[COLOR_POINTS_VB]);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+			m_label.position.x += (ch.Advance >> 6) * m_label.pixelSize;
+		}
+
+		glBindVertexArray(0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		m_shader->txtFont_program->Disable();
+
+	}
+
+
 }

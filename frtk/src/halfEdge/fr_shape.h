@@ -37,6 +37,13 @@
 // -------------------- OpenMesh
 
 namespace FR {
+	typedef struct {
+		GLuint TextureID;
+		glm::ivec2 Size;
+		glm::ivec2 Bearing;
+		GLuint Advance;
+	}Character_t;
+
 	class Fr_Shape : public Fr_Widget {
 	public:
 		// Constructors
@@ -55,17 +62,18 @@ namespace FR {
 		// Shared Pointer
 		std::shared_ptr<Fr_Texture2D> m_Texture2D;
 		void Render(RenderInfo& info) override;
-		//void InitializeVBO();
-
+		void RenderText(RenderInfo& info) override;
+		
 	private:
 		bool normalized_;
-
 		Fr_Window* linktoMainWindow;
 
 		// Private Methods
 		void calculateTextCoor() override;
 		void LoadLights(std::shared_ptr<ShaderProgram> program, const std::vector<LightInfo>& lights);
 		void RenderSilhouette(const glm::mat4& mvp);
+		
+		void lbl_redraw() override;
 
 		// Constants
 		const size_t kMaxLights = 8; // Important for light calculations
@@ -75,6 +83,12 @@ namespace FR {
 
 		// Attributes
 		float silhouette_;
+
+
+
+		//this should be 
+		std::map<char, Character_t> Characters;
+
 	};
 }
 #endif

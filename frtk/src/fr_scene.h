@@ -31,17 +31,16 @@
 
 #include<fr_core.h>
 
-#include<fr_transform.h>
-#include <fr_primatives.h>
-#include <fr_primativeShader.h>
+#include <fr_transform.h>
 #include <fr_light.h>
-
-#include<fr_camera.h>
-
-#include<fr_genID.h>
-#include <fr_grid.h>
-#include <fr_axis3D.h>
+#include <fr_camera.h>
+#include <fr_genID.h>
 #include <sceneItem/fr_sceneItem.h>
+#include <grid/fr_primatives.h>
+#include <grid/fr_grid_shader.h>
+#include <grid/fr_grid.h>
+#include <grid/fr_axis3D.h>
+
 
 
 namespace FR {
@@ -67,12 +66,15 @@ namespace FR {
 		void setupActiveCamera(uint8_t val, RenderInfo& info);
 
 		void CreateDefaultCameras(void);
+		
+		/** Renders Text (Freetype Font)*/
+		void RenderText(RenderInfo& info);
 
 		void Render(RenderInfo& info);
 		void RenderPrimativeShapes(RenderInfo& info);
-		void RenderWidgetToolkit(RenderInfo& info);
+ 
 		void RenderSilhouette(const glm::mat4& mvp);
-		void RenderIMGui(RenderInfo& info);
+ 
 
 		auto SearchIntersection(const glm::vec3& ray);
 
