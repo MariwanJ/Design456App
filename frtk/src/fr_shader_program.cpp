@@ -62,6 +62,21 @@ namespace FR {
 
     void ShaderProgram::Enable() {
         glCheckFunc(glUseProgram(program_));
+
+        //GLint linked = 0; //for debugging g
+        //glGetProgramiv(program_, GL_LINK_STATUS, &linked);
+        //if (!linked) {
+        //    GLint len = 0;
+        //    glGetProgramiv(program_, GL_INFO_LOG_LENGTH, &len);
+        //    std::vector<GLchar> log(len);
+        //    glGetProgramInfoLog(program_, len, &len, &log[0]);
+        //    printf("Link error: %s\n", &log[0]);
+        //}
+
+
+
+
+
     }
 
     void ShaderProgram::Disable() {
@@ -69,7 +84,7 @@ namespace FR {
     }
     //Send data to a variable inside the shader by the variable name which is retrieved by get location.
     // send integer value to a variable that is integer in the shader
-    void ShaderProgram::SetUniformInteger(const std::string& name, int value) {
+    void ShaderProgram::SetUniformInteger(const std::string name, int value) {
         GLuint location = glGetUniformLocation(program_, name.c_str());
         if (location == -1)
             DEBUG_BREAK;
@@ -77,7 +92,7 @@ namespace FR {
     }
     //Send data to a variable inside the shader by the variable name which is retrieved by get location.
     //Send one float value to a variable that is float in the shader
-    void ShaderProgram::SetUniformFloat(const std::string& name, float value) {
+    void ShaderProgram::SetUniformFloat(const std::string name, float value) {
         GLuint location = glGetUniformLocation(program_, name.c_str());
         if (location == -1)
             DEBUG_BREAK;
@@ -86,7 +101,7 @@ namespace FR {
     }
     //Send data to a variable inside the shader by the variable name which is retrieved by get location.
     //Send one float value to a variable that is 3 floats in the shader
-    void ShaderProgram::SetUniformVec3(const std::string& name, const glm::vec3& value) {
+    void ShaderProgram::SetUniformVec3(const std::string name, const glm::vec3& value) {
         GLuint location = glGetUniformLocation(program_, name.c_str());
         if (location == -1)
             DEBUG_BREAK;
@@ -95,7 +110,7 @@ namespace FR {
     }
     //Send data to a variable inside the shader by the variable name which is retrieved by get location.
     //Send one float value to a variable that is 3 floats in the shader
-    void ShaderProgram::SetUniformVec2Int(const std::string& name, const glm::ivec2& value) {
+    void ShaderProgram::SetUniformVec2Int(const std::string name, const glm::ivec2& value) {
         GLuint location = glGetUniformLocation(program_, name.c_str());
         if (location == -1)
             DEBUG_BREAK;
@@ -105,7 +120,7 @@ namespace FR {
 
     //Send data to a variable inside the shader by the variable name which is retrieved by get location.
     //Send one float value to a variable that is 3 floats in the shader
-    void ShaderProgram::SetUniformVec2(const std::string& name, const glm::vec2& value) {
+    void ShaderProgram::SetUniformVec2(const std::string name, const glm::vec2& value) {
         GLuint location = glGetUniformLocation(program_, name.c_str());
         if (location == -1)
             DEBUG_BREAK;
@@ -115,7 +130,7 @@ namespace FR {
 
     //Send data to a variable inside the shader by the variable name which is retrieved by get location.
     //Send one float value to a variable that is float in the shader
-    void ShaderProgram::SetUniformVec4(const std::string& name, const glm::vec4& value) {
+    void ShaderProgram::SetUniformVec4(const std::string name, const glm::vec4& value) {
         GLuint location = glGetUniformLocation(program_, name.c_str());
         if (location == -1)
             DEBUG_BREAK;
@@ -124,7 +139,7 @@ namespace FR {
     }
     //Send data to a variable inside the shader by the variable name which is retrieved by get location.
     //Send one float value to a variable that is glm::mat4 in the shader
-    void ShaderProgram::SetUniformMat4(const std::string& name, const glm::mat4& value) {
+    void ShaderProgram::SetUniformMat4(const std::string name, const glm::mat4& value) {
         GLuint location = glGetUniformLocation(program_, name.c_str());
         if (location == -1)
             DEBUG_BREAK;

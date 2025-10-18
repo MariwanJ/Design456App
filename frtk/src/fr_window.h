@@ -35,6 +35,11 @@
 #include <fr_core.h>
 #if 1
 #include <fr_transform.h>       //just for debug - remove it when done TODO : FIXME
+
+#include<fr_text.h>
+
+
+
 #endif
 /** Fr_Window */
 
@@ -54,7 +59,6 @@
 
 /** end Fr_Window */
 namespace FR {
-    
     //Change these as needed
     typedef struct {
         double Old_x = 0;  //SAVE X AND Y OF LAST Cursor Move
@@ -363,6 +367,15 @@ namespace FR {
         bool runCode;
 
         static GLFWwindow* pGLFWWindow;
+
+#if 1 
+
+        //EXPERMINETAL CODE : TODO : REMOVE MMEEEEE
+        public:
+        std::shared_ptr<TextRenderer> text;
+#endif
+
+
     };
 }
 

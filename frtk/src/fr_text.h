@@ -59,27 +59,29 @@ namespace FR {
         GLuint Advance;
     };
 
-    class TextRenderer {
-    public:
-        TextRenderer(unsigned int screenWidth, unsigned int screenHeight);
-        ~TextRenderer();
+        class TextRenderer {
+        public:
+            TextRenderer(unsigned int screenWidth, unsigned int screenHeight);
+            ~TextRenderer();
+            bool LoadFont(const std::string& fontPath, unsigned int pixelSize);
+            void RenderText(const std::string& text, float x, float y, float scale, const glm::vec3& color);
+            void SetProjection(unsigned int screenWidth, unsigned int screenHeight);
 
-        bool LoadFont(const std::string& fontPath, unsigned int pixelSize);
-        void RenderText(const std::string& text, float x, float y, float scale, const glm::vec3& color);
-        void SetProjection(unsigned int screenWidth, unsigned int screenHeight);
+        private:
+            GLuint CreateShaderProgram(const char* vertSrc, const char* fragSrc);
+            bool CheckCompileErrors(GLuint shader, const std::string& type);
 
-    private:
-        unsigned int Width, Height;
-        std::map<char, Character> Characters;
-        GLuint VAO, VBO, shaderProgram;
+            unsigned int Width, Height;
+            GLuint VAO, VBO;
+            GLuint shaderProgram;
+            std::map<char, Character> Characters;
+            bool fontLoaded; // Flag to check if font is loaded
 
-        GLuint CreateShaderProgram(const char* vertSrc, const char* fragSrc);
-        bool CheckCompileErrors(GLuint shader, const std::string& type);
+            static const char* vertexShaderSrc;
+            static const char* fragmentShaderSrc;
+        };
 
-        static const char* vertexShaderSrc;
-        static const char* fragmentShaderSrc;
-    };
+    } // namespace FR
 
-}
-
+ 
 #endif //FR_TEXT_H

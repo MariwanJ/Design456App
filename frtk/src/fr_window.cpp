@@ -40,8 +40,25 @@
   //Remove me later : TODO
 #include<halfedge/fr_shape.h>
 
+#if 1 //experimental code TODO: REMOVE ME 
+#include <fr_text.h>
+#endif
+
 /** end fr_grl3 */
 namespace FR {
+
+
+
+    
+
+
+
+
+
+
+
+
+
     /** from Fr_Window */
     int Fr_Window::RECURSION_COUNT = 200;
     float Fr_Window::RAY_RANGE = 600;
@@ -361,6 +378,18 @@ namespace FR {
  
         glfwGetFramebufferSize(pGLFWWindow, &m_ViewPort.w, &m_ViewPort.h);
         userData_ data;
+
+
+
+#if 1 //Experimental code TODO: REMOVE ME !! 
+        text= std::make_shared<TextRenderer>(m_ViewPort.w,m_ViewPort.h);
+        if (!text->LoadFont("C:/Windows/Fonts/ALGER.ttf", 20)) {
+            FRTK_CORE_ERROR("FAILED TO LOAD FONT ");
+            return 1;
+        }
+#endif
+
+
         while (!glfwWindowShouldClose(pGLFWWindow))
         {
             // glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - default should be wings3D or FreeCAD

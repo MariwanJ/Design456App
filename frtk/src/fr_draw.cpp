@@ -48,7 +48,7 @@ namespace FR {
 
         }break;
         case FR_CLOSED_LOOP: {  //This includes square, rectangle, triangle,pentagon, hexagon, star ..etc
-            glCheckFunc(glDrawElements(GL_TRIANGLE_FAN,m_indices->size(), GL_UNSIGNED_INT, 0));    //TODO: Check if this is correct!!            break;
+            glCheckFunc(glDrawElements(GL_TRIANGLE_FAN, m_indices->size(), GL_UNSIGNED_INT, 0));    //TODO: Check if this is correct!!            break;
 
         }break;
         case FR_CIRCLE: {
@@ -72,24 +72,16 @@ namespace FR {
         }
         glCheckFunc(glBindVertexArray(0));
     }
-    void Fr_Widget::DrawPoints(){
+    void Fr_Widget::DrawPoints() {
         glCheckFunc(glBindVertexArray(m_vao_points));
         glCheckFunc(glPointSize(m_pointSize)); // Set the size of the points
-        glCheckFunc(glDrawArrays(GL_POINTS, 0, m_vertices->size() / 3));  
-        glBindVertexArray(0);                             
+        glCheckFunc(glDrawArrays(GL_POINTS, 0, m_vertices->size() / 3));
+        glBindVertexArray(0);
     }
     //Label Draw and Font rendering
     void Fr_Widget::lbl_draw()
     {
-        glCheckFunc(glGenVertexArrays(1,&m_vao_txt));
-        glGenBuffers(1, &m_vbo[m_vao_txt]);
-        glBindVertexArray(m_vao_txt);
-        glBindBuffer(GL_ARRAY_BUFFER, m_vbo[m_vao_txt]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_DRAW);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
+
         return; //do nothing should be subclassed
     }
 
@@ -117,7 +109,6 @@ namespace FR {
         glCheckFunc(glGenBuffers(NUM_OF_VBO_BUFFERS, m_vbo));
         glCheckFunc(glGenVertexArrays(1, &m_vao));
         glCheckFunc(glGenVertexArrays(1, &m_vao_points));
-
         glCheckFunc(glBindVertexArray(m_vao));
 
         // VERTICES
@@ -165,20 +156,20 @@ namespace FR {
             glCheckFunc(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL)); //I cannot use the POSITION_POINTS_VB since it doesn't work here. it should be zero
             glCheckFunc(glBindVertexArray(0));
         }
-            //selection data
-        //glBindVertexArray(m_vao_txt);
-        //    glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_vbo[COLOR_POINTS_VB])); // Create a new VBO for selection
-        //    glCheckFunc(glBufferData(GL_ARRAY_BUFFER, m_selected->size() * sizeof(bool), m_selected->data(), GL_STATIC_DRAW));
-        //    glEnableVertexAttribArray(m_vao_txt);
-        //    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
-        //    glBindBuffer(GL_ARRAY_BUFFER, 0);
-        //glCheckFunc(glBindVertexArray(0));
-        //
-        
-        //TODO : WE SHOULD MAKE SURE THAT WE CAN RENDER THIS FIXME:
-        //Text font drawing 
-        lbl_draw();
-        return 0; 
+        //selection data
+
+    //TODO : WE SHOULD MAKE SURE THAT WE CAN RENDER THIS FIXME:
+    //Text font drawing 
+        glCheckFunc(glGenVertexArrays(1, &m_vao_txt));
+        glCheckFunc(glGenBuffers(1, &m_vbo[TEXT_VB]));
+        glCheckFunc(glBindVertexArray(m_vao_txt));
+        glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_vbo[TEXT_VB]));
+        glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_DRAW));
+        glCheckFunc(glEnableVertexAttribArray(0));
+        glCheckFunc(glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0));
+        glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, 0));
+        glCheckFunc(glBindVertexArray(0));
+        return 0;
     }
 
 }

@@ -83,14 +83,14 @@ namespace FR {
 
 
     typedef struct {
-        glm::vec3 position;        // Position relative to the widget,TODO: SHOULD BE RELATIVE OR ABS
+        glm::vec3 offset;        // Position relative to the widget,TODO: SHOULD BE RELATIVE OR ABS
         std::string text;
         std::shared_ptr<std::string> fnFont; // freetype Font used for rendering, filepath
-        float size;
         glm::vec4 color;
         bool visible;              // Visibility flag
         uint8_t type;               //ORTHO - PERSPECTIVE 
         size_t pixelSize;
+        size_t scale;
     }label_t;
 
 
@@ -214,7 +214,7 @@ namespace FR {
 
         void fontColor(float r, float g, float b, float a);
 
-        void lblPosition(glm::vec3 nval);
+        void lblOffset(glm::vec3 nval);
 
         /** Resizes the widget */
         virtual void resize(std::shared_ptr<std::vector<float>> verticies,

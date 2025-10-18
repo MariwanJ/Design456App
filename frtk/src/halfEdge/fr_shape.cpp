@@ -46,26 +46,23 @@ namespace FR {
 		{
 		if (!m_shader) {
 			m_shader = std::make_shared<Shader_t>();
+		}
 			std::string shaderpath = EXE_CURRENT_DIR + "/resources/shaders/";
-			m_shader->wdg_prog = std::make_shared <ShaderProgram>       (shaderpath+"objectshader");
+			m_shader->wdg_prog = std::make_shared <ShaderProgram>       (shaderpath+"wdgshader");
 			m_shader->silhouette_prog = std::make_shared <ShaderProgram>(shaderpath+"silhouette");
 			m_shader->texture_prog = std::make_shared <ShaderProgram>   (shaderpath+"texture");
 			m_shader->widgPoits_prog= std::make_shared <ShaderProgram>  (shaderpath+"widgPoints");
 			m_shader->txtFont_program = std::make_shared <ShaderProgram>(shaderpath + "txtFont");
-		}
+			
 		ReadFile(path);
 		m_boundBox = std::make_shared <cBoundBox3D>();
 		m_boundBox->setVertices(m_vertices);
-		m_label.fnFont = std::make_shared<std::string>(fontPath + "OpenSansRegular.ttf");
-
-		bool resultText = true;
-
-
-
+		m_label.fnFont = std::make_shared <std::string>(fontPath + "SUSEMono-Light.ttf"); //+ "OpenSansRegular.ttf");
+		m_label.text = "Shape - Be happy!!!";
+		m_label.visible = true;
 		calcualteTextCoor(1024, 1024);
 		initializeVBO();
 		CreateShader();
-
 
 		FT_Library ft = NULL;
 		assert(FT_Init_FreeType(&ft) == 0, "ERROR::FREETYPE: Could not init FreeType Library\n");
@@ -84,6 +81,10 @@ namespace FR {
 				FRTK_CORE_ERROR("Failed to load Glyph:{} ", c);
 				continue;
 			}
+			
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 			GLuint tex;
 			glGenTextures(1, &tex);
 			glBindTexture(GL_TEXTURE_2D, tex);
@@ -108,23 +109,21 @@ namespace FR {
 		FT_Done_Face(face);
 		FT_Done_FreeType(ft);
 
-
 	}
 	//Default constructor with no vertices defined
 	Fr_Shape::Fr_Shape() : Fr_Widget(NULL, NULL, "") {
-
-		//TODO: Dont know if we should have this. you should create shaders, boundbox, caculate texture coord, and initialize vbo by yourself.
-	
 		for (auto& pair : Characters)
 			glDeleteTextures(1, &pair.second.TextureID);
-		//TODO : I THINK WE SHOULD REMOVE ALL VBO VBA 
 	}
 
 	Fr_Shape::~Fr_Shape() {
-		/*if (m_vao != 0) {
+		//Think about cleanup here 
+
+/*		if (m_vao != 0) {
 			glCheckFunc(glDeleteVertexArrays(1, &m_vao));
 			glCheckFunc(glDeleteBuffers(NUM_OF_VBO_BUFFERS, m_vbo));
-		}*/
+		}
+		*/
 	}
 
 	void Fr_Shape::Draw() {
@@ -255,17 +254,17 @@ namespace FR {
 		m_shader->silhouette_prog->SetUniformFloat("silhouette", silhouette_);
 		m_shader->silhouette_prog->SetUniformMat4("mvp", mvp);
 
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_FRONT); // draw only backfaces
+		glCheckFunc(glEnable(GL_CULL_FACE));
+		glCheckFunc(glCullFace(GL_FRONT)  ); // draw only backfaces
 
 		Draw();
 		m_shader->silhouette_prog->Disable();
 		//back to normal
-		glCullFace(GL_BACK);          // restore normal culling
-		glDisable(GL_CULL_FACE);      // or disable if not used elsewhere
-		glDisable(GL_STENCIL_TEST);   // if you used it
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // ensure back to normal
-		glDepthFunc(GL_LESS);         // default depth test
+		glCheckFunc(glCullFace(GL_BACK));          // restore normal culling
+		glCheckFunc(glDisable(GL_CULL_FACE));      // or disable if not used elsewhere
+		glCheckFunc(glDisable(GL_STENCIL_TEST));   // if you used it
+		glCheckFunc(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)); // ensure back to normal
+		glCheckFunc(glDepthFunc(GL_LESS));         // default depth test
 	}
 
 	void Fr_Shape::lbl_redraw()
@@ -278,28 +277,33 @@ namespace FR {
 
 	}
 
-	//TODO: It is a problem to get the projection, think how to solve this for text :
-	void Fr_Shape::RenderText(RenderInfo& info) {
+    void Fr_Shape::RenderText(RenderInfo& info) {
+		glCheckFunc(glEnable(GL_BLEND));
+		glCheckFunc(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+
 		m_shader->txtFont_program->Enable();
+		m_shader->txtFont_program->SetUniformVec3("textColor", m_label.color);
+		glCheckFunc(glActiveTexture(GL_TEXTURE0));
+		glCheckFunc(glBindVertexArray(m_vao_txt));
+
 		glm::mat4 proj;
-		if(m_label.type==ORTHOGRAPHIC){
-			glm::mat4 proj = glm::ortho(0.0f, (float)info.screenDim.w, 0.0f, (float)info.screenDim.h);
+		if (m_label.type == ORTHOGRAPHIC) {
+			proj = glm::ortho(0.0f, (float)info.screenDim.w, 0.0f, (float)info.screenDim.h);
 		}
-		else
-		{
-			glm::mat4 proj = info.projection;
+		else {
+			proj = info.projection * info.modelview;
 		}
-		
 		m_shader->txtFont_program->SetUniformMat4("projection", proj);
-		m_shader->txtFont_program->SetUniformVec3("textColor",m_label.color);
-		glActiveTexture(GL_TEXTURE0);
-		glBindVertexArray(m_vao_txt);
+
+		float x = m_label.offset.x + m_boundBox->minX();
+		float y = m_label.offset.y + m_boundBox->maxY();
+
 		for (auto c : m_label.text) {
 			Character_t ch = Characters[c];
-			float xpos = m_label.position.x + ch.Bearing.x * m_label.pixelSize;
-			float ypos = m_label.position.y - (ch.Size.y - ch.Bearing.y) * m_label.pixelSize;
-			float w = ch.Size.x * m_label.pixelSize;
-			float h = ch.Size.y * m_label.pixelSize;
+			float xpos = x + ch.Bearing.x * m_label.scale;
+			float ypos = y - (ch.Size.y - ch.Bearing.y) * m_label.scale;
+			float w = ch.Size.x * m_label.scale;
+			float h = ch.Size.y * m_label.scale;
 
 			float vertices[6][4] = {
 				{ xpos,     ypos + h,   0.0f, 0.0f },
@@ -310,19 +314,23 @@ namespace FR {
 				{ xpos + w, ypos + h,   1.0f, 0.0f }
 			};
 
+			// Bind the texture for the current character
 			glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-			glBindBuffer(GL_ARRAY_BUFFER, m_vbo[COLOR_POINTS_VB]);
+			// Update vertex buffer
+			glBindBuffer(GL_ARRAY_BUFFER, m_vbo[TEXT_VB]);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+			// Draw the character
 			glDrawArrays(GL_TRIANGLES, 0, 6);
-			m_label.position.x += (ch.Advance >> 6) * m_label.pixelSize;
+			// Advance the cursor for the next character
+			x += (ch.Advance >> 6) * m_label.scale;
 		}
 
+		// Clean up
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		m_shader->txtFont_program->Disable();
-
 	}
-
 
 }

@@ -51,13 +51,14 @@ namespace FR {
         
         m_label.text = "";
         m_label.fnFont = NULL;// we cannot define it here
-        m_label.size = 10;
-        m_label.color = glm::vec4(FR_BLACK);
-        m_label.position = glm::vec3( 0.0f );
-        m_label.visible = false; //we dont have font .. disable it
-        m_label.pixelSize = 18;  //size of the pixesl -- TODO : HOW MUCH WE SHOULD PUT HERE !!!!!!!!!!!
+ 
+        m_label.color = glm::vec4(FR_YELLOW);
+        m_label.offset = glm::vec3( 0.0f );
+        m_label.visible = false; //we don't have font .. disable it you should enabled when you subclass
+        m_label.pixelSize = 16;  //size of the pixels -- TODO : HOW MUCH WE SHOULD PUT HERE !!!!!!!!!!!
+        m_label.scale = 1;
         m_label.text = "Change me - Widget say hello";
-        m_label.type = ORTHOGRAPHIC;
+        m_label.type = PERSPECTIVE;//ORTHOGRAPHIC;
 
         m_active = true;
         m_visible = true;
@@ -113,6 +114,8 @@ namespace FR {
         m_shader->widgPoits_prog = std::make_shared<ShaderProgram>   (shaderpath+"widgPoints");
         m_shader->silhouette_prog = std::make_shared<ShaderProgram>  (shaderpath+"silhouette");
         m_shader->texture_prog= std::make_shared<ShaderProgram>      (shaderpath+"texture"); 
+        m_shader->txtFont_program = std::make_shared<ShaderProgram>(shaderpath + "txtFont");
+
     }
     void Fr_Widget::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights)
     {
@@ -191,7 +194,7 @@ namespace FR {
 
     void Fr_Widget::fontSize(int size_)
     {
-        m_label.size = size_;
+        m_label.pixelSize = size_;
     }
 
     void Fr_Widget::fontColor(glm::vec4 col)
@@ -201,12 +204,11 @@ namespace FR {
     void Fr_Widget::fontColor(float r, float g, float b, float a)
     {
         m_label.color = glm::vec4(r, g, b, a);
-        m_label.position;
     }
 
-    void Fr_Widget::lblPosition(glm::vec3 nval)
+    void Fr_Widget::lblOffset(glm::vec3 nval)
     {
-        m_label.position = nval;
+        m_label.offset = nval;
     }
 
     void Fr_Widget::lbl_visible(bool v) {

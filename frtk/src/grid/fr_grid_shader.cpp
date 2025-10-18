@@ -49,7 +49,7 @@ namespace FR {
         m_f_objectshader = shaderpath+"primativeshader";
         m_f_silhouette   = shaderpath + "silhouette";
         m_f_texture      = shaderpath +"texture";
-        m_f_text = shaderpath + "txtshader";
+        m_f_text = shaderpath + "txtFont";
     }
     /** Shader file name and path */
     void Fr_GridShader::setObjectshader(const char* newValue)
