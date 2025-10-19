@@ -50,6 +50,9 @@ namespace FR {
     void Fr_Scene::SetBackgroud(float r, float g, float b, float alfa) {
         m_Background = glm::vec4(r, g, b, alfa);
     }
+    Camera & Fr_Scene::getActiveCamera(void) {
+        return m_cameras[m_active_camera];
+    }
     //TODO : THIS MUST BE FIXED !!!!!!
     void Fr_Scene::add3DObject(std::string fName)
     {
@@ -358,7 +361,7 @@ namespace FR {
 #if 1   //EXPERIMENTAL CODE - TEXT RENDERING 
 
        
-        win->text->RenderText("Design456App New View!", 25.0f, 300.0f, 1.0f, glm::vec3(0.8f, 0.8f, 0.1f));
+        win->text->RenderText("Design456App New View!", 0.0f,  0.0f, 1.0f, glm::vec3(0.8f, 0.8f, 0.1f));
             
 
 #endif  //EXPERIMENTAL CODE - TEXT RENDERING 

@@ -136,13 +136,21 @@ namespace FR {
         return m_direction;
     }
 
-    bool  Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
+    bool Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
     {
         if (!m_active)
             return false;
 
-        //FRTK_CORE_INFO(aspectRatio_);
+        // Ensure the current GLFW window is valid
+        GLFWwindow* g = Fr_Window::getCurrentGLWindow();
+        assert(g != nullptr); // This will stop execution if g is nullptr
 
+        int w, h;
+        glfwGetWindowSize(g, &w, &h);
+        if (h != 0 && w != 0) // Avoid updating ratio when it is invalid
+            m_aspect_ratio = static_cast<float>(w) / static_cast<float>(h);
+
+        // Set up projection matrix based on camera type
         if (m_camType == ORTHOGRAPHIC) {
             float orthoLeft = -m_OrthographicSize * m_aspect_ratio * 0.75f;
             float orthoRight = m_OrthographicSize * m_aspect_ratio * 0.75f;
@@ -153,11 +161,14 @@ namespace FR {
         else {
             projection = glm::perspective(glm::radians(m_fovy), m_aspect_ratio, m_znear, m_zfar);
         }
+
         m_ProjectionMatrix = projection;
-        updateViewMatrix();
+        updateViewMatrix(); // Ensure this updates m_ViewMatrix correctly
         modelview = m_ViewMatrix;
+
         return true;
     }
+ 
 
     /**
      * Direct center of the camera.

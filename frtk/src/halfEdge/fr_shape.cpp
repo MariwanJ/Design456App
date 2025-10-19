@@ -57,9 +57,10 @@ namespace FR {
 		ReadFile(path);
 		m_boundBox = std::make_shared <cBoundBox3D>();
 		m_boundBox->setVertices(m_vertices);
-		m_label.fnFont = std::make_shared <std::string>(fontPath + "SUSEMono-Light.ttf"); //+ "OpenSansRegular.ttf");
+		m_label.fnFont = std::make_shared <std::string>(fontPath + "OpenSansRegular.ttf"); // DEFAULT FONT 
 		m_label.text = "Shape - Be happy!!!";
 		m_label.visible = true;
+		m_label.scale = 1.0f;
 		calcualteTextCoor(1024, 1024);
 		initializeVBO();
 		CreateShader();
@@ -73,7 +74,7 @@ namespace FR {
 			assert("ERROR::FREETYPE: Failed to load font\n");
 		}
 
-		FT_Set_Pixel_Sizes(face, 0, m_label.pixelSize);
+		FT_Set_Pixel_Sizes(face, m_label.pixelSize, m_label.pixelSize);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 		for (unsigned char c = 0; c < 128; ++c) {
@@ -88,11 +89,17 @@ namespace FR {
 			GLuint tex;
 			glGenTextures(1, &tex);
 			glBindTexture(GL_TEXTURE_2D, tex);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, face->glyph->bitmap.width,
-				face->glyph->bitmap.rows, 0, GL_RED, GL_UNSIGNED_BYTE,
-				face->glyph->bitmap.buffer);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexImage2D(
+					GL_TEXTURE_2D, 
+					0,
+				    GL_RED, 
+					face->glyph->bitmap.width,
+					face->glyph->bitmap.rows, 
+					0, 
+					GL_RED, 
+					GL_UNSIGNED_BYTE,
+					face->glyph->bitmap.buffer);
+
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -277,7 +284,7 @@ namespace FR {
 
 	}
 
-    void Fr_Shape::RenderText(RenderInfo& info) {
+	void Fr_Shape::RenderText(RenderInfo& info) {
 		glCheckFunc(glEnable(GL_BLEND));
 		glCheckFunc(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
@@ -286,36 +293,49 @@ namespace FR {
 		glCheckFunc(glActiveTexture(GL_TEXTURE0));
 		glCheckFunc(glBindVertexArray(m_vao_txt));
 
-		glm::mat4 proj;
+		glm::mat4 mvp;
+
 		if (m_label.type == ORTHOGRAPHIC) {
-			proj = glm::ortho(0.0f, (float)info.screenDim.w, 0.0f, (float)info.screenDim.h);
+			mvp = glm::ortho(0.0f, (float)info.screenDim.w, 0.0f, (float)info.screenDim.h)* info.modelview;
 		}
 		else {
-			proj = info.projection * info.modelview;
+			mvp = info.projection * info.modelview; // Perspective
 		}
-		m_shader->txtFont_program->SetUniformMat4("projection", proj);
 
+
+		// Positioning text
 		float x = m_label.offset.x + m_boundBox->minX();
 		float y = m_label.offset.y + m_boundBox->maxY();
-
+		float z = m_label.offset.z + m_boundBox->minZ();
+		glm::mat4 model = glm::mat4{ 1.f };
+		model =glm::translate(glm::mat4(1.0f), glm::vec3(x,y,z));
+		mvp = mvp * model;
+		m_shader->txtFont_program->SetUniformMat4("mvp", mvp);
+	
+		x = 0;
+		y = 0;
 		for (auto c : m_label.text) {
 			Character_t ch = Characters[c];
-			float xpos = x + ch.Bearing.x * m_label.scale;
-			float ypos = y - (ch.Size.y - ch.Bearing.y) * m_label.scale;
-			float w = ch.Size.x * m_label.scale;
-			float h = ch.Size.y * m_label.scale;
+
+			// Position calculations based on character metrics
+			float xpos = x + ch.Bearing.x*m_label.scale;  
+			float ypos = y - (ch.Size.y - ch.Bearing.y);
+
+			float w = ch.Size.x * m_label.scale; // Use original size
+			float h = ch.Size.y * m_label.scale; // Use original size
 
 			float vertices[6][4] = {
-				{ xpos,     ypos + h,   0.0f, 0.0f },
-				{ xpos,     ypos,       0.0f, 1.0f },
-				{ xpos + w, ypos,       1.0f, 1.0f },
-				{ xpos,     ypos + h,   0.0f, 0.0f },
-				{ xpos + w, ypos,       1.0f, 1.0f },
-				{ xpos + w, ypos + h,   1.0f, 0.0f }
+				{ xpos,     ypos + h,   0.0f, 0.0f }, // Top-left
+				{ xpos,     ypos,       0.0f, 1.0f }, // Bottom-left
+				{ xpos + w, ypos,       1.0f, 1.0f }, // Bottom-right
+				{ xpos,     ypos + h,   0.0f, 0.0f }, // Top-left
+				{ xpos + w, ypos,       1.0f, 1.0f }, // Bottom-right
+				{ xpos + w, ypos + h,   1.0f, 0.0f }  // Top-right
 			};
 
 			// Bind the texture for the current character
 			glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+
 			// Update vertex buffer
 			glBindBuffer(GL_ARRAY_BUFFER, m_vbo[TEXT_VB]);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
@@ -323,8 +343,9 @@ namespace FR {
 
 			// Draw the character
 			glDrawArrays(GL_TRIANGLES, 0, 6);
+
 			// Advance the cursor for the next character
-			x += (ch.Advance >> 6) * m_label.scale;
+			x += (ch.Advance >> 6) * m_label.scale; // Adjust for the next character position
 		}
 
 		// Clean up
@@ -332,5 +353,6 @@ namespace FR {
 		glBindTexture(GL_TEXTURE_2D, 0);
 		m_shader->txtFont_program->Disable();
 	}
+
 
 }

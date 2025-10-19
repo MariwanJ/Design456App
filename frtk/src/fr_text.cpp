@@ -3,7 +3,7 @@
 #include FT_CONFIG_OPTIONS_H
 #include FT_FREETYPE_H
 #include <glm/gtc/matrix_transform.hpp>
-
+#include <fr_window.h>
 // Constructor
 namespace FR {
     TextRenderer::TextRenderer(unsigned int screenWidth, unsigned int screenHeight)
@@ -22,6 +22,8 @@ namespace FR {
 
         glUseProgram(shaderProgram);
         glm::mat4 proj = glm::ortho(0.0f, (float)Width, 0.0f, (float)Height);
+        Fr_Window* win = Fr_Window::getFr_Window();
+
         GLint loc = glGetUniformLocation(shaderProgram, "projection");
         glUniformMatrix4fv(loc, 1, GL_FALSE, &proj[0][0]);
         glUseProgram(0);

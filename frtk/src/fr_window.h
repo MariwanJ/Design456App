@@ -37,7 +37,7 @@
 #include <fr_transform.h>       //just for debug - remove it when done TODO : FIXME
 
 #include<fr_text.h>
-
+#include <fr_camera.h>
 
 
 #endif
@@ -103,6 +103,7 @@ namespace FR {
         Fr_Window(int x, int y, int w, int h, std::string label);
 
         Fr_Window();
+ 
         /**
          * Class destructor.
          */

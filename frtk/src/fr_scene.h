@@ -61,6 +61,7 @@ namespace FR {
 
 		void setBackgroud(float r, float g, float b, float alfa);
 		void setBackgroud(glm::vec4 color);
+		Camera&  getActiveCamera(void);
 
 		void setupActiveCamera(const char* name, RenderInfo& info);
 		void setupActiveCamera(uint8_t val, RenderInfo& info);

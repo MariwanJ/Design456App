@@ -4,12 +4,14 @@
 in vec2 TexCoords;
 out vec4 FragColor;
 
-uniform sampler2D text;
+uniform sampler2D image;
 uniform vec3 textColor;
 
 
 void main() {
-    float alpha = texture(text, TexCoords).r;
-    FragColor = vec4(textColor, alpha);
+    float d = texture(image, TexCoords).r;
+    float aaf= fwidth(d);
+    float alpha = smoothstep(0.5-aaf, 0.5+aaf,d);
+    FragColor = vec4(textColor, d);
 
 }

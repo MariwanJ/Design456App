@@ -1,3 +1,4 @@
+#include "fr_window.h"
 //
 // This file is a part of the Open Source Design456App
 // MIT License
@@ -383,7 +384,7 @@ namespace FR {
 
 #if 1 //Experimental code TODO: REMOVE ME !! 
         text= std::make_shared<TextRenderer>(m_ViewPort.w,m_ViewPort.h);
-        if (!text->LoadFont("C:/Windows/Fonts/ALGER.ttf", 20)) {
+        if (!text->LoadFont("C:/Windows/Fonts/ALGER.ttf", 48)) {
             FRTK_CORE_ERROR("FAILED TO LOAD FONT ");
             return 1;
         }
@@ -436,6 +437,7 @@ namespace FR {
     {
 
     }
+
     int Fr_Window::handle(int events)
     {
         //We need to get the ray always. This will affect performance but don't know how to avoid that
