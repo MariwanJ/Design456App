@@ -143,7 +143,7 @@ namespace FR {
 	}
 	float Fr_Window::getAspectRation() const
 	{
-		return Camera::m_aspect_ratio;
+		return Fr_Camera::m_aspect_ratio;
 	}
 	eventData Fr_Window::GLFWevents() const
 	{

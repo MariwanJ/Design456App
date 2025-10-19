@@ -1,4 +1,4 @@
-//
+﻿//
 // This file is a part of the Open Source Design456App
 // MIT License
 //
@@ -58,7 +58,7 @@ namespace FR {
 		m_boundBox = std::make_shared <cBoundBox3D>();
 		m_boundBox->setVertices(m_vertices);
 		m_label.fnFont = std::make_shared <std::string>(fontPath + "OpenSansRegular.ttf"); // DEFAULT FONT 
-		m_label.text = "Shape - Be happy!!!";
+		m_label.text = "Shape!!";
 		m_label.visible = true;
 		m_label.scale = 1.0f;
 		calcualteTextCoor(1024, 1024);

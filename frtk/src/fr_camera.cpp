@@ -99,9 +99,9 @@ namespace FR {
      height 44.932899\n\n}\n'
     */
 
-    float Camera::m_aspect_ratio = 1.9f;
+    float Fr_Camera::m_aspect_ratio = 1.9f;
 
-    Camera::Camera() : Fr_Transform(),
+    Fr_Camera::Fr_Camera() : Fr_Transform(),
         m_position{ 15.f, 11.f,  102.f },
         m_direction{ -.098f, -1.372f, 0.0f },
         m_up{ -58.84f, 628.451f, 29.412f },
@@ -120,34 +120,34 @@ namespace FR {
         if (g == nullptr)
             return;
         glfwGetWindowSize(g, &width, &height);
-        if (height != 0 && width != 0)        //Avoid updating ratio when it is invalid
+        if (height != 0 && width != 0)      
             m_aspect_ratio = float(width) / float(height);
     }
 
-    void Camera::SetCamPosition(float x, float y, float z) {
+    void Fr_Camera::SetCamPosition(float x, float y, float z) {
         m_position = glm::vec3(x, y, z);
     }
-    glm::vec3 Camera::GetCamPosition()
+    glm::vec3 Fr_Camera::GetCamPosition()
     {
         return m_position;
     }
-    glm::vec3 Camera::GetCamDirection()
+    glm::vec3 Fr_Camera::GetCamDirection()
     {
         return m_direction;
     }
 
-    bool Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
+    bool Fr_Camera::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
     {
         if (!m_active)
             return false;
 
         // Ensure the current GLFW window is valid
         GLFWwindow* g = Fr_Window::getCurrentGLWindow();
-        assert(g != nullptr); // This will stop execution if g is nullptr
+        assert(g != nullptr);
 
         int w, h;
         glfwGetWindowSize(g, &w, &h);
-        if (h != 0 && w != 0) // Avoid updating ratio when it is invalid
+        if (h != 0 && w != 0) 
             m_aspect_ratio = static_cast<float>(w) / static_cast<float>(h);
 
         // Set up projection matrix based on camera type
@@ -177,7 +177,7 @@ namespace FR {
      * \param y : y axis location
      * \param z : z axis location
      */
-    void Camera::SetCenter(float x, float y, float z) {
+    void Fr_Camera::SetCenter(float x, float y, float z) {
         m_direction = glm::vec3(x, y, z);
         updateViewMatrix();
     }
@@ -189,7 +189,7 @@ namespace FR {
      * \param y : y axis location
      * \param z : z axis location
      */
-    void Camera::SetUp(float x, float y, float z) {
+    void Fr_Camera::SetUp(float x, float y, float z) {
         m_up = glm::vec3(x, y, z);
         updateViewMatrix();
     }
@@ -200,7 +200,7 @@ namespace FR {
      * \param znear :  Z - Near value
      * \param zfar : z - Far value
      */
-    void Camera::SetPerspective(float fovy, float znear, float zfar) {
+    void Fr_Camera::SetPerspective(float fovy, float znear, float zfar) {
         m_fovy = fovy;   //LEFT
         m_znear = znear;  //BOTTOM
         m_zfar = zfar;    //TOP
@@ -211,7 +211,7 @@ namespace FR {
      *
      * \param data ref variable keeps the configuration
      */
-    void Camera::getUserData(userData_& data)
+    void Fr_Camera::getUserData(userData_& data)
     {
         data.aspectRatio_ = m_aspect_ratio;
         data.camm_position = m_position;
@@ -224,7 +224,7 @@ namespace FR {
         data.orthoSize_ = m_OrthographicSize;
     }
 
-    void Camera::setUserData(userData_& data)
+    void Fr_Camera::setUserData(userData_& data)
     {
         //aspectRatio_ = data.aspectRatio_;
         m_position = data.camm_position;
@@ -244,7 +244,7 @@ namespace FR {
      *
      */
 
-    void Camera::setupCameraHomeValues() {
+    void Fr_Camera::setupCameraHomeValues() {
         //TODO CHECK ME !! 
         m_zfar = 10000.0f;
         m_znear = 0.01f;
@@ -376,7 +376,7 @@ namespace FR {
     /**
     *   Set camera type
     */
-    void Camera::setType(uint8_t camTyp)
+    void Fr_Camera::setType(uint8_t camTyp)
     {
         m_camType = camTyp;
         m_active = true;
@@ -386,12 +386,12 @@ namespace FR {
      * Set camera type which affects the setup function.
      * \return
      */
-    uint8_t  Camera::getType() const
+    uint8_t  Fr_Camera::getType() const
     {
         return m_camType;
     }
 
-    glm::mat4 Camera::getProjection()
+    glm::mat4 Fr_Camera::getProjection()
     {
         //Projection Matrix change these 3D world into 2D display
         if (m_camType == ORTHOGRAPHIC) {
@@ -407,33 +407,33 @@ namespace FR {
         return m_ProjectionMatrix;
     }
 
-    void Camera::updateViewMatrix() {
+    void Fr_Camera::updateViewMatrix() {
         m_ViewMatrix = glm::lookAt(m_position, m_direction, m_up);      //Create the view Matrix (how camera see the space world)
         m_InverseViewMatrix = glm::inverse(m_ViewMatrix);
     }
 
-    glm::mat4 Camera::GetViewMatrix() {
+    glm::mat4 Fr_Camera::GetViewMatrix() {
         updateViewMatrix();
         return m_ViewMatrix;
     }
 
-    void Camera::setViewMatrix(glm::mat4& t)
+    void Fr_Camera::setViewMatrix(glm::mat4& t)
     {
         m_ViewMatrix = t;
     }
 
-    void Camera::SetOrthographicSize(float size_)
+    void Fr_Camera::SetOrthographicSize(float size_)
     {
         m_OrthographicSize = size_;
         updateViewMatrix();
     }
 
-    float Camera::getOrthgraphicSize()
+    float Fr_Camera::getOrthgraphicSize()
     {
         return m_OrthographicSize;
     }
 
-    glm::mat4 Camera::GetInverseViewMatrix() {
+    glm::mat4 Fr_Camera::GetInverseViewMatrix() {
         updateViewMatrix();
         return m_InverseViewMatrix;
     }

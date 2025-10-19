@@ -135,13 +135,13 @@ namespace FR {
 
     // Set Projection Method
     void  TextRenderer::SetProjection(unsigned int screenWidth, unsigned int screenHeight) {
-        Width = screenWidth;
+     /*   Width = screenWidth;
         Height = screenHeight;
         glUseProgram(shaderProgram);
         glm::mat4 proj = glm::ortho(0.0f, (float)Width, 0.0f, (float)Height);
         GLint loc = glGetUniformLocation(shaderProgram, "projection");
         glUniformMatrix4fv(loc, 1, GL_FALSE, &proj[0][0]);
-        glUseProgram(0);
+        glUseProgram(0);*/
     }
 
     // Shader Program Creation Method

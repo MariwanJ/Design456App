@@ -467,19 +467,21 @@ namespace FR {
     {
         ImGuiWindowFlags window_flags = 0
             | ImGuiWindowFlags_NoDocking
-            //| ImGuiWindowFlags_NoTitleBar
             | ImGuiWindowFlags_NoResize
-            //   | ImGuiWindowFlags_NoMove
-            | ImGuiWindowFlags_NoScrollbar
-            //| ImGuiWindowFlags_NoSavedSettings
-            ;
+            | ImGuiWindowFlags_NoScrollbar;
+            
+ 
         ImGui::Begin("File Browser", nullptr, ImGuiWindowFlags_NoDocking);
         // (optional) set browser properties
         this->fileDialog.SetTitle("Open file");
         fileDialog.SetTypeFilters({ ".obj", ".off" });
         fileDialog.Open();
         fileDialog.Display();
-
+        // Close button
+        
+        if (!fileDialog.IsOpened()) {
+            showOpenDialog = false; // User canceled or closed the dialog
+        }
         if (fileDialog.HasSelected())
         {
             std::string fileName = fileDialog.GetSelected().string();
@@ -487,7 +489,10 @@ namespace FR {
             fileDialog.ClearSelected();
             showOpenDialog = false;
         }
+  
+
         ImGui::End();
+ 
     }
 
     /**  callbacks */

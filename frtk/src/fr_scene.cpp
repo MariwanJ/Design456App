@@ -50,7 +50,7 @@ namespace FR {
     void Fr_Scene::SetBackgroud(float r, float g, float b, float alfa) {
         m_Background = glm::vec4(r, g, b, alfa);
     }
-    Camera & Fr_Scene::getActiveCamera(void) {
+    Fr_Camera & Fr_Scene::getActiveCamera(void) {
         return m_cameras[m_active_camera];
     }
     //TODO : THIS MUST BE FIXED !!!!!!

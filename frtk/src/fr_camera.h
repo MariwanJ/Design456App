@@ -54,13 +54,13 @@ namespace FR {
      * Scene's camera- Must be a subclass of Transform to achieve translation
      */
 
-    class FRTK_API Camera : public Fr_Transform {
+    class FRTK_API Fr_Camera : public Fr_Transform {
         friend Fr_Window;
     public:
         /**
          * Constructor
          */
-        Camera();
+        Fr_Camera();
 
         /**
          * Sets the eye coordinates

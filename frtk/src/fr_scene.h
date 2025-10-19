@@ -61,7 +61,7 @@ namespace FR {
 
 		void setBackgroud(float r, float g, float b, float alfa);
 		void setBackgroud(glm::vec4 color);
-		Camera&  getActiveCamera(void);
+		Fr_Camera&  getActiveCamera(void);
 
 		void setupActiveCamera(const char* name, RenderInfo& info);
 		void setupActiveCamera(uint8_t val, RenderInfo& info);
@@ -172,7 +172,7 @@ namespace FR {
 		 * \return      One if no events remained and all consumed, 0 if the events needs further treatment
 		 */
 		int handle(int ev);
-		Camera m_cameras[TOTAL_CAMS];
+		Fr_Camera m_cameras[TOTAL_CAMS];
 		std::vector<SceneItemStruct> m_world;
 		protected:
 			ray_t activeRay; 
