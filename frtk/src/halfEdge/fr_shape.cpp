@@ -57,7 +57,7 @@ namespace FR {
 		ReadFile(path);
 		m_boundBox = std::make_shared <cBoundBox3D>();
 		m_boundBox->setVertices(m_vertices);
-		m_label.fnFont = std::make_shared <std::string>(fontPath + "OpenSansRegular.ttf"); // DEFAULT FONT 
+		m_label.fnFont = std::make_shared <std::string>(fontPath + "terminal-f4.ttf"); // DEFAULT FONT 
 		m_label.text = "Shape!!";
 		m_label.visible = true;
 		m_label.scale = 1.0f;
@@ -301,17 +301,22 @@ namespace FR {
 		else {
 			mvp = info.projection * info.modelview; // Perspective
 		}
+ 
 
 
 		// Positioning text
 		float x = m_label.offset.x + m_boundBox->minX();
 		float y = m_label.offset.y + m_boundBox->maxY();
 		float z = m_label.offset.z + m_boundBox->minZ();
-		glm::mat4 model = glm::mat4{ 1.f };
-		model =glm::translate(glm::mat4(1.0f), glm::vec3(x,y,z));
-		mvp = mvp * model;
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(x, y, z)); // Translate to position
+		model = glm::scale(model, glm::vec3(m_label.scale, m_label.scale, 1.0f)); // Scale uniformly
+
+		// Correct order: first model, then view, then projection
+		mvp = info.projection * info.modelview * model;
 		m_shader->txtFont_program->SetUniformMat4("mvp", mvp);
-	
+ 
+ 
 		x = 0;
 		y = 0;
 		for (auto c : m_label.text) {
@@ -325,12 +330,12 @@ namespace FR {
 			float h = ch.Size.y * m_label.scale; // Use original size
 
 			float vertices[6][4] = {
-				{ xpos,     ypos + h,   0.0f, 0.0f }, // Top-left
+				{ xpos + w, ypos + h,   1.0f, 0.0f }, // Top-right
 				{ xpos,     ypos,       0.0f, 1.0f }, // Bottom-left
-				{ xpos + w, ypos,       1.0f, 1.0f }, // Bottom-right
 				{ xpos,     ypos + h,   0.0f, 0.0f }, // Top-left
-				{ xpos + w, ypos,       1.0f, 1.0f }, // Bottom-right
-				{ xpos + w, ypos + h,   1.0f, 0.0f }  // Top-right
+				{ xpos + w, ypos + h,   1.0f, 0.0f }, // Top-right (repeat)
+				{ xpos,     ypos,       0.0f, 1.0f }, // Bottom-left (repeat)
+				{ xpos + w, ypos,       1.0f, 1.0f }  // Bottom-right
 			};
 
 			// Bind the texture for the current character

@@ -482,6 +482,10 @@ namespace FR {
         if (!fileDialog.IsOpened()) {
             showOpenDialog = false; // User canceled or closed the dialog
         }
+        if (fileDialog.isCanceled()) {
+            showOpenDialog = false;
+            fileDialog.resetStatus();
+        }else
         if (fileDialog.HasSelected())
         {
             std::string fileName = fileDialog.GetSelected().string();
