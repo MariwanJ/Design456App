@@ -56,9 +56,15 @@ namespace FR {
 
 		// Public Methods
 		void Draw();
+
+		//TODO: NOT IMPLEMENTED SHOULD BE IMPLEMENTED :: FIXME!!!
 		void SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices);
+
 		glm::vec3 GetVertex(unsigned int index, const float vertices[]);
 		void ReadFile(const std::string& path);
+
+		void ReadMeshString(const std::string& mshData);
+		 
 
 		// Shared Pointer
 		std::shared_ptr<Fr_Texture2D> m_Texture2D;

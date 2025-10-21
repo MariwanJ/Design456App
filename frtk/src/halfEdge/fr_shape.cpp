@@ -67,76 +67,6 @@ namespace FR {
 		LoadFont(DEFAULT_FONT); //TODO: Do we need to allow other font at the creation, don't think so.
 	}
 
-	//void Fr_Shape::LoadFont(const std::string& fontPath)
-	//{
-	//	Characters.clear(); // Clear previous font glyphs
-	//	m_label.fnFont.reset(); //clear old path (remove)
-	//	m_label.fnFont = std::make_shared<std::string>(fontPath);
-
-	//	static FT_Library ft;
-	//	static bool ftInitialized = false;
-	//	if (!ftInitialized) {
-	//		if (FT_Init_FreeType(&ft)) {
-	//			FRTK_CORE_ERROR("ERROR::FREETYPE: Could not init FreeType Library");
-	//			return;
-	//		}
-	//		ftInitialized = true;
-	//	}
-
-	//	FT_Face face = nullptr;
-	//	if (FT_New_Face(ft, fontPath.c_str(), 0, &face)) {
-	//		FRTK_CORE_ERROR("ERROR::FREETYPE: Failed to load font: {}", fontPath);
-	//		return;
-	//	}
-
-	//	FT_Set_Pixel_Sizes(face, m_label.pixelSize, m_label.pixelSize);
-	//	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-	//	glEnable(GL_BLEND);
-	//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	//	for (unsigned char c = 0; c < 128; ++c)
-	//	{
-	//		if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-	//			FRTK_CORE_ERROR("Failed to load Glyph: {}", c);
-	//			continue;
-	//		}
-
-	//		GLuint tex;
-	//		glGenTextures(1, &tex);
-	//		glBindTexture(GL_TEXTURE_2D, tex);
-	//		glTexImage2D(
-	//			GL_TEXTURE_2D,
-	//			0,
-	//			GL_RED,
-	//			face->glyph->bitmap.width,
-	//			face->glyph->bitmap.rows,
-	//			0,
-	//			GL_RED,
-	//			GL_UNSIGNED_BYTE,
-	//			face->glyph->bitmap.buffer
-	//		);
-
-	//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	//		Character_t ch = {
-	//			tex,
-	//			glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-	//			glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-	//			(GLuint)face->glyph->advance.x
-	//		};
-
-	//		Characters.insert(std::make_pair(c, ch));
-	//	}
-
-	//	glBindTexture(GL_TEXTURE_2D, 0);
-	//	FT_Done_Face(face);
-
-	//	*m_label.fnFont = fontPath; // update current font name
-	//}
-
-
 	void printCharacterAsDots(FT_GlyphSlot glyph) {
 		int width = glyph->bitmap.width;
 		int height = glyph->bitmap.rows;
@@ -324,8 +254,54 @@ namespace FR {
 				m_indices->emplace_back(fvit.handle().idx());
 			}
 		}
-		init();//We should call this as the widget didn't get info from the beginign about vertices.
 	}
+
+	void Fr_Shape::ReadMeshString(const std::string& mshData) {
+		std::istringstream input(mshData);
+
+		// Ensure buffers exist
+		if (!m_vertices) m_vertices = std::make_shared<std::vector<float>>();
+		if (!m_indices)  m_indices = std::make_shared<std::vector<unsigned int>>();
+		if (!m_normals)  m_normals = std::make_shared<std::vector<float>>();
+
+		// Read vertex and triangle counts
+		size_t nVertices = 0, nTriangles = 0;
+		if (!(input >> nVertices >> nTriangles)) {
+			throw std::runtime_error("Invalid mesh data: missing vertex/triangle counts");
+		}
+
+		// Resize buffers
+		m_vertices->resize(nVertices * 3);
+		m_normals->resize(nVertices * 3); // still allocated for later computation
+		m_indices->resize(nTriangles * 3);
+
+		// Read vertex positions (ignore input normals)
+		for (size_t i = 0; i < nVertices; ++i) {
+			int id = 0;
+			float x, y, z;
+			if (!(input >> id >> x >> y >> z)) {
+				throw std::runtime_error("Invalid mesh data while reading vertex " + std::to_string(i));
+			}
+			m_vertices->at(3 * i) = x;
+			m_vertices->at(3 * i + 1) = y;
+			m_vertices->at(3 * i + 2) = z;
+		}
+
+		// Read triangle indices
+		for (size_t i = 0; i < nTriangles; ++i) {
+			int id = 0;
+			unsigned int a, b, c;
+			if (!(input >> id >> a >> b >> c)) {
+				throw std::runtime_error("Invalid mesh data while reading triangle " + std::to_string(i));
+			}
+			m_indices->at(3 * i) = a;
+			m_indices->at(3 * i + 1) = b;
+			m_indices->at(3 * i + 2) = c;
+		}
+	}
+
+
+
 
 	void Fr_Shape::calculateTextCoor( ) {
 		// Add a new property for storing UV coordinates (per-face UVs)
