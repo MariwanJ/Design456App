@@ -613,8 +613,11 @@ inline void ImGui::FileBrowser::Display()
                 ImGuiInputTextFlags_CallbackResize, ExpandInputBuffer, &newDirNameBuffer_);
             focusOnInputText |= IsItemFocused();
             SameLine();
+            SameLine();
+            SameLine();
+            SameLine();
 
-            if (Button("ok") && newDirNameBuffer_[0] != '\0')
+            if (Button("   Ok  ") && newDirNameBuffer_[0] != '\0')
             {
                 ScopeGuard closeNewDirPopup([] { CloseCurrentPopup(); });
                 if (create_directory(currentDirectory_ / u8StrToPath(newDirNameBuffer_.data())))
@@ -676,12 +679,9 @@ inline void ImGui::FileBrowser::Display()
                 const bool rangeSelect =
                     canSelect && GetIO().KeyShift &&
                     rangeSelectionStart_ < fileRecords_.size() &&
-                    (flags_ & ImGuiFileBrowserFlags_MultipleSelection) &&
-                    IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
+                    (flags_ & ImGuiFileBrowserFlags_MultipleSelection) && IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
                 const bool multiSelect =
-                    !rangeSelect && GetIO().KeyCtrl &&
-                    (flags_ & ImGuiFileBrowserFlags_MultipleSelection) &&
-                    IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
+                    !rangeSelect && GetIO().KeyCtrl && (flags_ & ImGuiFileBrowserFlags_MultipleSelection) && IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
 
                 if (rangeSelect)
                 {
@@ -829,27 +829,27 @@ inline void ImGui::FileBrowser::Display()
     if (!(flags_ & ImGuiFileBrowserFlags_SelectDirectory))
     {
         BeginDisabled(selectedFilenames_.empty());
-        const bool ok = Button("ok");
+        const bool ok = Button("       Ok   ");
         EndDisabled();
         if ((ok || isEnterPressed) && !selectedFilenames_.empty())
         {
+           
             isOk_ = true;
             CloseCurrentPopup();
         }
     }
     else
     {
-        if (Button(" ok ") || isEnterPressed)
+        if (Button("       Ok   ") || isEnterPressed)
         {
             isOk_ = true;
             CloseCurrentPopup();
         }
     }
 
-    SameLine();
-
+    SameLine(150);
     
-    if(Button("cancel")) {
+    if(Button("  Cancel  ")) {
         isCanceled_ = true;
         CloseCurrentPopup();
     }

@@ -48,6 +48,7 @@ namespace FR {
 	public:
 		// Constructors
 		Fr_Shape(const std::string& path, glm::vec4 color = glm::vec4(FR_GRAY), float silhouette = 0.05);
+		void LoadFont(const std::string& fontPath);
 		Fr_Shape(); // Default constructor
 
 		// Destructor

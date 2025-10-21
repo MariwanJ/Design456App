@@ -90,7 +90,7 @@ namespace FR {
         bool visible;              // Visibility flag
         uint8_t type;               //ORTHO - PERSPECTIVE 
         size_t pixelSize;
-        size_t scale;
+        float scale;
     }label_t;
 
 

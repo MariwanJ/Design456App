@@ -355,13 +355,13 @@ namespace FR {
          */
 
         
-        ImGui::FileBrowser fileDialog;
+        std::shared_ptr<ImGui::FileBrowser> fileDialog;
 
         bool showOpenDialog;
         //will be true if rotate/pan starts.
         static bool MouseOnce;
         static float m_MousePickerRadius;
-        float phi, theta;
+        static float phi, theta;
 
         //Camera rotation - mouse callback
         float radiusXYZ;

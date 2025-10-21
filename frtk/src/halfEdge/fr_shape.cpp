@@ -29,7 +29,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <halfedge/fr_shape.h>
-
+#include "fr_shape.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H 
 
@@ -42,7 +42,7 @@ namespace FR {
 		0.5, 0.5, 0.5, 1.0);
 
 
-	Fr_Shape::Fr_Shape(const std::string& path, glm::vec4 color, float silhouette) :Fr_Widget(NULL, NULL, path)
+	Fr_Shape::Fr_Shape(const std::string& fpath, glm::vec4 color, float silhouette) :Fr_Widget(NULL, NULL, fpath)
 		{
 		if (!m_shader) {
 			m_shader = std::make_shared<Shader_t>();
@@ -54,28 +54,153 @@ namespace FR {
 			m_shader->widgPoits_prog= std::make_shared <ShaderProgram>  (shaderpath+"widgPoints");
 			m_shader->txtFont_program = std::make_shared <ShaderProgram>(shaderpath + "txtFont");
 			
-		ReadFile(path);
+		ReadFile(fpath); //Read verticies 
 		m_boundBox = std::make_shared <cBoundBox3D>();
 		m_boundBox->setVertices(m_vertices);
-		m_label.fnFont = std::make_shared <std::string>(fontPath + "terminal-f4.ttf"); // DEFAULT FONT 
+		m_label.fnFont = std::make_shared <std::string>(DEFAULT_FONT); // DEFAULT FONT 
 		m_label.text = "Shape!!";
 		m_label.visible = true;
-		m_label.scale = 1.0f;
+		//m_label.scale = 1.0f;
 		calcualteTextCoor(1024, 1024);
 		initializeVBO();
 		CreateShader();
+		LoadFont(DEFAULT_FONT); //TODO: Do we need to allow other font at the creation, don't think so.
+	}
 
-		FT_Library ft = NULL;
-		assert(FT_Init_FreeType(&ft) == 0, "ERROR::FREETYPE: Could not init FreeType Library\n");
+	//void Fr_Shape::LoadFont(const std::string& fontPath)
+	//{
+	//	Characters.clear(); // Clear previous font glyphs
+	//	m_label.fnFont.reset(); //clear old path (remove)
+	//	m_label.fnFont = std::make_shared<std::string>(fontPath);
 
-		FT_Face face = NULL;
-		if (FT_New_Face(ft, m_label.fnFont->c_str(), 0, &face)) {
-			FT_Done_FreeType(ft);
-			assert("ERROR::FREETYPE: Failed to load font\n");
+	//	static FT_Library ft;
+	//	static bool ftInitialized = false;
+	//	if (!ftInitialized) {
+	//		if (FT_Init_FreeType(&ft)) {
+	//			FRTK_CORE_ERROR("ERROR::FREETYPE: Could not init FreeType Library");
+	//			return;
+	//		}
+	//		ftInitialized = true;
+	//	}
+
+	//	FT_Face face = nullptr;
+	//	if (FT_New_Face(ft, fontPath.c_str(), 0, &face)) {
+	//		FRTK_CORE_ERROR("ERROR::FREETYPE: Failed to load font: {}", fontPath);
+	//		return;
+	//	}
+
+	//	FT_Set_Pixel_Sizes(face, m_label.pixelSize, m_label.pixelSize);
+	//	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	//	glEnable(GL_BLEND);
+	//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	//	for (unsigned char c = 0; c < 128; ++c)
+	//	{
+	//		if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
+	//			FRTK_CORE_ERROR("Failed to load Glyph: {}", c);
+	//			continue;
+	//		}
+
+	//		GLuint tex;
+	//		glGenTextures(1, &tex);
+	//		glBindTexture(GL_TEXTURE_2D, tex);
+	//		glTexImage2D(
+	//			GL_TEXTURE_2D,
+	//			0,
+	//			GL_RED,
+	//			face->glyph->bitmap.width,
+	//			face->glyph->bitmap.rows,
+	//			0,
+	//			GL_RED,
+	//			GL_UNSIGNED_BYTE,
+	//			face->glyph->bitmap.buffer
+	//		);
+
+	//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	//		Character_t ch = {
+	//			tex,
+	//			glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+	//			glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+	//			(GLuint)face->glyph->advance.x
+	//		};
+
+	//		Characters.insert(std::make_pair(c, ch));
+	//	}
+
+	//	glBindTexture(GL_TEXTURE_2D, 0);
+	//	FT_Done_Face(face);
+
+	//	*m_label.fnFont = fontPath; // update current font name
+	//}
+
+
+	void printCharacterAsDots(FT_GlyphSlot glyph) {
+		int width = glyph->bitmap.width;
+		int height = glyph->bitmap.rows;
+
+		// Loop through each pixel in the bitmap
+		for (int y = 0; y < height; ++y) {
+			for (int x = 0; x < width; ++x) {
+				uint8_t alpha = glyph->bitmap.buffer[y * width + x];
+				// Print a dot for opaque pixels, otherwise print a space
+				if (alpha > 128) {
+					std::cout << ".";
+				}
+				else {
+					std::cout << " ";
+				}
+			}
+			std::cout << std::endl; // New line for the next row
+		}
+	}
+
+	void printStringAsDots(const std::string& text, FT_Face face) {
+		for (char c : text) {
+			if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
+				std::cerr << "Failed to load Glyph: " << c << std::endl;
+				continue;
+			}
+			std::cout << "Character: " << c << std::endl;
+			printCharacterAsDots(face->glyph);
+			std::cout << std::endl; // Space between characters
+		}
+	}
+
+
+
+	void Fr_Shape::LoadFont(const std::string& fontPath)
+	{
+		Characters.clear(); // Clear previous font glyphs
+		m_label.fnFont.reset(); // Clear old path (remove)
+		m_label.fnFont = std::make_shared<std::string>(fontPath);
+
+		static FT_Library ft;
+		static bool ftInitialized = false;
+		if (!ftInitialized) {
+			if (FT_Init_FreeType(&ft)) {
+				FRTK_CORE_ERROR("ERROR::FREETYPE: Could not init FreeType Library");
+				return;
+			}
+			ftInitialized = true;
 		}
 
-		FT_Set_Pixel_Sizes(face, m_label.pixelSize, m_label.pixelSize);
+		FT_Face face = nullptr;
+		if (FT_New_Face(ft, fontPath.c_str(), 0, &face)) {
+			FRTK_CORE_ERROR("ERROR::FREETYPE: Failed to load font: {}", fontPath);
+			return;
+		}
+		
+		
+		//FT_Set_Pixel_Sizes(face, m_label.pixelSize, m_label.pixelSize);
+		FT_Set_Pixel_Sizes(face, 0, 200);
+
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		for (unsigned char c = 0; c < 128; ++c) {
 			if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
@@ -83,8 +208,33 @@ namespace FR {
 				continue;
 			}
 			
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			// Create an RGBA bitmap
+			int width = face->glyph->bitmap.width;
+			int height = face->glyph->bitmap.rows;
+			std::vector<uint8_t> bitmapRGBA(width * height * 4, 0); // RGBA
+
+			// Populate the RGBA bitmap based on the alpha channel
+			for (int y = 0; y < height; ++y) {
+				for (int x = 0; x < width; ++x) {
+					int index = (y * width + x) * 4; // RGBA index
+					uint8_t alpha = face->glyph->bitmap.buffer[y * width + x];
+					uint8_t colorValue = 255; // Set your desired color value here (e.g., white)
+
+					// Set RGBA based on alpha
+					if (alpha > 128) { // Threshold for alpha
+						bitmapRGBA[index] = colorValue;     // Red
+						bitmapRGBA[index + 1] = colorValue; // Green
+						bitmapRGBA[index + 2] = colorValue; // Blue
+						bitmapRGBA[index + 3] = 255;         // Fully opaque
+					}
+					else {
+						bitmapRGBA[index] = 0;               // Transparent
+						bitmapRGBA[index + 1] = 0;
+						bitmapRGBA[index + 2] = 0;
+						bitmapRGBA[index + 3] = 0;           // Fully transparent
+					}
+				}
+			}
 
 			GLuint tex;
 			glGenTextures(1, &tex);
@@ -92,30 +242,35 @@ namespace FR {
 			glTexImage2D(
 					GL_TEXTURE_2D, 
 					0,
-				    GL_RED, 
-					face->glyph->bitmap.width,
-					face->glyph->bitmap.rows, 
+				GL_RGBA, // Change to RGBA format
+				width,
+				height,
 					0, 
-					GL_RED, 
+				GL_RGBA, // Change to RGBA format
 					GL_UNSIGNED_BYTE,
-					face->glyph->bitmap.buffer);
+				bitmapRGBA.data() // Use the RGBA bitmap
+			);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 			Character_t ch = {
 				tex,
-				glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+				glm::ivec2(width, height),
 				glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
 				(GLuint)face->glyph->advance.x
 			};
-			Characters.insert(std::pair<char, Character_t>(c, ch));
+
+			Characters.insert(std::make_pair(c, ch));
 		}
 
 		glBindTexture(GL_TEXTURE_2D, 0);
-		FT_Done_Face(face);
-		FT_Done_FreeType(ft);
+		
+		//printStringAsDots(m_label.text, face);
 
+		FT_Done_Face(face);
+
+		*m_label.fnFont = fontPath; // Update current font name
 	}
 	//Default constructor with no vertices defined
 	Fr_Shape::Fr_Shape() : Fr_Widget(NULL, NULL, "") {
@@ -295,25 +450,19 @@ namespace FR {
 
 		glm::mat4 mvp;
 
-		if (m_label.type == ORTHOGRAPHIC) {
-			mvp = glm::ortho(0.0f, (float)info.screenDim.w, 0.0f, (float)info.screenDim.h)* info.modelview;
-		}
-		else {
-			mvp = info.projection * info.modelview; // Perspective
-		}
- 
-
-
-		// Positioning text
+		// Positioning text at the top corner 
 		float x = m_label.offset.x + m_boundBox->minX();
 		float y = m_label.offset.y + m_boundBox->maxY();
 		float z = m_label.offset.z + m_boundBox->minZ();
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(x, y, z)); // Translate to position
-		model = glm::scale(model, glm::vec3(m_label.scale, m_label.scale, 1.0f)); // Scale uniformly
-
-		// Correct order: first model, then view, then projection
-		mvp = info.projection * info.modelview * model;
+		model = model*glm::scale(model, glm::vec3(m_label.scale, m_label.scale, 1.0f)); // Scale uniformly
+		if (m_label.type == ORTHOGRAPHIC) {
+			mvp = glm::ortho(0.0f, (float)info.screenDim.w, 0.0f, (float)info.screenDim.h);
+		}
+		else {
+			mvp = info.projection* info.modelview * model;// Perspective
+		}
 		m_shader->txtFont_program->SetUniformMat4("mvp", mvp);
  
  
@@ -323,11 +472,11 @@ namespace FR {
 			Character_t ch = Characters[c];
 
 			// Position calculations based on character metrics
-			float xpos = x + ch.Bearing.x*m_label.scale;  
+			float xpos = x + ch.Bearing.x;  
 			float ypos = y - (ch.Size.y - ch.Bearing.y);
 
-			float w = ch.Size.x * m_label.scale; // Use original size
-			float h = ch.Size.y * m_label.scale; // Use original size
+			float w = ch.Size.x ;  
+			float h = ch.Size.y ;  
 
 			float vertices[6][4] = {
 				{ xpos + w, ypos + h,   1.0f, 0.0f }, // Top-right
@@ -350,7 +499,7 @@ namespace FR {
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 
 			// Advance the cursor for the next character
-			x += (ch.Advance >> 6) * m_label.scale; // Adjust for the next character position
+			x += (ch.Advance >> 6) ; 
 		}
 
 		// Clean up

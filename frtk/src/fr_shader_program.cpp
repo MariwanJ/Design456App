@@ -144,7 +144,7 @@ namespace FR {
         if (location == -1)
             DEBUG_BREAK;
 
-        glCheckFunc(glUniformMatrix4fv(location, 1, false, glm::value_ptr(value)));
+        glCheckFunc(glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value)));
     }
 
     void ShaderProgram::SetAttribLocation(const char* name, unsigned int location) {

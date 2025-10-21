@@ -340,7 +340,7 @@ namespace FR {
         // Render all objects
         render_info.id = 0;
         render_info.render_transparent = false;
-
+       
         
         glViewport(0, 0, win->w(), win->h());  
         // Enable depth testing

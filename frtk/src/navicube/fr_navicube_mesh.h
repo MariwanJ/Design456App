@@ -1,0 +1,5 @@
+#ifndef FR_NAVICUBE_MESH_H
+#define FR_NAVICUBE_MESH_H
+
+
+#endif //FR_NAVICUBE_MESH_H

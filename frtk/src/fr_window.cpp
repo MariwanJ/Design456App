@@ -68,6 +68,8 @@ namespace FR {
     bool Fr_Window::s_GLFWInitialized = false;
     bool Fr_Window::s_GladInitialized = false;
     float Fr_Window::m_MousePickerRadius = 5;        //FreeCAD uses 5 pixels as default
+    float Fr_Window::phi = 0.0f;
+    float Fr_Window::theta = 0.0f;
 
     Fr_Window* Fr_Window::spWindow = nullptr;
     eventData Fr_Window::m_GLFWevents = { -1,-1,-1,-1,-1 };
@@ -93,7 +95,7 @@ namespace FR {
         MainWinCursor(0), panelWidth(0.f),
         gl_version_major(4), gl_version_minor(6),
         mouseDefaults{0},showOpenDialog(false),
-        phi(0.0f),theta(0.0f),radiusXYZ(0.0f),
+        radiusXYZ(0.0f),
         runCode(false), m_label(label)
     {
         showOpenDialog=false;
@@ -384,7 +386,8 @@ namespace FR {
 
 #if 1 //Experimental code TODO: REMOVE ME !! 
         text= std::make_shared<TextRenderer>(m_ViewPort.w,m_ViewPort.h);
-        if (!text->LoadFont("C:/Windows/Fonts/ALGER.ttf", 48)) {
+        //if (!text->LoadFont("C:/Windows/Fonts/ALGER.ttf", 48)) {
+        if (!text->LoadFont(DEFAULT_FONT, 48)) {
             FRTK_CORE_ERROR("FAILED TO LOAD FONT ");
             return 1;
         }

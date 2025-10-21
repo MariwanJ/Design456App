@@ -39,6 +39,7 @@ namespace FR {
             return;
         spWindow->m_ViewPort.w = width;
         spWindow->m_ViewPort.h = height;
+
         glfwGetWindowPos(pGLFWWindow, 
                          &spWindow->m_ViewPort.x,
                          &spWindow->m_ViewPort.y); //update even position
@@ -123,22 +124,13 @@ namespace FR {
 
 
         glfwMouseEvent mouse_evnets = spWindow->getMouseEvents();
-
-        //Limit handle area to the viewport only. Ignore other windows
-        //bool a1, a2, a3, a4;
-        //a1 = mouse_evnets.Old_x > viePort.relativeToScreen.x;
-        //a2 = mouse_evnets.Old_x < (viePort.relativeToScreen.x + viePort.width);
-        //a3 = mouse_evnets.Old_y > viePort.relativeToScreen.y;
-        //a4 = mouse_evnets.Old_y < (viePort.relativeToScreen.y + viePort.height);
-        
-        //todo : DO WE NEED THIS AFTER REMOVING IMGUI? 
-        bool activateHandle = true; // a1&& a2&& a3&& a4;
-
+        bool activateHandle = true; 
         if (GLFW_PRESS == action) {
             mouseEvent.Pressed = 1; //Pressed
         }
         else {
             mouseEvent.Pressed = 0; //Released
+            mouseEvent.Old_y = mouseEvent.Old_x = 0;// TODO : I THINK WE SHOULD MAKE THEM ZERO !!! !CHECK ME!!!!!! 2025-10-21
         }
         mouseEvent.Button = button;
 
@@ -191,8 +183,6 @@ namespace FR {
 
         else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_MIDDLE && mouseEvent.Pressed == 0)
         {
-            //TODO : Not sure if widgets needs this event
-
             if (activateHandle) {
                 if (spWindow->handle(FR_MIDDLE_RELEASE) == 1) {//Mouse click
                     mouseEvent.Button = -1; //consumed§l+--
@@ -206,6 +196,11 @@ namespace FR {
         // Ensure window is valid
         if (!spWindow)
             return;
+
+        auto updateMousePosition = [&](double x, double y) {
+            mouseEvent.Old_x = x;
+            mouseEvent.Old_y = y;
+            };
 
         // Modifier keys
         bool shiftPressed = (glfwGetKey(win, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS ||
@@ -223,17 +218,6 @@ namespace FR {
 
         // Limit handle area to viewport only
         bool activateHandle = true; 
-        //TODO : Do we need this after removeing imgui??
-        /*(mouse_events.Old_x > viewPort.relativeToScreen.x &&
-            mouse_events.Old_x < (viewPort.relativeToScreen.x + viewPort.width) &&
-            mouse_events.Old_y > viewPort.relativeToScreen.y &&
-            mouse_events.Old_y < (viewPort.relativeToScreen.y + viewPort.height));*/
-
-        // Helper lambdas
-        auto updateMousePosition = [&](double x, double y) {
-            mouseEvent.Old_x = x;
-            mouseEvent.Old_y = y;
-            };
 
         auto consumeEvent = [&](bool resetEvents = false) {
             if (resetEvents) {
@@ -354,8 +338,8 @@ namespace FR {
         if (spWindow == nullptr)
             return;
         userData_ data;
-        spWindow->activeScene->m_cameras[spWindow->activeScene->m_active_camera].getUserData(data);
-        if (spWindow->activeScene->m_cameras[spWindow->activeScene->m_active_camera].getType() == ORTHOGRAPHIC) {
+        spWindow->activeScene->getActiveCamera().getUserData(data);
+        if (spWindow->activeScene->getActiveCamera().getType() == ORTHOGRAPHIC) {
             data.orthoSize_ = data.orthoSize_ + float(yoffset) * spWindow->mouseDefaults.MouseScrollScale;
         }
         else
@@ -377,7 +361,7 @@ namespace FR {
             data.direction_ = -glm::vec3(inverseViewMatrix[2]);
             data.up_ = glm::vec3(inverseViewMatrix[1]);
         }
-        spWindow->activeScene->m_cameras[spWindow->activeScene->m_active_camera].setUserData(data);
+        spWindow->activeScene->getActiveCamera().setUserData(data);
     }
 
     void Fr_Window::MouseMovement(double xoffset, double yoffset)
@@ -388,7 +372,7 @@ namespace FR {
     {
          userData_ data;
 
-        spWindow->activeScene->m_cameras[spWindow->activeScene->m_active_camera].getUserData(data);
+        spWindow->activeScene->getActiveCamera().getUserData(data);
 
         if (mouseEvent.Old_x == mouseEvent.Old_y && mouseEvent.Old_x == 0) {
             mouseEvent.Old_x = xpos;
@@ -405,9 +389,10 @@ namespace FR {
 
         float xoffset = float(deltax) * spWindow->mouseDefaults.MouseXYScale;
         float yoffset = float(deltay) * spWindow->mouseDefaults.MouseXYScale;
-        data.camm_position = glm::vec3(data.camm_position.x - xoffset, data.camm_position.y - yoffset, data.camm_position.z);
-        data.direction_ = glm::vec3(data.direction_.x - xoffset, data.direction_.y - yoffset, data.direction_.z);
-        spWindow->activeScene->m_cameras[spWindow->activeScene->m_active_camera].setUserData(data);
+        data.camm_position = glm::vec3(data.camm_position.x + xoffset, data.camm_position.y + yoffset, data.camm_position.z);
+        data.direction_ = glm::vec3(data.direction_.x + xoffset, data.direction_.y + yoffset, data.direction_.z);
+        spWindow->activeScene->getActiveCamera().setUserData(data);
+
 
         ray_t ray= spWindow->GetScreenToWorldRay();
         mouseEvent.MouseRay.direction = ray.direction;
@@ -416,45 +401,52 @@ namespace FR {
 
     void Fr_Window::cameraRotate(GLFWwindow* win, double xpos, double ypos)
     {
-        userData_ data;
         if (spWindow == nullptr)
             return;
-        spWindow->activeScene->m_cameras[spWindow->activeScene->m_active_camera].getUserData(data);
-        spWindow->radiusXYZ = sqrt(data.camm_position.x * data.camm_position.x +
-            data.camm_position.y * data.camm_position.y +
-            data.camm_position.z * data.camm_position.z);
+        userData_ data;
+        spWindow->activeScene->getActiveCamera().getUserData(data);
 
-        // Initialize
+        //First time, we dont use the event, just update the mouse 
         if (mouseEvent.Old_x == mouseEvent.Old_y && mouseEvent.Old_x == 0) {
             mouseEvent.Old_x = xpos;
             mouseEvent.Old_y = ypos;
-            //   radiusXYZ = glm::length(data.camm_position.x);
-            //  theta = atan2(data.camm_position.y, data.camm_position.x); // Angle in radians
-            //  phi = acos(data.camm_position.z / radiusXYZ); // Angle in radians
-            //theta = glm::degrees(theta);
-            //phi = glm::degrees(phi);
-            //phi = glm::clamp(phi, -89.99f, 89.99f);
-            spWindow->theta = 0.0f;
-            spWindow->phi = 45.0f;        //TODO : STILL THIS IS NOT CORRECT TOTALLY 2025-02-13
+            return;
         }
 
-        float deltax = float(mouseEvent.Old_x - xpos);
-        float deltay = float(mouseEvent.Old_y - ypos);
+        spWindow->radiusXYZ = glm::length(glm::vec3(
+            data.camm_position.x,
+            data.camm_position.y,
+            data.camm_position.z
+        ));
+
+        // Compute deltas
+        float deltax = float(xpos - mouseEvent.Old_x);
+        float deltay = float(ypos - mouseEvent.Old_y);
+        mouseEvent.Old_x = xpos;
+        mouseEvent.Old_y = ypos;
+
         deltax *= spWindow->mouseDefaults.MouseXYScale;
         deltay *= spWindow->mouseDefaults.MouseXYScale;
 
+        // Update angles
         spWindow->theta += deltax;
-        spWindow->phi += deltay;
+        spWindow->phi   -= deltay;
 
-        // Clamp phi values
-       // phi = glm::clamp(phi, -89.99f, 89.99f);
+        // Clamp pitch
+        spWindow->phi = std::clamp(spWindow->phi, -89.9f, 89.9f);
 
-        // Update camera position using correct spherical coordinates
-        spWindow->activeScene->m_cameras[spWindow->activeScene->m_active_camera].m_position.x = spWindow->radiusXYZ * sin(glm::radians(spWindow->phi)) * cos(glm::radians(spWindow->theta));
-        spWindow->activeScene->m_cameras[spWindow->activeScene->m_active_camera].m_position.y = spWindow->radiusXYZ * sin(glm::radians(spWindow->phi)) * sin(glm::radians(spWindow->theta));
-        spWindow->activeScene->m_cameras[spWindow->activeScene->m_active_camera].m_position.z = spWindow->radiusXYZ * cos(glm::radians(spWindow->phi));
+        // Convert spherical (Z-up)
+        float radTheta = glm::radians(spWindow->theta);
+        float radPhi   = glm::radians(spWindow->phi);
 
-        spWindow->activeScene->m_cameras[spWindow->activeScene->m_active_camera].updateViewMatrix();
+        float x = spWindow->radiusXYZ * cos(radPhi) * sin(radTheta);
+        float y = spWindow->radiusXYZ * cos(radPhi) * cos(radTheta);
+        float z = spWindow->radiusXYZ * sin(radPhi);
+
+        auto& cam = spWindow->activeScene->getActiveCamera();
+        cam.m_position = glm::vec3(x, y, z);
+        cam.updateViewMatrix();
+
         ray_t ray= spWindow->GetScreenToWorldRay();
         mouseEvent.MouseRay.position = ray.position;
         mouseEvent.MouseRay.direction = ray.direction;
@@ -468,36 +460,62 @@ namespace FR {
         ImGuiWindowFlags window_flags = 0
             | ImGuiWindowFlags_NoDocking
             | ImGuiWindowFlags_NoResize
-            | ImGuiWindowFlags_NoScrollbar;
-            
- 
-        ImGui::Begin("File Browser", nullptr, ImGuiWindowFlags_NoDocking);
-        // (optional) set browser properties
-        this->fileDialog.SetTitle("Open file");
-        fileDialog.SetTypeFilters({ ".obj", ".off" });
-        fileDialog.Open();
-        fileDialog.Display();
-        // Close button
-        
-        if (!fileDialog.IsOpened()) {
-            showOpenDialog = false; // User canceled or closed the dialog
-        }
-        if (fileDialog.isCanceled()) {
-            showOpenDialog = false;
-            fileDialog.resetStatus();
-        }else
-        if (fileDialog.HasSelected())
-        {
-            std::string fileName = fileDialog.GetSelected().string();
-            activeScene->add3DObject(fileName);
-            fileDialog.ClearSelected();
-            showOpenDialog = false;
-        }
-  
+            | ImGuiWindowFlags_NoScrollbar
+            | ImGuiFileBrowserFlags_MultipleSelection; //multi selectioun 
 
-        ImGui::End();
- 
+
+        // Open the modal dialog (this could be triggered by a button or another event)
+        if (showOpenDialog) {
+            ImGui::OpenPopup("File Browser");
+        }
+
+        // Create the modal file browser
+        if (ImGui::BeginPopupModal("File Browser", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar)) {
+            // Initialize the file dialog if not done
+            if (!fileDialog) {
+                fileDialog = std::make_shared<ImGui::FileBrowser>(window_flags, EXE_CURRENT_DIR);
+                fileDialog->SetTitle("Open file");
+                fileDialog->SetTypeFilters({ ".obj", ".off" });
+                fileDialog->Open();
+            }
+
+            // Display the file dialog
+            fileDialog->Display();
+
+            // Handle user interactions
+            if (!fileDialog->IsOpened()) {
+                showOpenDialog = false; // User canceled or closed the dialog
+                fileDialog->resetStatus();
+                ImGui::CloseCurrentPopup();
+            }
+            else if (fileDialog->isCanceled()) {
+                showOpenDialog = false;
+                fileDialog->resetStatus();
+                ImGui::CloseCurrentPopup();
+            }
+            else if (fileDialog->HasSelected()) {
+                auto results = fileDialog->GetMultiSelected();
+                if (results.size()>0)
+                {
+                    for (const auto &obj : results) {
+                    activeScene->add3DObject(obj.string());
+                }
+                fileDialog->ClearSelected();
+                showOpenDialog = false; // Close the dialog after selection
+                ImGui::CloseCurrentPopup();
+                fileDialog->resetStatus();
+                }
+            }
+            // Close button
+            if (ImGui::Button("Close")) {
+                showOpenDialog = false;
+                ImGui::CloseCurrentPopup();
+                fileDialog->resetStatus();
+            }
+            ImGui::EndPopup();
+        }
     }
+
 
     /**  callbacks */
     void Fr_Window::mnuFileNew_cb(void* Data) {
