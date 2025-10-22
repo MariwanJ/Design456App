@@ -34,6 +34,18 @@ namespace FR {
     {
         m_normals = std::make_shared<std::vector<float>>();
         m_textCoord = std::make_shared<std::vector<float>>();
+        
+        // Add vertices and store their handles
+        for (size_t i = 0; i < m_vertices->size(); i += 3) {
+            MyMesh::Point p(m_vertices->at(i), m_vertices->at(i+ 1), m_vertices->at(i + 2) );
+            MyMesh::VertexHandle vh = m_mesh.add_vertex(p);
+        }
+
+        /*
+        Notice that:
+            if you dont have faces, you dont get edges from open mesh. 
+            So, if you want to create a face from the edges, you have to rebuild the entire thing
+        */
         CalculateNormals();
         lineWidth(1);
         std::vector<MyMesh::VertexHandle> vertexHandles;

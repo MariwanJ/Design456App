@@ -37,34 +37,24 @@
 // -------------------- OpenMesh
 
 namespace FR {
-	typedef struct {
-		GLuint TextureID;
-		glm::ivec2 Size;
-		glm::ivec2 Bearing;
-		GLuint Advance;
-	}Character_t;
 
 	class Fr_Shape : public Fr_Widget {
 	public:
 		// Constructors
 		Fr_Shape(const std::string& path, glm::vec4 color = glm::vec4(FR_GRAY), float silhouette = 0.05);
-		void LoadFont(const std::string& fontPath);
+		
 		Fr_Shape(); // Default constructor
 
 		// Destructor
 		~Fr_Shape();
 
 		// Public Methods
-		void Draw();
+		virtual void Draw();
 
 		//TODO: NOT IMPLEMENTED SHOULD BE IMPLEMENTED :: FIXME!!!
 		void SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices);
 
 		glm::vec3 GetVertex(unsigned int index, const float vertices[]);
-		void ReadFile(const std::string& path);
-
-		void ReadMeshString(const std::string& mshData);
-		 
 
 		// Shared Pointer
 		std::shared_ptr<Fr_Texture2D> m_Texture2D;
@@ -93,8 +83,6 @@ namespace FR {
 
 
 
-		//this should be 
-		std::map<char, Character_t> Characters;
 
 	};
 }

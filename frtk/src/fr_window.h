@@ -206,7 +206,7 @@ namespace FR {
         std::vector<glm::vec3> RayMousePos;
 
         /**
-         * Handle is a very important function that take care of all events happen (mouse, keyboard or between widgets).
+         * Handle is a very important function that take care of all events happining (mouse, keyboard or between widgets).
          * Whenever a widget consumes the events, it should return 0. FR_NO_EVENTS means that there is no more events left.
          * But if a widget uses the event but want to return the event to the system, it should return Fr_WGroup::handle(e).
          * or if the widget didn't care about the event, it should also return either 1 or Fr_WGroup::handle(e).

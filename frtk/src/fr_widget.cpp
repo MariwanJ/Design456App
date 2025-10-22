@@ -30,7 +30,9 @@
 #include <cmath>
 #include <glm/gtx/transform.hpp>
 #include <fr_widget.h>
-
+#include <frtk.h>
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 namespace FR {
     //Constructor
@@ -71,32 +73,235 @@ namespace FR {
         m_color = glm::vec4(FR_ANTIQUEWHITE);
         m_silhouette = 0;
         m_texture = 0; //used to return the texture for imgui rendering inside window. 
-        m_selected = std::make_shared <std::vector<uint8_t>>();
+		m_selected = std::make_shared <std::vector<size_t>>(); // this is boolean but since boolean is not ok for opengl 
         m_shader = std::make_shared<Shader_t>();
     }
-    void Fr_Widget::init(void) {
-        openEdges.clear();
-        std::vector< MyMesh::Point> points;
-        if (m_vertices == nullptr)                   //TODO This happens when you create the fr_windows which doesn't have any vertices or indices - can we fix that? !!! 2025-01-03
-            return;
-        for (size_t i = 0; i < m_vertices->size(); i += 3) {
-            auto x = m_vertices->at(1);
-            MyMesh::Point point(m_vertices->at(i), m_vertices->at(i + 1), m_vertices->at(i + 2));
-            points.push_back(point);
-        }
-        size_t total = points.size();
 
-        if (total < 2)
-            return; //Not enough points
-        for (int i = 0; i < total - (total % 2); i += 2) {
-            openEdges.push_back(std::make_pair(m_mesh.add_vertex(points.at(i)), m_mesh.add_vertex(points.at(i + 1))));
+	void Fr_Widget::LoadFont(const std::string& fontPath)
+	{
+		Characters.clear(); // Clear previous font glyphs
+		m_label.fnFont.reset(); // Clear old path (remove)
+		m_label.fnFont = std::make_shared<std::string>(fontPath);
+
+		static FT_Library ft;
+		static bool ftInitialized = false;
+		if (!ftInitialized) {
+			if (FT_Init_FreeType(&ft)) {
+				FRTK_CORE_ERROR("ERROR::FREETYPE: Could not init FreeType Library");
+				return;
+			}
+			ftInitialized = true;
+		}
+
+		FT_Face face = nullptr;
+		if (FT_New_Face(ft, fontPath.c_str(), 0, &face)) {
+			FRTK_CORE_ERROR("ERROR::FREETYPE: Failed to load font: {}", fontPath);
+            return;
         }
-        if (total % 2 != 0) {
-            // Handle the last edge if total is odd
-            openEdges.push_back(std::make_pair(m_mesh.add_vertex(points.at(total - 1)), m_mesh.add_vertex(points.at(0))));
-        }
-        //should not need casting, but just in case, and this will be one true/false per a vertex
-        // Resize the vector to initialize all elements to false
+
+		//FT_Set_Pixel_Sizes(face, m_label.pixelSize, m_label.pixelSize);
+		FT_Set_Pixel_Sizes(face, 0, 200);
+
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		for (unsigned char c = 0; c < 128; ++c) {
+			if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
+				FRTK_CORE_ERROR("Failed to load Glyph:{} ", c);
+				continue;
+			}
+
+			// Create an RGBA bitmap
+			int width = face->glyph->bitmap.width;
+			int height = face->glyph->bitmap.rows;
+			std::vector<uint8_t> bitmapRGBA(width * height * 4, 0); // RGBA
+
+			// Populate the RGBA bitmap based on the alpha channel
+			for (int y = 0; y < height; ++y) {
+				for (int x = 0; x < width; ++x) {
+					int index = (y * width + x) * 4; // RGBA index
+					uint8_t alpha = face->glyph->bitmap.buffer[y * width + x];
+					uint8_t colorValue = 255; // Set your desired color value here (e.g., white)
+
+					// Set RGBA based on alpha
+					if (alpha > 128) { // Threshold for alpha
+						bitmapRGBA[index] = colorValue;     // Red
+						bitmapRGBA[index + 1] = colorValue; // Green
+						bitmapRGBA[index + 2] = colorValue; // Blue
+						bitmapRGBA[index + 3] = 255;         // Fully opaque
+					}
+					else {
+						bitmapRGBA[index] = 0;               // Transparent
+						bitmapRGBA[index + 1] = 0;
+						bitmapRGBA[index + 2] = 0;
+						bitmapRGBA[index + 3] = 0;           // Fully transparent
+					}
+				}
+			}
+
+			GLuint tex;
+			glGenTextures(1, &tex);
+			glBindTexture(GL_TEXTURE_2D, tex);
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_RGBA, // Change to RGBA format
+				width,
+				height,
+				0,
+				GL_RGBA, // Change to RGBA format
+				GL_UNSIGNED_BYTE,
+				bitmapRGBA.data() // Use the RGBA bitmap
+			);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+			Character_t ch = {
+				tex,
+				glm::ivec2(width, height),
+				glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+				(GLuint)face->glyph->advance.x
+			};
+
+			Characters.insert(std::make_pair(c, ch));
+		}
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+#if 0	//For debugging only
+		printStringAsDots(m_label.text, face);
+#endif
+		FT_Done_Face(face);
+
+		*m_label.fnFont = fontPath; // Update current font name
+	}
+
+	void Fr_Widget::ReadMeshString(const std::string& mshData) {
+		//Reading from string array, Think about building openmesh object.
+		std::istringstream input(mshData);
+
+		// Ensure buffers exist
+		if (!m_vertices) {
+			m_vertices = std::make_shared<std::vector<float>>();
+		}
+		if (!m_indices) {
+			m_indices = std::make_shared<std::vector<unsigned int>>();
+		}
+		if (!m_normals) {
+			m_normals = std::make_shared<std::vector<float>>();
+		}
+		std::string header;
+		std::getline(input, header);
+
+		// Read vertex and triangle counts
+		size_t nVertices = 0, nTriangles = 0;
+		if (!(input >> nVertices >> nTriangles )) {
+			throw std::runtime_error("Invalid mesh data: missing vertex/triangle counts");
+		}
+
+		// Resize buffers
+		m_vertices->resize(nVertices*3 );
+		m_normals->resize(nVertices*3);
+		m_indices->resize(nTriangles*3);
+
+		// Read vertices
+		for (size_t i = 0; i < nVertices; ++i) {
+			int id;
+			float x, y, z;
+			input >> id >> x >> y >> z;
+			(*m_vertices)[3 * i] = x;
+			(*m_vertices)[3 * i + 1] = y;
+			(*m_vertices)[3 * i + 2] = z;
+		}
+
+		// Read faces
+		for (size_t i = 0; i < nTriangles; ++i) {
+			int id;
+			unsigned int a, b, c;
+			input >> id >> a >> b >> c;
+			(*m_indices)[3 * i] = a;
+			(*m_indices)[3 * i + 1] = b;
+			(*m_indices)[3 * i + 2] = c;
+		}
+
+		// Add vertices
+		std::vector<MyMesh::VertexHandle> vhandles;
+		vhandles.reserve(nVertices);
+		for (size_t i = 0; i < nVertices; ++i) {
+			MyMesh::Point p((*m_vertices)[3 * i], (*m_vertices)[3 * i + 1], (*m_vertices)[3 * i + 2]);
+			vhandles.push_back(m_mesh.add_vertex(p));
+		}
+
+		// Add faces
+		for (size_t i = 0; i < nTriangles; ++i) {
+			std::vector<MyMesh::VertexHandle> faceV;
+			for (int j = 0; j < 3; ++j) {
+				unsigned int idx = (*m_indices)[3 * i + j];
+				faceV.push_back(vhandles[idx]); // use stored handles!
+			}
+			auto fh = m_mesh.add_face(faceV);
+			if (!fh.is_valid()) {
+				std::cerr << "Failed to add face " << i << std::endl;
+			}
+		}
+	}
+	void Fr_Widget::ReadFile(const std::string& path) {
+		if (!m_vertices) {
+			m_vertices = std::make_shared < std::vector<float>>();
+		}
+		if (!m_indices) {
+			m_indices = std::make_shared < std::vector<unsigned int>>();
+		}
+		if (!OpenMesh::IO::read_mesh(m_mesh, path))
+		{
+			throw std::runtime_error("Failed to read mesh from " + path);
+		}
+
+		// Reserve space for vertices and indices
+		m_vertices->reserve(m_mesh.n_vertices() * 3);
+		m_indices->reserve(m_mesh.n_faces() * 3); // TODO: We need to make sure there are only 3 vert/obj
+
+		// Obtain the vertex positions from the mesh
+		for (auto vit = m_mesh.vertices_begin(); vit != m_mesh.vertices_end(); ++vit) {
+			MyMesh::Point p = m_mesh.point(*vit);
+			m_vertices->emplace_back(static_cast<float>(p[0]));
+			m_vertices->emplace_back(static_cast<float>(p[1]));
+			m_vertices->emplace_back(static_cast<float>(p[2]));
+		}
+
+		// Obtain the face indices from the mesh
+		for (auto fit = m_mesh.faces_begin(); fit != m_mesh.faces_end(); ++fit) {
+			for (auto fvit = m_mesh.fv_iter(*fit); fvit; ++fvit) {
+				m_indices->emplace_back(fvit.handle().idx());
+			}
+		}
+	}
+
+	void Fr_Widget::init(void) {
+		assert(!m_vertices->empty(), "ERROR: You should provide verticies before initializing the object");
+		
+		std::string shaderpath = EXE_CURRENT_DIR + "/resources/shaders/";
+		m_shader->wdg_prog = std::make_shared <ShaderProgram>(shaderpath + "wdgshader");
+		m_shader->silhouette_prog = std::make_shared <ShaderProgram>(shaderpath + "silhouette");
+		m_shader->texture_prog = std::make_shared <ShaderProgram>(shaderpath + "texture");
+		m_shader->widgPoits_prog = std::make_shared <ShaderProgram>(shaderpath + "widgPoints");
+		m_shader->txtFont_program = std::make_shared <ShaderProgram>(shaderpath + "txtFont");
+		m_label.fnFont = std::make_shared <std::string>(DEFAULT_FONT); // DEFAULT FONT
+		m_label.text = "Widget";
+
+		//create bound box
+		m_boundBox = std::make_shared <cBoundBox3D>();
+		m_boundBox->setVertices(m_vertices);
+		calcualteTextCoor(1024, 1024);
+
+		initializeVBO();
+		CreateShader();
+		LoadFont(DEFAULT_FONT); //TODO: Do we need to allow other font at the creation, don't think so.
+
+		//Selection of verticies : TODO: MAKE ME MORE GENERAL .. NOT JUST VERTICEIS
         m_selected->reserve(static_cast<size_t>(m_vertices->size()) / 3);
         m_selected->resize(m_selected->capacity(), 0);
     }
@@ -176,7 +381,10 @@ namespace FR {
     {
         m_label.text = lbl;
     }
-
+	void Fr_Widget::label(const char* lbl)
+	{
+		m_label.text = lbl;
+	}
     std::string Fr_Widget::label() const
     {
         return m_label.text;

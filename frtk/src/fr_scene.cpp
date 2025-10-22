@@ -40,8 +40,9 @@
 #include <vector>
 
 namespace FR {
-    Fr_Scene::Fr_Scene() :m_cameras{}, m_active_camera(uint8_t(0)),
+    Fr_Scene::Fr_Scene() :m_cameras{}, m_active_camera(uint8_t(0)), m_navi(std::make_shared<Fr_NavigationCube>()),
         m_Background{ 0.9f, 0.9f, 0.9f,1.0f } {
+        m_world.emplace_back(m_navi);
     }
 
     void Fr_Scene::SetBackgroud(float r, float g, float b) {
@@ -78,6 +79,9 @@ namespace FR {
                 DEBUG_BREAK;
             }
             newObj->hasTexture(1);
+            newObj->label("NewShape");
+            newObj->lbl_visible(true);
+            printf("Size of new object %ld\n", sizeof(*newObj));
             //convert fName to be a unique name
             std::string nFname = separateFN(fName);
             SceneItemStruct newtT(newObj, nFname);

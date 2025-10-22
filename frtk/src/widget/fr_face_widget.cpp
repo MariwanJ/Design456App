@@ -33,13 +33,27 @@ namespace FR {
         std::shared_ptr<std::vector <unsigned int>> indicies,
         std::string label) : Fr_Widget(verticies, indicies, label),m_pointPicker(false)
     {
+
+        std::vector<MyMesh::VertexHandle> vertexHandles;
+
+        // Add vertices and store their handles
+        for (size_t i = 0; i < m_vertices->size(); i += 3) {
+            MyMesh::Point p(m_vertices->at(i), m_vertices->at(i + 1), m_vertices->at(i + 2));
+            MyMesh::VertexHandle vh = m_mesh.add_vertex(p);
+            vertexHandles.push_back(vh);
+        }
+
+        // create faces (in sets of 3) // TODO: If it is a polygon how to do that???? 
+        for (size_t i = 0; i + 2 < vertexHandles.size(); i += 3) {
+            m_mesh.add_face(vertexHandles[i], vertexHandles[i + 1], vertexHandles[i + 2]);
+        }
+
         lineWidth(1);
         CalculateNormals();
         initializeVBO();
         CreateShader();
         m_boundBox = std::make_shared<cBoundBox3D>();
         m_boundBox->setVertices(m_vertices);
-        std::vector<MyMesh::VertexHandle> vertexHandles;
         m_WidgType = NODETYPE::FR_FACE_WIDGET;
         m_lineType = FR_CLOSED_LOOP;
     }

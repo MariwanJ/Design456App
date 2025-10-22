@@ -115,6 +115,13 @@ namespace FR {
     class Shape;
     class Fr_TwoD_Drawing;
 
+	typedef struct {
+		GLuint TextureID;
+		glm::ivec2 Size;
+		glm::ivec2 Bearing;
+		GLuint Advance;
+	}Character_t;
+
     /** Default callback type definition for all frtk widgets */
     typedef void (Fr_Callback)(Fr_Widget*, void*);
 
@@ -139,6 +146,7 @@ namespace FR {
             std::shared_ptr <std::vector<unsigned int>> indicies,
             std::string label);
 
+		//TODO: Should this be public?? 
         virtual void init(void); //We need this if the widget is created (subclassed) without verticies, like in reading files.
 
         /** Virtual destructor */
@@ -161,6 +169,13 @@ namespace FR {
         /** Renders Text (Freetype Font)*/
         virtual void RenderText(RenderInfo& info);
         
+		//Load default font.
+		virtual void LoadFont(const std::string& fontPath);
+
+		virtual void ReadFile(const std::string& path);
+		virtual void ReadMeshString(const std::string& mshData);
+
+
         virtual bool SetupTexture2D();
         virtual void RenderTexture2D();
 
@@ -194,6 +209,7 @@ namespace FR {
 
         /** Sets the label */
         void label(std::string& lbl);
+		void label(const char* l);
 
         void lbl_visible(bool v);
         bool lbl_visible();
@@ -326,7 +342,7 @@ namespace FR {
         void CalculateTrianglesNormals();
 
         std::shared_ptr<std::vector<float>> m_vertices;
-        std::shared_ptr<std::vector<uint8_t>> m_selected;
+		std::shared_ptr<std::vector<size_t>> m_selected;
         std::vector<float> m_textcoord; // Texture Coordinates
         std::shared_ptr<std::vector<unsigned int>> m_indices; // We don't use glm::vec3 but we can even so use it for Triangle drawing. Decide that by the drawing type.
         std::shared_ptr<std::vector<float>> m_vertCoord; // must be calculated internally
@@ -340,12 +356,13 @@ namespace FR {
         int uniqueIndex;
         int m_Parent; // -1 for Abstract class that doesn't have parent, and for the Root class
 
-        // OpenMesh Mesh. This must be defined here
+		// OpenMesh Mesh. This must be defined here and this will keep the whole structure of the mesh system
         MyMesh m_mesh;
 
-        // OpenMesh Edges object. In this widget system we use edges not faces.
-        // We can make mesh of it but it is 2D so we have only edges .. not faces TODO: IS THIS CORRECT???? 2024-12-14
-        std::vector<std::pair<MyMesh::VertexHandle, MyMesh::VertexHandle>> openEdges;
+		//// OpenMesh Edges object. In this widget system we use edges not faces.
+		//std::vector<std::pair<MyMesh::VertexHandle, MyMesh::VertexHandle>> openEdges;
+
+		//std::vector<MyMesh::FaceHandle> m_faces;
 
         /** From shader */
         /** Sets the uniform light data */
@@ -377,7 +394,8 @@ namespace FR {
         unsigned int m_lineWidth;
         unsigned int m_pointSize;
 
-
+		//this should be
+		std::map<char, Character_t> Characters;
     };
 
 

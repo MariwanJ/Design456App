@@ -4,7 +4,7 @@
 
 layout(location = 0) in vec3 position; // Vertex position
 layout(location = 1) in vec4 vertexColor; // Vertex color
-layout(location = 2) in uint isSelected; // Input for selection status (uint)
+layout(location = 2) in uint isSelected; // Input for selection status . boolean but we use size_t
 
 uniform mat4 mvp;
 uniform float pointSize;  // not sure what to do with this

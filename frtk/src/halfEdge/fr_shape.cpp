@@ -30,9 +30,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <halfedge/fr_shape.h>
 #include "fr_shape.h"
-#include <ft2build.h>
-#include FT_FREETYPE_H 
-
 
 namespace FR {
 	static const glm::mat4 kShadowMapBiasMatrix(
@@ -41,31 +38,26 @@ namespace FR {
 		0.0, 0.0, 0.5, 0.0,
 		0.5, 0.5, 0.5, 1.0);
 
-
-	Fr_Shape::Fr_Shape(const std::string& fpath, glm::vec4 color, float silhouette) :Fr_Widget(NULL, NULL, fpath)
+	Fr_Shape::Fr_Shape(const std::string& fpath, glm::vec4 color, float silhouette) :Fr_Widget(NULL, NULL, "Shape")
 		{
 		if (!m_shader) {
 			m_shader = std::make_shared<Shader_t>();
 		}
-			std::string shaderpath = EXE_CURRENT_DIR + "/resources/shaders/";
-			m_shader->wdg_prog = std::make_shared <ShaderProgram>       (shaderpath+"wdgshader");
-			m_shader->silhouette_prog = std::make_shared <ShaderProgram>(shaderpath+"silhouette");
-			m_shader->texture_prog = std::make_shared <ShaderProgram>   (shaderpath+"texture");
-			m_shader->widgPoits_prog= std::make_shared <ShaderProgram>  (shaderpath+"widgPoints");
-			m_shader->txtFont_program = std::make_shared <ShaderProgram>(shaderpath + "txtFont");
-			
+		if (std::filesystem::exists(fpath))
+		{
 		ReadFile(fpath); //Read verticies 
-		m_boundBox = std::make_shared <cBoundBox3D>();
-		m_boundBox->setVertices(m_vertices);
-		m_label.fnFont = std::make_shared <std::string>(DEFAULT_FONT); // DEFAULT FONT 
-		m_label.text = "Shape!!";
-		m_label.visible = true;
-		//m_label.scale = 1.0f;
-		calcualteTextCoor(1024, 1024);
-		initializeVBO();
-		CreateShader();
-		LoadFont(DEFAULT_FONT); //TODO: Do we need to allow other font at the creation, don't think so.
 	}
+		else if (fpath.substr(0, 3) == "OFF") {
+			ReadMeshString(fpath);
+		}
+		else {
+			assert("ERROR: No mesh provided to the class");
+		}
+		init(); //This will initializes all Openmesh, verticies, edget ..etc
+		m_label.text = "Widget";
+		//m_label.visible = true;   User should do this manually
+	}
+#if 0 //For debugging only
 
 	void printCharacterAsDots(FT_GlyphSlot glyph) {
 		int width = glyph->bitmap.width;
@@ -98,124 +90,23 @@ namespace FR {
 			std::cout << std::endl; // Space between characters
 		}
 	}
+#endif
 
-
-
-	void Fr_Shape::LoadFont(const std::string& fontPath)
-	{
-		Characters.clear(); // Clear previous font glyphs
-		m_label.fnFont.reset(); // Clear old path (remove)
-		m_label.fnFont = std::make_shared<std::string>(fontPath);
-
-		static FT_Library ft;
-		static bool ftInitialized = false;
-		if (!ftInitialized) {
-			if (FT_Init_FreeType(&ft)) {
-				FRTK_CORE_ERROR("ERROR::FREETYPE: Could not init FreeType Library");
-				return;
-			}
-			ftInitialized = true;
-		}
-
-		FT_Face face = nullptr;
-		if (FT_New_Face(ft, fontPath.c_str(), 0, &face)) {
-			FRTK_CORE_ERROR("ERROR::FREETYPE: Failed to load font: {}", fontPath);
-			return;
-		}
-		
-		
-		//FT_Set_Pixel_Sizes(face, m_label.pixelSize, m_label.pixelSize);
-		FT_Set_Pixel_Sizes(face, 0, 200);
-
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		for (unsigned char c = 0; c < 128; ++c) {
-			if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-				FRTK_CORE_ERROR("Failed to load Glyph:{} ", c);
-				continue;
-			}
-			
-			// Create an RGBA bitmap
-			int width = face->glyph->bitmap.width;
-			int height = face->glyph->bitmap.rows;
-			std::vector<uint8_t> bitmapRGBA(width * height * 4, 0); // RGBA
-
-			// Populate the RGBA bitmap based on the alpha channel
-			for (int y = 0; y < height; ++y) {
-				for (int x = 0; x < width; ++x) {
-					int index = (y * width + x) * 4; // RGBA index
-					uint8_t alpha = face->glyph->bitmap.buffer[y * width + x];
-					uint8_t colorValue = 255; // Set your desired color value here (e.g., white)
-
-					// Set RGBA based on alpha
-					if (alpha > 128) { // Threshold for alpha
-						bitmapRGBA[index] = colorValue;     // Red
-						bitmapRGBA[index + 1] = colorValue; // Green
-						bitmapRGBA[index + 2] = colorValue; // Blue
-						bitmapRGBA[index + 3] = 255;         // Fully opaque
-					}
-					else {
-						bitmapRGBA[index] = 0;               // Transparent
-						bitmapRGBA[index + 1] = 0;
-						bitmapRGBA[index + 2] = 0;
-						bitmapRGBA[index + 3] = 0;           // Fully transparent
-					}
-				}
-			}
-
-			GLuint tex;
-			glGenTextures(1, &tex);
-			glBindTexture(GL_TEXTURE_2D, tex);
-			glTexImage2D(
-					GL_TEXTURE_2D, 
-					0,
-				GL_RGBA, // Change to RGBA format
-				width,
-				height,
-					0, 
-				GL_RGBA, // Change to RGBA format
-					GL_UNSIGNED_BYTE,
-				bitmapRGBA.data() // Use the RGBA bitmap
-			);
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-			Character_t ch = {
-				tex,
-				glm::ivec2(width, height),
-				glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-				(GLuint)face->glyph->advance.x
-			};
-
-			Characters.insert(std::make_pair(c, ch));
-		}
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-		
-		//printStringAsDots(m_label.text, face);
-
-		FT_Done_Face(face);
-
-		*m_label.fnFont = fontPath; // Update current font name
-	}
 	//Default constructor with no vertices defined
 	Fr_Shape::Fr_Shape() : Fr_Widget(NULL, NULL, "") {
-		for (auto& pair : Characters)
-			glDeleteTextures(1, &pair.second.TextureID);
 	}
 
 	Fr_Shape::~Fr_Shape() {
-		//Think about cleanup here 
+		//Think about cleanup here ?????
 
 /*		if (m_vao != 0) {
 			glCheckFunc(glDeleteVertexArrays(1, &m_vao));
 			glCheckFunc(glDeleteBuffers(NUM_OF_VBO_BUFFERS, m_vbo));
 		}
 		*/
+
+		for (auto& pair : Characters)
+			glDeleteTextures(1, &pair.second.TextureID);
 	}
 
 	void Fr_Shape::Draw() {
@@ -223,85 +114,6 @@ namespace FR {
 		glCheckFunc(glDrawElements(GL_TRIANGLES, m_indices->size(), GL_UNSIGNED_INT, 0));
 		glCheckFunc(glBindVertexArray(0));
 	}
-
-	void Fr_Shape::ReadFile(const std::string& path) {
-		if (!m_vertices) {
-			m_vertices = std::make_shared < std::vector<float>>();
-		}
-		if (!m_indices) {
-			m_indices = std::make_shared < std::vector<unsigned int>>();
-		}
-		if (!OpenMesh::IO::read_mesh(m_mesh, path))
-		{
-			throw std::runtime_error("Failed to read mesh from " + path);
-		}
-
-		// Reserve space for vertices and indices
-		m_vertices->reserve(m_mesh.n_vertices() * 3);
-		m_indices->reserve(m_mesh.n_faces() * 3); // TODO: We need to make sure there are only 3 vert/obj
-
-		// Obtain the vertex positions from the mesh
-		for (auto vit = m_mesh.vertices_begin(); vit != m_mesh.vertices_end(); ++vit) {
-			MyMesh::Point p = m_mesh.point(*vit);
-			m_vertices->emplace_back(static_cast<float>(p[0]));
-			m_vertices->emplace_back(static_cast<float>(p[1]));
-			m_vertices->emplace_back(static_cast<float>(p[2]));
-		}
-
-		// Obtain the face indices from the mesh
-		for (auto fit = m_mesh.faces_begin(); fit != m_mesh.faces_end(); ++fit) {
-			for (auto fvit = m_mesh.fv_iter(*fit); fvit; ++fvit) {
-				m_indices->emplace_back(fvit.handle().idx());
-			}
-		}
-	}
-
-	void Fr_Shape::ReadMeshString(const std::string& mshData) {
-		std::istringstream input(mshData);
-
-		// Ensure buffers exist
-		if (!m_vertices) m_vertices = std::make_shared<std::vector<float>>();
-		if (!m_indices)  m_indices = std::make_shared<std::vector<unsigned int>>();
-		if (!m_normals)  m_normals = std::make_shared<std::vector<float>>();
-
-		// Read vertex and triangle counts
-		size_t nVertices = 0, nTriangles = 0;
-		if (!(input >> nVertices >> nTriangles)) {
-			throw std::runtime_error("Invalid mesh data: missing vertex/triangle counts");
-		}
-
-		// Resize buffers
-		m_vertices->resize(nVertices * 3);
-		m_normals->resize(nVertices * 3); // still allocated for later computation
-		m_indices->resize(nTriangles * 3);
-
-		// Read vertex positions (ignore input normals)
-		for (size_t i = 0; i < nVertices; ++i) {
-			int id = 0;
-			float x, y, z;
-			if (!(input >> id >> x >> y >> z)) {
-				throw std::runtime_error("Invalid mesh data while reading vertex " + std::to_string(i));
-			}
-			m_vertices->at(3 * i) = x;
-			m_vertices->at(3 * i + 1) = y;
-			m_vertices->at(3 * i + 2) = z;
-		}
-
-		// Read triangle indices
-		for (size_t i = 0; i < nTriangles; ++i) {
-			int id = 0;
-			unsigned int a, b, c;
-			if (!(input >> id >> a >> b >> c)) {
-				throw std::runtime_error("Invalid mesh data while reading triangle " + std::to_string(i));
-			}
-			m_indices->at(3 * i) = a;
-			m_indices->at(3 * i + 1) = b;
-			m_indices->at(3 * i + 2) = c;
-		}
-	}
-
-
-
 
 	void Fr_Shape::calculateTextCoor( ) {
 		// Add a new property for storing UV coordinates (per-face UVs)
@@ -416,6 +228,7 @@ namespace FR {
 	}
 
 	void Fr_Shape::RenderText(RenderInfo& info) {
+		glCheckFunc(glDisable(GL_DEPTH_TEST)); // Without disabling this, text over text will not be transparent in the scene
 		glCheckFunc(glEnable(GL_BLEND));
 		glCheckFunc(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
@@ -484,5 +297,49 @@ namespace FR {
 		m_shader->txtFont_program->Disable();
 	}
 
+	/*
+		Hints : how to extract indicies from openmesh
+		typedef OpenMesh::PolyMesh_ArrayKernelT<> MyMesh;
 
+		int main() {
+			MyMesh mesh;
+
+			// Add vertices to the mesh
+			MyMesh::VertexHandle v1 = mesh.add_vertex(MyMesh::Point(0.0, 0.0, 0.0));
+			MyMesh::VertexHandle v2 = mesh.add_vertex(MyMesh::Point(1.0, 0.0, 0.0));
+			MyMesh::VertexHandle v3 = mesh.add_vertex(MyMesh::Point(0.0, 1.0, 0.0));
+
+			// Create a face
+			mesh.add_face(v1, v2, v3);
+
+			// Extract vertex indices
+			std::vector<unsigned int> vertexIndices;
+			for (const auto& vh : mesh.vertices()) {
+				vertexIndices.push_back(vh.idx());
+			}
+
+			// Extract face indices
+			std::vector<unsigned int> faceIndices;
+			for (const auto& face : mesh.faces()) {
+				for (const auto& vh : mesh.fv(face)) {
+					faceIndices.push_back(vh.idx());
+				}
+			}
+
+			// Output indices
+			std::cout << "Vertex Indices:" << std::endl;
+			for (const auto& idx : vertexIndices) {
+				std::cout << idx << " ";
+			}
+			std::cout << std::endl;
+
+			std::cout << "Face Indices:" << std::endl;
+			for (const auto& idx : faceIndices) {
+				std::cout << idx << " ";
+			}
+			std::cout << std::endl;
+
+			return 0;
+
+	*/
 }

@@ -174,6 +174,8 @@ namespace FR {
 
         else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_MIDDLE && mouseEvent.Pressed == 1)
         {
+            //ALWAYS ALWAYS WE SHOULD RESET THE MOUSE EVENT X,Y TO AVOID JUMPING
+            mouseEvent.Old_y = mouseEvent.Old_x = 0;
 
             if (activateHandle) {
                 if (spWindow->handle(FR_MIDDLE_PUSH) == 1) //Mouse click
@@ -314,7 +316,7 @@ namespace FR {
                     res = spWindow->handle(FR_MIDDLE_RELEASE);
                     if (res) { consumeEvent(true); }
                     updateMousePosition(xpos, ypos);
-                    spWindow->phi = spWindow->theta = 0.0f;
+                   // spWindow->phi = spWindow->theta = 0.0f; //YOU SHOULD NEVER RESET IT 
                     spWindow->runCode = true;
                     return;
                 }
@@ -367,7 +369,7 @@ namespace FR {
     void Fr_Window::MouseMovement(double xoffset, double yoffset)
     {
     }
-
+    //DON'T CHANGE ME WORKS GOOD !!!! 2025-10-22
     void Fr_Window::cameraPAN(GLFWwindow* win, double xpos, double ypos)
     {
          userData_ data;
@@ -398,7 +400,7 @@ namespace FR {
         mouseEvent.MouseRay.direction = ray.direction;
         mouseEvent.MouseRay.position= ray.position;
     }
-
+    //DON'T CHANGE ME WORKS GOOD !!!! 2025-10-22
     void Fr_Window::cameraRotate(GLFWwindow* win, double xpos, double ypos)
     {
         if (spWindow == nullptr)
@@ -433,7 +435,7 @@ namespace FR {
         spWindow->phi   -= deltay;
 
         // Clamp pitch
-        spWindow->phi = std::clamp(spWindow->phi, -89.9f, 89.9f);
+            spWindow->phi = std::clamp(spWindow->phi, -89.99f, 89.99f);
 
         // Convert spherical (Z-up)
         float radTheta = glm::radians(spWindow->theta);
@@ -447,6 +449,7 @@ namespace FR {
         cam.m_position = glm::vec3(x, y, z);
         cam.updateViewMatrix();
 
+            //We update always the ray
         ray_t ray= spWindow->GetScreenToWorldRay();
         mouseEvent.MouseRay.position = ray.position;
         mouseEvent.MouseRay.direction = ray.direction;
@@ -476,9 +479,9 @@ namespace FR {
                 fileDialog = std::make_shared<ImGui::FileBrowser>(window_flags, EXE_CURRENT_DIR);
                 fileDialog->SetTitle("Open file");
                 fileDialog->SetTypeFilters({ ".obj", ".off" });
-                fileDialog->Open();
+                
             }
-
+                fileDialog->Open();
             // Display the file dialog
             fileDialog->Display();
 
@@ -500,6 +503,8 @@ namespace FR {
                     for (const auto &obj : results) {
                     activeScene->add3DObject(obj.string());
                 }
+                
+                }
                 fileDialog->ClearSelected();
                 showOpenDialog = false; // Close the dialog after selection
                 ImGui::CloseCurrentPopup();
@@ -513,7 +518,7 @@ namespace FR {
                 fileDialog->resetStatus();
             }
             ImGui::EndPopup();
-        }
+        
     }
 
 

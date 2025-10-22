@@ -961,6 +961,7 @@ inline void ImGui::FileBrowser::ClearSelected()
         AssignToArrayStyleString(inputNameBuffer_, "");
     }
     isOk_ = false;
+    isCanceled_ = false;
 }
 
 inline void ImGui::FileBrowser::SetTypeFilters(const std::vector<std::string>& _typeFilters)
