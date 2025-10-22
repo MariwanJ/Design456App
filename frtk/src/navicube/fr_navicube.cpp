@@ -14,7 +14,6 @@ namespace FR {
 		Fr_Window *win = Fr_Window::getFr_Window();
 		if (win != nullptr) {
 
-
 			bool testMouseBound = m_boundBox->isRayInsideBoundingBox(win->getMouseEvents().MouseRay);
 			m_isClicked = false;
 			switch (event) {
@@ -39,14 +38,16 @@ namespace FR {
 	Fr_NavigationCube::Fr_NavigationCube():Fr_WGroup(NULL,NULL,"")
 	{
 		//We need to create all parts, they are 27 parts. 
-		for (int i = 0; i < meshDataPointers.size(); ++i) {
+		for (int i = 0; i <meshDataPointers.size(); ++i) {
 			std::shared_ptr<customShape> tempOBJ = std::make_shared<customShape>(*meshDataPointers[i]);
 			
+			
+			//tempOBJ->CalculateNormals();
 			//tempOBJ->NormalizeVertices(); //to scale and move 
 			
 			tempOBJ->m_Texture2D = std::make_shared<Fr_Texture2D>();
 			std::string TexturePath = EXE_CURRENT_DIR + "/resources/Texture/";
-			std::string imag = (TexturePath + "3.png");
+			std::string imag = (TexturePath + "2.png");
 			if (tempOBJ->m_Texture2D->set2DTexture(imag))
 			{
 				tempOBJ->m_Texture2D->setup2DTexture();      //Don't forget to do this always

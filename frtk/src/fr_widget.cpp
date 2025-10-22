@@ -180,10 +180,7 @@ namespace FR {
 	}
 
 	void Fr_Widget::ReadMeshString(const std::string& mshData) {
-		//Reading from string array, Think about building openmesh object.
 		std::istringstream input(mshData);
-
-		// Ensure buffers exist
 		if (!m_vertices) {
 			m_vertices = std::make_shared<std::vector<float>>();
 		}
@@ -195,38 +192,36 @@ namespace FR {
 		}
 		std::string header;
 		std::getline(input, header);
+        
+        size_t nVertices, nTriangles, nQuads;
+        input >> nVertices >> nTriangles >> nQuads;
 
-		// Read vertex and triangle counts
-		size_t nVertices = 0, nTriangles = 0;
-		if (!(input >> nVertices >> nTriangles )) {
-			throw std::runtime_error("Invalid mesh data: missing vertex/triangle counts");
-		}
+        m_vertices->resize(nVertices * 3);
+        for (size_t i = 0; i < m_vertices->size(); ++i)
+            input >> m_vertices->at(i);
 
-		// Resize buffers
-		m_vertices->resize(nVertices*3 );
-		m_normals->resize(nVertices*3);
-		m_indices->resize(nTriangles*3);
+        m_indices->resize((nTriangles + 2 * nQuads) * 3);
+        size_t idx = 0;
+        for (size_t i = 0; i < nTriangles + nQuads; ++i) {
+            int polygon;
+            input >> polygon;
+            if (polygon == 3) {
+                input >> m_indices->at(idx++);
+                input >> m_indices->at(idx++);
+                input >> m_indices->at(idx++);
+            }
+            else {
+                float quad[4];              /// This is really not supported yet
+                input >> quad[0] >> quad[1] >> quad[2] >> quad[3];
+                m_indices->at(idx++) = quad[0];
+                m_indices->at(idx++) = quad[1];
+                m_indices->at(idx++) = quad[2];
+                m_indices->at(idx++) = quad[2];
+                m_indices->at(idx++) = quad[3];
+                m_indices->at(idx++) = quad[0];
+            }
 
-		// Read vertices
-		for (size_t i = 0; i < nVertices; ++i) {
-			int id;
-			float x, y, z;
-			input >> id >> x >> y >> z;
-			(*m_vertices)[3 * i] = x;
-			(*m_vertices)[3 * i + 1] = y;
-			(*m_vertices)[3 * i + 2] = z;
-		}
-
-		// Read faces
-		for (size_t i = 0; i < nTriangles; ++i) {
-			int id;
-			unsigned int a, b, c;
-			input >> id >> a >> b >> c;
-			(*m_indices)[3 * i] = a;
-			(*m_indices)[3 * i + 1] = b;
-			(*m_indices)[3 * i + 2] = c;
-		}
-
+        }
 		// Add vertices
 		std::vector<MyMesh::VertexHandle> vhandles;
 		vhandles.reserve(nVertices);
@@ -623,6 +618,7 @@ namespace FR {
         }
     }
     void Fr_Widget::NormalizeVertices(void) {
+        m_vertices->clear();
         m_vertices = m_normals;
     }
     void Fr_Widget::SetNormalizeMesh(bool value)
