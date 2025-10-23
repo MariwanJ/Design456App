@@ -171,8 +171,6 @@ namespace FR {
 			RenderSilhouette(mvp);
  
 		//Render texture also here.
-		
-		
 		auto normalmatrix = glm::transpose(glm::inverse(info.modelview));
 		m_shader->wdg_prog->Enable();
 		m_Texture2D->Bind(0);
@@ -184,9 +182,6 @@ namespace FR {
 		m_shader->wdg_prog->SetUniformMat4("normalmatrix", normalmatrix);
 		m_shader->wdg_prog->SetUniformMat4("mvp", mvp);
 		m_shader->wdg_prog->SetUniformVec4("color", m_color);       //Object color - not light color
-		//
-		//program->Disable();
-		//info.id++;
 		m_shader->wdg_prog->SetUniformInteger("hasTexture", hasTexture());
 		Draw();      //You should make a draw call to get that  done
 		m_Texture2D->Unbind();

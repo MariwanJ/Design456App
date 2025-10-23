@@ -53,7 +53,7 @@ vec3 compute_light_intensity(LightInfo light, vec3 frag_pos, vec3 frag_normal)
     // Specular (Phong)
     vec3 viewDir = normalize(camPos - frag_pos);
     vec3 reflectDir = reflect(-frag2light, frag_normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0); // Hardcoded shininess
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0); // Consider making shininess a uniform
     vec3 specular = spec * light.specular.rgb;
 
     // Ambient
@@ -88,9 +88,8 @@ void main()
 
     // Apply color and optional texture
     if (hasTexture == 1) {
-
-        frag_color = vec4(color.rgb * texture(ourTexture, vTextCoord).rgb * frag_light, color.a);
+        frag_color = vec4(clamp(color.rgb * texture(ourTexture, vTextCoord).rgb * frag_light, 0.0, 1.0), color.a);
     } else {
-        frag_color = vec4(color.rgb * frag_light, color.a);
+        frag_color = vec4(clamp(color.rgb * frag_light, 0.0, 1.0), color.a);
     }
 }

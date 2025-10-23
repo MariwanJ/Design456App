@@ -1,4 +1,5 @@
 #include "fr_widget.h"
+#include "fr_widget.h"
 //
 // This file is a part of the Open Source Design456App
 // MIT License
@@ -567,57 +568,8 @@ namespace FR {
     std::shared_ptr<std::vector<float>> Fr_Widget::getVertices() {
         return m_vertices;
     }
-    void Fr_Widget::CalculateNormals(void) {
-        if (!m_vertices) {
-            throw("ERRROR: m_vertices are not initizlied");
-        }
-        if (!m_normals) {
-            m_normals = std::make_shared<std::vector<float>>();
-        }
-        constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-        constexpr float FLOAT_MIN = -std::numeric_limits<float>::max();
 
-        glm::vec3 m_min(FLOAT_MAX, FLOAT_MAX, FLOAT_MAX);
-        glm::vec3 m_max(FLOAT_MIN, FLOAT_MIN, FLOAT_MIN); // Corrected initialization
-
-        // Find min and max
-        for (size_t i = 0; i < m_vertices->size(); i += 3) {
-            m_min.x = std::min(m_min.x, m_vertices->at(i));       // x
-            m_min.y = std::min(m_min.y, m_vertices->at(i + 1));   // y
-            m_min.z = std::min(m_min.z, m_vertices->at(i + 2));   // z
-
-            m_max.x = std::max(m_max.x, m_vertices->at(i));       // x
-            m_max.y = std::max(m_max.y, m_vertices->at(i + 1));   // y
-            m_max.z = std::max(m_max.z, m_vertices->at(i + 2));   // z
-        }
-
-        // Resize normals vector if necessary
-        if (m_normals->empty()) {
-            m_normals->resize(m_vertices->size());
-        }
-
-        // Initialize normals to zero
-        std::fill(m_normals->begin(), m_normals->end(), 0.0f);
-
-        // Normalize vertices and store in m_normals
-        for (size_t i = 0; i < m_vertices->size() / 3; ++i) {
-            // Read the vertex as a 3D vector from the flat float array
-            glm::vec3 vertex(
-                m_vertices->at(i * 3),
-                m_vertices->at(i * 3 + 1),
-                m_vertices->at(i * 3 + 2)
-            );
-
-            // Normalize the vertex
-            glm::vec3 normalized = (vertex - m_min) / (m_max - m_min); // Normalize
-
-            // Store normalized values back in m_normals
-            m_normals->at(i * 3) = normalized.x;
-            m_normals->at(i * 3 + 1) = normalized.y;
-            m_normals->at(i * 3 + 2) = normalized.z;
-        }
-    }
-    void Fr_Widget::NormalizeVertices(void) {
+        void Fr_Widget::NormalizeVertices(void) {
         m_vertices->clear();
         m_vertices = m_normals;
     }
@@ -769,5 +721,85 @@ namespace FR {
     void Fr_Widget::Parent(int index)
     {
         m_Parent = index;
+    }
+
+    void Fr_Widget::ConvertVerticesNormalized(void) {
+        if (!m_vertices) {
+            throw std::runtime_error("ERROR: m_vertices are not initialized");
+        }
+
+        constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
+        constexpr float FLOAT_MIN = -FLOAT_MAX;
+
+        glm::vec3 m_min(FLOAT_MAX, FLOAT_MAX, FLOAT_MAX);
+        glm::vec3 m_max(FLOAT_MIN, FLOAT_MIN, FLOAT_MIN);
+
+        // Find min and max
+        for (size_t i = 0; i < m_vertices->size(); i += 3) {
+            m_min.x = std::min(m_min.x, m_vertices->at(i));       // x
+            m_min.y = std::min(m_min.y, m_vertices->at(i + 1));   // y
+            m_min.z = std::min(m_min.z, m_vertices->at(i + 2));   // z
+
+            m_max.x = std::max(m_max.x, m_vertices->at(i));       // x
+            m_max.y = std::max(m_max.y, m_vertices->at(i + 1));   // y
+            m_max.z = std::max(m_max.z, m_vertices->at(i + 2));   // z
+        }
+
+        // Normalize vertices and save back to m_vertices
+        for (size_t i = 0; i < m_vertices->size() / 3; ++i) {
+            glm::vec3 vertex(
+                m_vertices->at(i * 3),
+                m_vertices->at(i * 3 + 1),
+                m_vertices->at(i * 3 + 2)
+            );
+
+            // Normalize the vertex to fit between -1 and 1
+            glm::vec3 normalized = (vertex - m_min) / (m_max - m_min) * 2.0f - 1.0f;
+
+            // Store normalized values back in m_vertices
+            m_vertices->at(i * 3) = normalized.x;
+            m_vertices->at(i * 3 + 1) = normalized.y;
+            m_vertices->at(i * 3 + 2) = normalized.z;
+        }
+        m_normalized = true;
+    }
+
+    void Fr_Widget::CalculateNormals(void) {
+        if (!m_vertices) {
+            throw std::runtime_error("ERROR: m_vertices are not initialized");
+        }
+        if (!m_normals) {
+            m_normals = std::make_shared<std::vector<float>>();
+        }
+       
+        size_t numTriangles = m_vertices->size() / 9; // 3 vertices per triangle
+        m_normals->resize(numTriangles * 3); // 3 normals per triangle
+
+        for (size_t i = 0; i < numTriangles; ++i) {
+            glm::vec3 v0(
+                m_vertices->at(i * 9),
+                m_vertices->at(i * 9 + 1),
+                m_vertices->at(i * 9 + 2)
+            );
+            glm::vec3 v1(
+                m_vertices->at(i * 9 + 3),
+                m_vertices->at(i * 9 + 4),
+                m_vertices->at(i * 9 + 5)
+            );
+            glm::vec3 v2(
+                m_vertices->at(i * 9 + 6),
+                m_vertices->at(i * 9 + 7),
+                m_vertices->at(i * 9 + 8)
+            );
+
+            
+            glm::vec3 normal = glm::normalize(glm::cross(v1 - v0, v2 - v0));
+
+            for (int j = 0; j < 3; ++j) {
+                m_normals->at(i * 9 + j * 3) = normal.x;
+                m_normals->at(i * 9 + j * 3 + 1) = normal.y;
+                m_normals->at(i * 9 + j * 3 + 2) = normal.z;
+            }
+        }
     }
 }

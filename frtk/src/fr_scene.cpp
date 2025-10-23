@@ -81,7 +81,6 @@ namespace FR {
             newObj->hasTexture(1);
             newObj->label("NewShape");
             newObj->lbl_visible(true);
-            printf("Size of new object %ld\n", sizeof(*newObj));
             //convert fName to be a unique name
             std::string nFname = separateFN(fName);
             SceneItemStruct newtT(newObj, nFname);
@@ -252,11 +251,11 @@ namespace FR {
     {   //TODO : how many sun we should have???
         std::shared_ptr<Fr_Light> sun = std::shared_ptr<Fr_Light>(new Fr_Light);
         sun->SetPosition(0.0f, 0.0f, 1000.0f); // Position is fine for a sun-like light
-        sun->SetDiffuse(0.25f, 0.25f, 0.25f); // Higher diffuse value for sunlight
+        sun->SetDiffuse(0.50f, 0.50f, 0.50f); // Higher diffuse value for sunlight
         sun->SetAmbient(0.5f, 0.5f, 0.5f); // Ambient value can remain as is
         sun->EnableShadowMap(glm::vec3(0, 0, 1),
             glm::vec3(0, 0, 4),
-            glm::ortho<float>(-10, 10, -10, 10, 100, 100));
+            glm::ortho<float>(-10, 10, -10, 10, 1, 100));
 
         sun->isActive(true);
         SceneItemStruct sunItem(sun, "Sun");
@@ -344,8 +343,7 @@ namespace FR {
         // Render all objects
         render_info.id = 0;
         render_info.render_transparent = false;
-       
-        
+
         glViewport(0, 0, win->w(), win->h());  
         // Enable depth testing
         glCheckFunc(glEnable(GL_DEPTH_TEST));
