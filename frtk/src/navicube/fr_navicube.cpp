@@ -39,6 +39,7 @@ namespace FR {
 	{
 		//We need to create all parts, they are 27 parts. 
 		for (int i = 0; i <meshDataPointers.size(); ++i) {
+	
 			std::shared_ptr<customShape> tempOBJ = std::make_shared<customShape>(*meshDataPointers[i]);
 			
 			
@@ -48,6 +49,7 @@ namespace FR {
 			tempOBJ->m_Texture2D = std::make_shared<Fr_Texture2D>();
 			std::string TexturePath = EXE_CURRENT_DIR + "/resources/Texture/";
 			std::string imag = (TexturePath + "2.png");
+			tempOBJ->hasTexture(1);
 			if (tempOBJ->m_Texture2D->set2DTexture(imag))
 			{
 				tempOBJ->m_Texture2D->setup2DTexture();      //Don't forget to do this always
