@@ -275,7 +275,7 @@ namespace FR {
 			glBindTexture(GL_TEXTURE_2D, ch.TextureID);
 
 			// Update vertex buffer
-			glBindBuffer(GL_ARRAY_BUFFER, m_vbo[TEXT_VB]);
+			glBindBuffer(GL_ARRAY_BUFFER, m_vbo[POSITION_TEXT_VB]);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 

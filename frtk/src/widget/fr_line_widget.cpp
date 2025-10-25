@@ -140,8 +140,8 @@ namespace FR {
         m_shader->wdg_prog->Enable();
         LoadLights(m_shader->wdg_prog, info.lights);
         m_shader->wdg_prog->SetAttribLocation("position", POSITION_VERTEX_VB);  //Position variable has (layout(location =0) inside vs shader
-        m_shader->wdg_prog->SetAttribLocation("texCoord", TEXCOORD_VB);  //Position variable has (layout(location =1 inside vs shader
-        m_shader->wdg_prog->SetAttribLocation("normal", NORMAL_VB);  //Position variable has (layout(location =1 inside vs shader
+        m_shader->wdg_prog->SetAttribLocation("texCoord", POSITION_TEXCOORD_VB);  //Position variable has (layout(location =1 inside vs shader
+        m_shader->wdg_prog->SetAttribLocation("normal", POSITION_NORMAL_VB);  //Position variable has (layout(location =1 inside vs shader
         m_shader->wdg_prog->SetUniformMat4("modelview", info.modelview);
         m_shader->wdg_prog->SetUniformMat4("normalmatrix", normalmatrix);
         m_shader->wdg_prog->SetUniformMat4("mvp", mvp);

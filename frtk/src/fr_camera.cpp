@@ -146,10 +146,14 @@ namespace FR {
         assert(g != nullptr);
 
         int w, h;
+        if (glfwGetWindowAttrib(g, GLFW_ICONIFIED)) {
+            m_aspect_ratio = 1.9f;
+        }
+        else {
         glfwGetWindowSize(g, &w, &h);
-        if (h != 0 && w != 0) 
+        if (h != 0 && w != 0)
             m_aspect_ratio = static_cast<float>(w) / static_cast<float>(h);
-
+            }
         // Set up projection matrix based on camera type
         if (m_camType == ORTHOGRAPHIC) {
             float orthoLeft = -m_OrthographicSize * m_aspect_ratio * 0.75f;
@@ -159,6 +163,8 @@ namespace FR {
             projection = glm::ortho(orthoLeft, orthoRight, orthoBottom, orthoTop, m_znear, m_zfar);
         }
         else {
+            if (m_aspect_ratio == 0)
+                m_aspect_ratio = 1.9; //avoid getting error
             projection = glm::perspective(glm::radians(m_fovy), m_aspect_ratio, m_znear, m_zfar);
         }
 

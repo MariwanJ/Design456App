@@ -329,8 +329,6 @@ namespace FR {
 
         void Parent(int index);
 
-        void ConvertVerticesNormalized(void);
-
         /** BoundBox for all objects */
         std::shared_ptr<cBoundBox3D> m_boundBox;
  

@@ -85,11 +85,11 @@ void main()
     }
 
     frag_light += GLOBAL_AMBIENT;
-
     // Apply color and optional texture
     if (hasTexture == 1) {
         frag_color = vec4(clamp(color.rgb * texture(ourTexture, vTextCoord).rgb * frag_light, 0.0, 1.0), color.a);
     } else {
-        frag_color = vec4(clamp(color.rgb * frag_light, 0.0, 1.0), color.a);
+       frag_color = vec4(clamp(color.rgb * frag_light, 0.0, 1.0), color.a);
+        
     }
 }

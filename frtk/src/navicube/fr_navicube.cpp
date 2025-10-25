@@ -43,7 +43,7 @@ namespace FR {
 			std::shared_ptr<customShape> tempOBJ = std::make_shared<customShape>(*meshDataPointers[i]);
 			
 			
-			tempOBJ->ConvertVerticesNormalized();
+			tempOBJ->NormalizeVertices();
 			
 			tempOBJ->m_Texture2D = std::make_shared<Fr_Texture2D>();
 			std::string TexturePath = EXE_CURRENT_DIR + "/resources/Texture/";

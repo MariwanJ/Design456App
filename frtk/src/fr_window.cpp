@@ -396,9 +396,6 @@ namespace FR {
 
         while (!glfwWindowShouldClose(pGLFWWindow))
         {
-            // glClearColor(FR_WINGS3D);   ///Background color for the whole scene  - default should be wings3D or FreeCAD
-            //glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-          
             //ALL 3D Drawings 
             activeScene->RenderScene();
             ImGui_ImplOpenGL3_NewFrame();

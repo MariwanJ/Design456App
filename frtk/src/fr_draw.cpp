@@ -117,16 +117,17 @@ namespace FR {
                 glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_vbo[POSITION_VERTEX_VB]));
                 glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_vertices->size(), m_vertices->data(), GL_STATIC_DRAW));
                 glCheckFunc(glEnableVertexAttribArray(POSITION_VERTEX_VB));
-                glCheckFunc(glVertexAttribPointer(POSITION_VERTEX_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL)); // m_positionVB = 0
+                glCheckFunc(glVertexAttribPointer(SHADER_POS_VERTEX_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL)); // m_positionVB = 0
 
             }
+
         // TEXTURE COORDINATES
         if (m_textCoord)
             if (!m_textCoord->empty()) {
-                glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_vbo[TEXCOORD_VB]));
+                glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_vbo[POSITION_TEXCOORD_VB]));
                 glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_textCoord->size(), m_textCoord->data(), GL_STATIC_DRAW));
-                glCheckFunc(glEnableVertexAttribArray(TEXCOORD_VB));
-                glCheckFunc(glVertexAttribPointer(TEXCOORD_VB, 2, GL_FLOAT, GL_FALSE, 0, NULL)); // TEXCOORD_VB = 1
+                glCheckFunc(glEnableVertexAttribArray(POSITION_TEXCOORD_VB));
+                glCheckFunc(glVertexAttribPointer(SHADER_POS_TEXTURE_VB, 2, GL_FLOAT, GL_FALSE, 0, NULL)); // POSITION_TEXCOORD_VB = 2
             }
 
         // ELEMENTS (Indices)
@@ -139,12 +140,13 @@ namespace FR {
         // NORMALS
         if (m_normals)
             if (!m_normals->empty()) {
-                glCheckFunc(glBindBuffer(GL_UNIFORM_BUFFER, m_vbo[NORMAL_VB]));
+                glCheckFunc(glBindBuffer(GL_UNIFORM_BUFFER, m_vbo[POSITION_NORMAL_VB]));
                 glCheckFunc(glBufferData(GL_UNIFORM_BUFFER, sizeof(float) * m_normals->size(), m_normals->data(), GL_STATIC_DRAW));
-                glCheckFunc(glEnableVertexAttribArray(NORMAL_VB)); // NORMAL_VB should correspond to the layout in your shader, typically 2
-                glCheckFunc(glVertexAttribPointer(NORMAL_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL)); // Corrected to use a valid offset and index
+                glCheckFunc(glEnableVertexAttribArray(POSITION_NORMAL_VB)); // POSITION_NORMAL_VB should correspond to the layout in your shader, typically 2
+                glCheckFunc(glVertexAttribPointer(SHADER_POS_NORMAL_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL)); // Corrected to use a valid offset and index
+                glCheckFunc(glBindVertexArray(0));
             }
-        glCheckFunc(glBindVertexArray(0));
+        
 
         //TODO : SHOULD WE ALWASY CREATE m_selected ???? 
         if (m_selected->size() > 0) {
@@ -152,18 +154,18 @@ namespace FR {
             glCheckFunc(glBindVertexArray(m_vao_points));
             glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_vbo[POSITION_POINTS_VB]));
             glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_vertices->size(), m_vertices->data(), GL_STATIC_DRAW));
-            glCheckFunc(glEnableVertexAttribArray(0)); //I cannot use the POSITION_POINTS_VB since it doesn't work here. it should be zero, it is another vao
-            glCheckFunc(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL)); //I cannot use the POSITION_POINTS_VB since it doesn't work here. it should be zero
+            glCheckFunc(glEnableVertexAttribArray(SHADER_POS_POINTS_VB)); 
+            glCheckFunc(glVertexAttribPointer(SHADER_POS_POINTS_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL)); 
             glCheckFunc(glBindVertexArray(0));
         }
         //selection data
 
-    //TODO : WE SHOULD MAKE SURE THAT WE CAN RENDER THIS FIXME:
+    //TODO : WE SHOULD MAKE SURE THAT WE CAN RENDER THIS - FIXME:
     //Text font drawing 
         glCheckFunc(glGenVertexArrays(1, &m_vao_txt));
-        glCheckFunc(glGenBuffers(1, &m_vbo[TEXT_VB]));
+        glCheckFunc(glGenBuffers(1, &m_vbo[POSITION_TEXT_VB]));
         glCheckFunc(glBindVertexArray(m_vao_txt));
-        glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_vbo[TEXT_VB]));
+        glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_vbo[POSITION_TEXT_VB]));
         glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_DRAW));
         glCheckFunc(glEnableVertexAttribArray(0));
         glCheckFunc(glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0));

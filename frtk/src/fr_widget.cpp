@@ -291,13 +291,14 @@ namespace FR {
 		//create bound box
 		m_boundBox = std::make_shared <cBoundBox3D>();
 		m_boundBox->setVertices(m_vertices);
-		calcualteTextCoor(1024, 1024);
-
+        CalculateNormals();
+        calcualteTextCoor(1024, 1024);  //TODO:  ??? dont think it is correct
+        
 		initializeVBO();
 		CreateShader();
 		LoadFont(DEFAULT_FONT); //TODO: Do we need to allow other font at the creation, don't think so.
 
-		//Selection of verticies : TODO: MAKE ME MORE GENERAL .. NOT JUST VERTICEIS
+		//Selection of vertices : TODO: MAKE ME MORE GENERAL .. NOT JUST VERTICEIS
         m_selected->reserve(static_cast<size_t>(m_vertices->size()) / 3);
         m_selected->resize(m_selected->capacity(), 0);
     }
@@ -569,10 +570,6 @@ namespace FR {
         return m_vertices;
     }
 
-        void Fr_Widget::NormalizeVertices(void) {
-        m_vertices->clear();
-        m_vertices = m_normals;
-    }
     void Fr_Widget::SetNormalizeMesh(bool value)
     {
         m_normalized = true;
@@ -620,7 +617,7 @@ namespace FR {
         }
     }
 
-
+  
     // TODO: These are bad -- remove them 2025-01-30
     glm::vec3 Fr_Widget::GetVertex(unsigned int index, const float vertices[]) {
         return glm::vec3(
@@ -652,7 +649,7 @@ namespace FR {
     void Fr_Widget::calcualteTextCoor(int width, int height) {
         // Calculate texture coordinates based on vertex positions
         // Loop through the vertices and calculate texture coordinates
-            CalculateNormals();
+            
             if (!m_textCoord) {
                 m_textCoord = std::make_shared<std::vector<float>>();
             }
@@ -724,57 +721,108 @@ namespace FR {
     }
 
     void Fr_Widget::CalculateNormals(void) {
-        if (!m_vertices) {
-            throw("ERRROR: m_vertices are not initizlied");
-        }
+    //    if (!m_vertices) {
+    //        throw("ERRROR: m_vertices are not initizlied");
+    //    }
+    //    if (!m_normals) {
+    //        m_normals = std::make_shared<std::vector<float>>();
+    //    }
+    //    constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
+    //    constexpr float FLOAT_MIN = -std::numeric_limits<float>::max();
+
+    //    glm::vec3 m_min(FLOAT_MAX, FLOAT_MAX, FLOAT_MAX);
+    //    glm::vec3 m_max(FLOAT_MIN, FLOAT_MIN, FLOAT_MIN); // Corrected initialization
+
+    //    // Find min and max
+    //    for (size_t i = 0; i < m_vertices->size(); i += 3) {
+    //        m_min.x = std::min(m_min.x, m_vertices->at(i));       // x
+    //        m_min.y = std::min(m_min.y, m_vertices->at(i + 1));   // y
+    //        m_min.z = std::min(m_min.z, m_vertices->at(i + 2));   // z
+
+    //        m_max.x = std::max(m_max.x, m_vertices->at(i));       // x
+    //        m_max.y = std::max(m_max.y, m_vertices->at(i + 1));   // y
+    //        m_max.z = std::max(m_max.z, m_vertices->at(i + 2));   // z
+    //    }
+
+    //    // Resize normals vector if necessary
+    //    if (m_normals->empty()) {
+    //        m_normals->resize(m_vertices->size());
+    //    }
+
+    //    // Initialize normals to zero
+    //    std::fill(m_normals->begin(), m_normals->end(), 0.0f);
+
+    //    // Normalize vertices and store in m_normals
+    //    for (size_t i = 0; i < m_vertices->size() / 3; ++i) {
+    //        // Read the vertex as a 3D vector from the flat float array
+    //        glm::vec3 vertex(
+    //            m_vertices->at(i * 3),
+    //            m_vertices->at(i * 3 + 1),
+    //            m_vertices->at(i * 3 + 2)
+    //        );
+
+    //        // Normalize the vertex
+    //        glm::vec3 normalized = (vertex - m_min) / (m_max - m_min); // Normalize
+
+    //        // Store normalized values back in m_normals
+    //        m_normals->at(i * 3) = normalized.x;
+    //        m_normals->at(i * 3 + 1) = normalized.y;
+    //        m_normals->at(i * 3 + 2) = normalized.z;
+    //        //printf("------------------\n");
+    //        //printf("old way %d= %.2f %.2f %.2f \n", i, normalized.x, normalized.y, normalized.z);
+    //        //printf("------------------\n");
+    //}
+
+
+
+         
+
+        // Correct way to calculate the normals but make the screen black
+
         if (!m_normals) {
             m_normals = std::make_shared<std::vector<float>>();
         }
-        constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-        constexpr float FLOAT_MIN = -std::numeric_limits<float>::max();
-
-        glm::vec3 m_min(FLOAT_MAX, FLOAT_MAX, FLOAT_MAX);
-        glm::vec3 m_max(FLOAT_MIN, FLOAT_MIN, FLOAT_MIN); // Corrected initialization
-
-        // Find min and max
-        for (size_t i = 0; i < m_vertices->size(); i += 3) {
-            m_min.x = std::min(m_min.x, m_vertices->at(i));       // x
-            m_min.y = std::min(m_min.y, m_vertices->at(i + 1));   // y
-            m_min.z = std::min(m_min.z, m_vertices->at(i + 2));   // z
-
-            m_max.x = std::max(m_max.x, m_vertices->at(i));       // x
-            m_max.y = std::max(m_max.y, m_vertices->at(i + 1));   // y
-            m_max.z = std::max(m_max.z, m_vertices->at(i + 2));   // z
-        }
-
-        // Resize normals vector if necessary
-        if (m_normals->empty()) {
-            m_normals->resize(m_vertices->size());
-        }
-
-        // Initialize normals to zero
+        m_normals->resize(m_vertices->size());
         std::fill(m_normals->begin(), m_normals->end(), 0.0f);
-
-        // Normalize vertices and store in m_normals
-        for (size_t i = 0; i < m_vertices->size() / 3; ++i) {
-            // Read the vertex as a 3D vector from the flat float array
-            glm::vec3 vertex(
-                m_vertices->at(i * 3),
-                m_vertices->at(i * 3 + 1),
-                m_vertices->at(i * 3 + 2)
-            );
-
-            // Normalize the vertex
-            glm::vec3 normalized = (vertex - m_min) / (m_max - m_min); // Normalize
-
-            // Store normalized values back in m_normals
-            m_normals->at(i * 3) = normalized.x;
-            m_normals->at(i * 3 + 1) = normalized.y;
-            m_normals->at(i * 3 + 2) = normalized.z;
+        if (m_vertices->size() % 9 !=0){
+            return; //No normal is possible to calculate
         }
+        // Prepare normals vector
+        if (!m_normals) {
+            m_normals = std::make_shared<std::vector<float>>(m_vertices->size(), 0.0f);
+        }
+       std::vector<glm::vec3> pre_normals(m_vertices->size() / 3, glm::vec3(0.0f));
+        for (size_t i = 0; i < m_indices->size(); i += 3) {
+            unsigned int v[3] = { m_indices->at(i), m_indices->at(i + 1), m_indices->at(i + 2) };
+
+            // Triangle's vertices
+            glm::vec3 triangle[3] = {
+                glm::vec3(m_vertices->at(v[0] * 3), m_vertices->at(v[0] * 3 + 1), m_vertices->at(v[0] * 3 + 2)),
+                glm::vec3(m_vertices->at(v[1] * 3), m_vertices->at(v[1] * 3 + 1), m_vertices->at(v[1] * 3 + 2)),
+                glm::vec3(m_vertices->at(v[2] * 3), m_vertices->at(v[2] * 3 + 1), m_vertices->at(v[2] * 3 + 2)),
+            };
+            // Calculate triangle's normal
+            glm::vec3 t_normal = glm::normalize(glm::cross(triangle[1] - triangle[0], triangle[2] - triangle[0]));
+            // Accumulate triangle normal to each vertex's normal
+            pre_normals[v[0]] += t_normal;
+            pre_normals[v[1]] += t_normal;
+            pre_normals[v[2]] += t_normal;
+        }
+
+        // Normalize each vertex normal
+        for (size_t i = 0; i < pre_normals.size(); ++i) {
+            if (glm::length(pre_normals[i]) > 0) {
+                pre_normals[i] = glm::normalize(pre_normals[i]);
+           
+            }
+            m_normals->at(i * 3) = pre_normals[i].x;
+            m_normals->at(i * 3 + 1) = pre_normals[i].y;
+            m_normals->at(i * 3 + 2) = pre_normals[i].z;
+        }
+         
     }
 
-    void Fr_Widget::ConvertVerticesNormalized(void) {
+    void Fr_Widget::NormalizeVertices(void) {
         if (!m_vertices) {
             throw std::runtime_error("ERROR: m_vertices are not initialized");
         }

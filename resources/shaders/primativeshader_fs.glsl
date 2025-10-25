@@ -88,7 +88,6 @@ void main()
 
     // Apply color and optional texture
     if (hasTexture == 1) {
-
         frag_color = vec4(color.rgb * texture(ourTexture, vTextCoord).rgb * frag_light, color.a);
     } else {
         frag_color = vec4(color.rgb * frag_light, color.a);

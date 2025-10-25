@@ -113,13 +113,18 @@ namespace FR {
 	// VBO buffers
 	constexpr int NUM_OF_VBO_BUFFERS = 7;
 	constexpr int POSITION_VERTEX_VB = 0;
-	constexpr int TEXCOORD_VB = 1;
-	constexpr int NORMAL_VB = 2;
+	constexpr int POSITION_NORMAL_VB = 1;
+	constexpr int POSITION_TEXCOORD_VB = 2;
 	constexpr int INDICES_VB = 3;
 	constexpr int POSITION_POINTS_VB = 4;
 	constexpr int COLOR_POINTS_VB = 5;
-	constexpr int TEXT_VB = 6;
+	constexpr int POSITION_TEXT_VB = 6;
 
+	//Shader position - this is NOT VBO position
+	constexpr int SHADER_POS_VERTEX_VB = 0;
+	constexpr int SHADER_POS_NORMAL_VB = 1;
+	constexpr int SHADER_POS_TEXTURE_VB = 2;
+	constexpr int SHADER_POS_POINTS_VB = 0; //HAS DIFF SHADER 
 
 	//used to find path for diff resources
 	extern std::string EXE_CURRENT_DIR;
