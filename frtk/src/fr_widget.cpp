@@ -822,11 +822,10 @@ namespace FR {
 
         glm::vec3 m_min(FLOAT_MAX, FLOAT_MAX, FLOAT_MAX);
         glm::vec3 m_max(FLOAT_MIN, FLOAT_MIN, FLOAT_MIN);
-
-        // Find min and max
+ 
         for (size_t i = 0; i < m_vertices->size(); i += 3) {
             if (i + 2 >= m_vertices->size()) {
-                break; // Avoid out-of-bounds for incomplete vertex sets
+                break;  
             }
 
             m_min.x = std::min(m_min.x, m_vertices->at(i));       // x
@@ -837,11 +836,16 @@ namespace FR {
             m_max.y = std::max(m_max.y, m_vertices->at(i + 1));   // y
             m_max.z = std::max(m_max.z, m_vertices->at(i + 2));   // z
         }
-
-        // Normalize vertices and save back to m_vertices
+        glm::vec3 range = m_max - m_min;
+        if (range.x == 0 && range.y == 0 && range.z == 0) {
+            //we have zero range, fill all verticies to zero 
+            std::fill(m_vertices->begin(), m_vertices->end(), 0.0f);
+            //TODO : CHECK ME - WHEN THIS CAN HAPPEN, AND WHY? DO WE DO A CORRECT DECISISION? !!! 
+            return; 
+        }
         for (size_t i = 0; i < m_vertices->size(); i += 3) {
             if (i + 2 >= m_vertices->size()) {
-                break; // Avoid out-of-bounds for incomplete vertex sets
+                break;  
             }
 
             glm::vec3 vertex(
@@ -851,7 +855,7 @@ namespace FR {
             );
 
             // Normalize the vertex to fit between -1 and 1
-            glm::vec3 normalized = (vertex - m_min) / (m_max - m_min) * 2.0f - 1.0f;
+            glm::vec3 normalized = (vertex - m_min) / range * 2.0f - 1.0f;
 
             // Store normalized values back in m_vertices
             m_vertices->at(i) = normalized.x;

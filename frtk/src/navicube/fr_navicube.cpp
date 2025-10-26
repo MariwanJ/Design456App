@@ -37,18 +37,17 @@ namespace FR {
 
 	Fr_NavigationCube::Fr_NavigationCube():Fr_WGroup(NULL,NULL,"")
 	{
-		//We need to create all parts, they are 27 parts. 
+		//We need to create all parts, they are 27 parts. 	
+		std::ofstream ff("newMesh.c");
 		for (int i = 0; i <meshDataPointers.size(); ++i) {
 	
 			std::shared_ptr<customShape> tempOBJ = std::make_shared<customShape>(*meshDataPointers[i]);
 			
-			
 			tempOBJ->NormalizeVertices();
-			
 			tempOBJ->m_Texture2D = std::make_shared<Fr_Texture2D>();
 			std::string TexturePath = EXE_CURRENT_DIR + "/resources/Texture/";
 			std::string imag = (TexturePath + "2.png");
-			tempOBJ->hasTexture(0);
+			tempOBJ->hasTexture(1);
 			if (tempOBJ->m_Texture2D->set2DTexture(imag))
 			{
 				tempOBJ->m_Texture2D->setup2DTexture();      //Don't forget to do this always
