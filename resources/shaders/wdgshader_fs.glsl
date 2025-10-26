@@ -77,7 +77,8 @@ vec3 compute_light_intensity(LightInfo light, vec3 frag_pos, vec3 frag_normal)
 
 void main()
 {
-    vec3 normal = normalize(frag_normal);
+    //vec3 normal = normalize(frag_normal);
+    vec3 normal = vec3(0.0, 1.0, 0.0);
     vec3 frag_light = vec3(0.0);
 
     for (int i = 0; i < nlights; i++) {

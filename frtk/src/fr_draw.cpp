@@ -140,8 +140,8 @@ namespace FR {
         // NORMALS
         if (m_normals)
             if (!m_normals->empty()) {
-                glCheckFunc(glBindBuffer(GL_UNIFORM_BUFFER, m_vbo[POSITION_NORMAL_VB]));
-                glCheckFunc(glBufferData(GL_UNIFORM_BUFFER, sizeof(float) * m_normals->size(), m_normals->data(), GL_STATIC_DRAW));
+                glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_vbo[POSITION_NORMAL_VB]));
+                glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_normals->size(), m_normals->data(), GL_STATIC_DRAW));
                 glCheckFunc(glEnableVertexAttribArray(POSITION_NORMAL_VB)); // POSITION_NORMAL_VB should correspond to the layout in your shader, typically 2
                 glCheckFunc(glVertexAttribPointer(SHADER_POS_NORMAL_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL)); // Corrected to use a valid offset and index
                 glCheckFunc(glBindVertexArray(0));

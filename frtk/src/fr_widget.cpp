@@ -1,4 +1,4 @@
-#include "fr_widget.h"
+﻿#include "fr_widget.h"
 #include "fr_widget.h"
 //
 // This file is a part of the Open Source Design456App
@@ -27,7 +27,6 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
- 
 #include <cmath>
 #include <glm/gtx/transform.hpp>
 #include <fr_widget.h>
@@ -40,23 +39,23 @@ namespace FR {
     Fr_Widget::Fr_Widget(std::shared_ptr<std::vector <float>> verticies,
         std::shared_ptr<std::vector <unsigned int>> indicies,
         std::string label) :m_vertices(std::move(verticies)),
-        m_Matrix(glm::mat4(1.0f)), m_indices(std::move(indicies)),m_vao (0),m_vbo{ 0 },
-        m_lineWidth(1),m_pointSize(10)
+        m_Matrix(glm::mat4(1.0f)), m_indices(std::move(indicies)), m_vao(0), m_vbo{ 0 },
+        m_lineWidth(1), m_pointSize(10)
     {
         m_lineType = FR_NOT_DEFINED; //You should define it before use it
-        
+
         m_vertCoord = NULL;          //must be calculated internally
         m_normals = NULL;
         m_textCoord = NULL;
-        m_shader = {0};
+        m_shader = { 0 };
         m_callback_ = NULL;
         m_boundBox = nullptr;
-        
+
         m_label.text = "";
         m_label.fnFont = NULL;// we cannot define it here
- 
+
         m_label.color = glm::vec4(FR_YELLOW);
-        m_label.offset = glm::vec3( 0.0f );
+        m_label.offset = glm::vec3(0.0f);
         m_label.visible = false; //we don't have font .. disable it you should enabled when you subclass
         m_label.pixelSize = 256;  //size of the pixels -- TODO : HOW MUCH WE SHOULD PUT HERE !!!!!!!!!!!
         m_label.scale = 0.046875f;
@@ -73,127 +72,127 @@ namespace FR {
         // Attributes
         m_color = glm::vec4(FR_ANTIQUEWHITE);
         m_silhouette = 0;
-        m_texture = 0; //used to return the texture for imgui rendering inside window. 
-		m_selected = std::make_shared <std::vector<size_t>>(); // this is boolean but since boolean is not ok for opengl 
+        m_texture = 0; //used to return the texture for imgui rendering inside window.
+        m_selected = std::make_shared <std::vector<size_t>>(); // this is boolean but since boolean is not ok for opengl
         m_shader = std::make_shared<Shader_t>();
     }
 
-	void Fr_Widget::LoadFont(const std::string& fontPath)
-	{
-		Characters.clear(); // Clear previous font glyphs
-		m_label.fnFont.reset(); // Clear old path (remove)
-		m_label.fnFont = std::make_shared<std::string>(fontPath);
+    void Fr_Widget::LoadFont(const std::string& fontPath)
+    {
+        Characters.clear(); // Clear previous font glyphs
+        m_label.fnFont.reset(); // Clear old path (remove)
+        m_label.fnFont = std::make_shared<std::string>(fontPath);
 
-		static FT_Library ft;
-		static bool ftInitialized = false;
-		if (!ftInitialized) {
-			if (FT_Init_FreeType(&ft)) {
-				FRTK_CORE_ERROR("ERROR::FREETYPE: Could not init FreeType Library");
-				return;
-			}
-			ftInitialized = true;
-		}
+        static FT_Library ft;
+        static bool ftInitialized = false;
+        if (!ftInitialized) {
+            if (FT_Init_FreeType(&ft)) {
+                FRTK_CORE_ERROR("ERROR::FREETYPE: Could not init FreeType Library");
+                return;
+            }
+            ftInitialized = true;
+        }
 
-		FT_Face face = nullptr;
-		if (FT_New_Face(ft, fontPath.c_str(), 0, &face)) {
-			FRTK_CORE_ERROR("ERROR::FREETYPE: Failed to load font: {}", fontPath);
+        FT_Face face = nullptr;
+        if (FT_New_Face(ft, fontPath.c_str(), 0, &face)) {
+            FRTK_CORE_ERROR("ERROR::FREETYPE: Failed to load font: {}", fontPath);
             return;
         }
 
-		//FT_Set_Pixel_Sizes(face, m_label.pixelSize, m_label.pixelSize);
-		FT_Set_Pixel_Sizes(face, 0, 200);
+        //FT_Set_Pixel_Sizes(face, m_label.pixelSize, m_label.pixelSize);
+        FT_Set_Pixel_Sizes(face, 0, 200);
 
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		for (unsigned char c = 0; c < 128; ++c) {
-			if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-				FRTK_CORE_ERROR("Failed to load Glyph:{} ", c);
-				continue;
-			}
+        for (unsigned char c = 0; c < 128; ++c) {
+            if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
+                FRTK_CORE_ERROR("Failed to load Glyph:{} ", c);
+                continue;
+            }
 
-			// Create an RGBA bitmap
-			int width = face->glyph->bitmap.width;
-			int height = face->glyph->bitmap.rows;
-			std::vector<uint8_t> bitmapRGBA(width * height * 4, 0); // RGBA
+            // Create an RGBA bitmap
+            int width = face->glyph->bitmap.width;
+            int height = face->glyph->bitmap.rows;
+            std::vector<uint8_t> bitmapRGBA(width * height * 4, 0); // RGBA
 
-			// Populate the RGBA bitmap based on the alpha channel
-			for (int y = 0; y < height; ++y) {
-				for (int x = 0; x < width; ++x) {
-					int index = (y * width + x) * 4; // RGBA index
-					uint8_t alpha = face->glyph->bitmap.buffer[y * width + x];
-					uint8_t colorValue = 255; // Set your desired color value here (e.g., white)
+            // Populate the RGBA bitmap based on the alpha channel
+            for (int y = 0; y < height; ++y) {
+                for (int x = 0; x < width; ++x) {
+                    int index = (y * width + x) * 4; // RGBA index
+                    uint8_t alpha = face->glyph->bitmap.buffer[y * width + x];
+                    uint8_t colorValue = 255; // Set your desired color value here (e.g., white)
 
-					// Set RGBA based on alpha
-					if (alpha > 128) { // Threshold for alpha
-						bitmapRGBA[index] = colorValue;     // Red
-						bitmapRGBA[index + 1] = colorValue; // Green
-						bitmapRGBA[index + 2] = colorValue; // Blue
-						bitmapRGBA[index + 3] = 255;         // Fully opaque
-					}
-					else {
-						bitmapRGBA[index] = 0;               // Transparent
-						bitmapRGBA[index + 1] = 0;
-						bitmapRGBA[index + 2] = 0;
-						bitmapRGBA[index + 3] = 0;           // Fully transparent
-					}
-				}
-			}
+                    // Set RGBA based on alpha
+                    if (alpha > 128) { // Threshold for alpha
+                        bitmapRGBA[index] = colorValue;     // Red
+                        bitmapRGBA[index + 1] = colorValue; // Green
+                        bitmapRGBA[index + 2] = colorValue; // Blue
+                        bitmapRGBA[index + 3] = 255;         // Fully opaque
+                    }
+                    else {
+                        bitmapRGBA[index] = 0;               // Transparent
+                        bitmapRGBA[index + 1] = 0;
+                        bitmapRGBA[index + 2] = 0;
+                        bitmapRGBA[index + 3] = 0;           // Fully transparent
+                    }
+                }
+            }
 
-			GLuint tex;
-			glGenTextures(1, &tex);
-			glBindTexture(GL_TEXTURE_2D, tex);
-			glTexImage2D(
-				GL_TEXTURE_2D,
-				0,
-				GL_RGBA, // Change to RGBA format
-				width,
-				height,
-				0,
-				GL_RGBA, // Change to RGBA format
-				GL_UNSIGNED_BYTE,
-				bitmapRGBA.data() // Use the RGBA bitmap
-			);
+            GLuint tex;
+            glGenTextures(1, &tex);
+            glBindTexture(GL_TEXTURE_2D, tex);
+            glTexImage2D(
+                GL_TEXTURE_2D,
+                0,
+                GL_RGBA, // Change to RGBA format
+                width,
+                height,
+                0,
+                GL_RGBA, // Change to RGBA format
+                GL_UNSIGNED_BYTE,
+                bitmapRGBA.data() // Use the RGBA bitmap
+            );
 
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-			Character_t ch = {
-				tex,
-				glm::ivec2(width, height),
-				glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-				(GLuint)face->glyph->advance.x
-			};
+            Character_t ch = {
+                tex,
+                glm::ivec2(width, height),
+                glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+                (GLuint)face->glyph->advance.x
+            };
 
-			Characters.insert(std::make_pair(c, ch));
-		}
+            Characters.insert(std::make_pair(c, ch));
+        }
 
-		glBindTexture(GL_TEXTURE_2D, 0);
+        glBindTexture(GL_TEXTURE_2D, 0);
 
 #if 0	//For debugging only
-		printStringAsDots(m_label.text, face);
+        printStringAsDots(m_label.text, face);
 #endif
-		FT_Done_Face(face);
+        FT_Done_Face(face);
 
-		*m_label.fnFont = fontPath; // Update current font name
-	}
+        *m_label.fnFont = fontPath; // Update current font name
+    }
 
-	void Fr_Widget::ReadMeshString(const std::string& mshData) {
-		std::istringstream input(mshData);
-		if (!m_vertices) {
-			m_vertices = std::make_shared<std::vector<float>>();
-		}
-		if (!m_indices) {
-			m_indices = std::make_shared<std::vector<unsigned int>>();
-		}
-		if (!m_normals) {
-			m_normals = std::make_shared<std::vector<float>>();
-		}
-		std::string header;
-		std::getline(input, header);
-        
+    void Fr_Widget::ReadMeshString(const std::string& mshData) {
+        std::istringstream input(mshData);
+        if (!m_vertices) {
+            m_vertices = std::make_shared<std::vector<float>>();
+        }
+        if (!m_indices) {
+            m_indices = std::make_shared<std::vector<unsigned int>>();
+        }
+        if (!m_normals) {
+            m_normals = std::make_shared<std::vector<float>>();
+        }
+        std::string header;
+        std::getline(input, header);
+
         size_t nVertices, nTriangles, nQuads;
         input >> nVertices >> nTriangles >> nQuads;
 
@@ -221,84 +220,83 @@ namespace FR {
                 m_indices->at(idx++) = quad[3];
                 m_indices->at(idx++) = quad[0];
             }
-
         }
-		// Add vertices
-		std::vector<MyMesh::VertexHandle> vhandles;
-		vhandles.reserve(nVertices);
-		for (size_t i = 0; i < nVertices; ++i) {
-			MyMesh::Point p((*m_vertices)[3 * i], (*m_vertices)[3 * i + 1], (*m_vertices)[3 * i + 2]);
-			vhandles.push_back(m_mesh.add_vertex(p));
-		}
+        // Add vertices
+        std::vector<MyMesh::VertexHandle> vhandles;
+        vhandles.reserve(nVertices);
+        for (size_t i = 0; i < nVertices; ++i) {
+            MyMesh::Point p((*m_vertices)[3 * i], (*m_vertices)[3 * i + 1], (*m_vertices)[3 * i + 2]);
+            vhandles.push_back(m_mesh.add_vertex(p));
+        }
 
-		// Add faces
-		for (size_t i = 0; i < nTriangles; ++i) {
-			std::vector<MyMesh::VertexHandle> faceV;
-			for (int j = 0; j < 3; ++j) {
-				unsigned int idx = (*m_indices)[3 * i + j];
-				faceV.push_back(vhandles[idx]); // use stored handles!
-			}
-			auto fh = m_mesh.add_face(faceV);
-			if (!fh.is_valid()) {
-				std::cerr << "Failed to add face " << i << std::endl;
-			}
-		}
-	}
-	void Fr_Widget::ReadFile(const std::string& path) {
-		if (!m_vertices) {
-			m_vertices = std::make_shared < std::vector<float>>();
-		}
-		if (!m_indices) {
-			m_indices = std::make_shared < std::vector<unsigned int>>();
-		}
-		if (!OpenMesh::IO::read_mesh(m_mesh, path))
-		{
-			throw std::runtime_error("Failed to read mesh from " + path);
-		}
+        // Add faces
+        for (size_t i = 0; i < nTriangles; ++i) {
+            std::vector<MyMesh::VertexHandle> faceV;
+            for (int j = 0; j < 3; ++j) {
+                unsigned int idx = (*m_indices)[3 * i + j];
+                faceV.push_back(vhandles[idx]); // use stored handles!
+            }
+            auto fh = m_mesh.add_face(faceV);
+            if (!fh.is_valid()) {
+                std::cerr << "Failed to add face " << i << std::endl;
+            }
+        }
+    }
+    void Fr_Widget::ReadFile(const std::string& path) {
+        if (!m_vertices) {
+            m_vertices = std::make_shared < std::vector<float>>();
+        }
+        if (!m_indices) {
+            m_indices = std::make_shared < std::vector<unsigned int>>();
+        }
+        if (!OpenMesh::IO::read_mesh(m_mesh, path))
+        {
+            throw std::runtime_error("Failed to read mesh from " + path);
+        }
 
-		// Reserve space for vertices and indices
-		m_vertices->reserve(m_mesh.n_vertices() * 3);
-		m_indices->reserve(m_mesh.n_faces() * 3); // TODO: We need to make sure there are only 3 vert/obj
+        // Reserve space for vertices and indices
+        m_vertices->reserve(m_mesh.n_vertices() * 3);
+        m_indices->reserve(m_mesh.n_faces() * 3); // TODO: We need to make sure there are only 3 vert/obj
 
-		// Obtain the vertex positions from the mesh
-		for (auto vit = m_mesh.vertices_begin(); vit != m_mesh.vertices_end(); ++vit) {
-			MyMesh::Point p = m_mesh.point(*vit);
-			m_vertices->emplace_back(static_cast<float>(p[0]));
-			m_vertices->emplace_back(static_cast<float>(p[1]));
-			m_vertices->emplace_back(static_cast<float>(p[2]));
-		}
+        // Obtain the vertex positions from the mesh
+        for (auto vit = m_mesh.vertices_begin(); vit != m_mesh.vertices_end(); ++vit) {
+            MyMesh::Point p = m_mesh.point(*vit);
+            m_vertices->emplace_back(static_cast<float>(p[0]));
+            m_vertices->emplace_back(static_cast<float>(p[1]));
+            m_vertices->emplace_back(static_cast<float>(p[2]));
+        }
 
-		// Obtain the face indices from the mesh
-		for (auto fit = m_mesh.faces_begin(); fit != m_mesh.faces_end(); ++fit) {
-			for (auto fvit = m_mesh.fv_iter(*fit); fvit; ++fvit) {
-				m_indices->emplace_back(fvit.handle().idx());
-			}
-		}
-	}
+        // Obtain the face indices from the mesh
+        for (auto fit = m_mesh.faces_begin(); fit != m_mesh.faces_end(); ++fit) {
+            for (auto fvit = m_mesh.fv_iter(*fit); fvit; ++fvit) {
+                m_indices->emplace_back(fvit.handle().idx());
+            }
+        }
+    }
 
-	void Fr_Widget::init(void) {
-		assert(!m_vertices->empty(), "ERROR: You should provide verticies before initializing the object");
-		
-		std::string shaderpath = EXE_CURRENT_DIR + "/resources/shaders/";
-		m_shader->wdg_prog = std::make_shared <ShaderProgram>(shaderpath + "wdgshader");
-		m_shader->silhouette_prog = std::make_shared <ShaderProgram>(shaderpath + "silhouette");
-		m_shader->texture_prog = std::make_shared <ShaderProgram>(shaderpath + "texture");
-		m_shader->widgPoits_prog = std::make_shared <ShaderProgram>(shaderpath + "widgPoints");
-		m_shader->txtFont_program = std::make_shared <ShaderProgram>(shaderpath + "txtFont");
-		m_label.fnFont = std::make_shared <std::string>(DEFAULT_FONT); // DEFAULT FONT
-		m_label.text = "Widget";
+    void Fr_Widget::init(void) {
+        assert(!m_vertices->empty(), "ERROR: You should provide verticies before initializing the object");
 
-		//create bound box
-		m_boundBox = std::make_shared <cBoundBox3D>();
-		m_boundBox->setVertices(m_vertices);
+        std::string shaderpath = EXE_CURRENT_DIR + "/resources/shaders/";
+        m_shader->wdg_prog = std::make_shared <ShaderProgram>(shaderpath + "wdgshader");
+        m_shader->silhouette_prog = std::make_shared <ShaderProgram>(shaderpath + "silhouette");
+        m_shader->texture_prog = std::make_shared <ShaderProgram>(shaderpath + "texture");
+        m_shader->widgPoits_prog = std::make_shared <ShaderProgram>(shaderpath + "widgPoints");
+        m_shader->txtFont_program = std::make_shared <ShaderProgram>(shaderpath + "txtFont");
+        m_label.fnFont = std::make_shared <std::string>(DEFAULT_FONT); // DEFAULT FONT
+        m_label.text = "Widget";
+
+        //create bound box
+        m_boundBox = std::make_shared <cBoundBox3D>();
+        m_boundBox->setVertices(m_vertices);
         CalculateNormals();
         calcualteTextCoor(1024, 1024);  //TODO:  ??? dont think it is correct
-        
-		initializeVBO();
-		CreateShader();
-		LoadFont(DEFAULT_FONT); //TODO: Do we need to allow other font at the creation, don't think so.
 
-		//Selection of vertices : TODO: MAKE ME MORE GENERAL .. NOT JUST VERTICEIS
+        initializeVBO();
+        CreateShader();
+        LoadFont(DEFAULT_FONT); //TODO: Do we need to allow other font at the creation, don't think so.
+
+        //Selection of vertices : TODO: MAKE ME MORE GENERAL .. NOT JUST VERTICEIS
         m_selected->reserve(static_cast<size_t>(m_vertices->size()) / 3);
         m_selected->resize(m_selected->capacity(), 0);
     }
@@ -312,12 +310,11 @@ namespace FR {
             m_shader = std::make_shared<Shader_t>();
         }
         std::string shaderpath = EXE_CURRENT_DIR + "/resources/shaders/";
-        m_shader->wdg_prog = std::make_shared<ShaderProgram>         (shaderpath+"wdgshader");
-        m_shader->widgPoits_prog = std::make_shared<ShaderProgram>   (shaderpath+"widgPoints");
-        m_shader->silhouette_prog = std::make_shared<ShaderProgram>  (shaderpath+"silhouette");
-        m_shader->texture_prog= std::make_shared<ShaderProgram>      (shaderpath+"texture"); 
+        m_shader->wdg_prog = std::make_shared<ShaderProgram>(shaderpath + "wdgshader");
+        m_shader->widgPoits_prog = std::make_shared<ShaderProgram>(shaderpath + "widgPoints");
+        m_shader->silhouette_prog = std::make_shared<ShaderProgram>(shaderpath + "silhouette");
+        m_shader->texture_prog = std::make_shared<ShaderProgram>(shaderpath + "texture");
         m_shader->txtFont_program = std::make_shared<ShaderProgram>(shaderpath + "txtFont");
-
     }
     void Fr_Widget::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights)
     {
@@ -378,10 +375,10 @@ namespace FR {
     {
         m_label.text = lbl;
     }
-	void Fr_Widget::label(const char* lbl)
-	{
-		m_label.text = lbl;
-	}
+    void Fr_Widget::label(const char* lbl)
+    {
+        m_label.text = lbl;
+    }
     std::string Fr_Widget::label() const
     {
         return m_label.text;
@@ -429,8 +426,8 @@ namespace FR {
     {
         m_vertices = std::move(verticies_);
         m_indices = std::move(indicies_);
-        
-        //TODO: Make sure that the code take care of this everywhere 
+
+        //TODO: Make sure that the code take care of this everywhere
         // This must be doen always
         m_selected->reserve(static_cast<size_t>(m_vertices->size()) / 3);
         m_selected->resize(m_selected->capacity(), 0);
@@ -538,7 +535,7 @@ namespace FR {
     }
     void Fr_Widget::Rotate(glm::vec3 axis, float angle)
     {
-        m_Matrix  = glm::rotate(m_Matrix, glm::radians(angle), axis);
+        m_Matrix = glm::rotate(m_Matrix, glm::radians(angle), axis);
     }
     void Fr_Widget::Translate(glm::vec3 v)
     {
@@ -617,7 +614,6 @@ namespace FR {
         }
     }
 
-  
     // TODO: These are bad -- remove them 2025-01-30
     glm::vec3 Fr_Widget::GetVertex(unsigned int index, const float vertices[]) {
         return glm::vec3(
@@ -636,7 +632,7 @@ namespace FR {
             (*m_vertices)[ind * 3 + 2]);
     }
 
-   void Fr_Widget::SetVertex(unsigned int ind, const glm::vec3& vertex) {
+    void Fr_Widget::SetVertex(unsigned int ind, const glm::vec3& vertex) {
         if (ind * 3 + 2 >= m_vertices->size()) {
             throw std::out_of_range("Index out of range in SetVertex");
         }
@@ -645,16 +641,16 @@ namespace FR {
         (*m_vertices)[ind * 3 + 2] = vertex.z;
     }
 
-    //TODO : FIX ME 
+    //TODO : FIX ME
     void Fr_Widget::calcualteTextCoor(int width, int height) {
         // Calculate texture coordinates based on vertex positions
         // Loop through the vertices and calculate texture coordinates
-            
-            if (!m_textCoord) {
-                m_textCoord = std::make_shared<std::vector<float>>();
-            }
-            //The size is 2x (verticies_size/3)
-            m_textCoord->reserve(2*m_vertices->size() / 3);
+
+        if (!m_textCoord) {
+            m_textCoord = std::make_shared<std::vector<float>>();
+        }
+        //The size is 2x (verticies_size/3)
+        m_textCoord->reserve(2 * m_vertices->size() / 3);
         for (int i = 0; i < m_normals->size(); i += 3)
         {
             //Get the vertex position
@@ -671,7 +667,7 @@ namespace FR {
             m_textCoord->push_back(v);
         }
     }
-    
+
     bool Fr_Widget::SetupTexture2D() {
         //Dummy code does nothing should be subclassed
         /*(void)info;*/
@@ -721,105 +717,99 @@ namespace FR {
     }
 
     void Fr_Widget::CalculateNormals(void) {
-    //    if (!m_vertices) {
-    //        throw("ERRROR: m_vertices are not initizlied");
-    //    }
-    //    if (!m_normals) {
-    //        m_normals = std::make_shared<std::vector<float>>();
-    //    }
-    //    constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-    //    constexpr float FLOAT_MIN = -std::numeric_limits<float>::max();
-
-    //    glm::vec3 m_min(FLOAT_MAX, FLOAT_MAX, FLOAT_MAX);
-    //    glm::vec3 m_max(FLOAT_MIN, FLOAT_MIN, FLOAT_MIN); // Corrected initialization
-
-    //    // Find min and max
-    //    for (size_t i = 0; i < m_vertices->size(); i += 3) {
-    //        m_min.x = std::min(m_min.x, m_vertices->at(i));       // x
-    //        m_min.y = std::min(m_min.y, m_vertices->at(i + 1));   // y
-    //        m_min.z = std::min(m_min.z, m_vertices->at(i + 2));   // z
-
-    //        m_max.x = std::max(m_max.x, m_vertices->at(i));       // x
-    //        m_max.y = std::max(m_max.y, m_vertices->at(i + 1));   // y
-    //        m_max.z = std::max(m_max.z, m_vertices->at(i + 2));   // z
-    //    }
-
-    //    // Resize normals vector if necessary
-    //    if (m_normals->empty()) {
-    //        m_normals->resize(m_vertices->size());
-    //    }
-
-    //    // Initialize normals to zero
-    //    std::fill(m_normals->begin(), m_normals->end(), 0.0f);
-
-    //    // Normalize vertices and store in m_normals
-    //    for (size_t i = 0; i < m_vertices->size() / 3; ++i) {
-    //        // Read the vertex as a 3D vector from the flat float array
-    //        glm::vec3 vertex(
-    //            m_vertices->at(i * 3),
-    //            m_vertices->at(i * 3 + 1),
-    //            m_vertices->at(i * 3 + 2)
-    //        );
-
-    //        // Normalize the vertex
-    //        glm::vec3 normalized = (vertex - m_min) / (m_max - m_min); // Normalize
-
-    //        // Store normalized values back in m_normals
-    //        m_normals->at(i * 3) = normalized.x;
-    //        m_normals->at(i * 3 + 1) = normalized.y;
-    //        m_normals->at(i * 3 + 2) = normalized.z;
-    //        //printf("------------------\n");
-    //        //printf("old way %d= %.2f %.2f %.2f \n", i, normalized.x, normalized.y, normalized.z);
-    //        //printf("------------------\n");
-    //}
-
-
-
-         
-
         // Correct way to calculate the normals but make the screen black
 
-        if (!m_normals) {
-            m_normals = std::make_shared<std::vector<float>>();
+        if (m_vertices->size() % 3 != 0) {
+            return; // invalid vertex data
         }
-        m_normals->resize(m_vertices->size());
-        std::fill(m_normals->begin(), m_normals->end(), 0.0f);
-        if (m_vertices->size() % 9 !=0){
-            return; //No normal is possible to calculate
-        }
-        // Prepare normals vector
         if (!m_normals) {
             m_normals = std::make_shared<std::vector<float>>(m_vertices->size(), 0.0f);
         }
-       std::vector<glm::vec3> pre_normals(m_vertices->size() / 3, glm::vec3(0.0f));
-        for (size_t i = 0; i < m_indices->size(); i += 3) {
-            unsigned int v[3] = { m_indices->at(i), m_indices->at(i + 1), m_indices->at(i + 2) };
-
-            // Triangle's vertices
-            glm::vec3 triangle[3] = {
-                glm::vec3(m_vertices->at(v[0] * 3), m_vertices->at(v[0] * 3 + 1), m_vertices->at(v[0] * 3 + 2)),
-                glm::vec3(m_vertices->at(v[1] * 3), m_vertices->at(v[1] * 3 + 1), m_vertices->at(v[1] * 3 + 2)),
-                glm::vec3(m_vertices->at(v[2] * 3), m_vertices->at(v[2] * 3 + 1), m_vertices->at(v[2] * 3 + 2)),
-            };
-            // Calculate triangle's normal
-            glm::vec3 t_normal = glm::normalize(glm::cross(triangle[1] - triangle[0], triangle[2] - triangle[0]));
-            // Accumulate triangle normal to each vertex's normal
-            pre_normals[v[0]] += t_normal;
-            pre_normals[v[1]] += t_normal;
-            pre_normals[v[2]] += t_normal;
+        else {
+            m_normals->resize(m_vertices->size());
+            std::fill(m_normals->begin(), m_normals->end(), 0.0f);
         }
+        size_t vertexCount = m_vertices->size() / 3;
+        if (!m_indices || m_indices->empty()) {
+            return;
+        }
+        if (m_indices->size() % 3 == 0) {
+            std::vector<glm::vec3> pre_normals(vertexCount, glm::vec3(0.0f));
+            for (size_t i = 0; i + 2 < m_indices->size(); i += 3) {
+                unsigned int v0 = m_indices->at(i);
+                unsigned int v1 = m_indices->at(i + 1);
+                unsigned int v2 = m_indices->at(i + 2);
 
-        // Normalize each vertex normal
-        for (size_t i = 0; i < pre_normals.size(); ++i) {
-            if (glm::length(pre_normals[i]) > 0) {
-                pre_normals[i] = glm::normalize(pre_normals[i]);
-           
+                if (v0 >= vertexCount || v1 >= vertexCount || v2 >= vertexCount)
+                    continue;
+
+                glm::vec3 p0(
+                    m_vertices->at(v0 * 3),
+                    m_vertices->at(v0 * 3 + 1),
+                    m_vertices->at(v0 * 3 + 2));
+                glm::vec3 p1(
+                    m_vertices->at(v1 * 3),
+                    m_vertices->at(v1 * 3 + 1),
+                    m_vertices->at(v1 * 3 + 2));
+                glm::vec3 p2(
+                    m_vertices->at(v2 * 3),
+                    m_vertices->at(v2 * 3 + 1),
+                    m_vertices->at(v2 * 3 + 2));
+
+                glm::vec3 faceNormal = glm::cross(p1 - p0, p2 - p0);
+                if (glm::dot(faceNormal, faceNormal) < 1e-12f)
+                    continue;
+                pre_normals[v0] += faceNormal;
+                pre_normals[v1] += faceNormal;
+                pre_normals[v2] += faceNormal;
             }
-            m_normals->at(i * 3) = pre_normals[i].x;
-            m_normals->at(i * 3 + 1) = pre_normals[i].y;
-            m_normals->at(i * 3 + 2) = pre_normals[i].z;
+
+            // Normalize accumulated vertex normals
+            for (size_t i = 0; i < vertexCount; ++i) {
+                glm::vec3 n = pre_normals[i];
+                if (glm::dot(n, n) > 1e-12f)
+                    n = glm::normalize(n);
+
+                (*m_normals)[i * 3 + 0] = n.x;
+                (*m_normals)[i * 3 + 1] = n.y;
+                (*m_normals)[i * 3 + 2] = n.z;
+            }
         }
-         
+        else if (m_indices->size() % 2 == 0) {
+            for (size_t i = 0; i + 1 < m_indices->size(); i += 2) {
+                unsigned int v0 = m_indices->at(i);
+                unsigned int v1 = m_indices->at(i + 1);
+                if (v0 >= vertexCount || v1 >= vertexCount)
+                    continue;
+                glm::vec3 p0(
+                    m_vertices->at(v0 * 3),
+                    m_vertices->at(v0 * 3 + 1),
+                    m_vertices->at(v0 * 3 + 2));
+                glm::vec3 p1(
+                    m_vertices->at(v1 * 3),
+                    m_vertices->at(v1 * 3 + 1),
+                    m_vertices->at(v1 * 3 + 2));
+                glm::vec3 dir = glm::normalize(p1 - p0);
+                glm::vec3 normal;
+                if (std::abs(dir.z) < 1e-6f) {
+                    normal = glm::vec3(-dir.y, dir.x, 0.0f);
+                }
+                else {
+                    glm::vec3 up(0.0f, 0.0f, 1.0f);
+                    normal = glm::normalize(glm::cross(dir, up));
+                }
+                (*m_normals)[v0 * 3 + 0] = normal.x;
+                (*m_normals)[v0 * 3 + 1] = normal.y;
+                (*m_normals)[v0 * 3 + 2] = normal.z;
+
+                (*m_normals)[v1 * 3 + 0] = normal.x;
+                (*m_normals)[v1 * 3 + 1] = normal.y;
+                (*m_normals)[v1 * 3 + 2] = normal.z;
+            }
+        }
+        else {
+            std::fill(m_normals->begin(), m_normals->end(), 0.0f);
+        }
     }
 
     void Fr_Widget::NormalizeVertices(void) {

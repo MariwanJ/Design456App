@@ -54,8 +54,12 @@ namespace FR {
          //std::shared_ptr<BYTE> IMG = n.getImage("nofile");
         EXE_CURRENT_DIR = GET_CURRENT_DIRECTORY();
         printf("Current Dir = %s\n", EXE_CURRENT_DIR.c_str());
+#if defined(_WIN32) || defined(_WIN64)
         auto it = EXE_CURRENT_DIR.find("\\bin");
-        
+#else
+        auto it = EXE_CURRENT_DIR.find("/bin");
+
+#endif
         if (it == std::string::npos) {
             printf("Warning, current dir is %s\n", EXE_CURRENT_DIR.c_str());
         }
