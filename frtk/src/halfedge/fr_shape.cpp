@@ -45,7 +45,7 @@ namespace FR {
 		}
 		if (std::filesystem::exists(fpath))
 		{
-		ReadFile(fpath); //Read verticies 
+		ReadFile(fpath); //Read vertices 
 	}
 		else if (fpath.substr(0, 3) == "OFF") {
 			ReadMeshString(fpath);
@@ -53,7 +53,7 @@ namespace FR {
 		else {
 			assert("ERROR: No mesh provided to the class");
 		}
-		init(); //This will initializes all Openmesh, verticies, edget ..etc
+		init(); //This will initializes all Openmesh, vertices, edget ..etc
 		m_label.text = "Widget";
 		//m_label.visible = true;   User should do this manually
 	}
@@ -109,7 +109,7 @@ namespace FR {
 			glDeleteTextures(1, &pair.second.TextureID);
 	}
 
-	void Fr_Shape::Draw() {
+	void Fr_Shape::draw() {
 		glCheckFunc(glBindVertexArray(m_vao));
 		glCheckFunc(glDrawElements(GL_TRIANGLES, m_indices->size(), GL_UNSIGNED_INT, 0));
 		glCheckFunc(glBindVertexArray(0));
@@ -183,7 +183,7 @@ namespace FR {
 		m_shader->wdg_prog->SetUniformMat4("mvp", mvp);
 		m_shader->wdg_prog->SetUniformVec4("color", m_color);       //Object color - not light color
 		m_shader->wdg_prog->SetUniformInteger("hasTexture", hasTexture());
-		Draw();      //You should make a draw call to get that  done
+		draw();      //You should make a draw call to get that  done
 		m_Texture2D->Unbind();
 		m_shader->wdg_prog->Disable();
 		info.id++;
@@ -202,7 +202,7 @@ namespace FR {
 		glCheckFunc(glEnable(GL_CULL_FACE));
 		glCheckFunc(glCullFace(GL_FRONT)  ); // draw only backfaces
 
-		Draw();
+		draw();
 		m_shader->silhouette_prog->Disable();
 		//back to normal
 		glCheckFunc(glCullFace(GL_BACK));          // restore normal culling
@@ -219,7 +219,6 @@ namespace FR {
 			FRTK_CORE_ERROR("ERROR: Label draw when font is not defined\n");
 			return;// do nothing
 		}
-
 	}
 
 	void Fr_Shape::RenderText(RenderInfo& info) {
@@ -248,8 +247,7 @@ namespace FR {
 			mvp = info.projection* info.modelview * model;// Perspective
 		}
 		m_shader->txtFont_program->SetUniformMat4("mvp", mvp);
- 
- 
+
 		x = 0;
 		y = 0;
 		for (auto c : m_label.text) {
@@ -278,8 +276,6 @@ namespace FR {
 			glBindBuffer(GL_ARRAY_BUFFER, m_vbo[POSITION_TEXT_VB]);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-			// Draw the character
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 
 			// Advance the cursor for the next character

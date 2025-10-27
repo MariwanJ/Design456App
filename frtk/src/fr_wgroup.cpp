@@ -34,9 +34,9 @@ namespace FR {
     //{
     //    linkTomainScene = linkTo;
     //}
-    Fr_WGroup::Fr_WGroup(std::shared_ptr<std::vector <float>>verticies, 
+    Fr_WGroup::Fr_WGroup(std::shared_ptr<std::vector <float>>vertices, 
                         std::shared_ptr<std::vector <unsigned int>> indicies,
-                        std::string label):Fr_Widget(verticies, indicies, label)
+                        std::string label):Fr_Widget(vertices, indicies, label)
     {
         m_children.clear();
     }

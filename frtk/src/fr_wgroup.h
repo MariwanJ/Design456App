@@ -34,7 +34,7 @@
 namespace FR {
     class FRTK_API Fr_WGroup : public Fr_Widget {
     public:
-        Fr_WGroup(std::shared_ptr<std::vector <float>> verticies, std::shared_ptr<std::vector <unsigned int>> indicies, std::string label);
+        Fr_WGroup(std::shared_ptr<std::vector <float>> vertices, std::shared_ptr<std::vector <unsigned int>> indicies, std::string label);
         Fr_WGroup() = delete;
         ~Fr_WGroup();
 

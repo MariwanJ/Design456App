@@ -49,7 +49,7 @@ namespace FR {
 		~Fr_Shape();
 
 		// Public Methods
-		virtual void Draw();
+		virtual void draw() override;
 
 		//TODO: NOT IMPLEMENTED SHOULD BE IMPLEMENTED :: FIXME!!!
 		void SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices);

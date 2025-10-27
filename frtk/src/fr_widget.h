@@ -142,12 +142,12 @@ namespace FR {
 
         // Default constructor is disallowed
         Fr_Widget() = delete;
-        Fr_Widget(std::shared_ptr <std::vector<float>> verticies,
+        Fr_Widget(std::shared_ptr <std::vector<float>> vertices,
             std::shared_ptr <std::vector<unsigned int>> indicies,
             std::string label);
 
 		//TODO: Should this be public?? 
-        virtual void init(void); //We need this if the widget is created (subclassed) without verticies, like in reading files.
+        virtual void init(void); //We need this if the widget is created (sub-classed) without vertices, like in reading files.
 
         /** Virtual destructor */
         virtual ~Fr_Widget();
@@ -233,7 +233,7 @@ namespace FR {
         void lblOffset(glm::vec3 nval);
 
         /** Resizes the widget */
-        virtual void resize(std::shared_ptr<std::vector<float>> verticies,
+        virtual void resize(std::shared_ptr<std::vector<float>> vertices,
             std::shared_ptr<std::vector<unsigned int>> indicies);
 
         bool Resizable();
@@ -244,7 +244,7 @@ namespace FR {
         void visible(bool value);
         bool visible(void);
 
-        /** Handle events - must be subclassed */
+        /** Handle events - must be sub-classed */
         virtual int handle(int e);
 
         /** Let the object be visible */
@@ -316,6 +316,8 @@ namespace FR {
         //
         virtual int initializeVBO();
         virtual void DrawPoints();
+
+        void lbl_Draw();
    
         void pointSize(uint8_t val);
         uint8_t pointSize();
@@ -378,7 +380,7 @@ namespace FR {
         int m_tabIndex;
         int m_hasTexture;
         glm::mat4 m_Matrix;
-        bool m_normalized; //if the verticies are normalized
+        bool m_normalized; //if the vertices are normalized
 
         // Attributes
         glm::vec4 m_color;

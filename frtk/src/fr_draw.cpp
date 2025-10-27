@@ -81,8 +81,7 @@ namespace FR {
     //Label Draw and Font rendering
     void Fr_Widget::lbl_draw()
     {
-
-        return; //do nothing should be subclassed
+        return; //do nothing should be sub-classed
     }
 
     void Fr_Widget::pointSize(uint8_t val)
@@ -107,8 +106,8 @@ namespace FR {
     //You must override this if you want to draw differntly 
     int Fr_Widget::initializeVBO() {
         glCheckFunc(glGenBuffers(NUM_OF_VBO_BUFFERS, m_vbo));
-        glCheckFunc(glGenVertexArrays(1, &m_vao));
         glCheckFunc(glGenVertexArrays(1, &m_vao_points));
+        glCheckFunc(glGenVertexArrays(1, &m_vao));
         glCheckFunc(glBindVertexArray(m_vao));
 
         // VERTICES

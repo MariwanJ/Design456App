@@ -29,9 +29,9 @@
 #include<fr_window.h>
 #include <fr_core.h>
 namespace FR {
-    Fr_Face_Widget::Fr_Face_Widget(std::shared_ptr<std::vector <float>> verticies,
+    Fr_Face_Widget::Fr_Face_Widget(std::shared_ptr<std::vector <float>> vertices,
         std::shared_ptr<std::vector <unsigned int>> indicies,
-        std::string label) : Fr_Widget(verticies, indicies, label),m_pointPicker(false)
+        std::string label) : Fr_Widget(vertices, indicies, label),m_pointPicker(false)
     {
 
         std::vector<MyMesh::VertexHandle> vertexHandles;

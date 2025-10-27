@@ -36,9 +36,9 @@
 
 namespace FR {
     //Constructor
-    Fr_Widget::Fr_Widget(std::shared_ptr<std::vector <float>> verticies,
+    Fr_Widget::Fr_Widget(std::shared_ptr<std::vector <float>> vertices,
         std::shared_ptr<std::vector <unsigned int>> indicies,
-        std::string label) :m_vertices(std::move(verticies)),
+        std::string label) :m_vertices(std::move(vertices)),
         m_Matrix(glm::mat4(1.0f)), m_indices(std::move(indicies)), m_vao(0), m_vbo{ 0 },
         m_lineWidth(1), m_pointSize(10)
     {
@@ -211,7 +211,7 @@ namespace FR {
                 input >> m_indices->at(idx++);
             }
             else {
-                float quad[4];              /// This is really not supported yet
+                float quad[4];              /// TODO: This is really not supported yet
                 input >> quad[0] >> quad[1] >> quad[2] >> quad[3];
                 m_indices->at(idx++) = quad[0];
                 m_indices->at(idx++) = quad[1];
@@ -221,15 +221,12 @@ namespace FR {
                 m_indices->at(idx++) = quad[0];
             }
         }
-        // Add vertices
         std::vector<MyMesh::VertexHandle> vhandles;
         vhandles.reserve(nVertices);
         for (size_t i = 0; i < nVertices; ++i) {
             MyMesh::Point p((*m_vertices)[3 * i], (*m_vertices)[3 * i + 1], (*m_vertices)[3 * i + 2]);
             vhandles.push_back(m_mesh.add_vertex(p));
         }
-
-        // Add faces
         for (size_t i = 0; i < nTriangles; ++i) {
             std::vector<MyMesh::VertexHandle> faceV;
             for (int j = 0; j < 3; ++j) {
@@ -253,20 +250,14 @@ namespace FR {
         {
             throw std::runtime_error("Failed to read mesh from " + path);
         }
-
-        // Reserve space for vertices and indices
         m_vertices->reserve(m_mesh.n_vertices() * 3);
         m_indices->reserve(m_mesh.n_faces() * 3); // TODO: We need to make sure there are only 3 vert/obj
-
-        // Obtain the vertex positions from the mesh
         for (auto vit = m_mesh.vertices_begin(); vit != m_mesh.vertices_end(); ++vit) {
             MyMesh::Point p = m_mesh.point(*vit);
             m_vertices->emplace_back(static_cast<float>(p[0]));
             m_vertices->emplace_back(static_cast<float>(p[1]));
             m_vertices->emplace_back(static_cast<float>(p[2]));
         }
-
-        // Obtain the face indices from the mesh
         for (auto fit = m_mesh.faces_begin(); fit != m_mesh.faces_end(); ++fit) {
             for (auto fvit = m_mesh.fv_iter(*fit); fvit; ++fvit) {
                 m_indices->emplace_back(fvit.handle().idx());
@@ -274,32 +265,23 @@ namespace FR {
         }
     }
 
-    void Fr_Widget::init(void) {
-        assert(!m_vertices->empty(), "ERROR: You should provide verticies before initializing the object");
 
-        std::string shaderpath = EXE_CURRENT_DIR + "/resources/shaders/";
-        m_shader->wdg_prog = std::make_shared <ShaderProgram>(shaderpath + "wdgshader");
-        m_shader->silhouette_prog = std::make_shared <ShaderProgram>(shaderpath + "silhouette");
-        m_shader->texture_prog = std::make_shared <ShaderProgram>(shaderpath + "texture");
-        m_shader->widgPoits_prog = std::make_shared <ShaderProgram>(shaderpath + "widgPoints");
-        m_shader->txtFont_program = std::make_shared <ShaderProgram>(shaderpath + "txtFont");
+    void Fr_Widget::init(void) {
+        assert(!m_vertices->empty(), "ERROR: You should provide vertices before initializing the object");
+        CreateShader();
         m_label.fnFont = std::make_shared <std::string>(DEFAULT_FONT); // DEFAULT FONT
         m_label.text = "Widget";
-
-        //create bound box
         m_boundBox = std::make_shared <cBoundBox3D>();
         m_boundBox->setVertices(m_vertices);
         CalculateNormals();
         calcualteTextCoor(1024, 1024);  //TODO:  ??? dont think it is correct
-
         initializeVBO();
         CreateShader();
         LoadFont(DEFAULT_FONT); //TODO: Do we need to allow other font at the creation, don't think so.
-
-        //Selection of vertices : TODO: MAKE ME MORE GENERAL .. NOT JUST VERTICEIS
         m_selected->reserve(static_cast<size_t>(m_vertices->size()) / 3);
         m_selected->resize(m_selected->capacity(), 0);
     }
+
     Fr_Widget::~Fr_Widget()
     {
     }
@@ -323,16 +305,16 @@ namespace FR {
 
     void Fr_Widget::Render(RenderInfo& info)
     {
-        return; //do nothing , should be subclassed
+        return; //do nothing , should be sub-classed
     }
 
     void Fr_Widget::RenderVertexes(RenderInfo& info)
     {
-        return; //do nothing should be subclassed
+        return; //do nothing should be sub-classed
     }
 
     void RenderText(RenderInfo& info) {
-        return;//do nothing should be subclassed
+        return;//do nothing should be sub-classed
     }
 
     GLuint Fr_Widget::getCurrentTexturer(void)
@@ -342,17 +324,17 @@ namespace FR {
 
     void Fr_Widget::draw()
     {
-        return; //do nothing should be subclassed
+        return; //do nothing should be sub-classed
     }
 
     void Fr_Widget::redraw()
     {
-        return; //do nothing should be subclassed
+        return; //do nothing should be sub-classed
     }
 
     void Fr_Widget::lbl_redraw()
     {
-        return; //do nothing should be subclassed
+        return; //do nothing should be sub-classed
     }
 
     bool Fr_Widget::setup()
@@ -421,14 +403,14 @@ namespace FR {
         return m_label.visible;
     }
 
-    void Fr_Widget::resize(std::shared_ptr<std::vector<float>>verticies_,
+    void Fr_Widget::resize(std::shared_ptr<std::vector<float>>vertices_,
         std::shared_ptr<std::vector <unsigned int>> indicies_)
     {
-        m_vertices = std::move(verticies_);
+        m_vertices = std::move(vertices_);
         m_indices = std::move(indicies_);
 
         //TODO: Make sure that the code take care of this everywhere
-        // This must be doen always
+        // This must be done always
         m_selected->reserve(static_cast<size_t>(m_vertices->size()) / 3);
         m_selected->resize(m_selected->capacity(), 0);
     }
@@ -577,7 +559,7 @@ namespace FR {
         return m_normalized;
     }
     void Fr_Widget::calculateTextCoor() {
-        return; //should be subbclassed
+        return; //should be sub-classed
     }
     void Fr_Widget::CalculateTrianglesNormals() {
         // Ensure m_triangles_normals is initialized
@@ -649,7 +631,7 @@ namespace FR {
         if (!m_textCoord) {
             m_textCoord = std::make_shared<std::vector<float>>();
         }
-        //The size is 2x (verticies_size/3)
+        //The size is 2x (vertices_size/3)
         m_textCoord->reserve(2 * m_vertices->size() / 3);
         for (int i = 0; i < m_normals->size(); i += 3)
         {
@@ -669,13 +651,13 @@ namespace FR {
     }
 
     bool Fr_Widget::SetupTexture2D() {
-        //Dummy code does nothing should be subclassed
+        //Dummy code does nothing should be sub-classed
         /*(void)info;*/
         return false;
     }
 
     void Fr_Widget::RenderTexture2D() {
-        //Dummy code does nothing should be subclassed
+        //Dummy code does nothing should be sub-classed
         /*(void)info;
         (void)modelview;*/
     }
@@ -838,7 +820,7 @@ namespace FR {
         }
         glm::vec3 range = m_max - m_min;
         if (range.x == 0 && range.y == 0 && range.z == 0) {
-            //we have zero range, fill all verticies to zero 
+            //we have zero range, fill all vertices to zero 
             std::fill(m_vertices->begin(), m_vertices->end(), 0.0f);
             //TODO : CHECK ME - WHEN THIS CAN HAPPEN, AND WHY? DO WE DO A CORRECT DECISISION? !!! 
             return; 

@@ -6,7 +6,7 @@
 namespace FR {
     class FRTK_API Fr_Line_Widget : public Fr_Widget {
     public:
-        Fr_Line_Widget(std::shared_ptr<std::vector <float>>verticies,
+        Fr_Line_Widget(std::shared_ptr<std::vector <float>>vertices,
             std::shared_ptr<std::vector <unsigned int>> indicies,
             std::string label = "");
         virtual ~Fr_Line_Widget();
