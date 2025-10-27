@@ -40,7 +40,7 @@ namespace FR {
         std::shared_ptr<std::vector <unsigned int>> indicies,
         std::string label) :m_vertices(std::move(vertices)),
         m_Matrix(glm::mat4(1.0f)), m_indices(std::move(indicies)), m_vao(0), m_vbo{ 0 },
-        m_lineWidth(1), m_pointSize(10)
+        m_lineWidth(1), m_pointSize(10), m_MVP(glm::mat4(1.0f))
     {
         m_lineType = FR_NOT_DEFINED; //You should define it before use it
 

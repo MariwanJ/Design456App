@@ -11,6 +11,7 @@ namespace FR {
 		customShape(const std::string& fpath, glm::vec4 color=glm::vec4(FR_LIGHTGRAY), float silhouette=0.01);
 		int handle(int event);
 		bool isClicked();
+		void Render(RenderInfo& info) override;
 	private: 
 		bool m_isMouseOver;
 		bool m_isClicked;

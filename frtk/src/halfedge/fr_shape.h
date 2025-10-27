@@ -61,7 +61,7 @@ namespace FR {
 		void Render(RenderInfo& info) override;
 		void RenderText(RenderInfo& info) override;
 		
-	private:
+	protected:
 		bool normalized_;
 		Fr_Window* linktoMainWindow;
 

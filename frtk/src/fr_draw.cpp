@@ -72,6 +72,7 @@ namespace FR {
         }
         glCheckFunc(glBindVertexArray(0));
     }
+
     void Fr_Widget::DrawPoints() {
         glCheckFunc(glBindVertexArray(m_vao_points));
         glCheckFunc(glPointSize(m_pointSize)); // Set the size of the points

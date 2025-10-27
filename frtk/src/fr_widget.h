@@ -137,6 +137,9 @@ namespace FR {
         */
 
     public:
+        glm::mat4 m_MVP; //TODO TEMPORARY CODE - REMOVE ME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    public:
         friend class Fl_Group;
  
 

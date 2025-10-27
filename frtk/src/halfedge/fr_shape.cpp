@@ -165,8 +165,8 @@ namespace FR {
 			(info.render_transparent && m_color.a == 1) ||
 			(!info.render_transparent && m_color.a < 1))
 			return;
-		auto mvp = info.projection * info.modelview * m_Matrix;
- 
+		//auto mvp = info.projection * info.modelview * m_Matrix; //TODO: This is not correct as modelview = m_Matrix. We should separate these two things.
+		auto mvp = info.projection *info.modelview;
 		if (m_color.a == 1)
 			RenderSilhouette(mvp);
  
@@ -289,7 +289,7 @@ namespace FR {
 	}
 
 	/*
-		Hints : how to extract indicies from openmesh
+		Hints : how to extract indices from openmesh
 		typedef OpenMesh::PolyMesh_ArrayKernelT<> MyMesh;
 
 		int main() {
