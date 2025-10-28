@@ -178,6 +178,8 @@ namespace FR {
 		virtual void ReadFile(const std::string& path);
 		virtual void ReadMeshString(const std::string& mshData);
 
+        virtual glm::vec3 position(void);
+        virtual void position(glm::vec3 val);
 
         virtual bool SetupTexture2D();
         virtual void RenderTexture2D();
@@ -360,6 +362,18 @@ namespace FR {
         bool m_active;
         int uniqueIndex;
         int m_Parent; // -1 for Abstract class that doesn't have parent, and for the Root class
+
+        /*
+            Widget position, 
+            but it is a problem since we have vertices and they are not normalized.
+            Any time position is changed, will make the vertices invalid as they will change their position
+            TODO: FIXME!!!!
+            Think about how to use this new variable, 
+            The problem FreeCAD has about transformation should not affect this projects.
+            Always, position should be relative to origin (0,0,0) and the vertices should represent also the 
+            same principle. how? i don't know yet!!
+        */
+        glm::vec3 m_WdgPosition;
 
 		// OpenMesh Mesh. This must be defined here and this will keep the whole structure of the mesh system
         MyMesh m_mesh;

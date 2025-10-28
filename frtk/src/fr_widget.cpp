@@ -40,7 +40,7 @@ namespace FR {
         std::shared_ptr<std::vector <unsigned int>> indicies,
         std::string label) :m_vertices(std::move(vertices)),
         m_Matrix(glm::mat4(1.0f)), m_indices(std::move(indicies)), m_vao(0), m_vbo{ 0 },
-        m_lineWidth(1), m_pointSize(10), m_MVP(glm::mat4(1.0f))
+        m_lineWidth(1), m_pointSize(10), m_MVP(glm::mat4(1.0f)), m_WdgPosition(0)
     {
         m_lineType = FR_NOT_DEFINED; //You should define it before use it
 
@@ -239,6 +239,20 @@ namespace FR {
             }
         }
     }
+    glm::vec3 Fr_Widget::position(void)
+    {
+        return m_WdgPosition;
+    }
+    void Fr_Widget::position(glm::vec3 val)
+    {
+        m_WdgPosition = val;
+        /*TODO: FIXME .. THIS SHOULD AFFECT THE VERTICES, 
+            USING ONLY glm::translate will not affect the internal 
+            vertices we have inside m_vertices. 
+            We need to find out how to re-calculate them or not?? 
+            */
+    }
+
     void Fr_Widget::ReadFile(const std::string& path) {
         if (!m_vertices) {
             m_vertices = std::make_shared < std::vector<float>>();
