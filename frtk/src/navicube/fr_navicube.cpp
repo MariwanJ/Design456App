@@ -90,7 +90,6 @@ namespace FR {
 	Fr_NavigationCube::Fr_NavigationCube():Fr_WGroup(NULL,NULL,"")
 	{
 		//We need to create all parts, they are 27 parts. 	
-		std::ofstream ff("newMesh.c");
 		for (int i = 0; i <meshDataPointers.size(); ++i) {
 	
 			std::shared_ptr<customShape> tempOBJ = std::make_shared<customShape>(*meshDataPointers[i]);
