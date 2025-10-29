@@ -42,11 +42,25 @@ namespace FR {
 			(!info.render_transparent && m_color.a < 1))
 			return;
 		Fr_Window* win = Fr_Window::getFr_Window();
-		// Set up orthographic projection for fixed object
-		 glm::mat4 proj= glm::ortho(0.0f, (float)win->getScreenDim().w , 0.0f, (float)win->getScreenDim().h, -10.0f, 10.0f);
+		userData_ data;
+		win->activeScene->getActiveCamera().getUserData(data);
+
+		//Set up orthographic projection for fixed object
+		float  m_OrthographicSize = 120.0f;
+		float orthoLeft = -m_OrthographicSize * data.aspectRatio_ * 0.75f;
+		float orthoRight = m_OrthographicSize * data.aspectRatio_ * 0.75f;
+		float orthoBottom = -m_OrthographicSize * 0.5f;
+		float orthoTop = m_OrthographicSize * 0.5f;
+
+		 glm::mat4 proj= glm::ortho(orthoLeft,orthoRight,orthoBottom,orthoTop, -100.0f, 100.0f);
 		 glm::mat4 viewMatrix = glm::mat4(1.0f);
-		viewMatrix = glm::translate(viewMatrix, glm::vec3((float)win->getScreenDim().w/2, (float)win->getScreenDim().h/1.5, -0.0f));
-		glm::mat4 mvp = proj*viewMatrix ;
+
+		 glm::mat4 mvp =  viewMatrix;
+
+		glm::vec3 pos = glm::vec3(140.f, 35.f, 0.f);
+		viewMatrix = glm::translate(viewMatrix, pos);
+		//glm::mat4 vie = glm::lookAt(pos, data.direction_, data.up_);
+		mvp= proj * viewMatrix ;
 
 
 		
@@ -54,14 +68,14 @@ namespace FR {
 			Fr_Shape::RenderSilhouette(mvp);
 
 		//Render texture also here.
-		auto normalmatrix = glm::transpose(glm::inverse(viewMatrix));
+		auto normalmatrix = glm::transpose(glm::inverse(info.modelview));
 		m_shader->wdg_prog->Enable();
 		m_Texture2D->Bind(0);
 		LoadLights(m_shader->wdg_prog, info.lights);
 		m_shader->wdg_prog->SetAttribLocation("position", 0);  //Position variable has (layout(location =0) inside objectshader_vs.glsl
 		m_shader->wdg_prog->SetAttribLocation("texCoord", 1);  //Position variable has (layout(location =1 inside objectshader_vs.glsl
 		m_shader->wdg_prog->SetAttribLocation("normal", 2);  //Position variable has (layout(location =1 inside objectshader_vs.glsl
-		m_shader->wdg_prog->SetUniformMat4("modelview", viewMatrix);
+		m_shader->wdg_prog->SetUniformMat4("modelview", info.modelview);
 		m_shader->wdg_prog->SetUniformMat4("normalmatrix", normalmatrix);
 		m_shader->wdg_prog->SetUniformMat4("mvp", mvp);
 		m_shader->wdg_prog->SetUniformVec4("color", m_color);       //Object color - not light color
@@ -85,7 +99,7 @@ namespace FR {
 			tempOBJ->m_Texture2D = std::make_shared<Fr_Texture2D>();
 			std::string TexturePath = EXE_CURRENT_DIR + "/resources/Texture/";
 			std::string imag = (TexturePath + "2.png");
-			tempOBJ->hasTexture(1);
+			tempOBJ->hasTexture(0);
 			if (tempOBJ->m_Texture2D->set2DTexture(imag))
 			{
 				tempOBJ->m_Texture2D->setup2DTexture();      //Don't forget to do this always
