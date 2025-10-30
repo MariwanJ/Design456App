@@ -40,7 +40,6 @@
 #include <grid/fr_grid_shader.h>
 #include <grid/fr_grid.h>
 #include <grid/fr_axis3D.h>
-#include <navicube/fr_navicube.h>
 
 
 namespace FR {
@@ -174,7 +173,6 @@ namespace FR {
 		int handle(int ev);
 		Fr_Camera m_cameras[TOTAL_CAMS];
 		std::vector<SceneItemStruct> m_world;
-		std::shared_ptr<Fr_NavigationCube > m_navi;
 		protected:
 			ray_t activeRay; 
 	private:

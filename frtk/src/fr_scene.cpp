@@ -40,10 +40,9 @@
 #include <vector>
 
 namespace FR {
-    Fr_Scene::Fr_Scene() :m_cameras{}, m_active_camera(uint8_t(0)), m_navi(std::make_shared<Fr_NavigationCube>()),
+    Fr_Scene::Fr_Scene() :m_cameras{}, m_active_camera(uint8_t(0)),
         m_Background{ 0.9f, 0.9f, 0.9f,1.0f } {
  
-         m_world.emplace_back(m_navi);
     }
 
     void Fr_Scene::SetBackgroud(float r, float g, float b) {

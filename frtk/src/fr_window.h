@@ -111,6 +111,7 @@ namespace FR {
 
         static Fr_Window* getFr_Window(void);
  
+        void Fr_Window::RenderGizmo();
 
         virtual int Exit();
         /**
