@@ -36,7 +36,7 @@
 
 #include "ImGuizmo.h"
 
-//TODO FIX ME DOSENT WORK DON'T KNOW WHY
+
 namespace FR {
 	int Fr_Window::imguimzo_init()
 	{
@@ -44,20 +44,21 @@ namespace FR {
 	}
 
 	void Fr_Window::RenderGizmo() {
-	 
 		Fr_Camera& cam = activeScene->getActiveCamera();
 		userData_ data;
-		ImGuiIO& io = ImGui::GetIO(); // Get ImGui IO
+		ImGuiIO& io = ImGui::GetIO();
 		cam.getUserData(data);
 	 	ImGuizmo::SetRect(0, 0, w(), h());
 		glm::mat4 view = cam.GetViewMatrix();
 		float viewManipulateSize = 100.0f;
+		
+		ImVec2 pos(x() + w() - viewManipulateSize, y() + 105);
+		ImVec2 size(viewManipulateSize, viewManipulateSize);
 		ImGuizmo::ViewManipulate(
 			glm::value_ptr(view),               
 			viewManipulateSize,                 
-			ImVec2(x() + w() - viewManipulateSize - 84,
-				y() + 84),
-			ImVec2(viewManipulateSize, viewManipulateSize),
+			pos,
+			size,
 			0x60606060                        
 		);
 		view = glm::inverse(view);
@@ -65,6 +66,29 @@ namespace FR {
 		data.direction_ =  glm::normalize(glm::vec3(view[2]));
 		data.up_= glm::normalize(glm::vec3(view[1]));
 		cam.setUserData(data);
+		
+		
+		//Axis under Navi Cube
+		const float gizmoSize = 500.f;
+		const float margin = 150.0f;
+		const float* noSnap = nullptr;
+		pos=ImVec2(pos.x -200.0, pos.y-50.0);
+		ImGuizmo::SetDrawlist(ImGui::GetForegroundDrawList());
+		ImGuizmo::SetRect(pos.x, pos.y, gizmoSize, gizmoSize);
+		glm::mat4 identity(1.0f); //dummy 
+		view[3] = glm::vec4(0, 0, 0, 1);
+		ImGuizmo::Enable(true);
+
+		ImGuizmo::Manipulate(
+			glm::value_ptr(cam.GetViewMatrix()),
+			glm::value_ptr(cam.getProjection()),
+			ImGuizmo::TRANSLATE,
+			ImGuizmo::LOCAL,
+			glm::value_ptr(identity),
+			nullptr,
+			noSnap
+		);
+
 	}
 
 
