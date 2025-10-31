@@ -401,7 +401,7 @@ namespace FR {
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
-            //ImGuizmo::BeginFrame();
+            ImGuizmo::BeginFrame();
             //This Renders all GUI (imGui) widgets and widnows- not viewport. 
             renderimGUI(data);
             ImGuiIO io = ImGui::GetIO();

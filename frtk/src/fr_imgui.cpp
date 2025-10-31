@@ -45,16 +45,12 @@ namespace FR {
 
 	void Fr_Window::RenderGizmo() {
 	 
-		Fr_Camera cam = activeScene->getActiveCamera();
+		Fr_Camera& cam = activeScene->getActiveCamera();
 		userData_ data;
 		ImGuiIO& io = ImGui::GetIO(); // Get ImGui IO
 		cam.getUserData(data);
-		glm::mat4 view = glm::lookAt(data.camm_position,data.direction_,data.up_);
-		glm::mat4 projection = glm::perspective(glm::radians(45.0f), io.DisplaySize.x / io.DisplaySize.y, 0.1f, 100.0f);
-		glm::mat4 modelMatrix = glm::mat4(1.0f); // The model matrix of the object
-
-		ImGuizmo::BeginFrame();
-	 	ImGuizmo::SetRect(x(), y(), w(), h());
+	 	ImGuizmo::SetRect(0, 0, w(), h());
+		glm::mat4 view = cam.GetViewMatrix();
 		float viewManipulateSize = 100.0f;
 		ImGuizmo::ViewManipulate(
 			glm::value_ptr(view),               
@@ -64,22 +60,11 @@ namespace FR {
 			ImVec2(viewManipulateSize, viewManipulateSize),
 			0x60606060                        
 		);
-
-		static glm::mat4 objectMatrix = glm::mat4(1.0f);
-
-		ImGuizmo::Manipulate(
-			glm::value_ptr(view),
-			glm::value_ptr(projection),
-			ImGuizmo::TRANSLATE| ImGuizmo::ROTATE,   
-			ImGuizmo::WORLD,
-			glm::value_ptr(objectMatrix)
-		);
-		//view = glm::inverse(view);
-		//data.camm_position= glm::vec3(view[3]);
-		//data.direction_ = -glm::normalize(glm::vec3(view[2]));
-		//data.up_= glm::normalize(glm::vec3(view[1]));
-		//glm::vec3 camRight = glm::normalize(glm::vec3(view[0]));
-		//cam.setUserData(data);
+		view = glm::inverse(view);
+		data.camm_position= glm::vec3(view[3]);
+		data.direction_ =  glm::normalize(glm::vec3(view[2]));
+		data.up_= glm::normalize(glm::vec3(view[1]));
+		cam.setUserData(data);
 	}
 
 

@@ -62,6 +62,10 @@ namespace FR {
          */
         Fr_Camera();
 
+        //Disallow copy & equal operator 
+        Fr_Camera(const Fr_Camera& camera) = delete;
+        Fr_Camera& operator=(const Fr_Camera& other) = delete;
+
         /**
          * Sets the eye coordinates
          * Default = (1, 0, 0)

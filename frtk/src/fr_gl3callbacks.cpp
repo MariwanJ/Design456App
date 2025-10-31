@@ -445,7 +445,7 @@ namespace FR {
         float y = spWindow->radiusXYZ * cos(radPhi) * cos(radTheta);
         float z = spWindow->radiusXYZ * sin(radPhi);
 
-        auto& cam = spWindow->activeScene->getActiveCamera();
+        Fr_Camera& cam = spWindow->activeScene->getActiveCamera();
         cam.m_position = glm::vec3(x, y, z);
         cam.updateViewMatrix();
 
