@@ -67,7 +67,6 @@ namespace FR {
 
 		void CreateDefaultCameras(void);
 		
-		/** Renders Text (Freetype Font)*/
 		void RenderText(RenderInfo& info);
 
 		void Render(RenderInfo& info);
@@ -75,7 +74,6 @@ namespace FR {
  
 		void RenderSilhouette(const glm::mat4& mvp);
  
-
 		auto SearchIntersection(const glm::vec3& ray);
 
 		std::string getUniqueName(const std::string& name, const std::vector<std::string>& names);
@@ -104,22 +102,22 @@ namespace FR {
 		bool replaceItemByName(std::shared_ptr<T> other, std::string_view name) {
 			for (auto& item : m_world) {
 				if (item.name == name) {
-					item.Sceneitem = other; // Assuming you want to replace the Sceneitem
-					return true; // Item was found and replaced
+					item.Sceneitem = other; 
+					return true;
 				}
 			}
-			return false; // Item was not found
+			return false; 
 		}
 
 		template <typename T>
 		bool replaceItemByID(std::shared_ptr<T> other, genID id) {
 			for (auto& item : m_world) {
 				if (item.id == id) {
-					item.Sceneitem = other; // Assuming you want to replace the Sceneitem
-					return true; // Item was found and replaced
+					item.Sceneitem = other; 
+					return true; 
 				}
 			}
-			return false; // Item was not found
+			return false;
 		}
 
 		template <typename T>
@@ -129,11 +127,11 @@ namespace FR {
 					std::shared_ptr<T> temp = std::static_pointer_cast<T>(item.Sceneitem);
 					if (temp) {
 						answer = temp;
-						return; // Found the item, so no need to continue searching
+						return; 
 					}
 				}
 			}
-			answer.reset(); // Reset if not found
+			answer.reset(); 
 		}
 
 		template <typename T>
@@ -143,11 +141,11 @@ namespace FR {
 					std::shared_ptr<T> temp = std::static_pointer_cast<T>(item.Sceneitem);
 					if (temp) {
 						answer = temp;
-						return; // Found the item, so no need to continue searching
+						return; 
 					}
 				}
 			}
-			answer.reset(); // Reset if not found
+			answer.reset(); 
 		}
 
 

@@ -47,7 +47,7 @@ namespace FR {
 		Fr_Camera& cam = activeScene->getActiveCamera();
 		userData_ data;
 		ImGuiIO& io = ImGui::GetIO();
-		cam.getUserData(data);
+		cam.getCamData(data);
 	 	ImGuizmo::SetRect(0, 0, w(), h());
 		glm::mat4 view = cam.GetViewMatrix();
 		float viewManipulateSize = 100.0f;
@@ -65,7 +65,7 @@ namespace FR {
 		data.camm_position= glm::vec3(view[3]);
 		data.direction_ =  glm::normalize(glm::vec3(view[2]));
 		data.up_= glm::normalize(glm::vec3(view[1]));
-		cam.setUserData(data);
+		cam.setCamData(data);
 		
 		
 		//Axis under Navi Cube
@@ -188,7 +188,7 @@ namespace FR {
 			counter++;
 
 			activeScene->m_cameras[(unsigned int)activeScene->m_active_camera].setupCameraHomeValues();
-			activeScene->m_cameras[(unsigned int)activeScene->m_active_camera].getUserData(data);
+			activeScene->m_cameras[(unsigned int)activeScene->m_active_camera].getCamData(data);
 		}
 		ImGui::SameLine();
 		ImGui::Text("counter = %d", counter);
@@ -268,14 +268,14 @@ namespace FR {
 			| ImGuiWindowFlags_NoNavFocus
 			| ImGuiWindowFlags_NoDecoration;
 
-		activeScene->m_cameras[activeScene->m_active_camera].getUserData(data);
+		activeScene->m_cameras[activeScene->m_active_camera].getCamData(data);
 		imgui_CameraConfiguration(data);
 		if (activeScene->m_active_camera != data.camType_) {
 			activeScene->m_cameras[activeScene->m_active_camera].isActive(false);
 			activeScene->m_active_camera = data.camType_;
-			activeScene->m_cameras[activeScene->m_active_camera].getUserData(data);
+			activeScene->m_cameras[activeScene->m_active_camera].getCamData(data);
 		}
-		activeScene->m_cameras[activeScene->m_active_camera].setUserData(data);
+		activeScene->m_cameras[activeScene->m_active_camera].setCamData(data);
 		activeScene->m_cameras[activeScene->m_active_camera].isActive(true);
 	}
 

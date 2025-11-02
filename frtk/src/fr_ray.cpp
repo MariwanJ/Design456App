@@ -37,16 +37,8 @@ namespace FR{
     glm::vec3 Fr_Window::toWorldCoords(const glm::vec4& eyeCoords)
     {
         glm::mat4 invertedView = activeScene->m_cameras[activeScene->m_active_camera].GetInverseViewMatrix();
-         //Transform eye coordinates to world coordinates
         glm::vec4 rayWorld = invertedView * eyeCoords;
-
         glm::vec3 mouseRay = glm::normalize(glm::vec3(rayWorld));
-   /*     printf("\n-------------------\n");
-        printf("normalized %f %f %f\n", mouseRay.x, mouseRay.y, mouseRay.z);
-        printf("rayworld %f %f %f\n", rayWorld.x, rayWorld.y, rayWorld.z);  
-        printf("\n-------------------\n");*/
-        //calculateMouseWorldPos();
-        //return  (mouseRay);
         return rayWorld;
     }
  
@@ -63,10 +55,6 @@ namespace FR{
             float depth = 1.0f;
             
             glm::vec2 mm=glm::vec2 (mouseEvent.Old_x, (m_ViewPort.h- mouseEvent.Old_y));
-            /*glm::vec2 mm = glm::vec2(
-                (mouseEvent.Old_x - (m_ViewPort.w / 2.0f)) * (2.0f / m_ViewPort.w),  // Normalize X to [-1, 1]
-                ((m_ViewPort.h / 2.0f) - mouseEvent.Old_y) * (2.0f / m_ViewPort.h)   // Normalize Y to [-1, 1]
-            )*/
 
             glReadPixels(
                 (int) mm.x,
@@ -77,10 +65,7 @@ namespace FR{
                 &depth
             );
 
-           // printf("DEPTH = %f -  mouse %f %f\n", depth, mm.x,mm.y);
-
             if (depth == 1.0f) {
-                // background (no object under cursor)
                 return glm::vec3(0.0f);
             }
 
@@ -99,49 +84,41 @@ namespace FR{
             glm::mat4 view = activeScene->m_cameras[(unsigned int)activeScene->m_active_camera].GetViewMatrix();
             glm::vec4 worldCoords = glm::inverse(view) * eyeCoords;
             worldCoords /= worldCoords.w; 
-
-            printf("WORLD %f %f %f \n", worldCoords.x, worldCoords.y, worldCoords.z);
-
             return glm::vec3(worldCoords);
         }
 
    //--------------------------------------------------------------------------------
-    //New calculation
-    ray_t Fr_Window::GetScreenToWorldRay() {
-        ray_t result;
-        glm::mat4 view = activeScene->m_cameras[activeScene->m_active_camera].GetViewMatrix();
-        glm::mat4 proj = activeScene->m_cameras[activeScene->m_active_camera].getProjection(); // Corrected spelling
+        ray_t Fr_Window::GetScreenToWorldRay() {
+            ray_t result;
+            glm::mat4 view = activeScene->m_cameras[activeScene->m_active_camera].GetViewMatrix();
+            glm::mat4 proj = activeScene->m_cameras[activeScene->m_active_camera].getProjection();  
 
-        // Mouse in window space (pixels)
-        float mouseX = mouseEvent.Old_x;
-        float mouseY = m_ViewPort.h - mouseEvent.Old_y; // Flip Y for OpenGL window coords
+            float mouseX = mouseEvent.Old_x;
+            float mouseY = m_ViewPort.h - mouseEvent.Old_y;  
 
-        // Z = 0 -> near plane, Z = 1 -> far plane (window-space depth)
-        glm::vec3 nearPoint = glm::unProject(
-            glm::vec3(mouseX, mouseY, 0.0f),
-            view,
-            proj,
-            glm::vec4(m_ViewPort.x, m_ViewPort.y, m_ViewPort.w, m_ViewPort.h)
-        );
+             
+            glm::vec3 nearPoint = glm::unProject(
+                glm::vec3(mouseX, mouseY, 0.0f),
+                view,
+                proj,
+                glm::vec4(m_ViewPort.x, m_ViewPort.y, m_ViewPort.w, m_ViewPort.h)
+            );
 
-        glm::vec3 farPoint = glm::unProject(
-            glm::vec3(mouseX, mouseY, 1.0f),
-            view,
-            proj,
-            glm::vec4(m_ViewPort.x, m_ViewPort.y, m_ViewPort.w, m_ViewPort.h)
-        );
+            glm::vec3 farPoint = glm::unProject(
+                glm::vec3(mouseX, mouseY, 1.0f),
+                view,
+                proj,
+                glm::vec4(m_ViewPort.x, m_ViewPort.y, m_ViewPort.w, m_ViewPort.h)
+            );
 
-        glm::vec3 direction = glm::normalize(farPoint - nearPoint);
-
-        // Check if the camera is orthographic
-        if (activeScene->m_active_camera==ORTHOGRAPHIC) {
-            result.position = nearPoint;
+            glm::vec3 direction = glm::normalize(farPoint - nearPoint);
+            if (activeScene->m_active_camera==ORTHOGRAPHIC) {
+                result.position = nearPoint;
+            }
+            else {
+                result.position = activeScene->m_cameras[activeScene->m_active_camera].GetCamPosition();
+            }
+            result.direction = direction;
+            return  (result);
         }
-        else { // ALL OTHER CAMERAS ARE PERSPECTIVE
-            result.position = activeScene->m_cameras[activeScene->m_active_camera].GetCamPosition();
-        }
-        result.direction = direction;
-        return  (result);
-    }
-
 }

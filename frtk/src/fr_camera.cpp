@@ -127,11 +127,11 @@ namespace FR {
     void Fr_Camera::SetCamPosition(float x, float y, float z) {
         m_position = glm::vec3(x, y, z);
     }
-    glm::vec3 Fr_Camera::GetCamPosition()
+    glm::vec3 Fr_Camera::GetCamPosition() const
     {
         return m_position;
     }
-    glm::vec3 Fr_Camera::GetCamDirection()
+    glm::vec3 Fr_Camera::GetCamDirection() const
     {
         return m_direction;
     }
@@ -169,7 +169,7 @@ namespace FR {
         }
 
         m_ProjectionMatrix = projection;
-        updateViewMatrix(); // Ensure this updates m_ViewMatrix correctly
+        updateViewMatrix();         // Ensure this updates m_ViewMatrix correctly
         modelview = m_ViewMatrix;
 
         return true;
@@ -207,17 +207,17 @@ namespace FR {
      * \param zfar : z - Far value
      */
     void Fr_Camera::SetPerspective(float fovy, float znear, float zfar) {
-        m_fovy = fovy;   //LEFT
-        m_znear = znear;  //BOTTOM
-        m_zfar = zfar;    //TOP
+        m_fovy = fovy;      //LEFT
+        m_znear = znear;    //BOTTOM
+        m_zfar = zfar;      //TOP
         updateViewMatrix();
     }
     /**
-     * Get camera configurations and saved in data.
+     * Get camera configurations.
      *
      * \param data ref variable keeps the configuration
      */
-    void Fr_Camera::getUserData(userData_& data)
+    void Fr_Camera::getCamData(userData_& data)
     {
         data.aspectRatio_ = m_aspect_ratio;
         data.camm_position = m_position;
@@ -230,7 +230,7 @@ namespace FR {
         data.orthoSize_ = m_OrthographicSize;
     }
 
-    void Fr_Camera::setUserData(userData_& data)
+    void Fr_Camera::setCamData(userData_& data)
     {
         //aspectRatio_ = data.aspectRatio_;
         m_position = data.camm_position;
@@ -422,11 +422,7 @@ namespace FR {
         updateViewMatrix();
         return m_ViewMatrix;
     }
-
-    void Fr_Camera::setViewMatrix(glm::mat4& t)
-    {
-        m_ViewMatrix = t;
-    }
+ 
 
     void Fr_Camera::SetOrthographicSize(float size_)
     {

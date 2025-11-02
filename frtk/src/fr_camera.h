@@ -71,9 +71,9 @@ namespace FR {
          * Default = (1, 0, 0)
          */
         void SetCamPosition(float x, float y, float z);
-        glm::vec3 GetCamPosition();
+        glm::vec3 GetCamPosition() const;
 
-        glm::vec3 GetCamDirection();
+        glm::vec3 GetCamDirection() const;
 
         void setupCameraHomeValues();
         /**
@@ -97,8 +97,8 @@ namespace FR {
          */
         void SetPerspective(float fovy, float znear, float zfar);
 
-        void getUserData(userData_& data);
-        void setUserData(userData_& data);
+        void getCamData(userData_& data);
+        void setCamData(userData_& data);
 
         /**
          * Sets the camera

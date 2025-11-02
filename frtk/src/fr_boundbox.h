@@ -41,9 +41,9 @@ namespace FR {
         cBoundBox3D(bool type = false);
         ~cBoundBox3D();
 
-        void Boxtype(bool val);
+        void ThreeD(bool val);
 
-        bool Boxtype();
+        bool ThreeD();
 
         //functions:
       /**
@@ -120,7 +120,8 @@ namespace FR {
 
     private:
         glm::vec3 m_center;
-        bool m_boxType;
+        bool m_threeD;
+        float pad;
     };
 }
 #endif

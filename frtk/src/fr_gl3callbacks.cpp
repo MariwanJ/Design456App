@@ -31,7 +31,6 @@
 #include <fr_window.h>
 #include "fr_gl3callbacks.h"
 
-//Wrapper Callbacks
 namespace FR {
     void Fr_Window::glfwWindosResize(GLFWwindow* window, int width, int height)
     {
@@ -98,7 +97,7 @@ namespace FR {
 
     void Fr_Window::mouse_button_callback(GLFWwindow* win, int button, int action, int mods)
     {
-        //TODO FIX ME  - THIS IS NOT FINISHED - THIS AND MOUSE MOVEMENT IS NOT CORRECT
+        
         if (spWindow == nullptr)
             return; //do nothing
 
@@ -316,7 +315,7 @@ namespace FR {
                     res = spWindow->handle(FR_MIDDLE_RELEASE);
                     if (res) { consumeEvent(true); }
                     updateMousePosition(xpos, ypos);
-                   // spWindow->phi = spWindow->theta = 0.0f; //YOU SHOULD NEVER RESET IT 
+                   // spWindow->phi = spWindow->theta = 0.0f; //YOU SHOULD NEVER RESET them 
                     spWindow->runCode = true;
                     return;
                 }
@@ -340,7 +339,7 @@ namespace FR {
         if (spWindow == nullptr)
             return;
         userData_ data;
-        spWindow->activeScene->getActiveCamera().getUserData(data);
+        spWindow->activeScene->getActiveCamera().getCamData(data);
         if (spWindow->activeScene->getActiveCamera().getType() == ORTHOGRAPHIC) {
             data.orthoSize_ = data.orthoSize_ + float(yoffset) * spWindow->mouseDefaults.MouseScrollScale;
         }
@@ -363,7 +362,7 @@ namespace FR {
             data.direction_ = -glm::vec3(inverseViewMatrix[2]);
             data.up_ = glm::vec3(inverseViewMatrix[1]);
         }
-        spWindow->activeScene->getActiveCamera().setUserData(data);
+        spWindow->activeScene->getActiveCamera().setCamData(data);
     }
 
     void Fr_Window::MouseMovement(double xoffset, double yoffset)
@@ -374,7 +373,7 @@ namespace FR {
     {
          userData_ data;
 
-        spWindow->activeScene->getActiveCamera().getUserData(data);
+        spWindow->activeScene->getActiveCamera().getCamData(data);
 
         if (mouseEvent.Old_x == mouseEvent.Old_y && mouseEvent.Old_x == 0) {
             mouseEvent.Old_x = xpos;
@@ -393,7 +392,7 @@ namespace FR {
         float yoffset = float(deltay) * spWindow->mouseDefaults.MouseXYScale;
         data.camm_position = glm::vec3(data.camm_position.x + xoffset, data.camm_position.y + yoffset, data.camm_position.z);
         data.direction_ = glm::vec3(data.direction_.x + xoffset, data.direction_.y + yoffset, data.direction_.z);
-        spWindow->activeScene->getActiveCamera().setUserData(data);
+        spWindow->activeScene->getActiveCamera().setCamData(data);
 
 
         ray_t ray= spWindow->GetScreenToWorldRay();
@@ -406,7 +405,7 @@ namespace FR {
         if (spWindow == nullptr)
             return;
         userData_ data;
-        spWindow->activeScene->getActiveCamera().getUserData(data);
+        spWindow->activeScene->getActiveCamera().getCamData(data);
 
         //First time, we dont use the event, just update the mouse 
         if (mouseEvent.Old_x == mouseEvent.Old_y && mouseEvent.Old_x == 0) {
@@ -464,7 +463,7 @@ namespace FR {
             | ImGuiWindowFlags_NoDocking
             | ImGuiWindowFlags_NoResize
             | ImGuiWindowFlags_NoScrollbar
-            | ImGuiFileBrowserFlags_MultipleSelection; //multi selectioun 
+            | ImGuiFileBrowserFlags_MultipleSelection; //multi selection 
 
 
         // Open the modal dialog (this could be triggered by a button or another event)
@@ -481,13 +480,10 @@ namespace FR {
                 fileDialog->SetTypeFilters({ ".obj", ".off" });
                 
             }
-                fileDialog->Open();
-            // Display the file dialog
+            fileDialog->Open();
             fileDialog->Display();
-
-            // Handle user interactions
             if (!fileDialog->IsOpened()) {
-                showOpenDialog = false; // User canceled or closed the dialog
+                showOpenDialog = false; 
                 fileDialog->resetStatus();
                 ImGui::CloseCurrentPopup();
             }
@@ -506,12 +502,11 @@ namespace FR {
                 
                 }
                 fileDialog->ClearSelected();
-                showOpenDialog = false; // Close the dialog after selection
+                showOpenDialog = false; 
                 ImGui::CloseCurrentPopup();
                 fileDialog->resetStatus();
                 }
             }
-            // Close button
             if (ImGui::Button("Close")) {
                 showOpenDialog = false;
                 ImGui::CloseCurrentPopup();

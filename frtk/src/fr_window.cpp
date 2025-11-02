@@ -260,9 +260,6 @@ namespace FR {
 
     int Fr_Window::createGLFWwindow()
     {
-        //***********************************************************************************************
-        // glfw: initialize and configure
-        // ------------------------------
         glfwInit();
 
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -312,10 +309,8 @@ namespace FR {
 
     void Fr_Window::resize(int x, int y, int w, int h)
     {
-        //This will affect the whole system, glfw and main window
         glfwSetWindowPos(pGLFWWindow, x, y);
         glfwSetWindowSize(pGLFWWindow, w, y);
-        //Do we need to send this to the scene and childrens?? TODO: CHECKME!!
     }
 
     void Fr_Window::show() {
@@ -334,15 +329,8 @@ namespace FR {
         
        
         panelWidth = 220.0f;
-        /**
-         *
-         * For the layers, We will make :
-         *  Main layer which has the dockspace and all other GUI parts and will be default visible object layer
-         */
- 
-        CreateScene();   //Main drawing process.
+        CreateScene();  
         activeScene->setupScene();
-        ///////////////////////
          // Setup Dear ImGui context
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -367,18 +355,12 @@ namespace FR {
         static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
 
         io.Fonts->AddFontFromFileTTF(PathICON.c_str(), ICON_FONT_SIZE, &icons_config, icons_ranges);
-
-        // Setup Dear ImGui style
-         //ImGui::StyleColorsDark();
-        //ImGui::StyleColorsClassic();
          ImGui::StyleColorsLight();
 
         GLFWwindow* window = Fr_Window::getCurrentGLWindow();
         assert(window != nullptr);
-        // Setup Platform/Renderer bindings
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_ImplOpenGL3_Init("#version 460");
- 
         glfwGetFramebufferSize(pGLFWWindow, &m_ViewPort.w, &m_ViewPort.h);
         userData_ data;
 
@@ -402,7 +384,7 @@ namespace FR {
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
             ImGuizmo::BeginFrame();
-            //This Renders all GUI (imGui) widgets and widnows- not viewport. 
+            //This Renders all GUI (imGui) widgets and windows- not viewport. 
             renderimGUI(data);
             ImGuiIO io = ImGui::GetIO();
             if (Fr_Window::getFr_Window() != nullptr) {
@@ -428,11 +410,6 @@ namespace FR {
         glfwDestroyWindow(pGLFWWindow);
         return 0;
     }
-    /**
-     * Default constructor required by Fr_Window.
-     *
-     */
-     //TODO: Dont know if it is correct
     Fr_Window::Fr_Window()
     {
 
@@ -450,8 +427,7 @@ namespace FR {
     }
     void Fr_Window::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights)
     {
- 
-            SetupLight(modelview, lights);   //Only if the layer is active
+            SetupLight(modelview, lights);
     }
     void Fr_Window::Render(RenderInfo& info)
     {

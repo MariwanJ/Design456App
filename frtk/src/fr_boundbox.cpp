@@ -3,9 +3,11 @@
 
 namespace FR {
     //******************************************************************************************************
-    cBoundBox3D::cBoundBox3D(bool type) :m_boxType(type)
+    cBoundBox3D::cBoundBox3D(bool type) :m_threeD(type)
     {
         m_minX = m_maxX = m_minY = m_maxY = m_minY = m_maxY = m_Xlength = m_Ylength = m_Zlength = m_minZ = m_maxZ = 0.0f;
+        pad = 0.1f;
+
     }
 
     float cBoundBox3D::minX()
@@ -59,24 +61,21 @@ namespace FR {
     cBoundBox3D::~cBoundBox3D()
     {
     }
-    void cBoundBox3D::Boxtype(bool val)
+    void cBoundBox3D::ThreeD(bool val)
     {
-        m_boxType = val;
+        m_threeD = val;
     }
-    bool cBoundBox3D::Boxtype()
+    bool cBoundBox3D::ThreeD()
     {
-        return m_boxType;
+        return m_threeD;
     }
     void cBoundBox3D::calBoundBox()
     {
         if (m_points->empty()) {
-            // Handle empty points case
             m_minX = m_minY = m_minZ = std::numeric_limits<float>::max();
             m_maxX = m_maxY = m_maxZ = std::numeric_limits<float>::lowest();
             return;
         }
-
-        // Initialize min and max values
         m_minX = m_maxX = (*m_points)[0];
         m_minY = m_maxY = (*m_points)[1];
         m_minZ = m_maxZ = (*m_points)[2];
@@ -90,6 +89,17 @@ namespace FR {
             m_maxY = std::max(m_maxY, (*m_points)[i + 1]);
             m_maxZ = std::max(m_maxZ, (*m_points)[i + 2]);
         }
+
+        m_minX -= pad; m_maxX += pad;
+        m_minY -= pad; m_maxY += pad;
+        m_minZ -= pad; m_maxZ += pad;
+
+        m_Xlength = abs(m_maxX - m_minX);
+        m_Ylength = abs(m_maxY - m_minY);
+        m_Zlength = abs(m_maxZ - m_minZ);
+
+        DiagonalLength();
+        Center();
     }
 
     void cBoundBox3D::setVertices(std::shared_ptr<std::vector<float>> pnts)
@@ -133,57 +143,74 @@ namespace FR {
      * \param Ray  rat_t struct consists of two vectors, direction and position
      * \return true if the ray is inside the boundbox otherwise false.
      */
-    bool cBoundBox3D::isRayInsideBoundingBox(const ray_t &Ray)
+    bool cBoundBox3D::isRayInsideBoundingBox(const ray_t& Ray)
     {
-        bool result = false;
+        /*
+                https://tavianator.com/2022/ray_box_boundary.html
+        */
+        printf("rai %.4f %.4f %.4f\n----------------------\n", Ray.direction.x,Ray.direction.y, Ray.direction.z);
 
-        // Handle division by zero safely
+        bool result = true;
         glm::vec3 invDir = 1.0f / glm::vec3(
             Ray.direction.x != 0.0f ? Ray.direction.x : 1e-8f,
             Ray.direction.y != 0.0f ? Ray.direction.y : 1e-8f,
             Ray.direction.z != 0.0f ? Ray.direction.z : 1e-8f
         );
 
-        // --- X slab ---
         float tmin = (m_minX - Ray.position.x) * invDir.x;
         float tmax = (m_maxX - Ray.position.x) * invDir.x;
-        if (tmin > tmax) std::swap(tmin, tmax);
+        if (tmin > tmax)
+            std::swap(tmin, tmax);
 
-        // --- Y slab ---
         float tymin = (m_minY - Ray.position.y) * invDir.y;
         float tymax = (m_maxY - Ray.position.y) * invDir.y;
-        if (tymin > tymax) std::swap(tymin, tymax);
-
-        if ((tmin > tymax) || (tymin > tmax))
+        if (tymin > tymax)
+            std::swap(tymin, tymax);
+        printf("tmin1 tymax %.2f %.2f\n", tymin, tymax);
+        if ((tmin > tymax) || (tymin > tmax)){
             result = false;
+            printf("empty ray\n");
+        }
         else {
             tmin = std::max(tmin, tymin);
             tmax = std::min(tmax, tymax);
 
-            // --- Z slab ---
             float tzmin = (m_minZ - Ray.position.z) * invDir.z;
             float tzmax = (m_maxZ - Ray.position.z) * invDir.z;
-            if (tzmin > tzmax) std::swap(tzmin, tzmax);
+            if (tzmin > tzmax)
+                std::swap(tzmin, tzmax);
+            printf("tmin2 tzmax %.2f %.2f\n", tmin, tzmax);
 
-            if ((tmin > tzmax) || (tzmin > tmax))
+            if ((tmin > tzmax) || (tzmin > tmax)) {
                 result = false;
+                printf("outside Z\n");
+            }
             else {
                 tmin = std::max(tmin, tzmin);
                 tmax = std::min(tmax, tzmax);
+                printf("tmin3 tymax %.2f %.2f\n", tmin, tmax);
 
-                if (tmax < 0 || tmin > tmax)
+                if (tmax < 0 || tmin > tmax) {
                     result = false;
-                else
+                    printf("not sure what\n");
+                }
+                else{
                     result = true;
+                }
             }
         }
+
+        printf("---------------------------------------------\\\n");
+        printf("Camera pos: %.2f %.2f %.2f\n", Ray.position.x, Ray.position.y, Ray.position.z);
+        printf("Ray dir: %.2f %.2f %.2f\n", Ray.direction.x, Ray.direction.y, Ray.direction.z);
+        printf("Box X: %.2f - %.2f, Y: %.2f - %.2f, Z: %.2f - %.2f\n",
+            m_minX, m_maxX, m_minY, m_maxY, m_minZ, m_maxZ);
+        printf("---------------------------------------------\\\n");
 
         if (result)
             FRTK_CORE_INFO("inside boundbox\n");
         else
             FRTK_CORE_INFO("not inside boundbox\n");
-
         return result;
     }
-
 }
