@@ -92,5 +92,5 @@ project "Design456App"
             commonLinks
         }
 
-    -- Reset filters
+    -- Reset filters. Always clear filters after each section 
     filter {}

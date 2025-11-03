@@ -143,11 +143,9 @@ project "OpenMesh"
         staticruntime "On"
         systemversion "latest"
         defines { "_GLFW_X11", "GLFW_EXPOSE_NATIVE_X11" }
-        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto" }
+        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto","-ggdb" }
 
-        filter "configurations:Debug"
-            buildoptions { "-ggdb" } 
-            
+    filter {}
     -- windows specifics
     filter "system:windows"
         staticruntime "On"
@@ -166,7 +164,9 @@ project "OpenMesh"
         runtime "Debug"
         targetsuffix "d"
         symbols "on"
-
+    filter {}
     filter "configurations:Release"
         runtime "Release"
         optimize "on"
+    filter {}
+filter {}

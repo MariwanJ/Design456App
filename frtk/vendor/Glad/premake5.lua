@@ -24,12 +24,9 @@ project "Glad"
         "include"
     }
     filter "system:linux"
-        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto" }
+        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto", "-ggdb" }
 
-        filter "configurations:Debug"
-            buildoptions { "-ggdb" } 
-
-
+    filter {}
     filter "system:windows"
         systemversion "latest"
 
@@ -41,3 +38,5 @@ project "Glad"
     filter "configurations:Release"
         runtime "Release"
         optimize "on"
+    filter {}
+filter {}

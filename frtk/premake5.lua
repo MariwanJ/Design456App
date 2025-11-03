@@ -122,10 +122,10 @@ project "frtk"
             "yaml-cpp%{cfg.targetsuffix}",
             "freetype%{cfg.targetsuffix}"
         }
-
+    filter {}
     -- Linux-specific
     filter "system:linux"
-        buildoptions { "-Wall", "-Wextra","-fPIC", "-fdiagnostics-color=auto" }
+        buildoptions { "-Wall", "-Wextra","-fPIC", "-fdiagnostics-color=auto","-ggdb" }
         defines
         {
             "GLFW_EXPOSE_NATIVE_X11",
@@ -144,14 +144,15 @@ project "frtk"
         runtime "Debug"
         targetsuffix "d"
         symbols "on"
-
+    filter {}
     -- Release configuration
     filter "configurations:Release"
         defines "FR_RELEASE"
         runtime "Release"
         optimize "on"
+    filter {}
+filter {}
 
-        
 --- Combine join two libraries into one library
 filter "system:linux"
     postbuildcommands {

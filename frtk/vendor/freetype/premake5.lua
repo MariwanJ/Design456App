@@ -90,11 +90,11 @@ project "freetype"
         pic "On"
         staticruntime "On"
         systemversion "latest"
-        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto" }
+        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto","-ggdb" }
 
-        filter "configurations:Debug"
-            buildoptions { "-ggdb" } 
-
+   
+    filter {}
+    
     filter "system:windows"
         defines { "WIN32", "_DEBUG" }
         systemversion "latest"
@@ -107,3 +107,4 @@ project "freetype"
     filter "configurations:Release"
         runtime "Release"
         optimize "on"
+    filter {}

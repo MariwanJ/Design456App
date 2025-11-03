@@ -34,10 +34,9 @@ project "GLFW"
         defines { "_GLFW_X11",
                     "GLFW_EXPOSE_NATIVE_X11" 
                 }
-        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto" }
-        filter "configurations:Debug"
-            buildoptions { "-ggdb" } 
+        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto","-ggdb"  }
 
+    filter {}
     filter "system:windows"
         staticruntime "On"
         systemversion "latest"
@@ -48,11 +47,13 @@ project "GLFW"
             "_CRT_SECURE_NO_WARNINGS"
         }
 
-    filter "configurations:Debug"
-        runtime "Debug"
-        targetsuffix "d"
-        symbols "on"
-
-    filter "configurations:Release"
-        runtime "Release"
-        optimize "on"
+        filter "configurations:Debug"
+            runtime "Debug"
+            targetsuffix "d"
+            symbols "on"
+    filter {}
+        filter "configurations:Release"
+            runtime "Release"
+            optimize "on"
+    filter {}
+filter {}

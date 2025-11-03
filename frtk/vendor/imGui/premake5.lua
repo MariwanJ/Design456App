@@ -28,19 +28,18 @@ project "imGui"
         pic "On"
         staticruntime "On"
         systemversion "latest"
-        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto" }
-
-        filter "configurations:Debug"
-            buildoptions { "-ggdb" } 
-        
+        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto" ,"-ggdb" }
+ 
+    filter {}
     filter "system:windows"
-        systemversion "latest"
-
-    filter "configurations:Debug"
-        runtime "Debug"
-        targetsuffix "d"
-        symbols "on"
-
+            systemversion "latest"
+            filter "configurations:Debug"
+                runtime "Debug"
+                targetsuffix "d"
+                symbols "on"
+    filter {}
     filter "configurations:Release"
         runtime "Release"
         optimize "on"
+        filter {}
+filter {}

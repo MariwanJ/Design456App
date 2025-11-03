@@ -307,8 +307,8 @@ namespace ImGui {
         }
 
         inline size_t getNumButtons() const { return buttons.size(); }
-        inline Button* getButton(size_t i) { return (i < buttons.size()) ? &buttons[i] : NULL; }
-        inline const Button* getButton(size_t i) const { return (i < buttons.size()) ? &buttons[i] : NULL; }
+        inline Button* getButton(size_t i) { return (i < (int )buttons.size()) ? &buttons[i] : NULL; }
+        inline const Button* getButton(size_t i) const { return (i < (int) buttons.size()) ? &buttons[i] : NULL; }
         inline void addButton(const Button& button) {
             buttons.push_back(button);
         }
