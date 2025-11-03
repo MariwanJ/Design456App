@@ -101,14 +101,14 @@ namespace FR{
                 glm::vec3(mouseX, mouseY, 0.0f),
                 view,
                 proj,
-                glm::vec4(m_ViewPort.x, m_ViewPort.y, m_ViewPort.w, m_ViewPort.h)
+                glm::vec4(0, 0, m_ViewPort.w, m_ViewPort.h)
             );
 
             glm::vec3 farPoint = glm::unProject(
                 glm::vec3(mouseX, mouseY, 1.0f),
                 view,
                 proj,
-                glm::vec4(m_ViewPort.x, m_ViewPort.y, m_ViewPort.w, m_ViewPort.h)
+                glm::vec4(0, 0, m_ViewPort.w, m_ViewPort.h)
             );
 
             glm::vec3 direction = glm::normalize(farPoint - nearPoint);

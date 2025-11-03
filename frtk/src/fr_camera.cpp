@@ -109,7 +109,7 @@ namespace FR {
         m_znear{ 0.01f },
         m_zfar{ 100000.f },
         m_OrthographicSize{ 10.f },
-        m_ProjectionMatrix(glm::perspective(glm::radians(m_fovy), m_aspect_ratio, m_znear, m_zfar)),     //default
+        m_ProjectionMatrix(glm::perspective(glm::radians(m_fovy), m_aspect_ratio, m_znear, m_zfar)), 
         m_camType(PERSPECTIVE) {
         int width, height;
 
@@ -414,7 +414,7 @@ namespace FR {
     }
 
     void Fr_Camera::updateViewMatrix() {
-        m_ViewMatrix = glm::lookAt(m_position, m_direction, m_up);      //Create the view Matrix (how camera see the space world)
+        m_ViewMatrix = glm::lookAt(m_position, m_direction, m_up);
         m_InverseViewMatrix = glm::inverse(m_ViewMatrix);
     }
 
