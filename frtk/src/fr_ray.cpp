@@ -5,8 +5,8 @@ namespace FR {
     glm::vec2 Fr_Window::getNormalisedDeviceCoordinates()
     {
         float ndcX, ndcY;
-        ndcX = (2.0f * mouseEvent.Old_x / float(m_ViewPort.w)) - 1.0f;
-        ndcY = 1 - (2.0f * mouseEvent.Old_y / float(m_ViewPort.h));
+        ndcX = (2.0f * (float)mouseEvent.Old_x / float(m_ViewPort.w)) - 1.0f;
+        ndcY = 1.0f - (2.0f * (float)mouseEvent.Old_y / float(m_ViewPort.h));
         return (glm::vec2(ndcX, ndcY));
     }
 
@@ -85,8 +85,8 @@ namespace FR {
         glm::mat4 view = activeScene->m_cameras[activeScene->m_active_camera].GetViewMatrix();
         glm::mat4 proj = activeScene->m_cameras[activeScene->m_active_camera].getProjection();
 
-        float mouseX = mouseEvent.Old_x;
-        float mouseY = m_ViewPort.h - mouseEvent.Old_y;  //Flip the y axis (OpenGL requires that)
+        float mouseX = (float)mouseEvent.Old_x;
+        float mouseY =(float) m_ViewPort.h - mouseEvent.Old_y;  //Flip the y axis (OpenGL requires that)
 
         glm::vec3 nearPoint = glm::unProject(
             glm::vec3(mouseX, mouseY, 0.0f),

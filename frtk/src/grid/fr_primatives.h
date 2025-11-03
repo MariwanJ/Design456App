@@ -59,7 +59,7 @@ namespace FR {
         std::vector<unsigned int> indices_;
         unsigned int vbo_[3];
         unsigned int vao_;
-        unsigned int m_lineWidth;
+        float m_lineWidth;
     };
 }
 #endif // !FR_PRIMATIVES_H

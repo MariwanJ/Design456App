@@ -100,7 +100,7 @@ namespace FR {
     }
 
     void Fr_Line_Widget::LoadLights(std::shared_ptr<ShaderProgram> program, const std::vector<LightInfo>& lights) {
-        unsigned int nlights = std::min(lights.size(), kMaxLights);
+        size_t nlights = std::min(lights.size(), kMaxLights);
         program->SetUniformInteger("nlights", nlights);
         for (size_t i = 0; i < nlights; ++i) {
             auto uniformVarNameInObjShader = "lights[" + std::to_string(i) + "].";
@@ -168,12 +168,12 @@ namespace FR {
             */
             //TODO: Should we change the cursor image?
 
-            unsigned int lastValue = m_vertices->size();
+            size_t lastValue = m_vertices->size();
             switch (e) {
             case FR_MOUSE_MOVE: {
                 //Mouse move without clicking or entering key ..
                 //NOT IMPLEMENTED
-                glm::vec3 intersectionPoint;
+               // glm::vec3 intersectionPoint;
                 glm::vec3 p1= glm::vec3(m_vertices->at(0), m_vertices->at(1), m_vertices->at(2));
                 glm::vec3 p2 = glm::vec3(m_vertices->at(3), m_vertices->at(4), m_vertices->at(5));
                 ray_t ray = win->activeScene->getRayValue();

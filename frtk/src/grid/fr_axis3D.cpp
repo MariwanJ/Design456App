@@ -173,22 +173,22 @@ namespace FR {
 		m_active = status;
 	}
 
-	void Fr_Axis3D::setAxisZstepSize(float sizeINmm)
+	void Fr_Axis3D::setAxisZstepSize(int sizeINmm)
 	{
-		ZstepSize_ = sizeINmm;
+		ZstepSize_ = (int)sizeINmm;
 	}
 
-	float Fr_Axis3D::getAxisZstepSize(void) const
+	int Fr_Axis3D::getAxisZstepSize(void) const
 	{
 		return ZstepSize_;
 	}
 
-	void Fr_Axis3D::setStepWidth(float sec)
+	void Fr_Axis3D::setStepWidth(int sec)
 	{
 		stepWidth_ = sec;
 	}
 
-	float Fr_Axis3D::getStepWidth(void) const
+	int Fr_Axis3D::getStepWidth(void) const
 	{
 		return stepWidth_;
 	}

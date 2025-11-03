@@ -164,7 +164,7 @@ namespace FR {
         }
         else {
             if (m_aspect_ratio == 0)
-                m_aspect_ratio = 1.9; //avoid getting error
+                m_aspect_ratio = 1.9f; //avoid getting error
             projection = glm::perspective(glm::radians(m_fovy), m_aspect_ratio, m_znear, m_zfar);
         }
 

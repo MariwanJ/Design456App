@@ -65,11 +65,11 @@ namespace FR {
         /**
          * Sets grid size. This is the distance between each line in both axis
          */
-        void setAxisZstepSize(float sizeINmm);
-        float getAxisZstepSize(void) const;
+        void setAxisZstepSize(int sizeINmm);
+        int getAxisZstepSize(void) const;
 
-        void setStepWidth(float sec);
-        float getStepWidth(void) const;
+        void setStepWidth(int sec);
+        int getStepWidth(void) const;
         
 
     private:
