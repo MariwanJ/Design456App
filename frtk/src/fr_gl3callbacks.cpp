@@ -39,10 +39,10 @@ namespace FR {
         spWindow->m_ViewPort.w = width;
         spWindow->m_ViewPort.h = height;
 
-        glfwGetWindowPos(pGLFWWindow, 
-                         &spWindow->m_ViewPort.x,
-                         &spWindow->m_ViewPort.y); //update even position
-        
+        glfwGetWindowPos(pGLFWWindow,
+            &spWindow->m_ViewPort.x,
+            &spWindow->m_ViewPort.y); //update even position
+
         uint8_t index = spWindow->activeScene->m_active_camera;
         spWindow->activeScene->m_cameras[index].m_aspect_ratio = static_cast<float>(spWindow->m_ViewPort.w) / spWindow->m_ViewPort.h;
     }
@@ -97,7 +97,6 @@ namespace FR {
 
     void Fr_Window::mouse_button_callback(GLFWwindow* win, int button, int action, int mods)
     {
-        
         if (spWindow == nullptr)
             return; //do nothing
 
@@ -121,9 +120,8 @@ namespace FR {
                 GLFW_STICKY_MOUSE_BUTTONS: Controls whether mouse buttons remain "pressed" after being released.
              */
 
-
         glfwMouseEvent mouse_evnets = spWindow->getMouseEvents();
-        bool activateHandle = true; 
+        bool activateHandle = true;
         if (GLFW_PRESS == action) {
             mouseEvent.Pressed = 1; //Pressed
         }
@@ -138,7 +136,6 @@ namespace FR {
 
         if (mouseEvent.Button == GLFW_MOUSE_BUTTON_LEFT && mouseEvent.Pressed == 1)
         {        //FRTK_CORE_INFO("MOUSE LEFT");
-
             if (activateHandle) {
                 if (spWindow->handle(FR_LEFT_PUSH) == 1) //Mouse click
                     return;  //Events is consumed - no more action required
@@ -156,7 +153,6 @@ namespace FR {
 
         else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_RIGHT && mouseEvent.Pressed == 1)
         {
-
             if (activateHandle) {
                 if (spWindow->handle(FR_RIGHT_PUSH) == 1) //Mouse click
                     return;  //Events is consumed - no more action required
@@ -164,7 +160,6 @@ namespace FR {
         }
         else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_RIGHT && mouseEvent.Pressed == 0)
         {
-
             if (activateHandle) {
                 if (spWindow->handle(FR_RIGHT_RELEASE) == 1) //Mouse click
                     return;  //Events is consumed - no more action required
@@ -197,6 +192,9 @@ namespace FR {
         // Ensure window is valid
         if (!spWindow)
             return;
+        //We need to calculate Ray always, and mouse location in the world TODO: Check if this is a problem that needs to be optimized?!!!!2025-11-03
+        spWindow->calculateScreenRay();
+        mouseEvent.WorldMouse = spWindow->calculateMouseWorldPos();
 
         auto updateMousePosition = [&](double x, double y) {
             mouseEvent.Old_x = x;
@@ -210,16 +208,9 @@ namespace FR {
         int saveButton = mouseEvent.Button;
         int res = 0;
 
-        // Get state
         glfwMouseEvent mouse_events = spWindow->getMouseEvents();
- 
-        ray_t ray = spWindow->GetScreenToWorldRay();
 
-        mouseEvent.MouseRay = { ray.position, ray.direction };
-
-        // Limit handle area to viewport only
-        bool activateHandle = true; 
-
+        bool activateHandle = true;
         auto consumeEvent = [&](bool resetEvents = false) {
             if (resetEvents) {
                 m_GLFWevents = { -1,-1,-1,-1,-1 };
@@ -235,7 +226,6 @@ namespace FR {
         {
             if (mouseEvent.Pressed == 1) // Drag
             {
-
                 if (activateHandle) {
                     res = spWindow->handle(FR_LEFT_DRAG_PUSH);
                     updateMousePosition(xpos, ypos);
@@ -244,7 +234,6 @@ namespace FR {
             }
             else if (mouseEvent.Pressed == 0) // Release
             {
-
                 if (activateHandle) {
                     res = spWindow->handle(FR_LEFT_DRAG_RELEASE);
                     updateMousePosition(xpos, ypos);
@@ -258,7 +247,6 @@ namespace FR {
         {
             if (mouseEvent.Pressed == 1) // Drag
             {
-
                 if (activateHandle) {
                     res = spWindow->handle(FR_RIGHT_DRAG_PUSH);
                     updateMousePosition(xpos, ypos);
@@ -267,7 +255,6 @@ namespace FR {
             }
             else if (mouseEvent.Pressed == 0) // Release
             {
-
                 if (activateHandle) {
                     res = spWindow->handle(FR_RIGHT_DRAG_RELEASE);
                     updateMousePosition(xpos, ypos);
@@ -290,9 +277,9 @@ namespace FR {
                     glfwSetCursor(win, spWindow->cursorHand);  // pre-created cursor
                     if (activateHandle) {
                         res = spWindow->handle(FR_MIDDLE_DRAG_PUSH);
-                        if (res==1) {
-                            updateMousePosition(xpos, ypos); 
-                            return; 
+                        if (res == 1) {
+                            updateMousePosition(xpos, ypos);
+                            return;
                         }
                         cameraPAN(win, xpos, ypos);
                         updateMousePosition(xpos, ypos);
@@ -310,25 +297,23 @@ namespace FR {
             {
                 glfwSetCursor(win, nullptr); // restore default
 
-
                 if (activateHandle) {
                     res = spWindow->handle(FR_MIDDLE_RELEASE);
                     if (res) { consumeEvent(true); }
                     updateMousePosition(xpos, ypos);
-                   // spWindow->phi = spWindow->theta = 0.0f; //YOU SHOULD NEVER RESET them 
+                    // spWindow->phi = spWindow->theta = 0.0f; //YOU SHOULD NEVER RESET them
                     spWindow->runCode = true;
                     return;
                 }
             }
         }
         // ------------------------------
-        // General mouse move (no button pressed)
+        // General mouse move (no buttons are pressed)
         if (activateHandle) {
             spWindow->handle(FR_MOUSE_MOVE);
         }
         updateMousePosition(xpos, ypos);
     }
-
 
     void Fr_Window::cursor_enter_callback(GLFWwindow*, int entered)
     {
@@ -371,7 +356,7 @@ namespace FR {
     //DON'T CHANGE ME WORKS GOOD !!!! 2025-10-22
     void Fr_Window::cameraPAN(GLFWwindow* win, double xpos, double ypos)
     {
-         userData_ data;
+        userData_ data;
 
         spWindow->activeScene->getActiveCamera().getCamData(data);
 
@@ -393,11 +378,6 @@ namespace FR {
         data.camm_position = glm::vec3(data.camm_position.x + xoffset, data.camm_position.y + yoffset, data.camm_position.z);
         data.direction_ = glm::vec3(data.direction_.x + xoffset, data.direction_.y + yoffset, data.direction_.z);
         spWindow->activeScene->getActiveCamera().setCamData(data);
-
-
-        ray_t ray= spWindow->GetScreenToWorldRay();
-        mouseEvent.MouseRay.direction = ray.direction;
-        mouseEvent.MouseRay.position= ray.position;
     }
     //DON'T CHANGE ME WORKS GOOD !!!! 2025-10-22
     void Fr_Window::cameraRotate(GLFWwindow* win, double xpos, double ypos)
@@ -407,7 +387,7 @@ namespace FR {
         userData_ data;
         spWindow->activeScene->getActiveCamera().getCamData(data);
 
-        //First time, we dont use the event, just update the mouse 
+        //First time, we dont use the event, just update the mouse
         if (mouseEvent.Old_x == mouseEvent.Old_y && mouseEvent.Old_x == 0) {
             mouseEvent.Old_x = xpos;
             mouseEvent.Old_y = ypos;
@@ -431,14 +411,14 @@ namespace FR {
 
         // Update angles
         spWindow->theta += deltax;
-        spWindow->phi   -= deltay;
+        spWindow->phi -= deltay;
 
         // Clamp pitch
-            spWindow->phi = std::clamp(spWindow->phi, -89.99f, 89.99f);
+        spWindow->phi = std::clamp(spWindow->phi, -89.99f, 89.99f);
 
         // Convert spherical (Z-up)
         float radTheta = glm::radians(spWindow->theta);
-        float radPhi   = glm::radians(spWindow->phi);
+        float radPhi = glm::radians(spWindow->phi);
 
         float x = spWindow->radiusXYZ * cos(radPhi) * sin(radTheta);
         float y = spWindow->radiusXYZ * cos(radPhi) * cos(radTheta);
@@ -447,11 +427,6 @@ namespace FR {
         Fr_Camera& cam = spWindow->activeScene->getActiveCamera();
         cam.m_position = glm::vec3(x, y, z);
         cam.updateViewMatrix();
-
-            //We update always the ray
-        ray_t ray= spWindow->GetScreenToWorldRay();
-        mouseEvent.MouseRay.position = ray.position;
-        mouseEvent.MouseRay.direction = ray.direction;
     }
     glfwMouseEvent Fr_Window::getMouseEvents()
     {
@@ -463,8 +438,7 @@ namespace FR {
             | ImGuiWindowFlags_NoDocking
             | ImGuiWindowFlags_NoResize
             | ImGuiWindowFlags_NoScrollbar
-            | ImGuiFileBrowserFlags_MultipleSelection; //multi selection 
-
+            | ImGuiFileBrowserFlags_MultipleSelection; //multi selection
 
         // Open the modal dialog (this could be triggered by a button or another event)
         if (showOpenDialog) {
@@ -478,12 +452,11 @@ namespace FR {
                 fileDialog = std::make_shared<ImGui::FileBrowser>(window_flags, EXE_CURRENT_DIR);
                 fileDialog->SetTitle("Open file");
                 fileDialog->SetTypeFilters({ ".obj", ".off" });
-                
             }
             fileDialog->Open();
             fileDialog->Display();
             if (!fileDialog->IsOpened()) {
-                showOpenDialog = false; 
+                showOpenDialog = false;
                 fileDialog->resetStatus();
                 ImGui::CloseCurrentPopup();
             }
@@ -494,28 +467,25 @@ namespace FR {
             }
             else if (fileDialog->HasSelected()) {
                 auto results = fileDialog->GetMultiSelected();
-                if (results.size()>0)
+                if (results.size() > 0)
                 {
-                    for (const auto &obj : results) {
-                    activeScene->add3DObject(obj.string());
-                }
-                
+                    for (const auto& obj : results) {
+                        activeScene->add3DObject(obj.string());
+                    }
                 }
                 fileDialog->ClearSelected();
-                showOpenDialog = false; 
-                ImGui::CloseCurrentPopup();
-                fileDialog->resetStatus();
-                }
-            }
-            if (ImGui::Button("Close")) {
                 showOpenDialog = false;
                 ImGui::CloseCurrentPopup();
                 fileDialog->resetStatus();
             }
-            ImGui::EndPopup();
-        
+        }
+        if (ImGui::Button("Close")) {
+            showOpenDialog = false;
+            ImGui::CloseCurrentPopup();
+            fileDialog->resetStatus();
+        }
+        ImGui::EndPopup();
     }
-
 
     /**  callbacks */
     void Fr_Window::mnuFileNew_cb(void* Data) {
@@ -624,6 +594,6 @@ namespace FR {
 
         mFace->pointPicker(true);
         mFace->SetColor(glm::vec4(FR_GREENYELLOW));
-        activeScene->addObject(mFace,"Fr_Face_Widget");
+        activeScene->addObject(mFace, "Fr_Face_Widget");
     }
 }

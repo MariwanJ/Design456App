@@ -322,7 +322,7 @@ namespace FR {
         virtual int initializeVBO();
         virtual void DrawPoints();
 
-        void lbl_Draw();
+        virtual void lbl_Draw();
    
         void pointSize(uint8_t val);
         uint8_t pointSize();
@@ -410,8 +410,8 @@ namespace FR {
         unsigned int m_vao;
         unsigned int m_vao_points;
         unsigned int m_vao_txt;
-        unsigned int m_lineWidth;
-        unsigned int m_pointSize;
+        float m_lineWidth;
+        float m_pointSize;
 
 		//this should be
 		std::map<char, Character_t> Characters;

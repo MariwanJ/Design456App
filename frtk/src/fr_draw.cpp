@@ -79,6 +79,9 @@ namespace FR {
         glCheckFunc(glDrawArrays(GL_POINTS, 0, m_vertices->size() / 3));
         glBindVertexArray(0);
     }
+    void Fr_Widget::lbl_Draw()
+    {
+    }
     //Label Draw and Font rendering
     void Fr_Widget::lbl_draw()
     {

@@ -63,7 +63,7 @@ namespace FR {
     typedef struct {
         double Old_x = 0;  //SAVE X AND Y OF LAST Cursor Move
         double Old_y = 0;
-        ray_t MouseRay; //Mouse x,y converted to 3D world
+        glm::vec3 WorldMouse;  
         int click = 0;
         int double_click = 0;
         bool Pressed = false;
@@ -203,8 +203,7 @@ namespace FR {
 
         glfwMouseEvent getMouseEvents();
 
-        ray_t GetScreenToWorldRay();
-        std::vector<glm::vec3> RayMousePos;
+        void calculateScreenRay();
 
         /**
          * Handle is a very important function that take care of all events happining (mouse, keyboard or between widgets).

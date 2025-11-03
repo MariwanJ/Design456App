@@ -41,7 +41,8 @@
 
 namespace FR {
     Fr_Scene::Fr_Scene() :m_cameras{}, m_active_camera(uint8_t(0)),
-        m_Background{ 0.9f, 0.9f, 0.9f,1.0f } {
+        m_Background{ 0.9f, 0.9f, 0.9f,1.0f }, 
+        m_activeRay{ glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,0.0f,0.0f) } {
  
     }
 
@@ -301,7 +302,7 @@ namespace FR {
                 //Doesn't have bound box, just go out
                 continue;
             }
-            if (m_world.at(i).Sceneitem->m_boundBox->isRayInsideBoundingBox(activeRay)) {
+            if (m_world.at(i).Sceneitem->m_boundBox->isRayInsideBoundingBox(m_activeRay)) {
                 if (m_world.at(i).Sceneitem->handle(ev) == 1)  //event consumed
                 {
                     return 1;// We are done
@@ -311,10 +312,20 @@ namespace FR {
         return 0; //We could not use the event .. Return 0 as we don't care , Never return value >0 if you don't care
     }
 
+    void Fr_Scene::setRayValue(ray_t val)
+    {
+        m_activeRay=val;
+    }
+
     /**
      * Scene Render. Main function to draw all objects inside the Scene
      *
      */
+
+    ray_t Fr_Scene::getRayValue(void) const
+    {
+        return m_activeRay;
+    }
 
     void Fr_Scene::RenderScene() {
         Fr_Window* win = Fr_Window::getFr_Window();

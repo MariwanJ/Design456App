@@ -48,19 +48,7 @@
 /** end fr_grl3 */
 namespace FR {
 
-
-
-    
-
-
-
-
-
-
-
-
-
-    /** from Fr_Window */
+ 
     int Fr_Window::RECURSION_COUNT = 200;
     float Fr_Window::RAY_RANGE = 600;
     GLuint m_QuadVA, m_QuadVB, m_QuadIB;
@@ -86,8 +74,6 @@ namespace FR {
     {
         fprintf(stderr, "Error: %s\n", description);
     }
-
-    /** end Fr_Window */
     screenDim_t Fr_Window::m_ViewPort{ 50,50, 800,600 };
 
     Fr_Window::Fr_Window(int x, int y, int w, int h, std::string label) :
@@ -102,8 +88,6 @@ namespace FR {
         /** from Fr_Window */
         mouseDefaults.MouseScrollScale = 1.1f;
         mouseDefaults.MouseXYScale = 0.5f;
-        gl_version_major = 4;
-        gl_version_minor = 6;
         glfwSetErrorCallback(error_callback);
         if (!s_GLFWInitialized)
         {
@@ -132,15 +116,6 @@ namespace FR {
         m_ViewPort.y = y;
         m_ViewPort.h = h;
         m_ViewPort.w = w;
-#if 1 //just for debug purpose
-    
-        RayMousePos.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
-        RayMousePos.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
- 
-
-#endif
-
- 
     }
 
     /* from Fr_Window*/
@@ -159,8 +134,6 @@ namespace FR {
     {
         return spWindow;
     }
-
- 
 
     /**
     * Exit application and destroy both windows.
@@ -417,8 +390,6 @@ namespace FR {
 
     int Fr_Window::handle(int events)
     {
-        //We need to get the ray always. This will affect performance but don't know how to avoid that
-        activeScene->activeRay =  GetScreenToWorldRay();
         return activeScene->handle(events);
     }
     bool Fr_Window::SetupCamera(glm::mat4& projection, glm::mat4& modelview)

@@ -29,8 +29,8 @@ namespace FR {
         // Display the relative position
         ImGui::Text("Mouse Position: (%.1f, %.1f)", mouseEvent.Old_x, mouseEvent.Old_y);
         ImGui::Text("Mouse : (%.1f, %.1f)", getMouseEvents().Old_x, getMouseEvents().Old_y);
-        ImGui::Text("RAY pos : (%.1f, %.1f, %.1f)", RayMousePos[0].x, RayMousePos[0].y, RayMousePos[0].z);
-        ImGui::Text("RAY dire : (%.1f, %.1f, %.1f)", RayMousePos[1].x, RayMousePos[1].y, RayMousePos[1].z);
+        //ImGui::Text("RAY pos : (%.1f, %.1f, %.1f)", RayMousePos[0].x, RayMousePos[0].y, RayMousePos[0].z);
+        //ImGui::Text("RAY dire : (%.1f, %.1f, %.1f)", RayMousePos[1].x, RayMousePos[1].y, RayMousePos[1].z);
         ImGui::End();
         return 0;
     }

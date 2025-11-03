@@ -171,8 +171,12 @@ namespace FR {
 		int handle(int ev);
 		Fr_Camera m_cameras[TOTAL_CAMS];
 		std::vector<SceneItemStruct> m_world;
+		
+		void setRayValue(ray_t val);
+		ray_t getRayValue(void)const;
+
 		protected:
-			ray_t activeRay; 
+			ray_t m_activeRay; 
 	private:
 		glm::vec4 m_Background;
 	};

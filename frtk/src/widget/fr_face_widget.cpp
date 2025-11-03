@@ -31,9 +31,8 @@
 namespace FR {
     Fr_Face_Widget::Fr_Face_Widget(std::shared_ptr<std::vector <float>> vertices,
         std::shared_ptr<std::vector <unsigned int>> indicies,
-        std::string label) : Fr_Widget(vertices, indicies, label),m_pointPicker(false)
+        std::string label) : Fr_Widget(vertices, indicies, label), m_pointPicker(false)
     {
-
         std::vector<MyMesh::VertexHandle> vertexHandles;
 
         // Add vertices and store their handles
@@ -43,7 +42,7 @@ namespace FR {
             vertexHandles.push_back(vh);
         }
 
-        // create faces (in sets of 3) // TODO: If it is a polygon how to do that???? 
+        // create faces (in sets of 3) // TODO: If it is a polygon how to do that????
         for (size_t i = 0; i + 2 < vertexHandles.size(); i += 3) {
             m_mesh.add_face(vertexHandles[i], vertexHandles[i + 1], vertexHandles[i + 2]);
         }
@@ -75,7 +74,7 @@ namespace FR {
     void Fr_Face_Widget::redraw()
     {
         CalculateNormals();
-       initializeVBO();
+        initializeVBO();
         draw_2d();
     }
 
@@ -157,7 +156,7 @@ namespace FR {
             return 0; //we don't use the event/we don't care
 
         Fr_Window* win = Fr_Window::getFr_Window();
-       /*  if (m_pointPicker)*/ {
+        /*  if (m_pointPicker)*/ {
             /*
             Here mouse will pick points that will be added to the line points.
             Here also we should allow to move the point. If Key Enter is not pressed, the last point will continue to move
@@ -171,37 +170,30 @@ namespace FR {
                 //Mouse move without clicking or entering key ..
                 //NOT IMPLEMENTED
                 glm::vec3 nn = win->calculateMouseWorldPos();
-                ray_t rtt = win->GetScreenToWorldRay();
-                
+
                 //printf("%f %f %f mouse to worl ray +++++++++++++++\n", nn.x, nn.y, nn.z);
-                
-                win->RayMousePos[0] = rtt.position;
-                win->RayMousePos[1] = rtt.direction;
+
                 glm::vec3 intersectionPoint;
 
-                if (win->intersectionChecker(rtt, intersectionPoint)) {
+                if (win->intersectionChecker(win->activeScene->getRayValue(), intersectionPoint)) {
                     FRTK_CORE_INFO("FOUND FACE");
                     SetColor(glm::vec4(FR_BLUE));
                 }
                 else
                     SetColor(glm::vec4(FR_GREEN)); //FRTK_CORE_INFO("NO FOUND FACE");
             }
-            break;
+                              break;
 
             case  FR_LEFT_PUSH: {
                 //DRAG THE OBJECT .. TODO : HOW SHOULD WE DO THAT???
-
-                //Start to pick, or move the point position
-                ray_t ray = win->GetScreenToWorldRay();
-                //FRTK_CORE_INFO("MOUSE POSITION IN 3D WORLD ({},{},{})   ({},{},{})", ray.at(0).x, ray.at(0).y, ray.at(0).z, ray.at(1).x, ray.at(1).y, ray.at(1).z);
                 bool result;
                 glm::vec3 intersectionPoint;
-                result = win->intersectionChecker(ray, intersectionPoint);
+                result = win->intersectionChecker(win->activeScene->getRayValue(), intersectionPoint);
                 if (result) {
-                    //This is not correct TODO : FIXME 
-                    m_vertices->at(0) =ray.direction.x;
-                    m_vertices->at(1) =ray.direction.y;
-                    m_vertices->at(2) =ray.direction.z;
+                    //This is not correct TODO : FIXME
+                    m_vertices->at(0) = win->getMouseEvents().WorldMouse.x;
+                    m_vertices->at(1) = win->getMouseEvents().WorldMouse.y;
+                    m_vertices->at(2) = win->getMouseEvents().WorldMouse.z;
                     SetColor(glm::vec4(FR_YELLOW));
                     redraw();
                 }
@@ -218,11 +210,11 @@ namespace FR {
                     redraw();
                 }
             }
-                            break;
+            break;
             case FR_LEFT_DRAG_PUSH: {
                 //This should select the item -- not implemented yet
             }
-                                  break;
+             break;
             }
             return 0;
         }

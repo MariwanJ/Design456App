@@ -160,12 +160,6 @@ namespace FR {
             return 0; //we don't use the event/we don't care
 
         Fr_Window* win = Fr_Window::getFr_Window();
-        ray_t mouseworld = win->GetScreenToWorldRay();
-        
-
-        win->RayMousePos[0] = mouseworld.position;
-        win->RayMousePos[1] = win->calculateMouseRay();//mouseworld.direction;
-
         if (m_pointPicker) {
             /*
             Here mouse will pick points that will be added to the line points.
@@ -179,46 +173,37 @@ namespace FR {
             case FR_MOUSE_MOVE: {
                 //Mouse move without clicking or entering key ..
                 //NOT IMPLEMENTED
-                ray_t ray = win->GetScreenToWorldRay();
- 
                 glm::vec3 intersectionPoint;
-                //intersectVertexIn3D
-               // intersectionChecker
-                glm::vec3 next = ray.direction * 1000.0f;
                 glm::vec3 p1= glm::vec3(m_vertices->at(0), m_vertices->at(1), m_vertices->at(2));
                 glm::vec3 p2 = glm::vec3(m_vertices->at(3), m_vertices->at(4), m_vertices->at(5));
-                //Point picker
-                if(intersectPointIn3D(ray,p1, 5.0f) || intersectPointIn3D(ray, p2, 5.0f))
+                ray_t ray = win->activeScene->getRayValue();
+                if(intersectPointIn3D(ray, p1, 5.0f) || intersectPointIn3D(ray, p2, 5.0f))
                 {
-                        SetColor(glm::vec4(FR_ORANGERED));
-                        lineWidth(3);
-                        break;
-                    }
+                    SetColor(glm::vec4(FR_ORANGERED));
+                    lineWidth(3);
+                    break;
+                }
                 else{
                     lineWidth(1);
                     SetColor(glm::vec4(FR_ANTIQUEWHITE));
                 }
                 return 0;//
             }
-                              break;
+            break;
 
             case  FR_LEFT_PUSH: {
                 //DRAG THE OBJECT .. TODO : HOW SHOULD WE DO THAT???
-
-                //Start to pick, or move the point position
-                ray_t ray = win->GetScreenToWorldRay();
-                glm::vec3 np = win->calculateMouseWorldPos();
-                glm::vec3 next = ray.direction * 1000.0f;
                 bool result;
                 glm::vec3 intersectionPoint;
                 glm::vec3 p1 = glm::vec3(m_vertices->at(0), m_vertices->at(1), m_vertices->at(2));
                 glm::vec3 p2 = glm::vec3(m_vertices->at(3), m_vertices->at(4), m_vertices->at(5));
+                ray_t ray = win->activeScene->getRayValue();
                 result = (intersectPointIn3D(ray, p1, 5.0f) || intersectPointIn3D(ray, p2, 5.0f));
                 if (result) {
                     //TODO This is not correct FIXME
-                    m_vertices->at(0) = np.x;//ray.direction.x;
-                    m_vertices->at(1) = np.y;//ray.direction.y;
-                    m_vertices->at(2) = np.z;//ray.direction.z;
+                    m_vertices->at(0) = win->getMouseEvents().WorldMouse.x;
+                    m_vertices->at(1) = win->getMouseEvents().WorldMouse.y;
+                    m_vertices->at(2) = win->getMouseEvents().WorldMouse.z;
 
                     redraw();
                 }
@@ -232,11 +217,11 @@ namespace FR {
                     redraw();
                 }
             }
-                            break;
+            break;
             case FR_LEFT_DRAG_PUSH: {
                 //This should select the item -- not implemented yet
             }
-                                  break;
+            break;
             }
             return 0;
         }

@@ -285,7 +285,7 @@ namespace ImGui {
 
         // called by other methods, but can be called manually after adding new buttons or resizing the screen.
         void updatePositionAndSize() const {
-            const int numButtons = (int)buttons.size();
+            const int numButtons = buttons.size();
             toolbarWindowSize.x = toolbarWindowSize.y = 0;
             if (numButtons == 0 || name[0] == '\0') return;
             bool isSeparator; ImVec2 sz(0, 0);
@@ -307,8 +307,8 @@ namespace ImGui {
         }
 
         inline size_t getNumButtons() const { return buttons.size(); }
-        inline Button* getButton(size_t i) { return ((size_t)i < buttons.size()) ? &buttons[i] : NULL; }
-        inline const Button* getButton(size_t i) const { return ((size_t)i < buttons.size()) ? &buttons[i] : NULL; }
+        inline Button* getButton(size_t i) { return (i < buttons.size()) ? &buttons[i] : NULL; }
+        inline const Button* getButton(size_t i) const { return (i < buttons.size()) ? &buttons[i] : NULL; }
         inline void addButton(const Button& button) {
             buttons.push_back(button);
         }

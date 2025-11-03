@@ -36,7 +36,7 @@
 
 namespace FR {
     /*
-        R= Righ Vector
+        R= Right Vector
         U= Up Vector
         D=  Direction Vector
         P=  Camera position vector
@@ -57,35 +57,22 @@ namespace FR {
     class FRTK_API Fr_Camera : public Fr_Transform {
         friend Fr_Window;
     public:
-        /**
-         * Constructor
-         */
+
         Fr_Camera();
 
         //Disallow copy & equal operator 
         Fr_Camera(const Fr_Camera& camera) = delete;
         Fr_Camera& operator=(const Fr_Camera& other) = delete;
 
-        /**
-         * Sets the eye coordinates
-         * Default = (1, 0, 0)
-         */
         void SetCamPosition(float x, float y, float z);
         glm::vec3 GetCamPosition() const;
 
         glm::vec3 GetCamDirection() const;
 
         void setupCameraHomeValues();
-        /**
-         * Sets the center coordinates
-         * Default = (0, 0, 0)
-         */
+
         void SetCenter(float x, float y, float z);
 
-        /**
-         * Sets the up coordinates
-         * Default = (0, 1, 0)
-         */
         void SetUp(float x, float y, float z);
 
         /**
@@ -120,8 +107,6 @@ namespace FR {
         virtual glm::mat4 GetViewMatrix();
         glm::mat4 GetInverseViewMatrix();
 
-        void setViewMatrix(glm::mat4& t);
-
         void SetOrthographicSize(float size);
         float getOrthgraphicSize();
 
@@ -130,10 +115,10 @@ namespace FR {
         uint8_t m_camType;
         glm::vec3 m_position;
         glm::vec3 m_direction;
-        glm::vec3 m_up;  //RIGHT
-        float m_fovy;    //LEFT
-        float m_znear;   //BOTTOM
-        float m_zfar;   //TOP
+        glm::vec3 m_up;   //RIGHT
+        float m_fovy;     //LEFT
+        float m_znear;    //BOTTOM
+        float m_zfar;     //TOP
         static float m_aspect_ratio;      //must be static as all cameras have the same ratio
         glm::mat4 m_ProjectionMatrix;
         float m_OrthographicSize;
