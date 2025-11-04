@@ -183,7 +183,7 @@ namespace FR {
      * \param y : y axis location
      * \param z : z axis location
      */
-    void Fr_Camera::SetCenter(float x, float y, float z) {
+    void Fr_Camera::SetDirection(float x, float y, float z) {
         m_direction = glm::vec3(x, y, z);
         updateViewMatrix();
     }
@@ -268,7 +268,7 @@ namespace FR {
                     heightAngle 0.78539819\n\n}\n'
             */
             SetCamPosition(0.0f, -120.0f, 60.0f);
-            SetCenter(0.0f, 0.0f, 0.0f);
+            SetDirection(0.0f, 0.0f, 0.0f);
             SetUp(0.0f, 0.0f, 1.f);
             SetPerspective(45.0f, 0.01f, 10000.f);
         }break;
@@ -276,7 +276,7 @@ namespace FR {
             //ORTHOGRAPHIC
 
             SetCamPosition(17.46f, -149.46f, 135.46f);
-            SetCenter(0.0f, 0.0f, 0.0f);
+            SetDirection(0.0f, 0.0f, 0.0f);
             SetUp(0.0f, 0.0f, 1.0f);
             SetPerspective(30.248f, 0.01f, 10000.f);
             SetOrthographicSize(45);
@@ -292,7 +292,7 @@ namespace FR {
              height 44.932899\n\n}\n'
             */
             SetCamPosition(0.f, 0.f, 100.f);
-            SetCenter(0.0f, 0.0f, 0.0f);
+            SetDirection(0.0f, 0.0f, 0.0f);
             SetUp(0.0f, 1.f, 0.0f);
             SetPerspective(45.f, 0.01f, 10000.0f);
         }break;
@@ -307,7 +307,7 @@ namespace FR {
              height 44.932903\n\n}\n'
             */
             SetCamPosition(0.0f, 0.0f, -100.0f);
-            SetCenter(0.0f, 0.0f, 0.0f);
+            SetDirection(0.0f, 0.0f, 0.0f);
             SetUp(0.0f, 1.0f, 0.f);
             SetPerspective(65, 0.01f, 10000.0f);
         }break;
@@ -324,7 +324,7 @@ namespace FR {
                      *
              */
             SetCamPosition(0.0f, -90.0f, 0.0f);
-            SetCenter(0.0f, 0.0f, 0.0f);
+            SetDirection(0.0f, 0.0f, 0.0f);
             SetUp(0.0f, 0.0f, 1.0f);
             SetPerspective(45.0f, 0.01f, 10000.0f);
         }break;
@@ -339,7 +339,7 @@ namespace FR {
                 height 44.932899\n\n}\n'
                 */
             SetCamPosition(0.0f, 90.0f, 0.0f);
-            SetCenter(0.0f, 0.0f, 0.0f);
+            SetDirection(0.0f, 0.0f, 0.0f);
             SetUp(0.0f, 0.0f, 1.f);
             SetPerspective(45.0f, 0.01f, 10000.0f);
         }break;
@@ -355,7 +355,7 @@ namespace FR {
                 height 44.932899\n\n
                 */
             SetCamPosition(100.0f, 0.0f, 0.0f);
-            SetCenter(0.0f, 0.0f, 0.0f);
+            SetDirection(0.0f, 0.0f, 0.0f);
             SetUp(0.0f, 0.0f, 1.f);
             SetPerspective(45.0f, 0.01f, 10000.0f);
         }break;
@@ -371,7 +371,7 @@ namespace FR {
                 height 44.932899\n\n}\n'
                 */
             SetCamPosition(-100.0f, 0.0f, 0.0f);
-            SetCenter(0.0f, 0.0f, 0.0f);
+            SetDirection(0.0f, 0.0f, 0.0f);
             SetUp(0.0f, 0.0f, 1.0f);
             SetPerspective(45.0f, 0.01f, 10000.0f);
         }break;

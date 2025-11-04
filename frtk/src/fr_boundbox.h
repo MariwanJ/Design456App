@@ -85,7 +85,7 @@ namespace FR {
          *
          * \param points
          */
-        virtual void setVertices(std::shared_ptr<std::vector<float>>points);
+        virtual void setVertices(std::weak_ptr<std::vector<float>>points);
         /**
          * .
          *
@@ -104,19 +104,19 @@ namespace FR {
 
     protected:
 
-        float m_minX; //Min X value of the BoundBox
-        float m_maxX; //Max X value of the BoundBox
-        float m_minY; //Min Y value of the BoundBox
-        float m_maxY; //Max Y value of the BoundBox
-        float m_minZ; //Min Z value of the BoundBox
-        float m_maxZ; //Max Z value of the BoundBox
+        float m_minX; 
+        float m_maxX; 
+        float m_minY; 
+        float m_maxY; 
+        float m_minZ; 
+        float m_maxZ; 
 
         float m_Xlength;
         float m_Ylength;
         float m_Zlength;
 
         float m_DiagonalLength;
-        std::shared_ptr<std::vector<float>>m_points;
+        std::weak_ptr<std::vector<float>>m_points;
 
     private:
         glm::vec3 m_center;

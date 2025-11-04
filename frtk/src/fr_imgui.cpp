@@ -63,8 +63,7 @@ namespace FR {
 		);
 		view = glm::inverse(view);
 		data.camm_position= glm::vec3(view[3]);
-		data.direction_ =  glm::normalize(glm::vec3(view[2]));
-		data.up_= glm::normalize(glm::vec3(view[1]));
+		data.up_=(glm::vec3(view[1]));
 		cam.setCamData(data);
 		
 		
@@ -79,8 +78,11 @@ namespace FR {
 		view[3] = glm::vec4(0, 0, 0, 1);
 		ImGuizmo::Enable(true);
 
+		 glm::mat4 newViewMatrix = glm::mat4(glm::mat3(cam.GetViewMatrix()));// Extract rotation 
+		 newViewMatrix[3] = glm::vec4(0.0f, 0.0f, -150.0f, 1.0f);		// Translation 
+
 		ImGuizmo::Manipulate(
-			glm::value_ptr(cam.GetViewMatrix()),
+			glm::value_ptr(newViewMatrix),
 			glm::value_ptr(cam.getProjection()),
 			ImGuizmo::TRANSLATE,
 			ImGuizmo::LOCAL,

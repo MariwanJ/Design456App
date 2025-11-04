@@ -6,7 +6,8 @@ namespace FR {
     cBoundBox3D::cBoundBox3D(bool type) :m_threeD(type)
     {
         m_minX = m_maxX = m_minY = m_maxY = m_minY = m_maxY = m_Xlength = m_Ylength = m_Zlength = m_minZ = m_maxZ = 0.0f;
-        pad = 0.5f;
+        pad = 0.1f;
+
     }
 
     float cBoundBox3D::minX()
@@ -26,10 +27,12 @@ namespace FR {
 
     float cBoundBox3D::maxZ()
     {
+        //Will return -1 if it is a 2D object
         return m_maxZ;
     }
     float cBoundBox3D::minZ()
     {
+        //Will return -1 if it is a 2D object
         return m_minZ;
     }
     float cBoundBox3D::maxY()
@@ -38,17 +41,21 @@ namespace FR {
     }
     float cBoundBox3D::Xlength()
     {
-        return abs(m_maxX - m_minX);
+        return (m_maxX - m_minX);
     }
 
     float cBoundBox3D::Ylength()
     {
-        return abs(m_maxY - m_minY);
+        return (m_maxY - m_minY);
     }
 
     float cBoundBox3D::Zlength()
     {
-        return abs(m_maxZ - m_minZ);
+        // Check if the object is effectively 2D
+        if (m_minZ == -1 && m_maxZ == -1)
+            return 0; // 2D object has no Z component.
+        else
+            return (m_maxZ - m_minZ); // Calculate the Z length.
     }
 
     cBoundBox3D::~cBoundBox3D()
@@ -64,23 +71,26 @@ namespace FR {
     }
     void cBoundBox3D::calBoundBox()
     {
-        if (m_points->empty()) {
+        std::shared_ptr<std::vector<float>> pnts = m_points.lock();
+        if (pnts)
+        {
+        if (pnts->size()==0) {
             m_minX = m_minY = m_minZ = std::numeric_limits<float>::max();
             m_maxX = m_maxY = m_maxZ = std::numeric_limits<float>::lowest();
             return;
         }
-        m_minX = m_maxX = (*m_points)[0];
-        m_minY = m_maxY = (*m_points)[1];
-        m_minZ = m_maxZ = (*m_points)[2];
+        m_minX = m_maxX = pnts->at(0);
+        m_minY = m_maxY = pnts->at(1);
+        m_minZ = m_maxZ = pnts->at(2);
 
-        for (size_t i = 0; i < m_points->size(); i += 3) {
-            m_minX = std::min(m_minX, (*m_points)[i]);
-            m_minY = std::min(m_minY, (*m_points)[i + 1]);
-            m_minZ = std::min(m_minZ, (*m_points)[i + 2]);
+        for (size_t i = 0; i < pnts->size(); i += 3) {
+            m_minX = std::min(m_minX, pnts->at(i));
+            m_minY = std::min(m_minY, pnts->at(i + 1));
+            m_minZ = std::min(m_minZ, pnts->at(i + 2));
 
-            m_maxX = std::max(m_maxX, (*m_points)[i]);
-            m_maxY = std::max(m_maxY, (*m_points)[i + 1]);
-            m_maxZ = std::max(m_maxZ, (*m_points)[i + 2]);
+            m_maxX = std::max(m_maxX, pnts->at(i));
+            m_maxY = std::max(m_maxY, pnts->at(i + 1));
+            m_maxZ = std::max(m_maxZ, pnts->at(i + 2));
         }
 
         m_minX -= pad; m_maxX += pad;
@@ -94,16 +104,22 @@ namespace FR {
         DiagonalLength();
         Center();
     }
+    }
 
-    void cBoundBox3D::setVertices(std::shared_ptr<std::vector<float>> pnts)
+    void cBoundBox3D::setVertices(std::weak_ptr<std::vector<float>> pnts)
     {
         m_points = pnts;
-        calBoundBox(); 
+        calBoundBox(); //TODO: Should we do that?
     }
 
     float cBoundBox3D::DiagonalLength()
     {
+        if (m_minZ == -1 && m_maxZ == -1)
+
         m_DiagonalLength = std::sqrt(m_Xlength * m_Xlength + m_Ylength * m_Ylength + m_Zlength * m_Zlength);
+        else
+            m_DiagonalLength = std::sqrt(m_Xlength * m_Xlength + m_Ylength * m_Ylength); //2D
+
         return m_DiagonalLength;
     }
 

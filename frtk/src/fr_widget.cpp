@@ -58,7 +58,7 @@ namespace FR {
         m_label.offset = glm::vec3(0.0f);
         m_label.visible = false; //we don't have font .. disable it you should enabled when you subclass
         m_label.pixelSize = 256;  //size of the pixels -- TODO : HOW MUCH WE SHOULD PUT HERE !!!!!!!!!!!
-        m_label.scale = 0.046875f;
+        m_label.scale = 1.0;// 0.046875f;
         m_label.text = "Change me - Widget say hello";
         m_label.type = PERSPECTIVE;//ORTHOGRAPHIC;
 

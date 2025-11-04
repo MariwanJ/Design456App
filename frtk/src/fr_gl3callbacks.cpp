@@ -332,8 +332,6 @@ namespace FR {
         {
             //Scroll zooming using the correct method of zooming. Use camera position by scaling the view-matrix
             float scale_;
-
-            glm::mat4 matr = glm::lookAt(data.camm_position, data.direction_, data.up_);
             if (yoffset < 0) {
                 scale_ = 1 / spWindow->mouseDefaults.MouseScrollScale;
             }
@@ -341,7 +339,8 @@ namespace FR {
             {
                 scale_ = spWindow->mouseDefaults.MouseScrollScale;
             }
-            matr = glm::scale(matr, glm::vec3(scale_, scale_, scale_));
+
+            glm::mat4 matr = glm::scale(spWindow->activeScene->getActiveCamera().GetViewMatrix() , glm::vec3(scale_, scale_, scale_));
             glm::mat4 inverseViewMatrix = glm::inverse(matr);
             data.camm_position = glm::vec3(inverseViewMatrix[3]);
             data.direction_ = -glm::vec3(inverseViewMatrix[2]);
@@ -363,6 +362,7 @@ namespace FR {
         if (mouseEvent.Old_x == mouseEvent.Old_y && mouseEvent.Old_x == 0) {
             mouseEvent.Old_x = xpos;
             mouseEvent.Old_y = ypos;
+            return;
         }
 
         double deltax = mouseEvent.Old_x - xpos;
@@ -375,8 +375,8 @@ namespace FR {
 
         float xoffset = float(deltax) * spWindow->mouseDefaults.MouseXYScale;
         float yoffset = float(deltay) * spWindow->mouseDefaults.MouseXYScale;
-        data.camm_position = glm::vec3(data.camm_position.x + xoffset, data.camm_position.y + yoffset, data.camm_position.z);
-        data.direction_ = glm::vec3(data.direction_.x + xoffset, data.direction_.y + yoffset, data.direction_.z);
+        data.camm_position = glm::vec3(data.camm_position.x + xoffset, data.camm_position.y - yoffset, data.camm_position.z);
+        data.direction_ = glm::vec3(data.direction_.x + xoffset, data.direction_.y - yoffset, data.direction_.z);
         spWindow->activeScene->getActiveCamera().setCamData(data);
     }
     //DON'T CHANGE ME WORKS GOOD !!!! 2025-10-22

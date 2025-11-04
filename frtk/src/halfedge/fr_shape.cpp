@@ -222,7 +222,9 @@ namespace FR {
 	}
 
 	void Fr_Shape::RenderText(RenderInfo& info) {
-		glCheckFunc(glDisable(GL_DEPTH_TEST)); // Without disabling this, text over text will not be transparent in the scene
+		glEnable(GL_DEPTH_TEST);
+		glDepthMask(GL_TRUE);
+
 		glCheckFunc(glEnable(GL_BLEND));
 		glCheckFunc(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
@@ -252,8 +254,6 @@ namespace FR {
 		y = 0;
 		for (auto c : m_label.text) {
 			Character_t ch = Characters[c];
-
-			// Position calculations based on character metrics
 			float xpos = x + ch.Bearing.x;  
 			float ypos = y - (ch.Size.y - ch.Bearing.y);
 
@@ -269,10 +269,7 @@ namespace FR {
 				{ xpos + w, ypos,       1.0f, 1.0f }  // Bottom-right
 			};
 
-			// Bind the texture for the current character
 			glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-
-			// Update vertex buffer
 			glBindBuffer(GL_ARRAY_BUFFER, m_vbo[POSITION_TEXT_VB]);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);

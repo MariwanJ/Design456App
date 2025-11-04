@@ -27,10 +27,11 @@ namespace FR {
         ImGui::Button(ICON_FA_BOX);
 
         // Display the relative position
+        ray_t ray = activeScene->getRayValue();
         ImGui::Text("Mouse Position: (%.1f, %.1f)", mouseEvent.Old_x, mouseEvent.Old_y);
-        ImGui::Text("Mouse : (%.1f, %.1f)", getMouseEvents().Old_x, getMouseEvents().Old_y);
-        //ImGui::Text("RAY pos : (%.1f, %.1f, %.1f)", RayMousePos[0].x, RayMousePos[0].y, RayMousePos[0].z);
-        //ImGui::Text("RAY dire : (%.1f, %.1f, %.1f)", RayMousePos[1].x, RayMousePos[1].y, RayMousePos[1].z);
+        ImGui::Text("Mouse World: (%.1f, %.1f, %.1f)", mouseEvent.WorldMouse.x, mouseEvent.WorldMouse.y, mouseEvent.WorldMouse.z);
+        ImGui::Text("RAY pos : (%.1f, %.1f, %.1f)", ray.position.x, ray.position.y, ray.position.z);
+        ImGui::Text("RAY dire : (%.1f, %.1f, %.1f)", ray.direction.x, ray.direction.y, ray.direction.z);
         ImGui::End();
         return 0;
     }

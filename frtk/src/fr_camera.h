@@ -71,7 +71,7 @@ namespace FR {
 
         void setupCameraHomeValues();
 
-        void SetCenter(float x, float y, float z);
+        void SetDirection(float x, float y, float z);
 
         void SetUp(float x, float y, float z);
 
