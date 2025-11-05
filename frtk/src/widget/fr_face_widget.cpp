@@ -170,11 +170,7 @@ namespace FR {
                 //Mouse move without clicking or entering key ..
                 //NOT IMPLEMENTED
                 glm::vec3 nn = win->calculateMouseWorldPos();
-
-                //printf("%f %f %f mouse to worl ray +++++++++++++++\n", nn.x, nn.y, nn.z);
-
                 glm::vec3 intersectionPoint;
-
                 if (win->intersectionChecker(win->activeScene->getRayValue(), intersectionPoint)) {
                     FRTK_CORE_INFO("FOUND FACE");
                     SetColor(glm::vec4(FR_BLUE));
@@ -213,6 +209,9 @@ namespace FR {
             break;
             case FR_LEFT_DRAG_PUSH: {
                 //This should select the item -- not implemented yet
+                m_vertices->at(0) = win->getMouseEvents().WorldMouse.x;
+                m_vertices->at(1) = win->getMouseEvents().WorldMouse.y;
+                m_vertices->at(2) = win->getMouseEvents().WorldMouse.z;
             }
              break;
             }

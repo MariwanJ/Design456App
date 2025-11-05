@@ -58,7 +58,7 @@ namespace FR {
         m_label.offset = glm::vec3(0.0f);
         m_label.visible = false; //we don't have font .. disable it you should enabled when you subclass
         m_label.pixelSize = 256;  //size of the pixels -- TODO : HOW MUCH WE SHOULD PUT HERE !!!!!!!!!!!
-        m_label.scale = 1.0;// 0.046875f;
+        m_label.scale = 0.006f;
         m_label.text = "Change me - Widget say hello";
         m_label.type = PERSPECTIVE;//ORTHOGRAPHIC;
 
@@ -100,10 +100,9 @@ namespace FR {
         }
 
         //FT_Set_Pixel_Sizes(face, m_label.pixelSize, m_label.pixelSize);
-        FT_Set_Pixel_Sizes(face, 0, 200);
+        FT_Set_Pixel_Sizes(face, 0, 360);
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -112,13 +111,10 @@ namespace FR {
                 FRTK_CORE_ERROR("Failed to load Glyph:{} ", c);
                 continue;
             }
-
             // Create an RGBA bitmap
             int width = face->glyph->bitmap.width;
             int height = face->glyph->bitmap.rows;
             std::vector<uint8_t> bitmapRGBA(width * height * 4, 0); // RGBA
-
-            // Populate the RGBA bitmap based on the alpha channel
             for (int y = 0; y < height; ++y) {
                 for (int x = 0; x < width; ++x) {
                     int index = (y * width + x) * 4; // RGBA index
@@ -136,7 +132,7 @@ namespace FR {
                         bitmapRGBA[index] = 0;               // Transparent
                         bitmapRGBA[index + 1] = 0;
                         bitmapRGBA[index + 2] = 0;
-                        bitmapRGBA[index + 3] = 0;           // Fully transparent
+                        bitmapRGBA[index + 3] = 0;          
                     }
                 }
             }
@@ -155,10 +151,11 @@ namespace FR {
                 GL_UNSIGNED_BYTE,
                 bitmapRGBA.data() // Use the RGBA bitmap
             );
-
+ 
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);    //Without this, you will see distortion at the edges.
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
             Character_t ch = {
                 tex,
                 glm::ivec2(width, height),
@@ -558,7 +555,6 @@ namespace FR {
     {
         return (glm::inverse(m_Matrix));
     }
-    // Method to retrieve a shared pointer to the vector of vertices
     std::shared_ptr<std::vector<float>> Fr_Widget::getVertices() {
         return m_vertices;
     }
@@ -576,7 +572,6 @@ namespace FR {
         return; //should be sub-classed
     }
     void Fr_Widget::CalculateTrianglesNormals() {
-        // Ensure m_triangles_normals is initialized
         if (!m_triangles_normals) {
             if (m_vertices) { // Check if m_vertices is not null
                 m_triangles_normals = std::make_shared<std::vector<glm::vec3>>(); // Store triangle normals as glm::vec3
@@ -588,24 +583,15 @@ namespace FR {
         }
         // Calculate the normals for each triangle
         for (size_t i = 0; i < m_indices->size(); i += 3) {
-            // Triangle vertices' indices
             uint32_t v[3] = { m_indices->at(i), m_indices->at(i + 1), m_indices->at(i + 2) };
-
-            // Triangle's vertices
             glm::vec3 triangle[3] = {
                 GetVertex(v[0], m_vertices->data()),
                 GetVertex(v[1], m_vertices->data()),
                 GetVertex(v[2], m_vertices->data())
             };
-
-            // Vectors created by the triangle's vertices
             glm::vec3 v0_to_v1 = triangle[1] - triangle[0];
             glm::vec3 v0_to_v2 = triangle[2] - triangle[0];
-
-            // Triangle's normal
             glm::vec3 t_normal = glm::normalize(glm::cross(v0_to_v1, v0_to_v2));
-
-            // Store the triangle normal
             m_triangles_normals->push_back(t_normal);
         }
     }
@@ -639,26 +625,17 @@ namespace FR {
 
     //TODO : FIX ME
     void Fr_Widget::calcualteTextCoor(int width, int height) {
-        // Calculate texture coordinates based on vertex positions
-        // Loop through the vertices and calculate texture coordinates
-
         if (!m_textCoord) {
             m_textCoord = std::make_shared<std::vector<float>>();
         }
-        //The size is 2x (vertices_size/3)
         m_textCoord->reserve(2 * m_vertices->size() / 3);
         for (int i = 0; i < m_normals->size(); i += 3)
         {
-            //Get the vertex position
             GLfloat x = m_normals->at(i);
             GLfloat y = m_normals->at(i + 1);
             GLfloat z = m_normals->at(i + 2);
-
-            // Calculate texture coordinates based on vertex position
-            GLfloat u = (x);
+           GLfloat u = (x);
             GLfloat v = (y);
-
-            //   Store the texture coordinates in the vertices array
             m_textCoord->push_back(u);
             m_textCoord->push_back(v);
         }
