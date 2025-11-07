@@ -351,7 +351,6 @@ namespace FR {
 
         std::shared_ptr<std::vector<float>> m_vertices;
 		std::shared_ptr<std::vector<size_t>> m_selected;
-        std::vector<float> m_textcoord; // Texture Coordinates
         std::shared_ptr<std::vector<unsigned int>> m_indices; // We don't use glm::vec3 but we can even so use it for Triangle drawing. Decide that by the drawing type.
         std::shared_ptr<std::vector<float>> m_vertCoord; // must be calculated internally
         std::shared_ptr<std::vector<float>> m_normals;

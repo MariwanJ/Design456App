@@ -115,32 +115,6 @@ namespace FR {
 		glCheckFunc(glBindVertexArray(0));
 	}
 
-	void Fr_Shape::calculateTextCoor( ) {
-		// Add a new property for storing UV coordinates (per-face UVs)
-		OpenMesh::FPropHandleT<OpenMesh::Vec2f> texcoord;
-		m_mesh.add_property(texcoord, "texcoord");
-
-		// Calculate UV coordinates for each face
-		for (auto fh : m_mesh.faces()) {
-			std::vector<MyMesh::Point> facePoints;
-
-			// Collect all vertices of the face
-			for (auto vh : m_mesh.fv_range(fh)) {
-				facePoints.push_back(m_mesh.point(vh));
-			}
-
-			// Calculate the UV coordinates for each vertex in the face
-			for (size_t i = 0; i < facePoints.size(); ++i) {
-				float u = (facePoints[i][0] - m_boundBox->minX()) / (m_boundBox->Xlength());
-				float v = (facePoints[i][1] - m_boundBox->minY()) / (m_boundBox->Ylength());
-
-				// Store the UV coordinates
-				m_textcoord.emplace_back(abs(u));
-				m_textcoord.emplace_back(abs(v));
-			}
-		}
-	}
-
 	void Fr_Shape::LoadLights(std::shared_ptr<ShaderProgram> program, const std::vector<LightInfo>& lights) {
 		unsigned int nlights =(unsigned int)(std::min(lights.size(), kMaxLights));
 		program->SetUniformInteger("nlights", nlights);

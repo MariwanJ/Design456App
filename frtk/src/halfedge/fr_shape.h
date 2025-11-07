@@ -66,7 +66,6 @@ namespace FR {
 		Fr_Window* linktoMainWindow;
 
 		// Private Methods
-		void calculateTextCoor() override;
 		void LoadLights(std::shared_ptr<ShaderProgram> program, const std::vector<LightInfo>& lights);
 		void RenderSilhouette(const glm::mat4& mvp);
 		

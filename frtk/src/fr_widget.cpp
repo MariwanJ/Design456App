@@ -633,7 +633,7 @@ namespace FR {
             GLfloat x = m_normals->at(i);
             GLfloat y = m_normals->at(i + 1);
             GLfloat z = m_normals->at(i + 2);
-           GLfloat u = (x);
+            GLfloat u = (x);
             GLfloat v = (y);
             m_textCoord->push_back(u);
             m_textCoord->push_back(v);
