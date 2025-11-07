@@ -63,7 +63,7 @@ namespace FR {
         }
 
         // 2. Normalized device coordinates
-        float x = (2.0f * mouseEvent.Old_x) / (float)m_ViewPort.w - 1.0f;
+        float x = (2.0f * (float) mouseEvent.Old_x) / (float)m_ViewPort.w - 1.0f;
         float y = 1.0f - (2.0f * (float)mouseEvent.Old_y) / (float)m_ViewPort.h; // try removing 1.0f - (...) if double-flip
         float z = depth * 2.0f - 1.0f;
         glm::vec4 ndcCoords(x, y, z, 1.0f);

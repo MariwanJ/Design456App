@@ -61,13 +61,13 @@
 namespace FR {
     //Change these as needed
     typedef struct {
-        double Old_x = 0;  //SAVE X AND Y OF LAST Cursor Move
-        double Old_y = 0;
+        double Old_x ;  //SAVE X AND Y OF LAST Cursor Move
+        double Old_y ;
         glm::vec3 WorldMouse;  
-        int click = 0;
-        int double_click = 0;
-        bool Pressed = false;
-        int Button = 0;
+        int click ;
+        int double_click;
+        bool Pressed ;
+        int Button;
     }glfwMouseEvent;
 
 
@@ -111,7 +111,7 @@ namespace FR {
 
         static Fr_Window* getFr_Window(void);
  
-        void Fr_Window::RenderGizmo();
+        void RenderGizmo(void);
 
         virtual int Exit();
         /**
@@ -237,7 +237,7 @@ namespace FR {
         void setCameraType(uint8_t typOfCamera);
         uint8_t getCameraType();
         
-        static const screenDim_t getScreenDim(void);
+        static screenDim_t getScreenDim(void);
 
 #if 1//Experimental code - will be removed
         std::shared_ptr <Fr_Transform> tempBu;

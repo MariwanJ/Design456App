@@ -43,16 +43,16 @@ namespace FR {
 		return 0;
 	}
 
-	void Fr_Window::RenderGizmo() {
+	void Fr_Window::RenderGizmo(void) {
 		Fr_Camera& cam = activeScene->getActiveCamera();
 		userData_ data;
 		ImGuiIO& io = ImGui::GetIO();
 		cam.getCamData(data);
-	 	ImGuizmo::SetRect(0, 0, w(), h());
+	 	ImGuizmo::SetRect(0.f, 0.f, (float)w(), (float)h());
 		glm::mat4 view = cam.GetViewMatrix();
 		float viewManipulateSize = 100.0f;
 		
-		ImVec2 pos(x() + w() - viewManipulateSize, y() + 105);
+		ImVec2 pos(x() + w() - (int)viewManipulateSize, y() + 105);
 		ImVec2 size(viewManipulateSize, viewManipulateSize);
 		ImGuizmo::ViewManipulate(
 			glm::value_ptr(view),               
@@ -71,7 +71,7 @@ namespace FR {
 		const float gizmoSize = 500.f;
 		const float margin = 150.0f;
 		const float* noSnap = nullptr;
-		pos=ImVec2(pos.x -200.0, pos.y-50.0);
+		pos=ImVec2(pos.x -200, pos.y-50);
 		ImGuizmo::SetDrawlist(ImGui::GetForegroundDrawList());
 		ImGuizmo::SetRect(pos.x, pos.y, gizmoSize, gizmoSize);
 		glm::mat4 identity(1.0f); //dummy 

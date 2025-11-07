@@ -22,7 +22,7 @@ namespace FR {
 
         
         float menuBarHeight = ImGui::GetFrameHeight();
-        ImGui::SetNextWindowPos(ImVec2( x(), y()+ menuBarHeight+3 ));
+        ImGui::SetNextWindowPos(ImVec2( x(), y()+ (int)menuBarHeight+3 ));
         ImGui::SetNextWindowSize(ImVec2(ImGui::GetIO().DisplaySize.x, TOOLBAR_HEIGHT));
 
         ImGui::Begin("TOOLBAR", NULL, window_flags);

@@ -183,7 +183,7 @@ class GenericCirculator_ValueHandleFnsT {
             {
                 if (adjust_for_ccw)
                 {
-                  // increment current heh and start so that cw and ccw version dont start with the same element but ranges are actually reversed
+                  // increment current heh and start so that cw and ccw version don't start with the same element but ranges are actually reversed
                   int lc = lap_counter;
                   increment(mesh, heh, start, lap_counter);
                   start = heh;
@@ -214,7 +214,7 @@ class GenericCirculator_ValueHandleFnsT<Mesh, CenterEntityHandle, typename Mesh:
             {
                 if (adjust_for_ccw)
                 {
-                  // increment current heh and start so that cw and ccw version dont start with the same element but ranges are actually reversed
+                  // increment current heh and start so that cw and ccw version don't start with the same element but ranges are actually reversed
                     int lc = lap_counter;
                     increment(mesh, heh, start, lap_counter);
                     start = heh;

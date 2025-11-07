@@ -1,6 +1,4 @@
-﻿#include "fr_widget.h"
-#include "fr_widget.h"
-//
+﻿//
 // This file is a part of the Open Source Design456App
 // MIT License
 //
@@ -32,6 +30,7 @@
 #include <fr_widget.h>
 #include <frtk.h>
 #include <ft2build.h>
+#include <cassert>
 #include FT_FREETYPE_H
 
 namespace FR {
@@ -278,14 +277,14 @@ namespace FR {
 
 
     void Fr_Widget::init(void) {
-        assert(!m_vertices->empty(), "ERROR: You should provide vertices before initializing the object");
+        assert(!m_vertices->empty() && "ERROR: You should provide vertices before initializing the object");
         CreateShader();
         m_label.fnFont = std::make_shared <std::string>(DEFAULT_FONT); // DEFAULT FONT
         m_label.text = "Widget";
         m_boundBox = std::make_shared <cBoundBox3D>();
         m_boundBox->setVertices(m_vertices);
         CalculateNormals();
-        calcualteTextCoor(1024, 1024);  //TODO:  ??? dont think it is correct
+        calcualteTextCoor(1024, 1024);  //TODO:  ??? don't think it is correct
         initializeVBO();
         CreateShader();
         LoadFont(DEFAULT_FONT); //TODO: Do we need to allow other font at the creation, don't think so.

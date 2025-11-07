@@ -411,7 +411,7 @@ HoleFillerT< MeshT >::refine(typename MeshT::FaceHandle _fh )
   Scalar d2 = 1.0f * norm( p2 - center );
 
 
-  //dont split triangles which tend to degenerate
+  //don't split triangles which tend to degenerate
   if ( (d0 + d1 + d2) / 3.0f < scale) return false;
 
 

@@ -40,15 +40,15 @@ namespace FR {
 
         }
         case FR_LINES: {
-            glCheckFunc(glDrawElements(GL_LINES, m_indices->size(), GL_UNSIGNED_INT, 0));
+            glCheckFunc(glDrawElements(GL_LINES,(int) m_indices->size(), GL_UNSIGNED_INT, 0));
 
         }break;
         case FR_OPEN_LOOP: {
-            glCheckFunc(glDrawElements(GL_LINE_LOOP, m_indices->size(), GL_UNSIGNED_INT, 0));    //TODO: Check if this is correct!!
+            glCheckFunc(glDrawElements(GL_LINE_LOOP, (int)m_indices->size(), GL_UNSIGNED_INT, 0));    //TODO: Check if this is correct!!
 
         }break;
         case FR_CLOSED_LOOP: {  //This includes square, rectangle, triangle,pentagon, hexagon, star ..etc
-            glCheckFunc(glDrawElements(GL_TRIANGLE_FAN, m_indices->size(), GL_UNSIGNED_INT, 0));    //TODO: Check if this is correct!!            break;
+            glCheckFunc(glDrawElements(GL_TRIANGLE_FAN,(int) m_indices->size(), GL_UNSIGNED_INT, 0));    //TODO: Check if this is correct!!            break;
 
         }break;
         case FR_CIRCLE: {
@@ -88,22 +88,22 @@ namespace FR {
         return; //do nothing should be sub-classed
     }
 
-    void Fr_Widget::pointSize(uint8_t val)
+    void Fr_Widget::pointSize(float val)
     {
         m_pointSize = val;
     }
 
-    uint8_t Fr_Widget::pointSize()
+    float Fr_Widget::pointSize()
     {
         return m_pointSize;
     }
 
-    void Fr_Widget::lineWidth(uint8_t wid)
+    void Fr_Widget::lineWidth(float wid)
     {
         m_lineWidth = wid;
     }
 
-    uint8_t Fr_Widget::lineWidth()
+    float Fr_Widget::lineWidth()
     {
         return m_lineWidth;
     }

@@ -86,12 +86,12 @@ namespace FR {
         InitializeVBO();
     }
 
-    void Fr_Primatives::lineWidth(unsigned int wid)
+    void Fr_Primatives::lineWidth(float wid)
     {
         m_lineWidth = wid;
     }
 
-    unsigned int Fr_Primatives::lineWidth()
+    float Fr_Primatives::lineWidth()
     {
         return m_lineWidth;
     }

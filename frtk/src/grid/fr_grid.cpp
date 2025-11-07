@@ -103,7 +103,7 @@ namespace FR {
 		std::vector<float> vertices;
 		float x, y, z;
 		x = y = z = 0;
-		float totalLength = gridWidth_ * sections_;
+		float totalLength = (float)gridWidth_ * (float)sections_;
 		glm::vec3 limmitValue = glm::vec3(centerPos_[0] - (totalLength / 2), centerPos_[1] - (totalLength / 2), centerPos_[2]);
 		//First lines
 		for (int i = 0; i <= (sections_); i++) {

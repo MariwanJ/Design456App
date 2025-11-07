@@ -365,7 +365,7 @@ bool PolyConnectivity::is_collapse_ok(HalfedgeHandle v0v1)
   if (!is_boundary(v1v0))
     v1v0_triangle = valence(face_handle(v1v0)) == 3;
 
-  //in a quadmesh we dont have the "next" or "previous" vhandle, so we need to look at previous and next on both sides
+  //in a quadmesh we don't have the "next" or "previous" vhandle, so we need to look at previous and next on both sides
   //VertexHandle v_01_p = from_vertex_handle(prev_halfedge_handle(v0v1));
   VertexHandle v_01_n = to_vertex_handle(next_halfedge_handle(v0v1));  
 

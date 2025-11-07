@@ -43,7 +43,7 @@ namespace FR {
 
         /*
         Notice that:
-            if you dont have faces, you dont get edges from open mesh. 
+            if you don't have faces, you don't get edges from open mesh. 
             So, if you want to create a face from the edges, you have to rebuild the entire thing
         */
         CalculateNormals();
@@ -194,7 +194,7 @@ namespace FR {
             case  FR_LEFT_PUSH: {
                 //DRAG THE OBJECT .. TODO : HOW SHOULD WE DO THAT???
                 bool result;
-                glm::vec3 intersectionPoint;
+                //glm::vec3 intersectionPoint;
                 glm::vec3 p1 = glm::vec3(m_vertices->at(0), m_vertices->at(1), m_vertices->at(2));
                 glm::vec3 p2 = glm::vec3(m_vertices->at(3), m_vertices->at(4), m_vertices->at(5));
                 ray_t ray = win->activeScene->getRayValue();

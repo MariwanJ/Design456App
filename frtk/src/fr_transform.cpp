@@ -102,8 +102,8 @@ namespace FR {
     glm::vec3 Fr_Transform::computeSphereCoordinate(double x, double y) {
         int vp[4];
         glGetIntegerv(GL_VIEWPORT, vp);
-        const float w = vp[2];
-        const float h = vp[3];
+        const float w = (float)vp[2];
+        const float h = (float)vp[3];
 
         if (invertX_) x = w - x;
         if (invertY_) y = h - y;

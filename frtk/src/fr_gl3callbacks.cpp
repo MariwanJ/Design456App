@@ -181,7 +181,7 @@ namespace FR {
         {
             if (activateHandle) {
                 if (spWindow->handle(FR_MIDDLE_RELEASE) == 1) {//Mouse click
-                    mouseEvent.Button = -1; //consumed§l+--
+                    mouseEvent.Button = -1; //consumed
                     return;
                 }
             }
@@ -299,7 +299,9 @@ namespace FR {
 
                 if (activateHandle) {
                     res = spWindow->handle(FR_MIDDLE_RELEASE);
-                    if (res) { consumeEvent(true); }
+                    if (res) 
+                    { consumeEvent(true);
+                    }
                     updateMousePosition(xpos, ypos);
                     // spWindow->phi = spWindow->theta = 0.0f; //YOU SHOULD NEVER RESET them
                     spWindow->runCode = true;
@@ -333,18 +335,23 @@ namespace FR {
             //Scroll zooming using the correct method of zooming. Use camera position by scaling the view-matrix
             float scale_;
             if (yoffset < 0) {
-                scale_ = 1 / spWindow->mouseDefaults.MouseScrollScale;
+                scale_ = -1 * spWindow->mouseDefaults.MouseScrollScale;
             }
             else
             {
                 scale_ = spWindow->mouseDefaults.MouseScrollScale;
             }
+            //glm::mat4 matr = spWindow->activeScene->getActiveCamera().GetViewMatrix();
+            //matr = glm::scale(matr, glm::vec3(scale_, scale_, scale_));
+            //glm::mat4 inverseViewMatrix = glm::inverse(matr);
+            //data.camm_position = glm::vec3(inverseViewMatrix[3]);
+            //data.direction_ = glm::vec3(inverseViewMatrix[2]);
+            //data.up_= glm::vec3(inverseViewMatrix[1]);
+            
+            glm::vec3 forward = glm::normalize(data.direction_ - data.camm_position); // forward direction
+            data.camm_position += forward * scale_;   // move camera
+            data.direction_ += forward * scale_;  // move target along with camera
 
-            glm::mat4 matr = glm::scale(spWindow->activeScene->getActiveCamera().GetViewMatrix() , glm::vec3(scale_, scale_, scale_));
-            glm::mat4 inverseViewMatrix = glm::inverse(matr);
-            data.camm_position = glm::vec3(inverseViewMatrix[3]);
-            data.direction_ = -glm::vec3(inverseViewMatrix[2]);
-            data.up_ = glm::vec3(inverseViewMatrix[1]);
         }
         spWindow->activeScene->getActiveCamera().setCamData(data);
     }
@@ -356,7 +363,8 @@ namespace FR {
     void Fr_Window::cameraPAN(GLFWwindow* win, double xpos, double ypos)
     {
         userData_ data;
-
+        if (!spWindow)
+            return;
         spWindow->activeScene->getActiveCamera().getCamData(data);
 
         if (mouseEvent.Old_x == mouseEvent.Old_y && mouseEvent.Old_x == 0) {
@@ -364,10 +372,8 @@ namespace FR {
             mouseEvent.Old_y = ypos;
             return;
         }
-
         double deltax = mouseEvent.Old_x - xpos;
         double deltay = mouseEvent.Old_y - ypos;
-
         // Only perform the panning if there is a significant change
         if (std::abs(deltax) < 1e-3 && std::abs(deltay) < 1e-3) {
             return; // Small movements are ignored
@@ -384,21 +390,17 @@ namespace FR {
     {
         if (spWindow == nullptr)
             return;
-        userData_ data;
-        spWindow->activeScene->getActiveCamera().getCamData(data);
+        Fr_Camera& cam = spWindow->activeScene->getActiveCamera();
+        
 
-        //First time, we dont use the event, just update the mouse
+        //First time, we don't use the event, just update the mouse
         if (mouseEvent.Old_x == mouseEvent.Old_y && mouseEvent.Old_x == 0) {
             mouseEvent.Old_x = xpos;
             mouseEvent.Old_y = ypos;
             return;
         }
 
-        spWindow->radiusXYZ = glm::length(glm::vec3(
-            data.camm_position.x,
-            data.camm_position.y,
-            data.camm_position.z
-        ));
+        spWindow->radiusXYZ = glm::length(cam.m_position);
 
         // Compute deltas
         float deltax = float(xpos - mouseEvent.Old_x);
@@ -423,10 +425,7 @@ namespace FR {
         float x = spWindow->radiusXYZ * cos(radPhi) * sin(radTheta);
         float y = spWindow->radiusXYZ * cos(radPhi) * cos(radTheta);
         float z = spWindow->radiusXYZ * sin(radPhi);
-
-        Fr_Camera& cam = spWindow->activeScene->getActiveCamera();
         cam.m_position = glm::vec3(x, y, z);
-        cam.updateViewMatrix();
     }
     glfwMouseEvent Fr_Window::getMouseEvents()
     {

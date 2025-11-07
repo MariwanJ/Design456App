@@ -324,10 +324,11 @@ namespace FR {
 
         virtual void lbl_Draw();
    
-        void pointSize(uint8_t val);
-        uint8_t pointSize();
-        void lineWidth(uint8_t wid);
-        uint8_t lineWidth();
+        //must be float as OpenGL uses float
+        void pointSize(float val);
+        float pointSize();
+        void lineWidth(float wid);
+        float lineWidth();
 
 
 

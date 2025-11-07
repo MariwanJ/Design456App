@@ -66,7 +66,7 @@ namespace FR {
     GLFWwindow* Fr_Window::pGLFWWindow = nullptr;
     bool Fr_Window::MouseOnce = true;
 
-    const screenDim_t Fr_Window::getScreenDim(void) {
+    screenDim_t Fr_Window::getScreenDim(void) {
         return m_ViewPort;
     }
 
@@ -86,7 +86,7 @@ namespace FR {
     {
         showOpenDialog=false;
         /** from Fr_Window */
-        mouseDefaults.MouseScrollScale = 1.1f;
+        mouseDefaults.MouseScrollScale = 5.0f;
         mouseDefaults.MouseXYScale = 0.5f;
         glfwSetErrorCallback(error_callback);
         if (!s_GLFWInitialized)

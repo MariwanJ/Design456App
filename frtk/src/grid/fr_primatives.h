@@ -46,8 +46,8 @@ namespace FR {
 
         void SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices);
 
-        void lineWidth(unsigned int wid);
-        unsigned int lineWidth();
+        void lineWidth(float wid);
+        float lineWidth();
 
     private:
 

@@ -376,7 +376,7 @@ namespace FR {
             SetPerspective(45.0f, 0.01f, 10000.0f);
         }break;
         }
-        m_up = glm::normalize(m_up);
+       // m_up = glm::normalize(m_up);
         updateViewMatrix();
     }
     /**
