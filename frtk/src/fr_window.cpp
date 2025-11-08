@@ -1,4 +1,3 @@
-#include "fr_window.h"
 //
 // This file is a part of the Open Source Design456App
 // MIT License
@@ -40,11 +39,6 @@
 
   //Remove me later : TODO
 #include<halfedge/fr_shape.h>
-
-#if 1 //experimental code TODO: REMOVE ME 
-#include <fr_text.h>
-#endif
-
 /** end fr_grl3 */
 namespace FR {
 
@@ -336,18 +330,6 @@ namespace FR {
         ImGui_ImplOpenGL3_Init("#version 460");
         glfwGetFramebufferSize(pGLFWWindow, &m_ViewPort.w, &m_ViewPort.h);
         userData_ data;
-
-
-
-#if 1 //Experimental code TODO: REMOVE ME !! 
-        text= std::make_shared<TextRenderer>(m_ViewPort.w,m_ViewPort.h);
-        //if (!text->LoadFont("C:/Windows/Fonts/ALGER.ttf", 48)) {
-        if (!text->LoadFont(DEFAULT_FONT, 48)) {
-            FRTK_CORE_ERROR("FAILED TO LOAD FONT ");
-            return 1;
-        }
-#endif
-
 
         while (!glfwWindowShouldClose(pGLFWWindow))
         {

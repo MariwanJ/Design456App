@@ -36,42 +36,15 @@
 #include <fr_transform.h>
 
 #include<fr_genID.h>
-
+#include <fr_label.h>
 //Introducing OpenMesh to Widget System also
 #include <OpenMesh/Core/IO/MeshIO.hh>
 #include <OpenMesh/Core/Mesh/PolyMesh_ArrayKernelT.hh>
 
 namespace FR {
-    /**
-  * Holds the light information
-  */
-    struct LightInfo {
-        glm::vec4 lightcolor;
-        glm::vec4 position;
-        glm::vec4 diffuse;
-        glm::vec4 specular;
-        glm::vec4 ambient;
-        glm::vec3 attenuation;
-        bool is_spot;
-        glm::vec3 direction;
-        float cutoff;
-        float exponent;
-    };
 
-    /**
-     * Holds the render information
-     */
-    struct RenderInfo {
-        int id;
-        glm::mat4 modelview;
-        glm::mat4 projection;
-        std::vector<LightInfo> lights;
-        //ShadowMapInfo shadowmap;
-        bool render_transparent;
-        screenDim_t screenDim;
-    };
 
-    const size_t kMaxLights = 8;        //This is important to consider. This is also defined in the   objectshader_fs.glsl as MAX_LIGHTS
+    const size_t kMaxLights = 8;        //This is important to consider. 
 
     typedef struct {
         //TODO : FIXME: This is just a dummy construction. this should be changed later
@@ -80,10 +53,6 @@ namespace FR {
             int val;
         };
     } userWidgetData;
-
-
-  
-
 
     //diff shader program
     typedef struct {
@@ -157,9 +126,6 @@ namespace FR {
         /** Renders Text (Freetype Font)*/
         virtual void RenderText(RenderInfo& info);
         
-		//Load default font.
-		virtual void LoadFont(const std::string& fontPath);
-
 		virtual void ReadFile(const std::string& path);
 		virtual void ReadMeshString(const std::string& mshData);
 
@@ -197,20 +163,7 @@ namespace FR {
         /** Initializes VBO and other stuff */
         virtual bool setup();
 
-        /** Sets the label */
-        void label(std::string& lbl);
-		void label(const char* l);
 
-        void lbl_visible(bool v);
-        bool lbl_visible();
-
-        void lblType(uint8_t lbltype);
-        const uint8_t lblType(void);
-
-        std::string label() const;
-
-        /** Sets the font */
-        void font(std::string& forntName);
         std::shared_ptr<std::string> font() const;
 
         /** Sets the font size */
@@ -317,6 +270,11 @@ namespace FR {
 
         void Parent(int index);
 
+        virtual void lblDraw(void);
+        virtual void lblredraw(void);
+        std::shared_ptr<Fr_Label> m_label;  //I think it should be global : TODO: Checkme!!
+
+
         /** BoundBox for all objects */
         std::shared_ptr<cBoundBox3D> m_boundBox;
  
@@ -333,9 +291,10 @@ namespace FR {
 		std::shared_ptr<std::vector<size_t>> m_selected;
         std::shared_ptr<std::vector<float>> m_normals;
         std::shared_ptr<std::vector<glm::vec3>> m_triangles_normals;
-        
+
         std::shared_ptr<std::vector<float>> m_textureCoord;
         std::shared_ptr<Shader_t> m_shader; // Program for shared resources, cannot be static
+
 
         bool m_active;
         int uniqueIndex;
@@ -366,9 +325,7 @@ namespace FR {
         virtual void LoadLights(std::shared_ptr<ShaderProgram> program, const std::vector<LightInfo>& lights);
 
         Fr_Callback* m_callback_;
-
-        label_t m_label;
-
+ 
         bool m_visible;
         bool m_focus;
         bool m_resizable;
@@ -390,6 +347,7 @@ namespace FR {
         unsigned int m_vao_txt;
         float m_lineWidth;
         float m_pointSize;
+
 
 
     };

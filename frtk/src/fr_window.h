@@ -35,8 +35,6 @@
 #include <fr_core.h>
 #if 1
 #include <fr_transform.h>       //just for debug - remove it when done TODO : FIXME
-
-#include<fr_text.h>
 #include <fr_camera.h>
 
 
@@ -368,14 +366,6 @@ namespace FR {
         bool runCode;
 
         static GLFWwindow* pGLFWWindow;
-
-#if 1 
-
-        //EXPERMINETAL CODE : TODO : REMOVE MMEEEEE
-        public:
-        std::shared_ptr<TextRenderer> text;
-#endif
-
 
     };
 }

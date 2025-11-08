@@ -75,7 +75,7 @@ namespace FR {
 
         // Constructor with unsigned int color
     Fr_GridShader::Fr_GridShader(unsigned int color, float silhouette) :
-            m_shared{ 0, 0, 0, 0, 0 },
+            m_shared{ 0, 0, 0, 0},
             m_Primative{ nullptr }, silhouette_(silhouette) {
             SetColor(color);
             InitializeSharedPrograms();

@@ -39,7 +39,7 @@ namespace FR {
         std::shared_ptr<std::vector <unsigned int>> indicies,
         std::string label) :m_vertices(std::move(vertices)),
         m_Matrix(glm::mat4(1.0f)), m_indices(std::move(indicies)), m_vao(0), m_vbo{ 0 },
-        m_lineWidth(1), m_pointSize(10), m_MVP(glm::mat4(1.0f)), m_WdgPosition(0)
+        m_lineWidth(1), m_pointSize(10), m_MVP(glm::mat4(1.0f)), m_WdgPosition(0), m_label(0)
     {
         m_lineType = FR_NOT_DEFINED; //You should define it before use it
 
@@ -48,17 +48,6 @@ namespace FR {
         m_shader = { 0 };
         m_callback_ = NULL;
         m_boundBox = nullptr;
-
-        m_label.text = "";
-        m_label.fnFont = NULL;// we cannot define it here
-
-        m_label.color = glm::vec4(FR_YELLOW);
-        m_label.offset = glm::vec3(0.0f);
-        m_label.visible = false; //we don't have font .. disable it you should enabled when you subclass
-        m_label.pixelSize = 256;  //size of the pixels -- TODO : HOW MUCH WE SHOULD PUT HERE !!!!!!!!!!!
-        m_label.scale = 0.006f;
-        m_label.text = "Change me - Widget say hello";
-        m_label.type = PERSPECTIVE;//ORTHOGRAPHIC;
 
         m_active = true;
         m_visible = true;
@@ -181,15 +170,12 @@ namespace FR {
     void Fr_Widget::init(void) {
         assert(!m_vertices->empty() && "ERROR: You should provide vertices before initializing the object");
         CreateShader();
-        m_label.fnFont = std::make_shared <std::string>(DEFAULT_FONT); // DEFAULT FONT
-        m_label.text = "Widget";
         m_boundBox = std::make_shared <cBoundBox3D>();
         m_boundBox->setVertices(m_vertices);
         CalculateNormals();
         calcualteTextCoor(1024, 1024);  //TODO:  ??? don't think it is correct
         initializeVBO();
         CreateShader();
-        LoadFont(DEFAULT_FONT); //TODO: Do we need to allow other font at the creation, don't think so.
         m_selected->reserve(static_cast<size_t>(m_vertices->size()) / 3);
         m_selected->resize(m_selected->capacity(), 0);
     }
@@ -208,7 +194,6 @@ namespace FR {
         m_shader->widgPoits_prog = std::make_shared<ShaderProgram>(shaderpath + "widgPoints");
         m_shader->silhouette_prog = std::make_shared<ShaderProgram>(shaderpath + "silhouette");
         m_shader->texture_prog = std::make_shared<ShaderProgram>(shaderpath + "texture");
-        m_shader->txtFont_program = std::make_shared<ShaderProgram>(shaderpath + "txtFont");
     }
     void Fr_Widget::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights)
     {
@@ -254,66 +239,13 @@ namespace FR {
         return false;   //Should be sub-classed to change that.
     }
 
-    void Fr_Widget::lblType(uint8_t lbltype) {
-        m_label.type = lbltype;
-    }
-    const uint8_t Fr_Widget::lblType(void) {
-        return m_label.type;
-    }
+
 
     void Fr_Widget::RenderText(RenderInfo& info) {
         return; //should be sub-classed to define this
     }
 
-    void Fr_Widget::label(std::string& lbl)
-    {
-        m_label.text = lbl;
-    }
-    void Fr_Widget::label(const char* lbl)
-    {
-        m_label.text = lbl;
-    }
-    std::string Fr_Widget::label() const
-    {
-        return m_label.text;
-    }
-
-    void Fr_Widget::font(std::string& forntName)
-    {
-        m_label.fnFont = std::make_shared<std::string>(forntName);
-    }
-
-    std::shared_ptr<std::string> Fr_Widget::font() const
-    {
-        return m_label.fnFont;
-    }
-
-    void Fr_Widget::fontSize(int size_)
-    {
-        m_label.pixelSize = size_;
-    }
-
-    void Fr_Widget::fontColor(glm::vec4 col)
-    {
-        m_label.color = col;
-    }
-    void Fr_Widget::fontColor(float r, float g, float b, float a)
-    {
-        m_label.color = glm::vec4(r, g, b, a);
-    }
-
-    void Fr_Widget::lblOffset(glm::vec3 nval)
-    {
-        m_label.offset = nval;
-    }
-
-    void Fr_Widget::lbl_visible(bool v) {
-        m_label.visible = v;
-    }
-
-    bool Fr_Widget::lbl_visible() {
-        return m_label.visible;
-    }
+ 
 
     void Fr_Widget::resize(std::shared_ptr<std::vector<float>>vertices_,
         std::shared_ptr<std::vector <unsigned int>> indicies_)
@@ -588,6 +520,16 @@ namespace FR {
     void Fr_Widget::Parent(int index)
     {
         m_Parent = index;
+    }
+
+    void Fr_Widget::lblDraw(void)
+    {
+        //Should be subclassed
+    }
+
+    void Fr_Widget::lblredraw(void)
+    {
+        //Should be subclassed
     }
 
     void Fr_Widget::CalculateNormals(void) {

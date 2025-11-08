@@ -40,6 +40,7 @@ namespace FR {
 
 	Fr_Shape::Fr_Shape(const std::string& fpath, glm::vec4 color, float silhouette) :Fr_Widget(NULL, NULL, "Shape")
 		{
+		m_label = std::make_shared<Fr_Label>(); //default constructor with default values
 		if (!m_shader) {
 			m_shader = std::make_shared<Shader_t>();
 		}
@@ -54,8 +55,10 @@ namespace FR {
 			assert("ERROR: No mesh provided to the class");
 		}
 		init(); //This will initializes all Openmesh, vertices, edget ..etc
-		m_label.text = "Widget";
-		//m_label.visible = true;   User should do this manually
+		if (m_label) {
+			m_label->LoadFont();
+		}
+
 	}
 #if 0 //For debugging only
 
@@ -185,7 +188,11 @@ namespace FR {
 		glCheckFunc(glDepthFunc(GL_LESS));         // default depth test
 	}
 
-	
+	void Fr_Shape::RenderText(RenderInfo& info) {
+		if (m_label) {
+			m_label->RenderText(info);
+		}
+	}
 
 	/*
 		Hints : how to extract indices from openmesh

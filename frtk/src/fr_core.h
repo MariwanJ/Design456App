@@ -76,7 +76,6 @@
     }()
 #endif
 
-
 // -------------------- Logging / Instrumentation --------------------
 #include <fr_constants.h>
 #include <Fr_Log.h>
@@ -110,28 +109,30 @@ typedef OpenMesh::PolyMesh_ArrayKernelT<> MyMesh;
 
 // -------------------- FRTK Core --------------------
 namespace FR {
-	// VBO buffers
-	constexpr int NUM_OF_VBO_BUFFERS = 7;
-	constexpr int POSITION_VERTEX_VB = 0;
-	constexpr int POSITION_NORMAL_VB = 1;
-	constexpr int POSITION_TEXCOORD_VB = 2;
-	constexpr int INDICES_VB = 3;
-	constexpr int POSITION_POINTS_VB = 4;
-	constexpr int COLOR_POINTS_VB = 5;
-	constexpr int POSITION_TEXT_VB = 6;
+    // VBO buffers
+    constexpr int NUM_OF_VBO_BUFFERS = 7;
+    constexpr int POSITION_VERTEX_VB = 0;
+    constexpr int POSITION_NORMAL_VB = 1;
+    constexpr int POSITION_TEXCOORD_VB = 2;
+    constexpr int INDICES_VB = 3;
+    constexpr int POSITION_POINTS_VB = 4;
+    constexpr int COLOR_POINTS_VB = 5;
+    constexpr int POSITION_TEXT_VB = 6;
 
-	//Shader position - this is NOT VBO position
-	constexpr int SHADER_POS_VERTEX_VB = 0;
-	constexpr int SHADER_POS_NORMAL_VB = 1;
-	constexpr int SHADER_POS_TEXTURE_VB = 2;
-	constexpr int SHADER_POS_POINTS_VB = 0; //HAS DIFF SHADER 
+    //Shader position - this is NOT VBO position
+    constexpr int SHADER_POS_VERTEX_VB = 0;
+    constexpr int SHADER_POS_NORMAL_VB = 1;
+    constexpr int SHADER_POS_TEXTURE_VB = 2;
+    constexpr int SHADER_POS_POINTS_VB = 0; //HAS DIFF SHADER
 
-	//used to find path for diff resources
-	extern std::string EXE_CURRENT_DIR;
-	extern std::string fontPath;
-	extern std::string DEFAULT_FONT;
+    //used to find path for diff resources
+    extern std::string EXE_CURRENT_DIR;
+    extern std::string fontPath;
+    extern std::string DEFAULT_FONT;
 
-	// Debug break
+  
+
+    // Debug break
 #if defined(_WIN32)
 #define DEBUG_BREAK __debugbreak()
 #elif defined(__linux__) || defined(__APPLE__)
@@ -184,131 +185,159 @@ namespace FR {
 #define setBIT(x) (1 << x)
 #define clearBIT(x) (0 << x)
 
-	std::string separateFN(std::string& st);
+    std::string separateFN(std::string& st);
 
-	class Fr_Window;
-		//PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
-	#define PERSPECTIVE   0
-	#define ORTHOGRAPHIC  1
-	#define TOP           2
-	#define BOTTOM        3
-	#define FRONT         4
-	#define BACK          5
-	#define RIGHT         6
-	#define LEFT          7
+    class Fr_Window;
+    //PERSPECTIVE,ORTHOGRAPHIC, TOP,BOTTOM, LEFT,RIGHT,BACK,FRONT,
+#define PERSPECTIVE   0
+#define ORTHOGRAPHIC  1
+#define TOP           2
+#define BOTTOM        3
+#define FRONT         4
+#define BACK          5
+#define RIGHT         6
+#define LEFT          7
 
- // Function to convert string to int
-	uint8_t getCameraIndex(const char* name);
-	const char* getCameraName(uint8_t v);
+// Function to convert string to int
+    uint8_t getCameraIndex(const char* name);
+    const char* getCameraName(uint8_t v);
 
-	//Mouse Ray
-	typedef struct {
-		glm::vec3 position;
-		glm::vec3 direction;
-	}ray_t;
+    //Mouse Ray
+    typedef struct {
+        glm::vec3 position;
+        glm::vec3 direction;
+    }ray_t;
 
-	typedef struct {
-		int x;
-		int y;
-		int w;
-		int h;
-	}screenDim_t;
+    typedef struct {
+        int x;
+        int y;
+        int w;
+        int h;
+    }screenDim_t;
 
-	struct userData_S {
-		glm::vec3 camm_position;
-		glm::vec3 direction_;
-		glm::vec3 up_;
-		float fovy_;
-		float znear_;
-		float zfar_;
-		float aspectRatio_;
-		float orthoSize_;
-		//        projectionm_Matrix(glm::ortho(-600, 600, -600, 600, -1, 1)),
-		uint8_t camType_;
-	};
-	typedef userData_S userData_;
+    struct userData_S {
+        glm::vec3 camm_position;
+        glm::vec3 direction_;
+        glm::vec3 up_;
+        float fovy_;
+        float znear_;
+        float zfar_;
+        float aspectRatio_;
+        float orthoSize_;
+        //        projectionm_Matrix(glm::ortho(-600, 600, -600, 600, -1, 1)),
+        uint8_t camType_;
+    };
+    typedef userData_S userData_;
 
-	static unsigned char GLLogCall() {
-		while (GLenum error = glGetError()) {
-			std::cout << "[OpenGL Error] {" << error << "}\n";
-			std::flush(std::cout);
-			return 0;
-		}
-		return 1;
-	}
-	//Used for 2D Drawing, maybe 3D also? TODO:FIXME
-	enum twodType_t {
-		FR_NOT_DEFINED = -1,
-		FR_POINT = 0,
-		FR_LINES,
-		FR_OPEN_LOOP,
-		FR_CLOSED_LOOP, //This includes square, rectangle, triangle,pentagon, hexagon, star ..etc
-		FR_CIRCLE,
-		FR_CURVE,
-		FR_ARC,
-		FR_BSPLINE,
-	};
+    static unsigned char GLLogCall() {
+        while (GLenum error = glGetError()) {
+            std::cout << "[OpenGL Error] {" << error << "}\n";
+            std::flush(std::cout);
+            return 0;
+        }
+        return 1;
+    }
 
-	enum FR_EVENTS {
-		FR_NO_EVENT = 0,     //DONT CARE EVENT
+    /**
+* Holds the light information
+*/
+    struct LightInfo {
+        glm::vec4 lightcolor;
+        glm::vec4 position;
+        glm::vec4 diffuse;
+        glm::vec4 specular;
+        glm::vec4 ambient;
+        glm::vec3 attenuation;
+        bool is_spot;
+        glm::vec3 direction;
+        float cutoff;
+        float exponent;
+    };
 
-		FR_LEFT_PUSH,
-		FR_RIGHT_PUSH,
-		FR_MIDDLE_PUSH,
-
-		FR_LEFT_RELEASE,
-		FR_RIGHT_RELEASE,
-		FR_MIDDLE_RELEASE,
-
-		FR_LEFT_DRAG_PUSH,
-		FR_LEFT_DRAG_RELEASE,
-
-		FR_RIGHT_DRAG_PUSH,
-		FR_RIGHT_DRAG_RELEASE,
-
-		FR_MIDDLE_DRAG_PUSH,
-		FR_MIDDLE_DRAG_RELEASE,
-
-		FR_MOUSE_MOVE,
-
-		FR_ENTER,
-		FR_FOCUS,
-		FR_KEYBOARD,
-		FR_CLOSE,
-		FR_DEACIVATE,
-		FR_ACTIVE,
-		FR_HIDE,
-		FR_SHOW,
-
-		FR_WINDOW_RESIZE,
-		FR_WINDOW_MINIMIZE,
-	};
-
-	//Define all kind of widgets here, YOU MUST DO THIS!!
-	typedef enum class NODETYPE {
-		FR_NODE = 0,
-		FR_GROUP = 1,
-		FR_TRANSFORM = 2,
-		FR_MANIPULATOR = 3,
-		FR_PRIMATIVESHADER = 4,
-		FR_LIGHT = 5,
-		FR_CAMERA = 6,
-		FR_MODEL_NODE = 7,
-		FR_SCENE = 8,
-		FR_SHAPE = 9,
-		FR_MESH = 10,
-		FR_GRID = 11,
-		FR_AXIS3D,
-		//FR WIDGETS
-		FR_WIDGET = 12,
-		FR_WGROUP = 13,
-		FR_WINDOW = 14,
-		FR_LINE_WIDGET = 15,
-		FR_FACE_WIDGET = 16,
-	}NODETYPE;
+    /**
+     * Holds the render information
+     */
+    struct RenderInfo {
+        int id;
+        glm::mat4 modelview;
+        glm::mat4 projection;
+        std::vector<LightInfo> lights;
+        //ShadowMapInfo shadowmap;
+        bool render_transparent;
+        screenDim_t screenDim;
+    };
 
 
 
+    //Used for 2D Drawing, maybe 3D also? TODO:FIXME
+    enum twodType_t {
+        FR_NOT_DEFINED = -1,
+        FR_POINT = 0,
+        FR_LINES,
+        FR_OPEN_LOOP,
+        FR_CLOSED_LOOP, //This includes square, rectangle, triangle,pentagon, hexagon, star ..etc
+        FR_CIRCLE,
+        FR_CURVE,
+        FR_ARC,
+        FR_BSPLINE,
+    };
 
+    enum FR_EVENTS {
+        FR_NO_EVENT = 0,     //DONT CARE EVENT
+
+        FR_LEFT_PUSH,
+        FR_RIGHT_PUSH,
+        FR_MIDDLE_PUSH,
+
+        FR_LEFT_RELEASE,
+        FR_RIGHT_RELEASE,
+        FR_MIDDLE_RELEASE,
+
+        FR_LEFT_DRAG_PUSH,
+        FR_LEFT_DRAG_RELEASE,
+
+        FR_RIGHT_DRAG_PUSH,
+        FR_RIGHT_DRAG_RELEASE,
+
+        FR_MIDDLE_DRAG_PUSH,
+        FR_MIDDLE_DRAG_RELEASE,
+
+        FR_MOUSE_MOVE,
+
+        FR_ENTER,
+        FR_FOCUS,
+        FR_KEYBOARD,
+        FR_CLOSE,
+        FR_DEACIVATE,
+        FR_ACTIVE,
+        FR_HIDE,
+        FR_SHOW,
+
+        FR_WINDOW_RESIZE,
+        FR_WINDOW_MINIMIZE,
+    };
+
+    //Define all kind of widgets here, YOU MUST DO THIS!!
+    typedef enum class NODETYPE {
+        FR_NODE = 0,
+        FR_GROUP = 1,
+        FR_TRANSFORM = 2,
+        FR_MANIPULATOR = 3,
+        FR_PRIMATIVESHADER = 4,
+        FR_LIGHT = 5,
+        FR_CAMERA = 6,
+        FR_MODEL_NODE = 7,
+        FR_SCENE = 8,
+        FR_SHAPE = 9,
+        FR_MESH = 10,
+        FR_GRID = 11,
+        FR_AXIS3D,
+        //FR WIDGETS
+        FR_WIDGET = 12,
+        FR_WGROUP = 13,
+        FR_WINDOW = 14,
+        FR_LINE_WIDGET = 15,
+        FR_FACE_WIDGET = 16,
+    }NODETYPE;
 } //FR
 #endif

@@ -31,9 +31,6 @@
 
 #include <fr_log.h>
 
-//Experimental code 
-#include <fr_text.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
 
@@ -80,8 +77,6 @@ namespace FR {
                 DEBUG_BREAK;
             }
             newObj->hasTexture(1);
-            newObj->label("NewShape");
-            newObj->lbl_visible(true);
             //convert fName to be a unique name
             std::string nFname = separateFN(fName);
             SceneItemStruct newtT(newObj, nFname);
@@ -368,17 +363,6 @@ namespace FR {
         // Render 3D objects
         Render(render_info);
         //// Render transparent items
-
-
-
-#if 1   //EXPERIMENTAL CODE - TEXT RENDERING 
-
-       
-        win->text->RenderText("Design456App New View!", 0.0f,  0.0f, 1.0f, glm::vec3(0.8f, 0.8f, 0.1f));
-            
-
-#endif  //EXPERIMENTAL CODE - TEXT RENDERING 
-
         RenderText(render_info);
 
         render_info.render_transparent = true;
@@ -437,8 +421,10 @@ namespace FR {
     }
     void Fr_Scene::RenderText(FR::RenderInfo& info) {
         for (size_t i = 0; i < m_world.size(); ++i) {
-             if(m_world[i].Sceneitem->lbl_visible())
+            if(m_world[i].Sceneitem->m_label){
+             if(m_world[i].Sceneitem->m_label->lbl_visible())
                 m_world[i].Sceneitem->RenderText(info);
+            }
         }
     }
 

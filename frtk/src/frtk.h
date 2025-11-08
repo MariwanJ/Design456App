@@ -84,9 +84,9 @@
 #include <unistd.h>
 
 #if defined(__sun)
-#define PROC_SELF_EXE "/proc/self/path/a.out"
+#define PROC_SELF_EXE "/proc/self/path/"
 #else
-#define PROC_SELF_EXE "/proc/self/exe"
+#define PROC_SELF_EXE "/proc/self/exe/"
 #endif
 
 #endif
