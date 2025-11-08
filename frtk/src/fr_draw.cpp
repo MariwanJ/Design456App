@@ -125,10 +125,10 @@ namespace FR {
             }
 
         // TEXTURE COORDINATES
-        if (m_textCoord)
-            if (!m_textCoord->empty()) {
+        if (m_textureCoord)
+            if (!m_textureCoord->empty()) {
                 glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_vbo[POSITION_TEXCOORD_VB]));
-                glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_textCoord->size(), m_textCoord->data(), GL_STATIC_DRAW));
+                glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_textureCoord->size(), m_textureCoord->data(), GL_STATIC_DRAW));
                 glCheckFunc(glEnableVertexAttribArray(POSITION_TEXCOORD_VB));
                 glCheckFunc(glVertexAttribPointer(SHADER_POS_TEXTURE_VB, 2, GL_FLOAT, GL_FALSE, 0, NULL)); // POSITION_TEXCOORD_VB = 2
             }
@@ -163,17 +163,7 @@ namespace FR {
         }
         //selection data
 
-    //TODO : WE SHOULD MAKE SURE THAT WE CAN RENDER THIS - FIXME:
-    //Text font drawing 
-        glCheckFunc(glGenVertexArrays(1, &m_vao_txt));
-        glCheckFunc(glGenBuffers(1, &m_vbo[POSITION_TEXT_VB]));
-        glCheckFunc(glBindVertexArray(m_vao_txt));
-        glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_vbo[POSITION_TEXT_VB]));
-        glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_DRAW));
-        glCheckFunc(glEnableVertexAttribArray(0));
-        glCheckFunc(glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0));
-        glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, 0));
-        glCheckFunc(glBindVertexArray(0));
+   
         return 0;
     }
 

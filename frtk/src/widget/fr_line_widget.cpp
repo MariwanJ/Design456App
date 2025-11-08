@@ -33,7 +33,7 @@ namespace FR {
         std::string label) : Fr_Widget(vertices, indicies, label),m_pointPicker(false)
     {
         m_normals = std::make_shared<std::vector<float>>();
-        m_textCoord = std::make_shared<std::vector<float>>();
+        m_textureCoord = std::make_shared<std::vector<float>>();
         
         // Add vertices and store their handles
         for (size_t i = 0; i < m_vertices->size(); i += 3) {

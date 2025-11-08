@@ -99,7 +99,6 @@ namespace FR {
             m_shared.wdg_prog = std::make_shared <ShaderProgram>(m_f_objectshader);
             m_shared.silhouette_prog= std::make_shared <ShaderProgram>(m_f_silhouette);
             m_shared.texture_prog = std::make_shared <ShaderProgram>(m_f_texture);
-            m_shared.txtFont_program= std::make_shared <ShaderProgram>(m_f_text);
         }
 
     Fr_GridShader::~Fr_GridShader() {

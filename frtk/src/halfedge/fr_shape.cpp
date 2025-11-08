@@ -105,8 +105,7 @@ namespace FR {
 		}
 		*/
 
-		for (auto& pair : Characters)
-			glDeleteTextures(1, &pair.second.TextureID);
+
 	}
 
 	void Fr_Shape::draw() {
@@ -186,78 +185,7 @@ namespace FR {
 		glCheckFunc(glDepthFunc(GL_LESS));         // default depth test
 	}
 
-	void Fr_Shape::lbl_redraw()
-	{
-		if (!m_label.fnFont) {
-			//Font is not defined, do nothing 
-			FRTK_CORE_ERROR("ERROR: Label draw when font is not defined\n");
-			return;// do nothing
-		}
-	}
-
-	void Fr_Shape::RenderText(RenderInfo& info) {
-		glEnable(GL_DEPTH_TEST);
-		glDepthMask(GL_TRUE);
-
-		glCheckFunc(glEnable(GL_BLEND));
-		glCheckFunc(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-
-		m_shader->txtFont_program->Enable();
-		m_shader->txtFont_program->SetUniformVec3("textColor", m_label.color);
-		glCheckFunc(glActiveTexture(GL_TEXTURE0));
-		glCheckFunc(glBindVertexArray(m_vao_txt));
-
-		glm::mat4 mvp;
-
-		// Positioning text at the top corner 
-		float x = m_label.offset.x + m_boundBox->minX();
-		float y = m_label.offset.y + m_boundBox->maxY();
-		float z = m_label.offset.z + m_boundBox->minZ();
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(x, y, z)); // Translate to position
-		model = model*glm::scale(model, glm::vec3(m_label.scale, m_label.scale, 1.0f)); // Scale uniformly
-		if (m_label.type == ORTHOGRAPHIC) {
-			mvp = glm::ortho(0.0f, (float)info.screenDim.w, 0.0f, (float)info.screenDim.h);
-		}
-		else {
-			mvp = info.projection* info.modelview * model;// Perspective
-		}
-		m_shader->txtFont_program->SetUniformMat4("mvp", mvp);
-
-		x = 0;
-		y = 0;
-		for (auto c : m_label.text) {
-			Character_t ch = Characters[c];
-			float xpos = x + ch.Bearing.x;  
-			float ypos = y - (ch.Size.y - ch.Bearing.y);
-
-			float w = ch.Size.x ;  
-			float h = ch.Size.y ;  
-
-			float vertices[6][4] = {
-				{ xpos + w, ypos + h,   1.0f, 0.0f }, // Top-right
-				{ xpos,     ypos,       0.0f, 1.0f }, // Bottom-left
-				{ xpos,     ypos + h,   0.0f, 0.0f }, // Top-left
-				{ xpos + w, ypos + h,   1.0f, 0.0f }, // Top-right (repeat)
-				{ xpos,     ypos,       0.0f, 1.0f }, // Bottom-left (repeat)
-				{ xpos + w, ypos,       1.0f, 1.0f }  // Bottom-right
-			};
-
-			glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-			glBindBuffer(GL_ARRAY_BUFFER, m_vbo[POSITION_TEXT_VB]);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glDrawArrays(GL_TRIANGLES, 0, 6);
-
-			// Advance the cursor for the next character
-			x += (ch.Advance >> 6) ; 
-		}
-
-		// Clean up
-		glBindVertexArray(0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		m_shader->txtFont_program->Disable();
-	}
+	
 
 	/*
 		Hints : how to extract indices from openmesh

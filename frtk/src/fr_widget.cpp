@@ -43,9 +43,8 @@ namespace FR {
     {
         m_lineType = FR_NOT_DEFINED; //You should define it before use it
 
-        m_vertCoord = NULL;          //must be calculated internally
         m_normals = NULL;
-        m_textCoord = NULL;
+        m_textureCoord = NULL;
         m_shader = { 0 };
         m_callback_ = NULL;
         m_boundBox = nullptr;
@@ -76,104 +75,7 @@ namespace FR {
         m_shader = std::make_shared<Shader_t>();
     }
 
-    void Fr_Widget::LoadFont(const std::string& fontPath)
-    {
-        Characters.clear(); // Clear previous font glyphs
-        m_label.fnFont.reset(); // Clear old path (remove)
-        m_label.fnFont = std::make_shared<std::string>(fontPath);
-
-        static FT_Library ft;
-        static bool ftInitialized = false;
-        if (!ftInitialized) {
-            if (FT_Init_FreeType(&ft)) {
-                FRTK_CORE_ERROR("ERROR::FREETYPE: Could not init FreeType Library");
-                return;
-            }
-            ftInitialized = true;
-        }
-
-        FT_Face face = nullptr;
-        if (FT_New_Face(ft, fontPath.c_str(), 0, &face)) {
-            FRTK_CORE_ERROR("ERROR::FREETYPE: Failed to load font: {}", fontPath);
-            return;
-        }
-
-        //FT_Set_Pixel_Sizes(face, m_label.pixelSize, m_label.pixelSize);
-        FT_Set_Pixel_Sizes(face, 0, 360);
-
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        for (unsigned char c = 0; c < 128; ++c) {
-            if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-                FRTK_CORE_ERROR("Failed to load Glyph:{} ", c);
-                continue;
-            }
-            // Create an RGBA bitmap
-            int width = face->glyph->bitmap.width;
-            int height = face->glyph->bitmap.rows;
-            std::vector<uint8_t> bitmapRGBA(width * height * 4, 0); // RGBA
-            for (int y = 0; y < height; ++y) {
-                for (int x = 0; x < width; ++x) {
-                    int index = (y * width + x) * 4; // RGBA index
-                    uint8_t alpha = face->glyph->bitmap.buffer[y * width + x];
-                    uint8_t colorValue = 255; // Set your desired color value here (e.g., white)
-
-                    // Set RGBA based on alpha
-                    if (alpha > 128) { // Threshold for alpha
-                        bitmapRGBA[index] = colorValue;     // Red
-                        bitmapRGBA[index + 1] = colorValue; // Green
-                        bitmapRGBA[index + 2] = colorValue; // Blue
-                        bitmapRGBA[index + 3] = 255;         // Fully opaque
-                    }
-                    else {
-                        bitmapRGBA[index] = 0;               // Transparent
-                        bitmapRGBA[index + 1] = 0;
-                        bitmapRGBA[index + 2] = 0;
-                        bitmapRGBA[index + 3] = 0;          
-                    }
-                }
-            }
-
-            GLuint tex;
-            glGenTextures(1, &tex);
-            glBindTexture(GL_TEXTURE_2D, tex);
-            glTexImage2D(
-                GL_TEXTURE_2D,
-                0,
-                GL_RGBA, // Change to RGBA format
-                width,
-                height,
-                0,
-                GL_RGBA, // Change to RGBA format
-                GL_UNSIGNED_BYTE,
-                bitmapRGBA.data() // Use the RGBA bitmap
-            );
- 
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);    //Without this, you will see distortion at the edges.
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            Character_t ch = {
-                tex,
-                glm::ivec2(width, height),
-                glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-                (GLuint)face->glyph->advance.x
-            };
-
-            Characters.insert(std::make_pair(c, ch));
-        }
-
-        glBindTexture(GL_TEXTURE_2D, 0);
-
-#if 0	//For debugging only
-        printStringAsDots(m_label.text, face);
-#endif
-        FT_Done_Face(face);
-
-        *m_label.fnFont = fontPath; // Update current font name
-    }
+    
 
     void Fr_Widget::ReadMeshString(const std::string& mshData) {
         std::istringstream input(mshData);
@@ -624,10 +526,10 @@ namespace FR {
 
     //TODO : FIX ME
     void Fr_Widget::calcualteTextCoor(int width, int height) {
-        if (!m_textCoord) {
-            m_textCoord = std::make_shared<std::vector<float>>();
+        if (!m_textureCoord) {
+            m_textureCoord = std::make_shared<std::vector<float>>();
         }
-        m_textCoord->reserve(2 * m_vertices->size() / 3);
+        m_textureCoord->reserve(2 * m_vertices->size() / 3);
         for (int i = 0; i < m_normals->size(); i += 3)
         {
             GLfloat x = m_normals->at(i);
@@ -635,8 +537,8 @@ namespace FR {
             GLfloat z = m_normals->at(i + 2);
             GLfloat u = (x);
             GLfloat v = (y);
-            m_textCoord->push_back(u);
-            m_textCoord->push_back(v);
+            m_textureCoord->push_back(u);
+            m_textureCoord->push_back(v);
         }
     }
 

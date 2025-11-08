@@ -82,17 +82,7 @@ namespace FR {
     } userWidgetData;
 
 
-    typedef struct {
-        glm::vec3 offset;        // Position relative to the widget,TODO: SHOULD BE RELATIVE OR ABS
-        std::string text;
-        std::shared_ptr<std::string> fnFont; // freetype Font used for rendering, filepath
-        glm::vec4 color;
-        bool visible;              // Visibility flag
-        uint8_t type;               //ORTHO - PERSPECTIVE 
-        size_t pixelSize;
-        float scale;
-    }label_t;
-
+  
 
 
     //diff shader program
@@ -101,7 +91,7 @@ namespace FR {
         std::shared_ptr <ShaderProgram> widgPoits_prog; //for points
         std::shared_ptr <ShaderProgram> silhouette_prog; // Dark shape and outline of object
         std::shared_ptr <ShaderProgram> texture_prog;
-        std::shared_ptr <ShaderProgram> txtFont_program;
+        
     }Shader_t;
 
     class NotImplementedException : public std::logic_error
@@ -115,12 +105,7 @@ namespace FR {
     class Shape;
     class Fr_TwoD_Drawing;
 
-	typedef struct {
-		GLuint TextureID;
-		glm::ivec2 Size;
-		glm::ivec2 Bearing;
-		GLuint Advance;
-	}Character_t;
+
 
     /** Default callback type definition for all frtk widgets */
     typedef void (Fr_Callback)(Fr_Widget*, void*);
@@ -330,11 +315,6 @@ namespace FR {
         void lineWidth(float wid);
         float lineWidth();
 
-
-
-        /** Return row pointer - must be overridden in the children */
-        // virtual auto getPointer() -> std::shared_ptr<Fr_Widget>;
-
         void Parent(int index);
 
         /** BoundBox for all objects */
@@ -346,17 +326,15 @@ namespace FR {
 
         virtual void do_callback();
         virtual void calculateTextCoor(); //might needs to be overridden
-
         void CalculateTrianglesNormals();
 
         std::shared_ptr<std::vector<float>> m_vertices;
+        std::shared_ptr<std::vector<unsigned int>> m_indices;
 		std::shared_ptr<std::vector<size_t>> m_selected;
-        std::shared_ptr<std::vector<unsigned int>> m_indices; // We don't use glm::vec3 but we can even so use it for Triangle drawing. Decide that by the drawing type.
-        std::shared_ptr<std::vector<float>> m_vertCoord; // must be calculated internally
         std::shared_ptr<std::vector<float>> m_normals;
-        std::shared_ptr<std::vector<glm::vec3>> m_triangles_normals; //triangles normals
-        std::shared_ptr<std::vector<float>> m_textCoord;
+        std::shared_ptr<std::vector<glm::vec3>> m_triangles_normals;
         
+        std::shared_ptr<std::vector<float>> m_textureCoord;
         std::shared_ptr<Shader_t> m_shader; // Program for shared resources, cannot be static
 
         bool m_active;
@@ -413,8 +391,7 @@ namespace FR {
         float m_lineWidth;
         float m_pointSize;
 
-		//this should be
-		std::map<char, Character_t> Characters;
+
     };
 
 
