@@ -43,7 +43,7 @@ namespace FR{
         void initializeVBO(void);
         void RenderText(RenderInfo& info);
 
-        void LoadFont(const std::string& fontPath=DEFAULT_FONT);
+     //   void LoadFont(const std::string& fontPath=DEFAULT_FONT);
 
 
     protected:

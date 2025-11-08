@@ -45,103 +45,6 @@ namespace FR {
         glDeleteBuffers(1, &m_vbo);
     }
 
-    void Fr_Label::LoadFont(const std::string& fontPath)
-    {
-        m_Characters.clear(); // Clear previous font glyphs
-        m_lblData.fnFont = fontPath;
-
-        static FT_Library ft;
-        static bool ftInitialized = false;
-        if (!ftInitialized) {
-            if (FT_Init_FreeType(&ft)) {
-                FRTK_CORE_ERROR("ERROR::FREETYPE: Could not init FreeType Library");
-                return;
-            }
-            ftInitialized = true;
-        }
-
-        FT_Face face = nullptr;
-        if (FT_New_Face(ft, fontPath.c_str(), 0, &face)) {
-            FRTK_CORE_ERROR("ERROR::FREETYPE: Failed to load font: {}", fontPath);
-            return;
-        }
-
-        //FT_Set_Pixel_Sizes(face, m_label.pixelSize, m_label.pixelSize);
-        FT_Set_Pixel_Sizes(face, 0, 360);
-
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        for (unsigned char c = 0; c < 128; ++c) {
-            if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-                FRTK_CORE_ERROR("Failed to load Glyph:{} ", c);
-                continue;
-            }
-            // Create an RGBA bitmap
-            int width = face->glyph->bitmap.width;
-            int height = face->glyph->bitmap.rows;
-            std::vector<uint8_t> bitmapRGBA(width * height * 4, 0); // RGBA
-            for (int y = 0; y < height; ++y) {
-                for (int x = 0; x < width; ++x) {
-                    int index = (y * width + x) * 4; // RGBA index
-                    uint8_t alpha = face->glyph->bitmap.buffer[y * width + x];
-                    uint8_t colorValue = 255; // Set your desired color value here (e.g., white)
-
-                    // Set RGBA based on alpha
-                    if (alpha > 128) { // Threshold for alpha
-                        bitmapRGBA[index] = colorValue;     // Red
-                        bitmapRGBA[index + 1] = colorValue; // Green
-                        bitmapRGBA[index + 2] = colorValue; // Blue
-                        bitmapRGBA[index + 3] = 255;         // Fully opaque
-                    }
-                    else {
-                        bitmapRGBA[index] = 0;               // Transparent
-                        bitmapRGBA[index + 1] = 0;
-                        bitmapRGBA[index + 2] = 0;
-                        bitmapRGBA[index + 3] = 0;
-                    }
-                }
-            }
-
-            GLuint tex;
-            glGenTextures(1, &tex);
-            glBindTexture(GL_TEXTURE_2D, tex);
-            glTexImage2D(
-                GL_TEXTURE_2D,
-                0,
-                GL_RGBA, // Change to RGBA format
-                width,
-                height,
-                0,
-                GL_RGBA, // Change to RGBA format
-                GL_UNSIGNED_BYTE,
-                bitmapRGBA.data() // Use the RGBA bitmap
-            );
-
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);    //Without this, you will see distortion at the edges.
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            Character_t ch = {
-                tex,
-                glm::ivec2(width, height),
-                glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-                (GLuint)face->glyph->advance.x
-            };
-
-            m_Characters.insert(std::make_pair(c, ch));
-        }
-
-        glBindTexture(GL_TEXTURE_2D, 0);
-
-#if 0	//For debugging only
-        printStringAsDots(m_label.text, face);
-#endif
-        FT_Done_Face(face);
-    }
-
-
     void Fr_Label::RenderText(RenderInfo& info) {
         glEnable(GL_DEPTH_TEST);
         glDepthMask(GL_TRUE);
@@ -149,14 +52,15 @@ namespace FR {
         glCheckFunc(glEnable(GL_BLEND));
         glCheckFunc(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
-        txtFont_program->Enable();
-        txtFont_program->SetUniformVec3("textColor", m_lblData.color);
+         txtFont_program->Enable();
+         txtFont_program->SetUniformVec3("textColor", m_lblData.color);
         glCheckFunc(glActiveTexture(GL_TEXTURE0));
         glCheckFunc(glBindVertexArray(m_vao));
 
         glm::mat4 mvp;
 
         // Positioning text at the top corner 
+
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, m_lblData.pos); // Translate to position
         model = model * glm::scale(model, glm::vec3(m_lblData.scale, m_lblData.scale, 1.0f)); // Scale uniformly
@@ -188,7 +92,7 @@ namespace FR {
             };
 
             glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-            glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+            glBindBuffer(GL_ARRAY_BUFFER, m_vbo );
             glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -200,6 +104,6 @@ namespace FR {
         // Clean up
         glBindVertexArray(0);
         glBindTexture(GL_TEXTURE_2D, 0);
-        txtFont_program->Disable();
+         txtFont_program->Disable();
     }
 }
