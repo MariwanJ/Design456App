@@ -67,8 +67,8 @@ namespace FR {
             EXE_CURRENT_DIR.erase(it);
         }
         fontPath = EXE_CURRENT_DIR + "/resources/fonts/";
-        //DEFAULT_FONT = fontPath + "Techfont.ttf"; 
-        DEFAULT_FONT = fontPath + "SUSEMono-Thin.ttf";
+        DEFAULT_FONT = fontPath + "Techfont.ttf"; 
+        //DEFAULT_FONT = fontPath + "SUSEMono-Thin.ttf";
 
         while (true) {
             size_t it = EXE_CURRENT_DIR.find("\\"); // Find the backslash

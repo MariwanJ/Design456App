@@ -34,14 +34,14 @@
 // Constructor
 namespace FR {
     Fr_Label::Fr_Label(label_t lbl) :m_lblData(lbl){
-        initialize_vbo();
         std::string shaderpath = EXE_CURRENT_DIR + "/resources/shaders/txtFont";
         txtFont_program = std::make_shared <ShaderProgram>(shaderpath);
+        initialize_vbo();
     }
 
     void Fr_Label::initialize_vbo(void) {
         //TODO : WE SHOULD MAKE SURE THAT WE CAN RENDER THIS - FIXME:
-   //Text font drawing
+        //Text font drawing
         glCheckFunc(glGenVertexArrays(1, &m_vao));
         glCheckFunc(glGenBuffers(1, &m_vbo));
         glCheckFunc(glBindVertexArray(m_vao));
@@ -73,26 +73,35 @@ namespace FR {
         glCheckFunc(glBindVertexArray(m_vao));
 
         glm::mat4 mvp;
-
+        glm::mat4 scale;
         // Positioning text at the top corner
+        glm::mat4 model = scale = glm::mat4(1.0f);
+        model = glm::translate(model, m_lblData.pos);
+       // scale= glm::scale(scale, glm::vec3(m_lblData.scale, m_lblData.scale, 1.0f));
 
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, m_lblData.pos); // Translate to position
-        model = model * glm::scale(model, glm::vec3(m_lblData.scale, m_lblData.scale, 1.0f)); // Scale uniformly
         if (m_lblData.type == ORTHOGRAPHIC) {
-            mvp = glm::ortho(0.0f, (float)info.screenDim.w, 0.0f, (float)info.screenDim.h);
+            mvp = glm::ortho(0.0f, (float)info.screenDim.w, 0.0f, (float)info.screenDim.h) * model;
         }
         else {
-            mvp = info.projection * info.modelview * model;// Perspective
+            mvp = info.projection * info.modelview * model * scale;// Perspective
         }
         txtFont_program->SetUniformMat4("mvp", mvp);
 
         float x = 0;
         float y = 0;
+        float xpos = 0;
+        float ypos = 0;
+        bool firstime = true;
         for (auto c : m_lblData.text) {
             Character_t ch = m_Characters[c];
-            float xpos = x + ch.Bearing.x;
-            float ypos = y - (ch.Size.y - ch.Bearing.y);
+            if(!firstime){
+                  xpos = x + ch.Bearing.x;
+                  ypos = y - (ch.Size.y - ch.Bearing.y);
+            }
+            else
+            {
+                firstime = false;
+            }
 
             float w = ch.Size.x;
             float h = ch.Size.y;

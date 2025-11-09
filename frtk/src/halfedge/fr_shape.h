@@ -34,28 +34,19 @@
 #include<../vendor/glm/glm/glm.hpp>
 #include<fr_widget.h>
 
-// -------------------- OpenMesh
-
 namespace FR {
     class Fr_Shape : public Fr_Widget {
     public:
-        // Constructors
+
         Fr_Shape(const std::string& path, glm::vec4 color = glm::vec4(FR_GRAY), float silhouette = 0.05);
-
-        Fr_Shape(); // Default constructor
-
-        // Destructor
+        Fr_Shape(); 
         ~Fr_Shape();
 
-        // Public Methods
         virtual void draw() override;
-
         //TODO: NOT IMPLEMENTED SHOULD BE IMPLEMENTED :: FIXME!!!
         void SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices);
-
         glm::vec3 GetVertex(unsigned int index, const float vertices[]);
 
-        // Shared Pointer
         std::shared_ptr<Fr_Texture2D> m_Texture2D;
         void Render(RenderInfo& info) override;
         void RenderText(RenderInfo& info)override;
@@ -63,17 +54,9 @@ namespace FR {
     protected:
         bool normalized_;
         Fr_Window* linktoMainWindow;
-
-        // Private Methods
         void LoadLights(std::shared_ptr<ShaderProgram> program, const std::vector<LightInfo>& lights);
         void RenderSilhouette(const glm::mat4& mvp);
-
-        // Constants
-        const size_t kMaxLights = 8; // Important for light calculations
-
-        // Shared between instances
-
-        // Attributes
+        const size_t kMaxLights = 8;
         float silhouette_;
     };
 }

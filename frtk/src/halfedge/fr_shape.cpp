@@ -41,6 +41,7 @@ namespace FR {
 	Fr_Shape::Fr_Shape(const std::string& fpath, glm::vec4 color, float silhouette) :Fr_Widget(NULL, NULL, "Shape")
 		{
 		m_label = std::make_shared<Fr_Label>(); //default constructor with default values
+		
 		if (!m_shader) {
 			m_shader = std::make_shared<Shader_t>();
 		}
@@ -55,10 +56,11 @@ namespace FR {
 			assert("ERROR: No mesh provided to the class");
 		}
 		init(); //This will initializes all Openmesh, vertices, edget ..etc
+		
 		if (m_label) {
+			m_label->pos(glm::vec3(m_boundBox->maxX()+15.0f, m_boundBox->maxY()+15.0f, 0.0f));
 			m_label->LoadFont();
 		}
-
 	}
 #if 0 //For debugging only
 

@@ -62,8 +62,8 @@ namespace FR {
             glm::vec4(FR_WHITE),                            //color
             true,                                           //visible
             PERSPECTIVE,                                    //type perspective or ortho,
-            350,                                            //Pixel size - Choose big and scale down
-            0.006f                                          //Scale
+            240,                                            //Pixel size - Choose big and scale down
+            0.0100f                                          //Scale
             });
         void initialize_vbo(void);
         ~Fr_Label();
