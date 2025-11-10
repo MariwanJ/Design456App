@@ -183,6 +183,10 @@ namespace FR {
          */
         static void deinitializeGlad();
         GLFWcursor* MainWinCursor;  //needed to change to hand, rotation.
+#if 1
+        std::shared_ptr<Fr_Shape> shape;
+#endif
+
 
         int  x()const;
         int  y()const;
@@ -237,13 +241,6 @@ namespace FR {
         
         static screenDim_t getScreenDim(void);
 
-#if 1//Experimental code - will be removed
-        std::shared_ptr <Fr_Transform> tempBu;
-        //Dummy CODE - TODO REMOVE ME WHEN TEST IS FINISHD :
-        //std::shared_ptr<Fr_Line_Widget> lineMain;
-        //std::shared_ptr<Fr_Line_Widget> lineRay;        //DEBUG CODE - FOR SHOWING RAY
-
-#endif
         int renderimGUI(userData_& data);
     
         static Fr_Window* spWindow;  //Row pointer otherwise we will not be able to set

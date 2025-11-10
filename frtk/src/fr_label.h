@@ -56,7 +56,7 @@ namespace FR {
     class Fr_Label {
     public:
         Fr_Label(label_t lblData = {
-            glm::vec3(10.0f,10.0f,0.0f),                      //Pos
+            glm::vec3(15.0f,15.0f,0.0f),                      //Pos
             "Label",                                        //label
             DEFAULT_FONT,    //Default font
             glm::vec4(FR_WHITE),                            //color
@@ -82,6 +82,7 @@ namespace FR {
         void fontColor(glm::vec4 col);
         void fontColor(float r, float g, float b, float a);
         void pos(glm::vec3 nval);
+        glm::vec3 Fr_Label::pos(void);
         void lbl_visible(bool v);
         bool lbl_visible();
         void lblType(uint8_t lbltype);

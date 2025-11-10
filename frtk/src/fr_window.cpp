@@ -70,7 +70,7 @@ namespace FR {
     }
     screenDim_t Fr_Window::m_ViewPort{ 50,50, 800,600 };
 
-    Fr_Window::Fr_Window(int x, int y, int w, int h, std::string label) :
+    Fr_Window::Fr_Window(int x, int y, int w, int h, std::string label) : shape(0),
         activeScene(nullptr),
         MainWinCursor(0), panelWidth(0.f),
         gl_version_major(4), gl_version_minor(6),

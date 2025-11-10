@@ -74,16 +74,16 @@ namespace FR {
 
         glm::mat4 mvp;
         glm::mat4 scale;
-        // Positioning text at the top corner
+
         glm::mat4 model = scale = glm::mat4(1.0f);
         model = glm::translate(model, m_lblData.pos);
-       // scale= glm::scale(scale, glm::vec3(m_lblData.scale, m_lblData.scale, 1.0f));
+         scale= glm::scale(scale, glm::vec3(m_lblData.scale, m_lblData.scale, 1.0f));
 
         if (m_lblData.type == ORTHOGRAPHIC) {
             mvp = glm::ortho(0.0f, (float)info.screenDim.w, 0.0f, (float)info.screenDim.h) * model;
         }
         else {
-            mvp = info.projection * info.modelview * model * scale;// Perspective
+            mvp = info.projection * info.modelview * model * scale; 
         }
         txtFont_program->SetUniformMat4("mvp", mvp);
 
@@ -267,6 +267,9 @@ namespace FR {
     void Fr_Label::pos(glm::vec3 nval)
     {
         m_lblData.pos = nval;
+    }
+    glm::vec3 Fr_Label::pos(void) {
+        return m_lblData.pos;
     }
 
     void Fr_Label::lbl_visible(bool v) {
