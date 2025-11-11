@@ -183,10 +183,6 @@ namespace FR {
          */
         static void deinitializeGlad();
         GLFWcursor* MainWinCursor;  //needed to change to hand, rotation.
-#if 1
-        std::shared_ptr<Fr_Shape> shape;
-#endif
-
 
         int  x()const;
         int  y()const;

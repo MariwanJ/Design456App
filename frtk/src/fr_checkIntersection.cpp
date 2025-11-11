@@ -55,8 +55,8 @@ namespace FR {
 
         // Calculate the distance from the vertex to the closest point on the ray
         float distanceToRay = glm::length(vertex - closestPoint);
-        printf("Ray was (%2.0f,%2.0f,%2.0f  ) ", rayDir.x, rayDir.y, rayDir.z);
-        printf("%f it was \n", distanceToRay);
+        printf("Ray was (%2.0f,%2.0f,%2.0f  \n) ", rayDir.x, rayDir.y, rayDir.z);
+        printf("%.2f it was \n", distanceToRay);
         return distanceToRay <= tolerance; // Check if within tolerance
     }
 

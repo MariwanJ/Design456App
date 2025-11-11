@@ -194,7 +194,15 @@ namespace FR {
             return;
         //We need to calculate Ray always, and mouse location in the world TODO: Check if this is a problem that needs to be optimized?!!!!2025-11-03
         spWindow->calculateScreenRay();
-        mouseEvent.WorldMouse = spWindow->calculateMouseWorldPos();
+        glm::vec3 ray = spWindow->activeScene->m_activeRay.direction;
+        if (abs(ray.x) > 0.6f)
+            ray.x = 0.f;
+        else if (abs(ray.y) > 0.6f)
+            ray.y = 0.f;
+        else if (abs(ray.z) > 0.6f)
+            ray.z = 0.f;
+
+        mouseEvent.WorldMouse = ray* RAY_RANGE;//spWindow->calculateMouseWorldPos();
 
         auto updateMousePosition = [&](double x, double y) {
             mouseEvent.Old_x = x;
@@ -565,7 +573,7 @@ namespace FR {
         activeScene->addObject(mline, "Fr_Line_Widget");
         std::cout << "Line\n";
 
-        std::shared_ptr<std::vector<float>> vert2 = std::make_shared<std::vector<float>>();
+      /*  std::shared_ptr<std::vector<float>> vert2 = std::make_shared<std::vector<float>>();
         std::shared_ptr<std::vector<unsigned int>> ind2 = std::make_shared<std::vector<unsigned int>>();
 
         vert2->push_back(-10.0f);
@@ -593,6 +601,6 @@ namespace FR {
 
         mFace->pointPicker(true);
         mFace->SetColor(glm::vec4(FR_GREENYELLOW));
-        activeScene->addObject(mFace, "Fr_Face_Widget");
+        activeScene->addObject(mFace, "Fr_Face_Widget");*/
     }
 }

@@ -59,17 +59,6 @@ namespace FR {
         ImGui::Text("Mouse World: (%.1f, %.1f, %.1f)", mouseEvent.WorldMouse.x, mouseEvent.WorldMouse.y, mouseEvent.WorldMouse.z);
         ImGui::Text("RAY pos : (%.1f, %.1f, %.1f)", ray.position.x, ray.position.y, ray.position.z);
         ImGui::Text("RAY dire : (%.1f, %.1f, %.1f)", ray.direction.x, ray.direction.y, ray.direction.z);
-
-        static glm::vec3 nf  { 0 };
-        if (shape){
-            nf=shape->m_label->pos();
-        }
-        ImGui::DragFloat("Translate x", &nf.x, 0.2f, -1000.f, 1000.f);
-        ImGui::DragFloat("Translate y", &nf.y, 0.2f, -1000.f, 1000.f);
-        ImGui::DragFloat("Translate z", &nf.z, 0.2f, -1000.f, 1000.f);
-        if (shape)
-            shape->m_label->pos( nf);
-
         ImGui::End();
         return 0;
     }

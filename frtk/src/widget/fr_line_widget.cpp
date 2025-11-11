@@ -198,14 +198,26 @@ namespace FR {
                 glm::vec3 p1 = glm::vec3(m_vertices->at(0), m_vertices->at(1), m_vertices->at(2));
                 glm::vec3 p2 = glm::vec3(m_vertices->at(3), m_vertices->at(4), m_vertices->at(5));
                 ray_t ray = win->activeScene->getRayValue();
-                result = (intersectPointIn3D(ray, p1, 5.0f) || intersectPointIn3D(ray, p2, 5.0f));
+                result = intersectPointIn3D(ray, p1, 5.0f) ;
                 if (result) {
                     //TODO This is not correct FIXME
                     m_vertices->at(0) = win->getMouseEvents().WorldMouse.x;
                     m_vertices->at(1) = win->getMouseEvents().WorldMouse.y;
                     m_vertices->at(2) = win->getMouseEvents().WorldMouse.z;
-
                     redraw();
+                }
+                else {
+                    result = intersectPointIn3D(ray, p2, 5.0f);
+                    if (result) {
+                        m_vertices->at(3) = win->getMouseEvents().WorldMouse.x;
+                        m_vertices->at(4) = win->getMouseEvents().WorldMouse.y;
+                        m_vertices->at(5) = win->getMouseEvents().WorldMouse.z;
+                        redraw();
+                    }
+                }
+                if (result) {
+                    m_boundBox->calBoundBox();//we must recalculate it
+                    return 0;
                 }
                 return 1;//Consume the event.
             } break;

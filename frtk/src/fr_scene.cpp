@@ -56,8 +56,7 @@ namespace FR {
     void Fr_Scene::add3DObject(std::string fName)
     {
         if (fName.find(".off") != std::string::npos) {
-            std::shared_ptr<Fr_Shape> newObj = std::make_shared<Fr_Shape>(fName); //  color and
-            Fr_Window::getFr_Window()->shape = newObj;
+            std::shared_ptr<Fr_Shape> newObj = std::make_shared<Fr_Shape>(fName);
             newObj->Translate(0, 0, 0);
             newObj->Scale(1, 1, 1);
             newObj->Rotate(0, 1, 0, 0); //TODO CHECK ME
