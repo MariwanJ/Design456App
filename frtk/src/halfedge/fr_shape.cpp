@@ -58,7 +58,7 @@ namespace FR {
 		init(); //This will initializes all Openmesh, vertices, edget ..etc
 		
 		if (m_label) {
-			m_label->pos(glm::vec3(0.0, m_boundBox->maxY(), 0.0f));
+			m_label->pos(glm::vec3(m_boundBox->minX(), m_boundBox->maxY(), 0.0f));
 			m_label->LoadFont();
 		}
 	}
