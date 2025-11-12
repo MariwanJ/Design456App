@@ -189,13 +189,11 @@ namespace FR {
         int  w()const;
         int  h()const;
 
-        float panelWidth;
-
         const char* label()const;
         void label(std::string l);
         void label(const char* l);
 
-        int imgui_CameraConfiguration(userData_& data);
+        
         float getAspectRation() const;
         eventData_t GLFWevents() const;
 

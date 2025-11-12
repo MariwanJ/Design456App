@@ -119,15 +119,87 @@ namespace FR {
 		return 1;
 	}
 
-	int Fr_Window::imgui_CameraConfiguration(userData_& data)
+ 
+	float Fr_Window::getAspectRation() const
 	{
-		//Demo code fix me
+		return Fr_Camera::m_aspect_ratio;
+	}
+	eventData Fr_Window::GLFWevents() const
+	{
+		return m_GLFWevents;
+	}
+	int Fr_Window::imgui_ViewPort()
+	{
+		activeScene->RenderScene();
+		return 0;
+	}
+
+	int Fr_Window::imgui_menu()
+	{
+		if (ImGui::BeginMainMenuBar()) //Start creating Main Window Menu.
+		{
+			ImGuiStyle& style = ImGui::GetStyle();
+			style.WindowMenuButtonPosition = ImGuiDir_Up; //Remove the button -- TODO: DONT KNOW IF WE SHOULD REMOVE IT!!!! 2025-02-01
+			style.WindowMenuButtonPosition | ImGuiStyleVar_DockingSeparatorSize;
+
+			if (ImGui::BeginMenu("File"))
+			{
+				//IMGUI_DEMO_MARKER("Examples/Menu");
+				if (ImGui::MenuItem("New")) { mnuFileNew_cb(nullptr); }
+				if (ImGui::MenuItem("Open", "Ctrl+O")) { mnuFileOpen_cb(nullptr); }
+				if (ImGui::BeginMenu("Open Recent"))
+				{
+					ImGui::MenuItem("---");
+					ImGui::EndMenu();
+				}
+				if (ImGui::MenuItem("Save", "Ctrl+S")) { mnuFileSave_cb(nullptr); }
+				if (ImGui::MenuItem("Save As..")) { mnuFileSaveAs_cb(nullptr); }
+				ImGui::Separator();
+				if (ImGui::MenuItem("Import")) { mnuFileImport_cb(nullptr); }
+				if (ImGui::MenuItem("Export")) { mnuFileImport_cb(nullptr); }
+				ImGui::Separator();
+				if (ImGui::MenuItem("Exit", "Alt+F4")) { mnuFileExit_cb(nullptr); }
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Edit"))
+			{
+				if (ImGui::MenuItem("Undo", "CTRL+Z")) { mnuEditUndo(nullptr); }
+				if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) { mnuEditRedo(nullptr); }  // Disabled item
+				ImGui::Separator();
+				if (ImGui::MenuItem("Copy", "CTRL+C")) { mnuEditCopy(nullptr); }
+				if (ImGui::MenuItem("Cut", "CTRL+X")) { mnuEditCut(nullptr); }
+				if (ImGui::MenuItem("Paste", "CTRL+V")) { mnuEditPaste(nullptr); }
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Tools"))
+			{
+				ImGui::MenuItem("Show/Hide Camera Options", "", &CamerOptionVisible);
+				ImGui::EndMenu();
+			}
+		}
+		ImGui::EndMainMenuBar();
+		return 0;
+	}
+
+	void Fr_Window::CameraOptions() {
+		userData_ data;
+
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImGuiWindowFlags window_flags = 0
+			//| ImGuiWindowFlags_NoDocking
+			//| ImGuiWindowFlags_NoTitleBar
+			| ImGuiWindowFlags_NoCollapse
+	 
+			| ImGuiWindowFlags_NoDecoration;
+
+		activeScene->m_cameras[activeScene->m_active_camera].getCamData(data);
+	 
+
+
 
 		static float f = 0.0f;
 		static int counter = 0;
-
-		ImGuiWindowFlags window_flags = 0;
-
+ 
 		ImGui::Begin("Camera Configuration!", nullptr, window_flags);                          // Create a window called "Hello, world!" and append into it.
 
 		f = data.orthoSize_;
@@ -196,82 +268,24 @@ namespace FR {
 		ImGui::Text("counter = %d", counter);
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
-		return 0;
-	}
-	float Fr_Window::getAspectRation() const
-	{
-		return Fr_Camera::m_aspect_ratio;
-	}
-	eventData Fr_Window::GLFWevents() const
-	{
-		return m_GLFWevents;
-	}
-	int Fr_Window::imgui_ViewPort()
-	{
-		activeScene->RenderScene();
-		return 0;
-	}
 
-	int Fr_Window::imgui_menu()
-	{
-		if (ImGui::BeginMainMenuBar()) //Start creating Main Window Menu.
-		{
-			ImGuiStyle& style = ImGui::GetStyle();
-			style.WindowMenuButtonPosition = ImGuiDir_Up; //Remove the button -- TODO: DONT KNOW IF WE SHOULD REMOVE IT!!!! 2025-02-01
-			style.WindowMenuButtonPosition | ImGuiStyleVar_DockingSeparatorSize;
 
-			if (ImGui::BeginMenu("File"))
-			{
-				//IMGUI_DEMO_MARKER("Examples/Menu");
-				if (ImGui::MenuItem("New")) { mnuFileNew_cb(nullptr); }
-				if (ImGui::MenuItem("Open", "Ctrl+O")) { mnuFileOpen_cb(nullptr); }
-				if (ImGui::BeginMenu("Open Recent"))
-				{
-					ImGui::MenuItem("---");
-					ImGui::EndMenu();
-				}
-				if (ImGui::MenuItem("Save", "Ctrl+S")) { mnuFileSave_cb(nullptr); }
-				if (ImGui::MenuItem("Save As..")) { mnuFileSaveAs_cb(nullptr); }
-				ImGui::Separator();
-				if (ImGui::MenuItem("Import")) { mnuFileImport_cb(nullptr); }
-				if (ImGui::MenuItem("Export")) { mnuFileImport_cb(nullptr); }
-				ImGui::Separator();
-				if (ImGui::MenuItem("Exit", "Alt+F4")) { mnuFileExit_cb(nullptr); }
-				ImGui::EndMenu();
-			}
-			if (ImGui::BeginMenu("Edit"))
-			{
-				if (ImGui::MenuItem("Undo", "CTRL+Z")) { mnuEditUndo(nullptr); }
-				if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) { mnuEditRedo(nullptr); }  // Disabled item
-				ImGui::Separator();
-				if (ImGui::MenuItem("Copy", "CTRL+C")) { mnuEditCopy(nullptr); }
-				if (ImGui::MenuItem("Cut", "CTRL+X")) { mnuEditCut(nullptr); }
-				if (ImGui::MenuItem("Paste", "CTRL+V")) { mnuEditPaste(nullptr); }
-				ImGui::EndMenu();
-			}
-			if (ImGui::BeginMenu("Tools"))
-			{
-				ImGui::MenuItem("Show/Hide Camera Options", "", &CamerOptionVisible);
-				ImGui::EndMenu();
-			}
-		}
-		ImGui::EndMainMenuBar();
-		return 0;
-	}
 
-	void Fr_Window::CameraOptions() {
-		userData_ data;
 
-		ImGuiViewport* viewport = ImGui::GetMainViewport();
-		ImGuiWindowFlags window_flags = 0
-			| ImGuiWindowFlags_NoDocking
-			| ImGuiWindowFlags_NoTitleBar
-			| ImGuiWindowFlags_NoCollapse
-			| ImGuiWindowFlags_NoNavFocus
-			| ImGuiWindowFlags_NoDecoration;
 
-		activeScene->m_cameras[activeScene->m_active_camera].getCamData(data);
-		imgui_CameraConfiguration(data);
+
+
+
+
+
+
+
+
+
+
+
+
+
 		if (activeScene->m_active_camera != data.camType_) {
 			activeScene->m_cameras[activeScene->m_active_camera].isActive(false);
 			activeScene->m_active_camera = data.camType_;
@@ -282,16 +296,17 @@ namespace FR {
 	}
 
 	void Fr_Window::SunOptions() {
-		ImGui::Begin("Sun Options");
+		
 		ImGuiViewport* viewport = ImGui::GetMainViewport();
 		ImGuiWindowFlags window_flags = 0
-			| ImGuiWindowFlags_NoDocking
-			//| ImGuiWindowFlags_NoTitleBar
+			//| ImGuiWindowFlags_NoDocking
+			// | ImGuiWindowFlags_NoTitleBar
 		   //| ImGuiWindowFlags_NoResize
 	   //   | ImGuiWindowFlags_NoMove
 		  //| ImGuiWindowFlags_NoScrollbar
 		  //| ImGuiWindowFlags_NoSavedSettings
 			;
+		ImGui::Begin("Sun Options",NULL,window_flags);
 		std::string_view str = "Sun";
 		std::shared_ptr<Fr_Light> sunT;
 		activeScene->findItemByName(sunT, str);

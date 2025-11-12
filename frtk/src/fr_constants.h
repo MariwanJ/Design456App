@@ -61,6 +61,7 @@ namespace FR {
 const unsigned int RECURSION_COUNT = 200;
 const float RAY_RANGE = 6000.0f;
 
+const unsigned char TOOLBAR_HEIGHT = 36;
 
        // Transparency - No color will be applied
     /* [Color definition used in all widgets consist of

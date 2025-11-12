@@ -34,31 +34,73 @@
 //TODO FIX ME DOSENT WORK DON'T KNOW WHY
 namespace FR {
     int Fr_Window::imgui_LeftPanel()
-    {
-        ImGui::Begin("LeftPannel");
-
+    {        
+        
+        ImGuiWindowFlags window_flags = 0//ImGuiWindowFlags_NoTitleBar |
+            | ImGuiWindowFlags_NoMove
+             | ImGuiWindowFlags_NoCollapse
+               // ImGuiWindowFlags_NoDecoration;   // <- equivalent to disabling all decorations
+            ;
+       float menuBarHeight = ImGui::GetFrameHeight();
+        int start = (int)menuBarHeight + 4 + TOOLBAR_HEIGHT;
+        ImGui::SetNextWindowPos(ImVec2(x(), y() + start));
+        ImGui::SetNextWindowSize(ImVec2(450, h() - start));
+        ImGui::Begin("LeftPannel", NULL, window_flags);
         // Get the current style
         ImGuiStyle& style = ImGui::GetStyle();
         style.WindowPadding = ImVec2(1, 1);
         style.FramePadding = ImVec2(1, 1);
         style.WindowMenuButtonPosition = ImGuiDir_None; ///remove docking button
-
-        ImGuiWindowFlags window_flags = 0;
-        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize;
-
-        ImGui::SameLine();
-        panelWidth = ImGui::GetWindowWidth();
         if (ImGui::Button(ICON_FA_PEN_CLIP, ImVec2(ICON_SIZE)))
             mnuDrawLine_cb(nullptr);                          //FILE SAVE
-
         ImGui::Button(ICON_FA_BOX);
 
-        // Display the relative position
-        ray_t ray = activeScene->getRayValue();
-        ImGui::Text("Mouse Position: (%.1f, %.1f)", mouseEvent.Old_x, mouseEvent.Old_y);
-        ImGui::Text("Mouse World: (%.1f, %.1f, %.1f)", mouseEvent.WorldMouse.x, mouseEvent.WorldMouse.y, mouseEvent.WorldMouse.z);
-        ImGui::Text("RAY pos : (%.1f, %.1f, %.1f)", ray.position.x, ray.position.y, ray.position.z);
-        ImGui::Text("RAY dire : (%.1f, %.1f, %.1f)", ray.direction.x, ray.direction.y, ray.direction.z);
+
+
+
+
+
+
+
+        if (ImGui::BeginTabBar("MyTabBar")) {
+            // First tab
+            if (ImGui::BeginTabItem("Model")) {
+                ImGui::Text("Content for Tab 1");
+
+                // Display the relative position
+                ray_t ray = activeScene->getRayValue();
+                ImGui::Text("Mouse Position: (%.1f, %.1f)", mouseEvent.Old_x, mouseEvent.Old_y);
+                ImGui::Text("Mouse World: (%.1f, %.1f, %.1f)", mouseEvent.WorldMouse.x, mouseEvent.WorldMouse.y, mouseEvent.WorldMouse.z);
+                ImGui::Text("RAY pos : (%.1f, %.1f, %.1f)", ray.position.x, ray.position.y, ray.position.z);
+                ImGui::Text("RAY dire : (%.1f, %.1f, %.1f)", ray.direction.x, ray.direction.y, ray.direction.z);
+
+                ImGui::EndTabItem();
+            }
+
+            // Second tab
+            if (ImGui::BeginTabItem("Data")) {
+                ImGui::Text("Content for Tab 2");
+                ImGui::EndTabItem();
+            }
+
+            // Third tab
+            if (ImGui::BeginTabItem("Camera")) {
+                ImGui::Text("Content for Tab 3");
+                ImGui::EndTabItem();
+            }
+
+            // End the tab bar
+            ImGui::EndTabBar();
+
+        }
+
+
+
+
+
+
+
+
         ImGui::End();
         return 0;
     }

@@ -72,7 +72,7 @@ namespace FR {
 
     Fr_Window::Fr_Window(int x, int y, int w, int h, std::string label) : 
         activeScene(nullptr),
-        MainWinCursor(0), panelWidth(0.f),
+        MainWinCursor(0), 
         gl_version_major(4), gl_version_minor(6),
         mouseDefaults{0},showOpenDialog(false),
         radiusXYZ(0.0f),
@@ -292,10 +292,6 @@ namespace FR {
     {
        /* FR_PROFILE_FUNCTION();
         FR_PROFILE_SCOPE("GLFWrun");*/
-
-        
-       
-        panelWidth = 220.0f;
         CreateScene();  
         activeScene->setupScene();
          // Setup Dear ImGui context

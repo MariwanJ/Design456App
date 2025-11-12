@@ -3,9 +3,6 @@
 namespace FR {
     int Fr_Window::imgui_ToolbarPannel()
     {
-        //Here we have the top toolbar
-        const uint8_t TOOLBAR_HEIGHT = 36;
-
         static bool use_work_area = false;
         ImGuiViewport* viewport = ImGui::GetMainViewport();
 
