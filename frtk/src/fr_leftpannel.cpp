@@ -51,21 +51,28 @@ namespace FR {
         style.WindowPadding = ImVec2(1, 1);
         style.FramePadding = ImVec2(1, 1);
         style.WindowMenuButtonPosition = ImGuiDir_None; ///remove docking button
-        if (ImGui::Button(ICON_FA_PEN_CLIP, ImVec2(ICON_SIZE)))
-            mnuDrawLine_cb(nullptr);                          //FILE SAVE
-        ImGui::Button(ICON_FA_BOX);
-
-
-
-
-
-
-
 
         if (ImGui::BeginTabBar("MyTabBar")) {
             // First tab
+            if (ImGui::BeginTabItem("ModelMain")) {
+                if (ImGui::BeginTabBar("subTab1")) {
+                    if (ImGui::BeginTabItem("CAM")) {
+                        CameraOptions();
+                        SunOptions();
+                        ImGui::EndTabItem();
+                    }
+                    ImGui::SeparatorText("Data");
+                    if (ImGui::BeginTabItem("CAM")) {
+                        CameraOptions();
+                        SunOptions();
+                        ImGui::EndTabItem();
+                    }
+                    ImGui::EndTabBar();
+
+                }
+                ImGui::EndTabItem();
+            }
             if (ImGui::BeginTabItem("Model")) {
-                ImGui::Text("Content for Tab 1");
 
                 // Display the relative position
                 ray_t ray = activeScene->getRayValue();
@@ -95,6 +102,9 @@ namespace FR {
         }
 
 
+        if (ImGui::Button(ICON_FA_PEN_CLIP, ImVec2(ICON_SIZE)))
+            mnuDrawLine_cb(nullptr);                          //FILE SAVE
+        ImGui::Button(ICON_FA_BOX);
 
 
 
@@ -102,6 +112,8 @@ namespace FR {
 
 
         ImGui::End();
+        bool sho = true;
+        ImGui::ShowDemoWindow(&sho);
         return 0;
     }
 }

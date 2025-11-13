@@ -333,15 +333,27 @@ namespace FR {
             activeScene->RenderScene();
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplGlfw_NewFrame();
-            ImGui::NewFrame();
+
+
+            ImGui::NewFrame(); 
+      
+
             ImGuizmo::BeginFrame();
             //This Renders all GUI (imGui) widgets and windows- not viewport. 
+           
+
             renderimGUI(data);
-            ImGuiIO io = ImGui::GetIO();
+            ImGuiIO io = ImGui::GetIO();     
+            
+            
+            
             if (Fr_Window::getFr_Window() != nullptr) {
                 io.DisplaySize = ImVec2(float(Fr_Window::getFr_Window()->w()), float(Fr_Window::getFr_Window()->h()));
 
                 ImGui::Render();
+            
+
+
                 ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
                 if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
                     GLFWwindow* backupCurrentContext = glfwGetCurrentContext();
@@ -349,7 +361,9 @@ namespace FR {
                     ImGui::RenderPlatformWindowsDefault();
                     glfwMakeContextCurrent(backupCurrentContext);
                 }
-            }
+            }              
+            
+
 
             glCheckFunc(glfwSwapBuffers(pGLFWWindow));
             glCheckFunc(glfwPollEvents());
