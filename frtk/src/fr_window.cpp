@@ -41,8 +41,6 @@
 #include<halfedge/fr_shape.h>
 /** end fr_grl3 */
 namespace FR {
-
- 
     int Fr_Window::RECURSION_COUNT = 200;
     float Fr_Window::RAY_RANGE = 600;
     GLuint m_QuadVA, m_QuadVB, m_QuadIB;
@@ -70,15 +68,15 @@ namespace FR {
     }
     screenDim_t Fr_Window::m_ViewPort{ 50,50, 800,600 };
 
-    Fr_Window::Fr_Window(int x, int y, int w, int h, std::string label) : 
+    Fr_Window::Fr_Window(int x, int y, int w, int h, std::string label) :
         activeScene(nullptr),
-        MainWinCursor(0), 
+        MainWinCursor(0),
         gl_version_major(4), gl_version_minor(6),
-        mouseDefaults{0},showOpenDialog(false),
+        mouseDefaults{ 0 }, showOpenDialog(false),
         radiusXYZ(0.0f),
         runCode(false), m_label(label)
     {
-        showOpenDialog=false;
+        showOpenDialog = false;
         /** from Fr_Window */
         mouseDefaults.MouseScrollScale = 5.0f;
         mouseDefaults.MouseXYScale = 0.5f;
@@ -160,7 +158,7 @@ namespace FR {
     {
         //Use this to resize the GLFW window regardless the ratio
         m_ViewPort = { xGl,yGl,wGl,hGl };
-       }
+    }
 
     //TODO : FIXME : Maybe it is not correct???
     void Fr_Window::hide()
@@ -290,17 +288,17 @@ namespace FR {
 
     int Fr_Window::GLFWrun()
     {
-       /* FR_PROFILE_FUNCTION();
-        FR_PROFILE_SCOPE("GLFWrun");*/
-        CreateScene();  
+        /* FR_PROFILE_FUNCTION();
+         FR_PROFILE_SCOPE("GLFWrun");*/
+        CreateScene();
         activeScene->setupScene();
-         // Setup Dear ImGui context
+        // Setup Dear ImGui context
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO(); (void)io;
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
         //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
         //io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
         //io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
@@ -318,7 +316,7 @@ namespace FR {
         static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
 
         io.Fonts->AddFontFromFileTTF(PathICON.c_str(), ICON_FONT_SIZE, &icons_config, icons_ranges);
-         ImGui::StyleColorsLight();
+        ImGui::StyleColorsLight();
 
         GLFWwindow* window = Fr_Window::getCurrentGLWindow();
         assert(window != nullptr);
@@ -329,30 +327,23 @@ namespace FR {
 
         while (!glfwWindowShouldClose(pGLFWWindow))
         {
-            //ALL 3D Drawings 
+            //ALL 3D Drawings
             activeScene->RenderScene();
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplGlfw_NewFrame();
 
-
-            ImGui::NewFrame(); 
-      
+            ImGui::NewFrame();
 
             ImGuizmo::BeginFrame();
-            //This Renders all GUI (imGui) widgets and windows- not viewport. 
-           
+            //This Renders all GUI (imGui) widgets and windows- not viewport.
 
             renderimGUI(data);
-            ImGuiIO io = ImGui::GetIO();     
-            
-            
-            
+            ImGuiIO io = ImGui::GetIO();
+
             if (Fr_Window::getFr_Window() != nullptr) {
                 io.DisplaySize = ImVec2(float(Fr_Window::getFr_Window()->w()), float(Fr_Window::getFr_Window()->h()));
 
                 ImGui::Render();
-            
-
 
                 ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
                 if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
@@ -361,9 +352,7 @@ namespace FR {
                     ImGui::RenderPlatformWindowsDefault();
                     glfwMakeContextCurrent(backupCurrentContext);
                 }
-            }              
-            
-
+            }
 
             glCheckFunc(glfwSwapBuffers(pGLFWWindow));
             glCheckFunc(glfwPollEvents());
@@ -377,7 +366,6 @@ namespace FR {
     }
     Fr_Window::Fr_Window()
     {
-
     }
 
     int Fr_Window::handle(int events)
@@ -390,10 +378,9 @@ namespace FR {
     }
     void Fr_Window::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights)
     {
-            SetupLight(modelview, lights);
+        SetupLight(modelview, lights);
     }
     void Fr_Window::Render(RenderInfo& info)
     {
-
     }
 }

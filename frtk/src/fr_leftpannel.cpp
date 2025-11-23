@@ -34,86 +34,103 @@
 //TODO FIX ME DOSENT WORK DON'T KNOW WHY
 namespace FR {
     int Fr_Window::imgui_LeftPanel()
-    {        
-        
+    {   
+        // bool sho = true;
+        // ImGui::ShowDemoWindow(&sho);
+
+
         ImGuiWindowFlags window_flags = 0//ImGuiWindowFlags_NoTitleBar |
             | ImGuiWindowFlags_NoMove
-             | ImGuiWindowFlags_NoCollapse
-               // ImGuiWindowFlags_NoDecoration;   // <- equivalent to disabling all decorations
+            | ImGuiWindowFlags_NoCollapse
+            // ImGuiWindowFlags_NoDecoration;   // <- equivalent to disabling all decorations
             ;
-       float menuBarHeight = ImGui::GetFrameHeight();
+        float menuBarHeight = ImGui::GetFrameHeight();
         int start = (int)menuBarHeight + 4 + TOOLBAR_HEIGHT;
         ImGui::SetNextWindowPos(ImVec2(x(), y() + start));
         ImGui::SetNextWindowSize(ImVec2(450, h() - start));
-        ImGui::Begin("LeftPannel", NULL, window_flags);
-        // Get the current style
-        ImGuiStyle& style = ImGui::GetStyle();
-        style.WindowPadding = ImVec2(1, 1);
-        style.FramePadding = ImVec2(1, 1);
-        style.WindowMenuButtonPosition = ImGuiDir_None; ///remove docking button
+        ImGui::Begin("LeftPannel", NULL, window_flags); {
+            // Get the current style
+            ImGuiStyle& style = ImGui::GetStyle();
+            style.WindowPadding = ImVec2(1, 1);
+            style.FramePadding = ImVec2(1, 1);
+            style.WindowMenuButtonPosition = ImGuiDir_None; ///remove docking button
 
-        if (ImGui::BeginTabBar("MyTabBar")) {
-            // First tab
-            if (ImGui::BeginTabItem("ModelMain")) {
-                if (ImGui::BeginTabBar("subTab1")) {
-                    if (ImGui::BeginTabItem("CAM")) {
-                        CameraOptions();
-                        SunOptions();
-                        ImGui::EndTabItem();
-                    }
-                    ImGui::SeparatorText("Data");
-                    if (ImGui::BeginTabItem("CAM")) {
-                        CameraOptions();
-                        SunOptions();
-                        ImGui::EndTabItem();
-                    }
-                    ImGui::EndTabBar();
+            if (ImGui::BeginTabBar("Main")) {
+                if (ImGui::BeginTabItem("Model")) {
+                    ImGuiIO& io = ImGui::GetIO();
+                    ImVec2 avail = ImGui::GetContentRegionAvail();
 
+                    // persistent height for top pane
+                    static float topHeight = 0.0f;
+                    const float splitterThickness = 6.0f;
+                    const float minPane = 50.0f;
+
+                    // initialize to equal halves on first visible frame or if window became very small
+                    if (topHeight <= 0.0f || topHeight > avail.y - minPane)
+                        topHeight = avail.y * 0.5f;
+
+                    // --- TOP CHILD ---
+                    ImGui::BeginChild("TopChild", ImVec2(0, topHeight), true);
+                    {
+                      
+                         
+                                ImGui::Button(ICON_FAD_USB);
+                        
+                          
+                         
+                    }
+                    ImGui::EndChild();
+                    ImDrawList* draw = ImGui::GetWindowDrawList();
+                    ImVec2 splitterPos = ImGui::GetCursorScreenPos();
+                    ImVec2 splitterEnd = ImVec2(splitterPos.x + avail.x, splitterPos.y + splitterThickness);
+                    draw->AddRectFilled(splitterPos, splitterEnd, IM_COL32(120, 120, 120, 200));
+                    ImGui::InvisibleButton("##h_splitter", ImVec2(avail.x, splitterThickness));
+                    if (ImGui::IsItemActive())
+                        topHeight += io.MouseDelta.y;
+
+                    if (ImGui::IsItemHovered() || ImGui::IsItemActive())
+                        ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeNS);
+
+                    ImGui::BeginChild("BottomChild", ImVec2(0, 0), true);
+                    {
+                        if (ImGui::BeginTabBar("Data")) {
+                            if (ImGui::BeginTabItem("Data")) {
+                                ImGui::Button(ICON_FA_42_GROUP);
+                                ImGui::EndTabItem();
+                            }
+
+                            ImGui::EndTabBar();
+                        }
+                    }
+                    ImGui::EndChild();
+                    ImGui::EndTabItem();
                 }
-                ImGui::EndTabItem();
+                
+
+                // First tab
+                if (ImGui::BeginTabItem("Objects")) {
+                    // Display the relative position
+                    ray_t ray = activeScene->getRayValue();
+                    ImGui::Text("Mouse Position: (%.1f, %.1f)", mouseEvent.Old_x, mouseEvent.Old_y);
+                    ImGui::Text("Mouse World: (%.1f, %.1f, %.1f)", mouseEvent.WorldMouse.x, mouseEvent.WorldMouse.y, mouseEvent.WorldMouse.z);
+                    ImGui::Text("RAY pos : (%.1f, %.1f, %.1f)", ray.position.x, ray.position.y, ray.position.z);
+                    ImGui::Text("RAY dire : (%.1f, %.1f, %.1f)", ray.direction.x, ray.direction.y, ray.direction.z);
+
+                    if (ImGui::Button(ICON_FA_PEN_CLIP, ImVec2(ICON_SIZE)))
+                        mnuDrawLine_cb(nullptr);            
+                    ImGui::Button(ICON_FA_BOX);
+                    ImGui::EndTabItem();
+                }
+
+                 CameraOptions();
+                 SunOptions();
+
+                // End the tab bar
+                ImGui::EndTabBar();
             }
-            if (ImGui::BeginTabItem("Model")) {
-
-                // Display the relative position
-                ray_t ray = activeScene->getRayValue();
-                ImGui::Text("Mouse Position: (%.1f, %.1f)", mouseEvent.Old_x, mouseEvent.Old_y);
-                ImGui::Text("Mouse World: (%.1f, %.1f, %.1f)", mouseEvent.WorldMouse.x, mouseEvent.WorldMouse.y, mouseEvent.WorldMouse.z);
-                ImGui::Text("RAY pos : (%.1f, %.1f, %.1f)", ray.position.x, ray.position.y, ray.position.z);
-                ImGui::Text("RAY dire : (%.1f, %.1f, %.1f)", ray.direction.x, ray.direction.y, ray.direction.z);
-
-                ImGui::EndTabItem();
-            }
-
-            // Second tab
-            if (ImGui::BeginTabItem("Data")) {
-                ImGui::Text("Content for Tab 2");
-                ImGui::EndTabItem();
-            }
-
-            // Third tab
-            if (ImGui::BeginTabItem("Camera")) {
-                ImGui::Text("Content for Tab 3");
-                ImGui::EndTabItem();
-            }
-
-            // End the tab bar
-            ImGui::EndTabBar();
-
         }
-
-
-        if (ImGui::Button(ICON_FA_PEN_CLIP, ImVec2(ICON_SIZE)))
-            mnuDrawLine_cb(nullptr);                          //FILE SAVE
-        ImGui::Button(ICON_FA_BOX);
-
-
-
-
-
-
         ImGui::End();
-        bool sho = true;
-        ImGui::ShowDemoWindow(&sho);
+
         return 0;
     }
 }

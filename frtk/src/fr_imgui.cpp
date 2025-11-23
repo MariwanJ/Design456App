@@ -259,8 +259,6 @@ namespace FR {
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			//ImGui::End();
 			ImGui::EndTabItem();
-
-
 		}
 
 		if (activeScene->m_active_camera != data.camType_) {
@@ -274,7 +272,7 @@ namespace FR {
 
 	void Fr_Window::SunOptions() {
 		
-		if (ImGui::BeginTabItem("Data")) {
+		if (ImGui::BeginTabItem("Light")) {
 
 			std::string_view str = "Sun";
 			std::shared_ptr<Fr_Light> sunT;
