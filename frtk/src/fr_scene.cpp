@@ -64,7 +64,7 @@ namespace FR {
             newObj->m_Texture2D = std::make_shared<Fr_Texture2D>();
             std::string TexturePath = EXE_CURRENT_DIR + "/resources/Texture/";
             //std::string imag =(EXE_CURRENT_DIR+"../resources/Texture/test.png");
-           //std::string imag = (TexturePath+"ts.png");
+            //std::string imag = (TexturePath+"ts.png");
             std::string imag = (TexturePath + "2.png");
             //std::string imag = (TexturePath+"3.png");
             //std::string imag = (TexturePath+"default.png");

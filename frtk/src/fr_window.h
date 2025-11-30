@@ -325,7 +325,7 @@ namespace FR {
         //Mouse picker variable
         static int RECURSION_COUNT;
         static float RAY_RANGE;
-
+        static bool m_RotateActive;
    
 
         void flush();

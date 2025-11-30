@@ -31,8 +31,7 @@
 #include <glm/gtx/string_cast.hpp>
 #include<Math/fr_math.h>
 #include<fr_constants.h>
-//TODO FIX ME DOSENT WORK DON'T KNOW WHY
-namespace FR {
+ namespace FR {
     int Fr_Window::imgui_LeftPanel()
     {   
         // bool sho = true;
@@ -42,12 +41,12 @@ namespace FR {
         ImGuiWindowFlags window_flags = 0//ImGuiWindowFlags_NoTitleBar |
             | ImGuiWindowFlags_NoMove
             | ImGuiWindowFlags_NoCollapse
-            // ImGuiWindowFlags_NoDecoration;   // <- equivalent to disabling all decorations
+           // |  ImGuiWindowFlags_NoDecoration;   // <- equivalent to disabling all decorations
             ;
         float menuBarHeight = ImGui::GetFrameHeight();
-        int start = (int)menuBarHeight + 4 + TOOLBAR_HEIGHT;
+        int start = (int)menuBarHeight + 2 + TOOLBAR_HEIGHT;
         ImGui::SetNextWindowPos(ImVec2(x(), y() + start));
-        ImGui::SetNextWindowSize(ImVec2(450, h() - start));
+        //ImGui::SetNextWindowSize(ImVec2(450, h() - start));
         ImGui::Begin("LeftPannel", NULL, window_flags); {
             // Get the current style
             ImGuiStyle& style = ImGui::GetStyle();

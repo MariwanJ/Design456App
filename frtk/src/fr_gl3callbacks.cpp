@@ -179,6 +179,7 @@ namespace FR {
 
         else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_MIDDLE && mouseEvent.Pressed == 0)
         {
+            m_RotateActive = false;
             if (activateHandle) {
                 if (spWindow->handle(FR_MIDDLE_RELEASE) == 1) {//Mouse click
                     mouseEvent.Button = -1; //consumed
@@ -194,6 +195,8 @@ namespace FR {
             return;
         //We need to calculate Ray always, and mouse location in the world TODO: Check if this is a problem that needs to be optimized?!!!!2025-11-03
         spWindow->calculateScreenRay();
+        Fr_Camera& cam = spWindow->activeScene->getActiveCamera();
+
         glm::vec3 ray = spWindow->activeScene->m_activeRay.direction;
         if (abs(ray.x) > 0.6f)
             ray.x = 0.f;
@@ -279,6 +282,9 @@ namespace FR {
                 if (spWindow->runCode) {
                     updateMousePosition(xpos, ypos);  // FIXED: use current position, not (0,0)
                     spWindow->runCode = false;
+                    spWindow->theta = glm::degrees(atan2(cam.GetCamPosition().x, cam.GetCamPosition().y));
+                    spWindow->phi = glm::degrees(asin(cam.GetCamPosition().z / glm::length(cam.GetCamPosition())));
+                    return;
                 }
 
                 if (shiftPressed) {
@@ -308,7 +314,8 @@ namespace FR {
                 if (activateHandle) {
                     res = spWindow->handle(FR_MIDDLE_RELEASE);
                     if (res) 
-                    { consumeEvent(true);
+                    { 
+                        consumeEvent(true);
                     }
                     updateMousePosition(xpos, ypos);
                     // spWindow->phi = spWindow->theta = 0.0f; //YOU SHOULD NEVER RESET them
@@ -375,9 +382,10 @@ namespace FR {
             return;
         spWindow->activeScene->getActiveCamera().getCamData(data);
 
-        if (mouseEvent.Old_x == mouseEvent.Old_y && mouseEvent.Old_x == 0) {
+        if (mouseEvent.Old_x== mouseEvent.Old_x && mouseEvent.Old_x==0) {
             mouseEvent.Old_x = xpos;
             mouseEvent.Old_y = ypos;
+            m_RotateActive = true;
             return;
         }
         double deltax = mouseEvent.Old_x - xpos;
@@ -401,23 +409,13 @@ namespace FR {
         Fr_Camera& cam = spWindow->activeScene->getActiveCamera();
         
 
-        //First time, we don't use the event, just update the mouse
-        if (mouseEvent.Old_x == mouseEvent.Old_y && mouseEvent.Old_x == 0) {
-            mouseEvent.Old_x = xpos;
-            mouseEvent.Old_y = ypos;
-            return;
-        }
-
         spWindow->radiusXYZ = glm::length(cam.m_position);
 
         // Compute deltas
-        float deltax = float(xpos - mouseEvent.Old_x);
-        float deltay = float(ypos - mouseEvent.Old_y);
+        float deltax = float(xpos - mouseEvent.Old_x) * spWindow->mouseDefaults.MouseXYScale;
+        float deltay = float(ypos - mouseEvent.Old_y) * spWindow->mouseDefaults.MouseXYScale;
         mouseEvent.Old_x = xpos;
         mouseEvent.Old_y = ypos;
-
-        deltax *= spWindow->mouseDefaults.MouseXYScale;
-        deltay *= spWindow->mouseDefaults.MouseXYScale;
 
         // Update angles
         spWindow->theta += deltax;

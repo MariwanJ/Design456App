@@ -61,7 +61,7 @@ namespace FR {
     screenDim_t Fr_Window::getScreenDim(void) {
         return m_ViewPort;
     }
-
+    bool Fr_Window::m_RotateActive = false;
     static void error_callback(int error, const char* description)
     {
         fprintf(stderr, "Error: %s\n", description);
