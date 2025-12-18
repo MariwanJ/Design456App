@@ -223,10 +223,10 @@ namespace FR {
                 }
             }
         }
-        if (result)
+      /*  if (result)
             FRTK_CORE_INFO("inside boundbox\n");
         else
-            FRTK_CORE_INFO("not inside boundbox\n");
+            FRTK_CORE_INFO("not inside boundbox\n");*/
         return result;
     }
 }

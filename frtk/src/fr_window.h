@@ -45,9 +45,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include<../src/halfedge/fr_shape.h>
-
-//fonts for Imgui icons
-#include <imguiFont/IconsFontAwesome6.h>
  
 #include <fr_filebrowser.h>
 #include <widget/fr_line_widget.h>  //TODO: Put me somewhere else

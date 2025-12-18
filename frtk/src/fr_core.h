@@ -90,13 +90,8 @@
 #include "widgets/imgui_toolbars.h"
 
 // ImGui Fonts
-#include "imguiFont/IconsFontaudio.h"
-#include "imguiFont/IconsFontAwesome6.h"
-#include "imguiFont/IconsFontAwesome6Brands.h"
-#include "imguiFont/IconsForkAwesome.h"
-#include "imguiFont/IconsKenney.h"
-#include "imguiFont/IconsMaterialDesign.h"
-
+#include "imguiFont/shapes_ttf.h"
+ 
 // -------------------- STB Image --------------------
 #include "../vendor/stb_image/src/stb_image.h"
 

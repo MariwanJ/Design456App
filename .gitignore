@@ -57,44 +57,44 @@ frtk/vendor/imGui/bin-int/
 frtk/vendor/imGui/bin/
 frtk/vendor/imGui/Makefile
 frtk/vendor/imGui/*.vcxproj
-frtk/vendor/imGui/*.vcxproj.filters
+frtk/vendor/imGui/*.vcxproj.*
 
 frtk/vendor/ImGuizmo/bin-int/
 frtk/vendor/ImGuizmo/bin/
 frtk/vendor/ImGuizmo/Makefile
 frtk/vendor/ImGuizmo/*.vcxproj
-frtk/vendor/ImGuizmo/*.vcxproj.filters
+frtk/vendor/ImGuizmo/*.vcxproj.*
 
 frtk/vendor/objloader/bin-int/
 frtk/vendor/objloader/bin/
 frtk/vendor/objloader/Makefile
 frtk/vendor/objloader/*.vcxproj
-frtk/vendor/objloader/*.vcxproj.filters
+frtk/vendor/objloader/*.vcxproj.*
 
 frtk/vendor/OpenMesh/bin-int/
 frtk/vendor/OpenMesh/bin/
 frtk/vendor/OpenMesh/Makefile
 frtk/vendor/OpenMesh/*.vcxproj
-frtk/vendor/OpenMesh/*.vcxproj.filters
+frtk/vendor/OpenMesh/*.vcxproj.*
 
 frtk/vendor/spdlog/bin-int/
 frtk/vendor/spdlog/bin/
 frtk/vendor/spdlog/Makefile
 frtk/vendor/spdlog/example
 frtk/vendor/spdlog/*.vcxproj
-frtk/vendor/spdlog/*.vcxproj.filters
+frtk/vendor/spdlog/*.vcxproj.*
 
 frtk/vendor/stb_image/bin-int/
 frtk/vendor/stb_image/bin/
 frtk/vendor/stb_image/Makefile
 frtk/vendor/stb_image/*.vcxproj
-frtk/vendor/stb_image/*.vcxproj.filters
+frtk/vendor/stb_image/*.vcxproj.*
 
 frtk/vendor/yaml-cpp/bin-int/
 frtk/vendor/yaml-cpp/bin/
 frtk/vendor/yaml-cpp/Makefile
 frtk/vendor/yaml-cpp/*.vcxproj
-frtk/vendor/yaml-cpp/*.vcxproj.filters
+frtk/vendor/yaml-cpp/*.vcxproj.*
 
 
 frtk/vendor/freetyp/bin-int/

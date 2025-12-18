@@ -31,21 +31,21 @@ namespace FR {
 
         // ImGui::Dummy(ImVec2(0.0f, 20.0f));           //space -- Vertically
         ImGui::SameLine(0,2);
-        if (ImGui::Button(ICON_FA_FILE, ImVec2(ICON_SIZE)))   mnuFileNew_cb(nullptr);                                  //FILE NEW
+        if (ImGui::Button(GLYPH_FILE_CIRCLE_PLUS, ImVec2(ICON_SIZE)))   mnuFileNew_cb(nullptr);                                  //FILE NEW
         // ImGui::Dummy(ImVec2(36.0f, 0.0f));
         ImGui::SameLine(0, 2);
 
-        if (ImGui::Button(ICON_FA_FILE_ARROW_UP, ImVec2(ICON_SIZE)))     mnuFileOpen_cb(nullptr);                     //FILE OPEN
+        if (ImGui::Button(GLYPH_FOLDER_OPEN_LINE, ImVec2(ICON_SIZE)))     mnuFileOpen_cb(nullptr);                     //FILE OPEN
         ImGui::SameLine(0, 2);
-        if (ImGui::Button(ICON_FA_FLOPPY_DISK, ImVec2(ICON_SIZE)))   mnuFileSave_cb(nullptr);                          //FILE SAVE
+        if (ImGui::Button(GLYPH_SAVE_LINE, ImVec2(ICON_SIZE)))   mnuFileSave_cb(nullptr);                          //FILE SAVE
         ImGui::SameLine(0, 2);
-        if (ImGui::Button(ICON_FA_ARROWS_DOWN_TO_LINE, ImVec2(ICON_SIZE)))   mnuFileSaveAs_cb(nullptr);                //FILE SAVE AS
+        if (ImGui::Button(GLYPH_SAVE_2_LINE, ImVec2(ICON_SIZE)))   mnuFileSaveAs_cb(nullptr);                //FILE SAVE AS
         ImGui::SameLine(0, 2);
-        if (ImGui::Button(ICON_FA_CIRCLE_XMARK, ImVec2(ICON_SIZE)))   mnuFileNew_cb(nullptr);                          //FILE CLOSE
+        if (ImGui::Button(GLYPH_CLOSE_CIRCLE_LINE, ImVec2(ICON_SIZE)))   mnuFileClose_cb(nullptr);                          //FILE CLOSE
         ImGui::SameLine(0, 2);
-        if (ImGui::Button(ICON_FA_ARROW_DOWN, ImVec2(ICON_SIZE)))   mnuFileImport_cb(nullptr);                         //FILE IMPORT
+        if (ImGui::Button(GLYPH_IMPORT_FILL, ImVec2(ICON_SIZE)))   mnuFileImport_cb(nullptr);                         //FILE IMPORT
         ImGui::SameLine(0, 2);
-        if (ImGui::Button(ICON_FA_ARROW_UP, ImVec2(ICON_SIZE)))   mnuFileExport_cb(nullptr);                            //FILE EXPORT
+        if (ImGui::Button(GLYPH_EXPORT_LINE, ImVec2(ICON_SIZE)))   mnuFileExport_cb(nullptr);                            //FILE EXPORT
 
         ImGui::End();
 

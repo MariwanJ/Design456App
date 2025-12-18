@@ -1,4 +1,4 @@
-//
+﻿//
 // This file is a part of the Open Source Design456App
 // MIT License
 //
@@ -73,7 +73,7 @@
                     {
                       
                          
-                                ImGui::Button(ICON_FAD_USB);
+                                ImGui::Button(GLYPH_CUBE);
                         
                           
                          
@@ -94,7 +94,7 @@
                     {
                         if (ImGui::BeginTabBar("Data")) {
                             if (ImGui::BeginTabItem("Data")) {
-                                ImGui::Button(ICON_FA_42_GROUP);
+                                ImGui::Button(GLYPH_CAKE_CANDLES);
                                 ImGui::EndTabItem();
                             }
 
@@ -115,9 +115,9 @@
                     ImGui::Text("RAY pos : (%.1f, %.1f, %.1f)", ray.position.x, ray.position.y, ray.position.z);
                     ImGui::Text("RAY dire : (%.1f, %.1f, %.1f)", ray.direction.x, ray.direction.y, ray.direction.z);
 
-                    if (ImGui::Button(ICON_FA_PEN_CLIP, ImVec2(ICON_SIZE)))
+                    if (ImGui::Button(GLYPH_CHART_PIE, ImVec2(ICON_SIZE)))
                         mnuDrawLine_cb(nullptr);            
-                    ImGui::Button(ICON_FA_BOX);
+                    ImGui::Button(GLYPH_BOX_1_FILL);
                     ImGui::EndTabItem();
                 }
 

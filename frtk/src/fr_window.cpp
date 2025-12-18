@@ -285,7 +285,7 @@ namespace FR {
             }
         }
     }
-
+#include <E:/tmp/raylib/src/raylib.h>
     int Fr_Window::GLFWrun()
     {
         /* FR_PROFILE_FUNCTION();
@@ -309,11 +309,11 @@ namespace FR {
         path = fontPath + "Open Sans Regular.ttf";
         io.FontDefault = io.Fonts->AddFontFromFileTTF(path.c_str(), fontSize);
 
-        std::string PathICON = fontPath + std::string(FONT_ICON_FILE_NAME_FAS);
+        std::string PathICON = fontPath + std::string("shapes_ttf.ttf");
         ImFontConfig icons_config;
         icons_config.MergeMode = true;
         icons_config.PixelSnapH = true;
-        static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
+        static const ImWchar icons_ranges[] = { ICON_MIN, ICON_MAX, 0 };
 
         io.Fonts->AddFontFromFileTTF(PathICON.c_str(), ICON_FONT_SIZE, &icons_config, icons_ranges);
         ImGui::StyleColorsLight();
@@ -327,6 +327,19 @@ namespace FR {
 
         while (!glfwWindowShouldClose(pGLFWWindow))
         {
+
+
+
+
+
+
+
+
+
+
+
+
+
             //ALL 3D Drawings
             activeScene->RenderScene();
             ImGui_ImplOpenGL3_NewFrame();
