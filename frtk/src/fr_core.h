@@ -2,7 +2,7 @@
 // This file is a part of the Open Source Design456App
 // MIT License
 //
-// Copyright (c) 2025
+// Copyright (c) 2026
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -88,6 +88,7 @@
 #include <imgui.h>
 #include <ImGuizmo.h>
 #include "widgets/imgui_toolbars.h"
+#include <fr_openmesh.h>
 
 // ImGui Fonts
 #include "imguiFont/shapes_ttf.h"
@@ -97,10 +98,9 @@
 
 // -------------------- OpenMesh --------------------
 // Must be included after GLAD/OpenGL
-#include <OpenMesh/Core/IO/MeshIO.hh>
-#include <OpenMesh/Core/Mesh/PolyMesh_ArrayKernelT.hh>
+using MyMesh = FR::FrOpenMesh;
 
-typedef OpenMesh::PolyMesh_ArrayKernelT<> MyMesh;
+
 
 // -------------------- FRTK Core --------------------
 namespace FR {

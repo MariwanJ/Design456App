@@ -1,0 +1,115 @@
+//
+// This file is a part of the Open Source Design456App
+// MIT License
+//
+// Copyright (c) 2026
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
+//  Author :Mariwan Jalal    mariwan.jalal@gmail.com
+//
+#include <fr_openmesh.h>
+ 
+namespace FR {
+    FrOpenMesh::FrOpenMesh()
+    {
+        add_property(mesh_selected, "mesh:selected");
+        add_property(v_selected, "vertex:selected");
+        add_property(e_selected, "edge:selected");
+        add_property(f_selected, "face:selected");
+        add_property(h_selected, "halfedge:selected");
+        property(mesh_selected) = false;
+    }
+
+    FrOpenMesh::~FrOpenMesh()
+    {
+        remove_property(mesh_selected);
+        remove_property(v_selected);
+        remove_property(e_selected);
+        remove_property(f_selected);
+        remove_property(h_selected);
+    }
+ 
+    void FrOpenMesh::selectMesh(bool s)
+    {
+        property(mesh_selected) = s;
+    }
+
+    bool FrOpenMesh::isMeshSelected() const
+    {
+        return property(mesh_selected);
+    }
+ 
+    void FrOpenMesh::selectVertex(VertexHandle v, bool s)
+    {
+        property(v_selected, v) = s;
+    }
+
+    bool FrOpenMesh::isVertexSelected(VertexHandle v) const
+    {
+        return property(v_selected, v);
+    }
+ 
+    void FrOpenMesh::selectEdge(EdgeHandle e, bool s)
+    {
+        property(e_selected, e) = s;
+    }
+
+    bool FrOpenMesh::isEdgeSelected(EdgeHandle e) const
+    {
+        return property(e_selected, e);
+    }
+ 
+    void FrOpenMesh::selectFace(FaceHandle f, bool s)
+    {
+        property(f_selected, f) = s;
+    }
+
+    bool FrOpenMesh::isFaceSelected(FaceHandle f) const
+    {
+        return property(f_selected, f);
+    }
+ 
+    void FrOpenMesh::selectHalfedge(HalfedgeHandle h, bool s)
+    {
+        property(h_selected, h) = s;
+    }
+
+    bool FrOpenMesh::isHalfedgeSelected(HalfedgeHandle h) const
+    {
+        return property(h_selected, h);
+    }
+ 
+    void FrOpenMesh::clearAllSelections()
+    {
+        property(mesh_selected) = false;
+
+        for (auto v : vertices())
+            property(v_selected, v) = false;
+
+        for (auto e : edges())
+            property(e_selected, e) = false;
+
+        for (auto f : faces())
+            property(f_selected, f) = false;
+
+        for (auto h : halfedges())
+            property(h_selected, h) = false;
+    }
+}

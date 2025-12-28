@@ -21,43 +21,52 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//  Original Author : Gabriel de Quadros  https://github.com/gligneul
-//  Modified to use with this project by :
+//
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
+#ifndef FR_OPENMESH_H
+#define FR_OPENMESH_H
 
-#ifndef FR_NEW_MESH_H
-#define FR_NEW_MESH_H
+#include <OpenMesh/Core/Mesh/PolyMesh_ArrayKernelT.hh>
+#include <OpenMesh/Core/IO/MeshIO.hh>
+#include <OpenMesh/Core/Utils/PropertyManager.hh>
 
-#include<../src/frtk.h>
-#include<../src/fr_core.h>
-#include<../vendor/glm/glm/glm.hpp>
-#include<fr_widget.h>
 
 namespace FR {
-    class Fr_Shape : public Fr_Widget {
+    class FrOpenMesh : public OpenMesh::PolyMesh_ArrayKernelT<>
+    {
     public:
+        // Property handles
+        OpenMesh::MPropHandleT<bool> mesh_selected;
+        OpenMesh::VPropHandleT<bool> v_selected;
+        OpenMesh::EPropHandleT<bool> e_selected;
+        OpenMesh::FPropHandleT<bool> f_selected;
+        OpenMesh::HPropHandleT<bool> h_selected;
 
-        Fr_Shape(const std::string& path, glm::vec4 color = glm::vec4(FR_GRAY), float silhouette = 0.05);
-        Fr_Shape(); 
-        ~Fr_Shape();
+        FrOpenMesh();
+        ~FrOpenMesh();
 
-        virtual void draw() override;
-        //TODO: NOT IMPLEMENTED SHOULD BE IMPLEMENTED :: FIXME!!!
-        void SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices);
-        glm::vec3 GetVertex(unsigned int index, const float vertices[]);
+        // Mesh 
+        void selectMesh(bool s);
+        bool isMeshSelected() const;
 
-        std::shared_ptr<Fr_Texture2D> m_Texture2D;
-        void Render(RenderInfo& info) override;
-        void RenderText(RenderInfo& info)override;
+        // Vertex 
+        void selectVertex(VertexHandle v, bool s);
+        bool isVertexSelected(VertexHandle v) const;
 
-    protected:
-        bool normalized_;
-        Fr_Window* linktoMainWindow;
-        void LoadLights(std::shared_ptr<ShaderProgram> program, const std::vector<LightInfo>& lights);
-        void RenderSilhouette(const glm::mat4& mvp);
-        const size_t kMaxLights = 8;
-        float silhouette_;
+        // Edge 
+        void selectEdge(EdgeHandle e, bool s);
+        bool isEdgeSelected(EdgeHandle e) const;
+
+        // Face 
+        void selectFace(FaceHandle f, bool s);
+        bool isFaceSelected(FaceHandle f) const;
+
+        // Halfedge 
+        void selectHalfedge(HalfedgeHandle h, bool s);
+        bool isHalfedgeSelected(HalfedgeHandle h) const;
+ 
+        void clearAllSelections();
     };
 }
-#endif
+#endif //#define FR_OPENMESH_H
