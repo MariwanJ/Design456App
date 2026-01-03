@@ -72,7 +72,7 @@ namespace FR {
         float MouseScrollScale;
     }mouseScale_t;
 
-
+   
 
     /**
      * Each of these variables will keep the last events happened and their value.
@@ -173,6 +173,8 @@ namespace FR {
         //Mouse picker
         bool intersectionChecker(const ray_t& ray, glm::vec3& intersectionPoint);
 
+        defaultFont SystemFont;
+
         /**
          * Function to change the initialization variable of glad to false.
          * The variable will be used to avoid calling glad functions
@@ -243,10 +245,11 @@ namespace FR {
 
     protected:
         
-  
+
 
         int imgui_LeftPanel();
         int imgui_ToolbarPannel();
+        int imgui_SelectionToolbar();
 
         int imgui_ViewPort();
         int imgui_menu();
@@ -296,6 +299,18 @@ namespace FR {
         void mnuFileExport_cb(void* Data);
         void mnuFileImport_cb(void* Data);
         void mnuFileExit_cb(void* Data);
+        
+        
+        //Selection toolbar callbacks
+        void mnuSelMesh_cb(void* data);
+        void mnuSelFace_cb(void *data);
+        void mnuSelEdges_cb(void *data);
+        void mnuSelVertex_cb(void *data);
+
+
+
+        
+        
         void CameraOptions(void);
         void SunOptions(void);
 

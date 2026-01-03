@@ -74,7 +74,16 @@ namespace FR {
     class Shape;
     class Fr_TwoD_Drawing;
 
+    //Font definition 
+    typedef struct  {
+        std::string txtFontpath;
+        std::string symbFontpath;
+        std::shared_ptr<ImFont> toolbarFont;     // = io.Fonts->AddFontFromFileTTF("path/to/your/toolbar_font.ttf", 16.0f);
+        std::shared_ptr<ImFont> textFont;        // = io.Fonts->AddFontFromFileTTF("path/to/your/text_font.ttf", 14.0f);
+        float fontSize;
+    }defaultFont;
 
+    
 
     /** Default callback type definition for all frtk widgets */
     typedef void (Fr_Callback)(Fr_Widget*, void*);
@@ -277,7 +286,9 @@ namespace FR {
 
         /** BoundBox for all objects */
         std::shared_ptr<cBoundBox3D> m_boundBox;
- 
+
+        // OpenMesh Mesh. keep the whole structure of the mesh system
+        MyMesh m_mesh;
     protected:
         
         virtual void lbl_draw();
@@ -312,8 +323,7 @@ namespace FR {
         */
         glm::vec3 m_WdgPosition;
 
-		// OpenMesh Mesh. This must be defined here and this will keep the whole structure of the mesh system
-        MyMesh m_mesh;
+
 
 		//// OpenMesh Edges object. In this widget system we use edges not faces.
 		//std::vector<std::pair<MyMesh::VertexHandle, MyMesh::VertexHandle>> openEdges;

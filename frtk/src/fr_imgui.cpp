@@ -111,6 +111,7 @@ namespace FR {
 		// Your other UI code goes here
 		if (imgui_menu() < 0) return -1;
 		if (imgui_ToolbarPannel() < 0) return -1;
+		if (imgui_SelectionToolbar() < 0) return -1;
 		if (imgui_LeftPanel() < 0) return -1;
 		//if (CamerOptionVisible) CameraOptions();
 		//SunOptions();

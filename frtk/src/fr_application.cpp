@@ -35,9 +35,8 @@ namespace FR {
 
    std::string EXE_CURRENT_DIR;
    std::string fontPath;
-   std::string DEFAULT_FONT;
 
-    Fr_Application::Fr_Application(int x, int y, int w, int h, const char* l) :Fr_Window(x, y, w, h, l)
+   Fr_Application::Fr_Application(int x, int y, int w, int h, const char* l) :Fr_Window(x, y, w, h, l)
     {
 
     }
@@ -49,36 +48,7 @@ namespace FR {
  
     int Fr_Application::run(int argc, char** argv)
     {
-        // std::string fname = "R";
-        // auto n = loadImage();
-         //std::shared_ptr<BYTE> IMG = n.getImage("nofile");
-        EXE_CURRENT_DIR = GET_CURRENT_DIRECTORY();
-        printf("Current Dir = %s\n", EXE_CURRENT_DIR.c_str());
-#if defined(_WIN32) || defined(_WIN64)
-        auto it = EXE_CURRENT_DIR.find("\\bin");
-#else
-        auto it = EXE_CURRENT_DIR.find("/bin");
-
-#endif
-        if (it == std::string::npos) {
-            printf("Warning, current dir is %s\n", EXE_CURRENT_DIR.c_str());
-        }
-        else{
-            EXE_CURRENT_DIR.erase(it);
-        }
-        fontPath = EXE_CURRENT_DIR + "/resources/fonts/";
-        DEFAULT_FONT = fontPath + "Techfont.ttf"; 
-        //DEFAULT_FONT = fontPath + "SUSEMono-Thin.ttf";
-
-        while (true) {
-            size_t it = EXE_CURRENT_DIR.find("\\"); // Find the backslash
-            if (it != std::string::npos) { // Check if found
-                EXE_CURRENT_DIR.replace(it, 1, "/"); // Replace with a forward slash
-            }
-            else {
-                break; // Exit the loop if no more backslashes
-            }
-        }
+ 
 
         createGLFWwindow();
         return GLFWrun();

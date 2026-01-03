@@ -525,6 +525,23 @@ namespace FR {
         Exit();
     }
 
+    //Selection toolbar callbacks
+    void Fr_Window::mnuSelMesh_cb(void* data)
+    {
+    }
+
+    void Fr_Window::mnuSelFace_cb(void* data)
+    {
+    }
+
+    void Fr_Window::mnuSelEdges_cb(void* data)
+    {
+    }
+
+    void Fr_Window::mnuSelVertex_cb(void* data)
+    {
+    }
+
     void Fr_Window::mnuEditUndo(void* Data) {
         std::cout << "undo\n";
     }

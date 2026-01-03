@@ -159,7 +159,11 @@ namespace FR {
 		m_shader->wdg_prog->SetUniformMat4("modelview", info.modelview);
 		m_shader->wdg_prog->SetUniformMat4("normalmatrix", normalmatrix);
 		m_shader->wdg_prog->SetUniformMat4("mvp", mvp);
-		m_shader->wdg_prog->SetUniformVec4("color", m_color);       //Object color - not light color
+		
+		if (m_mesh.isMeshSelected())
+			m_shader->wdg_prog->SetUniformVec4("color", glm::vec4(FR_BLUE));       //Object color - not light color
+		else
+			m_shader->wdg_prog->SetUniformVec4("color", m_color);       //Object color - not light color
 		m_shader->wdg_prog->SetUniformInteger("hasTexture", hasTexture());
 		draw();      //You should make a draw call to get that  done
 		m_Texture2D->Unbind();

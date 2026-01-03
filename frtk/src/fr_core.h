@@ -123,7 +123,8 @@ namespace FR {
     //used to find path for diff resources
     extern std::string EXE_CURRENT_DIR;
     extern std::string fontPath;
-    extern std::string DEFAULT_FONT;
+    
+
 
   
 
@@ -334,5 +335,9 @@ namespace FR {
         FR_LINE_WIDGET = 15,
         FR_FACE_WIDGET = 16,
     }NODETYPE;
+
+
+
+
 } //FR
 #endif

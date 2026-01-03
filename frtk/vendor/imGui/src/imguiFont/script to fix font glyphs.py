@@ -1,108 +1,110 @@
+ 
+
+#def fixVerticalSize:
 import fontforge
 import psMat
+font = fontforge.activeFont()
 
-def fixVerticalSize:
-    font = fontforge.activeFont()
+EM = font.em
+ASCENT = font.ascent
+DESCENT = font.descent
 
-    EM = font.em
-    ASCENT = font.ascent
-    DESCENT = font.descent
+for g in font.glyphs():
+    if not g.isWorthOutputting():
+        continue
 
-    for g in font.glyphs():
-        if not g.isWorthOutputting():
-            continue
+    xmin, ymin, xmax, ymax = g.boundingBox()
+    glyph_center = (ymin + ymax) / 2
 
-        xmin, ymin, xmax, ymax = g.boundingBox()
-        glyph_center = (ymin + ymax) / 2
+    # Target center of em (icon-font style)
+    target_center = (ASCENT - DESCENT) / 2
 
-        # Target center of em (icon-font style)
-        target_center = (ASCENT - DESCENT) / 2
+    dy = target_center - glyph_center
 
-        dy = target_center - glyph_center
+    g.transform(psMat.translate(0, dy))
+    g.round()
 
-        g.transform(psMat.translate(0, dy))
-        g.round()
+print("Vertical centering complete.")
+#---------------------------------------------------------------------------------
+#def fixAllSVgIcons:
+import fontforge
+import psMat
+font = fontforge.activeFont()
 
-    print("Vertical centering complete.")
+for g in font.glyphs():
+    if not g.isWorthOutputting():
+        continue
 
-def fixAllSVgIcons:
+    # Fix contour direction
+    g.correctDirection()
 
-    font = fontforge.activeFont()
+    # Remove overlaps
+    g.removeOverlap()
 
-    for g in font.glyphs():
-        if not g.isWorthOutputting():
-            continue
+    # Add missing extrema
+    g.addExtrema()
 
-        # Fix contour direction
-        g.correctDirection()
+    # Simplify tiny errors
+    g.simplify()
 
-        # Remove overlaps
-        g.removeOverlap()
+    # Round coordinates to integers
+    g.round()
 
-        # Add missing extrema
-        g.addExtrema()
+    # Auto-hinting (optional for icons)
+    g.autoHint()
 
-        # Simplify tiny errors
-        g.simplify()
+print("Auto-fix completed for all glyphs.")
 
-        # Round coordinates to integers
-        g.round()
-
-        # Auto-hinting (optional for icons)
-        g.autoHint()
-
-    print("Auto-fix completed for all glyphs.")
+#---------------------------------------------------------------------------------
+#def fixDiffSizeOfDiffSvg:
 
 
 import fontforge
 import psMat
-def fixDiffSizeOfDiffSvg:
+font = fontforge.activeFont()
 
+# Collect bounding boxes of all glyphs
+max_width = 0
+max_height = 0
 
-    font = fontforge.activeFont()
+glyphs = [g for g in font.glyphs() if g.isWorthOutputting()]
 
-    # Collect bounding boxes of all glyphs
-    max_width = 0
-    max_height = 0
+for g in glyphs:
+    xmin, ymin, xmax, ymax = g.boundingBox()
+    width = xmax - xmin
+    height = ymax - ymin
 
-    glyphs = [g for g in font.glyphs() if g.isWorthOutputting()]
+    max_width = max(max_width, width)
+    max_height = max(max_height, height)
 
-    for g in glyphs:
-        xmin, ymin, xmax, ymax = g.boundingBox()
-        width = xmax - xmin
-        height = ymax - ymin
+print("Max width:", max_width)
+print("Max height:", max_height)
 
-        max_width = max(max_width, width)
-        max_height = max(max_height, height)
+# Scale all glyphs to match the largest glyph
+for g in glyphs:
+    xmin, ymin, xmax, ymax = g.boundingBox()
+    width = xmax - xmin
+    height = ymax - ymin
 
-    print("Max width:", max_width)
-    print("Max height:", max_height)
+    if width == 0 or height == 0:
+        continue
 
-    # Scale all glyphs to match the largest glyph
-    for g in glyphs:
-        xmin, ymin, xmax, ymax = g.boundingBox()
-        width = xmax - xmin
-        height = ymax - ymin
+    scale_x = max_width / width
+    scale_y = max_height / height
+    scale = min(scale_x, scale_y)  # preserve aspect ratio
 
-        if width == 0 or height == 0:
-            continue
+    # Move glyph to origin
+    g.transform(psMat.translate(-xmin, -ymin))
 
-        scale_x = max_width / width
-        scale_y = max_height / height
-        scale = min(scale_x, scale_y)  # preserve aspect ratio
+    # Scale glyph
+    g.transform(psMat.scale(scale))
 
-        # Move glyph to origin
-        g.transform(psMat.translate(-xmin, -ymin))
+    # Re-center glyph
+    new_xmin, new_ymin, new_xmax, new_ymax = g.boundingBox()
+    dx = (max_width - (new_xmax - new_xmin)) / 2
+    dy = (max_height - (new_ymax - new_ymin)) / 2
+    g.transform(psMat.translate(dx, dy))
 
-        # Scale glyph
-        g.transform(psMat.scale(scale))
+    g.round()
 
-        # Re-center glyph
-        new_xmin, new_ymin, new_xmax, new_ymax = g.boundingBox()
-        dx = (max_width - (new_xmax - new_xmin)) / 2
-        dy = (max_height - (new_ymax - new_ymin)) / 2
-        g.transform(psMat.translate(dx, dy))
-
-        g.round()
-
-    print("All glyphs scaled and standardized.")
+print("All glyphs scaled and standardized.")

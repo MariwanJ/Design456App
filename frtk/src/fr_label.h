@@ -53,12 +53,16 @@ namespace FR {
         float scale;
     }label_t;
 
+
+
+
+
     class Fr_Label {
     public:
         Fr_Label(label_t lblData = {
             glm::vec3(15.0f,15.0f,0.0f),                      //Pos
             "Label",                                        //label
-            DEFAULT_FONT,    //Default font
+            (fontPath + "Techfont.ttf"),          //Default font
             glm::vec4(FR_WHITE),                            //color
             true,                                           //visible
             PERSPECTIVE,                                    //type perspective or ortho,
@@ -69,7 +73,7 @@ namespace FR {
         ~Fr_Label();
         void RenderText(RenderInfo& info);
 
-        void LoadFont(const std::string& fontPath = DEFAULT_FONT);
+        void LoadFont(const std::string& fontPath = fontPath + "Techfont.ttf");
 
 
 

@@ -108,6 +108,42 @@ namespace FR {
         m_ViewPort.y = y;
         m_ViewPort.h = h;
         m_ViewPort.w = w;
+        
+        // std::string fname = "R";
+ // auto n = loadImage();
+  //std::shared_ptr<BYTE> IMG = n.getImage("nofile");
+        EXE_CURRENT_DIR = GET_CURRENT_DIRECTORY();
+        printf("Current Dir = %s\n", EXE_CURRENT_DIR.c_str());
+#if defined(_WIN32) || defined(_WIN64)
+        auto it = EXE_CURRENT_DIR.find("\\bin");
+#else
+        auto it = EXE_CURRENT_DIR.find("/bin");
+
+#endif
+        if (it == std::string::npos) {
+            printf("Warning, current dir is %s\n", EXE_CURRENT_DIR.c_str());
+        }
+        else {
+            EXE_CURRENT_DIR.erase(it);
+        }
+        //DEFAULT_FONT = fontPath + "SUSEMono-Thin.ttf";
+
+        while (true) {
+            size_t it = EXE_CURRENT_DIR.find("\\"); // Find the backslash
+            if (it != std::string::npos) { // Check if found
+                EXE_CURRENT_DIR.replace(it, 1, "/"); // Replace with a forward slash
+            }
+            else {
+                break; // Exit the loop if no more backslashes
+            }
+        }
+
+
+
+        fontPath = EXE_CURRENT_DIR + "/resources/fonts/";
+
+    
+
     }
 
     /* from Fr_Window*/
@@ -296,6 +332,19 @@ namespace FR {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO(); (void)io;
+        
+        //System fonts : 
+        SystemFont.txtFontpath = fontPath + "Techfont.ttf";
+        SystemFont.symbFontpath = fontPath + "shapes_ttf.ttf";
+        SystemFont.fontSize = 14.0;
+
+        //Define default fonts 
+        ImFont* toolbarFontRaw = io.Fonts->AddFontFromFileTTF(SystemFont.symbFontpath.c_str(), SystemFont.fontSize);
+        SystemFont.toolbarFont = std::shared_ptr<ImFont>(toolbarFontRaw, [](ImFont*) { /* No-op, managed by ImGui */ });
+
+        ImFont* textFontRaw = io.Fonts->AddFontFromFileTTF(SystemFont.txtFontpath.c_str(), SystemFont.fontSize);
+        SystemFont.textFont = std::shared_ptr<ImFont>(textFontRaw, [](ImFont*) { /* No-op, managed by ImGui */ });
+
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
         //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking

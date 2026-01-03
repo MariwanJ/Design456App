@@ -70,15 +70,35 @@
 
                     // --- TOP CHILD ---
                     ImGui::BeginChild("TopChild", ImVec2(0, topHeight), true);
+
+                    static ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_DrawLinesFull | ImGuiTreeNodeFlags_DefaultOpen;
+                    ImGuiTreeNodeFlags leaf_flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+
+                    // Root node
+                    if (ImGui::TreeNodeEx("Root", base_flags))
                     {
-                      
-                         
-                                ImGui::Button(GLYPH_CUBE);
-                        
-                          
-                         
+                        for (int i = 0; i < activeScene->m_world.size(); ++i)
+                        {
+                            ImGui::PushID(activeScene->m_world[i].id);
+
+                            ImGui::PushFont(SystemFont.toolbarFont.get());
+                            std::string res = GLYPH_CUBE + activeScene->m_world[i].name + " - " + std::to_string(activeScene->m_world[i].id);
+
+                            // Leaf node
+                            ImGui::TreeNodeEx(res.c_str(), leaf_flags);
+                            ImGui::PopFont();
+
+                            if (ImGui::IsItemClicked())
+                            {
+                                activeScene->m_world[i].Sceneitem->m_mesh.selectMesh(true);
+                            }
+                            ImGui::PopID();
+                        }
+                        ImGui::TreePop(); // Only pop for root
                     }
+
                     ImGui::EndChild();
+
                     ImDrawList* draw = ImGui::GetWindowDrawList();
                     ImVec2 splitterPos = ImGui::GetCursorScreenPos();
                     ImVec2 splitterEnd = ImVec2(splitterPos.x + avail.x, splitterPos.y + splitterThickness);
