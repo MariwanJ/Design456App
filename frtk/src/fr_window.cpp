@@ -74,7 +74,7 @@ namespace FR {
         gl_version_major(4), gl_version_minor(6),
         mouseDefaults{ 0 }, showOpenDialog(false),
         radiusXYZ(0.0f),
-        runCode(false), m_label(label)
+        runCode(false), m_label(label), m_currentSelMode(SelectionMode::Mesh)
     {
         showOpenDialog = false;
         /** from Fr_Window */
@@ -321,7 +321,6 @@ namespace FR {
             }
         }
     }
-#include <E:/tmp/raylib/src/raylib.h>
     int Fr_Window::GLFWrun()
     {
         /* FR_PROFILE_FUNCTION();

@@ -338,7 +338,7 @@ namespace FR {
         static int RECURSION_COUNT;
         static float RAY_RANGE;
         static bool m_RotateActive;
-   
+        SelectionMode  m_currentSelMode; //0 Mesh, 1 Face, 2 Edge, 3Vertex
 
         void flush();
        

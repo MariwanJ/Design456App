@@ -27,6 +27,24 @@
 #include <fr_toolbar.h>
 #include <fr_window.h>
 namespace FR {
+   
+    bool IconButtonPressed(const char* icon, bool active, const ImVec2& size)
+    {
+        if (active)
+        {
+            ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyle().Colors[ImGuiCol_ButtonActive]);
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImGui::GetStyle().Colors[ImGuiCol_ButtonActive]);
+        }
+
+        bool pressed = ImGui::Button(icon, size);
+
+        if (active)
+            ImGui::PopStyleColor(2);
+
+        return pressed;
+    }
+
+
     int Fr_Window::imgui_SelectionToolbar() {
         static bool use_work_area = false;
         ImGuiViewport* viewport = ImGui::GetMainViewport();
@@ -54,12 +72,31 @@ namespace FR {
         ImVec4 pressedCol = ImVec4(FR_BEIGE);
         ImVec4 normalCol = ImVec4(FR_LIGHTGRAY);
 
-        // ImGui::Dummy(ImVec2(20.0f, 0.0f));           //space -- Horizontally 
-        //ImGui::SameLine(0.f, 36.f);
-        if (ImGui::Button(GLYPH_CUBES, ImVec2(ICON_SIZE)))              mnuSelMesh_cb(nullptr);
-        if (ImGui::Button(GLYPH_BOX_1_FILL, ImVec2(ICON_SIZE)))         mnuSelFace_cb(nullptr);
-        if (ImGui::Button(GLYPH_SHAPE_2_FILL, ImVec2(ICON_SIZE)))       mnuSelEdges_cb(nullptr);
-        if (ImGui::Button(GLYPH_BORDER_TOP_LEFT, ImVec2(ICON_SIZE)))    mnuSelVertex_cb(nullptr);
+        if (IconButtonPressed(GLYPH_CUBES, m_currentSelMode == SelectionMode::Mesh, ImVec2(ICON_SIZE)))
+        {
+            m_currentSelMode = SelectionMode::Mesh;
+            mnuSelMesh_cb(nullptr);
+        }
+
+        if (IconButtonPressed(GLYPH_BOX_1_FILL, m_currentSelMode == SelectionMode::Face, ImVec2(ICON_SIZE)))
+        {
+            m_currentSelMode = SelectionMode::Face;
+            mnuSelFace_cb(nullptr);
+        }
+
+        if (IconButtonPressed(GLYPH_SHAPE_2_FILL, m_currentSelMode == SelectionMode::Edge, ImVec2(ICON_SIZE)))
+        {
+            m_currentSelMode = SelectionMode::Edge;
+            mnuSelEdges_cb(nullptr);
+        }
+
+        if (IconButtonPressed(GLYPH_BORDER_TOP_LEFT, m_currentSelMode == SelectionMode::Vertex, ImVec2(ICON_SIZE)))
+        {
+            m_currentSelMode = SelectionMode::Vertex;
+            mnuSelVertex_cb(nullptr);
+        }
+
+
         ImGui::End();
 
         return 0;
@@ -99,6 +136,8 @@ namespace FR {
         if (ImGui::Button(GLYPH_FILE_CIRCLE_PLUS, ImVec2(ICON_SIZE)))   mnuFileNew_cb(nullptr);               //FILE NEW
         // ImGui::Dummy(ImVec2(36.0f, 0.0f));
         ImGui::SameLine(0, 2);
+
+  
 
         if (ImGui::Button(GLYPH_FOLDER_OPEN_LINE, ImVec2(ICON_SIZE)))     mnuFileOpen_cb(nullptr);            //FILE OPEN
         ImGui::SameLine(0, 2);

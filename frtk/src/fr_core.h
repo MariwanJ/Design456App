@@ -337,7 +337,13 @@ namespace FR {
     }NODETYPE;
 
 
-
+   typedef enum 
+    {
+        Mesh = 0,
+        Face,
+        Edge,
+        Vertex
+    }SelectionMode;
 
 } //FR
 #endif
