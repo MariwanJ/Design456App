@@ -174,6 +174,9 @@ namespace FR {
         bool intersectionChecker(const ray_t& ray, glm::vec3& intersectionPoint);
 
         defaultFont SystemFont;
+        
+        //Selection mode toolbar
+        SelectionMode  m_currentSelMode; //0 Mesh, 1 Face, 2 Edge, 3Vertex
 
         /**
          * Function to change the initialization variable of glad to false.
@@ -189,10 +192,12 @@ namespace FR {
         int  h()const;
 
         const char* label()const;
-        void label(std::string l);
+        void label(std::string &l);
         void label(const char* l);
 
         
+        static float m_MousePickerRadius;
+
         float getAspectRation() const;
         eventData_t GLFWevents() const;
 
@@ -338,7 +343,7 @@ namespace FR {
         static int RECURSION_COUNT;
         static float RAY_RANGE;
         static bool m_RotateActive;
-        SelectionMode  m_currentSelMode; //0 Mesh, 1 Face, 2 Edge, 3Vertex
+        
 
         void flush();
        
@@ -361,7 +366,7 @@ namespace FR {
         bool showOpenDialog;
         //will be true if rotate/pan starts.
         static bool MouseOnce;
-        static float m_MousePickerRadius;
+       
         static float phi, theta;
 
         //Camera rotation - mouse callback

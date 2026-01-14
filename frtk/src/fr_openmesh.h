@@ -33,6 +33,13 @@
 
 
 namespace FR {
+
+    typedef OpenMesh::MeshHandle MeshHandle;
+    typedef OpenMesh::FaceHandle FaceHandle;
+    typedef OpenMesh::EdgeHandle EdgeHandle;
+    typedef OpenMesh::VertexHandle VertexHandle;
+
+
     class FrOpenMesh : public OpenMesh::PolyMesh_ArrayKernelT<>
     {
     public:

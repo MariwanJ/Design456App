@@ -30,6 +30,8 @@
 #include <glm/gtx/norm.hpp> // For glm::distance2
 #include<fr_checkIntersection.h>
 #include <fr_window.h>
+#include <fr_openmesh.h>
+
 namespace FR {
     // Small epsilon for floating-point checks
     constexpr float EPSILON = 1e-6f;
@@ -63,7 +65,7 @@ namespace FR {
     // =====================================================
     // 2. Line Segment Picking
     // =====================================================
-    bool intersectLineSegment3D(const std::vector<glm::vec3>& line, const ray_t& ray, glm::vec3& intersectionPoint, float pickingRadius) {
+    bool intersectLineSegment3D(const ray_t& ray, const std::vector<glm::vec3>& line, glm::vec3& intersectionPoint) {
         if (line.size() < 2) return false;
 
         glm::vec3 A = line[0];
@@ -101,8 +103,9 @@ namespace FR {
         glm::vec3 pointOnRay = C + s * d;
 
         float distance = glm::length(pointOnSegment - pointOnRay);
-
-        if (distance <= pickingRadius) {
+        Fr_Window* win = Fr_Window::getFr_Window();
+        assert(win );
+        if (distance <= win->m_MousePickerRadius) {
             intersectionPoint = pointOnSegment;
             return true;
         }
@@ -126,7 +129,7 @@ namespace FR {
         glm::vec3 h = glm::cross(ray.direction, edge2);
         float a = glm::dot(edge1, h);
 
-        if (fabs(a) < EPSILON)
+        if (fabs(a) < (EPSILON* glm::length(edge1))) // scale epsilon by the triangle size
             return false; // Ray parallel to triangle
 
         float f = 1.0f / a;
@@ -143,7 +146,7 @@ namespace FR {
             return false;
 
         float t = f * glm::dot(edge2, q);
-        if (t > EPSILON) {
+        if (t > (EPSILON * glm::length(edge1))) {
             intersectionPoint = ray.position + t * ray.direction;
             return true;
         }
@@ -169,6 +172,50 @@ namespace FR {
             }
         }
         return false;
+    }
+
+
+    bool intersectRayOpenMesh(
+        const ray_t& ray,
+        const FrOpenMesh& mesh,
+        glm::vec3& intersectionPoint)   // pass by reference!
+    {
+        bool hit = false;
+        float closestDist = std::numeric_limits<float>::max();
+
+        for (auto f : mesh.faces())
+        {
+            std::vector<glm::vec3> faceVerts;
+            for (auto fv : mesh.fv_range(f))
+            {
+                const auto& pt = mesh.point(fv);
+                faceVerts.push_back(glm::vec3(pt[0], pt[1], pt[2]));
+            }
+
+            if (faceVerts.size() < 3) continue; // skip degenerate faces
+
+            // Fan triangulation: v0,v1,v2; v0,v2,v3; ...
+            glm::vec3 v0 = faceVerts[0];
+            
+            for (size_t i = 1; i < faceVerts.size() - 1; ++i)
+            {
+                std::vector<glm::vec3> tri = { v0, faceVerts[i], faceVerts[i + 1] };
+                glm::vec3 p; // intersection point
+                if (intersectRayTriangle(ray, tri, p))
+                {
+                    float dist = glm::length(p - ray.position);  // use ray.origin
+
+                    if (dist < closestDist)
+                    {
+                        closestDist = dist;
+                        intersectionPoint = p;
+                        hit = true;
+                    }
+                }
+            }
+        }
+
+        return hit;
     }
 
 }

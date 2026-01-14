@@ -31,17 +31,16 @@
 #include <glm/gtx/string_cast.hpp>
 #include<Math/fr_math.h>
 #include<fr_constants.h>
- namespace FR {
+namespace FR {
     int Fr_Window::imgui_LeftPanel()
-    {   
+    {
         // bool sho = true;
         // ImGui::ShowDemoWindow(&sho);
-
 
         ImGuiWindowFlags window_flags = 0//ImGuiWindowFlags_NoTitleBar |
             | ImGuiWindowFlags_NoMove
             | ImGuiWindowFlags_NoCollapse
-           // |  ImGuiWindowFlags_NoDecoration;   // <- equivalent to disabling all decorations
+            // |  ImGuiWindowFlags_NoDecoration;   // <- equivalent to disabling all decorations
             ;
         float menuBarHeight = ImGui::GetFrameHeight();
         int start = (int)menuBarHeight + 2 + TOOLBAR_HEIGHT;
@@ -59,16 +58,13 @@
                     ImGuiIO& io = ImGui::GetIO();
                     ImVec2 avail = ImGui::GetContentRegionAvail();
 
-                    // persistent height for top pane
                     static float topHeight = 0.0f;
                     const float splitterThickness = 6.0f;
                     const float minPane = 50.0f;
 
-                    // initialize to equal halves on first visible frame or if window became very small
                     if (topHeight <= 0.0f || topHeight > avail.y - minPane)
                         topHeight = avail.y * 0.5f;
 
-                    // --- TOP CHILD ---
                     ImGui::BeginChild("TopChild", ImVec2(0, topHeight), true);
 
                     static ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_DrawLinesFull | ImGuiTreeNodeFlags_DefaultOpen;
@@ -124,7 +120,6 @@
                     ImGui::EndChild();
                     ImGui::EndTabItem();
                 }
-                
 
                 // First tab
                 if (ImGui::BeginTabItem("Objects")) {
@@ -136,13 +131,13 @@
                     ImGui::Text("RAY dire : (%.1f, %.1f, %.1f)", ray.direction.x, ray.direction.y, ray.direction.z);
 
                     if (ImGui::Button(GLYPH_CHART_PIE, ImVec2(ICON_SIZE)))
-                        mnuDrawLine_cb(nullptr);            
+                        mnuDrawLine_cb(nullptr);
                     ImGui::Button(GLYPH_BOX_1_FILL);
                     ImGui::EndTabItem();
                 }
 
-                 CameraOptions();
-                 SunOptions();
+                CameraOptions();
+                SunOptions();
 
                 // End the tab bar
                 ImGui::EndTabBar();

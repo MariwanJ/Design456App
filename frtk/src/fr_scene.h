@@ -162,6 +162,7 @@ namespace FR {
 		//Grid, Axis, Camera which is always created automatically.User shouldn't need to do anything
 		void setupScene();
 
+
 		/**
 		 * Handel events coming from GLFW window and distribute it to the registered objects inside the Scene.
 		 *
@@ -177,6 +178,10 @@ namespace FR {
 
 		protected:
 			ray_t m_activeRay; 
+			
+			int Fr_Scene::findClosestMeshToRay(const ray_t& m_activeRay);
+			int handle_selection(int ev);
+
 	private:
 		glm::vec4 m_Background;
 	};

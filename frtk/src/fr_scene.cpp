@@ -38,9 +38,8 @@
 
 namespace FR {
     Fr_Scene::Fr_Scene() :m_cameras{}, m_active_camera(uint8_t(0)),
-        m_Background{ 0.9f, 0.9f, 0.9f,1.0f }, 
+        m_Background{ 0.9f, 0.9f, 0.9f,1.0f },
         m_activeRay{ glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,0.0f,0.0f) } {
- 
     }
 
     void Fr_Scene::SetBackgroud(float r, float g, float b) {
@@ -49,7 +48,7 @@ namespace FR {
     void Fr_Scene::SetBackgroud(float r, float g, float b, float alfa) {
         m_Background = glm::vec4(r, g, b, alfa);
     }
-    Fr_Camera & Fr_Scene::getActiveCamera(void) {
+    Fr_Camera& Fr_Scene::getActiveCamera(void) {
         return m_cameras[m_active_camera];
     }
     //TODO : THIS MUST BE FIXED !!!!!!
@@ -281,35 +280,160 @@ namespace FR {
         CreateAxis();
         CreateGrid();
     }
-
-    int Fr_Scene::handle(int ev)
-    {
-        //Here, we should try to send the events to each object in the scene.
-        // Depending on where the events occur, object should get them otherwise just ignore them
+    int Fr_Scene::findClosestMeshToRay(const ray_t& m_activeRay) {
+        Fr_Window* win = Fr_Window::getFr_Window();
+        assert(win != 0);
+        GLFWwindow* glfWin = Fr_Window::getCurrentGLWindow();
+        glm::vec3 intersectionPoint(0.0f, 0.0f, 0.0f);
+        float closestT = std::numeric_limits<float>::max();
+        float t;
+        int IndexOfclosestItem = -1;
         for (size_t i = 0; i < m_world.size(); ++i) {
-            if (!m_world.at(i).Sceneitem->active()) {
-                continue;
-            }
-            /*Here we need to know if the ray is inside the boundbox,
-                if so, we send the event to the object/widget
-            */
-            if (m_world.at(i).Sceneitem->m_boundBox == nullptr) {
-                //Doesn't have bound box, just go out
-                continue;
-            }
-            if (m_world.at(i).Sceneitem->m_boundBox->isRayInsideBoundingBox(m_activeRay)) {
-                if (m_world.at(i).Sceneitem->handle(ev) == 1)  //event consumed
-                {
-                    return 1;// We are done
+            if (intersectRayOpenMesh(m_activeRay, m_world[i].Sceneitem->m_mesh, intersectionPoint)) {
+                t = glm::length(intersectionPoint - m_activeRay.position);
+                if (t < closestT) {
+                    closestT = t;
+                    IndexOfclosestItem = i;
                 }
             }
         }
+        return IndexOfclosestItem;
+    }
+    int Fr_Scene::handle_selection(int ev) {
+        //We need to find closest object to the screen,
+        // if the object is behind another object, we should ignore it
+        Fr_Widget* closestItem = nullptr;
+        float t = 0.0f;
+
+        glm::vec3 intersectionPoint;
+
+        struct MeshItem { MeshHandle handle; Fr_Widget  widget; };
+        struct FaceItem { FaceHandle handle; Fr_Widget  widget; };
+        struct EdgeItem { EdgeHandle handle; Fr_Widget  widget; };
+        struct VertexItem { VertexHandle handle; Fr_Widget  widget; };
+
+        std::vector<MeshItem>   sel_mesh;
+        std::vector<FaceItem>   sel_face;
+        std::vector<EdgeItem>   sel_edge;
+        std::vector<VertexItem> sel_vert;
+
+        Fr_Window* win = Fr_Window::getFr_Window();
+        assert(win != 0);
+        GLFWwindow* glfWin = Fr_Window::getCurrentGLWindow();
+
+        eventData_t glfData = win->GLFWevents();
+        bool ctrlPressed = (glfData.lastMod & GLFW_MOD_CONTROL);
+        bool mouseClicked = (ev == FR_LEFT_PUSH);
+
+        //Here, we should try to send the events to each object in the scene.
+        // Depending on where the events occur, object should get them otherwise just ignore them
+        if (mouseClicked) {
+            int IndexOfclosestItem = findClosestMeshToRay(m_activeRay);
+            
+            if (IndexOfclosestItem < 0) {
+                //Ray did not hit anything
+                for (size_t i = 0; i < m_world.size(); ++i) {
+                    m_world.at(i).Sceneitem->m_mesh.clearAllSelections(); //Deselect all objects that are not visible
+                }
+                return -1; //no selection, all cleared
+            }
+            else {
+                if (m_world.at(IndexOfclosestItem).Sceneitem->m_boundBox->isRayInsideBoundingBox(m_activeRay)) {
+                    switch (win->m_currentSelMode) {
+                    case SelectionMode::Mesh: {
+                        m_world.at(IndexOfclosestItem).Sceneitem->m_mesh.selectMesh(true);
+                        return 1; 
+                    } break;
+                    case SelectionMode::Face: {
+                        for (auto f_it = m_world[IndexOfclosestItem].Sceneitem->m_mesh.faces_begin();
+                            f_it != m_world[IndexOfclosestItem].Sceneitem->m_mesh.faces_end();
+                            ++f_it) {
+                                OpenMesh::FaceHandle fh = *f_it;
+                                std::vector<glm::vec3> verts;
+                                for (auto fv_it = m_world[IndexOfclosestItem].Sceneitem->m_mesh.fv_begin(fh);
+                                    fv_it != m_world[IndexOfclosestItem].Sceneitem->m_mesh.fv_end(fh);
+                                    ++fv_it)
+                                {
+                                    const auto& p = m_world[IndexOfclosestItem].Sceneitem->m_mesh.point(*fv_it);
+                                    verts.emplace_back(glm::vec3(p[0], p[1], p[2]));
+                                }
+
+                                if (intersectRayPolygon(m_activeRay, verts, intersectionPoint)) {
+                                    m_world[IndexOfclosestItem].Sceneitem->m_mesh.selectFace(fh, true);
+                                    return 1;//we are done, only one face per each click
+                                    FRTK_CORE_INFO("FACE FOUND");
+                                }
+                        }
+                    } break;
+                    case SelectionMode::Edge:
+                    {
+                        auto& mesh = m_world[IndexOfclosestItem].Sceneitem->m_mesh;
+                        for (auto e_it = mesh.edges_begin(); e_it != mesh.edges_end(); ++e_it)
+                        {
+                            OpenMesh::EdgeHandle eh = *e_it;
+                            std::vector<glm::vec3> verts;
+                            verts.reserve(2);
+                            for (auto ev_it = mesh.ev_begin(eh); ev_it != mesh.ev_end(eh); ++ev_it)
+                            {
+                                const auto& p = mesh.point(*ev_it);
+                                verts.emplace_back(glm::vec3(p[0], p[1], p[2]));
+                            }
+                            if (intersectLineSegment3D(m_activeRay, verts, intersectionPoint))
+                            {
+                                mesh.selectEdge(eh, true);
+                                return 1; 
+                            }
+                        }
+                    }break;
+                    case SelectionMode::Vertex: {
+                        auto& mesh = m_world[IndexOfclosestItem].Sceneitem->m_mesh;
+
+                        for (auto v_it = mesh.vertices_begin(); v_it != mesh.vertices_end(); ++v_it)
+                        {
+                            OpenMesh::VertexHandle vh = *v_it;
+                            const auto& p = mesh.point(vh);
+                            glm::vec3 vertexPos(p[0], p[1], p[2]);
+                            if (intersectPointIn3D(m_activeRay, vertexPos))
+                            {
+                                mesh.selectVertex(vh, true);
+                                return 1; // done, only one vertex per click
+                            }
+                        }
+                    } break;
+                    default: {} break;
+                    }
+                }
+                else
+                {
+                    //might be multi selection since the ray was not inside the boundbox of the current object
+                    if (!ctrlPressed) {
+                        for (size_t i = 0; i < m_world.size(); ++i) {
+                            m_world.at(i).Sceneitem->m_mesh.clearAllSelections(); //Deselect all objects that are not visible
+                        }
+                        return -1; //no selection, all cleared
+                    }
+                    else
+                    {
+                        //Multi - Selection.
+                    }
+                }
+                return -1;
+            }
+
+        }
+        return 0;
+    }
+    int Fr_Scene::handle(int ev)
+    {
+        int res = handle_selection(ev);
+        if (res == 1) return 1;
+        else if (res == -1) return 0;
         return 0; //We could not use the event .. Return 0 as we don't care , Never return value >0 if you don't care
     }
 
     void Fr_Scene::setRayValue(ray_t val)
     {
-        m_activeRay=val;
+        m_activeRay = val;
     }
 
     /**
@@ -350,7 +474,7 @@ namespace FR {
         render_info.id = 0;
         render_info.render_transparent = false;
 
-        glViewport(0, 0, win->w(), win->h());  
+        glViewport(0, 0, win->w(), win->h());
         // Enable depth testing
         glCheckFunc(glEnable(GL_DEPTH_TEST));
         glClearColor(win->clear_color.x * win->clear_color.w,
@@ -358,7 +482,7 @@ namespace FR {
             win->clear_color.z * win->clear_color.w,
             win->clear_color.w);
         glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-       // glCheckFunc(glDepthFunc(GL_LESS));
+        // glCheckFunc(glDepthFunc(GL_LESS));
         RenderPrimativeShapes(render_info);
         // Render 3D objects
         Render(render_info);
@@ -417,13 +541,12 @@ namespace FR {
             m_world[i].Sceneitem->Render(info);
         }
         RenderText(info);
-
     }
     void Fr_Scene::RenderText(FR::RenderInfo& info) {
         for (size_t i = 0; i < m_world.size(); ++i) {
-            if(m_world[i].Sceneitem->m_label){
-             if(m_world[i].Sceneitem->m_label->lbl_visible())
-                m_world[i].Sceneitem->RenderText(info);
+            if (m_world[i].Sceneitem->m_label) {
+                if (m_world[i].Sceneitem->m_label->lbl_visible())
+                    m_world[i].Sceneitem->RenderText(info);
             }
         }
     }
@@ -555,7 +678,7 @@ namespace FR {
                         ln.push_back(glm::vec3(vert->at(ii), vert->at(ii + 1), vert->at(ii + 2)));
                     }
                     glm::vec3 intersectionPoint(0.0f);
-                    if (intersectLineSegment3D(ln, ray, intersectionPoint, m_MousePickerRadius)) {
+                    if (intersectLineSegment3D(ray, ln, intersectionPoint)) {
                         // Check if the intersection point is within the bounds of the line segment plus radius
                         glm::vec3 minPoint = glm::min(ln[0], ln[1]);
                         glm::vec3 maxPoint = glm::max(ln[0], ln[1]);

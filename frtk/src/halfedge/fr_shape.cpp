@@ -29,7 +29,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <halfedge/fr_shape.h>
-#include "fr_shape.h"
+#include <fr_window.h>
 
 namespace FR {
 	static const glm::mat4 kShadowMapBiasMatrix(
@@ -38,7 +38,8 @@ namespace FR {
 		0.0, 0.0, 0.5, 0.0,
 		0.5, 0.5, 0.5, 1.0);
 
-	Fr_Shape::Fr_Shape(const std::string& fpath, glm::vec4 color, float silhouette) :Fr_Widget(NULL, NULL, "Shape")
+	Fr_Shape::Fr_Shape(const std::string& fpath, glm::vec4 color, float silhouette) :Fr_Widget(NULL, NULL, "Shape"),
+			linktoMainWindow(NULL),normalized_(false),silhouette_(0.0f)
 		{
 		m_label = std::make_shared<Fr_Label>(); //default constructor with default values
 		
@@ -159,8 +160,9 @@ namespace FR {
 		m_shader->wdg_prog->SetUniformMat4("modelview", info.modelview);
 		m_shader->wdg_prog->SetUniformMat4("normalmatrix", normalmatrix);
 		m_shader->wdg_prog->SetUniformMat4("mvp", mvp);
-		
-		if (m_mesh.isMeshSelected())
+		Fr_Window* win = Fr_Window::getFr_Window();
+		assert(win);
+		if(m_mesh.isMeshSelected())
 			m_shader->wdg_prog->SetUniformVec4("color", glm::vec4(FR_BLUE));       //Object color - not light color
 		else
 			m_shader->wdg_prog->SetUniformVec4("color", m_color);       //Object color - not light color
@@ -245,4 +247,59 @@ namespace FR {
 			return 0;
 
 	*/
+
+	int Fr_Shape::handle(int e) {
+		if (!m_active)
+			return 0; //we don't use the event/we don't care
+
+		Fr_Window* win = Fr_Window::getFr_Window();
+		//TODO : Implement mouse-over for all types, mesh, face, edge, & Vertex.
+		switch (e) {
+			case FR_MOUSE_MOVE: {
+				//Mouse move without clicking or entering key ..
+			//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!TODO : FIXME CONTINUE DEVELOPING THIS 
+			//! 
+			
+				return 0;//
+			}
+							  break;
+
+			case  FR_LEFT_PUSH: {
+				ray_t ray = win->activeScene->getRayValue();
+				bool result;
+				glm::vec3 intersectionPoint;
+				switch (win->m_currentSelMode) {
+				case SelectionMode::Mesh: {
+					result = intersectRayOpenMesh(ray, m_mesh, intersectionPoint);
+					if (result) {
+						m_mesh.selectMesh(true);
+						return 1;
+					}
+					else {
+						m_mesh.selectMesh(false);
+						return 0;
+					}
+				} break;
+				case SelectionMode::Face: {
+				} break;
+				case SelectionMode::Edge: {
+				} break;
+				case SelectionMode::Vertex: {
+				} break;
+				}
+				
+				return 0;
+			} break;
+
+			case FR_KEYBOARD: {
+
+			} break;
+			case FR_LEFT_DRAG_PUSH: {
+				
+			} break;
+		}
+		return 0;
+
+
+	}
 }

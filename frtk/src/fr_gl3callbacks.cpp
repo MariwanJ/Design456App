@@ -214,7 +214,7 @@ namespace FR {
 
         // Modifier keys
         bool shiftPressed = (glfwGetKey(win, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS ||
-            glfwGetKey(win, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS);
+                             glfwGetKey(win, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS);
 
         int saveButton = mouseEvent.Button;
         int res = 0;

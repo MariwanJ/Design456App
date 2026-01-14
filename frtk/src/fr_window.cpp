@@ -239,7 +239,7 @@ namespace FR {
         return m_label.c_str();
     }
 
-    void Fr_Window::label(std::string l)
+    void Fr_Window::label(std::string &l)
     {
         m_label = l;
     }
