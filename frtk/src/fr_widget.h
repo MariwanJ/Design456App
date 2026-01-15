@@ -57,7 +57,7 @@ namespace FR {
     //diff shader program
     typedef struct {
         std::shared_ptr <ShaderProgram> wdg_prog;        //for the widget itself
-        std::shared_ptr <ShaderProgram> widgPoits_prog; //for points
+        std::shared_ptr <ShaderProgram> widgPoints_prog; //for points
         std::shared_ptr <ShaderProgram> silhouette_prog; // Dark shape and outline of object
         std::shared_ptr <ShaderProgram> texture_prog;
         
@@ -129,8 +129,10 @@ namespace FR {
         /** Renders the node */
         virtual void Render(RenderInfo& info);
 
-        /** Renders Vertexes in orthographic projection separate from normal rendering */
+        /** Renders highlighting of objects based on their selection*/
         virtual void RenderVertexes(RenderInfo& info);
+        virtual void RenderEdges(RenderInfo& info); 
+        virtual void RenderFaces(RenderInfo& info);
 
         /** Renders Text (Freetype Font)*/
         virtual void RenderText(RenderInfo& info);

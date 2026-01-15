@@ -588,7 +588,7 @@ namespace FR {
         activeScene->addObject(mline, "Fr_Line_Widget");
         std::cout << "Line\n";
 
-      /*  std::shared_ptr<std::vector<float>> vert2 = std::make_shared<std::vector<float>>();
+        std::shared_ptr<std::vector<float>> vert2 = std::make_shared<std::vector<float>>();
         std::shared_ptr<std::vector<unsigned int>> ind2 = std::make_shared<std::vector<unsigned int>>();
 
         vert2->push_back(-10.0f);
@@ -601,11 +601,11 @@ namespace FR {
 
         vert2->push_back(-30.0f);
         vert2->push_back(-30.0f);
-        vert2->push_back(-10.0f);
+        vert2->push_back(10.0f);
 
         vert2->push_back(-10.0f);
         vert2->push_back(-30.0f);
-        vert2->push_back(-10.0f);
+        vert2->push_back(10.0f);
 
         ind2->push_back(0);
         ind2->push_back(1);
@@ -616,6 +616,6 @@ namespace FR {
 
         mFace->pointPicker(true);
         mFace->SetColor(glm::vec4(FR_GREENYELLOW));
-        activeScene->addObject(mFace, "Fr_Face_Widget");*/
+        activeScene->addObject(mFace, "Fr_Face_Widget");
     }
 }

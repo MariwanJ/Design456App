@@ -65,7 +65,7 @@ namespace FR {
          * \param info
          */
         void RenderVertexes(RenderInfo& info) override;
-
+        void RenderEdges(RenderInfo& info) override;
 
     private:
         bool m_pointPicker;     //if 1 , mouse will pick points to be added to the polygon(or line)

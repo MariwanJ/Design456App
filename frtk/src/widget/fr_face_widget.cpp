@@ -119,13 +119,13 @@ namespace FR {
         if (!m_active)
             return;
         auto mvp = info.projection * info.modelview * m_Matrix;
-        m_shader->widgPoits_prog->Enable();
-        m_shader->widgPoits_prog->SetAttribLocation("position", 0);
-        m_shader->widgPoits_prog->SetUniformMat4("mvp", mvp);
-        m_shader->widgPoits_prog->SetUniformVec4("color", m_color);
-        m_shader->widgPoits_prog->SetUniformFloat("pointSize", pointSize());
+        m_shader->widgPoints_prog->Enable();
+        m_shader->widgPoints_prog->SetAttribLocation("position", 0);
+        m_shader->widgPoints_prog->SetUniformMat4("mvp", mvp);
+        m_shader->widgPoints_prog->SetUniformVec4("color", m_color);
+        m_shader->widgPoints_prog->SetUniformFloat("pointSize", pointSize());
         draw_points();
-        m_shader->widgPoits_prog->Disable();
+        m_shader->widgPoints_prog->Disable();
     }
     void Fr_Face_Widget::Render(RenderInfo& info) {
         if (!m_active)

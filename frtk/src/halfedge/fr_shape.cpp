@@ -163,7 +163,7 @@ namespace FR {
 		Fr_Window* win = Fr_Window::getFr_Window();
 		assert(win);
 		if(m_mesh.isMeshSelected())
-			m_shader->wdg_prog->SetUniformVec4("color", glm::vec4(FR_BLUE));       //Object color - not light color
+			m_shader->wdg_prog->SetUniformVec4("color", glm::vec4(FR_YELLOW));       //Object color - not light color
 		else
 			m_shader->wdg_prog->SetUniformVec4("color", m_color);       //Object color - not light color
 		m_shader->wdg_prog->SetUniformInteger("hasTexture", hasTexture());

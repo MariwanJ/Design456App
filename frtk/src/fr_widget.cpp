@@ -191,7 +191,7 @@ namespace FR {
         }
         std::string shaderpath = EXE_CURRENT_DIR + "/resources/shaders/";
         m_shader->wdg_prog = std::make_shared<ShaderProgram>(shaderpath + "wdgshader");
-        m_shader->widgPoits_prog = std::make_shared<ShaderProgram>(shaderpath + "widgPoints");
+        m_shader->widgPoints_prog = std::make_shared<ShaderProgram>(shaderpath + "widgPoints");
         m_shader->silhouette_prog = std::make_shared<ShaderProgram>(shaderpath + "silhouette");
         m_shader->texture_prog = std::make_shared<ShaderProgram>(shaderpath + "texture");
     }
@@ -209,6 +209,21 @@ namespace FR {
     {
         return; //do nothing should be sub-classed
     }
+    void Fr_Widget::RenderVertexes(RenderInfo& info) {
+            return;
+    }
+
+    void Fr_Widget::RenderEdges(RenderInfo& info) {
+            return;
+    }
+    void Fr_Widget::RenderFaces(RenderInfo& info) {
+            return;
+    }
+
+
+
+
+
 
     void RenderText(RenderInfo& info) {
         return;//do nothing should be sub-classed
