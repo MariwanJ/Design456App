@@ -145,7 +145,7 @@ namespace FR {
         m_shader->widgPoints_prog->SetUniformVec4("color", m_color);
 
         glLineWidth(1.0f);// TODO FIX ME SO IT IS DEFINED GLOBALLY 
-        draw_lines(); 
+        //draw_lines();  //TODO: Continue writing or fixing this part !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         m_shader->widgPoints_prog->Disable();
     }
 

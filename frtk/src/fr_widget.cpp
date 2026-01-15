@@ -209,10 +209,6 @@ namespace FR {
     {
         return; //do nothing should be sub-classed
     }
-    void Fr_Widget::RenderVertexes(RenderInfo& info) {
-            return;
-    }
-
     void Fr_Widget::RenderEdges(RenderInfo& info) {
             return;
     }
