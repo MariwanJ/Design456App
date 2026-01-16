@@ -482,6 +482,7 @@ namespace FR {
             win->clear_color.z * win->clear_color.w,
             win->clear_color.w);
         glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+        glEnable(GL_LINE_SMOOTH);
         // glCheckFunc(glDepthFunc(GL_LESS));
         RenderPrimativeShapes(render_info);
         // Render 3D objects

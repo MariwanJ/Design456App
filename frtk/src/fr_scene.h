@@ -179,7 +179,7 @@ namespace FR {
 		protected:
 			ray_t m_activeRay; 
 			
-			int Fr_Scene::findClosestMeshToRay(const ray_t& m_activeRay);
+			int findClosestMeshToRay(const ray_t& m_activeRay);
 			int handle_selection(int ev);
 
 	private:

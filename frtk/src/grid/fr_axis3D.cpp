@@ -123,6 +123,7 @@ namespace FR {
 		std::vector<unsigned int> indicesZBlue;
 		//Parallel lines
 		for (int i = -500; i <= 500; i = i + ZstepSize_) {
+			if(i == 0) continue; //skip at the origin
 			verticesZBlue.push_back(0.0f);
 			verticesZBlue.push_back(float(-zBlueSize / 2));
 			verticesZBlue.push_back(float(i));

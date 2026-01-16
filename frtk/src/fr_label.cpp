@@ -131,7 +131,7 @@ namespace FR {
         txtFont_program->Disable();
     }
 
-    void Fr_Label::LoadFont(const std::string& fontPath)
+    void Fr_Label::LoadFont(std::string fontPath)
     {
         m_Characters.clear(); // Clear previous font glyphs
         m_lblData.fnFont = fontPath;

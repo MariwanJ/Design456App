@@ -73,7 +73,7 @@ namespace FR {
         ~Fr_Label();
         void RenderText(RenderInfo& info);
 
-        void LoadFont(const std::string& fontPath = fontPath + "Techfont.ttf");
+        void LoadFont( std::string fP = fontPath + "Techfont.ttf");
 
 
 
@@ -86,7 +86,7 @@ namespace FR {
         void fontColor(glm::vec4 col);
         void fontColor(float r, float g, float b, float a);
         void pos(glm::vec3 nval);
-        glm::vec3 Fr_Label::pos(void);
+        glm::vec3 pos(void);
         void lbl_visible(bool v);
         bool lbl_visible();
         void lblType(uint8_t lbltype);
