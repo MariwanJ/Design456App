@@ -141,12 +141,12 @@ namespace FR {
 
 	void Fr_Shape::Render(RenderInfo& info) {
 		if (!m_active ||
-			(info.render_transparent && m_color.a == 1) ||
-			(!info.render_transparent && m_color.a < 1))
+			(info.render_transparent && m_color.baseColor.a == 1) ||
+			(!info.render_transparent && m_color.baseColor.a < 1))
 			return;
 		//auto mvp = info.projection * info.modelview * m_Matrix; //TODO: This is not correct as modelview = m_Matrix. We should separate these two things.
 		auto mvp = info.projection *info.modelview;
-		if (m_color.a == 1)
+		if (m_color.baseColor.a == 1)
 			RenderSilhouette(mvp);
  
 		//Render texture also here.
@@ -165,7 +165,7 @@ namespace FR {
 		if(m_mesh.isMeshSelected())
 			m_shader->wdg_prog->SetUniformVec4("color", glm::vec4(FR_YELLOW));       //Object color - not light color
 		else
-			m_shader->wdg_prog->SetUniformVec4("color", m_color);       //Object color - not light color
+			m_shader->wdg_prog->SetUniformVec4("color", m_color.baseColor);       //Object color - not light color
 		m_shader->wdg_prog->SetUniformInteger("hasTexture", hasTexture());
 		draw();      //You should make a draw call to get that  done
 		m_Texture2D->Unbind();

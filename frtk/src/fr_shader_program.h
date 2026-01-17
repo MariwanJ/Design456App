@@ -95,7 +95,7 @@ namespace FR {
          */
         void LinkShader();
 
-        unsigned int program_;
+        unsigned int m_program;
     };
 }
 #endif

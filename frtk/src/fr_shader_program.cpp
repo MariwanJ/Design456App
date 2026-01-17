@@ -33,18 +33,18 @@
 #include <fr_window.h>
 namespace FR {
     ShaderProgram::ShaderProgram(const std::string& prefix) :
-        program_((glCreateProgram())) {
+        m_program((glCreateProgram())) {
         CompileShader(GL_VERTEX_SHADER, prefix + "_vs.glsl");
         CompileShader(GL_FRAGMENT_SHADER, prefix + "_fs.glsl");
         LinkShader();
     }
 
     ShaderProgram::~ShaderProgram() {
-        glCheckFunc(glDeleteProgram(program_));
+        glCheckFunc(glDeleteProgram(m_program));
     }
 
     unsigned int ShaderProgram::GetHandle() {
-        return program_;
+        return m_program;
     }
     std::string ShaderProgram::ReadFile(const std::string& path) {
         std::ifstream input(path);
@@ -61,7 +61,7 @@ namespace FR {
     }
 
     void ShaderProgram::Enable() {
-        glCheckFunc(glUseProgram(program_));
+        glCheckFunc(glUseProgram(m_program));
 
         //GLint linked = 0; //for debugging g
         //glGetProgramiv(program_, GL_LINK_STATUS, &linked);
@@ -85,7 +85,7 @@ namespace FR {
     //Send data to a variable inside the shader by the variable name which is retrieved by get location.
     // send integer value to a variable that is integer in the shader
     void ShaderProgram::SetUniformInteger(const std::string name, int value) {
-        GLuint location = glGetUniformLocation(program_, name.c_str());
+        GLuint location = glGetUniformLocation(m_program, name.c_str());
         if (location == -1)
             DEBUG_BREAK;
         glCheckFunc(glUniform1i(location, value));
@@ -93,7 +93,7 @@ namespace FR {
     //Send data to a variable inside the shader by the variable name which is retrieved by get location.
     //Send one float value to a variable that is float in the shader
     void ShaderProgram::SetUniformFloat(const std::string name, float value) {
-        GLuint location = glGetUniformLocation(program_, name.c_str());
+        GLuint location = glGetUniformLocation(m_program, name.c_str());
         if (location == -1)
             DEBUG_BREAK;
 
@@ -102,7 +102,7 @@ namespace FR {
     //Send data to a variable inside the shader by the variable name which is retrieved by get location.
     //Send one float value to a variable that is 3 floats in the shader
     void ShaderProgram::SetUniformVec3(const std::string name, const glm::vec3& value) {
-        GLuint location = glGetUniformLocation(program_, name.c_str());
+        GLuint location = glGetUniformLocation(m_program, name.c_str());
         if (location == -1)
             DEBUG_BREAK;
 
@@ -111,7 +111,7 @@ namespace FR {
     //Send data to a variable inside the shader by the variable name which is retrieved by get location.
     //Send one float value to a variable that is 3 floats in the shader
     void ShaderProgram::SetUniformVec2Int(const std::string name, const glm::ivec2& value) {
-        GLuint location = glGetUniformLocation(program_, name.c_str());
+        GLuint location = glGetUniformLocation(m_program, name.c_str());
         if (location == -1)
             DEBUG_BREAK;
 
@@ -121,7 +121,7 @@ namespace FR {
     //Send data to a variable inside the shader by the variable name which is retrieved by get location.
     //Send one float value to a variable that is 3 floats in the shader
     void ShaderProgram::SetUniformVec2(const std::string name, const glm::vec2& value) {
-        GLuint location = glGetUniformLocation(program_, name.c_str());
+        GLuint location = glGetUniformLocation(m_program, name.c_str());
         if (location == -1)
             DEBUG_BREAK;
 
@@ -131,7 +131,7 @@ namespace FR {
     //Send data to a variable inside the shader by the variable name which is retrieved by get location.
     //Send one float value to a variable that is float in the shader
     void ShaderProgram::SetUniformVec4(const std::string name, const glm::vec4& value) {
-        GLuint location = glGetUniformLocation(program_, name.c_str());
+        GLuint location = glGetUniformLocation(m_program, name.c_str());
         if (location == -1)
             DEBUG_BREAK;
 
@@ -140,7 +140,7 @@ namespace FR {
     //Send data to a variable inside the shader by the variable name which is retrieved by get location.
     //Send one float value to a variable that is glm::mat4 in the shader
     void ShaderProgram::SetUniformMat4(const std::string name, const glm::mat4& value) {
-        GLuint location = glGetUniformLocation(program_, name.c_str());
+        GLuint location = glGetUniformLocation(m_program, name.c_str());
         if (location == -1)
             DEBUG_BREAK;
 
@@ -148,10 +148,10 @@ namespace FR {
     }
 
     void ShaderProgram::SetAttribLocation(const char* name, unsigned int location) {
-        glCheckFunc(glBindAttribLocation(program_, location, name));
+        glCheckFunc(glBindAttribLocation(m_program, location, name));
     }
     void ShaderProgram::SetUniformCamPosition(const char* name) {
-        GLuint location = glGetUniformLocation(program_, name);
+        GLuint location = glGetUniformLocation(m_program, name);
         if (location == -1)
             DEBUG_BREAK;
         if (Fr_Window::spWindow){
@@ -179,18 +179,18 @@ namespace FR {
             throw std::runtime_error(log);
             delete log;
         }
-        glCheckFunc(glAttachShader(program_, shader));
+        glCheckFunc(glAttachShader(m_program, shader));
     }
 
     void ShaderProgram::LinkShader() {
-        glCheckFunc(glLinkProgram(program_));
+        glCheckFunc(glLinkProgram(m_program));
         GLint program_linked;
-        glGetProgramiv(program_, GL_LINK_STATUS, &program_linked);
+        glGetProgramiv(m_program, GL_LINK_STATUS, &program_linked);
         if (program_linked != GL_TRUE)
         {
             GLsizei log_length = 0;
             GLchar message[1024];
-            glGetProgramInfoLog(program_, 1024, &log_length, message);
+            glGetProgramInfoLog(m_program, 1024, &log_length, message);
             // Write the error to a log
         }
 

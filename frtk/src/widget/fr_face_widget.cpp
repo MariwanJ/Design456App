@@ -119,14 +119,18 @@ namespace FR {
         if (!m_active)
             return;
         auto mvp = info.projection * info.modelview * m_Matrix;
-        m_shader->widgPoints_prog->Enable();
-        m_shader->widgPoints_prog->SetAttribLocation("position", 0);
-        m_shader->widgPoints_prog->SetUniformMat4("mvp", mvp);
-        m_shader->widgPoints_prog->SetUniformVec4("color", m_color);
-        m_shader->widgPoints_prog->SetUniformFloat("pointSize", pointSize());
+        m_shader->wdg_selection_prog->Enable();
+        m_shader->wdg_selection_prog->SetAttribLocation("position", 0);
+        m_shader->wdg_selection_prog->SetUniformMat4("mvp", mvp);
+        m_shader->wdg_selection_prog->SetUniformVec4("baseColor", m_color.baseColor);
+        m_shader->wdg_selection_prog->SetUniformVec4("faceSelectColor", m_color.faceSelectColor);
+        m_shader->wdg_selection_prog->SetUniformVec4("edgeSelectColor", m_color.edgeSelectColor);
+        m_shader->wdg_selection_prog->SetUniformVec4("vertexSelectColor", m_color.vertexSelectColor);
+        m_shader->wdg_selection_prog->SetUniformFloat("pointSize", pointSize());
         draw_points();
-        m_shader->widgPoints_prog->Disable();
+        m_shader->wdg_selection_prog->Disable();
     }
+
     void Fr_Face_Widget::Render(RenderInfo& info) {
         if (!m_active)
             return;
@@ -141,7 +145,7 @@ namespace FR {
         m_shader->wdg_prog->SetUniformMat4("modelview", info.modelview);
         m_shader->wdg_prog->SetUniformMat4("normalmatrix", normalmatrix);
         m_shader->wdg_prog->SetUniformMat4("mvp", mvp);
-        m_shader->wdg_prog->SetUniformVec4("color", m_color);       //Object color - not light color
+        m_shader->wdg_prog->SetUniformVec4("color", m_color.baseColor);       //Object color - not light color
         m_shader->wdg_prog->SetUniformInteger("hasTexture", false);
         draw();      //You should make a draw call to get that  done
         lbl_draw();

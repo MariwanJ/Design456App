@@ -43,7 +43,12 @@
 
 namespace FR {
 
-
+    typedef struct {
+        glm::vec4 baseColor;
+        glm::vec4 vertexSelectColor;
+        glm::vec4 edgeSelectColor;
+        glm::vec4 faceSelectColor;
+    } widgColor;
     const size_t kMaxLights = 8;        //This is important to consider. 
 
     typedef struct {
@@ -57,7 +62,7 @@ namespace FR {
     //diff shader program
     typedef struct {
         std::shared_ptr <ShaderProgram> wdg_prog;        //for the widget itself
-        std::shared_ptr <ShaderProgram> widgPoints_prog; //for points
+        std::shared_ptr <ShaderProgram> wdg_selection_prog; //for points
         std::shared_ptr <ShaderProgram> silhouette_prog; // Dark shape and outline of object
         std::shared_ptr <ShaderProgram> texture_prog;
         
@@ -347,7 +352,7 @@ namespace FR {
         bool m_normalized; //if the vertices are normalized
 
         // Attributes
-        glm::vec4 m_color;
+        widgColor m_color;
         float m_silhouette;
         GLuint m_texture; // Used to return the texture for imgui rendering inside window.
         NODETYPE m_WidgType;

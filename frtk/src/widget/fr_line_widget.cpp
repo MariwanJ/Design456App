@@ -122,14 +122,19 @@ namespace FR {
         if (!m_active)
             return;
         auto mvp = info.projection * info.modelview * m_Matrix;
-        m_shader->widgPoints_prog->Enable();
-        m_shader->widgPoints_prog->SetAttribLocation("position", 0);
-        m_shader->widgPoints_prog->SetAttribLocation("selected", 1); // depending on the status, it will give yellow color or color
-        m_shader->widgPoints_prog->SetUniformMat4("mvp", mvp);
-        m_shader->widgPoints_prog->SetUniformVec4("color", m_color);
-        m_shader->widgPoints_prog->SetUniformFloat("pointSize", pointSize());
+        m_shader->wdg_selection_prog->Enable();
+        m_shader->wdg_selection_prog->SetAttribLocation("position", 0);
+        m_shader->wdg_selection_prog->SetAttribLocation("selectionMask", 1); // depending on the status, it will give yellow color or color
+        m_shader->wdg_selection_prog->SetUniformMat4("mvp", mvp);
+        
+        m_shader->wdg_selection_prog->SetUniformVec4("baseColor", m_color.baseColor);
+        m_shader->wdg_selection_prog->SetUniformVec4("faceSelectColor", m_color.faceSelectColor);
+        m_shader->wdg_selection_prog->SetUniformVec4("edgeSelectColor", m_color.edgeSelectColor);
+        m_shader->wdg_selection_prog->SetUniformVec4("vertexSelectColor", m_color.vertexSelectColor);
+
+        m_shader->wdg_selection_prog->SetUniformFloat("pointSize", pointSize());
         draw_points();
-        m_shader->widgPoints_prog->Disable();
+        m_shader->wdg_selection_prog->Disable();
     }
     
     void Fr_Line_Widget::RenderEdges(RenderInfo& info) {
@@ -138,15 +143,15 @@ namespace FR {
 
         auto mvp = info.projection * info.modelview * m_Matrix;
 
-        m_shader->widgPoints_prog->Enable(); // you can reuse the same shader
-        m_shader->widgPoints_prog->SetAttribLocation("position", 0);
-        m_shader->widgPoints_prog->SetAttribLocation("selected", 2); // edge vertex selection
-        m_shader->widgPoints_prog->SetUniformMat4("mvp", mvp);
-        m_shader->widgPoints_prog->SetUniformVec4("color", m_color);
+        m_shader->wdg_selection_prog->Enable(); // you can reuse the same shader
+        m_shader->wdg_selection_prog->SetAttribLocation("position", 0);
+        m_shader->wdg_selection_prog->SetAttribLocation("selectionMask", 1); // edge vertex selection
+        m_shader->wdg_selection_prog->SetUniformMat4("mvp", mvp);
+        m_shader->wdg_selection_prog->SetUniformVec4("color", m_color.baseColor);
 
         glLineWidth(1.0f);// TODO FIX ME SO IT IS DEFINED GLOBALLY 
         //draw_lines();  //TODO: Continue writing or fixing this part !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        m_shader->widgPoints_prog->Disable();
+        m_shader->wdg_selection_prog->Disable();
     }
 
     void Fr_Line_Widget::Render(RenderInfo& info) {
@@ -163,13 +168,13 @@ namespace FR {
         m_shader->wdg_prog->SetUniformMat4("modelview", info.modelview);
         m_shader->wdg_prog->SetUniformMat4("normalmatrix", normalmatrix);
         m_shader->wdg_prog->SetUniformMat4("mvp", mvp);
-        m_shader->wdg_prog->SetUniformVec4("color", m_color);       //Object color - not light color
+        m_shader->wdg_prog->SetUniformVec4("color", m_color.baseColor);       //Object color - not light color
         m_shader->wdg_prog->SetUniformInteger("hasTexture", false);
         draw();      //You should make a draw call to get that  done
         lbl_draw();
         m_shader->wdg_prog->Disable();
-        info.id++;
         RenderVertexes(info);
+        info.id++;
     }
 
     int Fr_Line_Widget::handle(int e)

@@ -57,14 +57,17 @@ namespace FR {
         m_tabIndex = -1;
         m_hasTexture = 0;
         // Attributes
-        m_color = glm::vec4(FR_ANTIQUEWHITE);
+        m_color.baseColor           = glm::vec4(FR_ANTIQUEWHITE);
+        m_color.faceSelectColor     = glm::vec4(FR_LIGHTYELLOW);
+        m_color.edgeSelectColor     = glm::vec4(FR_LIGHTGOLDENRODYELLOW);
+        m_color.vertexSelectColor   = glm::vec4(FR_YELLOW);
+
+
         m_silhouette = 0;
         m_texture = 0; //used to return the texture for imgui rendering inside window.
         m_selected = std::make_shared <std::vector<size_t>>(); // this is boolean but since boolean is not ok for opengl
         m_shader = std::make_shared<Shader_t>();
     }
-
-    
 
     void Fr_Widget::ReadMeshString(const std::string& mshData) {
         std::istringstream input(mshData);
@@ -191,7 +194,7 @@ namespace FR {
         }
         std::string shaderpath = EXE_CURRENT_DIR + "/resources/shaders/";
         m_shader->wdg_prog = std::make_shared<ShaderProgram>(shaderpath + "wdgshader");
-        m_shader->widgPoints_prog = std::make_shared<ShaderProgram>(shaderpath + "widgPoints");
+        m_shader->wdg_selection_prog = std::make_shared<ShaderProgram>(shaderpath + "wdg_selection");
         m_shader->silhouette_prog = std::make_shared<ShaderProgram>(shaderpath + "silhouette");
         m_shader->texture_prog = std::make_shared<ShaderProgram>(shaderpath + "texture");
     }
@@ -329,18 +332,18 @@ namespace FR {
 
     void Fr_Widget::WidgetShader(glm::vec4 color, float silhouette)
     {
-        m_color = color;
+        m_color.baseColor = color;
         silhouette = silhouette;
     }
 
     void Fr_Widget::SetColor(glm::vec4 c)
     {
-        m_color = c;
+        m_color.baseColor = c;
     }
 
     void Fr_Widget::SetOpacity(float alpha)
     {
-        m_color[3] = alpha;
+        m_color.baseColor[3] = alpha;
     }
 
     void Fr_Widget::do_callback()
