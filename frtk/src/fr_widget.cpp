@@ -65,7 +65,6 @@ namespace FR {
 
         m_silhouette = 0;
         m_texture = 0; //used to return the texture for imgui rendering inside window.
-        m_selected = std::make_shared <std::vector<size_t>>(); // this is boolean but since boolean is not ok for opengl
         m_shader = std::make_shared<Shader_t>();
     }
 
@@ -179,8 +178,6 @@ namespace FR {
         calcualteTextCoor(1024, 1024);  //TODO:  ??? don't think it is correct
         initializeVBO();
         CreateShader();
-        m_selected->reserve(static_cast<size_t>(m_vertices->size()) / 3);
-        m_selected->resize(m_selected->capacity(), 0);
     }
 
     Fr_Widget::~Fr_Widget()
@@ -266,11 +263,6 @@ namespace FR {
     {
         m_vertices = std::move(vertices_);
         m_indices = std::move(indicies_);
-
-        //TODO: Make sure that the code take care of this everywhere
-        // This must be done always
-        m_selected->reserve(static_cast<size_t>(m_vertices->size()) / 3);
-        m_selected->resize(m_selected->capacity(), 0);
     }
 
     bool Fr_Widget::Resizable()

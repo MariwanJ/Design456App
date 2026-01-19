@@ -74,7 +74,7 @@ namespace FR {
     }
 
     void Fr_Widget::DrawPoints() {
-        glCheckFunc(glBindVertexArray(m_vao_points));
+        glCheckFunc(glBindVertexArray(m_sel_vao.vertex));
         glCheckFunc(glPointSize(m_pointSize)); // Set the size of the points
         glCheckFunc(glDrawArrays(GL_POINTS, 0, m_vertices->size() / 3));
         glBindVertexArray(0);
@@ -110,7 +110,11 @@ namespace FR {
     //You must override this if you want to draw differntly 
     int Fr_Widget::initializeVBO() {
         glCheckFunc(glGenBuffers(NUM_OF_VBO_BUFFERS, m_vbo));
-        glCheckFunc(glGenVertexArrays(1, &m_vao_points));
+        
+        glCheckFunc(glGenVertexArrays(1, &m_sel_vao.vertex));
+        glCheckFunc(glGenVertexArrays(1, &m_sel_vao.edges));
+        glCheckFunc(glGenVertexArrays(1, &m_sel_vao.faces));
+
         glCheckFunc(glGenVertexArrays(1, &m_vao));
         glCheckFunc(glBindVertexArray(m_vao));
 
@@ -121,7 +125,6 @@ namespace FR {
                 glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_vertices->size(), m_vertices->data(), GL_STATIC_DRAW));
                 glCheckFunc(glEnableVertexAttribArray(POSITION_VERTEX_VB));
                 glCheckFunc(glVertexAttribPointer(SHADER_POS_VERTEX_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL)); // m_positionVB = 0
-
             }
 
         // TEXTURE COORDINATES
@@ -147,23 +150,107 @@ namespace FR {
                 glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_normals->size(), m_normals->data(), GL_STATIC_DRAW));
                 glCheckFunc(glEnableVertexAttribArray(POSITION_NORMAL_VB)); // POSITION_NORMAL_VB should correspond to the layout in your shader, typically 2
                 glCheckFunc(glVertexAttribPointer(SHADER_POS_NORMAL_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL)); // Corrected to use a valid offset and index
-                glCheckFunc(glBindVertexArray(0));
+//                glCheckFunc(glBindVertexArray(0));
             }
         
 
-        //TODO : SHOULD WE ALWASY CREATE m_selected ???? 
-        if (m_selected->size() > 0) {
-            //2 Points for each edge
-            glCheckFunc(glBindVertexArray(m_vao_points));
-            glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_vbo[POSITION_POINTS_VB]));
-            glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_vertices->size(), m_vertices->data(), GL_STATIC_DRAW));
-            glCheckFunc(glEnableVertexAttribArray(SHADER_POS_POINTS_VB)); 
-            glCheckFunc(glVertexAttribPointer(SHADER_POS_POINTS_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL)); 
-            glCheckFunc(glBindVertexArray(0));
-        }
-        //selection data
+        //TODO : New Selection way depending on openmesh property 
+        if (m_mesh.has_face_sel()>0) {
+            unsigned int indexCounter = 0;
+            std::vector<float> vertices;    // To store vertex positions
+            std::vector<unsigned int> indices; // To store indices of the vertices
+            unsigned int i = 0;
 
-   
+            for (const auto& face : m_mesh.faces()) {
+                if (!m_mesh.isFaceSelected(face)) continue;
+
+                std::vector<unsigned int> localIndices;
+                for (auto fv_it = m_mesh.fv_iter(face); fv_it.is_valid(); ++fv_it) {
+                    OpenMesh::Vec3f p = m_mesh.point(*fv_it);
+                    vertices.push_back(p[0]);
+                    vertices.push_back(p[1]);
+                    vertices.push_back(p[2]);
+                    localIndices.push_back(indexCounter++);
+                }
+
+                // Fan triangulation
+                for (size_t j = 1; j + 1 < localIndices.size(); ++j) {
+                    indices.push_back(localIndices[0]);
+                    indices.push_back(localIndices[j]);
+                    indices.push_back(localIndices[j + 1]);
+                }
+            }
+
+            glCheckFunc(glBindVertexArray(m_sel_vao.faces));
+            glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_sel_vbo.faces));
+            glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_sel_vbo.faces_indices));
+            glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW));
+            glCheckFunc(glEnableVertexAttribArray(SHADER_POS_POINTS_VB));
+            glCheckFunc(glVertexAttribPointer(SHADER_POS_POINTS_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL));
+            glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW));
+        }
+
+        if (m_mesh.has_edge_sel()>0) {
+            //2 Points for each edge
+
+            unsigned int indexCounter = 0;
+            std::vector<float> vertices;    // To store vertex positions
+            std::vector<unsigned int> indices; // To store indices of the vertices
+            for (const auto& eh : m_mesh.edges())
+            {
+                if (!m_mesh.isEdgeSelected(eh))
+                    continue;
+
+                OpenMesh::HalfedgeHandle he0 = m_mesh.halfedge_handle(eh, 0);
+                OpenMesh::HalfedgeHandle he1 = m_mesh.halfedge_handle(eh, 1);
+
+                OpenMesh::Vec3f p0 = m_mesh.point(m_mesh.from_vertex_handle(he0));
+                OpenMesh::Vec3f p1 = m_mesh.point(m_mesh.from_vertex_handle(he1));
+
+                // first point
+                vertices.push_back(p0[0]);
+                vertices.push_back(p0[1]);
+                vertices.push_back(p0[2]);
+
+                // second point
+                vertices.push_back(p1[0]);
+                vertices.push_back(p1[1]);
+                vertices.push_back(p1[2]);
+                indices.push_back(indexCounter++);
+                indices.push_back(indexCounter++);
+            }
+
+            glCheckFunc(glBindVertexArray(m_sel_vao.edges));
+            glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_sel_vbo.edges));
+            glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_sel_vbo.edges_indices));
+
+            glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW));
+            glCheckFunc(glEnableVertexAttribArray(SHADER_POS_POINTS_VB));
+            glCheckFunc(glVertexAttribPointer(SHADER_POS_POINTS_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL));
+            glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW));
+ 
+        }
+        if (m_mesh.has_vert_sel()>0) {
+            //2 Points for each edge
+
+            unsigned int indexCounter = 0;
+            std::vector<float> vertices;    // To store vertex positions
+            std::vector<unsigned int> indices; // To store indices of the vertices
+            for (const auto& vh : m_mesh.vertices())
+            {
+                if (!m_mesh.isVertexSelected(vh)) continue;
+                OpenMesh::Vec3f p = m_mesh.point(vh);
+                vertices.push_back(p[0]);
+                vertices.push_back(p[1]);
+                vertices.push_back(p[2]);
+            }
+
+            glCheckFunc(glBindVertexArray(m_sel_vao.vertex));
+            glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_sel_vbo.vertex));
+            glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW));
+            glCheckFunc(glEnableVertexAttribArray(SHADER_POS_POINTS_VB));
+            glCheckFunc(glVertexAttribPointer(SHADER_POS_POINTS_VB, 3, GL_FLOAT, GL_FALSE, 0, NULL));
+        }
         return 0;
     }
 

@@ -27,7 +27,7 @@
 #include <fr_openmesh.h>
  
 namespace FR {
-    FrOpenMesh::FrOpenMesh()
+    FrOpenMesh::FrOpenMesh(): m_has_vert_sel(0), m_has_edge_sel(0), m_has_face_sel(0)
     {
         add_property(mesh_selected, "mesh:selected");
         add_property(v_selected, "vertex:selected");
@@ -58,6 +58,7 @@ namespace FR {
  
     void FrOpenMesh::selectVertex(VertexHandle v, bool s)
     {
+        m_has_vert_sel ++;
         property(v_selected, v) = s;
     }
 
@@ -68,6 +69,7 @@ namespace FR {
  
     void FrOpenMesh::selectEdge(EdgeHandle e, bool s)
     {
+        m_has_edge_sel++;
         property(e_selected, e) = s;
     }
 
@@ -78,6 +80,7 @@ namespace FR {
  
     void FrOpenMesh::selectFace(FaceHandle f, bool s)
     {
+        m_has_face_sel++;
         property(f_selected, f) = s;
     }
 
@@ -95,6 +98,21 @@ namespace FR {
     {
         return property(h_selected, h);
     }
+
+    size_t FrOpenMesh::has_vert_sel()
+    {
+        return  m_has_vert_sel;
+    }
+
+    size_t FrOpenMesh::has_edge_sel()
+    {
+        return m_has_edge_sel;
+    }
+
+    size_t FrOpenMesh::has_face_sel()
+    {
+        return m_has_face_sel;
+    }
  
     void FrOpenMesh::clearAllSelections()
     {
@@ -111,5 +129,6 @@ namespace FR {
 
         for (auto h : halfedges())
             property(h_selected, h) = false;
+        m_has_face_sel = m_has_edge_sel = m_has_vert_sel = 0;
     }
 }

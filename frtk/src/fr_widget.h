@@ -65,8 +65,15 @@ namespace FR {
         std::shared_ptr <ShaderProgram> wdg_selection_prog; //for points
         std::shared_ptr <ShaderProgram> silhouette_prog; // Dark shape and outline of object
         std::shared_ptr <ShaderProgram> texture_prog;
-        
     }Shader_t;
+
+    typedef struct {
+        unsigned int vertex;
+        unsigned int edges;
+        unsigned int edges_indices;
+        unsigned int faces;
+        unsigned int faces_indices;
+    }selection_vao_vbo_t;
 
     class NotImplementedException : public std::logic_error
     {
@@ -306,7 +313,6 @@ namespace FR {
 
         std::shared_ptr<std::vector<float>> m_vertices;
         std::shared_ptr<std::vector<unsigned int>> m_indices;
-		std::shared_ptr<std::vector<size_t>> m_selected;
         std::shared_ptr<std::vector<float>> m_normals;
         std::shared_ptr<std::vector<glm::vec3>> m_triangles_normals;
 
@@ -360,8 +366,10 @@ namespace FR {
 
         unsigned int m_vbo[NUM_OF_VBO_BUFFERS]; 
         unsigned int m_vao;
-        unsigned int m_vao_points;
+        selection_vao_vbo_t m_sel_vao;
+
         unsigned int m_vao_txt;
+        selection_vao_vbo_t m_sel_vbo;
         float m_lineWidth;
         float m_pointSize;
 

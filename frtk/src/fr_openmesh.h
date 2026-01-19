@@ -73,7 +73,16 @@ namespace FR {
         void selectHalfedge(HalfedgeHandle h, bool s);
         bool isHalfedgeSelected(HalfedgeHandle h) const;
  
+        size_t has_vert_sel();
+        size_t has_edge_sel();
+        size_t has_face_sel();
+        
         void clearAllSelections();
+
+    private: 
+        size_t m_has_vert_sel;
+        size_t m_has_edge_sel;
+        size_t m_has_face_sel;
     };
 }
 #endif //#define FR_OPENMESH_H
