@@ -39,7 +39,7 @@ namespace FR {
         std::shared_ptr<std::vector <unsigned int>> indicies,
         std::string label) :m_vertices(std::move(vertices)),
         m_Matrix(glm::mat4(1.0f)), m_indices(std::move(indicies)), m_vao(0), m_vbo{ 0 },
-        m_lineWidth(1), m_pointSize(10), m_MVP(glm::mat4(1.0f)), m_WdgPosition(0), m_label(0)
+        m_lineWidth(1), m_pointSize(10), m_MVP(glm::mat4(1.0f)), m_WdgPosition(0), m_label(0), m_sel_vao({ 0 })
     {
         m_lineType = FR_NOT_DEFINED; //You should define it before use it
 
@@ -176,7 +176,8 @@ namespace FR {
         m_boundBox->setVertices(m_vertices);
         CalculateNormals();
         calcualteTextCoor(1024, 1024);  //TODO:  ??? don't think it is correct
-        initializeVBO();
+        createBuffers();
+        initSelectionVAOs();
         CreateShader();
     }
 
@@ -205,21 +206,10 @@ namespace FR {
         return; //do nothing , should be sub-classed
     }
 
-    void Fr_Widget::RenderVertexes(RenderInfo& info)
+    void Fr_Widget::RenderSelection(RenderInfo& info)
     {
         return; //do nothing should be sub-classed
     }
-    void Fr_Widget::RenderEdges(RenderInfo& info) {
-            return;
-    }
-    void Fr_Widget::RenderFaces(RenderInfo& info) {
-            return;
-    }
-
-
-
-
-
 
     void RenderText(RenderInfo& info) {
         return;//do nothing should be sub-classed

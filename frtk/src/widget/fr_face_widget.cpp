@@ -34,25 +34,17 @@ namespace FR {
         std::string label) : Fr_Widget(vertices, indicies, label), m_pointPicker(false)
     {
         std::vector<MyMesh::VertexHandle> vertexHandles;
-
-        // Add vertices and store their handles
         for (size_t i = 0; i < m_vertices->size(); i += 3) {
             MyMesh::Point p(m_vertices->at(i), m_vertices->at(i + 1), m_vertices->at(i + 2));
             MyMesh::VertexHandle vh = m_mesh.add_vertex(p);
             vertexHandles.push_back(vh);
         }
-
         // create faces (in sets of 3) // TODO: If it is a polygon how to do that????
         for (size_t i = 0; i + 2 < vertexHandles.size(); i += 3) {
             m_mesh.add_face(vertexHandles[i], vertexHandles[i + 1], vertexHandles[i + 2]);
         }
-
         lineWidth(1);
-        CalculateNormals();
-        initializeVBO();
-        CreateShader();
-        m_boundBox = std::make_shared<cBoundBox3D>();
-        m_boundBox->setVertices(m_vertices);
+        init(); 
         m_WidgType = NODETYPE::FR_FACE_WIDGET;
         m_lineType = FR_CLOSED_LOOP;
     }
@@ -63,6 +55,7 @@ namespace FR {
 
     void Fr_Face_Widget::draw()
     {
+        initializeVBO();
         draw_2d();
     }
 
@@ -115,7 +108,7 @@ namespace FR {
             program->SetUniformCamPosition("camPos");
         }
     }
-    void Fr_Face_Widget::RenderVertexes(RenderInfo& info) {
+    void Fr_Face_Widget::RenderSelection(RenderInfo& info) {
         if (!m_active)
             return;
         auto mvp = info.projection * info.modelview * m_Matrix;
@@ -126,8 +119,10 @@ namespace FR {
         m_shader->wdg_selection_prog->SetUniformVec4("faceSelectColor", m_color.faceSelectColor);
         m_shader->wdg_selection_prog->SetUniformVec4("edgeSelectColor", m_color.edgeSelectColor);
         m_shader->wdg_selection_prog->SetUniformVec4("vertexSelectColor", m_color.vertexSelectColor);
+        m_shader->wdg_selection_prog->SetUniformInteger("selectionMask", m_currentSelMode);
         m_shader->wdg_selection_prog->SetUniformFloat("pointSize", pointSize());
-        draw_points();
+        initializeVBO_Selection();
+        draw_2d_sel();
         m_shader->wdg_selection_prog->Disable();
     }
 
@@ -151,7 +146,7 @@ namespace FR {
         lbl_draw();
         m_shader->wdg_prog->Disable();
         info.id++;
-        RenderVertexes(info);
+       RenderSelection(info);
     }
 
     int Fr_Face_Widget::handle(int e)
@@ -185,21 +180,21 @@ namespace FR {
                               break;
 
             case  FR_LEFT_PUSH: {
-                //DRAG THE OBJECT .. TODO : HOW SHOULD WE DO THAT???
-                bool result;
-                glm::vec3 intersectionPoint;
-                result = win->intersectionChecker(win->activeScene->getRayValue(), intersectionPoint);
-                if (result) {
-                    //This is not correct TODO : FIXME
-                    m_vertices->at(0) = win->getMouseEvents().WorldMouse.x;
-                    m_vertices->at(1) = win->getMouseEvents().WorldMouse.y;
-                    m_vertices->at(2) = win->getMouseEvents().WorldMouse.z;
-                    SetColor(glm::vec4(FR_YELLOW));
-                    redraw();
-                }
-                else {
-                    SetColor(glm::vec4(FR_BROWN));
-                }
+                ////DRAG THE OBJECT .. TODO : HOW SHOULD WE DO THAT???
+                //bool result;
+                //glm::vec3 intersectionPoint;
+                //result = win->intersectionChecker(win->activeScene->getRayValue(), intersectionPoint);
+                //if (result) {
+                //    //This is not correct TODO : FIXME
+                //    m_vertices->at(0) = win->getMouseEvents().WorldMouse.x;
+                //    m_vertices->at(1) = win->getMouseEvents().WorldMouse.y;
+                //    m_vertices->at(2) = win->getMouseEvents().WorldMouse.z;
+                //    SetColor(glm::vec4(FR_YELLOW));
+                //    redraw();
+                //}
+                //else {
+                //    SetColor(glm::vec4(FR_BROWN));
+                //}
                 return 1;//Consume the event.
             } break;
 

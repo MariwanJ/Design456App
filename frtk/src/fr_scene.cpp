@@ -324,46 +324,78 @@ namespace FR {
         eventData_t glfData = win->GLFWevents();
         bool ctrlPressed = (glfData.lastMod & GLFW_MOD_CONTROL);
         bool mouseClicked = (ev == FR_LEFT_PUSH);
-
+        int result = -1;
+        int IndexOfclosestItem = 0;
         //Here, we should try to send the events to each object in the scene.
         // Depending on where the events occur, object should get them otherwise just ignore them
         if (mouseClicked) {
-            int IndexOfclosestItem = findClosestMeshToRay(m_activeRay);
+            IndexOfclosestItem = findClosestMeshToRay(m_activeRay);
             
             if (IndexOfclosestItem < 0) {
                 //Ray did not hit anything
                 for (size_t i = 0; i < m_world.size(); ++i) {
                     m_world.at(i).Sceneitem->m_mesh.clearAllSelections(); //Deselect all objects that are not visible
                 }
-                return -1; //no selection, all cleared
+                result= -1; //no selection, all cleared
             }
             else {
                 if (m_world.at(IndexOfclosestItem).Sceneitem->m_boundBox->isRayInsideBoundingBox(m_activeRay)) {
-                    switch (win->m_currentSelMode) {
+                    switch (m_currentSelMode) {
                     case SelectionMode::Mesh: {
                         m_world.at(IndexOfclosestItem).Sceneitem->m_mesh.selectMesh(true);
                         return 1; 
                     } break;
                     case SelectionMode::Face: {
-                        for (auto f_it = m_world[IndexOfclosestItem].Sceneitem->m_mesh.faces_begin();
-                            f_it != m_world[IndexOfclosestItem].Sceneitem->m_mesh.faces_end();
-                            ++f_it) {
-                                OpenMesh::FaceHandle fh = *f_it;
-                                std::vector<glm::vec3> verts;
-                                for (auto fv_it = m_world[IndexOfclosestItem].Sceneitem->m_mesh.fv_begin(fh);
-                                    fv_it != m_world[IndexOfclosestItem].Sceneitem->m_mesh.fv_end(fh);
-                                    ++fv_it)
-                                {
-                                    const auto& p = m_world[IndexOfclosestItem].Sceneitem->m_mesh.point(*fv_it);
-                                    verts.emplace_back(glm::vec3(p[0], p[1], p[2]));
-                                }
+                        //for (const auto& face : m_world[IndexOfclosestItem].Sceneitem->m_mesh.faces()) {
+                        //    std::vector<glm::vec3> verts;
+                        //    for (auto fv_it = m_world[IndexOfclosestItem].Sceneitem->m_mesh.fv_iter(face); fv_it.is_valid(); ++fv_it) {
+                        //        const OpenMesh::Vec3f& p = m_world[IndexOfclosestItem].Sceneitem->m_mesh.point(*fv_it);
+                        //        verts.emplace_back(glm::vec3(p[0], p[1], p[2]));
+                        //    }
 
-                                if (intersectRayPolygon(m_activeRay, verts, intersectionPoint)) {
-                                    m_world[IndexOfclosestItem].Sceneitem->m_mesh.selectFace(fh, true);
-                                    return 1;//we are done, only one face per each click
-                                    FRTK_CORE_INFO("FACE FOUND");
+                        //    if (intersectRayPolygon(m_activeRay, verts, intersectionPoint)) {
+                        //        //TODO: Implement multi face-selection using ctl
+                        //        m_world[IndexOfclosestItem].Sceneitem->m_mesh.selectFace(face, true);
+                        //        FRTK_CORE_INFO("FACE FOUND");
+                        //        result = 1;//we are done, only one face per each click
+                        //    }
+                        //}
+
+                        float closestT = std::numeric_limits<float>::max();
+                        OpenMesh::FaceHandle pickedFace;
+                        for (const auto& face : m_world[IndexOfclosestItem].Sceneitem->m_mesh.faces()) {
+                            std::vector<glm::vec3> verts;
+                            for (auto fv_it = m_world[IndexOfclosestItem].Sceneitem->m_mesh.fv_iter(face); fv_it.is_valid(); ++fv_it) {
+                                const OpenMesh::Vec3f& p = m_world[IndexOfclosestItem].Sceneitem->m_mesh.point(*fv_it);
+                                verts.emplace_back(p[0], p[1], p[2]);
+                            }
+
+                            if (verts.size() < 3)
+                                continue;
+                            glm::vec3 faceNormal = glm::normalize(glm::cross(
+                                verts[1] - verts[0],
+                                verts[2] - verts[0]
+                            ));
+
+                            if (glm::dot(faceNormal, m_activeRay.direction) >= 0.0f)
+                                continue;
+
+                            for (size_t i = 1; i + 1 < verts.size(); ++i) {
+
+                                float t;
+                                glm::vec3 hit;
+
+                                if (intersectRayPolygon(m_activeRay,verts, intersectionPoint,t))
+                                {
+                                    if (t < closestT) {
+                                        closestT = t;
+                                        pickedFace = face;
+                                    }
                                 }
+                            }
                         }
+                        
+                        m_world[IndexOfclosestItem].Sceneitem->m_mesh.selectFace(pickedFace, true);
                     } break;
                     case SelectionMode::Edge:
                     {
@@ -381,7 +413,8 @@ namespace FR {
                             if (intersectLineSegment3D(m_activeRay, verts, intersectionPoint))
                             {
                                 mesh.selectEdge(eh, true);
-                                return 1; 
+                                result = 1;
+                                break;
                             }
                         }
                     }break;
@@ -396,7 +429,8 @@ namespace FR {
                             if (intersectPointIn3D(m_activeRay, vertexPos))
                             {
                                 mesh.selectVertex(vh, true);
-                                return 1; // done, only one vertex per click
+                                result = 1; // done, only one vertex per click
+                                break;
                             }
                         }
                     } break;
@@ -410,24 +444,38 @@ namespace FR {
                         for (size_t i = 0; i < m_world.size(); ++i) {
                             m_world.at(i).Sceneitem->m_mesh.clearAllSelections(); //Deselect all objects that are not visible
                         }
-                        return -1; //no selection, all cleared
+                        result = -1; //no selection, all cleared
                     }
                     else
                     {
                         //Multi - Selection.
                     }
                 }
-                return -1;
+                result = -1;
             }
 
+        }
+        if (result == 1) {
+            m_world[IndexOfclosestItem].Sceneitem->initializeVBO(); //re-create all vertices
+            return 1;
         }
         return 0;
     }
     int Fr_Scene::handle(int ev)
     {
+
         int res = handle_selection(ev);
+        /*
         if (res == 1) return 1;
         else if (res == -1) return 0;
+        */
+        if (res)
+            FRTK_CORE_INFO("res is found");
+        //TODO: Should we, even if the mouse was a selection action, send the event to the objects?? 
+        for (auto& obj : m_world) {
+            obj.Sceneitem->handle(ev);
+        }
+
         return 0; //We could not use the event .. Return 0 as we don't care , Never return value >0 if you don't care
     }
 
@@ -713,7 +761,8 @@ namespace FR {
                     for (int ii = 0; ii<int(vert->size()); ii += 3)
                         fc.push_back(glm::vec3(vert->at(ii), vert->at(ii + 1), vert->at(ii + 2)));
                     glm::vec3 intersectionPoint;
-                    if (intersectRayPolygon(ray, fc, intersectionPoint)) {
+                    float t;
+                    if (intersectRayPolygon(ray, fc, intersectionPoint,t)) {
                         return true;
                     }
                     else

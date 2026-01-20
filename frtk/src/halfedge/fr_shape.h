@@ -50,6 +50,7 @@ namespace FR {
         std::shared_ptr<Fr_Texture2D> m_Texture2D;
         void Render(RenderInfo& info) override;
         void RenderText(RenderInfo& info)override;
+        void RenderSelection(RenderInfo& info) override;
         int handle(int e) override;
 
     protected:

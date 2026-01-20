@@ -115,6 +115,7 @@ namespace FR {
 	}
 
 	void Fr_Shape::draw() {
+		initializeVBO();
 		glCheckFunc(glBindVertexArray(m_vao));
 		glCheckFunc(glDrawElements(GL_TRIANGLES, m_indices->size(), GL_UNSIGNED_INT, 0));
 		glCheckFunc(glBindVertexArray(0));
@@ -171,6 +172,8 @@ namespace FR {
 		m_Texture2D->Unbind();
 		m_shader->wdg_prog->Disable();
 		info.id++;
+
+		RenderSelection(info);
 	}
 
 	void Fr_Shape::RenderSilhouette(const glm::mat4& mvp) {
@@ -201,7 +204,28 @@ namespace FR {
 			m_label->RenderText(info);
 		}
 	}
+	void Fr_Shape::RenderSelection(RenderInfo& info) {
+		if (!m_active)
+			return;
+		auto mvp = info.projection * info.modelview * m_Matrix;
+		m_shader->wdg_selection_prog->Enable();
+		m_shader->wdg_selection_prog->SetAttribLocation("position", 0);
+		m_shader->wdg_selection_prog->SetUniformMat4("mvp", mvp);
+		m_shader->wdg_selection_prog->SetUniformVec4("baseColor", m_color.baseColor);
+		m_shader->wdg_selection_prog->SetUniformVec4("faceSelectColor", m_color.faceSelectColor);
+		m_shader->wdg_selection_prog->SetUniformVec4("edgeSelectColor", m_color.edgeSelectColor);
+		m_shader->wdg_selection_prog->SetUniformVec4("vertexSelectColor", m_color.vertexSelectColor);
+		m_shader->wdg_selection_prog->SetUniformInteger("selectionMask", (int)m_currentSelMode);
+		m_shader->wdg_selection_prog->SetUniformFloat("pointSize", pointSize());
+		initializeVBO_Selection();
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_CULL_FACE);
 
+		draw_2d_sel();
+		m_shader->wdg_selection_prog->Disable();
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
+	}
 	/*
 		Hints : how to extract indices from openmesh
 		typedef OpenMesh::PolyMesh_ArrayKernelT<> MyMesh;
@@ -256,9 +280,7 @@ namespace FR {
 		//TODO : Implement mouse-over for all types, mesh, face, edge, & Vertex.
 		switch (e) {
 			case FR_MOUSE_MOVE: {
-				//Mouse move without clicking or entering key ..
-			//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!TODO : FIXME CONTINUE DEVELOPING THIS 
-			//! 
+
 			
 				return 0;//
 			}
@@ -267,26 +289,6 @@ namespace FR {
 			case  FR_LEFT_PUSH: {
 				ray_t ray = win->activeScene->getRayValue();
 				bool result;
-				glm::vec3 intersectionPoint;
-				switch (win->m_currentSelMode) {
-				case SelectionMode::Mesh: {
-					result = intersectRayOpenMesh(ray, m_mesh, intersectionPoint);
-					if (result) {
-						m_mesh.selectMesh(true);
-						return 1;
-					}
-					else {
-						m_mesh.selectMesh(false);
-						return 0;
-					}
-				} break;
-				case SelectionMode::Face: {
-				} break;
-				case SelectionMode::Edge: {
-				} break;
-				case SelectionMode::Vertex: {
-				} break;
-				}
 				
 				return 0;
 			} break;

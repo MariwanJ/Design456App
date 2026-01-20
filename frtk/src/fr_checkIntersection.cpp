@@ -36,9 +36,6 @@ namespace FR {
     // Small epsilon for floating-point checks
     constexpr float EPSILON = 1e-6f;
 
-    // =====================================================
-    // 1. Vertex Picking
-    // =====================================================
     bool intersectPointIn3D(const ray_t& ray, const glm::vec3& vertex, float tolerance) {
         glm::vec3 rayDir = glm::normalize(ray.direction); // Normalize the direction
         glm::vec3 toVertex = vertex - ray.position; // Vector from ray origin to vertex
@@ -62,9 +59,6 @@ namespace FR {
         return distanceToRay <= tolerance; // Check if within tolerance
     }
 
-    // =====================================================
-    // 2. Line Segment Picking
-    // =====================================================
     bool intersectLineSegment3D(const ray_t& ray, const std::vector<glm::vec3>& line, glm::vec3& intersectionPoint) {
         if (line.size() < 2) return false;
 
@@ -112,69 +106,57 @@ namespace FR {
         return false;
     }
 
-    // =====================================================
-    // 3. Triangle Picking (Möller–Trumbore)
-    // =====================================================
-    bool intersectRayTriangle(const ray_t& ray, const std::vector<glm::vec3>& triangle,
-        glm::vec3& intersectionPoint) {
-        if (triangle.size() < 3) return false;
+    bool intersectRayTriangle(const ray_t& ray, const std::vector<glm::vec3>& triangle,glm::vec3& intersectionPoint, float & t) {
+            const float EPS = 1e-6f;
+            const glm::vec3 v0 = triangle[0];
+            const glm::vec3 v1 = triangle[1];
+            const glm::vec3 v2 = triangle[2];
 
-        glm::vec3 v0 = triangle[0];
-        glm::vec3 v1 = triangle[1];
-        glm::vec3 v2 = triangle[2];
+            glm::vec3 e1 = v1 - v0;
+            glm::vec3 e2 = v2 - v0;
 
-        glm::vec3 edge1 = v1 - v0;
-        glm::vec3 edge2 = v2 - v0;
+            glm::vec3 p = glm::cross(ray.direction, e2);
+            float det = glm::dot(e1, p);
 
-        glm::vec3 h = glm::cross(ray.direction, edge2);
-        float a = glm::dot(edge1, h);
+            if (fabs(det) < EPS)
+                return false;
 
-        if (fabs(a) < (EPSILON* glm::length(edge1))) // scale epsilon by the triangle size
-            return false; // Ray parallel to triangle
+            float invDet = 1.0f / det;
+            glm::vec3 s = ray.position - v0;
+            float u = invDet * glm::dot(s, p);
 
-        float f = 1.0f / a;
-        glm::vec3 s = ray.position - v0;
-        float u = f * glm::dot(s, h);
+            if (u < 0.0f || u > 1.0f)
+                return false;
 
-        if (u < 0.0f || u > 1.0f)
-            return false;
+            glm::vec3 q = glm::cross(s, e1);
+            float v = invDet * glm::dot(ray.direction, q);
 
-        glm::vec3 q = glm::cross(s, edge1);
-        float v = f * glm::dot(ray.direction, q);
+            if (v < 0.0f || u + v > 1.0f)
+                return false;
 
-        if (v < 0.0f || u + v > 1.0f)
-            return false;
-
-        float t = f * glm::dot(edge2, q);
-        if (t > (EPSILON * glm::length(edge1))) {
-            intersectionPoint = ray.position + t * ray.direction;
-            return true;
+            t = invDet * glm::dot(e2, q);
+            return t > EPS;
         }
 
-        return false;
-    }
 
-    // =====================================================
-    // 4. Polygon Picking (Triangle Fan)
-    // =====================================================
+
     bool intersectRayPolygon(const ray_t& ray, const std::vector<glm::vec3>& polygon,
-        glm::vec3& intersectionPoint) {
+        glm::vec3& intersectionPoint, float& t) {
         if (polygon.size() < 3)
             return false;
 
         glm::vec3 v0 = polygon[0];
-
         // Fan triangulation: only valid for convex polygons
         for (size_t i = 1; i < polygon.size() - 1; ++i) {
             std::vector<glm::vec3> tri = { v0, polygon[i], polygon[i + 1] };
-            if (intersectRayTriangle(ray, tri, intersectionPoint)) {
+            if (intersectRayTriangle(ray, tri, intersectionPoint, t)) {
                 return true;
             }
         }
         return false;
     }
 
-
+    //TODO FIX ME THIS IS NOT CORRECT 
     bool intersectRayOpenMesh(
         const ray_t& ray,
         const FrOpenMesh& mesh,
@@ -182,7 +164,7 @@ namespace FR {
     {
         bool hit = false;
         float closestDist = std::numeric_limits<float>::max();
-
+        float t;
         for (auto f : mesh.faces())
         {
             std::vector<glm::vec3> faceVerts;
@@ -200,8 +182,8 @@ namespace FR {
             for (size_t i = 1; i < faceVerts.size() - 1; ++i)
             {
                 std::vector<glm::vec3> tri = { v0, faceVerts[i], faceVerts[i + 1] };
-                glm::vec3 p; // intersection point
-                if (intersectRayTriangle(ray, tri, p))
+                glm::vec3 p;
+                if (intersectRayTriangle(ray, tri, p,t))
                 {
                     float dist = glm::length(p - ray.position);  // use ray.origin
 

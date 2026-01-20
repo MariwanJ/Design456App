@@ -1,8 +1,8 @@
 #version 460 core
 
 layout(location = 0) in vec3 position;
-layout(location = 1) in uint selectionMask;
 
+uniform int selectionMask;
 uniform mat4 mvp;
 uniform float pointSize;
 flat out uint selectiontype;

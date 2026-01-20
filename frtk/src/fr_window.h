@@ -174,9 +174,6 @@ namespace FR {
         bool intersectionChecker(const ray_t& ray, glm::vec3& intersectionPoint);
 
         defaultFont SystemFont;
-        
-        //Selection mode toolbar
-        SelectionMode  m_currentSelMode; //0 Mesh, 1 Face, 2 Edge, 3Vertex
 
         /**
          * Function to change the initialization variable of glad to false.

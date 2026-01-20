@@ -60,15 +60,22 @@
 
 // -------------------- Get Current Directory --------------------
 #if defined(_WIN32) || defined(_WIN64)
-#define GET_CURRENT_DIRECTORY() []() { \
+#define GET_CURRENT_DIRECTORY() []() -> std::string { \
         char buffer[MAX_PATH]; \
-        _getcwd(buffer, MAX_PATH); \
-        return std::string(buffer); \
+        if (_getcwd(buffer, sizeof(buffer)) != NULL) { \
+            return std::string(buffer); \
+        } else { \
+            return std::string("Error: Unable to get current directory."); \
+        } \
     }()
 #else
-#define GET_CURRENT_DIRECTORY() []() { \
+#include <limits.h> // For PATH_MAX
+#include <cstring>  // For strerror
+#include <cerrno>   // For errno
+
+#define GET_CURRENT_DIRECTORY() []() -> std::string { \
         char buffer[PATH_MAX]; \
-        if(getcwd(buffer, sizeof(buffer))) { \
+        if (getcwd(buffer, sizeof(buffer))) { \
             return std::string(buffer); \
         } else { \
             return std::string("Error: ") + strerror(errno); \
@@ -126,7 +133,6 @@ namespace FR {
     extern std::string EXE_CURRENT_DIR;
     extern std::string fontPath;
     
-
 
   
 
@@ -274,6 +280,7 @@ namespace FR {
         FR_LINES,
         FR_OPEN_LOOP,
         FR_CLOSED_LOOP, //This includes square, rectangle, triangle,pentagon, hexagon, star ..etc
+        FR_TRIANGLE,
         FR_CIRCLE,
         FR_CURVE,
         FR_ARC,
@@ -346,6 +353,11 @@ namespace FR {
         Edge,
         Vertex
     }SelectionMode;
+
+
+   //Selection mode toolbar
+   extern SelectionMode  m_currentSelMode; //0 Mesh, 1 Face, 2 Edge, 3Vertex
+
 
 } //FR
 #endif

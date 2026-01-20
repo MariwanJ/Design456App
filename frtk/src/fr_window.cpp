@@ -68,13 +68,15 @@ namespace FR {
     }
     screenDim_t Fr_Window::m_ViewPort{ 50,50, 800,600 };
 
+    SelectionMode  m_currentSelMode= SelectionMode::Mesh;
+
     Fr_Window::Fr_Window(int x, int y, int w, int h, std::string label) :
         activeScene(nullptr),
         MainWinCursor(0),
         gl_version_major(4), gl_version_minor(6),
         mouseDefaults{ 0 }, showOpenDialog(false),
         radiusXYZ(0.0f),
-        runCode(false), m_label(label), m_currentSelMode(SelectionMode::Mesh)
+        runCode(false), m_label(label)
     {
         showOpenDialog = false;
         /** from Fr_Window */
@@ -110,10 +112,16 @@ namespace FR {
         m_ViewPort.w = w;
         
         // std::string fname = "R";
- // auto n = loadImage();
-  //std::shared_ptr<BYTE> IMG = n.getImage("nofile");
+         // auto n = loadImage();
+          //std::shared_ptr<BYTE> IMG = n.getImage("nofile");
         EXE_CURRENT_DIR = GET_CURRENT_DIRECTORY();
+        if (EXE_CURRENT_DIR.find("Error:") != std::string::npos) {
+            std::cerr << EXE_CURRENT_DIR << std::endl;  // Print the error message
+            exit(1);  // Exit with a non-zero status indicating failure
+        }
         printf("Current Dir = %s\n", EXE_CURRENT_DIR.c_str());
+
+
 #if defined(_WIN32) || defined(_WIN64)
         auto it = EXE_CURRENT_DIR.find("\\bin");
 #else

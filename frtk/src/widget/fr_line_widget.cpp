@@ -34,28 +34,15 @@ namespace FR {
     {
         m_normals = std::make_shared<std::vector<float>>();
         m_textureCoord = std::make_shared<std::vector<float>>();
-        
         // Add vertices and store their handles
         for (size_t i = 0; i < m_vertices->size(); i += 3) {
             MyMesh::Point p(m_vertices->at(i), m_vertices->at(i+ 1), m_vertices->at(i + 2) );
             MyMesh::VertexHandle vh = m_mesh.add_vertex(p);
         }
-
-        /*
-        Notice that:
-            if you don't have faces, you don't get edges from open mesh. 
-            So, if you want to create a face from the edges, you have to rebuild the entire thing
-        */
-        CalculateNormals();
         lineWidth(1);
-        std::vector<MyMesh::VertexHandle> vertexHandles;
+        init(); 
         m_WidgType = NODETYPE::FR_LINE_WIDGET;
         m_lineType = FR_LINES;
-        initializeVBO();
-        CreateShader();
-        m_boundBox = std::make_shared<cBoundBox3D>();
-        m_boundBox->setVertices(m_vertices);
-
     }
 
     Fr_Line_Widget::~Fr_Line_Widget()
@@ -64,6 +51,7 @@ namespace FR {
 
     void Fr_Line_Widget::draw()
     {
+        initializeVBO();
         draw_2d();
     }
 
@@ -118,7 +106,7 @@ namespace FR {
         program->SetUniformCamPosition("camPos");
 
     }
-    void Fr_Line_Widget::RenderVertexes(RenderInfo& info) {
+    void Fr_Line_Widget::RenderSelection(RenderInfo& info) {
         if (!m_active)
             return;
         auto mvp = info.projection * info.modelview * m_Matrix;
@@ -131,29 +119,13 @@ namespace FR {
         m_shader->wdg_selection_prog->SetUniformVec4("faceSelectColor", m_color.faceSelectColor);
         m_shader->wdg_selection_prog->SetUniformVec4("edgeSelectColor", m_color.edgeSelectColor);
         m_shader->wdg_selection_prog->SetUniformVec4("vertexSelectColor", m_color.vertexSelectColor);
-
+        m_shader->wdg_selection_prog->SetUniformInteger("selectionMask", m_currentSelMode);
         m_shader->wdg_selection_prog->SetUniformFloat("pointSize", pointSize());
-        draw_points();
+        initializeVBO_Selection();
+        draw_2d_sel();  //draw_points();
         m_shader->wdg_selection_prog->Disable();
     }
     
-    void Fr_Line_Widget::RenderEdges(RenderInfo& info) {
-        if (!m_active)
-            return;
-
-        auto mvp = info.projection * info.modelview * m_Matrix;
-
-        m_shader->wdg_selection_prog->Enable(); // you can reuse the same shader
-        m_shader->wdg_selection_prog->SetAttribLocation("position", 0);
-        m_shader->wdg_selection_prog->SetAttribLocation("selectionMask", 1); // edge vertex selection
-        m_shader->wdg_selection_prog->SetUniformMat4("mvp", mvp);
-        m_shader->wdg_selection_prog->SetUniformVec4("color", m_color.baseColor);
-
-        glLineWidth(1.0f);// TODO FIX ME SO IT IS DEFINED GLOBALLY 
-        //draw_lines();  //TODO: Continue writing or fixing this part !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        m_shader->wdg_selection_prog->Disable();
-    }
-
     void Fr_Line_Widget::Render(RenderInfo& info) {
         if (!m_active)
             return;
@@ -173,7 +145,7 @@ namespace FR {
         draw();      //You should make a draw call to get that  done
         lbl_draw();
         m_shader->wdg_prog->Disable();
-        RenderVertexes(info);
+        RenderSelection(info);
         info.id++;
     }
 

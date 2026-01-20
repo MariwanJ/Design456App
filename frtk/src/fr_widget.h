@@ -95,7 +95,10 @@ namespace FR {
         float fontSize;
     }defaultFont;
 
-    
+    typedef struct {
+        std::vector<float> vertices;
+        std::vector <unsigned int > indices;
+    }sel_data_t;
 
     /** Default callback type definition for all frtk widgets */
     typedef void (Fr_Callback)(Fr_Widget*, void*);
@@ -142,9 +145,9 @@ namespace FR {
         virtual void Render(RenderInfo& info);
 
         /** Renders highlighting of objects based on their selection*/
-        virtual void RenderVertexes(RenderInfo& info);
-        virtual void RenderEdges(RenderInfo& info); 
-        virtual void RenderFaces(RenderInfo& info);
+        virtual void RenderSelection(RenderInfo& info);
+        //virtual void RenderEdges(RenderInfo& info); 
+        //virtual void RenderFaces(RenderInfo& info);
 
         /** Renders Text (Freetype Font)*/
         virtual void RenderText(RenderInfo& info);
@@ -169,12 +172,13 @@ namespace FR {
         bool isActive(void);
 
         void SetNormalizeMesh(bool value);
-        bool getNormalizeMesh();
+        bool getNormalizeMesh(void);
 
         /** Main draw function */
-        virtual void draw();
+        virtual void draw(void);
 
-        virtual void draw_2d();
+        virtual void draw_2d(void);
+        virtual void draw_2d_sel(void);
 
         /** Redraw the last object */
         virtual void redraw();
@@ -280,10 +284,13 @@ namespace FR {
 
 
         //
-        virtual int initializeVBO();
-        virtual void DrawPoints();
+        virtual void createBuffers(void);
+        virtual void initSelectionVAOs();
+        virtual int initializeVBO(void);
+        virtual int Fr_Widget::initializeVBO_Selection();
+        virtual void DrawPoints(void);
 
-        virtual void lbl_Draw();
+        virtual void lbl_Draw(void);
    
         //must be float as OpenGL uses float
         void pointSize(float val);
@@ -315,6 +322,8 @@ namespace FR {
         std::shared_ptr<std::vector<unsigned int>> m_indices;
         std::shared_ptr<std::vector<float>> m_normals;
         std::shared_ptr<std::vector<glm::vec3>> m_triangles_normals;
+
+        sel_data_t m_selectionData;
 
         std::shared_ptr<std::vector<float>> m_textureCoord;
         std::shared_ptr<Shader_t> m_shader; // Program for shared resources, cannot be static
