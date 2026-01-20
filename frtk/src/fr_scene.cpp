@@ -413,6 +413,7 @@ namespace FR {
                             if (intersectLineSegment3D(m_activeRay, verts, intersectionPoint))
                             {
                                 mesh.selectEdge(eh, true);
+                                FRTK_CORE_INFO("EDGE FOUND!!");
                                 result = 1;
                                 break;
                             }

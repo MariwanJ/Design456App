@@ -40,8 +40,7 @@ namespace FR {
 		}break;
 		case SelectionMode::Edge: {
 			glCheckFunc(glBindVertexArray(m_sel_vao.edges));
-			type = FR_OPEN_LOOP;
-
+			type = FR_LINES;
 		}break;
 		case SelectionMode::Vertex: {
 			glCheckFunc(glBindVertexArray(m_sel_vao.vertex));
