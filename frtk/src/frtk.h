@@ -60,7 +60,7 @@
 #include <vector>
 #include <string>
 #include <stdint.h>
-
+#include <stack>
 
  //for ResourcePath
 #if defined(_WIN32)

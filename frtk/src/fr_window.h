@@ -252,8 +252,6 @@ namespace FR {
         int imgui_LeftPanel();
         int imgui_ToolbarPannel();
         int imgui_SelectionToolbar();
-
-        int imgui_ViewPort();
         int imgui_menu();
 
         int createGLFWwindow();

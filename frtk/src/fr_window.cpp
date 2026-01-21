@@ -376,26 +376,16 @@ namespace FR {
 
         GLFWwindow* window = Fr_Window::getCurrentGLWindow();
         assert(window != nullptr);
+        
         ImGui_ImplGlfw_InitForOpenGL(window, true);
+        
         ImGui_ImplOpenGL3_Init("#version 460");
         glfwGetFramebufferSize(pGLFWWindow, &m_ViewPort.w, &m_ViewPort.h);
         userData_ data;
+        
 
         while (!glfwWindowShouldClose(pGLFWWindow))
         {
-
-
-
-
-
-
-
-
-
-
-
-
-
             //ALL 3D Drawings
             activeScene->RenderScene();
             ImGui_ImplOpenGL3_NewFrame();
@@ -407,6 +397,7 @@ namespace FR {
             //This Renders all GUI (imGui) widgets and windows- not viewport.
 
             renderimGUI(data);
+
             ImGuiIO io = ImGui::GetIO();
 
             if (Fr_Window::getFr_Window() != nullptr) {

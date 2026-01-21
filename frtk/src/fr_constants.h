@@ -52,7 +52,7 @@ namespace FR {
                           (double)FL_MINOR_VERSION * 0.01 + \
                           (double)FL_PATCH_VERSION * 0.0001 )
 
-#define ICON_SIZE  32,32
+#define ICON_SIZE  ImVec2(32,32)
 #define ICON_FONT_SIZE 24
 #define MAX_FOV_ZOOM 165
 

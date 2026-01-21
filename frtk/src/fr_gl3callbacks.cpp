@@ -36,6 +36,7 @@ namespace FR {
     {
         if (spWindow == nullptr)
             return;
+
         spWindow->m_ViewPort.w = width;
         spWindow->m_ViewPort.h = height;
 
@@ -83,6 +84,12 @@ namespace FR {
     {
         if (spWindow == nullptr)
             return; //do nothing
+
+        //if (ImGui::GetCurrentContext() && ImGui::GetIO().WantCaptureMouse) {
+        //    ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
+        //    return;
+        //}
+
         m_GLFWevents = { -1,-1,-1,-1,-1 };
 
         m_GLFWevents.lastKey = key;
@@ -193,6 +200,7 @@ namespace FR {
         // Ensure window is valid
         if (!spWindow)
             return;
+
         //We need to calculate Ray always, and mouse location in the world TODO: Check if this is a problem that needs to be optimized?!!!!2025-11-03
         spWindow->calculateScreenRay();
         Fr_Camera& cam = spWindow->activeScene->getActiveCamera();
@@ -332,14 +340,18 @@ namespace FR {
         updateMousePosition(xpos, ypos);
     }
 
-    void Fr_Window::cursor_enter_callback(GLFWwindow*, int entered)
+    void Fr_Window::cursor_enter_callback(GLFWwindow* win, int entered)
     {
+        if (spWindow == nullptr)
+            return; //do nothing
     }
 
     void Fr_Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
     {
+        
         if (spWindow == nullptr)
             return;
+
         userData_ data;
         spWindow->activeScene->getActiveCamera().getCamData(data);
         if (spWindow->activeScene->getActiveCamera().getType() == ORTHOGRAPHIC) {
@@ -380,6 +392,7 @@ namespace FR {
         userData_ data;
         if (!spWindow)
             return;
+
         spWindow->activeScene->getActiveCamera().getCamData(data);
 
         if (mouseEvent.Old_x== mouseEvent.Old_x && mouseEvent.Old_x==0) {
