@@ -36,76 +36,148 @@ namespace FR {
     // Small epsilon for floating-point checks
     constexpr float EPSILON = 1e-6f;
 
-    bool intersectPointIn3D(const ray_t& ray, const glm::vec3& vertex, float tolerance) {
-        glm::vec3 rayDir = glm::normalize(ray.direction); // Normalize the direction
-        glm::vec3 toVertex = vertex - ray.position; // Vector from ray origin to vertex
-
-        // Project toVertex onto ray direction
-        float t = glm::dot(toVertex, rayDir);
-
-        // If the projection point is behind the ray origin
-        if (t < 0.0f) {
-            // Check distance to the ray origin
-            return glm::length(vertex - ray.position) <= tolerance;
-        }
-
-        // Closest point on the ray to the vertex
-        glm::vec3 closestPoint = ray.position + t * rayDir;
-
-        // Calculate the distance from the vertex to the closest point on the ray
-        float distanceToRay = glm::length(vertex - closestPoint);
-        printf("Ray was (%2.0f,%2.0f,%2.0f  \n) ", rayDir.x, rayDir.y, rayDir.z);
-        printf("%.2f it was \n", distanceToRay);
-        return distanceToRay <= tolerance; // Check if within tolerance
-    }
-
-    bool intersectLineSegment3D( const ray_t& ray, const std::vector<glm::vec3>& line, glm::vec3& intersectionPoint, float& tOut)
+    bool intersectPointIn3D( const ray_t& ray, const glm::vec3& vertex,   float tolerance, float& tRayOut)
     {
-        if (line.size() < 2) return false;
+        glm::vec3 rayDir = glm::normalize(ray.direction);
+        glm::vec3 toVertex = vertex - ray.position;
 
-        glm::vec3 A = line[0];
-        glm::vec3 B = line[1];
-        glm::vec3 AB = B - A;
+        float tRay = glm::dot(toVertex, rayDir);
 
-        glm::vec3 C = ray.position;
-        glm::vec3 d = ray.direction; // normalized
-
-        glm::vec3 AC = A - C;
-
-        float abDotab = glm::dot(AB, AB);
-        float abDotd = glm::dot(AB, d);
-        float abDotAC = glm::dot(AB, AC);
-        float dDotAC = glm::dot(d, AC);
-
-        float denom = abDotab - abDotd * abDotd;
-        if (fabs(denom) < EPSILON)
+        if (tRay < 0.0f)
             return false;
 
-        float tSeg = (abDotd * dDotAC - abDotAC) / denom;
-        float sRay = dDotAC + abDotd * tSeg;
-
-        Fr_Window* win = Fr_Window::getFr_Window();
-        assert(win);
-
-        userData_ data;
-        win->activeScene->getActiveCamera().getCamData(data);
-        float maxPickDistance = data.zfar_ - data.znear_ ;
-
-        if (tSeg < 0.0f || tSeg > 1.0f) return false;
-        if (sRay < 0.0f || sRay > maxPickDistance) return false;
-
-        glm::vec3 pointOnSegment = A + tSeg * AB;
-        glm::vec3 pointOnRay = C + sRay * d;
-
-        float distance = glm::length(pointOnSegment - pointOnRay);
-        if (distance > win->m_MousePickerRadius)
+        glm::vec3 closestPoint = ray.position + tRay * rayDir;
+        float distance = glm::length(vertex - closestPoint);
+        if (distance > tolerance)
             return false;
 
-        intersectionPoint = pointOnSegment;
-        tOut = tSeg;
+        tRayOut = tRay;
         return true;
     }
 
+    //Works but not perfect,
+    //bool intersectLineSegment3D( const ray_t& ray, const std::vector<glm::vec3>& line, glm::vec3& intersectionPoint, float& tOut)
+    //{
+    //    if (line.size() < 2)
+    //        return false;
+
+    //    const glm::vec3& A = line[0];
+    //    const glm::vec3& B = line[1];
+
+    //    glm::vec3 AB = B - A;
+    //    glm::vec3 C = ray.position;
+    //    glm::vec3 d = glm::normalize(ray.direction);
+
+    //    float abLen2 = glm::dot(AB, AB);
+    //    if (abLen2 < 1e-6f)
+    //        return false;
+
+    //    glm::vec3 AC = A - C;
+
+    //    float abDotD = glm::dot(AB, d);
+    //    float abDotAC = glm::dot(AB, AC);
+    //    float dDotAC = glm::dot(d, AC);
+
+    //    float denom = abLen2 - abDotD * abDotD;
+
+    //    float tSeg, sRay;
+
+    //    if (fabs(denom) < 1e-6f)
+    //    {
+    //        tSeg = glm::clamp(abDotAC / abLen2, 0.0f, 1.0f);
+    //        sRay = glm::dot(A + tSeg * AB - C, d);
+    //    }
+    //    else
+    //    {
+    //        tSeg = (abDotD * dDotAC - abDotAC) / denom;
+    //        tSeg = glm::clamp(tSeg, 0.0f, 1.0f);
+    //        sRay = dDotAC + abDotD * tSeg;
+    //    }
+
+    //    if (sRay < 0.0f)
+    //        return false;
+
+    //    glm::vec3 pSeg = A + tSeg * AB;
+    //    glm::vec3 pRay = C + sRay * d;
+
+
+    //    Fr_Window* win = Fr_Window::getFr_Window();
+    //    assert(win);
+
+    //    userData_ data;
+    //    win->activeScene->getActiveCamera().getCamData(data);
+
+    //    // Vertical FOV in radians
+    //    float fovY = data.fovy_;
+    //    float screenHeight = (float)win->h();
+
+    //    // World units per pixel at depth sRay
+    //    float worldPerPixel = 2.0f * sRay * tanf(fovY * 0.5f) / screenHeight;
+
+    //    float pickRadiusWorld =
+    //        win->m_MousePickerRadius * worldPerPixel;
+
+    //    float dist2 = glm::dot(pSeg - pRay, pSeg - pRay);
+    //    if (dist2 > pickRadiusWorld * pickRadiusWorld)
+    //        return false;
+
+    //    intersectionPoint = pSeg;
+    //    tOut = tSeg;
+    //    return true;
+    //}
+
+bool intersectLineSegment3D(const ray_t& ray, const std::vector<glm::vec3>& line, glm::vec3& intersectionPoint, float& tOut)
+{
+    if (line.size() < 2)
+        return false;
+
+    Fr_Window* win = Fr_Window::getFr_Window();
+    assert(win);
+    const glm::vec3& A = line[0];
+    const glm::vec3& B = line[1];
+    glm::mat4 view = win->activeScene->getActiveCamera().GetViewMatrix();
+    glm::mat4 proj = win->activeScene->getActiveCamera().getProjection();
+    glm::vec2 viewport((float)win->w(), (float)win->h());
+
+    auto WorldToScreen = [&](const glm::vec3& p)
+        {
+            glm::vec4 clip = proj * view * glm::vec4(p, 1.0f);
+            if (clip.w <= 0.0f)
+                return glm::vec2(-1.0f);
+
+            glm::vec3 ndc = glm::vec3(clip) / clip.w;
+            return glm::vec2( (ndc.x * 0.5f + 0.5f) * viewport.x, 
+                              (1.0f - (ndc.y * 0.5f + 0.5f)) * viewport.y);
+        };
+
+    glm::vec2 A2 = WorldToScreen(A);
+    glm::vec2 B2 = WorldToScreen(B);
+    if (A2.x < 0.0f || B2.x < 0.0f)
+        return false;
+
+    glm::vec2 mousePx = glm::vec2(win->getMouseEvents().Old_x,  win->getMouseEvents().Old_y);
+    glm::vec2 AB2 = B2 - A2;
+    float tScreen = glm::dot(mousePx - A2, AB2) / glm::dot(AB2, AB2);
+    tScreen = glm::clamp(tScreen, 0.0f, 1.0f);
+
+    glm::vec2 closest2D = A2 + tScreen * AB2;
+    float distPx = glm::length(mousePx - closest2D);
+
+    if (distPx > win->m_MousePickerRadius)
+        return false;
+
+    glm::vec3 hit = A + tScreen * (B - A);
+
+    // Snap hit point onto ray for stability
+    glm::vec3 d = glm::normalize(ray.direction);
+    float s = glm::dot(hit - ray.position, d);
+    if (s < 0.0f)
+        return false;
+
+    intersectionPoint = ray.position + s * d;
+    tOut = tScreen;
+    return true;
+}
 
    //only ONE triangle
     bool intersectRayTriangle(const ray_t& ray, const std::vector<glm::vec3>& triangle, glm::vec3& intersectionPoint, float &t)
@@ -284,7 +356,7 @@ namespace FR {
                 continue;
 
             // Resulted face
-            mesh.selectFace(fh, true);
+            mesh.toggleFaceSelection(fh);
             for (auto ff = mesh.ff_iter(fh); ff.is_valid(); ++ff)
                 stack.push(*ff);
         }

@@ -346,6 +346,11 @@ namespace FR {
 		glViewport(0, 0, win->w(), win->h());
 		// Enable depth testing
 		glCheckFunc(glEnable(GL_DEPTH_TEST));
+		glCheckFunc(glDepthFunc(GL_LEQUAL));
+		glCheckFunc(glDepthMask(GL_TRUE));
+
+		glCheckFunc(glEnable(GL_POLYGON_OFFSET_LINE));
+
 		glClearColor(win->clear_color.x * win->clear_color.w,
 			win->clear_color.y * win->clear_color.w,
 			win->clear_color.z * win->clear_color.w,
@@ -353,15 +358,19 @@ namespace FR {
 		glCheckFunc(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 		glEnable(GL_LINE_SMOOTH);
 
-		// glCheckFunc(glDepthFunc(GL_LESS));
-		RenderPrimativeShapes(render_info);
 		// Render 3D objects
 		Render(render_info);
 		//// Render transparent items
 		RenderText(render_info);
 
+		// glCheckFunc(glDepthFunc(GL_LESS));
+		RenderPrimativeShapes(render_info);
+
 		render_info.render_transparent = true;
 		Render(render_info);
+
+
+
 	}
 
 	bool Fr_Scene::deleteItemByID(std::string_view str) {
@@ -618,7 +627,7 @@ namespace FR {
 		return 0; //We could not use the event .. Return 0 as we don't care , Never return value >0 if you don't care
 	}
 
-	bool Fr_Scene::pickAFace( size_t IndexOfclosestItem, OpenMesh::FaceHandle& pickedFace, float& outT)
+	bool Fr_Scene::pickAFace(size_t IndexOfclosestItem, OpenMesh::FaceHandle& pickedFace, float& outT)
 	{
 		float closestT = std::numeric_limits<float>::max();
 		bool found = false;
@@ -669,7 +678,6 @@ namespace FR {
 		return true;
 	}
 
-
 	int Fr_Scene::handle_selection(int ev) {
 		//We need to find closest object to the screen,
 		// if the object is behind another object, we should ignore it
@@ -701,11 +709,13 @@ namespace FR {
 		// Depending on where the events occur, object should get them otherwise just ignore them
 		if (mouseClicked) {
 			IndexOfclosestItem = findClosestMeshToRay(m_activeRay);
-
 			if (IndexOfclosestItem < 0) {
 				//Ray did not hit anything
-				for (size_t i = 0; i < m_world.size(); ++i) {
-					m_world.at(i).Sceneitem->m_mesh.clearAllSelections(); //Deselect all objects that are not visible
+				//TODO : check and test if this is the desired functionality for selection, deselection
+				if ((!ctrlPressed)) {
+					for (size_t i = 0; i < m_world.size(); ++i) {
+						m_world.at(i).Sceneitem->m_mesh.clearAllSelections(); //Deselect all objects that are not visible
+					}
 				}
 				result = -1; //no selection, all cleared
 			}
@@ -716,7 +726,7 @@ namespace FR {
 				if (m_world.at(IndexOfclosestItem).Sceneitem->m_boundBox->isRayInsideBoundingBox(m_activeRay)) {
 					switch (m_currentSelMode) {
 					case SelectionMode::Mesh: {
-						m_world.at(IndexOfclosestItem).Sceneitem->m_mesh.selectMesh(true);
+						m_world.at(IndexOfclosestItem).Sceneitem->m_mesh.toggleMeshSelection();
 						return 1;
 					} break;
 					case SelectionMode::Face:
@@ -744,6 +754,10 @@ namespace FR {
 						bool found = false;
 
 						constexpr float depthEpsilon = 1e-3f;
+
+						if (!ctrlPressed) {
+							m_world.at(IndexOfclosestItem).Sceneitem->m_mesh.clearAllSelections();
+						}
 
 						for (auto fh : m_world[IndexOfclosestItem].Sceneitem->m_mesh.fh_range(pickedFace))
 						{
@@ -776,26 +790,54 @@ namespace FR {
 
 						if (found)
 						{
-							m_world[IndexOfclosestItem].Sceneitem->m_mesh.selectEdge(bestEdge, true);
+							m_world[IndexOfclosestItem].Sceneitem->m_mesh.toggleEdgeSelection(bestEdge);
 							result = 1;
 						}
 					}
 					break;
 
-					case SelectionMode::Vertex: {
+					case SelectionMode::Vertex:
+					{
 						auto& mesh = m_world[IndexOfclosestItem].Sceneitem->m_mesh;
+						OpenMesh::FaceHandle pickedFace;
+						float faceT;
 
-						for (auto v_it = mesh.vertices_begin(); v_it != mesh.vertices_end(); ++v_it)
+						if (!pickAFace(IndexOfclosestItem, pickedFace, faceT))
+							break;
+
+						if (!ctrlPressed)
+							mesh.clearAllSelections();
+
+						OpenMesh::VertexHandle bestVertex;
+						float bestDepth = FLT_MAX;
+						bool found = false;
+
+						// Iterate ONLY vertices of the picked face
+						for (auto fv_it = mesh.fv_begin(pickedFace);
+							fv_it.is_valid();
+							++fv_it)
 						{
-							OpenMesh::VertexHandle vh = *v_it;
+							OpenMesh::VertexHandle vh = *fv_it;
+
 							const auto& p = mesh.point(vh);
+							float t;
 							glm::vec3 vertexPos(p[0], p[1], p[2]);
-							if (intersectPointIn3D(m_activeRay, vertexPos))
+							//mesh.selectVertex(vh, true);
+							if (!intersectPointIn3D(m_activeRay, vertexPos, win->m_MousePickerRadius, t))
+								continue;
+							// Keep closest to camera (important)
+							if (t < bestDepth)
 							{
-								mesh.selectVertex(vh, true);
-								result = 1; // done, only one vertex per click
-								break;
+								bestDepth = t;
+								bestVertex = vh;
+								found = true;
 							}
+						}
+
+						if (found)
+						{
+							mesh.toggleVertexSelection(bestVertex);
+							result = 1;
 						}
 					} break;
 					default: {} break;

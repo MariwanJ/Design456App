@@ -62,6 +62,7 @@ namespace FR {
 
     void Fr_Label::RenderText(RenderInfo& info) {
         glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
         glDepthMask(GL_TRUE);
 
         glCheckFunc(glEnable(GL_BLEND));

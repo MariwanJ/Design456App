@@ -172,7 +172,8 @@ namespace FR {
                 glm::vec3 p1= glm::vec3(m_vertices->at(0), m_vertices->at(1), m_vertices->at(2));
                 glm::vec3 p2 = glm::vec3(m_vertices->at(3), m_vertices->at(4), m_vertices->at(5));
                 ray_t ray = win->activeScene->getRayValue();
-                if(intersectPointIn3D(ray, p1, 5.0f) || intersectPointIn3D(ray, p2, 5.0f))
+                float t;
+                if(intersectPointIn3D(ray, p1, 5.0f,t ) || intersectPointIn3D(ray, p2, 5.0f,t))
                 {
                     SetColor(glm::vec4(FR_ORANGERED));
                     lineWidth(3);
@@ -193,7 +194,8 @@ namespace FR {
                 glm::vec3 p1 = glm::vec3(m_vertices->at(0), m_vertices->at(1), m_vertices->at(2));
                 glm::vec3 p2 = glm::vec3(m_vertices->at(3), m_vertices->at(4), m_vertices->at(5));
                 ray_t ray = win->activeScene->getRayValue();
-                result = intersectPointIn3D(ray, p1, 5.0f) ;
+                float t;
+                result = intersectPointIn3D(ray, p1, 5.0f,t ) ;
                 if (result) {
                     //TODO This is not correct FIXME
                     m_vertices->at(0) = win->getMouseEvents().WorldMouse.x;
@@ -202,7 +204,8 @@ namespace FR {
                     redraw();
                 }
                 else {
-                    result = intersectPointIn3D(ray, p2, 5.0f);
+                    float t;
+                    result = intersectPointIn3D(ray, p2, 5.0f,t);
                     if (result) {
                         m_vertices->at(3) = win->getMouseEvents().WorldMouse.x;
                         m_vertices->at(4) = win->getMouseEvents().WorldMouse.y;

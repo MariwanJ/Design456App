@@ -31,58 +31,60 @@
 #include <OpenMesh/Core/IO/MeshIO.hh>
 #include <OpenMesh/Core/Utils/PropertyManager.hh>
 
-
 namespace FR {
+	typedef OpenMesh::MeshHandle MeshHandle;
+	typedef OpenMesh::FaceHandle FaceHandle;
+	typedef OpenMesh::EdgeHandle EdgeHandle;
+	typedef OpenMesh::VertexHandle VertexHandle;
 
-    typedef OpenMesh::MeshHandle MeshHandle;
-    typedef OpenMesh::FaceHandle FaceHandle;
-    typedef OpenMesh::EdgeHandle EdgeHandle;
-    typedef OpenMesh::VertexHandle VertexHandle;
+	class FrOpenMesh : public OpenMesh::PolyMesh_ArrayKernelT<>
+	{
+	public:
+		// Property handles
+		OpenMesh::MPropHandleT<bool> mesh_selected;
+		OpenMesh::VPropHandleT<bool> v_selected;
+		OpenMesh::EPropHandleT<bool> e_selected;
+		OpenMesh::FPropHandleT<bool> f_selected;
+		OpenMesh::HPropHandleT<bool> h_selected;
 
+		FrOpenMesh();
+		~FrOpenMesh();
 
-    class FrOpenMesh : public OpenMesh::PolyMesh_ArrayKernelT<>
-    {
-    public:
-        // Property handles
-        OpenMesh::MPropHandleT<bool> mesh_selected;
-        OpenMesh::VPropHandleT<bool> v_selected;
-        OpenMesh::EPropHandleT<bool> e_selected;
-        OpenMesh::FPropHandleT<bool> f_selected;
-        OpenMesh::HPropHandleT<bool> h_selected;
+		// Mesh
+		void selectMesh(bool s);
+		void toggleMeshSelection();
+		bool isMeshSelected() const;
 
-        FrOpenMesh();
-        ~FrOpenMesh();
+		// Vertex
+		void selectVertex(VertexHandle v, bool s);
+		void toggleVertexSelection(VertexHandle v);
+		bool isVertexSelected(VertexHandle v) const;
 
-        // Mesh 
-        void selectMesh(bool s);
-        bool isMeshSelected() const;
+		// Edge
+		void selectEdge(EdgeHandle e, bool s);
+		void toggleEdgeSelection(EdgeHandle e);
+		bool isEdgeSelected(EdgeHandle e) const;
 
-        // Vertex 
-        void selectVertex(VertexHandle v, bool s);
-        bool isVertexSelected(VertexHandle v) const;
+		// Face
+		void selectFace(FaceHandle f, bool s);
+		void toggleFaceSelection(FaceHandle f);
+		bool isFaceSelected(FaceHandle f) const;
 
-        // Edge 
-        void selectEdge(EdgeHandle e, bool s);
-        bool isEdgeSelected(EdgeHandle e) const;
+		// Halfedge
+		void selectHalfedge(HalfedgeHandle h, bool s);
+		void toggleHalfeedgeSelection(HalfedgeHandle h);
+		bool isHalfedgeSelected(HalfedgeHandle h) const;
 
-        // Face 
-        void selectFace(FaceHandle f, bool s);
-        bool isFaceSelected(FaceHandle f) const;
+		size_t has_vert_sel();
+		size_t has_edge_sel();
+		size_t has_face_sel();
 
-        // Halfedge 
-        void selectHalfedge(HalfedgeHandle h, bool s);
-        bool isHalfedgeSelected(HalfedgeHandle h) const;
- 
-        size_t has_vert_sel();
-        size_t has_edge_sel();
-        size_t has_face_sel();
-        
-        void clearAllSelections();
+		void clearAllSelections();
 
-    private: 
-        size_t m_has_vert_sel;
-        size_t m_has_edge_sel;
-        size_t m_has_face_sel;
-    };
+	private:
+		size_t m_has_vert_sel;
+		size_t m_has_edge_sel;
+		size_t m_has_face_sel;
+	};
 }
 #endif //#define FR_OPENMESH_H

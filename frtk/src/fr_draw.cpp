@@ -53,9 +53,13 @@ namespace FR {
 		}
 		glCheckFunc(glLineWidth(m_lineWidth));
 		switch (type) {
-			case FR_POINT: {
-			}
-			case FR_LINES: {
+		case FR_POINT: {
+				glCheckFunc(glEnable(GL_PROGRAM_POINT_SIZE));
+				glCheckFunc(glPointSize(m_pointSize));
+				glCheckFunc(glDrawArrays(GL_POINTS, 0, m_selectionData.vertices.size() / 3));
+			}break;
+			
+		case FR_LINES: {
 				glCheckFunc(glDrawElements(GL_LINES, (int)m_selectionData.indices.size(), GL_UNSIGNED_INT, 0));
 			}break;
 			case FR_OPEN_LOOP: {

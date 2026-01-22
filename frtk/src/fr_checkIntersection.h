@@ -37,7 +37,7 @@ namespace FR {
 	/**
 	 * .
 	 */
-	bool intersectPointIn3D(const ray_t& RAY, const glm::vec3& vertex, float tolerance = DEFAULT_VERTEX_TOLERANCE);
+	bool intersectPointIn3D(const ray_t& ray, const glm::vec3& vertex, float tolerance, float& tRayOut);
 	bool intersectLineSegment3D(const ray_t& ray, const std::vector<glm::vec3>& line, glm::vec3& intersectionPoint, float &t);
 	bool intersectRayTriangle(const ray_t& RAY, const std::vector<glm::vec3>& triangle, glm::vec3& intersectionPoint, float& t); //only one triangle
 	bool intersectRayOpenMesh(const ray_t& ray, const FrOpenMesh& mesh, glm::vec3& intersectionPoint);
