@@ -16,16 +16,16 @@ struct LightInfo {
 const int MAX_LIGHTS = 8;
 const vec3 GLOBAL_AMBIENT = vec3(0.1, 0.1, 0.1);
 
-layout(location = 0) in vec3 frag_position;
-layout(location = 1) in vec3 frag_normal;
-layout(location = 2) in vec2 vTextCoord;
+in vec3 frag_position;
+in vec3 frag_normal;
+in vec2 vTextCoord;
 
 uniform vec4 color;
 uniform int nlights;
 uniform LightInfo lights[MAX_LIGHTS];
 uniform int hasTexture;
 uniform sampler2D ourTexture;
-uniform vec3 camPos; // Needed for specular
+uniform vec3 camPos;
 
 layout(location = 0) out vec4 frag_color;
 
@@ -53,7 +53,7 @@ vec3 compute_light_intensity(LightInfo light, vec3 frag_pos, vec3 frag_normal)
     // Specular (Phong)
     vec3 viewDir = normalize(camPos - frag_pos);
     vec3 reflectDir = reflect(-frag2light, frag_normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0); // Consider making shininess a uniform
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
     vec3 specular = spec * light.specular.rgb;
 
     // Ambient
@@ -85,11 +85,11 @@ void main()
     }
 
     frag_light += GLOBAL_AMBIENT;
-    // Apply color and optional texture
+
     if (hasTexture == 1) {
-        frag_color = vec4(clamp(color.rgb * texture(ourTexture, vTextCoord).rgb * frag_light, 0.0, 1.0), color.a);
+        vec3 texColor = texture(ourTexture, vTextCoord).rgb;
+        frag_color = vec4(clamp(color.rgb * texColor * frag_light, 0.0, 1.0), color.a);
     } else {
-       frag_color = vec4(clamp(color.rgb * frag_light, 0.0, 1.0), color.a);
-        
+        frag_color = vec4(clamp(color.rgb * frag_light, 0.0, 1.0), color.a);
     }
 }

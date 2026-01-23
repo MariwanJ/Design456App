@@ -141,7 +141,7 @@ namespace FR {
 
 	void FrOpenMesh::clearAllSelections()
 	{
-		//TODO : Let is be possible to clear only one object type between all object types.
+		//TODO : Let's be possible to clear only one object type between all object types.
 		property(mesh_selected) = false;
 
 		for (auto v : vertices())

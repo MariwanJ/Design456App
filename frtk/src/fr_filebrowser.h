@@ -1,4 +1,3 @@
-
 #ifndef FR_FILEBROWSWER_H
 #define FR_FILEBROWSWER_H
 /**
@@ -834,7 +833,6 @@ inline void ImGui::FileBrowser::Display()
         EndDisabled();
         if ((ok || isEnterPressed) && !selectedFilenames_.empty())
         {
-           
             isOk_ = true;
             CloseCurrentPopup();
         }
@@ -849,12 +847,12 @@ inline void ImGui::FileBrowser::Display()
     }
 
     SameLine(150);
-    
-    if(Button("  Cancel  ")) {
+
+    if (Button("  Cancel  ")) {
         isCanceled_ = true;
         CloseCurrentPopup();
     }
-   
+
     const bool shouldClose = shouldClose_ ||
         ((flags_ & ImGuiFileBrowserFlags_CloseOnEsc) &&
             IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows) &&
@@ -1371,6 +1369,6 @@ inline std::uint32_t ImGui::FileBrowser::GetDrivesBitMask()
     }
     return ret;
 }
- 
+
 #endif
 #endif

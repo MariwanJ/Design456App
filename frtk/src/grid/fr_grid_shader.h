@@ -33,16 +33,16 @@ namespace FR {
     class FRTK_API Fr_Primatives;
     class FRTK_API ShaderProgram;
 
-    class FRTK_API Fr_GridShader   {
+    class FRTK_API Fr_GridShader {
     public:
         void setText(const char* newValue);
         void setTexture(const char* newValue);
         /**
          * Constructor
          */
-        Fr_GridShader(unsigned int color = 0x111111, float silhouette = 0.005);
-        Fr_GridShader(glm::vec4 color, float silhouette = 0.005);
-        Fr_GridShader(float color[4], float silhouette = 0.005);
+        Fr_GridShader(unsigned int color = 0x111111, float silhouette = DEFAULT_SIHOUETTE);
+        Fr_GridShader(glm::vec4 color, float silhouette = DEFAULT_SIHOUETTE);
+        Fr_GridShader(float color[4], float silhouette = DEFAULT_SIHOUETTE);
 
         /**
          * Destructor
@@ -70,13 +70,12 @@ namespace FR {
          * Renders the node
          */
 
-        void Render(RenderInfo& info) ;
+        void Render(RenderInfo& info);
 
         std::shared_ptr <Fr_Texture2D> m_Texture2D;
 
         void setObjectshader(const char* newValue);
         void setSilhouette(const char* newValue);
- 
 
         GLuint getCurrentTexturer(void);
     private:
@@ -94,7 +93,7 @@ namespace FR {
 
         // Constants
         const size_t kMaxLights = 8;
-        
+
         void InitializeSharedPrograms();
 
         void defaultShaders();
@@ -105,7 +104,7 @@ namespace FR {
         // Attributes
         std::shared_ptr <Fr_Primatives> m_Primative;
         glm::vec4 m_Color;
-        float silhouette_;
+        float m_silhouette;
         std::string m_f_objectshader;
         std::string m_f_silhouette;
         std::string m_f_texture;

@@ -37,7 +37,6 @@
 #include <fr_transform.h>       //just for debug - remove it when done TODO : FIXME
 #include <fr_camera.h>
 
-
 #endif
 /** Fr_Window */
 
@@ -45,7 +44,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include<../src/halfedge/fr_shape.h>
- 
+
 #include <fr_filebrowser.h>
 #include <widget/fr_line_widget.h>  //TODO: Put me somewhere else
 #include <widget/fr_face_widget.h>  //TODO: Put me somewhere else
@@ -56,23 +55,19 @@
 namespace FR {
     //Change these as needed
     typedef struct {
-        double Old_x ;  //SAVE X AND Y OF LAST Cursor Move
-        double Old_y ;
-        glm::vec3 WorldMouse;  
-        int click ;
+        double Old_x;  //SAVE X AND Y OF LAST Cursor Move
+        double Old_y;
+        glm::vec3 WorldMouse;
+        int click;
         int double_click;
-        bool Pressed ;
+        bool Pressed;
         int Button;
     }glfwMouseEvent;
 
-
- 
-    typedef struct  {
+    typedef struct {
         float MouseXYScale;
         float MouseScrollScale;
     }mouseScale_t;
-
-   
 
     /**
      * Each of these variables will keep the last events happened and their value.
@@ -98,14 +93,14 @@ namespace FR {
         Fr_Window(int x, int y, int w, int h, std::string label);
 
         Fr_Window();
- 
+
         /**
          * Class destructor.
          */
         ~Fr_Window();
 
         static Fr_Window* getFr_Window(void);
- 
+
         void RenderGizmo(void);
 
         virtual int Exit();
@@ -164,10 +159,10 @@ namespace FR {
 
         glm::vec4 toEyeCoords(const glm::vec4& clipCoords);
 
-        glm::vec2 getNormalisedDeviceCoordinates(); 
+        glm::vec2 getNormalisedDeviceCoordinates();
 
         glm::vec3 getPointOnRay(const glm::vec3& ray, float distance);
-        //experemental code 
+        //experemental code
         glm::vec3 calculateMouseWorldPos();
 
         //Mouse picker
@@ -189,10 +184,9 @@ namespace FR {
         int  h()const;
 
         const char* label()const;
-        void label(std::string &l);
+        void label(std::string& l);
         void label(const char* l);
 
-        
         static float m_MousePickerRadius;
 
         float getAspectRation() const;
@@ -233,21 +227,17 @@ namespace FR {
 
         void setCameraType(uint8_t typOfCamera);
         uint8_t getCameraType();
-        
+
         static screenDim_t getScreenDim(void);
 
         int renderimGUI(userData_& data);
-    
+
         static Fr_Window* spWindow;  //Row pointer otherwise we will not be able to set
         std::shared_ptr<Fr_Scene> activeScene;
 
         ImVec4 clear_color;
 
-
-
     protected:
-        
-
 
         int imgui_LeftPanel();
         int imgui_ToolbarPannel();
@@ -259,7 +249,7 @@ namespace FR {
         int imguimzo_init();
 
         static glfwMouseEvent mouseEvent;
-        
+
         static screenDim_t m_ViewPort;
 
         GLFWcursor* cursorHand = nullptr;
@@ -267,8 +257,6 @@ namespace FR {
 
         static void glfwWindosResize(GLFWwindow* window, int width, int height);
         static void glfwWindPos(GLFWwindow* window, int pos_x, int pos_y);
-
-      
 
         static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
@@ -289,7 +277,7 @@ namespace FR {
         static void cameraRotate(GLFWwindow* win, double xoffset, double yoffset);
 
         static void joystick_callback(int jid, int events);
-  
+
         //Menu and toolbar callbacks
         void mnuFileNew_cb(void* Data);
         void mnuFileOpen_cb(void* Data);
@@ -299,18 +287,13 @@ namespace FR {
         void mnuFileExport_cb(void* Data);
         void mnuFileImport_cb(void* Data);
         void mnuFileExit_cb(void* Data);
-        
-        
+
         //Selection toolbar callbacks
         void mnuSelMesh_cb(void* data);
-        void mnuSelFace_cb(void *data);
-        void mnuSelEdges_cb(void *data);
-        void mnuSelVertex_cb(void *data);
+        void mnuSelFace_cb(void* data);
+        void mnuSelEdges_cb(void* data);
+        void mnuSelVertex_cb(void* data);
 
-
-
-        
-        
         void CameraOptions(void);
         void SunOptions(void);
 
@@ -338,10 +321,9 @@ namespace FR {
         static int RECURSION_COUNT;
         static float RAY_RANGE;
         static bool m_RotateActive;
-        
 
         void flush();
-       
+
         /**
          * Boolean variable keeps information about GLFW window if it is initialized or not.
          */
@@ -355,13 +337,12 @@ namespace FR {
          * Keep track of the active camera.
          */
 
-        
         std::shared_ptr<ImGui::FileBrowser> fileDialog;
 
         bool showOpenDialog;
         //will be true if rotate/pan starts.
         static bool MouseOnce;
-       
+
         static float phi, theta;
 
         //Camera rotation - mouse callback
@@ -369,7 +350,6 @@ namespace FR {
         bool runCode;
 
         static GLFWwindow* pGLFWWindow;
-
     };
 }
 

@@ -136,7 +136,7 @@ namespace FR {
     void cBoundBox3D::setVertices(std::weak_ptr<std::vector<float>> pnts)
     {
         m_points = pnts;
-        calBoundBox(); //TODO: Should we do that?
+        calBoundBox();
     }
 
     float cBoundBox3D::DiagonalLength()
@@ -223,10 +223,6 @@ namespace FR {
                 }
             }
         }
-      /*  if (result)
-            FRTK_CORE_INFO("inside boundbox\n");
-        else
-            FRTK_CORE_INFO("not inside boundbox\n");*/
         return result;
     }
 }

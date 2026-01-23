@@ -48,7 +48,7 @@ namespace FR {
     }
     std::string ShaderProgram::ReadFile(const std::string& path) {
         std::ifstream input(path);
-        std::string mm =  std::filesystem::current_path().string();
+        std::string mm = std::filesystem::current_path().string();
         if (!input.is_open())
             throw std::runtime_error("Unable to open file: " + path);
         std::string output;
@@ -72,11 +72,6 @@ namespace FR {
         //    glGetProgramInfoLog(program_, len, &len, &log[0]);
         //    printf("Link error: %s\n", &log[0]);
         //}
-
-
-
-
-
     }
 
     void ShaderProgram::Disable() {
@@ -154,7 +149,7 @@ namespace FR {
         GLuint location = glGetUniformLocation(m_program, name);
         if (location == -1)
             DEBUG_BREAK;
-        if (Fr_Window::spWindow){
+        if (Fr_Window::spWindow) {
             auto win = Fr_Window::spWindow;
             glm::vec3 campos = win->activeScene->m_cameras[win->activeScene->m_active_camera].GetCamPosition();
             glCheckFunc(glUniform3fv(location, 1, glm::value_ptr(campos)));

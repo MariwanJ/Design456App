@@ -38,30 +38,30 @@ namespace FR {
 
     void Fr_Primatives::Draw()
     {
-        if (drawType == GL_LINES) {
-            glCheckFunc(glBindVertexArray(vao_));
-            glCheckFunc(glLineWidth(m_lineWidth));
-            glCheckFunc(glDrawArrays(GL_LINES, 0, vertices_.size()));
-            glCheckFunc(glBindVertexArray(0));
-        }
-        else if (drawType == GL_LINE_STRIP) {
-            glCheckFunc(glBindVertexArray(vao_));
-            glCheckFunc(glLineWidth(m_lineWidth));
-            glCheckFunc(glDrawArrays(GL_LINE_STRIP, 0, vertices_.size()));
-            glCheckFunc(glBindVertexArray(0));
-        }
-        else if (drawType == GL_LINE_LOOP) {
-            glCheckFunc(glBindVertexArray(vao_));
-            glCheckFunc(glLineWidth(m_lineWidth));
-            glCheckFunc(glDrawArrays(GL_LINE_LOOP, 0, vertices_.size()));
-            glCheckFunc(glBindVertexArray(0));
-        }
-        else if (drawType == GL_TRIANGLES) {
-            glCheckFunc(glBindVertexArray(vao_));
-            glCheckFunc(glLineWidth(m_lineWidth));
-            glCheckFunc(glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0));
-            glCheckFunc(glBindVertexArray(0));
-        }
+        glBindVertexArray(vao_);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        glEnable(GL_DEPTH_TEST);
+        glDepthMask(GL_FALSE);
+
+        float lw = (drawType == GL_LINES || drawType == GL_LINE_STRIP || drawType == GL_LINE_LOOP) ? m_lineWidth : 1.0f;
+
+        glLineWidth(lw);
+
+        GLsizei vertexCount = static_cast<GLsizei>(vertices_.size() / 3);
+
+        if (drawType == GL_TRIANGLES)
+            glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices_.size()), GL_UNSIGNED_INT, nullptr);
+        else
+            glDrawArrays(drawType, 0, vertexCount);
+
+        glBindVertexArray(0);
+
+        glLineWidth(1.0f);
+        glDepthMask(GL_TRUE);
+        glDisable(GL_BLEND);
     }
 
     void Fr_Primatives::setDrawType(int type)
@@ -96,26 +96,20 @@ namespace FR {
         return m_lineWidth;
     }
 
-    void Fr_Primatives::InitializeVBO() {
-        if (drawType == GL_TRIANGLES) {
-            glCheckFunc(glGenBuffers(1, vbo_));
-            glCheckFunc(glGenVertexArrays(1, &vao_));
-            glCheckFunc(glBindVertexArray(vao_));
-
-            glCheckFunc(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[0]));
-            glCheckFunc(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int), indices_.data(), GL_STATIC_DRAW));
-        }
-        else
+    void Fr_Primatives::InitializeVBO()
+    {
+        glGenVertexArrays(1, &vao_);
+        glGenBuffers(2, vbo_);
+        glBindVertexArray(vao_);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
+        glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(float), vertices_.data(), GL_STATIC_DRAW);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+        glEnableVertexAttribArray(0);
+        if (drawType == GL_TRIANGLES)
         {
-            glCheckFunc(glGenBuffers(1, vbo_));
-            glCheckFunc(glGenVertexArrays(1, &vao_));
-            glCheckFunc(glBindVertexArray(vao_));       //Keeps all instructions related this object
-
-            glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]));        //First object buffer
-            glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices_.size(), vertices_.data(), GL_STATIC_DRAW));
-            glCheckFunc(glEnableVertexAttribArray(0));
-            glCheckFunc(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL));
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[1]);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int), indices_.data(), GL_STATIC_DRAW);
         }
-        glCheckFunc(glBindVertexArray(0));
+        glBindVertexArray(0);
     }
 }

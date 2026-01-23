@@ -44,7 +44,7 @@ namespace FR {
             m_mesh.add_face(vertexHandles[i], vertexHandles[i + 1], vertexHandles[i + 2]);
         }
         lineWidth(1);
-        init(); 
+        init();
         m_WidgType = NODETYPE::FR_FACE_WIDGET;
         m_lineType = FR_CLOSED_LOOP;
     }
@@ -57,11 +57,6 @@ namespace FR {
     {
         initializeVBO();
         draw_2d();
-    }
-
-    void Fr_Face_Widget::draw_points()
-    {
-        DrawPoints();
     }
 
     void Fr_Face_Widget::redraw()
@@ -121,7 +116,7 @@ namespace FR {
         m_shader->wdg_selection_prog->SetUniformVec4("vertexSelectColor", m_color.vertexSelectColor);
         m_shader->wdg_selection_prog->SetUniformInteger("selectionMask", m_currentSelMode);
         m_shader->wdg_selection_prog->SetUniformFloat("pointSize", pointSize());
-        initializeVBO_Selection();
+        updateVBO_Selection();
         draw_2d_sel();
         m_shader->wdg_selection_prog->Disable();
     }
@@ -134,9 +129,6 @@ namespace FR {
         auto normalmatrix = glm::transpose(glm::inverse(info.modelview));
         m_shader->wdg_prog->Enable();
         LoadLights(m_shader->wdg_prog, info.lights);
-        m_shader->wdg_prog->SetAttribLocation("position", POSITION_VERTEX_VB);  //Position variable has (layout(location =0) inside vs shader
-        m_shader->wdg_prog->SetAttribLocation("texCoord", POSITION_TEXCOORD_VB);  //Position variable has (layout(location =1 inside vs shader
-        m_shader->wdg_prog->SetAttribLocation("normal", POSITION_NORMAL_VB);  //Position variable has (layout(location =1 inside vs shader
         m_shader->wdg_prog->SetUniformMat4("modelview", info.modelview);
         m_shader->wdg_prog->SetUniformMat4("normalmatrix", normalmatrix);
         m_shader->wdg_prog->SetUniformMat4("mvp", mvp);
@@ -146,7 +138,7 @@ namespace FR {
         lbl_draw();
         m_shader->wdg_prog->Disable();
         info.id++;
-       RenderSelection(info);
+        RenderSelection(info);
     }
 
     int Fr_Face_Widget::handle(int e)
@@ -175,7 +167,7 @@ namespace FR {
                     SetColor(glm::vec4(FR_BLUE));
                 }
                 else
-                    SetColor(glm::vec4(FR_GREEN)); //FRTK_CORE_INFO("NO FOUND FACE");
+                    SetColor(glm::vec4(FR_GREEN));
             }
                               break;
 
@@ -205,14 +197,14 @@ namespace FR {
                     redraw();
                 }
             }
-            break;
+                            break;
             case FR_LEFT_DRAG_PUSH: {
                 //This should select the item -- not implemented yet
                 m_vertices->at(0) = win->getMouseEvents().WorldMouse.x;
                 m_vertices->at(1) = win->getMouseEvents().WorldMouse.y;
                 m_vertices->at(2) = win->getMouseEvents().WorldMouse.z;
             }
-             break;
+                                  break;
             }
             return 0;
         }

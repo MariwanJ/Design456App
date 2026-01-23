@@ -34,9 +34,9 @@ namespace FR {
     //{
     //    linkTomainScene = linkTo;
     //}
-    Fr_WGroup::Fr_WGroup(std::shared_ptr<std::vector <float>>vertices, 
-                        std::shared_ptr<std::vector <unsigned int>> indicies,
-                        std::string label):Fr_Widget(vertices, indicies, label)
+    Fr_WGroup::Fr_WGroup(std::shared_ptr<std::vector <float>>vertices,
+        std::shared_ptr<std::vector <unsigned int>> indicies,
+        std::string label) :Fr_Widget(vertices, indicies, label)
     {
         m_children.clear();
     }
@@ -59,9 +59,9 @@ namespace FR {
     }
     void Fr_WGroup::draw_lbl_children()
     {
-        for (auto  node : m_children) {
-             //TODO : FIXME
-           // node->lbl_draw();
+        for (auto node : m_children) {
+            //TODO : FIXME
+          // node->lbl_draw();
         }
     }
     void Fr_WGroup::update_child(std::shared_ptr <Fr_Widget> wd)
@@ -74,7 +74,6 @@ namespace FR {
     //    return std::make_shared<std::vector<SceneItemStruct>>(m_children);
     //}
 
-
     void Fr_WGroup::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights)
     {
         for (auto& node : m_children) {
@@ -85,7 +84,6 @@ namespace FR {
     {
         for (auto& node : m_children) {
             node.Sceneitem->Render(info);
-            //FRTK_CORE_INFO("{},{}", "info", info.id);       //Just a debug info - TODO : remove me 
         }
     }
 
@@ -93,13 +91,12 @@ namespace FR {
         // Iterate through the m_children vector, which holds shared pointers to SceneItemStruct
         for (size_t i = 0; i < m_children.size(); ++i) {
             // Check if the Sceneitem in the current SceneItemStruct matches the given wd
-            if (m_children.at(i).Sceneitem== wd) {
+            if (m_children.at(i).Sceneitem == wd) {
                 return static_cast<int>(i); // Return the index if found
             }
         }
         return -1; // Return -1 if not found
     }
-
 
     //int Fr_WGroup::insert(std::shared_ptr <Fr_Widget>wd, int index_before)
     //{
@@ -115,7 +112,7 @@ namespace FR {
     {
         SceneItemStruct nItem(wid, "NoName");
         m_children.emplace_back(std::move(nItem));
-        }
+    }
     int Fr_WGroup::removeWidget(std::shared_ptr<Fr_Widget> wd) {
         // Iterate through m_children to find the widget
         for (auto it = m_children.begin(); it != m_children.end(); ++it) {
@@ -149,5 +146,4 @@ namespace FR {
     {
         return std::make_shared<std::vector<SceneItemStruct>>(m_children);
     }
-
 }

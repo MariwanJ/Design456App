@@ -39,7 +39,7 @@ namespace FR {
         std::shared_ptr<std::vector <unsigned int>> indicies,
         std::string label) :m_vertices(std::move(vertices)),
         m_Matrix(glm::mat4(1.0f)), m_indices(std::move(indicies)), m_vao(0), m_vbo{ 0 },
-        m_lineWidth(1), m_pointSize(10), m_MVP(glm::mat4(1.0f)), m_WdgPosition(0), m_label(0), m_sel_vao({ 0 })
+        m_lineWidth(1), m_selectionlineWidth(5), m_pointSize(10), m_WdgPosition(0), m_label(0), m_sel_vao({ 0 }), m_silhouette(DEFAULT_SIHOUETTE)
     {
         m_lineType = FR_NOT_DEFINED; //You should define it before use it
 
@@ -57,13 +57,14 @@ namespace FR {
         m_tabIndex = -1;
         m_hasTexture = 0;
         // Attributes
-        m_color.baseColor           = glm::vec4(FR_ANTIQUEWHITE);
-        m_color.faceSelectColor     = glm::vec4(FR_LIGHTYELLOW);
-        m_color.edgeSelectColor     = glm::vec4(FR_LIGHTGOLDENRODYELLOW);
-        m_color.vertexSelectColor   = glm::vec4(FR_YELLOW);
+        m_color.baseColor = glm::vec4(FR_ANTIQUEWHITE);
+        m_color.faceSelectColor = glm::vec4(FR_LIGHTYELLOW);
+        m_color.edgeSelectColor = glm::vec4(FR_LIGHTGOLDENRODYELLOW);
+        m_color.vertexSelectColor = glm::vec4(FR_YELLOW);
 
+        //Change ALFA (transparency)
+        m_color.faceSelectColor.a = m_color.edgeSelectColor.a = m_color.vertexSelectColor.a = 0.5f;
 
-        m_silhouette = 0;
         m_texture = 0; //used to return the texture for imgui rendering inside window.
         m_shader = std::make_shared<Shader_t>();
     }
@@ -135,10 +136,10 @@ namespace FR {
     void Fr_Widget::position(glm::vec3 val)
     {
         m_WdgPosition = val;
-        /*TODO: FIXME .. THIS SHOULD AFFECT THE VERTICES, 
-            USING ONLY glm::translate will not affect the internal 
-            vertices we have inside m_vertices. 
-            We need to find out how to re-calculate them or not?? 
+        /*TODO: FIXME .. THIS SHOULD AFFECT THE VERTICES,
+            USING ONLY glm::translate will not affect the internal
+            vertices we have inside m_vertices.
+            We need to find out how to re-calculate them or not??
             */
     }
 
@@ -168,17 +169,17 @@ namespace FR {
         }
     }
 
-
     void Fr_Widget::init(void) {
         assert(!m_vertices->empty() && "ERROR: You should provide vertices before initializing the object");
         CreateShader();
         m_boundBox = std::make_shared <cBoundBox3D>();
         m_boundBox->setVertices(m_vertices);
         CalculateNormals();
-        calcualteTextCoor(1024, 1024);  //TODO:  ??? don't think it is correct
         createBuffers();
         initSelectionVAOs();
+        initializeVAO();
         CreateShader();
+        calcualteTextCoor();  //TODO:  ??? don't think it is correct
     }
 
     Fr_Widget::~Fr_Widget()
@@ -194,7 +195,6 @@ namespace FR {
         m_shader->wdg_prog = std::make_shared<ShaderProgram>(shaderpath + "wdgshader");
         m_shader->wdg_selection_prog = std::make_shared<ShaderProgram>(shaderpath + "wdg_selection");
         m_shader->silhouette_prog = std::make_shared<ShaderProgram>(shaderpath + "silhouette");
-        m_shader->texture_prog = std::make_shared<ShaderProgram>(shaderpath + "texture");
     }
     void Fr_Widget::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights)
     {
@@ -240,13 +240,9 @@ namespace FR {
         return false;   //Should be sub-classed to change that.
     }
 
-
-
     void Fr_Widget::RenderText(RenderInfo& info) {
         return; //should be sub-classed to define this
     }
-
- 
 
     void Fr_Widget::resize(std::shared_ptr<std::vector<float>>vertices_,
         std::shared_ptr<std::vector <unsigned int>> indicies_)
@@ -452,21 +448,96 @@ namespace FR {
         (*m_vertices)[ind * 3 + 2] = vertex.z;
     }
 
-    //TODO : FIX ME
-    void Fr_Widget::calcualteTextCoor(int width, int height) {
-        if (!m_textureCoord) {
+    void Fr_Widget::calcualteTextCoor()
+    {
+        if (m_mesh.n_faces() == 0)
+            return;
+
+        // Request required OpenMesh properties
+        if (!m_mesh.has_halfedge_texcoords2D())
+            m_mesh.request_halfedge_texcoords2D();
+
+        if (!m_mesh.has_vertex_normals())
+            m_mesh.request_vertex_normals();
+
+        if (!m_mesh.has_face_normals())
+            m_mesh.request_face_normals();
+
+        m_mesh.update_normals();
+
+        // Allocate output buffer
+        if (!m_textureCoord)
             m_textureCoord = std::make_shared<std::vector<float>>();
-        }
-        m_textureCoord->reserve(2 * m_vertices->size() / 3);
-        for (int i = 0; i < m_normals->size(); i += 3)
+
+        m_textureCoord->clear();
+        m_textureCoord->reserve(m_mesh.n_faces() * 6); // at least triangles
+
+        // Assign UVs and export them
+        for (auto f : m_mesh.faces())
         {
-            GLfloat x = m_normals->at(i);
-            GLfloat y = m_normals->at(i + 1);
-            GLfloat z = m_normals->at(i + 2);
-            GLfloat u = (x);
-            GLfloat v = (y);
-            m_textureCoord->push_back(u);
-            m_textureCoord->push_back(v);
+            std::vector<OpenMesh::HalfedgeHandle> halfedges;
+            for (auto h : m_mesh.fh_range(f))
+                halfedges.push_back(h);
+
+            int n = (int)halfedges.size();
+
+            // Triangle
+            if (n == 3)
+            {
+                OpenMesh::Vec2f uv[3] = {
+                    {0.0f, 0.0f},
+                    {1.0f, 0.0f},
+                    {0.0f, 1.0f}
+                };
+
+                for (int i = 0; i < 3; ++i)
+                {
+                    m_mesh.set_texcoord2D(halfedges[i], uv[i]);
+                    m_textureCoord->push_back(uv[i][0]);
+                    m_textureCoord->push_back(uv[i][1]);
+                }
+            }
+            // Quad (split as two triangles)
+            else if (n == 4)
+            {
+                OpenMesh::Vec2f uv[4] = {
+                    {0.0f, 0.0f},
+                    {1.0f, 0.0f},
+                    {1.0f, 1.0f},
+                    {0.0f, 1.0f}
+                };
+
+                int tri[6] = { 0, 1, 2, 0, 2, 3 };
+
+                for (int i = 0; i < 6; ++i)
+                {
+                    int idx = tri[i];
+                    m_mesh.set_texcoord2D(halfedges[idx], uv[idx]);
+                    m_textureCoord->push_back(uv[idx][0]);
+                    m_textureCoord->push_back(uv[idx][1]);
+                }
+            }
+            // N-gon (fan triangulation)
+            else if (n > 2)
+            {
+                for (int i = 1; i < n - 1; ++i)
+                {
+                    OpenMesh::Vec2f uv0(0.0f, 0.0f);
+                    OpenMesh::Vec2f uv1(1.0f, 0.0f);
+                    OpenMesh::Vec2f uv2(0.0f, 1.0f);
+
+                    m_mesh.set_texcoord2D(halfedges[0], uv0);
+                    m_mesh.set_texcoord2D(halfedges[i], uv1);
+                    m_mesh.set_texcoord2D(halfedges[i + 1], uv2);
+
+                    m_textureCoord->push_back(uv0[0]);
+                    m_textureCoord->push_back(uv0[1]);
+                    m_textureCoord->push_back(uv1[0]);
+                    m_textureCoord->push_back(uv1[1]);
+                    m_textureCoord->push_back(uv2[0]);
+                    m_textureCoord->push_back(uv2[1]);
+                }
+            }
         }
     }
 
@@ -477,9 +548,6 @@ namespace FR {
     }
 
     void Fr_Widget::RenderTexture2D() {
-        //Dummy code does nothing should be sub-classed
-        /*(void)info;
-        (void)modelview;*/
     }
     void Fr_Widget::isActive(bool active) {
         m_active = active;
@@ -634,10 +702,10 @@ namespace FR {
 
         glm::vec3 m_min(FLOAT_MAX, FLOAT_MAX, FLOAT_MAX);
         glm::vec3 m_max(FLOAT_MIN, FLOAT_MIN, FLOAT_MIN);
- 
+
         for (size_t i = 0; i < m_vertices->size(); i += 3) {
             if (i + 2 >= m_vertices->size()) {
-                break;  
+                break;
             }
 
             m_min.x = std::min(m_min.x, m_vertices->at(i));       // x
@@ -650,14 +718,14 @@ namespace FR {
         }
         glm::vec3 range = m_max - m_min;
         if (range.x == 0 && range.y == 0 && range.z == 0) {
-            //we have zero range, fill all vertices to zero 
+            //we have zero range, fill all vertices to zero
             std::fill(m_vertices->begin(), m_vertices->end(), 0.0f);
-            //TODO : CHECK ME - WHEN THIS CAN HAPPEN, AND WHY? DO WE DO A CORRECT DECISISION? !!! 
-            return; 
+            //TODO : CHECK ME - WHEN THIS CAN HAPPEN, AND WHY? DO WE DO A CORRECT DECISISION? !!!
+            return;
         }
         for (size_t i = 0; i < m_vertices->size(); i += 3) {
             if (i + 2 >= m_vertices->size()) {
-                break;  
+                break;
             }
 
             glm::vec3 vertex(
@@ -668,8 +736,6 @@ namespace FR {
 
             // Normalize the vertex to fit between -1 and 1
             glm::vec3 normalized = (vertex - m_min) / range * 2.0f - 1.0f;
-
-            // Store normalized values back in m_vertices
             m_vertices->at(i) = normalized.x;
             m_vertices->at(i + 1) = normalized.y;
             m_vertices->at(i + 2) = normalized.z;

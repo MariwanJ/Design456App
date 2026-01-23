@@ -142,7 +142,7 @@ namespace FR {
         auto shftR = glfwGetKey(win, GLFW_KEY_RIGHT_SHIFT);
 
         if (mouseEvent.Button == GLFW_MOUSE_BUTTON_LEFT && mouseEvent.Pressed == 1)
-        {        //FRTK_CORE_INFO("MOUSE LEFT");
+        {
             if (activateHandle) {
                 if (spWindow->handle(FR_LEFT_PUSH) == 1) //Mouse click
                     return;  //Events is consumed - no more action required
@@ -150,8 +150,6 @@ namespace FR {
         }
         else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_LEFT && mouseEvent.Pressed == 0)
         {
-            //FRTK_CORE_INFO("MOUSE LEFT");
-
             if (activateHandle) {
                 if (spWindow->handle(FR_LEFT_RELEASE) == 1) //Mouse click
                     return;  //Events is consumed - no more action required
@@ -213,7 +211,7 @@ namespace FR {
         else if (abs(ray.z) > 0.6f)
             ray.z = 0.f;
 
-        mouseEvent.WorldMouse = ray* RAY_RANGE;//spWindow->calculateMouseWorldPos();
+        mouseEvent.WorldMouse = ray * RAY_RANGE;//spWindow->calculateMouseWorldPos();
 
         auto updateMousePosition = [&](double x, double y) {
             mouseEvent.Old_x = x;
@@ -222,7 +220,7 @@ namespace FR {
 
         // Modifier keys
         bool shiftPressed = (glfwGetKey(win, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS ||
-                             glfwGetKey(win, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS);
+            glfwGetKey(win, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS);
 
         int saveButton = mouseEvent.Button;
         int res = 0;
@@ -321,8 +319,8 @@ namespace FR {
 
                 if (activateHandle) {
                     res = spWindow->handle(FR_MIDDLE_RELEASE);
-                    if (res) 
-                    { 
+                    if (res)
+                    {
                         consumeEvent(true);
                     }
                     updateMousePosition(xpos, ypos);
@@ -348,7 +346,6 @@ namespace FR {
 
     void Fr_Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
     {
-        
         if (spWindow == nullptr)
             return;
 
@@ -368,17 +365,9 @@ namespace FR {
             {
                 scale_ = spWindow->mouseDefaults.MouseScrollScale;
             }
-            //glm::mat4 matr = spWindow->activeScene->getActiveCamera().GetViewMatrix();
-            //matr = glm::scale(matr, glm::vec3(scale_, scale_, scale_));
-            //glm::mat4 inverseViewMatrix = glm::inverse(matr);
-            //data.camm_position = glm::vec3(inverseViewMatrix[3]);
-            //data.direction_ = glm::vec3(inverseViewMatrix[2]);
-            //data.up_= glm::vec3(inverseViewMatrix[1]);
-            
             glm::vec3 forward = glm::normalize(data.direction_ - data.camm_position); // forward direction
             data.camm_position += forward * scale_;   // move camera
             data.direction_ += forward * scale_;  // move target along with camera
-
         }
         spWindow->activeScene->getActiveCamera().setCamData(data);
     }
@@ -395,7 +384,7 @@ namespace FR {
 
         spWindow->activeScene->getActiveCamera().getCamData(data);
 
-        if (mouseEvent.Old_x== mouseEvent.Old_x && mouseEvent.Old_x==0) {
+        if (mouseEvent.Old_x == mouseEvent.Old_x && mouseEvent.Old_x == 0) {
             mouseEvent.Old_x = xpos;
             mouseEvent.Old_y = ypos;
             m_RotateActive = true;
@@ -420,7 +409,6 @@ namespace FR {
         if (spWindow == nullptr)
             return;
         Fr_Camera& cam = spWindow->activeScene->getActiveCamera();
-        
 
         spWindow->radiusXYZ = glm::length(cam.m_position);
 
@@ -430,14 +418,11 @@ namespace FR {
         mouseEvent.Old_x = xpos;
         mouseEvent.Old_y = ypos;
 
-        // Update angles
         spWindow->theta += deltax;
         spWindow->phi -= deltay;
 
-        // Clamp pitch
         spWindow->phi = std::clamp(spWindow->phi, -89.99f, 89.99f);
 
-        // Convert spherical (Z-up)
         float radTheta = glm::radians(spWindow->theta);
         float radPhi = glm::radians(spWindow->phi);
 
@@ -465,7 +450,6 @@ namespace FR {
 
         // Create the modal file browser
         if (ImGui::BeginPopupModal("File Browser", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar)) {
-            // Initialize the file dialog if not done
             if (!fileDialog) {
                 fileDialog = std::make_shared<ImGui::FileBrowser>(window_flags, EXE_CURRENT_DIR);
                 fileDialog->SetTitle("Open file");

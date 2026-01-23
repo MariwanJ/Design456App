@@ -55,11 +55,6 @@ namespace FR {
         draw_2d();
     }
 
-    void Fr_Line_Widget::draw_points()
-    {
-        DrawPoints();
-    }
-
 
     void Fr_Line_Widget::redraw()
     {
@@ -121,7 +116,7 @@ namespace FR {
         m_shader->wdg_selection_prog->SetUniformVec4("vertexSelectColor", m_color.vertexSelectColor);
         m_shader->wdg_selection_prog->SetUniformInteger("selectionMask", m_currentSelMode);
         m_shader->wdg_selection_prog->SetUniformFloat("pointSize", pointSize());
-        initializeVBO_Selection();
+        updateVBO_Selection();
         draw_2d_sel();  //draw_points();
         m_shader->wdg_selection_prog->Disable();
     }

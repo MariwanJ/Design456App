@@ -46,11 +46,8 @@ namespace FR {
          *
          */
         Fr_Grid();
-
-        // Copy constructor
-// Copy constructor
         Fr_Grid(const Fr_Grid& other)
-            : Fr_Widget(other), sections_(other.sections_), gridWidth_(other.gridWidth_),
+            : Fr_Widget(other), m_sections(other.m_sections), m_gridWidth(other.m_gridWidth),
             scale_(other.scale_), centerPos_(other.centerPos_),
             gridRotation_(other.gridRotation_), gridColor_(other.gridColor_)
         {
@@ -60,43 +57,34 @@ namespace FR {
                 gridShader = std::make_shared<Fr_GridShader>(*other.gridShader);
             }
             else {
-                // Handle the case where other is null (nullptr)
-                // You can choose to set gridShader to nullptr or take some other action.
-                gridShader = nullptr; // For example, setting it to nullptr.
+                gridShader = nullptr; 
             }
         }
 
-        // Assignment operator
         Fr_Grid& operator=(const Fr_Grid& other)
         {
-            if (this != &other) // self-assignment check
+            if (this != &other) 
             {
-                Fr_Widget::operator=(other); // call the base class assignment operator
-
-                // Copy the simple members
-                sections_ = other.sections_;
-                gridWidth_ = other.gridWidth_;
+                Fr_Widget::operator=(other);
+                m_sections = other.m_sections;
+                m_gridWidth = other.m_gridWidth;
                 scale_ = other.scale_;
                 centerPos_ = other.centerPos_;
                 gridRotation_ = other.gridRotation_;
                 gridColor_ = other.gridColor_;
-
-                // Copy the shared pointer if it is not NULL
                 gridShader = (other.gridShader != nullptr) ? std::make_shared<Fr_GridShader>(*other.gridShader) : nullptr;
             }
             return *this;
         }
-        // Move constructor
         Fr_Grid(Fr_Grid&& other) noexcept
-            : Fr_Widget(std::move(other)), sections_(std::exchange(other.sections_, 0)),
-            gridWidth_(std::exchange(other.gridWidth_, 0)),
+            : Fr_Widget(std::move(other)), m_sections(std::exchange(other.m_sections, 0)),
+            m_gridWidth(std::exchange(other.m_gridWidth, 0)),
             scale_(std::move(other.scale_)),
             centerPos_(std::move(other.centerPos_)),
             gridRotation_(std::move(other.gridRotation_)),
             gridColor_(std::move(other.gridColor_)),
             gridShader(std::move(other.gridShader))
         {
-            // Set the moved-from pointer to null
             other.gridShader = nullptr;
         }
 
@@ -159,8 +147,8 @@ namespace FR {
         void CreateGrid();
 
     private:
-        int sections_; //No of lines in both directions
-        int gridWidth_; //Distance between each line in mm. This will be affected by the scale
+        int m_sections; //No of lines in both directions
+        int m_gridWidth; //Distance between each line in mm. This will be affected by the scale
         glm::vec3 scale_; //Scale the whole grid - Be careful this affects the distance value.
         glm::vec3 centerPos_;//Center of the grid
         glm::vec4 gridRotation_; //(Axis, angle) 4 float values

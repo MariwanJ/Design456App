@@ -33,7 +33,7 @@
 #include <fr_window.h>
 // Constructor
 namespace FR {
-    Fr_Label::Fr_Label(label_t lbl) :m_lblData(lbl){
+    Fr_Label::Fr_Label(label_t lbl) :m_lblData(lbl) {
         std::string shaderpath = EXE_CURRENT_DIR + "/resources/shaders/txtFont";
         txtFont_program = std::make_shared <ShaderProgram>(shaderpath);
         initialize_vbo();
@@ -60,75 +60,78 @@ namespace FR {
         glDeleteBuffers(1, &m_vbo);
     }
 
-    void Fr_Label::RenderText(RenderInfo& info) {
+    void Fr_Label::RenderText(RenderInfo& info)
+    {
+        glDisable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
         glDepthMask(GL_TRUE);
 
-        glCheckFunc(glEnable(GL_BLEND));
-        glCheckFunc(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         txtFont_program->Enable();
         txtFont_program->SetUniformVec3("textColor", m_lblData.color);
-        glCheckFunc(glActiveTexture(GL_TEXTURE0));
-        glCheckFunc(glBindVertexArray(m_vao));
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindVertexArray(m_vao);
+
+        glm::mat4 model(1.0f);
+        glm::mat4 scale(1.0f);
+
+        model = glm::translate(model, m_lblData.pos);
+        scale = glm::scale(scale, glm::vec3(m_lblData.scale, m_lblData.scale, 1.0f));
 
         glm::mat4 mvp;
-        glm::mat4 scale;
-
-        glm::mat4 model = scale = glm::mat4(1.0f);
-        model = glm::translate(model, m_lblData.pos);
-         scale= glm::scale(scale, glm::vec3(m_lblData.scale, m_lblData.scale, 1.0f));
-
         if (m_lblData.type == ORTHOGRAPHIC) {
-            mvp = glm::ortho(0.0f, (float)info.screenDim.w, 0.0f, (float)info.screenDim.h) * model;
+            mvp = glm::ortho(
+                0.0f, (float)info.screenDim.w,
+                0.0f, (float)info.screenDim.h
+            ) * model;
         }
         else {
-            mvp = info.projection * info.modelview * model * scale; 
+            mvp = info.projection * info.modelview * model * scale;
         }
+
         txtFont_program->SetUniformMat4("mvp", mvp);
 
-        float x = 0;
-        float y = 0;
-        float xpos = 0;
-        float ypos = 0;
-        bool firstime = true;
-        for (auto c : m_lblData.text) {
+        float x = 0.0f;
+        float y = 0.0f;
+        bool firstTime = true;
+
+        for (auto c : m_lblData.text)
+        {
             Character_t ch = m_Characters[c];
-            if(!firstime){
-                  xpos = x + ch.Bearing.x;
-                  ypos = y - (ch.Size.y - ch.Bearing.y);
-            }
-            else
-            {
-                firstime = false;
-            }
+
+            float xpos = firstTime ? 0.0f : x + ch.Bearing.x;
+            float ypos = firstTime ? 0.0f : y - (ch.Size.y - ch.Bearing.y);
+            firstTime = false;
 
             float w = ch.Size.x;
             float h = ch.Size.y;
 
             float vertices[6][4] = {
-                { xpos + w, ypos + h,   1.0f, 0.0f }, // Top-right
-                { xpos,     ypos,       0.0f, 1.0f }, // Bottom-left
-                { xpos,     ypos + h,   0.0f, 0.0f }, // Top-left
-                { xpos + w, ypos + h,   1.0f, 0.0f }, // Top-right (repeat)
-                { xpos,     ypos,       0.0f, 1.0f }, // Bottom-left (repeat)
-                { xpos + w, ypos,       1.0f, 1.0f }  // Bottom-right
+                { xpos + w, ypos + h, 1.0f, 0.0f },
+                { xpos,     ypos,     0.0f, 1.0f },
+                { xpos,     ypos + h, 0.0f, 0.0f },
+                { xpos + w, ypos + h, 1.0f, 0.0f },
+                { xpos,     ypos,     0.0f, 1.0f },
+                { xpos + w, ypos,     1.0f, 1.0f }
             };
 
             glBindTexture(GL_TEXTURE_2D, ch.TextureID);
             glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
             glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
+
             glDrawArrays(GL_TRIANGLES, 0, 6);
 
-            // Advance the cursor for the next character
             x += (ch.Advance >> 6);
         }
 
-        // Clean up
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
         glBindTexture(GL_TEXTURE_2D, 0);
+
         txtFont_program->Disable();
     }
 
@@ -226,8 +229,6 @@ namespace FR {
         FT_Done_Face(face);
     }
 
-
-
     void Fr_Label::label(std::string& lbl)
     {
         m_lblData.text = lbl;
@@ -246,7 +247,7 @@ namespace FR {
         m_lblData.fnFont = forntName;
     }
 
-    const std::string & Fr_Label::font() const
+    const std::string& Fr_Label::font() const
     {
         return m_lblData.fnFont;
     }

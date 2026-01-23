@@ -42,14 +42,13 @@
 #include <OpenMesh/Core/Mesh/PolyMesh_ArrayKernelT.hh>
 
 namespace FR {
-
     typedef struct {
         glm::vec4 baseColor;
         glm::vec4 vertexSelectColor;
         glm::vec4 edgeSelectColor;
         glm::vec4 faceSelectColor;
     } widgColor;
-    const size_t kMaxLights = 8;        //This is important to consider. 
+    const size_t kMaxLights = 8;        //This is important to consider.
 
     typedef struct {
         //TODO : FIXME: This is just a dummy construction. this should be changed later
@@ -61,10 +60,9 @@ namespace FR {
 
     //diff shader program
     typedef struct {
-        std::shared_ptr <ShaderProgram> wdg_prog;        //for the widget itself
+        std::shared_ptr <ShaderProgram> wdg_prog;           //for the widget itself
         std::shared_ptr <ShaderProgram> wdg_selection_prog; //for points
-        std::shared_ptr <ShaderProgram> silhouette_prog; // Dark shape and outline of object
-        std::shared_ptr <ShaderProgram> texture_prog;
+        std::shared_ptr <ShaderProgram> silhouette_prog;    // outline of object
     }Shader_t;
 
     typedef struct {
@@ -86,8 +84,8 @@ namespace FR {
     class Shape;
     class Fr_TwoD_Drawing;
 
-    //Font definition 
-    typedef struct  {
+    //Font definition
+    typedef struct {
         std::string txtFontpath;
         std::string symbFontpath;
         std::shared_ptr<ImFont> toolbarFont;     // = io.Fonts->AddFontFromFileTTF("path/to/your/toolbar_font.ttf", 16.0f);
@@ -115,11 +113,7 @@ namespace FR {
         */
 
     public:
-        glm::mat4 m_MVP; //TODO TEMPORARY CODE - REMOVE ME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    public:
         friend class Fl_Group;
- 
 
         // Default constructor is disallowed
         Fr_Widget() = delete;
@@ -127,7 +121,7 @@ namespace FR {
             std::shared_ptr <std::vector<unsigned int>> indicies,
             std::string label);
 
-		//TODO: Should this be public?? 
+        //TODO: Should this be public??
         virtual void init(void); //We need this if the widget is created (sub-classed) without vertices, like in reading files.
 
         /** Virtual destructor */
@@ -146,14 +140,12 @@ namespace FR {
 
         /** Renders highlighting of objects based on their selection*/
         virtual void RenderSelection(RenderInfo& info);
-        //virtual void RenderEdges(RenderInfo& info); 
-        //virtual void RenderFaces(RenderInfo& info);
 
         /** Renders Text (Freetype Font)*/
         virtual void RenderText(RenderInfo& info);
-        
-		virtual void ReadFile(const std::string& path);
-		virtual void ReadMeshString(const std::string& mshData);
+
+        virtual void ReadFile(const std::string& path);
+        virtual void ReadMeshString(const std::string& mshData);
 
         virtual glm::vec3 position(void);
         virtual void position(glm::vec3 val);
@@ -180,27 +172,20 @@ namespace FR {
         virtual void draw_2d(void);
         virtual void draw_2d_sel(void);
 
-        /** Redraw the last object */
         virtual void redraw();
-
-        /** Label draw function */
 
         virtual void lbl_redraw();
 
         /** Initializes VBO and other stuff */
         virtual bool setup();
 
-
         std::shared_ptr<std::string> font() const;
 
-        /** Sets the font size */
         void fontSize(int size_);
 
         void fontColor(glm::vec4 col);
 
         void fontColor(float r, float g, float b, float a);
-
-        void lblOffset(glm::vec3 nval);
 
         /** Resizes the widget */
         virtual void resize(std::shared_ptr<std::vector<float>> vertices,
@@ -227,7 +212,7 @@ namespace FR {
         Fr_Callback_p callback() const;
 
         /** From shader */
-        virtual void WidgetShader(glm::vec4 color = glm::vec4(FR_WHITE), float silhouette = 0.005);
+        virtual void WidgetShader(glm::vec4 color = glm::vec4(FR_WHITE), float silhouette = DEFAULT_SIHOUETTE);
 
         /** Sets the color */
         void SetColor(glm::vec4 c);
@@ -280,18 +265,18 @@ namespace FR {
         /** Set vertex at an index */
         void SetVertex(unsigned int ind, const glm::vec3& vertex);
 
-        virtual void calcualteTextCoor(int width, int height);
-
+        virtual void calcualteTextCoor();
 
         //
         virtual void createBuffers(void);
         virtual void initSelectionVAOs();
         virtual int initializeVBO(void);
-        virtual int Fr_Widget::initializeVBO_Selection();
-        virtual void DrawPoints(void);
+        virtual int initializeVAO(void);
+
+        virtual void updateVBO_Selection(void);
 
         virtual void lbl_Draw(void);
-   
+
         //must be float as OpenGL uses float
         void pointSize(float val);
         float pointSize();
@@ -304,14 +289,13 @@ namespace FR {
         virtual void lblredraw(void);
         std::shared_ptr<Fr_Label> m_label;  //I think it should be global : TODO: Checkme!!
 
-
         /** BoundBox for all objects */
         std::shared_ptr<cBoundBox3D> m_boundBox;
 
         // OpenMesh Mesh. keep the whole structure of the mesh system
         MyMesh m_mesh;
     protected:
-        
+
         virtual void lbl_draw();
 
         virtual void do_callback();
@@ -328,36 +312,33 @@ namespace FR {
         std::shared_ptr<std::vector<float>> m_textureCoord;
         std::shared_ptr<Shader_t> m_shader; // Program for shared resources, cannot be static
 
-
         bool m_active;
         int uniqueIndex;
         int m_Parent; // -1 for Abstract class that doesn't have parent, and for the Root class
 
         /*
-            Widget position, 
+            Widget position,
             but it is a problem since we have vertices and they are not normalized.
             Any time position is changed, will make the vertices invalid as they will change their position
             TODO: FIXME!!!!
-            Think about how to use this new variable, 
+            Think about how to use this new variable,
             The problem FreeCAD has about transformation should not affect this projects.
-            Always, position should be relative to origin (0,0,0) and the vertices should represent also the 
+            Always, position should be relative to origin (0,0,0) and the vertices should represent also the
             same principle. how? i don't know yet!!
         */
         glm::vec3 m_WdgPosition;
 
+        //// OpenMesh Edges object. In this widget system we use edges not faces.
+        //std::vector<std::pair<MyMesh::VertexHandle, MyMesh::VertexHandle>> openEdges;
 
-
-		//// OpenMesh Edges object. In this widget system we use edges not faces.
-		//std::vector<std::pair<MyMesh::VertexHandle, MyMesh::VertexHandle>> openEdges;
-
-		//std::vector<MyMesh::FaceHandle> m_faces;
+        //std::vector<MyMesh::FaceHandle> m_faces;
 
         /** From shader */
         /** Sets the uniform light data */
         virtual void LoadLights(std::shared_ptr<ShaderProgram> program, const std::vector<LightInfo>& lights);
 
         Fr_Callback* m_callback_;
- 
+
         bool m_visible;
         bool m_focus;
         bool m_resizable;
@@ -373,20 +354,15 @@ namespace FR {
         NODETYPE m_WidgType;
         twodType_t m_lineType;
 
-        unsigned int m_vbo[NUM_OF_VBO_BUFFERS]; 
+        unsigned int m_vbo[NUM_OF_VBO_BUFFERS];
         unsigned int m_vao;
         selection_vao_vbo_t m_sel_vao;
 
         unsigned int m_vao_txt;
         selection_vao_vbo_t m_sel_vbo;
         float m_lineWidth;
+        float m_selectionlineWidth;
         float m_pointSize;
-
-
-
     };
-
-
-
 }
 #endif

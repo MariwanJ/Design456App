@@ -63,6 +63,8 @@ const float RAY_RANGE = 6000.0f;
 
 const unsigned char TOOLBAR_HEIGHT = 36;
 
+const float DEFAULT_SIHOUETTE = 0.15f;
+
        // Transparency - No color will be applied
     /* [Color definition used in all widgets consist of
         a tuple of three float values between 0.0 and 1.0]

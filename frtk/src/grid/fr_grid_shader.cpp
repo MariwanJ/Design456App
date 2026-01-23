@@ -31,11 +31,6 @@
 #include <glad/glad.h>
 #include <fr_window.h>
 namespace FR {
-    //static const glm::mat4 kShadowMapBiasMatrix(
-    //    0.5, 0.0, 0.0, 0.0,
-    //    0.0, 0.5, 0.0, 0.0,
-    //    0.0, 0.0, 0.5, 0.0,
-    //    0.5, 0.5, 0.5, 1.0);
     static const glm::mat4 kShadowMapBiasMatrix(
         0.25, 0.0, 0.0, 0.0,
         0.0, 0.25, 0.0, 0.0,
@@ -45,10 +40,10 @@ namespace FR {
     void Fr_GridShader::defaultShaders()
     {
         //Default programs
-        std::string shaderpath= EXE_CURRENT_DIR + "/resources/shaders/";
-        m_f_objectshader = shaderpath+"primativeshader";
-        m_f_silhouette   = shaderpath + "silhouette";
-        m_f_texture      = shaderpath +"texture";
+        std::string shaderpath = EXE_CURRENT_DIR + "/resources/shaders/";
+        m_f_objectshader = shaderpath + "wdgshader";
+        m_f_silhouette = shaderpath + "silhouette";
+        m_f_texture = shaderpath + "texture";
         m_f_text = shaderpath + "txtFont";
     }
     /** Shader file name and path */
@@ -56,50 +51,45 @@ namespace FR {
     {
         m_f_objectshader = newValue;
     }
-    /** Silhouette Shader file name and path */
+
     void Fr_GridShader::setSilhouette(const char* newValue)
     {
         m_f_silhouette = newValue;
     }
-    /** Text (font rendering) Shader file name and path */
+
     void Fr_GridShader::setText(const char* newValue)
     {
         m_f_text = newValue;
-
     }
-    
+
     void Fr_GridShader::setTexture(const char* newValue)
     {
         m_f_texture = newValue;
     }
 
-        // Constructor with unsigned int color
     Fr_GridShader::Fr_GridShader(unsigned int color, float silhouette) :
-            m_shared{ 0, 0, 0, 0},
-            m_Primative{ nullptr }, silhouette_(silhouette) {
-            SetColor(color);
-            InitializeSharedPrograms();
-        }
+        m_shared{ 0, 0, 0 },
+        m_Primative{ nullptr }, m_silhouette(silhouette) {
+        SetColor(color);
+        InitializeSharedPrograms();
+    }
 
-        // Constructor with glm::vec4 color
     Fr_GridShader::Fr_GridShader(glm::vec4 color, float silhouette) :
-            m_Primative{ nullptr }, silhouette_(silhouette) {
-            SetColor(color);
-            InitializeSharedPrograms();
-        }
+        m_Primative{ nullptr }, m_silhouette(silhouette) {
+        SetColor(color);
+        InitializeSharedPrograms();
+    }
 
-        // Constructor with float array color
     Fr_GridShader::Fr_GridShader(float color[4], float silhouette) :
-            m_Primative{ nullptr }, silhouette_(silhouette), m_Color{ color[0], color[1], color[2], color[3] } {
-            InitializeSharedPrograms();
-        }
- 
-     void Fr_GridShader::InitializeSharedPrograms() {
-            defaultShaders();
-            m_shared.wdg_prog = std::make_shared <ShaderProgram>(m_f_objectshader);
-            m_shared.silhouette_prog= std::make_shared <ShaderProgram>(m_f_silhouette);
-            m_shared.texture_prog = std::make_shared <ShaderProgram>(m_f_texture);
-        }
+        m_Primative{ nullptr }, m_silhouette(silhouette), m_Color{ color[0], color[1], color[2], color[3] } {
+        InitializeSharedPrograms();
+    }
+
+    void Fr_GridShader::InitializeSharedPrograms() {
+        defaultShaders();
+        m_shared.wdg_prog = std::make_shared <ShaderProgram>(m_f_objectshader);
+        m_shared.silhouette_prog = std::make_shared <ShaderProgram>(m_f_silhouette);
+    }
 
     Fr_GridShader::~Fr_GridShader() {
     }
@@ -139,34 +129,26 @@ namespace FR {
             program->SetUniformVec3(id + "direction", lights[i].direction);
             program->SetUniformFloat(id + "cutoff", lights[i].cutoff);
             program->SetUniformFloat(id + "exponent", lights[i].exponent);
-            program->SetUniformInteger("hasTexture", 0); ///TODO DO WE NEED THIS!!!!! 
+            program->SetUniformInteger("hasTexture", 0); ///TODO DO WE NEED THIS!!!!!
             program->SetUniformCamPosition("camPos");
         }
     }
 
     void Fr_GridShader::Render(RenderInfo& info) {
-        if (/*!m_active ||*/
-            (info.render_transparent && m_Color.a == 1) ||
-            (!info.render_transparent && m_Color.a < 1))
-            return;
         auto mvp = info.projection * info.modelview;
         auto normalmatrix = glm::transpose(glm::inverse(info.modelview));
 
         if (m_Color.a == 1)
             RenderSilhouette(mvp);
 
-         m_shared.wdg_prog->Enable();
+        m_shared.wdg_prog->Enable();
         LoadLights(m_shared.wdg_prog, info.lights);
-
-        m_shared.wdg_prog->SetAttribLocation("position", 0);
-        m_shared.wdg_prog->SetAttribLocation("normal", 1);
         m_shared.wdg_prog->SetUniformMat4("modelview", info.modelview);
         m_shared.wdg_prog->SetUniformMat4("normalmatrix", normalmatrix);
         m_shared.wdg_prog->SetUniformMat4("mvp", mvp);
         m_shared.wdg_prog->SetUniformVec4("color", m_Color);
 
         //for returning the texture keep the id
-        //_texture = info.shadowmap.texture;
         m_Primative->Draw();
         m_shared.wdg_prog->Disable();
         info.id++;
@@ -174,10 +156,7 @@ namespace FR {
 
     void Fr_GridShader::RenderSilhouette(const glm::mat4& mvp) {
         m_shared.silhouette_prog->Enable();
-        m_shared.silhouette_prog->SetAttribLocation("position", 0);
-        m_shared.silhouette_prog->SetAttribLocation("texCoord", 1);
-        m_shared.silhouette_prog->SetAttribLocation("normal", 2);
-        m_shared.silhouette_prog->SetUniformFloat("silhouette", silhouette_);
+        m_shared.silhouette_prog->SetUniformFloat("silhouette", m_silhouette);
         m_shared.silhouette_prog->SetUniformMat4("mvp", mvp);
         m_Primative->Draw();
         m_shared.silhouette_prog->Disable();

@@ -48,7 +48,7 @@ namespace FR {
         std::string m_FilePath;
         unsigned char* m_LocalBuffer;
 
-        int m_width, m_height, m_BPP, numComponents; // bpp : Bit per pixel (RGB or RGBA) in the file
+        int m_width, m_height, m_BPP ;
     };
 }
 #endif

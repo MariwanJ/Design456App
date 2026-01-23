@@ -70,12 +70,12 @@ namespace FR {
 
         void setStepWidth(int sec);
         int getStepWidth(void) const;
-        
 
     private:
 
         int ZstepSize_;
         int stepWidth_;
+        float m_axisWidth;
         std::shared_ptr<Fr_GridShader> m_Red;
         std::shared_ptr<Fr_GridShader> m_Green;
         std::shared_ptr<Fr_GridShader> m_Blue;
