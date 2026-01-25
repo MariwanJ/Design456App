@@ -774,6 +774,51 @@ namespace FR {
                             }
                         }
                     }break;
+
+                    //case SelectionMode::Vertex:
+                    //{
+                    //    auto& mesh = m_world[IndexOfclosestItem].Sceneitem->m_mesh;
+                    //    OpenMesh::FaceHandle pickedFace;
+                    //    float faceT;
+
+                    //    if (!pickAFace(IndexOfclosestItem, pickedFace, faceT))
+                    //        break;
+
+                    //    if (!ctrlPressed)
+                    //        mesh.clearAllSelections();
+
+                    //    OpenMesh::VertexHandle bestVertex;
+                    //    float bestDepth = FLT_MAX;
+                    //    bool found = false;
+
+                    //    // Iterate ONLY vertices of the picked face
+                    //    for (auto fv_it = mesh.fv_begin(pickedFace);
+                    //        fv_it.is_valid();
+                    //        ++fv_it)
+                    //    {
+                    //        OpenMesh::VertexHandle vh = *fv_it;
+
+                    //        const auto& p = mesh.point(vh);
+                    //        float t;
+                    //        glm::vec3 vertexPos(p[0], p[1], p[2]);
+                    //        //mesh.selectVertex(vh, true);
+                    //        if (!intersectPointIn3D(m_activeRay, vertexPos, win->m_MousePickerRadius, t))
+                    //            continue;
+                    //        // Keep closest to camera (important)
+                    //        if (t < bestDepth)
+                    //        {
+                    //            bestDepth = t;
+                    //            bestVertex = vh;
+                    //            found = true;
+                    //        }
+                    //    }
+
+                    //    if (found)
+                    //    {
+                    //        mesh.toggleVertexSelection(bestVertex);
+                    //        result = 1;
+                    //    }
+                    //} break;
                     default: {} break;
                     }
                 }
