@@ -80,7 +80,7 @@ namespace FR {
         indices = indices_;
     }
 
-    void Fr_Primatives::SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices) {
+    void Fr_Primatives::SetVertices(std::vector<float>& vertices, std::vector<unsigned int>& indices) {
         vertices_ = vertices;
         indices_ = indices;
         InitializeVBO();

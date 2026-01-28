@@ -1,19 +1,17 @@
-#ifndef FR_FACE_WIDGET_H
-#define FR_FACE_WIDGET_H
+#ifndef FR_POINT_WIDGET_H
+#define FR_POINT_WIDGET_H
 
-#include<fr_widget.h>
-
-//#include<ThreeDWidgets/fr_draw.h>
+#include <fr_widget.h>
  
 namespace FR {
-    class FRTK_API Fr_Face_Widget : public Fr_Widget {
+    class FRTK_API Fr_Point_Widget : public Fr_Widget {
     public:
-        Fr_Face_Widget(std::shared_ptr<std::vector <float>>vertices,
+        Fr_Point_Widget(std::shared_ptr<std::vector <float>>vertices,
             std::shared_ptr<std::vector <unsigned int>> indicies,
             std::string label = "");
-        virtual ~Fr_Face_Widget();
+        virtual ~Fr_Point_Widget();
         //Default constructor is disallowed
-        Fr_Face_Widget() = delete;
+        Fr_Point_Widget() = delete;
         virtual void draw();
         virtual void redraw() override;
 
@@ -72,4 +70,4 @@ namespace FR {
     };
 }
 
-#endif // !Fr_Face_Widget
+#endif // !FR_POINT_WIDGET_H

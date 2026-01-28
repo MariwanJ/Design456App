@@ -27,9 +27,6 @@
 #ifndef FR_WINDOW_H
 #define FR_WINDOW_H
 
-//#include <fr_ImGuiLayer.h>
-//#include <fr_grid.h>
-//#include<fr_axis3D.h>
 #include<fr_scene.h>
 #include <fr_boundbox.h>
 #include <fr_core.h>

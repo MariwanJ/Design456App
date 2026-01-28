@@ -44,7 +44,7 @@ namespace FR {
 
         void GetPrimatives(std::vector<float>& vertices, std::vector<float>& normals, std::vector<unsigned int>& indices);
 
-        void SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices);
+        void SetVertices(std::vector<float>& vertices, std::vector<unsigned int>& indices);
 
         void lineWidth(float wid);
         float lineWidth();

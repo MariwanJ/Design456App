@@ -43,7 +43,7 @@ namespace FR {
         ~Fr_Shape();
 
         virtual void draw() override;
-        void SetVertexes(std::vector<float>& vertices, std::vector<unsigned int>& indices);
+        void SetVertices(std::vector<float>& vertices, std::vector<unsigned int>& indices);
         glm::vec3 GetVertex(unsigned int index, const float vertices[]);
 
         std::shared_ptr<Fr_Texture2D> m_Texture2D;

@@ -27,14 +27,31 @@
 #include <fr_openmesh.h>
 
 namespace FR {
-	FrOpenMesh::FrOpenMesh() : m_has_vert_sel(0), m_has_edge_sel(0), m_has_face_sel(0)
+	FrOpenMesh::FrOpenMesh(MeshType type) : m_has_vert_sel(0), m_has_edge_sel(0), m_has_face_sel(0) , m_meshType(type)
 	{
 		add_property(mesh_selected, "mesh:selected");
 		add_property(v_selected, "vertex:selected");
 		add_property(e_selected, "edge:selected");
 		add_property(f_selected, "face:selected");
 		add_property(h_selected, "halfedge:selected");
+
+		// Add property handles
+		add_property(m_fake, "m_fake");
+		add_property(v_fake, "v_fake");
+		add_property(e_fake, "e_fake");
+		add_property(f_fake, "f_fake");
+
+		// Initialize mesh-level fake flag
+		property(m_fake) = false;
+
 		property(mesh_selected) = false;
+	}
+
+	void FrOpenMesh::initializeFakeFlags() {
+		property(m_fake) = false;
+		for (auto v : vertices()) property(v_fake, v) = false;
+		for (auto e : edges())    property(e_fake, e) = false;
+		for (auto f : faces())    property(f_fake, f) = false;
 	}
 
 	FrOpenMesh::~FrOpenMesh()
@@ -44,6 +61,13 @@ namespace FR {
 		remove_property(e_selected);
 		remove_property(f_selected);
 		remove_property(h_selected);
+
+		
+		remove_property(m_fake);
+		remove_property(v_fake);
+		remove_property(e_fake);
+		remove_property(f_fake);
+
 	}
 
 	void FrOpenMesh::selectMesh(bool s)
@@ -156,5 +180,15 @@ namespace FR {
 		for (auto h : halfedges())
 			property(h_selected, h) = false;
 		m_has_face_sel = m_has_edge_sel = m_has_vert_sel = 0;
+	}
+
+	bool FrOpenMesh::isFake() const { 
+		return m_meshType == MeshType::FAKE_MESH; 
+	}
+	void FrOpenMesh::isFake(bool val) {
+		if (val)
+			m_meshType == MeshType::FAKE_MESH;
+		else
+			m_meshType == MeshType::REAL_MESH;
 	}
 }

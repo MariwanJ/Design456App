@@ -34,6 +34,7 @@
 namespace FR {
     Fr_Axis3D::Fr_Axis3D() :Fr_Widget(NULL, NULL, ""), ZstepSize_(10), stepWidth_(10), m_axisWidth(1.5f)
     {
+        m_WidgType = NODETYPE::FR_AXIS3D;
     }
 
     Fr_Axis3D::~Fr_Axis3D()
@@ -134,7 +135,7 @@ namespace FR {
 
         //For the blue, we add also the vertical line
         auto primativeR = std::make_shared<Fr_Primatives>();
-        primativeR->SetVertexes(verticesRed, indicesRed);
+        primativeR->SetVertices(verticesRed, indicesRed);
         primativeR->lineWidth(m_axisWidth); //THICKER LINE
         m_Red = std::make_shared<Fr_GridShader>(); //  color and
         m_Red->SetColor(glm::vec4(FR_RED));
@@ -142,7 +143,7 @@ namespace FR {
         m_Red->SetOpacity(1.0f);
 
         std::shared_ptr <Fr_Primatives>primativeG = std::shared_ptr<Fr_Primatives>(new Fr_Primatives());
-        primativeG->SetVertexes(verticesGreen, indicesGreen);
+        primativeG->SetVertices(verticesGreen, indicesGreen);
         primativeG->lineWidth(m_axisWidth); //THICKER LINE
         m_Green = std::make_shared<Fr_GridShader>(); //  color and
         m_Green->SetColor(glm::vec4(FR_GREEN));
@@ -150,7 +151,7 @@ namespace FR {
         m_Green->SetOpacity(0.5f);
 
         auto primativeB = std::make_shared<Fr_Primatives>();
-        primativeB->SetVertexes(verticesBlue, indicesBlue);
+        primativeB->SetVertices(verticesBlue, indicesBlue);
         primativeB->lineWidth(m_axisWidth); //THICKER LINE
         m_Blue = std::make_shared<Fr_GridShader>(); //  color and
         m_Blue->SetColor(glm::vec4(FR_BLUE));
@@ -158,7 +159,7 @@ namespace FR {
         m_Blue->SetPrimative(primativeB);
 
         auto primativeZB = std::make_shared<Fr_Primatives>();
-        primativeZB->SetVertexes(verticesZBlue, indicesZBlue);
+        primativeZB->SetVertices(verticesZBlue, indicesZBlue);
         primativeZB->lineWidth(m_axisWidth);
         m_ZBlue = std::make_shared<Fr_GridShader>(); //  color and
         m_ZBlue->SetColor(glm::vec4(FR_YELLOW));

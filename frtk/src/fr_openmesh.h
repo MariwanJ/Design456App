@@ -36,7 +36,11 @@ namespace FR {
 	typedef OpenMesh::FaceHandle FaceHandle;
 	typedef OpenMesh::EdgeHandle EdgeHandle;
 	typedef OpenMesh::VertexHandle VertexHandle;
-
+	
+	typedef enum MeshType {
+		REAL_MESH,
+		FAKE_MESH
+	}MeshType;
 	class FrOpenMesh : public OpenMesh::PolyMesh_ArrayKernelT<>
 	{
 	public:
@@ -47,7 +51,14 @@ namespace FR {
 		OpenMesh::FPropHandleT<bool> f_selected;
 		OpenMesh::HPropHandleT<bool> h_selected;
 
-		FrOpenMesh();
+		OpenMesh::MPropHandleT<bool> m_fake;
+		OpenMesh::VPropHandleT<bool> v_fake;  
+		OpenMesh::EPropHandleT<bool> e_fake;  
+		OpenMesh::FPropHandleT<bool> f_fake;  
+
+		
+		MeshType m_meshType;
+		FrOpenMesh(MeshType type = MeshType::REAL_MESH);
 		~FrOpenMesh();
 
 		// Mesh
@@ -80,6 +91,10 @@ namespace FR {
 		size_t has_face_sel();
 
 		void clearAllSelections();
+		void initializeFakeFlags();
+
+		bool isFake() const;
+		void isFake(bool val);
 
 	private:
 		size_t m_has_vert_sel;

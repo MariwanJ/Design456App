@@ -316,27 +316,36 @@ namespace FR {
     };
 
     //Define all kind of widgets here, YOU MUST DO THIS!!
-    typedef enum class NODETYPE {
-        FR_NODE = 0,
-        FR_GROUP = 1,
-        FR_TRANSFORM = 2,
-        FR_MANIPULATOR = 3,
-        FR_PRIMATIVESHADER = 4,
-        FR_LIGHT = 5,
-        FR_CAMERA = 6,
-        FR_MODEL_NODE = 7,
-        FR_SCENE = 8,
-        FR_SHAPE = 9,
-        FR_MESH = 10,
-        FR_GRID = 11,
-        FR_AXIS3D,
-        //FR WIDGETS
-        FR_WIDGET = 12,
-        FR_WGROUP = 13,
-        FR_WINDOW = 14,
-        FR_LINE_WIDGET = 15,
-        FR_FACE_WIDGET = 16,
+    typedef enum NODETYPE {
+        FR_NODE                 = 0,
+        FR_GROUP                = 100,
+        FR_LIGHT                = 101,
+        FR_AXIS3D               = 102,
+        FR_WIDGET               = 103,
+        FR_WINDOW               = 104,
+        FR_GRID                 = 105,
+   //   FR_TRANSFORM            =    ,
+   //   FR_CAMERA               =    ,
+
+
+        //point-based widgets 2D
+        FR_POINT_WIDGET         =10000,
+
+
+        //line/edge-based widgets 2D
+        FR_LINE_WIDGET          =20000,
+        
+        
+        //Face based widgets (polygon) 2D
+        FR_FACE_WIDGET          =30000,
+        
+        //3D based widgets
+        FR_SHAPE                =40000,
+
+
     }NODETYPE;
+
+
 
     typedef enum
     {
@@ -348,5 +357,6 @@ namespace FR {
 
     //Selection mode toolbar
     extern SelectionMode  m_currentSelMode; //0 Mesh, 1 Face, 2 Edge, 3Vertex
+
 } //FR
 #endif

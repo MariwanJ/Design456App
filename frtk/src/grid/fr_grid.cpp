@@ -145,7 +145,7 @@ namespace FR {
             indices.push_back(i);
         }
         std::shared_ptr<Fr_Primatives> primative = std::make_shared<Fr_Primatives>();
-        primative->SetVertexes(vertices, indices);
+        primative->SetVertices(vertices, indices);
         gridShader = std::make_shared<Fr_GridShader>();
         gridShader->SetColor(gridColor_);
         gridShader->SetPrimative(primative);

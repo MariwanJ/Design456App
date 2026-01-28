@@ -590,19 +590,19 @@ namespace FR {
 
         vert2->push_back(-10.0f);
         vert2->push_back(-10.0f);
-        vert2->push_back(-10.0f);
+        vert2->push_back(0.0f);
 
         vert2->push_back(-30.0f);
         vert2->push_back(-10.0f);
-        vert2->push_back(-10.0f);
+        vert2->push_back(0.0f);
 
         vert2->push_back(-30.0f);
         vert2->push_back(-30.0f);
-        vert2->push_back(10.0f);
+        vert2->push_back(0.0f);
 
         vert2->push_back(-10.0f);
         vert2->push_back(-30.0f);
-        vert2->push_back(10.0f);
+        vert2->push_back(0.0f);
 
         ind2->push_back(0);
         ind2->push_back(1);

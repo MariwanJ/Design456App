@@ -248,12 +248,7 @@ bool intersectLineSegment3D(const ray_t& ray, const std::vector<glm::vec3>& line
     //    return hit;
     //}
 
-
-    //TODO FIX ME THIS IS NOT CORRECT 
-    bool intersectRayOpenMesh(
-        const ray_t& ray,
-        const FrOpenMesh& mesh,
-        glm::vec3& intersectionPoint)   // pass by reference!
+    bool intersectRayOpenMesh( const ray_t& ray, const FrOpenMesh& mesh, glm::vec3& intersectionPoint)   
     {
         bool hit = false;
         float closestDist = std::numeric_limits<float>::max();
@@ -289,9 +284,9 @@ bool intersectLineSegment3D(const ray_t& ray, const std::vector<glm::vec3>& line
                 }
             }
         }
-
         return hit;
     }
+
 
     inline glm::vec3 toGLM(const OpenMesh::Vec3f& v)
     {
@@ -300,8 +295,6 @@ bool intersectLineSegment3D(const ray_t& ray, const std::vector<glm::vec3>& line
 
     void selectCoplanarFaces(FrOpenMesh& mesh, OpenMesh::FaceHandle seedFace, float normalThreshold, float planeThreshold )
     {
-        if (!seedFace.is_valid())
-            return;
 
         // --- Build plane from seed face ---
         auto fv = mesh.fv_iter(seedFace);
@@ -361,7 +354,4 @@ bool intersectLineSegment3D(const ray_t& ray, const std::vector<glm::vec3>& line
                 stack.push(*ff);
         }
     }
-
-
-
 }
