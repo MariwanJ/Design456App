@@ -163,7 +163,7 @@ namespace FR {
             m_vertices->emplace_back(static_cast<float>(p[2]));
         }
         for (auto fit = m_mesh.faces_begin(); fit != m_mesh.faces_end(); ++fit) {
-            for (auto fvit = m_mesh.fv_iter(*fit); fvit; ++fvit) {
+            for (auto fvit = m_mesh.fv_iter(*fit); fvit.is_valid(); ++fvit) {
                 m_indices->emplace_back(fvit.handle().idx());
             }
         }

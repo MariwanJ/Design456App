@@ -43,53 +43,27 @@
 #include<../src/halfedge/fr_shape.h>
 
 #include <fr_filebrowser.h>
-#include <widget/fr_line_widget.h>  //TODO: Put me somewhere else
-#include <widget/fr_face_widget.h>  //TODO: Put me somewhere else
+#include <mesh_widget/fr_line_widget.h>  //TODO: Put me somewhere else
+#include <mesh_widget/fr_face_widget.h>  //TODO: Put me somewhere else
 
 #include<fr_checkIntersection.h>
 
+
+
+
+
 /** end Fr_Window */
 namespace FR {
-    //Change these as needed
-    typedef struct {
-        double Old_x;  //SAVE X AND Y OF LAST Cursor Move
-        double Old_y;
-        glm::vec3 WorldMouse;
-        int click;
-        int double_click;
-        bool Pressed;
-        int Button;
-    }glfwMouseEvent;
-
-    typedef struct {
-        float MouseXYScale;
-        float MouseScrollScale;
-    }mouseScale_t;
-
-    /**
-     * Each of these variables will keep the last events happened and their value.
-     * If the event is not relative to the variable, it will have -1 sa value.
-     */
-    struct eventData {
-        int lastAction;
-        int lastKey;
-        int lastMod;
-        int button;
-        int scancode;
-    };
-    typedef eventData eventData_t;
-    /** end of Fr_Window */
-
+    class Frtk_Window;
     FRTK_API class  Fr_Window {
         /** from Fr_Window */
+        friend Frtk_Window;
     public:
         /**
          * Class constructor for main dummy window object that holds the FR_WIDGET system objects and their properties.
          */
 
-        Fr_Window(int x, int y, int w, int h, std::string label);
-
-        Fr_Window();
+        Fr_Window(int x=0, int y=0, int w=800, int h=600, std::string label = "Fr_Window");
 
         /**
          * Class destructor.
@@ -159,11 +133,9 @@ namespace FR {
         glm::vec2 getNormalisedDeviceCoordinates();
 
         glm::vec3 getPointOnRay(const glm::vec3& ray, float distance);
-        //experemental code
+        //experimental code
         glm::vec3 calculateMouseWorldPos();
 
-        //Mouse picker
-        bool intersectionChecker(const ray_t& ray, glm::vec3& intersectionPoint);
 
         defaultFont SystemFont;
 
@@ -187,14 +159,12 @@ namespace FR {
         static float m_MousePickerRadius;
 
         float getAspectRation() const;
-        eventData_t GLFWevents() const;
-
-        glfwMouseEvent getMouseEvents();
-
         void calculateScreenRay();
 
+        std::shared_ptr<NVGcontext> getnvgContext(void); //NanoVG Context
+        
         /**
-         * Handle is a very important function that take care of all events happining (mouse, keyboard or between widgets).
+         * Handle is a very important function that take care of all events happening (mouse, keyboard or between widgets).
          * Whenever a widget consumes the events, it should return 0. FR_NO_EVENTS means that there is no more events left.
          * But if a widget uses the event but want to return the event to the system, it should return Fr_WGroup::handle(e).
          * or if the widget didn't care about the event, it should also return either 1 or Fr_WGroup::handle(e).
@@ -203,6 +173,10 @@ namespace FR {
          * \return
          */
         virtual int handle(int events);
+
+
+        //Treats events per frame 
+        virtual void updateInputEvents(void);
 
         /**
          * Sets the camera
@@ -229,10 +203,16 @@ namespace FR {
 
         int renderimGUI(userData_& data);
 
+        int renderNewGUI(); //temporary function 
+
         static Fr_Window* spWindow;  //Row pointer otherwise we will not be able to set
+        std::vector<std::shared_ptr<Frtk_Window>> m_frtkWindow;
+
         std::shared_ptr<Fr_Scene> activeScene;
 
         ImVec4 clear_color;
+        
+        static Fr_InputEvent_t m_systemEvents;
 
     protected:
 
@@ -245,7 +225,7 @@ namespace FR {
 
         int imguimzo_init();
 
-        static glfwMouseEvent mouseEvent;
+        
 
         static screenDim_t m_ViewPort;
 
@@ -267,11 +247,10 @@ namespace FR {
 
         static void scroll_callback(GLFWwindow* win, double xoffset, double yoffset);
 
-        static void MouseMovement(double xoffset, double yoffset);
+        static void cameraPAN(GLFWwindow* win);
 
-        static void cameraPAN(GLFWwindow* win, double xoffset, double yoffset);
-
-        static void cameraRotate(GLFWwindow* win, double xoffset, double yoffset);
+        static void cameraRotate(GLFWwindow* win);
+        void cameraZoom(GLFWwindow* win);
 
         static void joystick_callback(int jid, int events);
 
@@ -312,7 +291,6 @@ namespace FR {
         int gl_version_minor;
         mouseScale_t mouseDefaults;
 
-        static eventData m_GLFWevents;        //All GLFW events that will be used by FR_WIDGET system
 
         //Mouse picker variable
         static int RECURSION_COUNT;
@@ -347,6 +325,9 @@ namespace FR {
         bool runCode;
 
         static GLFWwindow* pGLFWWindow;
+        
+        std::shared_ptr<NVGcontext> m_nvgContext; //NanoVG Context
+
     };
 }
 

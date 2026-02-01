@@ -435,6 +435,11 @@ namespace FR {
         return m_OrthographicSize;
     }
 
+    float Fr_Camera::getRatio() const
+    {
+        return m_aspect_ratio;
+    }
+
     glm::mat4 Fr_Camera::GetInverseViewMatrix() {
         updateViewMatrix();
         return m_InverseViewMatrix;

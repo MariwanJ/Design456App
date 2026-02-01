@@ -125,8 +125,8 @@ namespace FR {
                 if (ImGui::BeginTabItem("Objects")) {
                     // Display the relative position
                     ray_t ray = activeScene->getRayValue();
-                    ImGui::Text("Mouse Position: (%.1f, %.1f)", mouseEvent.Old_x, mouseEvent.Old_y);
-                    ImGui::Text("Mouse World: (%.1f, %.1f, %.1f)", mouseEvent.WorldMouse.x, mouseEvent.WorldMouse.y, mouseEvent.WorldMouse.z);
+                    ImGui::Text("Mouse Position: (%.1f, %.1f)", m_systemEvents.mouse.activeX, m_systemEvents.mouse.activeY);
+                    ImGui::Text("Mouse World: (%.1f, %.1f, %.1f)", m_systemEvents.worldPos.x, m_systemEvents.worldPos.y, m_systemEvents.worldPos.z);
                     ImGui::Text("RAY pos : (%.1f, %.1f, %.1f)", ray.position.x, ray.position.y, ray.position.z);
                     ImGui::Text("RAY dire : (%.1f, %.1f, %.1f)", ray.direction.x, ray.direction.y, ray.direction.z);
 

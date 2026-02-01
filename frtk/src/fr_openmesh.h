@@ -32,74 +32,74 @@
 #include <OpenMesh/Core/Utils/PropertyManager.hh>
 
 namespace FR {
-	typedef OpenMesh::MeshHandle MeshHandle;
-	typedef OpenMesh::FaceHandle FaceHandle;
-	typedef OpenMesh::EdgeHandle EdgeHandle;
-	typedef OpenMesh::VertexHandle VertexHandle;
-	
-	typedef enum MeshType {
-		REAL_MESH,
-		FAKE_MESH
-	}MeshType;
-	class FrOpenMesh : public OpenMesh::PolyMesh_ArrayKernelT<>
-	{
-	public:
-		// Property handles
-		OpenMesh::MPropHandleT<bool> mesh_selected;
-		OpenMesh::VPropHandleT<bool> v_selected;
-		OpenMesh::EPropHandleT<bool> e_selected;
-		OpenMesh::FPropHandleT<bool> f_selected;
-		OpenMesh::HPropHandleT<bool> h_selected;
+    typedef OpenMesh::MeshHandle MeshHandle;
+    typedef OpenMesh::FaceHandle FaceHandle;
+    typedef OpenMesh::EdgeHandle EdgeHandle;
+    typedef OpenMesh::VertexHandle VertexHandle;
+    
+    typedef enum MeshType {
+        REAL_MESH,
+        FAKE_MESH
+    }MeshType;
+    class FrOpenMesh : public OpenMesh::PolyMesh_ArrayKernelT<>
+    {
+    public:
+        // Property handles
+        OpenMesh::MPropHandleT<bool> mesh_selected;
+        OpenMesh::VPropHandleT<bool> v_selected;
+        OpenMesh::EPropHandleT<bool> e_selected;
+        OpenMesh::FPropHandleT<bool> f_selected;
+        OpenMesh::HPropHandleT<bool> h_selected;
 
-		OpenMesh::MPropHandleT<bool> m_fake;
-		OpenMesh::VPropHandleT<bool> v_fake;  
-		OpenMesh::EPropHandleT<bool> e_fake;  
-		OpenMesh::FPropHandleT<bool> f_fake;  
+        OpenMesh::MPropHandleT<bool> m_fake;
+        OpenMesh::VPropHandleT<bool> v_fake;  
+        OpenMesh::EPropHandleT<bool> e_fake;  
+        OpenMesh::FPropHandleT<bool> f_fake;  
 
-		
-		MeshType m_meshType;
-		FrOpenMesh(MeshType type = MeshType::REAL_MESH);
-		~FrOpenMesh();
+        
+        MeshType m_meshType;
+        FrOpenMesh(MeshType type = MeshType::REAL_MESH);
+        ~FrOpenMesh();
 
-		// Mesh
-		void selectMesh(bool s);
-		void toggleMeshSelection();
-		bool isMeshSelected() const;
+        // Mesh
+        void selectMesh(bool s);
+        void toggleMeshSelection();
+        bool isMeshSelected() const;
 
-		// Vertex
-		void selectVertex(VertexHandle v, bool s);
-		void toggleVertexSelection(VertexHandle v);
-		bool isVertexSelected(VertexHandle v) const;
+        // Vertex
+        void selectVertex(VertexHandle v, bool s);
+        void toggleVertexSelection(VertexHandle v);
+        bool isVertexSelected(VertexHandle v) const;
 
-		// Edge
-		void selectEdge(EdgeHandle e, bool s);
-		void toggleEdgeSelection(EdgeHandle e);
-		bool isEdgeSelected(EdgeHandle e) const;
+        // Edge
+        void selectEdge(EdgeHandle e, bool s);
+        void toggleEdgeSelection(EdgeHandle e);
+        bool isEdgeSelected(EdgeHandle e) const;
 
-		// Face
-		void selectFace(FaceHandle f, bool s);
-		void toggleFaceSelection(FaceHandle f);
-		bool isFaceSelected(FaceHandle f) const;
+        // Face
+        void selectFace(FaceHandle f, bool s);
+        void toggleFaceSelection(FaceHandle f);
+        bool isFaceSelected(FaceHandle f) const;
 
-		// Halfedge
-		void selectHalfedge(HalfedgeHandle h, bool s);
-		void toggleHalfeedgeSelection(HalfedgeHandle h);
-		bool isHalfedgeSelected(HalfedgeHandle h) const;
+        // Halfedge
+        void selectHalfedge(HalfedgeHandle h, bool s);
+        void toggleHalfeedgeSelection(HalfedgeHandle h);
+        bool isHalfedgeSelected(HalfedgeHandle h) const;
 
-		size_t has_vert_sel();
-		size_t has_edge_sel();
-		size_t has_face_sel();
+        size_t has_vert_sel();
+        size_t has_edge_sel();
+        size_t has_face_sel();
 
-		void clearAllSelections();
-		void initializeFakeFlags();
+        void clearAllSelections();
+        void initializeFakeFlags();
 
-		bool isFake() const;
-		void isFake(bool val);
+        bool isFake() const;
+        void isFake(bool val);
 
-	private:
-		size_t m_has_vert_sel;
-		size_t m_has_edge_sel;
-		size_t m_has_face_sel;
-	};
+    private:
+        size_t m_has_vert_sel;
+        size_t m_has_edge_sel;
+        size_t m_has_face_sel;
+    };
 }
 #endif //#define FR_OPENMESH_H

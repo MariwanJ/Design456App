@@ -223,7 +223,7 @@ namespace FR {
 
         glBindTexture(GL_TEXTURE_2D, 0);
 
-#if 0	//For debugging only
+#if 0    //For debugging only
         printStringAsDots(m_label.text, face);
 #endif
         FT_Done_Face(face);

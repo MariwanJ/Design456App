@@ -47,7 +47,7 @@ namespace FR {
             type = FR_POINT;
         }break;
         default: {
-            type = FR_NOT_DEFINED;			// Do nothing, it i already done.
+            type = FR_NOT_DEFINED;            // Do nothing, it i already done.
         }break;
         }
         glCheckFunc(glLineWidth(m_selectionlineWidth));

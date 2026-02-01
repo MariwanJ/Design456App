@@ -33,6 +33,7 @@ workspace "Design456App"
     IncludeDir["objloader"] = "../frtk/vendor/objloader"
     IncludeDir["OpenMesh"]  = "../frtk/vendor/OpenMesh/src"
     IncludeDir["freetype"]  = "../frtk/vendor/freetype/include"
+    IncludeDir["nanovg"]  = "../frtk/vendor/nanovg/src"
 
 
 -- Configure projects
@@ -65,7 +66,8 @@ project "Design456App"
         IncludeDir["spdlog"],
         IncludeDir["stb_image"],
         IncludeDir["yaml-cpp"],
-        IncludeDir["freetype"]
+        IncludeDir["freetype"],
+        IncludeDir["nanovg"],
     }
 
     filter "configurations:Debug"
@@ -92,6 +94,7 @@ group "Dependencies"
         include "frtk/vendor/objloader"
         include "frtk/vendor/OpenMesh"
         include "frtk/vendor/freetype"
+        include "frtk/vendor/nanovg"
 
     -- Don't remove the below line. Without this, the following names will be grouped as dependencies.
 group ""

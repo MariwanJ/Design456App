@@ -85,21 +85,20 @@ namespace FR {
         if (spWindow == nullptr)
             return; //do nothing
 
-        //if (ImGui::GetCurrentContext() && ImGui::GetIO().WantCaptureMouse) {
-        //    ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
-        //    return;
-        //}
+        //prevKeyDown will be updated per frame in your updater function, after processing input.
+        auto& e = spWindow->m_systemEvents;
+        e.lastKey = key;
+        e.scancode = scancode;
+        e.lastAction = action;
+        e.lastMod = mods;
+        e.shiftDown = (mods & GLFW_MOD_SHIFT) != 0;
+        e.ctrlDown = (mods & GLFW_MOD_CONTROL) != 0;
+        e.altDown = (mods & GLFW_MOD_ALT) != 0;
+        e.superDown = (mods & GLFW_MOD_SUPER) != 0;
 
-        m_GLFWevents = { -1,-1,-1,-1,-1 };
-
-        m_GLFWevents.lastKey = key;
-        m_GLFWevents.lastAction = action;
-        m_GLFWevents.lastMod = mods;
-        m_GLFWevents.scancode = scancode;
-        if (spWindow->handle(FR_KEYBOARD) == 1) { //TODO CHECK ME IF THIS IS CORRECT
-            m_GLFWevents = { -1,-1,-1,-1,-1 };
-            return;
-        }
+        // Update the current key state
+        if (key >= 0 && key <= GLFW_KEY_LAST)
+            e.keyDown[key] = (action != GLFW_RELEASE);
     }
 
     void Fr_Window::mouse_button_callback(GLFWwindow* win, int button, int action, int mods)
@@ -107,291 +106,70 @@ namespace FR {
         if (spWindow == nullptr)
             return; //do nothing
 
-        m_GLFWevents.button = button;          /* #define 	GLFW_MOUSE_BUTTON_1   0
-                                                        #define 	GLFW_MOUSE_BUTTON_2   1
-                                                        #define 	GLFW_MOUSE_BUTTON_3   2
-                                                        #define 	GLFW_MOUSE_BUTTON_4
-                                                        #define 	GLFW_MOUSE_BUTTON_5   4
-                                                        #define 	GLFW_MOUSE_BUTTON_6   5
-                                                        #define 	GLFW_MOUSE_BUTTON_7   6
-                                                        #define 	GLFW_MOUSE_BUTTON_8   7
-                                                        #define 	GLFW_MOUSE_BUTTON_LAST   GLFW_MOUSE_BUTTON_8
-                                                        #define 	GLFW_MOUSE_BUTTON_LEFT   GLFW_MOUSE_BUTTON_1
-                                                        #define 	GLFW_MOUSE_BUTTON_RIGHT   GLFW_MOUSE_BUTTON_2
-                                                        #define 	GLFW_MOUSE_BUTTON_MIDDLE   GLFW_MOUSE_BUTTON_3*/
-        m_GLFWevents.lastAction = action;       //GLFW_RELEASE = The key or mouse button was released, GLFW_PRESS =The key or mouse button was pressed.  , GLFW_REPEAT=  The key was held down until it repeated.   , GLFW_KEY_UNKNOWN
-        m_GLFWevents.lastMod = mods;          //GLFW_CURSOR, GLFW_STICKY_KEYS, GLFW_STICKY_MOUSE_BUTTONS, GLFW_LOCK_KEY_MODS or GLFW_RAW_MOUSE_MOTION.
-        /*
-                GLFW_CURSOR: Controls the appearance and behavior of the cursor.
-                GLFW_STICKY_KEYS: Controls whether keys remain "pressed" after being released.
-                GLFW_STICKY_MOUSE_BUTTONS: Controls whether mouse buttons remain "pressed" after being released.
-             */
-
-        glfwMouseEvent mouse_evnets = spWindow->getMouseEvents();
-        bool activateHandle = true;
-        if (GLFW_PRESS == action) {
-            mouseEvent.Pressed = 1; //Pressed
-        }
-        else {
-            mouseEvent.Pressed = 0; //Released
-            mouseEvent.Old_y = mouseEvent.Old_x = 0;// TODO : I THINK WE SHOULD MAKE THEM ZERO !!! !CHECK ME!!!!!! 2025-10-21
-        }
-        mouseEvent.Button = button;
-
-        auto shftL = glfwGetKey(win, GLFW_KEY_LEFT_SHIFT);
-        auto shftR = glfwGetKey(win, GLFW_KEY_RIGHT_SHIFT);
-
-        if (mouseEvent.Button == GLFW_MOUSE_BUTTON_LEFT && mouseEvent.Pressed == 1)
-        {
-            if (activateHandle) {
-                if (spWindow->handle(FR_LEFT_PUSH) == 1) //Mouse click
-                    return;  //Events is consumed - no more action required
-            }
-        }
-        else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_LEFT && mouseEvent.Pressed == 0)
-        {
-            if (activateHandle) {
-                if (spWindow->handle(FR_LEFT_RELEASE) == 1) //Mouse click
-                    return;  //Events is consumed - no more action required
-            }
+        auto& e = spWindow->m_systemEvents;
+        
+        //Avoid View jumping , we should initialize the current theta and phi 
+        if (spWindow->runCode && button == GLFW_MOUSE_BUTTON_MIDDLE) {
+            spWindow->runCode = false;
+            Fr_Camera& cam = spWindow->activeScene->getActiveCamera();
+            spWindow->theta = glm::degrees(atan2(cam.GetCamPosition().x, cam.GetCamPosition().y));
+            spWindow->phi = glm::degrees(asin(cam.GetCamPosition().z / glm::length(cam.GetCamPosition())));
+         }
+        else if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_RELEASE) {
+            spWindow->runCode = true;
         }
 
-        else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_RIGHT && mouseEvent.Pressed == 1)
-        {
-            if (activateHandle) {
-                if (spWindow->handle(FR_RIGHT_PUSH) == 1) //Mouse click
-                    return;  //Events is consumed - no more action required
-            }
-        }
-        else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_RIGHT && mouseEvent.Pressed == 0)
-        {
-            if (activateHandle) {
-                if (spWindow->handle(FR_RIGHT_RELEASE) == 1) //Mouse click
-                    return;  //Events is consumed - no more action required
-            }
-        }
-
-        else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_MIDDLE && mouseEvent.Pressed == 1)
-        {
-            //ALWAYS ALWAYS WE SHOULD RESET THE MOUSE EVENT X,Y TO AVOID JUMPING
-            mouseEvent.Old_y = mouseEvent.Old_x = 0;
-
-            if (activateHandle) {
-                if (spWindow->handle(FR_MIDDLE_PUSH) == 1) //Mouse click
-                    return;
-            }
-        }
-
-        else if (mouseEvent.Button == GLFW_MOUSE_BUTTON_MIDDLE && mouseEvent.Pressed == 0)
-        {
-            m_RotateActive = false;
-            if (activateHandle) {
-                if (spWindow->handle(FR_MIDDLE_RELEASE) == 1) {//Mouse click
-                    mouseEvent.Button = -1; //consumed
-                    return;
-                }
-            }
-        }
+        if (button == GLFW_MOUSE_BUTTON_LEFT)             e.L_Down = (action != GLFW_RELEASE);
+        else if (button == GLFW_MOUSE_BUTTON_RIGHT)       e.R_Down = (action != GLFW_RELEASE);
+        else if (button == GLFW_MOUSE_BUTTON_MIDDLE)      e.M_Down = (action != GLFW_RELEASE);
+        spWindow->m_systemEvents.button = button;
+        spWindow->m_systemEvents.lastAction = action;
+        spWindow->m_systemEvents.lastMod = mods;
+        spWindow->m_systemEvents.mouseEntered = true;
     }
     void Fr_Window::cursor_m_positioncallback(GLFWwindow* win, double xpos, double ypos)
     {
-        // Ensure window is valid
         if (!spWindow)
             return;
-
-        //We need to calculate Ray always, and mouse location in the world TODO: Check if this is a problem that needs to be optimized?!!!!2025-11-03
+        auto& mouse = spWindow->m_systemEvents.mouse;
+        mouse.activeX = xpos;
+        mouse.activeY = ypos;
         spWindow->calculateScreenRay();
-        Fr_Camera& cam = spWindow->activeScene->getActiveCamera();
-
-        glm::vec3 ray = spWindow->activeScene->m_activeRay.direction;
-        if (abs(ray.x) > 0.6f)
-            ray.x = 0.f;
-        else if (abs(ray.y) > 0.6f)
-            ray.y = 0.f;
-        else if (abs(ray.z) > 0.6f)
-            ray.z = 0.f;
-
-        mouseEvent.WorldMouse = ray * RAY_RANGE;//spWindow->calculateMouseWorldPos();
-
-        auto updateMousePosition = [&](double x, double y) {
-            mouseEvent.Old_x = x;
-            mouseEvent.Old_y = y;
-            };
-
-        // Modifier keys
-        bool shiftPressed = (glfwGetKey(win, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS ||
-            glfwGetKey(win, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS);
-
-        int saveButton = mouseEvent.Button;
-        int res = 0;
-
-        glfwMouseEvent mouse_events = spWindow->getMouseEvents();
-
-        bool activateHandle = true;
-        auto consumeEvent = [&](bool resetEvents = false) {
-            if (resetEvents) {
-                m_GLFWevents = { -1,-1,-1,-1,-1 };
-            }
-            else {
-                mouseEvent.Button = 0;
-            }
-            };
-
-        // ------------------------------
-        // Left mouse
-        if (saveButton == GLFW_MOUSE_BUTTON_LEFT)
-        {
-            if (mouseEvent.Pressed == 1) // Drag
-            {
-                if (activateHandle) {
-                    res = spWindow->handle(FR_LEFT_DRAG_PUSH);
-                    updateMousePosition(xpos, ypos);
-                    if (res) { consumeEvent(); return; }
-                }
-            }
-            else if (mouseEvent.Pressed == 0) // Release
-            {
-                if (activateHandle) {
-                    res = spWindow->handle(FR_LEFT_DRAG_RELEASE);
-                    updateMousePosition(xpos, ypos);
-                    if (res) { consumeEvent(true); return; }
-                }
-            }
-        }
-        // ------------------------------
-        // Right mouse
-        else if (saveButton == GLFW_MOUSE_BUTTON_RIGHT)
-        {
-            if (mouseEvent.Pressed == 1) // Drag
-            {
-                if (activateHandle) {
-                    res = spWindow->handle(FR_RIGHT_DRAG_PUSH);
-                    updateMousePosition(xpos, ypos);
-                    if (res) { consumeEvent(); return; }
-                }
-            }
-            else if (mouseEvent.Pressed == 0) // Release
-            {
-                if (activateHandle) {
-                    res = spWindow->handle(FR_RIGHT_DRAG_RELEASE);
-                    updateMousePosition(xpos, ypos);
-                    if (res) { consumeEvent(true); return; }
-                }
-            }
-        }
-        // ------------------------------
-        // Middle mouse
-        else if (saveButton == GLFW_MOUSE_BUTTON_MIDDLE)
-        {
-            if (mouseEvent.Pressed == 1) // Drag
-            {
-                if (spWindow->runCode) {
-                    updateMousePosition(xpos, ypos);  // FIXED: use current position, not (0,0)
-                    spWindow->runCode = false;
-                    spWindow->theta = glm::degrees(atan2(cam.GetCamPosition().x, cam.GetCamPosition().y));
-                    spWindow->phi = glm::degrees(asin(cam.GetCamPosition().z / glm::length(cam.GetCamPosition())));
-                    return;
-                }
-
-                if (shiftPressed) {
-                    glfwSetCursor(win, spWindow->cursorHand);  // pre-created cursor
-                    if (activateHandle) {
-                        res = spWindow->handle(FR_MIDDLE_DRAG_PUSH);
-                        if (res == 1) {
-                            updateMousePosition(xpos, ypos);
-                            return;
-                        }
-                        cameraPAN(win, xpos, ypos);
-                        updateMousePosition(xpos, ypos);
-                        return;
-                    }
-                }
-                else {
-                    glfwSetCursor(win, spWindow->cursorCrosshair); // pre-created cursor
-                    cameraRotate(win, xpos, ypos);
-                    updateMousePosition(xpos, ypos);
-                    return;
-                }
-            }
-            else if (mouseEvent.Pressed == 0) // Release
-            {
-                glfwSetCursor(win, nullptr); // restore default
-
-                if (activateHandle) {
-                    res = spWindow->handle(FR_MIDDLE_RELEASE);
-                    if (res)
-                    {
-                        consumeEvent(true);
-                    }
-                    updateMousePosition(xpos, ypos);
-                    // spWindow->phi = spWindow->theta = 0.0f; //YOU SHOULD NEVER RESET them
-                    spWindow->runCode = true;
-                    return;
-                }
-            }
-        }
-        // ------------------------------
-        // General mouse move (no buttons are pressed)
-        if (activateHandle) {
-            spWindow->handle(FR_MOUSE_MOVE);
-        }
-        updateMousePosition(xpos, ypos);
+        // ----- SIGNALS -----
+        spWindow->m_systemEvents.mouseMoved = true;
     }
 
     void Fr_Window::cursor_enter_callback(GLFWwindow* win, int entered)
     {
         if (spWindow == nullptr)
             return; //do nothing
+        spWindow->m_systemEvents.mouseEntered = (entered != 0);
+        //Reset DRAG
+        spWindow->m_systemEvents.L_Drag = false;
+        spWindow->m_systemEvents.R_Drag = false;
+        spWindow->m_systemEvents.M_Drag = false;
     }
 
     void Fr_Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
     {
         if (spWindow == nullptr)
             return;
-
-        userData_ data;
-        spWindow->activeScene->getActiveCamera().getCamData(data);
-        if (spWindow->activeScene->getActiveCamera().getType() == ORTHOGRAPHIC) {
-            data.orthoSize_ = data.orthoSize_ + float(yoffset) * spWindow->mouseDefaults.MouseScrollScale;
-        }
-        else
-        {
-            //Scroll zooming using the correct method of zooming. Use camera position by scaling the view-matrix
-            float scale_;
-            if (yoffset < 0) {
-                scale_ = -1 * spWindow->mouseDefaults.MouseScrollScale;
-            }
-            else
-            {
-                scale_ = spWindow->mouseDefaults.MouseScrollScale;
-            }
-            glm::vec3 forward = glm::normalize(data.direction_ - data.camm_position); // forward direction
-            data.camm_position += forward * scale_;   // move camera
-            data.direction_ += forward * scale_;  // move target along with camera
-        }
-        spWindow->activeScene->getActiveCamera().setCamData(data);
+        auto& m = spWindow->m_systemEvents.mouse;
+        m.scrollX = xoffset;
+        m.scrollY = yoffset;
     }
 
-    void Fr_Window::MouseMovement(double xoffset, double yoffset)
-    {
-    }
     //DON'T CHANGE ME WORKS GOOD !!!! 2025-10-22
-    void Fr_Window::cameraPAN(GLFWwindow* win, double xpos, double ypos)
+    void Fr_Window::cameraPAN(GLFWwindow* win)
     {
         userData_ data;
         if (!spWindow)
             return;
 
         spWindow->activeScene->getActiveCamera().getCamData(data);
-
-        if (mouseEvent.Old_x == mouseEvent.Old_x && mouseEvent.Old_x == 0) {
-            mouseEvent.Old_x = xpos;
-            mouseEvent.Old_y = ypos;
-            m_RotateActive = true;
-            return;
-        }
-        double deltax = mouseEvent.Old_x - xpos;
-        double deltay = mouseEvent.Old_y - ypos;
+        auto& mouse = spWindow->m_systemEvents.mouse;
+        double deltax = mouse.prevX - mouse.activeX;
+        double deltay = mouse.prevY - mouse.activeY;
         // Only perform the panning if there is a significant change
         if (std::abs(deltax) < 1e-3 && std::abs(deltay) < 1e-3) {
             return; // Small movements are ignored
@@ -404,7 +182,7 @@ namespace FR {
         spWindow->activeScene->getActiveCamera().setCamData(data);
     }
     //DON'T CHANGE ME WORKS GOOD !!!! 2025-10-22
-    void Fr_Window::cameraRotate(GLFWwindow* win, double xpos, double ypos)
+    void Fr_Window::cameraRotate(GLFWwindow* win)
     {
         if (spWindow == nullptr)
             return;
@@ -413,10 +191,9 @@ namespace FR {
         spWindow->radiusXYZ = glm::length(cam.m_position);
 
         // Compute deltas
-        float deltax = float(xpos - mouseEvent.Old_x) * spWindow->mouseDefaults.MouseXYScale;
-        float deltay = float(ypos - mouseEvent.Old_y) * spWindow->mouseDefaults.MouseXYScale;
-        mouseEvent.Old_x = xpos;
-        mouseEvent.Old_y = ypos;
+        auto& mouse = spWindow->m_systemEvents.mouse;
+        float deltax = float(mouse.activeX - mouse.prevX) * spWindow->mouseDefaults.MouseXYScale;
+        float deltay = float(mouse.activeY - mouse.prevY) * spWindow->mouseDefaults.MouseXYScale;
 
         spWindow->theta += deltax;
         spWindow->phi -= deltay;
@@ -431,10 +208,32 @@ namespace FR {
         float z = spWindow->radiusXYZ * sin(radPhi);
         cam.m_position = glm::vec3(x, y, z);
     }
-    glfwMouseEvent Fr_Window::getMouseEvents()
+
+    void Fr_Window::cameraZoom(GLFWwindow* win)
     {
-        return mouseEvent;
+        userData_ data;
+        activeScene->getActiveCamera().getCamData(data);
+        if (spWindow->activeScene->getActiveCamera().getType() == ORTHOGRAPHIC) {
+            data.orthoSize_ = data.orthoSize_ + float(m_systemEvents.mouse.scrollY) * spWindow->mouseDefaults.MouseScrollScale;
+        }
+        else
+        {
+            //Scroll zooming using the correct method of zooming. Use camera position by scaling the view-matrix
+            float scale_;
+            if (m_systemEvents.mouse.scrollY < 0) {
+                scale_ = -1 * spWindow->mouseDefaults.MouseScrollScale;
+            }
+            else
+            {
+                scale_ = spWindow->mouseDefaults.MouseScrollScale;
+            }
+            glm::vec3 forward = glm::normalize(data.direction_ - data.camm_position); // forward direction
+            data.camm_position += forward * scale_;   // move camera
+            data.direction_ += forward * scale_;  // move target along with camera
+        }
+        spWindow->activeScene->getActiveCamera().setCamData(data);
     }
+
     void Fr_Window::createOpenDialog(void)
     {
         ImGuiWindowFlags window_flags = 0

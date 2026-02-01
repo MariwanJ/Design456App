@@ -29,7 +29,8 @@
 #define FR_CORE_H
 
 #include <frtk.h>
-#pragma once
+
+
 
 // -------------------- OpenGL / GLAD / GLFW --------------------
 #if defined(__APPLE__)
@@ -39,11 +40,16 @@
 #include <glad/glad.h>          // Modern OpenGL loader
 #include <GLFW/glfw3.h>         // GLFW context and window
 #include <GLFW/glfw3native.h>   // Native access (X11 on Linux)
+
+//NanoVG 
+#include <nanovg.h>
+
 #undef None                      // Fix X11 macro conflict
 #endif
 
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+
 
 // -------------------- Standard Libraries --------------------
 #include <string>
@@ -197,6 +203,12 @@ namespace FR {
 #define RIGHT         6
 #define LEFT          7
 
+    class NotImplementedException : public std::logic_error
+    {
+    public:
+        NotImplementedException() : std::logic_error{ "not implemented." } {}
+    };
+
 // Function to convert string to int
     uint8_t getCameraIndex(const char* name);
     const char* getCameraName(uint8_t v);
@@ -301,6 +313,7 @@ namespace FR {
         FR_MIDDLE_DRAG_RELEASE,
 
         FR_MOUSE_MOVE,
+        FR_SCROLL,
 
         FR_ENTER,
         FR_FOCUS,
@@ -357,6 +370,55 @@ namespace FR {
 
     //Selection mode toolbar
     extern SelectionMode  m_currentSelMode; //0 Mesh, 1 Face, 2 Edge, 3Vertex
+
+    typedef struct {
+        float MouseXYScale;
+        float MouseScrollScale;
+    }mouseScale_t;
+
+    typedef struct {
+        double activeX;
+        double activeY;
+        double prevX;
+        double prevY;
+        double scrollX;
+        double scrollY;
+    }mouse_buttons_t;
+
+    
+    typedef struct {
+        // Mouse positions
+        mouse_buttons_t mouse;   // activeX/Y + prevX/Y
+        bool mouseEntered; //Entered Windows area or not
+
+        glm::vec3 worldPos;      // world mouse position
+
+        int button;              // which button triggered last action
+        int isDClick;            // double click flag
+
+        // Derived per-frame flags
+
+        bool L_Down, R_Down, M_Down;
+        bool L_Pressed, L_Released, L_Drag;
+        bool R_Pressed, R_Released, R_Drag;
+        bool M_Pressed, M_Released, M_Drag;
+        bool mouseMoved;
+
+
+        // Keyboard
+        bool keyDown[GLFW_KEY_LAST + 1];
+        bool prevKeyDown[GLFW_KEY_LAST + 1];
+        int lastKey;
+        int lastAction;
+        int lastMod;
+        int scancode;
+
+        bool shiftDown ;
+        bool ctrlDown ;
+        bool altDown ;
+        bool superDown;
+
+    } Fr_InputEvent_t;
 
 } //FR
 #endif

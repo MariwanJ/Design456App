@@ -52,10 +52,10 @@ namespace FR {
 #define FRTK_CORE_FATAL(...)    Fr_Log::GetFRTKLogger()->critical(__VA_ARGS__)
 
 // Application
-#define APP_APP_TRACE(...)	   Fr_Log::GetAPPLogger()->trace(__VA_ARGS__)
-#define APP_APP_INFO(...)	   Fr_Log::GetAPPLogger()->info(__VA_ARGS__)
-#define APP_APP_WARN(...)	   Fr_Log::GetAPPLogger()->warn(__VA_ARGS__)
-#define APP_APP_ERROR(...)	   Fr_Log::GetAPPLogger()->error(__VA_ARGS__)
-#define APP_APP_FATAL(...)	   Fr_Log::GetAPPLogger()->critical(__VA_ARGS__)
+#define APP_APP_TRACE(...)       Fr_Log::GetAPPLogger()->trace(__VA_ARGS__)
+#define APP_APP_INFO(...)       Fr_Log::GetAPPLogger()->info(__VA_ARGS__)
+#define APP_APP_WARN(...)       Fr_Log::GetAPPLogger()->warn(__VA_ARGS__)
+#define APP_APP_ERROR(...)       Fr_Log::GetAPPLogger()->error(__VA_ARGS__)
+#define APP_APP_FATAL(...)       Fr_Log::GetAPPLogger()->critical(__VA_ARGS__)
 }
 #endif

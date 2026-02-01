@@ -31,6 +31,7 @@
 #include<fr_checkIntersection.h>
 #include <fr_window.h>
 #include <fr_openmesh.h>
+#include <fr_core.h>
 
 namespace FR {
     // Small epsilon for floating-point checks
@@ -155,7 +156,7 @@ bool intersectLineSegment3D(const ray_t& ray, const std::vector<glm::vec3>& line
     if (A2.x < 0.0f || B2.x < 0.0f)
         return false;
 
-    glm::vec2 mousePx = glm::vec2(win->getMouseEvents().Old_x,  win->getMouseEvents().Old_y);
+    glm::vec2 mousePx = glm::vec2(win->m_systemEvents.mouse.activeX, win->m_systemEvents.mouse.activeY);
     glm::vec2 AB2 = B2 - A2;
     float tScreen = glm::dot(mousePx - A2, AB2) / glm::dot(AB2, AB2);
     tScreen = glm::clamp(tScreen, 0.0f, 1.0f);
@@ -335,9 +336,9 @@ bool intersectLineSegment3D(const ray_t& ray, const std::vector<glm::vec3>& line
 
             // Plane distance test
             bool onPlane = true;
-            for (auto fv = mesh.fv_iter(fh); fv.is_valid(); ++fv)
+            for (auto fv_ = mesh.fv_iter(fh); fv_.is_valid(); ++fv_)
             {
-                glm::vec3 v = toGLM(mesh.point(*fv));
+                glm::vec3 v = toGLM(mesh.point(*fv_));
                 if (std::abs(glm::dot(planeNormal, v) + planeD) > planeThreshold)
                 {
                     onPlane = false;

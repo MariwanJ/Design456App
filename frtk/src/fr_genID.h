@@ -22,7 +22,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-//	This id  generator is inspired by HAZEL ENGINE THE CHERNO
+//    This id  generator is inspired by HAZEL ENGINE THE CHERNO
 //  Modified by Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 

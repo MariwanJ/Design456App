@@ -76,9 +76,9 @@ const float DEFAULT_SIHOUETTE = 0.15f;
         float A = 1.0;
     };
 
-    typedef T FR_COLOR;
+typedef T FR_COLOR;
     namespace COLOR {
-#define FR_TRANSPARENCY         -1.0000f, -1.0000f, -1.0000f,  1.0000f		   // No color
+#define FR_TRANSPARENCY         -1.0000f, -1.0000f, -1.0000f,  1.0000f           // No color
 #define FR_IRON                  0.5600f,  0.5700f,  0.58000f, 1.0000f
 #define FR_SILVER                0.9720f,  0.9600f,  0.91500f, 1.0000f
 #define FR_SILVER1               0.7529f,  0.7529f,  0.7529f,  1.0000f
@@ -241,10 +241,13 @@ const float DEFAULT_SIHOUETTE = 0.15f;
 #define FR_MEDIUMAQUAMARINE      0.4000f,  0.8039f,  0.6667f,  1.0000f
 #define FR_OLDLACE               0.9922f,  0.9608f,  0.9020f,  1.0000f
 #define FR_GLASS                 0.3300f,  1.0000f,  1.0000f,  1.0000f
-#define FR_WINGS3D				 0.3800f,  0.3800f,  0.3800f,  0.5000f
+#define FR_WINGS3D                 0.3800f,  0.3800f,  0.3800f,  0.5000f
 #define FR_DESIGN456_GRID        0.7410f,  0.8820f,  0.9220f,  1.0000f 
 #define FR_123D                  0.0117f,  0.6392f,  0.8470f,  1.0000f
-    };
+};
+
+#define WITH_ALPHA(c, alpha) ((c.A *= (alpha), c.A = (c.A < 0.0f ? 0.0f : (c.A > 1.0f ? 1.0f : c.A)), c.R), (c.G), (c.B), (c.A))
+
     namespace SPECULAR {
         //Material             BaseColor(R, G, B)
 #define FR_METAL           0.50f, 0.50f, 0.50f,  1.0

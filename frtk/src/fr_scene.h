@@ -43,150 +43,150 @@
 
 
 namespace FR {
-	class FRTK_API Fr_Scene {
-	public:
-		friend Fr_Window;
-		/**
-		 * Default Constructor
-		 */
-		Fr_Scene();
-		/**
-		 * Sets the background color
-		 */
-		void SetBackgroud(float r, float g, float b);
-		void SetBackgroud(float r, float g, float b, float alfa);
+    class FRTK_API Fr_Scene {
+    public:
+        friend Fr_Window;
+        /**
+         * Default Constructor
+         */
+        Fr_Scene();
+        /**
+         * Sets the background color
+         */
+        void SetBackgroud(float r, float g, float b);
+        void SetBackgroud(float r, float g, float b, float alfa);
 
-		virtual void RenderScene();
+        virtual void RenderScene();
 
-		void setBackgroud(float r, float g, float b, float alfa);
-		void setBackgroud(glm::vec4 color);
-		Fr_Camera&  getActiveCamera(void);
+        void setBackgroud(float r, float g, float b, float alfa);
+        void setBackgroud(glm::vec4 color);
+        Fr_Camera&  getActiveCamera(void);
 
-		void setupActiveCamera(const char* name, RenderInfo& info);
-		void setupActiveCamera(uint8_t val, RenderInfo& info);
+        void setupActiveCamera(const char* name, RenderInfo& info);
+        void setupActiveCamera(uint8_t val, RenderInfo& info);
 
-		void CreateDefaultCameras(void);
-		
-		void RenderText(RenderInfo& info);
+        void CreateDefaultCameras(void);
+        
+        void RenderText(RenderInfo& info);
 
-		void Render(RenderInfo& info);
-		void RenderPrimativeShapes(RenderInfo& info);
+        void Render(RenderInfo& info);
+        void RenderPrimativeShapes(RenderInfo& info);
  
-		void RenderSilhouette(const glm::mat4& mvp);
+        void RenderSilhouette(const glm::mat4& mvp);
  
-		auto SearchIntersection(const glm::vec3& ray);
+        auto SearchIntersection(const glm::vec3& ray);
 
-		std::string getUniqueName(const std::string& name, const std::vector<std::string>& names);
+        std::string getUniqueName(const std::string& name, const std::vector<std::string>& names);
 
-		SceneItemStruct CreateDefaultSunLight(void);
-		uint8_t m_active_camera;
+        SceneItemStruct CreateDefaultSunLight(void);
+        uint8_t m_active_camera;
 
-		// Function to find all occurrences of a specific type in the m_world vector
+        // Function to find all occurrences of a specific type in the m_world vector
 
-		bool replaceItemByID(int id, SceneItemStruct& newItem);
-		bool deleteItemByID(int id);
-		bool deleteItemByID(std::string_view str);
+        bool replaceItemByID(int id, SceneItemStruct& newItem);
+        bool deleteItemByID(int id);
+        bool deleteItemByID(std::string_view str);
 
-		
-		template <typename T>
-		void findOccurrencesOfType(std::vector<std::shared_ptr<T>>& vect, NODETYPE type) {
-			for (const auto& sceneItem : m_world) {
-				if (sceneItem.Sceneitem->isOfType(type)) {
-					std::shared_ptr<T> ptr = std::static_pointer_cast<T>(sceneItem.Sceneitem);
-					vect.push_back(ptr);
-				}
-			}
-		}
+        
+        template <typename T>
+        void findOccurrencesOfType(std::vector<std::shared_ptr<T>>& vect, NODETYPE type) {
+            for (const auto& sceneItem : m_world) {
+                if (sceneItem.Sceneitem->isOfType(type)) {
+                    std::shared_ptr<T> ptr = std::static_pointer_cast<T>(sceneItem.Sceneitem);
+                    vect.push_back(ptr);
+                }
+            }
+        }
 
-		template <typename T>
-		bool replaceItemByName(std::shared_ptr<T> other, std::string_view name) {
-			for (auto& item : m_world) {
-				if (item.name == name) {
-					item.Sceneitem = other; 
-					return true;
-				}
-			}
-			return false; 
-		}
+        template <typename T>
+        bool replaceItemByName(std::shared_ptr<T> other, std::string_view name) {
+            for (auto& item : m_world) {
+                if (item.name == name) {
+                    item.Sceneitem = other; 
+                    return true;
+                }
+            }
+            return false; 
+        }
 
-		template <typename T>
-		bool replaceItemByID(std::shared_ptr<T> other, genID id) {
-			for (auto& item : m_world) {
-				if (item.id == id) {
-					item.Sceneitem = other; 
-					return true; 
-				}
-			}
-			return false;
-		}
+        template <typename T>
+        bool replaceItemByID(std::shared_ptr<T> other, genID id) {
+            for (auto& item : m_world) {
+                if (item.id == id) {
+                    item.Sceneitem = other; 
+                    return true; 
+                }
+            }
+            return false;
+        }
 
-		template <typename T>
-		void findItemByName(std::shared_ptr<T>& answer, const std::string_view& name) {
-			for (const auto& item : m_world) {
-				if (item.name == name) {
-					std::shared_ptr<T> temp = std::static_pointer_cast<T>(item.Sceneitem);
-					if (temp) {
-						answer = temp;
-						return; 
-					}
-				}
-			}
-			answer.reset(); 
-		}
+        template <typename T>
+        void findItemByName(std::shared_ptr<T>& answer, const std::string_view& name) {
+            for (const auto& item : m_world) {
+                if (item.name == name) {
+                    std::shared_ptr<T> temp = std::static_pointer_cast<T>(item.Sceneitem);
+                    if (temp) {
+                        answer = temp;
+                        return; 
+                    }
+                }
+            }
+            answer.reset(); 
+        }
 
-		template <typename T>
-		void findItemByID(std::shared_ptr<T>& answer, genID id) {
-			for (const auto& item : m_world) {
-				if (item.id == id) {
-					std::shared_ptr<T> temp = std::static_pointer_cast<T>(item.Sceneitem);
-					if (temp) {
-						answer = temp;
-						return; 
-					}
-				}
-			}
-			answer.reset(); 
-		}
-
-
-
-		void add3DObject(std::string fName = "");
-		void addObject(SceneItemStruct&& item);
-		void addObject(std::shared_ptr<Fr_Widget> item, std::string name = "NoName");
-
-		void delete3DObject(std::shared_ptr<Fr_Widget> item);
-		void delete3DObject(SceneItemStruct& obj);
-		SceneItemStruct CreateGrid();
-		SceneItemStruct CreateAxis();
-
-		//Grid, Axis, Camera which is always created automatically.User shouldn't need to do anything
-		void setupScene();
+        template <typename T>
+        void findItemByID(std::shared_ptr<T>& answer, genID id) {
+            for (const auto& item : m_world) {
+                if (item.id == id) {
+                    std::shared_ptr<T> temp = std::static_pointer_cast<T>(item.Sceneitem);
+                    if (temp) {
+                        answer = temp;
+                        return; 
+                    }
+                }
+            }
+            answer.reset(); 
+        }
 
 
-		/**
-		 * Handel events coming from GLFW window and distribute it to the registered objects inside the Scene.
-		 *
-		 * \param ev    Incoming events from GLFW window
-		 * \return      One if no events remained and all consumed, 0 if the events needs further treatment
-		 */
-		int handle(int ev);
-		bool Fr_Scene::pickAFace(size_t IndexOfclosestItem, OpenMesh::FaceHandle& pickedFace, float& outT);
-		Fr_Camera m_cameras[TOTAL_CAMS];
-		std::vector<SceneItemStruct> m_world;
-		
-		void setRayValue(ray_t val);
-		ray_t getRayValue(void)const;
 
-	protected:
-			ray_t m_activeRay; 
-			
-			int findClosestMeshToRay(const ray_t& m_activeRay);
-			int handle_selection(int ev);
+        void add3DObject(std::string fName = "");
+        void addObject(SceneItemStruct&& item);
+        void addObject(std::shared_ptr<Fr_Widget> item, std::string name = "NoName");
+
+        void delete3DObject(std::shared_ptr<Fr_Widget> item);
+        void delete3DObject(SceneItemStruct& obj);
+        SceneItemStruct CreateGrid();
+        SceneItemStruct CreateAxis();
+
+        //Grid, Axis, Camera which is always created automatically.User shouldn't need to do anything
+        void setupScene();
 
 
-	private:
-		glm::vec4 m_Background;
+        /**
+         * Handel events coming from GLFW window and distribute it to the registered objects inside the Scene.
+         *
+         * \param ev    Incoming events from GLFW window
+         * \return      One if no events remained and all consumed, 0 if the events needs further treatment
+         */
+        int handle(int ev);
+        bool Fr_Scene::pickAFace(size_t IndexOfclosestItem, OpenMesh::FaceHandle& pickedFace, float& outT);
+        Fr_Camera m_cameras[TOTAL_CAMS];
+        std::vector<SceneItemStruct> m_world;
+        
+        void setRayValue(ray_t &val);
+        ray_t getRayValue(void)const;
 
-	};
+    protected:
+            ray_t m_activeRay; 
+            
+            int findClosestMeshToRay(const ray_t& m_activeRay);
+            int handle_selection(int ev);
+
+
+    private:
+        glm::vec4 m_Background;
+
+    };
 }
 #endif

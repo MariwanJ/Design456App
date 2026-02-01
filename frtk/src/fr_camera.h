@@ -109,6 +109,7 @@ namespace FR {
 
         void SetOrthographicSize(float size);
         float getOrthgraphicSize();
+        float getRatio() const;
 
     private:
 

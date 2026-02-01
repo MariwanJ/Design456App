@@ -28,6 +28,7 @@ project "Design456App"
         "%{IncludeDir.objloader}",
         "%{IncludeDir.spdlog}",
         "%{IncludeDir.freetype}",
+        "%{IncludeDir.nanovg}",
     }
 
     -- Common defines

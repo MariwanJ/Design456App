@@ -24,7 +24,7 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-#include <widget/fr_point_widget.h>
+#include <mesh_widget/fr_point_widget.h>
 #include <glm/gtx/transform.hpp>
 #include <fr_window.h>
 namespace FR {
