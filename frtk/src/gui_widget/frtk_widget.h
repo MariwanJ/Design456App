@@ -49,7 +49,12 @@ namespace FR {
         virtual void drawLabel() ;
         virtual void drawLabel(float X, float Y, float W, float H = 18.0* 1.3f) ;
 
-        void wdgImage(std::string path);
+        //Widget Icon/image
+        int wdgImage(std::string path);
+        void drawImage(Dim_float_t dim);
+        void drawImage(float x, float y, float w, float h);
+        void Frtk_Widget::createTexture(float w, float h);
+   
 
         bool can_focus() const;
        
@@ -138,9 +143,10 @@ namespace FR {
 
         std::shared_ptr<uint8_t> m_Image;
         
+        Callback m_callback;
+        GLuint m_IconTexture;
 
     private:
-        Callback m_callback;
 };
 
     typedef struct {

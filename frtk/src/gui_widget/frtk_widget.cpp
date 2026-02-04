@@ -24,7 +24,7 @@ namespace FR {
     Fr_Window *Frtk_Widget::m_mainWindow = nullptr;
     Frtk_Widget::Frtk_Widget(float X, float Y, float W, float H, std::string label = "Widget", BOX_TYPE b) :m_x(X), m_y(Y), m_w(W), m_h(H),
         m_label(label), m_wdgType(FRTK_WIDGET), m_boxType(b),m_has_focus(false),
-        m_visible(true), m_dragging(false), m_active(true), m_cantake_focus(false),
+        m_visible(true), m_dragging(false), m_active(true), m_cantake_focus(false),m_IconTexture(0),
         m_borderColor(glm::vec4(FR_DARKSLATEGREY)),m_borderWidth(NORMAL_BORDER), m_dim{ X,Y,W,H}, m_img_dim{ X,Y,W,H},m_callback(default_callback),
         m_color(glm::vec4(FR_GRAY)), m_bkg_color(FR_LIGHTGRAY) {
         if (!m_mainWindow) {
@@ -32,6 +32,11 @@ namespace FR {
         }
     }
     Frtk_Widget::~Frtk_Widget() {
+        //Should be called always!!! 
+        if (m_IconTexture)
+            if (m_IconTexture != 0) {
+                glDeleteTextures(1, &m_IconTexture);
+            }
     }
     Frtk_Widget* Frtk_Widget::parent() {
         return m_parent;
@@ -62,7 +67,6 @@ namespace FR {
 
     bool Frtk_Widget::should_getEvent(bool win) const
     {
-         
         const auto& mouse = m_mainWindow->m_systemEvents.mouse; // content-space mouse
 
         float ax = absX();
@@ -236,23 +240,37 @@ namespace FR {
         m_active = true;
     }
 
-    void Frtk_Widget::wdgImage(std::string path) {
-        if (path.empty())
-            return;
+    int Frtk_Widget::wdgImage(const std::string path) {
+        if (path.empty()) return -1;
+
         int w, h, channels;
-        auto data = stbi_load(path.c_str(), &w, &h, &channels, 0);
+        unsigned char* data = stbi_load(path.c_str(), &w, &h, &channels, 4); // RGBA
+        if (!data) return -1;
 
-        if (!data) {
-            FRTK_CORE_ERROR("Failed to load image {}: {}", path, stbi_failure_reason());
-            m_Image.reset();
-            return;
-        }
+        m_Image = std::shared_ptr<unsigned char>(data, stbi_image_free);
 
-        m_Image = std::shared_ptr<uint8_t>(data, stbi_image_free);
-        if (!m_Image) {
-            FRTK_CORE_ERROR("Image not found {}", path);
-        }
+        m_IconTexture = nvgCreateImageRGBA(m_vg, w, h, 0, data);
+        if (m_IconTexture == 0) return -1;
+
+        return 0;
     }
+    void Frtk_Widget::drawImage(Dim_float_t dim) {
+        nvgBeginPath(m_vg);
+        nvgRect(m_vg, dim.pos.x, dim.pos.y, dim.size.w, dim.size.h);
+        nvgFillPaint(m_vg, nvgImagePattern(m_vg, dim.pos.x, dim.pos.y, dim.size.w, dim.size.h, 0, m_IconTexture, 1.0f));
+        nvgFill(m_vg);
+    }
+
+    void Frtk_Widget::drawImage(float x, float y, float w, float h) {
+        Dim_float_t dim;
+        dim.pos.x = x;
+        dim.pos.y = y;
+        dim.size.w = w;
+        dim.size.h = h;
+        drawImage(dim);
+    }
+
+
     bool Frtk_Widget::can_focus() const {
         return (m_visible && m_active && m_cantake_focus);
     }

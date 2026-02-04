@@ -37,6 +37,8 @@ namespace FR {
         {
             //Inactive
         }
+        if (m_IconTexture != 0)
+            drawImage(m_x, m_y, m_w, m_h);
         drawLabel();
         switch (m_cellStyle) {
         case FR_PIC_OVER_TEXT_CENTER: {

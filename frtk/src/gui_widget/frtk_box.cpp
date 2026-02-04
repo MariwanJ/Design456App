@@ -26,6 +26,8 @@ namespace FR {
             return;
             draw_box(m_vg, m_boxType, m_dim,0.0f,NORMAL_BORDER,  nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a),nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), true);
             drawLabel();
+            if(m_IconTexture!=0)
+                drawImage(m_x, m_y, m_w, m_h);
     }
     int Frtk_Box::handle(int e)
     {
