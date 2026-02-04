@@ -37,29 +37,30 @@ namespace FR {
         if (spWindow == nullptr)
             return;
 
-        spWindow->m_ViewPort.w = width;
-        spWindow->m_ViewPort.h = height;
+        spWindow->m_ViewPort.size.w = width;
+        spWindow->m_ViewPort.size.h = height;
 
-        glfwGetWindowPos(pGLFWWindow,
-            &spWindow->m_ViewPort.x,
-            &spWindow->m_ViewPort.y); //update even position
+        glfwGetWindowPos(pGLFWWindow,&m_ViewPort.pos.x, &m_ViewPort.pos.y); //update even position
 
         uint8_t index = spWindow->activeScene->m_active_camera;
-        spWindow->activeScene->m_cameras[index].m_aspect_ratio = static_cast<float>(spWindow->m_ViewPort.w) / spWindow->m_ViewPort.h;
+        if(spWindow->m_ViewPort.size.h!=0){
+            //Avoid divide by zero, keep the last ratio 
+            spWindow->activeScene->m_cameras[index].m_aspect_ratio = static_cast<float>(spWindow->m_ViewPort.size.w) / spWindow->m_ViewPort.size.h;
+        }
     }
     void Fr_Window::glfwWindPos(GLFWwindow* window, int pos_x, int pos_y)
     {
         if (spWindow == nullptr)
             return;
-        spWindow->m_ViewPort.x = pos_x;
-        spWindow->m_ViewPort.y = pos_y;
+        spWindow->m_ViewPort.pos.x = pos_x;
+        spWindow->m_ViewPort.pos.y = pos_y;
     }
     void Fr_Window::framebuffer_size_callback(GLFWwindow* window, int width, int height)
     {
         if (spWindow == nullptr)
             return;
-        spWindow->m_ViewPort.w = width;
-        spWindow->m_ViewPort.h = height;
+        spWindow->m_ViewPort.size.w = width;
+        spWindow->m_ViewPort.size.h = height;
         if (s_GladInitialized && s_GLFWInitialized) {
             glViewport(0, 0, width, width);
         }
@@ -85,7 +86,6 @@ namespace FR {
         if (spWindow == nullptr)
             return; //do nothing
 
-        //prevKeyDown will be updated per frame in your updater function, after processing input.
         auto& e = spWindow->m_systemEvents;
         e.lastKey = key;
         e.scancode = scancode;
@@ -234,59 +234,54 @@ namespace FR {
         spWindow->activeScene->getActiveCamera().setCamData(data);
     }
 
-    void Fr_Window::createOpenDialog(void)
+    void Fr_Window::createOpenDialog()
     {
-        ImGuiWindowFlags window_flags = 0
-            | ImGuiWindowFlags_NoDocking
-            | ImGuiWindowFlags_NoResize
-            | ImGuiWindowFlags_NoScrollbar
-            | ImGuiFileBrowserFlags_MultipleSelection; //multi selection
+        ImGuiWindowFlags window_flags =
+            ImGuiWindowFlags_NoDocking |
+            ImGuiWindowFlags_NoResize |
+            ImGuiWindowFlags_NoScrollbar |
+            ImGuiFileBrowserFlags_MultipleSelection;
 
-        // Open the modal dialog (this could be triggered by a button or another event)
         if (showOpenDialog) {
             ImGui::OpenPopup("File Browser");
         }
 
-        // Create the modal file browser
-        if (ImGui::BeginPopupModal("File Browser", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar)) {
+        if (ImGui::BeginPopupModal("File Browser", nullptr,
+            ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar))
+        {
             if (!fileDialog) {
                 fileDialog = std::make_shared<ImGui::FileBrowser>(window_flags, EXE_CURRENT_DIR);
                 fileDialog->SetTitle("Open file");
                 fileDialog->SetTypeFilters({ ".obj", ".off" });
             }
+
             fileDialog->Open();
             fileDialog->Display();
-            if (!fileDialog->IsOpened()) {
+
+            if (!fileDialog->IsOpened() || fileDialog->isCanceled()) {
                 showOpenDialog = false;
-                fileDialog->resetStatus();
-                ImGui::CloseCurrentPopup();
-            }
-            else if (fileDialog->isCanceled()) {
-                showOpenDialog = false;
-                fileDialog->resetStatus();
+                fileDialog.reset();             
                 ImGui::CloseCurrentPopup();
             }
             else if (fileDialog->HasSelected()) {
-                auto results = fileDialog->GetMultiSelected();
-                if (results.size() > 0)
-                {
-                    for (const auto& obj : results) {
-                        activeScene->add3DObject(obj.string());
-                    }
+                for (const auto& obj : fileDialog->GetMultiSelected()) {
+                    activeScene->add3DObject(obj.string());
                 }
                 fileDialog->ClearSelected();
                 showOpenDialog = false;
+                fileDialog.reset();             
                 ImGui::CloseCurrentPopup();
-                fileDialog->resetStatus();
             }
+
+            if (ImGui::Button("Close")) {
+                showOpenDialog = false;
+                fileDialog.reset();             
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
         }
-        if (ImGui::Button("Close")) {
-            showOpenDialog = false;
-            ImGui::CloseCurrentPopup();
-            fileDialog->resetStatus();
-        }
-        ImGui::EndPopup();
     }
+
 
     /**  callbacks */
     void Fr_Window::mnuFileNew_cb(void* Data) {

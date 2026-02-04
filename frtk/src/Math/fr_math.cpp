@@ -106,7 +106,7 @@ namespace FR {
         }
 
         else {
-            glm::quat quaternion; // Your quaternion matrix
+            glm::quat quaternion;  
 
             // Normalize the quaternion
             quaternion = glm::normalize(rotation_);

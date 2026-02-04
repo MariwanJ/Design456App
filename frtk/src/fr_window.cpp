@@ -43,9 +43,9 @@
 //#include <glad/glad.h>    // must be included first
 
 #include <gui_widget/frtk_window.h>
+#include <gui_widget/demo.h>
 
  /** Fr_Window */
-
 
   //Remove me later : TODO
 #include<halfedge/fr_shape.h>
@@ -60,9 +60,9 @@ namespace FR {
     float Fr_Window::m_MousePickerRadius = 5;        //FreeCAD uses 5 pixels as default
     float Fr_Window::phi = 0.0f;
     float Fr_Window::theta = 0.0f;
-    
-    Fr_Window* Fr_Window::spWindow = nullptr;
-    
+
+    std::shared_ptr<Fr_Window> Fr_Window::spWindow = nullptr;
+
     Fr_InputEvent_t Fr_Window::m_systemEvents{ 0 };
 
     GLFWwindow* Fr_Window::pGLFWWindow = nullptr;
@@ -76,19 +76,28 @@ namespace FR {
     {
         fprintf(stderr, "Error: %s\n", description);
     }
-    screenDim_t Fr_Window::m_ViewPort{ 50,50, 800,600 };
+    screenDim_t Fr_Window::m_ViewPort{ {50,50}, {800,600 } };
 
     SelectionMode  m_currentSelMode = SelectionMode::Mesh;
 
-    Fr_Window::Fr_Window(int x, int y, int w, int h, std::string label) :
-        activeScene(nullptr),
-        MainWinCursor(0),
+    // Destructor
+    Fr_Window::~Fr_Window() {
+    }
+
+    // Singleton accessor
+    std::shared_ptr<Fr_Window> Fr_Window::getFr_Window(int x, int y, int w, int h, const std::string& label) {
+        return spWindow;
+    }
+
+    Fr_Window::Fr_Window(int x, int y, int w, int h, const std::string& label)
+        : m_label(label), showOpenDialog(false),
+        cursorHand(nullptr), cursorCrosshair(nullptr),
+        runCode(false), activeScene(nullptr), m_nvgContext(nullptr),
         gl_version_major(4), gl_version_minor(6),
-        mouseDefaults{ 0 }, showOpenDialog(false),
-        radiusXYZ(0.0f),
-        runCode(false), m_label(label)
+        mouseDefaults{ 0 }, radiusXYZ(0.0f)
     {
         showOpenDialog = false;
+
         /** from Fr_Window */
         mouseDefaults.MouseScrollScale = 5.0f;
         mouseDefaults.MouseXYScale = 0.5f;
@@ -110,16 +119,15 @@ namespace FR {
         radiusXYZ = 0.0f;
         phi = theta = 0.f;
         runCode = true;
-        spWindow = this;
         clear_color = ImVec4(FR_WINGS3D);
 
         cursorHand = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
         cursorCrosshair = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
 
-        m_ViewPort.x = x;
-        m_ViewPort.y = y;
-        m_ViewPort.h = h;
-        m_ViewPort.w = w;
+        m_ViewPort.pos.x = x;
+        m_ViewPort.pos.y = y;
+        m_ViewPort.size.h = h;
+        m_ViewPort.size.w = w;
 
         // std::string fname = "R";
          // auto n = loadImage();
@@ -172,18 +180,6 @@ namespace FR {
 
     void Fr_Window::flush() {
         glad_glFlush();
-    }
-    //FIXME
-    Fr_Window::~Fr_Window()
-    {
-        if (cursorHand)      glfwDestroyCursor(cursorHand);
-        if (cursorCrosshair) glfwDestroyCursor(cursorCrosshair);
-
-    }
-
-    Fr_Window* Fr_Window::getFr_Window(void)
-    {
-        return spWindow;
     }
 
     /**
@@ -239,22 +235,22 @@ namespace FR {
 
     int Fr_Window::x() const
     {
-        return m_ViewPort.x;
+        return m_ViewPort.pos.x;
     }
 
     int Fr_Window::y() const
     {
-        return m_ViewPort.y;
+        return m_ViewPort.pos.y;
     }
 
     int Fr_Window::w() const
     {
-        return m_ViewPort.w;
+        return m_ViewPort.size.w;
     }
 
     int Fr_Window::h() const
     {
-        return m_ViewPort.h;
+        return m_ViewPort.size.h;
     }
 
     const char* Fr_Window::label() const
@@ -295,7 +291,7 @@ namespace FR {
 
         // glfw window creation
         // --------------------
-        pGLFWWindow = glfwCreateWindow(m_ViewPort.w, m_ViewPort.h, m_label.c_str(), NULL, NULL);
+        pGLFWWindow = glfwCreateWindow(m_ViewPort.size.w, m_ViewPort.size.h, m_label.c_str(), NULL, NULL);
         if (pGLFWWindow == NULL)
         {
             std::cout << "Failed to create GLFW window" << std::endl;
@@ -304,7 +300,8 @@ namespace FR {
         }
         glfwMakeContextCurrent(pGLFWWindow);
         glfwSwapInterval(1);
-        glfwSetWindowPos(pGLFWWindow, m_ViewPort.x, m_ViewPort.y);
+
+        glfwSetWindowPos(pGLFWWindow, (int)m_ViewPort.pos.x, (int)m_ViewPort.pos.y);
 
         // glad: load all OpenGL function pointers
         // ---------------------------------------
@@ -347,18 +344,17 @@ namespace FR {
 
     int Fr_Window::GLFWrun()
     {
-        NVGcontext* vg = nvgCreateGL3(NVG_ANTIALIAS);
-        if (!vg) {
+        m_nvgContext = nvgCreateGL3(NVG_ANTIALIAS);
+        if (!m_nvgContext) {
             FRTK_CORE_FATAL("Failed to create context for NanoVG");
             glfwTerminate();
             std::abort(); // stop execution since we can’t continue
         }
         // Wrap in shared_ptr with proper deleting
-        m_nvgContext = std::shared_ptr<NVGcontext>(vg, [](NVGcontext* ctx) {if (ctx) nvgDeleteGL3(ctx); });
 
         /* FR_PROFILE_FUNCTION();
          FR_PROFILE_SCOPE("GLFWrun");*/
-        
+
         CreateScene();
         activeScene->setupScene();
         // Setup Dear ImGui context
@@ -406,12 +402,12 @@ namespace FR {
         ImGui_ImplGlfw_InitForOpenGL(window, true);
 
         ImGui_ImplOpenGL3_Init("#version 460");
-        glfwGetFramebufferSize(pGLFWWindow, &m_ViewPort.w, &m_ViewPort.h);
+
+        glfwGetFramebufferSize(pGLFWWindow, &m_ViewPort.size.w, &m_ViewPort.size.h);
+
         userData_ data;
         //Temporary Code -- TODO : Remove Me when you are done with the new GUI SYSTEM !!!!!  2026-01-30 Mariwan
-        m_frtkWindow.push_back(std::make_shared<Frtk_Window>(150.f, 150.f, 400.f, 400.f, 
-                                                              "Testing New GUI system"));
-
+        m_frtkWindow.push_back(runFRTKdemo());
         while (!glfwWindowShouldClose(pGLFWWindow))
         {
             //ALL 3D Drawings
@@ -425,7 +421,6 @@ namespace FR {
 
             ImGuizmo::BeginFrame();
             //This Renders all GUI (imGui) widgets and windows- not viewport.
-            ;
 
             renderimGUI(data);
 
@@ -450,25 +445,27 @@ namespace FR {
             glViewport(0, 0, w(), h());
             updateInputEvents(); //Process events.
         }
-        ImGui_ImplOpenGL3_Shutdown();
-        ImGui_ImplGlfw_Shutdown();
-        ImGui::DestroyContext();
 
-
-
-        
         //IMPORTANT!!!!
-        /*destroy everything - Without this, 
-         destructors will not be initiated before OpenGL destroy the context 
+        /*destroy everything - Without this,
+         destructors will not be initiated before OpenGL destroy the context
          which causes a bug in OpenGL*/
         activeScene->m_world.clear();
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+
+        if (cursorHand) glfwDestroyCursor(cursorHand);
+        if (cursorCrosshair) glfwDestroyCursor(cursorCrosshair);
+
+        for (auto& w : m_frtkWindow)
+            w->remove_all();
         m_frtkWindow.clear();
+
+        ImGui::DestroyContext();
         glfwDestroyWindow(pGLFWWindow);
         return 0;
     }
 
-
-    
     bool Fr_Window::SetupCamera(glm::mat4& projection, glm::mat4& modelview)
     {
         return false;
@@ -480,22 +477,20 @@ namespace FR {
     void Fr_Window::Render(RenderInfo& info)
     {
     }
-    std::shared_ptr<NVGcontext> Fr_Window::getnvgContext(void)
+    NVGcontext* Fr_Window::getnvgContext(void)
     {
         return m_nvgContext;
     }
 
     int Fr_Window::renderNewGUI() {
         //We might have multiple windows!!!
-       for (auto guiWin : m_frtkWindow)
+        for (auto guiWin : m_frtkWindow)
             guiWin->draw();
-       return 0;
+        return 0;
     }
-
 
     //New system for handling events
     void Fr_Window::updateInputEvents(void) {
-
         double dx = m_systemEvents.mouse.activeX - m_systemEvents.mouse.prevX;
         double dy = m_systemEvents.mouse.activeY - m_systemEvents.mouse.prevY;
         m_systemEvents.mouseMoved = (dx != 0.0 || dy != 0.0);
@@ -515,7 +510,7 @@ namespace FR {
         // MIDDLE BUTTON
         e.M_Pressed = (e.button == GLFW_MOUSE_BUTTON_MIDDLE && e.lastAction == GLFW_PRESS);
         e.M_Released = (e.button == GLFW_MOUSE_BUTTON_MIDDLE && e.lastAction == GLFW_RELEASE);
-        e.M_Drag = (e.M_Down && e.mouseMoved ); // true if dragging
+        e.M_Drag = (e.M_Down && e.mouseMoved); // true if dragging
         //Keyboard
         for (int k = 0; k <= GLFW_KEY_LAST; ++k) {
             bool justPressed = (e.keyDown[k] && !e.prevKeyDown[k]);
@@ -525,27 +520,27 @@ namespace FR {
             if (justPressed || justReleased) {
                 e.lastKey = k;
                 e.lastAction = justPressed ? GLFW_PRESS : GLFW_RELEASE;
-                // SHIFT - CTL - ALT 
+                // SHIFT - CTL - ALT
             }
         }
         // Update prevKeyDown for next frame
         std::copy(std::begin(e.keyDown), std::end(e.keyDown), std::begin(e.prevKeyDown));
- 
-        if (e.mouseMoved)       handle( FR_MOUSE_MOVE );
-        if (e.L_Pressed)        handle( FR_LEFT_PUSH );
-        if (e.L_Released)       handle( FR_LEFT_RELEASE );
+
+        if (e.mouseMoved)       handle(FR_MOUSE_MOVE);
+        if (e.L_Pressed)        handle(FR_LEFT_PUSH);
+        if (e.L_Released)       handle(FR_LEFT_RELEASE);
 
         // RIGHT BUTTON
-        if (e.R_Pressed)        handle( FR_RIGHT_PUSH );
-        if (e.R_Released)       handle( FR_RIGHT_RELEASE );
+        if (e.R_Pressed)        handle(FR_RIGHT_PUSH);
+        if (e.R_Released)       handle(FR_RIGHT_RELEASE);
 
         // MIDDLE BUTTON
-        if (e.M_Pressed)        handle( FR_MIDDLE_PUSH );
-        if (e.M_Released)       handle( FR_MIDDLE_RELEASE );
+        if (e.M_Pressed)        handle(FR_MIDDLE_PUSH);
+        if (e.M_Released)       handle(FR_MIDDLE_RELEASE);
 
-        if (e.L_Drag)           handle( FR_LEFT_DRAG_PUSH );
-        if (e.R_Drag)           handle( FR_RIGHT_DRAG_PUSH );
-        if (e.M_Drag)           handle( FR_MIDDLE_DRAG_PUSH );
+        if (e.L_Drag)           handle(FR_LEFT_DRAG_PUSH);
+        if (e.R_Drag)           handle(FR_RIGHT_DRAG_PUSH);
+        if (e.M_Drag)           handle(FR_MIDDLE_DRAG_PUSH);
 
         //Keyboard Events
         for (int k = 0; k <= GLFW_KEY_LAST; ++k) {
@@ -554,22 +549,22 @@ namespace FR {
             if (justPressed || justReleased) {
                 e.lastKey = k;
                 e.lastAction = justPressed ? GLFW_PRESS : GLFW_RELEASE;
-                handle(FR_KEYBOARD) ;
+                handle(FR_KEYBOARD);
             }
         }
         //scroll happened
         bool scrollHappened = (e.mouse.scrollX != 0.0 || e.mouse.scrollY != 0.0);
         if (scrollHappened) {
-            handle(FR_SCROLL) ;
-         }
-        // Enter, deactivate 
+            handle(FR_SCROLL);
+        }
+        // Enter, deactivate
         if (e.mouseEntered) {
             handle(FR_ENTER);
         }
         else {
             handle(FR_DEACIVATE);
-        } 
-        
+        }
+
         // END OF FRAME RESET
         e.mouse.prevX = e.mouse.activeX;
         e.mouse.prevY = e.mouse.activeY;
@@ -587,7 +582,6 @@ namespace FR {
         e.mouse.scrollY = 0.0;
 
         spWindow->calculateScreenRay();
-
     }
     int Fr_Window::handle(int events)
     {
@@ -596,11 +590,11 @@ namespace FR {
             if (gui_win->handle(events) == 1)
                 return 1; //We consumed the event
         }
-        auto &e = m_systemEvents;
+        auto& e = m_systemEvents;
 
         switch (events) {
         case FR_MIDDLE_DRAG_PUSH:
-            
+
             if (!e.mouseMoved)
                 break; // nothing to do this frame
 
@@ -618,10 +612,9 @@ namespace FR {
         case FR_SCROLL: {
             cameraZoom(pGLFWWindow);
             return 1;
-            }break;
-        default: { }
+        }break;
+        default: {}
         }
         return activeScene->handle(events);
     }
- 
 }

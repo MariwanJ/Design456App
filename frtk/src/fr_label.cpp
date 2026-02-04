@@ -85,8 +85,8 @@ namespace FR {
         glm::mat4 mvp;
         if (m_lblData.type == ORTHOGRAPHIC) {
             mvp = glm::ortho(
-                0.0f, (float)info.screenDim.w,
-                0.0f, (float)info.screenDim.h
+                0.0f, (float)info.screenDim.size.w,
+                0.0f, (float)info.screenDim.size.h
             ) * model;
         }
         else {

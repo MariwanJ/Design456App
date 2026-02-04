@@ -218,13 +218,39 @@ namespace FR {
         glm::vec3 position;
         glm::vec3 direction;
     }ray_t;
+    
+    typedef struct {
+        float w;
+        float h;
+    }dimSize_float_t;
+
+    typedef struct {
+        float x;
+        float y;
+    }dimPos_float_t;
+
+    typedef struct {
+        int w;
+        int h;
+    }dimSize_int_t;
 
     typedef struct {
         int x;
         int y;
-        int w;
-        int h;
-    }screenDim_t;
+    }dimPos_int_t;
+
+    typedef struct {
+        dimPos_float_t pos;
+        dimSize_float_t size;
+    } Dim_float_t;
+
+    typedef struct {
+        dimPos_int_t pos;
+        dimSize_int_t size;
+    } screenDim_t;
+
+
+
 
     struct userData_S {
         glm::vec3 camm_position;
@@ -291,7 +317,30 @@ namespace FR {
         FR_ARC,
         FR_BSPLINE,
     };
+    /*
+    Events explanations: 
+    1- FR_FOCUS :(Click example When you click a widget :    
+                        -FLTK sends FL_PUSH        
+                        -Widget’s handle() runs
+                        -If the widget does NOT call Fl::focus(this)  -> nothing happens        
+                        -Keyboard focus stays where it was
+    2- FR_XXX_PUSH ->    Mouse button xxx pushed
+    3- FR_XXX_RELEASE    Mouse button xxx released
+    4- FR_XXX_DRAG_PUSH  Mouse button xxx is pushed continously and MOUSE-MOVE also happend
+    5- FR_MOUSE_MOVE     Mouse moves 
+    6- FR_SCROLL         Scroll wheel rotated
+    7- FR_ENTER          Enter pressed (Left - Right)
+    8- FR_KEYBOAR        Keyboard pressed 
+    9- FR_CLOSE          User clicks the window manager X button
+                         User presses Alt+F4 / Cmd+W
+    10-FR_DEACTIVATE     Windows sends the event .. 
+       FR_ACTIVATE
+    11-FR_HIDE/SHOW      Windows sends these event to childrens
+    12-FR_WINDOW_RESIZE/ Windows sends these events
+       FR_WINDOW_MINIMIZE
 
+You call window->hide()
+    */
     enum FR_EVENTS {
         FR_NO_EVENT = 0,     //DONT CARE EVENT
 
@@ -317,6 +366,7 @@ namespace FR {
 
         FR_ENTER,
         FR_FOCUS,
+        FR_UNFOCUS,
         FR_KEYBOARD,
         FR_CLOSE,
         FR_DEACIVATE,
@@ -328,7 +378,7 @@ namespace FR {
         FR_WINDOW_MINIMIZE,
     };
 
-    //Define all kind of widgets here, YOU MUST DO THIS!!
+    //Define all kind of MESH-widgets here, YOU MUST DO THIS!!
     typedef enum NODETYPE {
         FR_NODE                 = 0,
         FR_GROUP                = 100,
@@ -358,7 +408,25 @@ namespace FR {
 
     }NODETYPE;
 
-
+    //Update this as needed - FRTK GUI ENUM 
+    typedef enum WIDGTYPE {
+        FRTK_WIDGET,
+        FRTK_GROUP,
+        FRTK_WINDOW,
+        FRTK_BOX,
+        FRTK_BUTTON,
+        FRTK_LABEL,
+        FRTK_INPUT,
+        FRTK_INPUT_FLOAT,
+        FRTK_INPUT_INT,
+        FRTK_INPUT_TEXT,
+        FRTK_INPUT_MULTI_TEXT,
+        FRTK_VSCROLL,
+        FRTK_HSCROLL,
+        FRTK_IMAGE,
+        FRTK_TOOLBAR,
+        FRTK_TOOLBAR_BUTTON,
+    };
 
     typedef enum
     {

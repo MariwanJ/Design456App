@@ -149,8 +149,7 @@ namespace FR {
         GLuint location = glGetUniformLocation(m_program, name);
         if (location == -1)
             DEBUG_BREAK;
-        if (Fr_Window::spWindow) {
-            auto win = Fr_Window::spWindow;
+        if (auto win = FR::Fr_Window::getFr_Window()) {
             glm::vec3 campos = win->activeScene->m_cameras[win->activeScene->m_active_camera].GetCamPosition();
             glCheckFunc(glUniform3fv(location, 1, glm::value_ptr(campos)));
         }

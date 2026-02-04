@@ -59,19 +59,14 @@ namespace FR {
         /** from Fr_Window */
         friend Frtk_Window;
     public:
-        /**
-         * Class constructor for main dummy window object that holds the FR_WIDGET system objects and their properties.
-         */
-
-        Fr_Window(int x=0, int y=0, int w=800, int h=600, std::string label = "Fr_Window");
-
-        /**
-         * Class destructor.
-         */
-        ~Fr_Window();
-
-        static Fr_Window* getFr_Window(void);
-
+        virtual ~Fr_Window();
+        // Singleton accessor
+        static std::shared_ptr<Fr_Window> getFr_Window(
+            int x = 0, int y = 0, int w = 800, int h = 600, const std::string& label = "Design456App");
+    protected:
+        Fr_Window(int x, int y, int w, int h, const std::string& label);
+    
+    public:
         void RenderGizmo(void);
 
         virtual int Exit();
@@ -161,7 +156,7 @@ namespace FR {
         float getAspectRation() const;
         void calculateScreenRay();
 
-        std::shared_ptr<NVGcontext> getnvgContext(void); //NanoVG Context
+        NVGcontext* getnvgContext(void); //NanoVG Context
         
         /**
          * Handle is a very important function that take care of all events happening (mouse, keyboard or between widgets).
@@ -205,7 +200,8 @@ namespace FR {
 
         int renderNewGUI(); //temporary function 
 
-        static Fr_Window* spWindow;  //Row pointer otherwise we will not be able to set
+        static std::shared_ptr<Fr_Window> spWindow;
+
         std::vector<std::shared_ptr<Frtk_Window>> m_frtkWindow;
 
         std::shared_ptr<Fr_Scene> activeScene;
@@ -326,7 +322,7 @@ namespace FR {
 
         static GLFWwindow* pGLFWWindow;
         
-        std::shared_ptr<NVGcontext> m_nvgContext; //NanoVG Context
+        NVGcontext* m_nvgContext; //NanoVG Context
 
     };
 }

@@ -157,7 +157,7 @@ namespace FR {
         m_shader->wdg_prog->SetUniformMat4("normalmatrix", normalmatrix);
         m_shader->wdg_prog->SetUniformMat4("mvp", mvp);
 
-        Fr_Window* win = Fr_Window::getFr_Window();
+        std::shared_ptr<FR::Fr_Window> win = FR::Fr_Window::getFr_Window();
         assert(win);
         if (m_mesh.isMeshSelected())
             m_shader->wdg_prog->SetUniformVec4("color", glm::vec4(FR_YELLOW));       //Object color - not light color
@@ -296,7 +296,7 @@ namespace FR {
         if (!m_active)
             return 0; //we don't use the event/we don't care
 
-        Fr_Window* win = Fr_Window::getFr_Window();
+        std::shared_ptr<FR::Fr_Window> win = FR::Fr_Window::getFr_Window();
         //TODO : Implement mouse-over for all types, mesh, face, edge, & Vertex.
         switch (e) {
         case FR_MOUSE_MOVE: {

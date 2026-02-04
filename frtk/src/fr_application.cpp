@@ -33,10 +33,10 @@
 
 namespace FR {
 
-   std::string EXE_CURRENT_DIR;
-   std::string fontPath;
+    std::string EXE_CURRENT_DIR;
+    std::string fontPath;
 
-   Fr_Application::Fr_Application(int x, int y, int w, int h, const char* l) :Fr_Window(x, y, w, h, l)
+    Fr_Application::Fr_Application(int x, int y, int w, int h, const char* l) :Fr_Window(x, y, w, h, l)
     {
 
     }
@@ -45,11 +45,9 @@ namespace FR {
     {
     }
 #include <fr_icons.h>
- 
+
     int Fr_Application::run(int argc, char** argv)
     {
- 
-
         createGLFWwindow();
         return GLFWrun();
     }

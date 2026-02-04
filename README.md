@@ -10,16 +10,13 @@ This is an experimental piece of code. Please don't use it in any serious applic
 **Only Windows is supported at the moment. Glad is version 4.x.**
 
 ## Status
-- Try to implement new GUI system to replace ImGui based on NanoVG library. 
+- New GUI toolkit is designed based on NanoVG library WIP. 
 - Issues with ImGui; the Windows GUI is not fully functional yet.
 - Support for Linux is almost there, it compiles but has some bugs which doesn't happen in Windows. :( 
-- Significant work has been done for code cleanup and fixing redundant code.
-- The base application is ready for further development, but the NaviCube feature is implemented (with some bug which is ImGuizmo issue), and detection of vertices, lines, faces, and objects is in the almost done (testing required).
-- Libraries are now included, to allow user to compile fully the project. 
-- There is thinking of combining all libraries into one library libfrtk.a/so. It should work but some testing is required. 
+- Code optimization specially events processing.
 - Compilation in Linux due to the library creating is somehow slow. I will look at that later. 
-- Suggestions are welcome, as this code is still not at the quality I aspire to achieve. Development time is limited.
-- I discovered that FLTK and GLFW are not a good combination. I attempted some code, which you can find in the frozen version, but that concluded my efforts with this approach.
+- I know that FLTK and GLFW are not a good combination. I tried some code, which you fin in the frozen version/branch, but that was the end of my efforts with fltk approach.
+
 **Please ensure you download `premake5`.**
 
 ## Acknowledgments

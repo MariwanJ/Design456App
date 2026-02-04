@@ -84,8 +84,8 @@ namespace FR {
     typedef struct {
         std::string txtFontpath;
         std::string symbFontpath;
-        std::shared_ptr<ImFont> toolbarFont;     // = io.Fonts->AddFontFromFileTTF("path/to/your/toolbar_font.ttf", 16.0f);
-        std::shared_ptr<ImFont> textFont;        // = io.Fonts->AddFontFromFileTTF("path/to/your/text_font.ttf", 14.0f);
+        std::shared_ptr<ImFont> toolbarFont;     // = io.Fonts->AddFontFromFileTTF("path/to/toolbar_font.ttf", 16.0f);
+        std::shared_ptr<ImFont> textFont;        // = io.Fonts->AddFontFromFileTTF("path/to/text_font.ttf", 14.0f);
         float fontSize;
     }defaultFont;
 

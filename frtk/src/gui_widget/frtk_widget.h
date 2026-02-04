@@ -14,53 +14,45 @@
 
 namespace FR {
     
-    enum class WIDG_TYPE {
-        FRTK_NONE,
-        FRTK_WIDGET,
-        FRTK_BOX,
-        FRTK_BUTTON,
-        FRTK_TOGGLE_BUTTON,
-    };
+#define FRTK_WINDOWS_TITLE_HEIGHT 30.0
 
     class FRTK_API Frtk_Widget {
-        friend class Frtk_Group;
+        friend class Frtk_GrpWidget;
     
     protected:
-        Frtk_Widget(float X, float Y, float W, float H, std::string label);
-        ~Frtk_Widget();
+        Frtk_Widget(float X, float Y, float W, float H, std::string label, BOX_TYPE b =FRTK_NO_BOX);
+        virtual ~Frtk_Widget();// = default;
     
         Frtk_Widget(const Frtk_Widget&)=delete;
         /** unimplemented assignment operator */
         Frtk_Widget& operator=(const Frtk_Widget&)=delete;
     
     public:
-        virtual void draw(void) ;
         virtual void redraw(void) ;
-        virtual int handle(int ev);
-        /*Use always this check inside handel before treating any widget.
+        /*Use always this check inside handle before treating any widget.
           Main this toolkit window, SHOULD consume the event 
           so we prevent Scene get the event*/
-        inline bool should_getEvent() const {
-                         auto &mouse = Fr_Window::m_systemEvents.mouse;
-                        return (mouse.activeX >= m_x && mouse.activeX <= (m_x + m_w) &&
-                                mouse.activeY >= m_y && mouse.activeY <= (m_y + m_h));}
+
+        bool Frtk_Widget::should_getEvent(bool win) const;
+
         void label(const std::string& lbl);
         const std::string& label() const;
 
-        virtual void draw_box();
-        virtual void draw_box(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 c) ;
-        virtual void draw_box(BOX_TYPE t, glm::vec4 c) ;
+        virtual void drawBox();
+        virtual void drawBox(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 c) ;
+        virtual void drawBox(BOX_TYPE t, glm::vec4 c) ;
 
         virtual void draw_focus() ;
         virtual void draw_focus(BOX_TYPE t, float X, float Y, float W, float H) ;
         virtual void draw_focus(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 bkg) ;
         
-        virtual void draw_label() ;
-        virtual void draw_label(float X, float Y, float W, float H) ;
-        void boxtype(BOX_TYPE bt);
-        BOX_TYPE boxtype() const;
+        virtual void drawLabel() ;
+        virtual void drawLabel(float X, float Y, float W, float H = 18.0* 1.3f) ;
 
-        
+        void wdgImage(std::string path);
+
+        bool can_focus() const;
+       
         void color(uint8_t R, uint8_t G, uint8_t B, uint8_t A=255);
         void color(float R, float G, float B, float A=1.0f);
         void color(glm::vec4 col);
@@ -82,32 +74,82 @@ namespace FR {
         void y(float v);
         void w(float v);
         void h(float v);
-        float x() const;
-        float y() const;
-        float w() const;
-        float h() const;
+        float x(void) const;
+        float y(void) const;
+        float w(void) const;
+        float h(void) const;
         virtual void resize(float X, float Y, float W, float H);
         void position(float X, float Y);
         void size(float W, float H);
         void align(LBL_ALIGN ALIGN);
         void hide();
         bool visible() const;
+        std::shared_ptr<uint8_t> img; //stb image
+        
+        bool active(void) const;
+        void activate(void);
+        void disable(void);
+        
+        virtual void boxType(BOX_TYPE nType);
+
+        virtual BOX_TYPE boxtype() const;
+        Frtk_Widget* parent();
+        float absX() const;
+        float absY() const;
+        void parent(Frtk_Widget* parent);
+        bool has_focus(void);
+        void focus(bool val);
+        void lose_focus();
+        bool take_focus(void);
+        bool hasBelowMouse() const;
+        void set_BeloMouse();
+
+        //Callback function definition
+        using Callback = std::function<void(Frtk_Widget*)>; 
+        void set_callback(Callback cb);
 
     protected:
+        virtual void draw(void);
+        virtual int handle(int ev);
+        virtual bool set_child_focus(Frtk_Widget* w) { return false; } // default: do nothing
+        void callback();
+
+        Frtk_Widget* m_parent = nullptr;
+
+        NVGcontext* m_vg;
         float m_x, m_y, m_w, m_h;
         std::string m_label;
         glm::vec4 m_color;
+        glm::vec4 m_borderColor;
         glm::vec4 m_bkg_color;
         bool m_visible;
         bool m_dragging;
+        WIDGTYPE m_wdgType;
+        static Fr_Window* m_mainWindow;
+        bool m_active;
+        float m_borderWidth;
+        font_t m_font;
+        Dim_float_t m_dim;
+        Dim_float_t m_img_dim;
+        //dimPos_float_t m_lbl_pos;
+        BOX_TYPE m_boxType;
+        bool m_has_focus;
+        bool m_cantake_focus;
+
+        std::shared_ptr<uint8_t> m_Image;
+        
 
     private:
-        BOX_TYPE m_boxtype;
-        WIDG_TYPE m_widgType;
-        LBL_ALIGN m_align;
-        std::shared_ptr<Fr_Window> m_mainWindow;
+        Callback m_callback;
+};
 
-    };
+    typedef struct {
+        Frtk_Widget* current;
+        Frtk_Widget* prev;
+        Frtk_Widget* g_underMouse;
+    }global_focus_tracker_t;
+
+    extern global_focus_tracker_t g_focusedWdgt; 
 
 }
 

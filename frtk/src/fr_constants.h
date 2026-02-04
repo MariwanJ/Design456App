@@ -244,6 +244,7 @@ typedef T FR_COLOR;
 #define FR_WINGS3D                 0.3800f,  0.3800f,  0.3800f,  0.5000f
 #define FR_DESIGN456_GRID        0.7410f,  0.8820f,  0.9220f,  1.0000f 
 #define FR_123D                  0.0117f,  0.6392f,  0.8470f,  1.0000f
+#define FR_DARK_SHADOW           0.0f   ,   0.0f  ,  0.0f   ,  0.6509803921568627f
 };
 
 #define WITH_ALPHA(c, alpha) ((c.A *= (alpha), c.A = (c.A < 0.0f ? 0.0f : (c.A > 1.0f ? 1.0f : c.A)), c.R), (c.G), (c.B), (c.A))
@@ -295,5 +296,7 @@ typedef T FR_COLOR;
         FR_BUTTON_WIDGET = 4,
         //More will be added later
     };
+
+
 }
 #endif // !FR_H
