@@ -65,7 +65,6 @@ namespace FR {
         m_has_focus = true;
         m_cantake_focus = true;
         m_wdgType = FRTK_WINDOW;
-        vertical_pading = 10.0f;
     }
 
     Frtk_Window::~Frtk_Window() {
