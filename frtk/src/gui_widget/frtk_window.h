@@ -49,7 +49,6 @@ namespace FR{
         float m_cornerRadius;
     } Frtk_HeaderStyle_t;
     
-
     typedef struct {
         float contentX;
         float contentY;
@@ -60,7 +59,6 @@ namespace FR{
     public:
         Frtk_Window(float X, float Y, float W, float H, std::string lbl = "Frtk_Window", BOX_TYPE b=FRTK_UP_BOX);
         ~Frtk_Window();
-        void draw_header();
         void init(void);
         void drawLabel()  override;
         void drawLabel(float X, float Y, float W, float H)   override;
@@ -84,6 +82,7 @@ namespace FR{
     protected:
         virtual int handle(int event) override;
         virtual void draw(void) override;
+        virtual void draw_header();
 
         FontData_t m_data;
         std::string default_font_path;

@@ -38,14 +38,13 @@ namespace FR {
         Frtk_GrpWidget(NVGcontext* vg, float X, float Y, float W, float H, std::string label, BOX_TYPE b= FRTK_NO_BOX);
         ~Frtk_GrpWidget();
 
-        virtual void draw()  override;
+       
         
         virtual void draw_children();
         virtual void redraw_children();
 
         virtual void redraw() override;
         bool restore_focus();
-        virtual int handle(int ev) override;
 
         virtual void drawBox() override;
         virtual void drawBox(BOX_TYPE t, glm::vec4 c) override;
@@ -66,6 +65,9 @@ namespace FR {
         bool navigate_focus(int key);
         
     protected:
+        virtual void draw()  override;
+        virtual int handle(int ev) override;
+
         std::vector<std::shared_ptr<Frtk_Widget>> m_children;
         bool set_child_focus(Frtk_Widget* w) override;
         Frtk_Widget* m_childFocus;  //keep track of focused widget

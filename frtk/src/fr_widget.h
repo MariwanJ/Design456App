@@ -164,6 +164,8 @@ namespace FR {
 
         /** Main draw function */
         virtual void draw(void);
+        /** Handle events - must be sub-classed */
+        virtual int handle(int e);
 
         virtual void draw_2d(void);
         virtual void draw_2d_sel(void);
@@ -195,8 +197,7 @@ namespace FR {
         void visible(bool value);
         bool visible(void);
 
-        /** Handle events - must be sub-classed */
-        virtual int handle(int e);
+
 
         /** Let the object be visible */
         virtual void show();

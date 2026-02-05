@@ -548,7 +548,6 @@ namespace FR {
         nvgFontBlur(vg, 0.0f);
         nvgFillColor(vg, fnt.forgColor);
         nvgText(vg, drawX, baselineY, text.c_str(), nullptr);
-        FRTK_CORE_INFO("{} {} {} draw text", text, fnt.pos.x, fnt.pos.y);
     }
 
 }

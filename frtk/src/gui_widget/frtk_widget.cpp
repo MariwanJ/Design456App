@@ -119,7 +119,6 @@ namespace FR {
         bool result;
         result= mouse.activeX >= ax &&   mouse.activeX <= ax + m_w &&
                  mouse.activeY >= ay &&      mouse.activeY <= ay + m_h;
-        //FRTK_CORE_INFO("---{} {} , {} {} - {} {} {} ", ax, ay, ax+ m_w, ay, mouse.activeX, mouse.activeY, result);
         return result;
     }
 

@@ -25,32 +25,17 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef FRTK_BUTTON_H
-#define FRTK_BUTTON_H
+#ifndef FRTK_REPEAT_BUTTON_H
+#define FRTK_REPEAT_BUTTON_H
 
-#include <frtk.h>
-#include <gui_widget/frtk_Box.h>
+#include <gui_widget/frtk_button.h> 
 
 namespace FR {
+	class Frtk_Repeat_Button : public Frtk_Button
+	{
+	public:
+		 Frtk_Repeat_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b = FRTK_UP_BOX);
 
-   
-    class Frtk_Button : public Frtk_Box
-    {
-    public:
-        Frtk_Button(NVGcontext*vg, float x, float y, float w, float h, std::string l, BOX_TYPE b= FRTK_UP_BOX);
-
-        void Frtk_Button::value(uint8_t val);
-        uint8_t value() const;
-        uint8_t oldValue() const;
-
-    protected:
-        virtual void draw() override;
-        virtual int  handle(int e) override;
-
-        //Either 0 or 1 
-        uint8_t m_value;   
-        uint8_t m_oldValue;
-
-    };
+	};
 }
-#endif // FL_BUTTON_H
+#endif // FRTK_REPEATE_BUTTON_H

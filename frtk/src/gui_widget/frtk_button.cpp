@@ -72,10 +72,8 @@ namespace FR {
             //Inactive
         }
         
-        FRTK_CORE_INFO("{} {} {} draw button", m_label, m_font.pos.x, m_font.pos.y);
-
         if (m_IconTexture != 0)
-            drawImage();//Dimentions are already calculated using style
+            drawImage();//Dimensions are already calculated using style
         
         drawLabel();
 
@@ -98,10 +96,8 @@ namespace FR {
         return 0;
     }
 
-    // implementaions for all other button types, drawing is done in the base class:
-    Frtk_Check_Button::Frtk_Check_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :Frtk_Button(vg, x, y, w, h, l, b) {
-        m_wdgType = FRTK_CHECK_BUTTON;
-    }
+    // implementations for all other button types, drawing is done in the base class:
+
     Frtk_Round_Button::Frtk_Round_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :Frtk_Button(vg, x, y, w, h, l, b) {
         m_wdgType = FRTK_ROUND_BUTTON;
     }

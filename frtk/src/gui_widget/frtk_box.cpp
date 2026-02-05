@@ -75,8 +75,6 @@ namespace FR {
         if (!m_visible)
             return;
             draw_box(m_vg, m_boxType, m_dim,0.0f,NORMAL_BORDER,  nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a),nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), true);
-            
-            FRTK_CORE_INFO("{} {} {} draw label", m_label, m_font.pos.x, m_font.pos.y);
             drawLabel();
             if(m_IconTexture!=0)
                 drawImage(m_x, m_y, m_w, m_h);
@@ -205,7 +203,6 @@ namespace FR {
         if (result < 0)
             return result;
             applyStyle();
-            FRTK_CORE_INFO("{} {} {} wdgImage", m_label, m_font.pos.x, m_font.pos.y);
         return 0;
     }
     int Frtk_Box::cellStyle() const

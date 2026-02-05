@@ -69,14 +69,17 @@ namespace FR {
          Frtk_Box(NVGcontext* vg, float x, float y, float w, float h, std::string l="", BOX_TYPE=FRTK_UP_BOX);
         ~Frtk_Box();
         void applyStyle();
-        virtual void draw() override;
-        virtual int  handle(int e) override;
+      
+
         void computeBoxLayout();
 
         int cellStyle() const;
         void cellStyle(FRTK_PICTXT_STYLE style);
         virtual int wdgImage(std::string path) override;
     protected:
+        
+        virtual void draw() override;
+        virtual int  handle(int e) override;
 
         inline float centerX(float w) { return m_x + (m_w - w) * 0.5f; }
         inline float centerY(float h) { return m_y + (m_h - h) * 0.5f; }

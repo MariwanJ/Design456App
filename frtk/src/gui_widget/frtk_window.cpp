@@ -250,7 +250,7 @@ namespace FR {
         const auto& mouse = m_mainWindow->m_sysEvents.mouse; // content-space mouse
         bool result = mouse.activeX >= m_x && mouse.activeX <= m_x + m_w &&
             mouse.activeY >= m_y && mouse.activeY <= m_y + m_WindowsStyle.height;
-        //FRTK_CORE_INFO("{} {} , {} {} - {} {} {} ",m_x,m_y, m_x+m_w, m_y+ m_WindowsStyle.height, mouse.activeX,mouse.activeY , result);
+
         return result;
     }
     int Frtk_Window::handle(int events)
