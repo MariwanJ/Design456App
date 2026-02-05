@@ -681,17 +681,18 @@ namespace FR {
         assert(win != nullptr);
         GLFWwindow* glfWin = Fr_Window::getCurrentGLWindow();
 
-
+        auto& em = win->m_sysEvents.mouse;
+        auto& ek = win->m_sysEvents.keyB;
         int result = -1;
         int IndexOfclosestItem = 0;
         //Here, we should try to send the events to each object in the scene.
         // Depending on where the events occur, object should get them otherwise just ignore them
-        if (win->m_systemEvents.L_Pressed) {
+        if (em.L_Pressed) {
             IndexOfclosestItem = findClosestMeshToRay(m_activeRay);
             if (IndexOfclosestItem < 0) {
                 //Ray did not hit anything
                 //TODO : check and test if this is the desired functionality for selection, deselection
-                if ((!win->m_systemEvents.ctrlDown)) {
+                if ((!ek.ctrlDown)) {
                     for (size_t i = 0; i < m_world.size(); ++i) {
                         m_world.at(i).Sceneitem->m_mesh.clearAllSelections(); //Deselect all objects that are not visible
                     }
@@ -700,17 +701,17 @@ namespace FR {
             }
             else {
                 MyMesh& mesh = m_world.at(IndexOfclosestItem).Sceneitem->m_mesh;
-                if (!win->m_systemEvents.ctrlDown) {
+                if (!ek.ctrlDown) {
                     mesh.clearAllSelections();
                 }
                 if (m_world.at(IndexOfclosestItem).Sceneitem->m_boundBox->isRayInsideBoundingBox(m_activeRay)) {
                     switch (m_currentSelMode) {
-                        case SelectionMode::Mesh: {
+                        case SelectionMode::MESH: {
                             mesh.toggleMeshSelection();
                             result = 1;
                         } break;
 
-                        case SelectionMode::Face:
+                        case SelectionMode::FACE:
                         {
                             OpenMesh::FaceHandle pickedFace;
                             float t;
@@ -739,8 +740,8 @@ namespace FR {
                         }
                         break;
 
-                        case SelectionMode::Edge:
-                        case SelectionMode::Vertex:
+                        case SelectionMode::EDGE:
+                        case SelectionMode::VERTEX:
                         {
                             OpenMesh::FaceHandle pickedFace;
                             float faceT;
@@ -754,7 +755,7 @@ namespace FR {
                             bool isEdgeWidget = (type >= FR_LINE_WIDGET && type < FR_LINE_WIDGET + 10000);
                             bool isPointWidget = (type >= FR_POINT_WIDGET && type < FR_POINT_WIDGET + 10000);
 
-                            if (!win->m_systemEvents.ctrlDown) {
+                            if (!ek.ctrlDown) {
                                 mesh.clearAllSelections();
                             }
 
@@ -804,11 +805,11 @@ namespace FR {
                             }
                             if (found)
                             {
-                                if (m_currentSelMode == SelectionMode::Edge) {
+                                if (m_currentSelMode == SelectionMode::EDGE) {
                                     mesh.toggleEdgeSelection(bestEdge);
                                     result = 1;
                                 }
-                                else if (m_currentSelMode == SelectionMode::Vertex) {
+                                else if (m_currentSelMode == SelectionMode::VERTEX) {
                                     OpenMesh::HalfedgeHandle heh = mesh.halfedge_handle(bestEdge, 0);
 
                                     OpenMesh::VertexHandle v0 = mesh.from_vertex_handle(heh);
@@ -839,7 +840,7 @@ namespace FR {
                 else
                 {
                     //might be multi selection since the ray was not inside the boundbox of the current object
-                    if (!win->m_systemEvents.ctrlDown) {
+                    if (!ek.ctrlDown) {
                         for (size_t i = 0; i < m_world.size(); ++i) {
                             m_world.at(i).Sceneitem->m_mesh.clearAllSelections(); //Deselect all objects that are not visible
                         }

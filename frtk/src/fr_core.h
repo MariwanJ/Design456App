@@ -414,7 +414,19 @@ You call window->hide()
         FRTK_GROUP,
         FRTK_WINDOW,
         FRTK_BOX,
-        FRTK_BUTTON,
+
+        FRTK_NORMAL_BUTTON,
+        FRTK_RETURN_BUTTON,
+        FRTK_REPEAT_BUTTON,
+        FRTK_LIGHT_BUTTON ,
+        FRTK_CHECK_BUTTON ,
+        FRTK_ROUND_BUTTON ,
+        FRTK_RADIO_BUTTON ,
+        FRTK_TOGGLE_ROUND_BUTTON,
+        FRTK_TOGGLE_LIGHT_BUTTON,
+
+
+
         FRTK_LABEL,
         FRTK_INPUT,
         FRTK_INPUT_FLOAT,
@@ -430,10 +442,10 @@ You call window->hide()
 
     typedef enum
     {
-        Mesh = 0,
-        Face,
-        Edge,
-        Vertex
+        MESH = 0,
+        FACE,
+        EDGE,
+        VERTEX
     }SelectionMode;
 
     //Selection mode toolbar
@@ -451,42 +463,53 @@ You call window->hide()
         double prevY;
         double scrollX;
         double scrollY;
-    }mouse_buttons_t;
-
-    
-    typedef struct {
-        // Mouse positions
-        mouse_buttons_t mouse;   // activeX/Y + prevX/Y
-        bool mouseEntered; //Entered Windows area or not
-
-        glm::vec3 worldPos;      // world mouse position
-
-        int button;              // which button triggered last action
-        int isDClick;            // double click flag
-
-        // Derived per-frame flags
 
         bool L_Down, R_Down, M_Down;
         bool L_Pressed, L_Released, L_Drag;
         bool R_Pressed, R_Released, R_Drag;
         bool M_Pressed, M_Released, M_Drag;
         bool mouseMoved;
+        bool mouseEntered; //Entered Windows area or not
+        int lastMAction;
+        int lastMod;
+        glm::vec3 worldPos;      // world mouse position
 
+        int button;              // which button triggered last action
+        int isDClick;            // double click flag
 
-        // Keyboard
+    }mouse_t;
+
+    typedef struct {
         bool keyDown[GLFW_KEY_LAST + 1];
         bool prevKeyDown[GLFW_KEY_LAST + 1];
         int lastKey;
-        int lastAction;
-        int lastMod;
+        int lastKAction;
+
         int scancode;
-
-        bool shiftDown ;
-        bool ctrlDown ;
-        bool altDown ;
+        int lastMod;
+        bool shiftDown;
+        bool ctrlDown;
+        bool altDown;
         bool superDown;
-
+}Keybaord_t;
+    
+    /*Structure changed to prevent bugs 
+    (Keyboards events are seperated from mouse 
+     as some of the variable names are the same)*/
+    typedef struct {
+        mouse_t mouse;  
+        Keybaord_t keyB;
     } Fr_InputEvent_t;
+
+    //used to keep pointer to image-icon, and it's size
+    typedef struct {
+        std::shared_ptr<uint8_t> image;
+        Dim_float_t dim;
+        float opacity;
+    } iconImageSize_t;
+
+    //TODO: FIX ME .. IS THIS CORRECT ??? 
+    const float ICONE_IMAGE_PADDING = 8.0f;
 
 } //FR
 #endif

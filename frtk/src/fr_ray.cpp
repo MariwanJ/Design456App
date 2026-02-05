@@ -34,8 +34,8 @@ namespace FR {
     glm::vec2 Fr_Window::getNormalisedDeviceCoordinates()
     {
         float ndcX, ndcY;
-        ndcX = (2.0f * (float)m_systemEvents.mouse.activeX/ float(m_ViewPort.size.w)) - 1.0f;
-        ndcY = 1.0f - (2.0f * (float)m_systemEvents.mouse.activeY / float(m_ViewPort.size.h));
+        ndcX = (2.0f * (float)m_sysEvents.mouse.activeX/ float(m_ViewPort.size.w)) - 1.0f;
+        ndcY = 1.0f - (2.0f * (float)m_sysEvents.mouse.activeY / float(m_ViewPort.size.h));
         return (glm::vec2(ndcX, ndcY));
     }
 
@@ -77,7 +77,7 @@ namespace FR {
     {
         // 1. Read depth buffer
         float depth = 1.0f;
-        glm::vec2 mm = glm::vec2(m_systemEvents.mouse.activeX, (m_ViewPort.size.h - m_systemEvents.mouse.activeY));
+        glm::vec2 mm = glm::vec2(m_sysEvents.mouse.activeX, (m_ViewPort.size.h - m_sysEvents.mouse.activeY));
 
         glReadPixels(
             (int)mm.x,
@@ -92,8 +92,8 @@ namespace FR {
         }
 
         // 2. Normalized device coordinates
-        float x = (2.0f * (float)m_systemEvents.mouse.activeX) / (float)m_ViewPort.size.w - 1.0f;
-        float y = 1.0f - (2.0f * (float)m_systemEvents.mouse.activeY) / (float)m_ViewPort.size.h; // try removing 1.0f - (...) if double-flip
+        float x = (2.0f * (float)m_sysEvents.mouse.activeX) / (float)m_ViewPort.size.w - 1.0f;
+        float y = 1.0f - (2.0f * (float)m_sysEvents.mouse.activeY) / (float)m_ViewPort.size.h; // try removing 1.0f - (...) if double-flip
         float z = depth * 2.0f - 1.0f;
         glm::vec4 ndcCoords(x, y, z, 1.0f);
 
@@ -114,8 +114,8 @@ namespace FR {
         glm::mat4 view = activeScene->m_cameras[activeScene->m_active_camera].GetViewMatrix();
         glm::mat4 proj = activeScene->m_cameras[activeScene->m_active_camera].getProjection();
 
-        float mouseX = (float) m_systemEvents.mouse.activeX;
-        float mouseY = (float) m_ViewPort.size.h - (float)m_systemEvents.mouse.activeY;  //Flip the y axis (OpenGL requires that)
+        float mouseX = (float) m_sysEvents.mouse.activeX;
+        float mouseY = (float) m_ViewPort.size.h - (float)m_sysEvents.mouse.activeY;  //Flip the y axis (OpenGL requires that)
 
         glm::vec3 nearPoint = glm::unProject(
             glm::vec3(mouseX, mouseY, 0.0f),

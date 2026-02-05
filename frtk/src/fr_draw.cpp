@@ -34,15 +34,15 @@ namespace FR {
         //visualization of selection
         twodType_t type;
         switch (m_currentSelMode) {
-        case SelectionMode::Face: {
+        case SelectionMode::FACE: {
             glCheckFunc(glBindVertexArray(m_sel_vao.faces));
             type = FR_TRIANGLE;
         }break;
-        case SelectionMode::Edge: {
+        case SelectionMode::EDGE: {
             glCheckFunc(glBindVertexArray(m_sel_vao.edges));
             type = FR_OPEN_LOOP;
         }break;
-        case SelectionMode::Vertex: {
+        case SelectionMode::VERTEX: {
             glCheckFunc(glBindVertexArray(m_sel_vao.vertex));
             type = FR_POINT;
         }break;

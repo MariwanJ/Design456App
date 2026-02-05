@@ -1,3 +1,30 @@
+//
+// This file is a part of the Open Source Design456App
+// MIT License
+//
+// Copyright (c) 2026
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
+//  Author :Mariwan Jalal    mariwan.jalal@gmail.com
+//
+
 #include<gui_widget/frtk_window.h>
 
 namespace FR {
@@ -38,6 +65,7 @@ namespace FR {
         m_has_focus = true;
         m_cantake_focus = true;
         m_wdgType = FRTK_WINDOW;
+        vertical_pading = 10.0f;
     }
 
     Frtk_Window::~Frtk_Window() {
@@ -85,7 +113,7 @@ namespace FR {
         //nvgSave(m_nvgContext);
         nvgRestore(m_nvgContext);
         nvgTranslate(m_nvgContext, m_x, m_y + m_WindowsStyle.height);
-        //Frtk_GrpWidget::draw(); We dont need to draw the group as it is the windows now.
+        //Frtk_GrpWidget::draw(); We don't need to draw the group as it is the windows now.
         Frtk_GrpWidget::draw_children();
         nvgRestore(m_nvgContext);
         nvgEndFrame(m_nvgContext);
@@ -130,13 +158,12 @@ namespace FR {
     {
     }
     void Frtk_Window::drawLabel() {
-        m_font.pos = { m_x, m_y - m_WindowsStyle.height / 2 };
+        m_font.pos = { m_x, m_y };
         m_font.size = { m_w, m_WindowsStyle.height };
         drawTextInBox(m_nvgContext, m_label, m_font);
     }
 
     void Frtk_Window::drawLabel(float X, float Y, float W, float H) {
-        //m_font.pos = { X+W/2,Y };
         m_font.size.w = W;
         m_font.size.h = H;
         drawLabel();
@@ -221,7 +248,7 @@ namespace FR {
         m_WindowsStyle = STYLE;
     }
     bool Frtk_Window::Header_clicked(void) {
-        const auto& mouse = m_mainWindow->m_systemEvents.mouse; // content-space mouse
+        const auto& mouse = m_mainWindow->m_sysEvents.mouse; // content-space mouse
         bool result = mouse.activeX >= m_x && mouse.activeX <= m_x + m_w &&
             mouse.activeY >= m_y && mouse.activeY <= m_y + m_WindowsStyle.height;
         //FRTK_CORE_INFO("{} {} , {} {} - {} {} {} ",m_x,m_y, m_x+m_w, m_y+ m_WindowsStyle.height, mouse.activeX,mouse.activeY , result);
@@ -229,9 +256,9 @@ namespace FR {
     }
     int Frtk_Window::handle(int events)
     {
-        m_mouseDim.contentX = (float)m_mainWindow->m_systemEvents.mouse.activeX;
-        m_mouseDim.contentY = (float)m_mainWindow->m_systemEvents.mouse.activeY - m_WindowsStyle.height;
-        auto& mouse = m_mainWindow->m_systemEvents.mouse;
+        m_mouseDim.contentX = (float)m_mainWindow->m_sysEvents.mouse.activeX;
+        m_mouseDim.contentY = (float)m_mainWindow->m_sysEvents.mouse.activeY - m_WindowsStyle.height;
+        auto& mouse = m_mainWindow->m_sysEvents.mouse;
         int result = 0;
         if (should_getEvent(true)) {
             result = 1;

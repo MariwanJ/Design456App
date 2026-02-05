@@ -166,27 +166,27 @@ namespace FR {
         ImGui::SetCursorPosX(toolbarWidth - rightWidth/2);
 
         uint8_t selectionButtNo = 5;
-        if (IconButtonPressed(GLYPH_CUBES, m_currentSelMode == SelectionMode::Mesh, ICON_SIZE))
+        if (IconButtonPressed(GLYPH_CUBES, m_currentSelMode == SelectionMode::MESH, ICON_SIZE))
         {
-            m_currentSelMode = SelectionMode::Mesh;
+            m_currentSelMode = SelectionMode::MESH;
             mnuSelMesh_cb(nullptr);
         }
         ImGui::SameLine(0, 2);
-        if (IconButtonPressed(GLYPH_BOX_1_FILL, m_currentSelMode == SelectionMode::Face, ICON_SIZE))
+        if (IconButtonPressed(GLYPH_BOX_1_FILL, m_currentSelMode == SelectionMode::FACE, ICON_SIZE))
         {
-            m_currentSelMode = SelectionMode::Face;
+            m_currentSelMode = SelectionMode::FACE;
             mnuSelFace_cb(nullptr);
         }
         ImGui::SameLine(0, 2);
-        if (IconButtonPressed(GLYPH_SHAPE_2_FILL, m_currentSelMode == SelectionMode::Edge, ICON_SIZE))
+        if (IconButtonPressed(GLYPH_SHAPE_2_FILL, m_currentSelMode == SelectionMode::EDGE, ICON_SIZE))
         {
-            m_currentSelMode = SelectionMode::Edge;
+            m_currentSelMode = SelectionMode::EDGE;
             mnuSelEdges_cb(nullptr);
         }
         ImGui::SameLine(0, 2);
-        if (IconButtonPressed(GLYPH_BORDER_TOP_LEFT, m_currentSelMode == SelectionMode::Vertex, ICON_SIZE))
+        if (IconButtonPressed(GLYPH_BORDER_TOP_LEFT, m_currentSelMode == SelectionMode::VERTEX, ICON_SIZE))
         {
-            m_currentSelMode = SelectionMode::Vertex;
+            m_currentSelMode = SelectionMode::VERTEX;
             mnuSelVertex_cb(nullptr);
         }
         ImGui::SameLine(0, 2);

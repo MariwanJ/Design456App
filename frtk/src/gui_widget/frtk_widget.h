@@ -1,3 +1,30 @@
+//
+// This file is a part of the Open Source Design456App
+// MIT License
+//
+// Copyright (c) 2026
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
+//  Author :Mariwan Jalal    mariwan.jalal@gmail.com
+//
+
 #ifndef FRTK_WIDGET_H
 #define FRTK_WIDGET_H
 
@@ -50,11 +77,10 @@ namespace FR {
         virtual void drawLabel(float X, float Y, float W, float H = 18.0* 1.3f) ;
 
         //Widget Icon/image
-        int wdgImage(std::string path);
+        virtual int wdgImage(std::string  path );
         void drawImage(Dim_float_t dim);
+        void drawImage();
         void drawImage(float x, float y, float w, float h);
-        void Frtk_Widget::createTexture(float w, float h);
-   
 
         bool can_focus() const;
        
@@ -140,8 +166,7 @@ namespace FR {
         BOX_TYPE m_boxType;
         bool m_has_focus;
         bool m_cantake_focus;
-
-        std::shared_ptr<uint8_t> m_Image;
+        iconImageSize_t m_Image;
         
         Callback m_callback;
         GLuint m_IconTexture;

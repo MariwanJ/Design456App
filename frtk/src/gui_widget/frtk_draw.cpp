@@ -1,3 +1,30 @@
+//
+// This file is a part of the Open Source Design456App
+// MIT License
+//
+// Copyright (c) 2026
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
+//  Author :Mariwan Jalal    mariwan.jalal@gmail.com
+//
+
 #include<gui_widget/frtk_draw.h>
 namespace FR {
     //FRTK_NO_BOX
@@ -433,14 +460,27 @@ namespace FR {
             break;
         }
     }
-    float getTextWidth(NVGcontext* vg, const std::string& str, float fontSize, const char* fontFace, int align)
+    float getTextWidth( NVGcontext* vg, const std::string& str, float fontSize, const char* fontFace)
     {
         nvgFontFace(vg, fontFace);
         nvgFontSize(vg, fontSize);
-        nvgTextAlign(vg, align);
+        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE); // nutral alignment for measuring width
         float bounds[4];
         nvgTextBounds(vg, 0.0f, 0.0f, str.c_str(), nullptr, bounds);
         return bounds[2] - bounds[0];
+    }
+
+
+    float getTextLeftBearing( NVGcontext* vg, const std::string& text, const font_t& fnt)
+    {
+        nvgFontSize(vg, fnt.fontSize);
+        nvgFontFace(vg, fnt.fName.c_str());
+        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
+
+        float bounds[4];
+        nvgTextBounds(vg, 0.0f, 0.0f, text.c_str(), nullptr, bounds);
+
+        return -bounds[0];  
     }
 
     //Horizontal = NVG_ALIGN_CENTER,    NVG_ALIGN_LEFT / NVG_ALIGN_CENTER / NVG_ALIGN_RIGHT
@@ -450,12 +490,15 @@ namespace FR {
         nvgFontSize(vg, fnt.fontSize);
         nvgFontFace(vg, fnt.fName.c_str());
 
-        nvgTextAlign(vg, fnt.hAlign | NVG_ALIGN_TOP);
+        // baseline alignment
+        nvgTextAlign(vg, fnt.hAlign | NVG_ALIGN_BASELINE);
 
         float asc, desc, lineh;
         nvgTextMetrics(vg, &asc, &desc, &lineh);
 
-        float baselineY = fnt.pos.y;
+        // vertical alignment  - baselineY 
+        float baselineY = fnt.pos.y + asc;
+
         switch (fnt.vAlign)
         {
         case NVG_ALIGN_TOP:
@@ -463,7 +506,7 @@ namespace FR {
             break;
 
         case NVG_ALIGN_MIDDLE:
-            baselineY = fnt.pos.y + (fnt.size.h - lineh) * 0.4f + asc;
+            baselineY = fnt.pos.y + (fnt.size.h - lineh) * 0.5f + asc;
             break;
 
         case NVG_ALIGN_BOTTOM:
@@ -471,12 +514,23 @@ namespace FR {
             break;
         }
 
+        // horizontal alignment - drawX
         float drawX = fnt.pos.x;
-        if (fnt.hAlign & NVG_ALIGN_CENTER)
-            drawX = fnt.pos.x + fnt.size.w * 0.5f;
-        else if (fnt.hAlign & NVG_ALIGN_RIGHT)
-            drawX = fnt.pos.x + fnt.size.w;
 
+        if (fnt.hAlign & NVG_ALIGN_CENTER)
+        {
+            drawX = fnt.pos.x + fnt.size.w * 0.5f;
+        }
+        else if (fnt.hAlign & NVG_ALIGN_RIGHT)
+        {
+            drawX = fnt.pos.x + fnt.size.w;
+        }
+        else // LEFT
+        {
+            drawX = fnt.pos.x + getTextLeftBearing(vg, text, fnt);
+        }
+
+        // shadow 
         if (fnt.blur > 0.0f)
         {
             nvgFontBlur(vg, fnt.blur);
@@ -489,8 +543,12 @@ namespace FR {
                 nullptr
             );
         }
+
+        // main text
         nvgFontBlur(vg, 0.0f);
         nvgFillColor(vg, fnt.forgColor);
         nvgText(vg, drawX, baselineY, text.c_str(), nullptr);
+        FRTK_CORE_INFO("{} {} {} draw text", text, fnt.pos.x, fnt.pos.y);
     }
+
 }

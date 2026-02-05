@@ -1,3 +1,30 @@
+//
+// This file is a part of the Open Source Design456App
+// MIT License
+//
+// Copyright (c) 2026
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
+//  Author :Mariwan Jalal    mariwan.jalal@gmail.com
+//
+
 #ifndef FRTK_BUTTON_H
 #define FRTK_BUTTON_H
 
@@ -6,42 +33,25 @@
 
 namespace FR {
 
-    typedef enum FRTK_PICTXT_STYLE
-    {	// align() values
-        // picture Over Text and (Center, Left & Right)
-        FR_PIC_OVER_TEXT_CENTER = 0,
-        FR_PIC_OVER_TEXT_LEFT = 3,
-        FR_PIC_OVER_TEXT_RIGHT = 4,
-
-        // picture Under Text and (Center,  Left & Right)
-        FR_PIC_UNDER_TEXT_CENTER = 5,
-        FR_PIC_UNDER_TEXT_LEFT = 8,
-        FR_PIC_UNDER_TEXT_RIGHT = 9,
-
-        // picture Left To Text and (Center,Left & Right)
-        FR_PIC_LEFTTO_TEXT_CENTER = 10,
-        FR_PIC_LEFTTO_TEXT_LEFT = 13,
-        FR_PIC_LEFTTO_TEXT_RIGHT = 14,
-
-        // picture Right To Text and (Center, Left & Right)
-        FR_PIC_RIGHTTO_TEXT_CENTER = 15,
-        FR_PIC_RIGHTTO_TEXT_LEFT = 18,
-        FR_PIC_RIGHTTO_TEXT_RIGHT = 19,
-    };
+   
     class Frtk_Button : public Frtk_Box
     {
     public:
         Frtk_Button(NVGcontext*vg, float x, float y, float w, float h, std::string l, BOX_TYPE b= FRTK_UP_BOX);
 
-        int cellStyle() const;
-        void cellStyle(FRTK_PICTXT_STYLE style);
-        
+        void Frtk_Button::value(uint8_t val);
+        uint8_t value() const;
+        uint8_t oldValue() const;
+
     protected:
         virtual void draw() override;
         virtual int  handle(int e) override;
 
-        int m_value;   
-        FRTK_PICTXT_STYLE  m_cellStyle;
+
+        //Either 0 or 1 
+        uint8_t m_value;   
+        uint8_t m_oldValue;
+
     };
 }
 #endif // FL_BUTTON_H

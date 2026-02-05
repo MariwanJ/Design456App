@@ -25,17 +25,17 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef FRTK_TOOLBAR_BUTTON_H
-#define FRTK_TOOLBAR_BUTTON_H
+#ifndef FRTK_TOGGLE_LIGHT_BUTTON_H
+#define FRTK_TOGGLE_LIGHT_BUTTON_H
 
 #include <gui_widget/frtk_button.h> 
 
 namespace FR {
-	class Frtk_ToolBar_Button : public Frtk_Button
+	class Frtk_Toggle_Light_Button : public Frtk_Button
 	{
 	public:
-		Frtk_ToolBar_Button(NVGcontext* vg, int x, int y, int w, int h, const char* l, BOX_TYPE b=FRTK_UP_BOX);
-		~Frtk_ToolBar_Button();
+		 Frtk_Toggle_Light_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b = FRTK_UP_BOX);
+
 	};
 }
-#endif // FRTK_TOOLBAR_BUTTON_H
+#endif // FRTK_TOGGLE_LIGHT_BUTTON_H

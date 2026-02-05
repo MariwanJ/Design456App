@@ -1,3 +1,30 @@
+//
+// This file is a part of the Open Source Design456App
+// MIT License
+//
+// Copyright (c) 2026
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
+//  Author :Mariwan Jalal    mariwan.jalal@gmail.com
+//
+
 #ifndef FRTK_DRAW_H
 #define FRTK_DRAW_H
 /*
@@ -73,16 +100,16 @@ namespace FR {
     };
 
     typedef struct {
-        dimPos_float_t pos = { 0.0f,0.0f };
-        dimSize_float_t size = { 30.0f, 14.f*1.3f};
-        NVGcolor forgColor = nvgRGBA(0, 0, 0, 255);
-        NVGcolor shadowCol = nvgRGBA(255, 255, 255, 255);
-        float fontSize = 14.0f;
-        std::string fName = "sans";
-        dimPos_float_t  shadowOffs = { 0.0f,0.0f };
-        float blur = 2.0f;
-        int vAlign = NVG_ALIGN_MIDDLE;
-        int hAlign = NVG_ALIGN_LEFT ;
+        dimPos_float_t pos  ;
+        dimSize_float_t size ;
+        NVGcolor forgColor  ;
+        NVGcolor shadowCol  ;
+        float fontSize  ;
+        std::string fName;
+        dimPos_float_t  shadowOffs  ;
+        float blur  ;
+        int vAlign  ;
+        int hAlign  ;
     }font_t;
 
 
@@ -94,11 +121,13 @@ namespace FR {
 
     
 
-    float getTextWidth(NVGcontext* vg, const std::string& str, float fontSize = 14.0f, const char* fontFace = "sans", int align = NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+    float getTextWidth(NVGcontext* vg, const std::string& str, float fontSize, const char* fontFace);
     void draw_box(NVGcontext* vg, BOX_TYPE b, Dim_float_t dim, float cornerRadius=0.0f, float strokeWidth=1.0f, 
                     NVGcolor c = nvgRGBAf(FR_BLANCHEDALMOND), NVGcolor shadowCol= nvgRGBAf(FR_DARK_SHADOW), bool up=true);
 
     
+    float getTextLeftBearing(NVGcontext* vg, const std::string& text, const font_t& fnt);
+
     //TEXT Drawing :: 
    // void draw_label(NVGcontext* vg, const std::string& text,  font_t& fnt);
     void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt);

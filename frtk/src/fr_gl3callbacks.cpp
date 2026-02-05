@@ -86,19 +86,19 @@ namespace FR {
         if (spWindow == nullptr)
             return; //do nothing
 
-        auto& e = spWindow->m_systemEvents;
-        e.lastKey = key;
-        e.scancode = scancode;
-        e.lastAction = action;
-        e.lastMod = mods;
-        e.shiftDown = (mods & GLFW_MOD_SHIFT) != 0;
-        e.ctrlDown = (mods & GLFW_MOD_CONTROL) != 0;
-        e.altDown = (mods & GLFW_MOD_ALT) != 0;
-        e.superDown = (mods & GLFW_MOD_SUPER) != 0;
+        auto& ek = spWindow->m_sysEvents.keyB;
+        ek.lastKey = key;
+        ek.scancode = scancode;
+        ek.lastKAction = action;
+        ek.lastMod = mods;
+        ek.shiftDown = (mods & GLFW_MOD_SHIFT) != 0;
+        ek.ctrlDown = (mods & GLFW_MOD_CONTROL) != 0;
+        ek.altDown = (mods & GLFW_MOD_ALT) != 0;
+        ek.superDown = (mods & GLFW_MOD_SUPER) != 0;
 
         // Update the current key state
         if (key >= 0 && key <= GLFW_KEY_LAST)
-            e.keyDown[key] = (action != GLFW_RELEASE);
+            ek.keyDown[key] = (action != GLFW_RELEASE);
     }
 
     void Fr_Window::mouse_button_callback(GLFWwindow* win, int button, int action, int mods)
@@ -106,7 +106,7 @@ namespace FR {
         if (spWindow == nullptr)
             return; //do nothing
 
-        auto& e = spWindow->m_systemEvents;
+        auto& em = spWindow->m_sysEvents.mouse;
         
         //Avoid View jumping , we should initialize the current theta and phi 
         if (spWindow->runCode && button == GLFW_MOUSE_BUTTON_MIDDLE) {
@@ -119,42 +119,42 @@ namespace FR {
             spWindow->runCode = true;
         }
 
-        if (button == GLFW_MOUSE_BUTTON_LEFT)             e.L_Down = (action != GLFW_RELEASE);
-        else if (button == GLFW_MOUSE_BUTTON_RIGHT)       e.R_Down = (action != GLFW_RELEASE);
-        else if (button == GLFW_MOUSE_BUTTON_MIDDLE)      e.M_Down = (action != GLFW_RELEASE);
-        spWindow->m_systemEvents.button = button;
-        spWindow->m_systemEvents.lastAction = action;
-        spWindow->m_systemEvents.lastMod = mods;
-        spWindow->m_systemEvents.mouseEntered = true;
+        if (button == GLFW_MOUSE_BUTTON_LEFT)             em.L_Down = (action != GLFW_RELEASE);
+        else if (button == GLFW_MOUSE_BUTTON_RIGHT)       em.R_Down = (action != GLFW_RELEASE);
+        else if (button == GLFW_MOUSE_BUTTON_MIDDLE)      em.M_Down = (action != GLFW_RELEASE);
+        em.button = button;
+        em.lastMAction = action;
+        em.lastMod = mods;
+        em.mouseEntered = true;
     }
     void Fr_Window::cursor_m_positioncallback(GLFWwindow* win, double xpos, double ypos)
     {
         if (!spWindow)
             return;
-        auto& mouse = spWindow->m_systemEvents.mouse;
+        auto& mouse = spWindow->m_sysEvents.mouse;
         mouse.activeX = xpos;
         mouse.activeY = ypos;
         spWindow->calculateScreenRay();
         // ----- SIGNALS -----
-        spWindow->m_systemEvents.mouseMoved = true;
+        spWindow->m_sysEvents.mouse.mouseMoved = true;
     }
 
     void Fr_Window::cursor_enter_callback(GLFWwindow* win, int entered)
     {
         if (spWindow == nullptr)
             return; //do nothing
-        spWindow->m_systemEvents.mouseEntered = (entered != 0);
+        spWindow->m_sysEvents.mouse.mouseEntered = (entered != 0);
         //Reset DRAG
-        spWindow->m_systemEvents.L_Drag = false;
-        spWindow->m_systemEvents.R_Drag = false;
-        spWindow->m_systemEvents.M_Drag = false;
+        spWindow->m_sysEvents.mouse.L_Drag = false;
+        spWindow->m_sysEvents.mouse.R_Drag = false;
+        spWindow->m_sysEvents.mouse.M_Drag = false;
     }
 
     void Fr_Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
     {
         if (spWindow == nullptr)
             return;
-        auto& m = spWindow->m_systemEvents.mouse;
+        auto& m = spWindow->m_sysEvents.mouse;
         m.scrollX = xoffset;
         m.scrollY = yoffset;
     }
@@ -167,7 +167,7 @@ namespace FR {
             return;
 
         spWindow->activeScene->getActiveCamera().getCamData(data);
-        auto& mouse = spWindow->m_systemEvents.mouse;
+        auto& mouse = spWindow->m_sysEvents.mouse;
         double deltax = mouse.prevX - mouse.activeX;
         double deltay = mouse.prevY - mouse.activeY;
         // Only perform the panning if there is a significant change
@@ -191,7 +191,7 @@ namespace FR {
         spWindow->radiusXYZ = glm::length(cam.m_position);
 
         // Compute deltas
-        auto& mouse = spWindow->m_systemEvents.mouse;
+        auto& mouse = spWindow->m_sysEvents.mouse;
         float deltax = float(mouse.activeX - mouse.prevX) * spWindow->mouseDefaults.MouseXYScale;
         float deltay = float(mouse.activeY - mouse.prevY) * spWindow->mouseDefaults.MouseXYScale;
 
@@ -214,13 +214,13 @@ namespace FR {
         userData_ data;
         activeScene->getActiveCamera().getCamData(data);
         if (spWindow->activeScene->getActiveCamera().getType() == ORTHOGRAPHIC) {
-            data.orthoSize_ = data.orthoSize_ + float(m_systemEvents.mouse.scrollY) * spWindow->mouseDefaults.MouseScrollScale;
+            data.orthoSize_ = data.orthoSize_ + float(m_sysEvents.mouse.scrollY) * spWindow->mouseDefaults.MouseScrollScale;
         }
         else
         {
             //Scroll zooming using the correct method of zooming. Use camera position by scaling the view-matrix
             float scale_;
-            if (m_systemEvents.mouse.scrollY < 0) {
+            if (m_sysEvents.mouse.scrollY < 0) {
                 scale_ = -1 * spWindow->mouseDefaults.MouseScrollScale;
             }
             else

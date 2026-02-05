@@ -63,9 +63,10 @@ namespace FR {
         // Singleton accessor
         static std::shared_ptr<Fr_Window> getFr_Window(
             int x = 0, int y = 0, int w = 800, int h = 600, const std::string& label = "Design456App");
+        
     protected:
         Fr_Window(int x, int y, int w, int h, const std::string& label);
-    
+
     public:
         void RenderGizmo(void);
 
@@ -208,10 +209,11 @@ namespace FR {
 
         ImVec4 clear_color;
         
-        static Fr_InputEvent_t m_systemEvents;
+        static Fr_InputEvent_t m_sysEvents;
+        void initSystemEvents();
 
     protected:
-
+        FRTK_WIN_TYPE m_winType;
         int imgui_LeftPanel();
         int imgui_ToolbarPannel();
         int imgui_SelectionToolbar();

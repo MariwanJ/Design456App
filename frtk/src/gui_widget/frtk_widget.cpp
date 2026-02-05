@@ -1,3 +1,30 @@
+//
+// This file is a part of the Open Source Design456App
+// MIT License
+//
+// Copyright (c) 2026
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
+//  Author :Mariwan Jalal    mariwan.jalal@gmail.com
+//
+
 #include <gui_widget/frtk_widget.h>
 #include <fr_window.h>
 
@@ -23,13 +50,24 @@ namespace FR {
     
     Fr_Window *Frtk_Widget::m_mainWindow = nullptr;
     Frtk_Widget::Frtk_Widget(float X, float Y, float W, float H, std::string label = "Widget", BOX_TYPE b) :m_x(X), m_y(Y), m_w(W), m_h(H),
-        m_label(label), m_wdgType(FRTK_WIDGET), m_boxType(b),m_has_focus(false),
-        m_visible(true), m_dragging(false), m_active(true), m_cantake_focus(false),m_IconTexture(0),
-        m_borderColor(glm::vec4(FR_DARKSLATEGREY)),m_borderWidth(NORMAL_BORDER), m_dim{ X,Y,W,H}, m_img_dim{ X,Y,W,H},m_callback(default_callback),
+        m_label(label), m_wdgType(FRTK_WIDGET), m_boxType(b), m_has_focus(false), m_Image({ nullptr, {{0.f, 0.f}, {0.f, 0.f}} }),
+        m_visible(true), m_dragging(false), m_active(true), m_cantake_focus(false), m_IconTexture(0),
+        m_borderColor(glm::vec4(FR_DARKSLATEGREY)), m_borderWidth(NORMAL_BORDER), m_dim{ X,Y,W,H }, m_img_dim{ X,Y,W,H }, m_callback(default_callback),
         m_color(glm::vec4(FR_GRAY)), m_bkg_color(FR_LIGHTGRAY) {
         if (!m_mainWindow) {
             m_mainWindow = FR::Fr_Window::getFr_Window().get();
         }
+        m_font.blur = 2.0;
+        m_font.fName = "sans";
+        m_font.fontSize = 18.0;
+        m_font.forgColor = nvgRGBAf(FR_BLACK);
+        m_font.hAlign = NVG_ALIGN_LEFT;
+        m_font.vAlign = NVG_ALIGN_CENTER;
+        m_font.pos = { 0.0, 0.0 };
+        m_font.size = { 0.0, 0.0 };
+        m_font.shadowCol = nvgRGBAf( 0.0f, 0.0f,0.0f,0.38f );
+        m_font.shadowOffs = { 0.5f,0.5f };
+        m_Image.opacity = 1.0;
     }
     Frtk_Widget::~Frtk_Widget() {
         //Should be called always!!! 
@@ -67,7 +105,7 @@ namespace FR {
 
     bool Frtk_Widget::should_getEvent(bool win) const
     {
-        const auto& mouse = m_mainWindow->m_systemEvents.mouse; // content-space mouse
+        const auto& mouse = m_mainWindow->m_sysEvents.mouse; // content-space mouse
 
         float ax = absX();
         float ay;
@@ -111,8 +149,6 @@ namespace FR {
         throw NotImplementedException();  // this method should be implemented by subclassing the widget
     }
     void Frtk_Widget::drawLabel() {
-        
-        m_font.pos = { m_x, m_y };
         drawTextInBox(m_vg, m_label, m_font);
     }
     void Frtk_Widget::drawLabel(float X, float Y, float W, float H) {
@@ -240,34 +276,51 @@ namespace FR {
         m_active = true;
     }
 
-    int Frtk_Widget::wdgImage(const std::string path) {
+    int Frtk_Widget::wdgImage(std::string path)
+    {
         if (path.empty()) return -1;
+        int channels = 0;
+        int w_ = 0, h_ = 0;
 
-        int w, h, channels;
-        unsigned char* data = stbi_load(path.c_str(), &w, &h, &channels, 4); // RGBA
+        unsigned char* data = stbi_load(path.c_str(), &w_, &h_, &channels, 4);
         if (!data) return -1;
+        m_Image.dim.size.w = float(w_);
+        m_Image.dim.size.h = float(h_);
+        m_Image.image = std::shared_ptr<unsigned char>(data, stbi_image_free);
 
-        m_Image = std::shared_ptr<unsigned char>(data, stbi_image_free);
-
-        m_IconTexture = nvgCreateImageRGBA(m_vg, w, h, 0, data);
+        m_IconTexture = nvgCreateImageRGBA(m_vg, w_, h_, 0, data);
         if (m_IconTexture == 0) return -1;
 
         return 0;
     }
+
+
+
     void Frtk_Widget::drawImage(Dim_float_t dim) {
+        m_Image.dim = dim;
+        drawImage();
+    }
+    void Frtk_Widget::drawImage(void)
+    {
+        if (!m_IconTexture) return;
+        nvgSave(m_vg);                             
+        nvgGlobalAlpha(m_vg, m_Image.opacity);     
         nvgBeginPath(m_vg);
-        nvgRect(m_vg, dim.pos.x, dim.pos.y, dim.size.w, dim.size.h);
-        nvgFillPaint(m_vg, nvgImagePattern(m_vg, dim.pos.x, dim.pos.y, dim.size.w, dim.size.h, 0, m_IconTexture, 1.0f));
+        nvgRect( m_vg, m_Image.dim.pos.x, m_Image.dim.pos.y, m_Image.dim.size.w, m_Image.dim.size.h );
+        nvgFillPaint( m_vg, nvgImagePattern( m_vg, m_Image.dim.pos.x, m_Image.dim.pos.y, 
+                    m_Image.dim.size.w, m_Image.dim.size.h, 0.0f,m_IconTexture,1.0f   ));
         nvgFill(m_vg);
+        nvgRestore(m_vg);                         
     }
 
+
     void Frtk_Widget::drawImage(float x, float y, float w, float h) {
-        Dim_float_t dim;
-        dim.pos.x = x;
-        dim.pos.y = y;
-        dim.size.w = w;
-        dim.size.h = h;
-        drawImage(dim);
+
+        m_Image.dim.pos.x = x;
+        m_Image.dim.pos.y = y;
+        m_Image.dim.size.w = w;
+        m_Image.dim.size.h = h;
+        drawImage();
     }
 
 

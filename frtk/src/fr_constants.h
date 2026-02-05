@@ -297,6 +297,19 @@ typedef T FR_COLOR;
         //More will be added later
     };
 
-
+    //Note all will directly be implemented : TODO: Implemente these 2026/02/05
+    typedef enum {
+        NORMAL      =0,
+        INACTIVE     =1<<1, //Visible, dosent take events
+        HEADERLESS   =1<<2,
+        CAN_CLOSE    =1<<3,
+        CAN_MINIMIZE =1<<4,
+        CAN_MAXIMIZE =1<<5,
+        MAXIMIZED    =1<<6,
+        MINIMIZED    =1<<7,
+        ANIMATED     =1<<8,
+        MODAL        =1<<9,
+        POPUP_MODAL  =1 << 10,
+    }FRTK_WIN_TYPE;
 }
 #endif // !FR_H

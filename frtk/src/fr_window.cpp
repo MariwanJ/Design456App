@@ -63,7 +63,7 @@ namespace FR {
 
     std::shared_ptr<Fr_Window> Fr_Window::spWindow = nullptr;
 
-    Fr_InputEvent_t Fr_Window::m_systemEvents{ 0 };
+    Fr_InputEvent_t Fr_Window::m_sysEvents{ 0 };
 
     GLFWwindow* Fr_Window::pGLFWWindow = nullptr;
     bool Fr_Window::MouseOnce = true;
@@ -78,7 +78,7 @@ namespace FR {
     }
     screenDim_t Fr_Window::m_ViewPort{ {50,50}, {800,600 } };
 
-    SelectionMode  m_currentSelMode = SelectionMode::Mesh;
+    SelectionMode  m_currentSelMode = SelectionMode::MESH;
 
     // Destructor
     Fr_Window::~Fr_Window() {
@@ -88,13 +88,52 @@ namespace FR {
     std::shared_ptr<Fr_Window> Fr_Window::getFr_Window(int x, int y, int w, int h, const std::string& label) {
         return spWindow;
     }
+    void Fr_Window::initSystemEvents() {
+        auto &ev = m_sysEvents;
+            ev.mouse.activeX = -1;
+            ev.mouse.activeY = -1;
+            ev.mouse.prevX = -1;
+            ev.mouse.prevY = -1;
+            ev.mouse.mouseEntered = -1;
+            ev.mouse.worldPos[0] = 0.0f;
+            ev.mouse.worldPos[1] = 0.0f;
+            ev.mouse.worldPos[2] = 0.0f;
+            ev.mouse.button = -1;
+            ev.mouse.isDClick = -1;
+            ev.mouse.L_Down = false;
+            ev.mouse.R_Down = false;
+            ev.mouse.M_Down = false;
+            ev.mouse.L_Pressed = false;
+            ev.mouse.L_Released = false;
+            ev.mouse.L_Drag = false;
+            ev.mouse.R_Pressed = false;
+            ev.mouse.R_Released = false;
+            ev.mouse.R_Drag = false;
+            ev.mouse.M_Pressed = false;
+            ev.mouse.M_Released = false;
+            ev.mouse.M_Drag = false;
+            ev.mouse.mouseMoved = false;
+            ev.mouse.lastMAction = -1;
+            ev.mouse.lastMod = -1;
+            memset(ev.keyB.keyDown, 0, sizeof(ev.keyB.keyDown));
+            memset(ev.keyB.prevKeyDown, 0, sizeof(ev.keyB.prevKeyDown));
 
+            ev.keyB.lastKey = -1;
+            ev.keyB.lastKAction = -1;
+            ev.keyB.lastMod = -1;
+            ev.keyB.scancode = -1;
+            ev.keyB.shiftDown = false;
+            ev.keyB.ctrlDown = false;
+            ev.keyB.altDown = false;
+            ev.keyB.superDown = false;
+        }
+    
     Fr_Window::Fr_Window(int x, int y, int w, int h, const std::string& label)
         : m_label(label), showOpenDialog(false),
         cursorHand(nullptr), cursorCrosshair(nullptr),
         runCode(false), activeScene(nullptr), m_nvgContext(nullptr),
         gl_version_major(4), gl_version_minor(6),
-        mouseDefaults{ 0 }, radiusXYZ(0.0f)
+        mouseDefaults{ 0 }, radiusXYZ(0.0f), m_winType(FRTK_WIN_TYPE::NORMAL)
     {
         showOpenDialog = false;
 
@@ -169,11 +208,7 @@ namespace FR {
 
         //TODO : Check these flags
 
-        SystemFont.txtFontpath = "";
-        SystemFont.symbFontpath = "";
-        SystemFont.toolbarFont = nullptr;
-        SystemFont.textFont = nullptr;
-        SystemFont.fontSize = 14.0f;
+        initSystemEvents();
     }
 
     /* from Fr_Window*/
@@ -491,74 +526,76 @@ namespace FR {
 
     //New system for handling events
     void Fr_Window::updateInputEvents(void) {
-        double dx = m_systemEvents.mouse.activeX - m_systemEvents.mouse.prevX;
-        double dy = m_systemEvents.mouse.activeY - m_systemEvents.mouse.prevY;
-        m_systemEvents.mouseMoved = (dx != 0.0 || dy != 0.0);
+        double dx = m_sysEvents.mouse.activeX - m_sysEvents.mouse.prevX;
+        double dy = m_sysEvents.mouse.activeY - m_sysEvents.mouse.prevY;
+        m_sysEvents.mouse.mouseMoved = (dx != 0.0 || dy != 0.0);
 
-        auto& e = m_systemEvents;
+        auto& em = m_sysEvents.mouse;
 
         // LEFT BUTTON
-        e.L_Pressed = (e.button == GLFW_MOUSE_BUTTON_LEFT && e.lastAction == GLFW_PRESS);
-        e.L_Released = (e.button == GLFW_MOUSE_BUTTON_LEFT && e.lastAction == GLFW_RELEASE);
-        e.L_Drag = (e.L_Down && e.mouseMoved);  // true if dragging
+        em.L_Pressed =  (em.button == GLFW_MOUSE_BUTTON_LEFT  && em.lastMAction == GLFW_PRESS);
+        em.L_Released = (em.button == GLFW_MOUSE_BUTTON_LEFT && em.lastMAction == GLFW_RELEASE);
+        em.L_Drag = (em.L_Down && em.mouseMoved);  // true if dragging
 
         // RIGHT BUTTON
-        e.R_Pressed = (e.button == GLFW_MOUSE_BUTTON_RIGHT && e.lastAction == GLFW_PRESS);
-        e.R_Released = (e.button == GLFW_MOUSE_BUTTON_RIGHT && e.lastAction == GLFW_RELEASE);
-        e.R_Drag = (e.R_Down && e.mouseMoved); // true if dragging
+        em.R_Pressed = ( em.button == GLFW_MOUSE_BUTTON_RIGHT && em.lastMAction == GLFW_PRESS);
+        em.R_Released = (em.button == GLFW_MOUSE_BUTTON_RIGHT && em.lastMAction == GLFW_RELEASE);
+        em.R_Drag = (em.R_Down && em.mouseMoved); // true if dragging
 
         // MIDDLE BUTTON
-        e.M_Pressed = (e.button == GLFW_MOUSE_BUTTON_MIDDLE && e.lastAction == GLFW_PRESS);
-        e.M_Released = (e.button == GLFW_MOUSE_BUTTON_MIDDLE && e.lastAction == GLFW_RELEASE);
-        e.M_Drag = (e.M_Down && e.mouseMoved); // true if dragging
+        em.M_Pressed  = (em.button == GLFW_MOUSE_BUTTON_MIDDLE && em.lastMAction == GLFW_PRESS);
+        em.M_Released = (em.button == GLFW_MOUSE_BUTTON_MIDDLE && em.lastMAction == GLFW_RELEASE);
+        em.M_Drag = (em.M_Down && em.mouseMoved); // true if dragging
+
         //Keyboard
+        auto& ek = m_sysEvents.keyB;
         for (int k = 0; k <= GLFW_KEY_LAST; ++k) {
-            bool justPressed = (e.keyDown[k] && !e.prevKeyDown[k]);
-            bool justReleased = (!e.keyDown[k] && e.prevKeyDown[k]);
+            bool justPressed =  (ek.keyDown[k] && !ek.prevKeyDown[k]);
+            bool justReleased = (!ek.keyDown[k] && ek.prevKeyDown[k]);
 
             // You can store these in temp arrays or call handle()
             if (justPressed || justReleased) {
-                e.lastKey = k;
-                e.lastAction = justPressed ? GLFW_PRESS : GLFW_RELEASE;
+                ek.lastKey = k;
+                ek.lastKAction = justPressed ? GLFW_PRESS : GLFW_RELEASE;
                 // SHIFT - CTL - ALT
             }
         }
         // Update prevKeyDown for next frame
-        std::copy(std::begin(e.keyDown), std::end(e.keyDown), std::begin(e.prevKeyDown));
+        std::copy(std::begin(ek.keyDown), std::end(ek.keyDown), std::begin(ek.prevKeyDown));
 
-        if (e.mouseMoved)       handle(FR_MOUSE_MOVE);
-        if (e.L_Pressed)        handle(FR_LEFT_PUSH);
-        if (e.L_Released)       handle(FR_LEFT_RELEASE);
+        if (em.mouseMoved)       handle(FR_MOUSE_MOVE);
+        if (em.L_Pressed)        handle(FR_LEFT_PUSH);
+        if (em.L_Released)       handle(FR_LEFT_RELEASE);
 
         // RIGHT BUTTON
-        if (e.R_Pressed)        handle(FR_RIGHT_PUSH);
-        if (e.R_Released)       handle(FR_RIGHT_RELEASE);
+        if (em.R_Pressed)        handle(FR_RIGHT_PUSH);
+        if (em.R_Released)       handle(FR_RIGHT_RELEASE);
 
         // MIDDLE BUTTON
-        if (e.M_Pressed)        handle(FR_MIDDLE_PUSH);
-        if (e.M_Released)       handle(FR_MIDDLE_RELEASE);
+        if (em.M_Pressed)        handle(FR_MIDDLE_PUSH);
+        if (em.M_Released)       handle(FR_MIDDLE_RELEASE);
 
-        if (e.L_Drag)           handle(FR_LEFT_DRAG_PUSH);
-        if (e.R_Drag)           handle(FR_RIGHT_DRAG_PUSH);
-        if (e.M_Drag)           handle(FR_MIDDLE_DRAG_PUSH);
+        if (em.L_Drag)           handle(FR_LEFT_DRAG_PUSH);
+        if (em.R_Drag)           handle(FR_RIGHT_DRAG_PUSH);
+        if (em.M_Drag)           handle(FR_MIDDLE_DRAG_PUSH);
 
         //Keyboard Events
         for (int k = 0; k <= GLFW_KEY_LAST; ++k) {
-            bool justPressed = e.keyDown[k] && !e.prevKeyDown[k];
-            bool justReleased = !e.keyDown[k] && e.prevKeyDown[k];
+            bool justPressed  =  ek.keyDown[k] && !ek.prevKeyDown[k];
+            bool justReleased = !ek.keyDown[k] &&  ek.prevKeyDown[k];
             if (justPressed || justReleased) {
-                e.lastKey = k;
-                e.lastAction = justPressed ? GLFW_PRESS : GLFW_RELEASE;
+                ek.lastKey = k;
+                ek.lastKAction = justPressed ? GLFW_PRESS : GLFW_RELEASE;
                 handle(FR_KEYBOARD);
             }
         }
         //scroll happened
-        bool scrollHappened = (e.mouse.scrollX != 0.0 || e.mouse.scrollY != 0.0);
+        bool scrollHappened = (em.scrollX != 0.0 || em.scrollY != 0.0);
         if (scrollHappened) {
             handle(FR_SCROLL);
         }
         // Enter, deactivate
-        if (e.mouseEntered) {
+        if (em.mouseEntered) {
             handle(FR_ENTER);
         }
         else {
@@ -566,21 +603,21 @@ namespace FR {
         }
 
         // END OF FRAME RESET
-        e.mouse.prevX = e.mouse.activeX;
-        e.mouse.prevY = e.mouse.activeY;
+        em.prevX = em.activeX;
+        em.prevY = em.activeY;
 
         // Clear edge events
-        e.L_Pressed = e.L_Released = false;
-        e.R_Pressed = e.R_Released = false;
-        e.M_Pressed = e.M_Released = false;
-        e.mouseEntered = false;
-        e.lastKey = -1;
-        e.lastAction = -1;
+        em.L_Pressed = em.L_Released = false;
+        em.R_Pressed = em.R_Released = false;
+        em.M_Pressed = em.M_Released = false;
+        em.mouseEntered = false;
+        ek.lastKey = -1;
+        em.lastMAction = -1;
+        ek.lastKAction = -1;
 
-        e.mouseMoved = false;
-        e.mouse.scrollX = 0.0;
-        e.mouse.scrollY = 0.0;
-
+        em.mouseMoved = false;
+        em.scrollX = 0.0;
+        em.scrollY = 0.0;
         spWindow->calculateScreenRay();
     }
     int Fr_Window::handle(int events)
@@ -590,15 +627,16 @@ namespace FR {
             if (gui_win->handle(events) == 1)
                 return 1; //We consumed the event
         }
-        auto& e = m_systemEvents;
+        auto& em = m_sysEvents.mouse;
+        auto& ek = m_sysEvents.keyB;
 
         switch (events) {
         case FR_MIDDLE_DRAG_PUSH:
 
-            if (!e.mouseMoved)
+            if (!em.mouseMoved)
                 break; // nothing to do this frame
 
-            if (e.shiftDown) {
+            if (ek.shiftDown) {
                 // Pan the camera
                 this->cameraPAN(pGLFWWindow);
                 return 1;

@@ -1,3 +1,30 @@
+//
+// This file is a part of the Open Source Design456App
+// MIT License
+//
+// Copyright (c) 2026
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
+//  Author :Mariwan Jalal    mariwan.jalal@gmail.com
+//
+
 #include <gui_widget/frtk_grpwidget.h>
 
 namespace FR {
@@ -5,17 +32,17 @@ namespace FR {
     static int navkey() {
         if (Fr_Window::spWindow == nullptr)
             return 0; //do nothing
-        auto& e = Fr_Window::spWindow->m_systemEvents;
+        auto& ek = Fr_Window::spWindow->m_sysEvents.keyB;
         // The app may want these for hotkeys, check key state
-        if (e.ctrlDown || e.shiftDown || e.altDown) return 0;
-        else if (e.keyDown[GLFW_KEY_TAB]) {
-            if (e.shiftDown) return GLFW_KEY_RIGHT;
+        if (ek.ctrlDown || ek.shiftDown || ek.altDown) return 0;
+        else if (ek.keyDown[GLFW_KEY_TAB]) {
+            if (ek.shiftDown) return GLFW_KEY_RIGHT;
             else return GLFW_KEY_LEFT;
         }
-        else if (e.keyDown[GLFW_KEY_RIGHT])      return GLFW_KEY_RIGHT;
-        else if (e.keyDown[GLFW_KEY_LEFT])       return GLFW_KEY_LEFT;
-        else if (e.keyDown[GLFW_KEY_UP])         return GLFW_KEY_UP;
-        else if (e.keyDown[GLFW_KEY_DOWN])       return GLFW_KEY_DOWN;
+        else if (ek.keyDown[GLFW_KEY_RIGHT])      return GLFW_KEY_RIGHT;
+        else if (ek.keyDown[GLFW_KEY_LEFT])       return GLFW_KEY_LEFT;
+        else if (ek.keyDown[GLFW_KEY_UP])         return GLFW_KEY_UP;
+        else if (ek.keyDown[GLFW_KEY_DOWN])       return GLFW_KEY_DOWN;
         else                                     return 0;
     }
 
@@ -88,15 +115,6 @@ namespace FR {
     void Frtk_GrpWidget::draw_focus(BOX_TYPE t, float X, float Y, float W, float H) {
     }
     void Frtk_GrpWidget::draw_focus(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 bkg) {
-    }
-
-    void Frtk_GrpWidget::draw_childrenLabel() {
-        for (auto wdg : m_children)
-            wdg->drawLabel();
-    }
-    void Frtk_GrpWidget::draw_childrenLabel(float X, float Y, float W, float H) {
-        for (auto wdg : m_children)
-            wdg->drawLabel(X, Y, W, H);
     }
 
     int Frtk_GrpWidget::send_event(Frtk_Widget& w, int ev) {
