@@ -81,16 +81,27 @@ namespace FR {
     int Frtk_Button::handle(int e) {
         if (should_getEvent(false)) {
             if (e == FR_LEFT_PUSH) {
-                m_value = 1;
+                if (m_wdgType == FRTK_CHECK_BUTTON) {
+                    m_value = ~m_value;
+                    if (m_value == 1) {
+                        m_Image.opacity = 0.5;
+                    }else{
+                        m_Image.opacity = 1.0;
+                    }
+                }else{
+                    m_value = 1;
+                    m_Image.opacity = 0.5;
+                }
                 callback();
-                m_Image.opacity = 0.5;
                 return 1;
             }
             else if (e == FR_LEFT_RELEASE) {
+                if (m_wdgType != FRTK_CHECK_BUTTON){
                 m_value = 0;
                 m_Image.opacity = 1.0f;
-                //callback(); Optional if you want to execute the callback even when mouse is released.
+                    //callback(); Optional if you want to execute the callback even when mouse is released.
                 return 1;
+                }
             }
         }
         return 0;

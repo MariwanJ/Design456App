@@ -31,7 +31,7 @@
 #include <gui_widget/frtk_button.h>
 #include <gui_widget/frtk_toolbar.h>
 #include <gui_widget/frtk_toolbar_button.h>
-
+#include <gui_widget/frtk_check_button.h>
 namespace FR {
     std::shared_ptr<Frtk_Window> runFRTKdemo() {
         /*
@@ -72,7 +72,7 @@ namespace FR {
         FF = NN = 40;
         float next = FF + 5;
         std::shared_ptr<Frtk_Button> button1 = std::make_shared<Frtk_Button>(window->getContext(), 10.0f, 250.0f, 200.0f, 56.0f, "button1", FRTK_UP_BOX);
-        std::shared_ptr<Frtk_Button> button2 = std::make_shared<Frtk_Button>(window->getContext(), 10.0f, 50.0f, 200.0f, 56.0f, "button2", FRTK_UP_BOX);
+        std::shared_ptr<Frtk_Check_Button> button2 = std::make_shared<Frtk_Check_Button>(window->getContext(), 10.0f, 50.0f, 200.0f, 56.0f, "button2", FRTK_UP_BOX);
         std::shared_ptr<Frtk_Button> button3 = std::make_shared<Frtk_Button>(window->getContext(), 10.0f, 150.0f, 200.0f, 56.0f, "button3", FRTK_UP_BOX);
 
         std::shared_ptr<Frtk_Button> button11 = std::make_shared<Frtk_Button>(window->getContext(), 250.0f, 250.0f, 200.0f, 56.0f, "button4", FRTK_UP_BOX);
@@ -80,7 +80,7 @@ namespace FR {
         std::shared_ptr<Frtk_Button> button33 = std::make_shared<Frtk_Button>(window->getContext(), 250.0f, 150.0f, 200.0f, 56.0f, "button6", FRTK_UP_BOX);
 
         button1->wdgImage(imagePath);
-        button2->wdgImage(imagePath);
+       // button2->wdgImage(imagePath);
         button3->wdgImage(imagePath);
         button11->wdgImage(imagePath);
         button22->wdgImage(imagePath);
