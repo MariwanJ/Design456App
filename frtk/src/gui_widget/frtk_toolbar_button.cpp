@@ -71,8 +71,20 @@ namespace FR {
 
 
     void Frtk_ToolBar_Button::draw() {
-        draw_box(m_vg, m_boxType, {{ m_x,m_y }, { m_w,m_h }}, 0.0f, NORMAL_BORDER, nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a), nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), true);
-        if (m_divider) {
+       if(m_value ==0){
+            draw_box(m_vg, (m_boxType), { { m_x,m_y }, { m_w,m_h } }, 0.0f, NORMAL_BORDER, 
+                nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a), 
+                nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), true);
+            m_Image.opacity = 1.0f;
+        }
+       else if (m_value == 1) {
+           draw_box(m_vg, (BOX_TYPE)((int)(m_boxType)+1), { { m_x,m_y }, { m_w,m_h } },
+               0.0f, NORMAL_BORDER, nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a),
+               nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), false);
+           m_Image.opacity = 0.5f;
+       }
+
+       if (m_divider) {
             drawVerticalDivider();
         }
         if (m_IconTexture != 0){

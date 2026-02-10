@@ -118,14 +118,14 @@ namespace FR {
         }
         //TODO : FIX ME .. THIS SHOULD EXECUTE ONLY WHEN IT LOOSES FOCUS WHICH IS NOT DONE HERE!! IN GROUP WIDGET OR WINDOWS
     //Lost focus we should make the value 0
-        if (!(m_wdgType == FRTK_CHECK_BUTTON ||
+      /*  if (!(m_wdgType == FRTK_CHECK_BUTTON ||
             m_wdgType == FRTK_TOGGLE_LIGHT_BUTTON ||
             m_wdgType == FRTK_TOGGLE_ROUND_BUTTON ||
             m_wdgType == FRTK_SWITCH_BUTTON ||
             m_wdgType == FRTK_LIGHT_BUTTON ||
             m_wdgType == FRTK_ROUND_BUTTON)) {
             m_value = 0;
-        }
+        }*/
         return 0;
     }
 }
