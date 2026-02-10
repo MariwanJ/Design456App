@@ -5,7 +5,8 @@ project "spdlog"
     
     targetdir ("../../../bin/")
     objdir ("../../../bin_obj/")
-
+    
+    
     files
     {
         "include/spdlog/**",
@@ -27,12 +28,12 @@ project "spdlog"
         pic "On"
         staticruntime "On"
         systemversion "latest"
-        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto","-ggdb" }
+        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto","-ggdb" , "-finput-charset=UTF-8", "-fexec-charset=UTF-8" }
  
     filter {}
     filter "system:windows"
         systemversion "latest"
-        buildoptions { "/utf-8" }  -- Add UTF-8 support
+        buildoptions { "/utf-8" 					  }  -- Add UTF-8 support
 
         filter "configurations:Debug"
             runtime "Debug"

@@ -31,17 +31,16 @@
 #include <fr_core.h>
 #include <gui_widget/frtk_widget.h>
 
-namespace FR {
-    
-    class Frtk_GrpWidget : public Frtk_Widget {
-    public:
-        Frtk_GrpWidget(NVGcontext* vg, float X, float Y, float W, float H, std::string label, BOX_TYPE b= FRTK_NO_BOX);
-        ~Frtk_GrpWidget();
+class Frtk_Window;
 
-       
-        
+namespace FR {
+    class Frtk_GrpWidget : public Frtk_Widget {
+        friend Frtk_Window;
+    public:
+        Frtk_GrpWidget(NVGcontext* vg, float X , float Y , float W , float H , std::string label = "", BOX_TYPE b = FRTK_NO_BOX);
+        virtual ~Frtk_GrpWidget();
+
         virtual void draw_children();
-        virtual void redraw_children();
 
         virtual void redraw() override;
         bool restore_focus();
@@ -56,23 +55,23 @@ namespace FR {
 
         int send_event(Frtk_Widget& w, int ev);
 
-        int Frtk_GrpWidget::findIndex(const std::shared_ptr<Frtk_Widget>& w) const;
-        void remove_children(size_t index);
+        int findIndex(const std::shared_ptr<Frtk_Widget>& w) const;
+        void remove_child_at(size_t index);
+        void remove_child(std::shared_ptr<Frtk_Widget> &wdg);
         void remove_all();
 
-        void Frtk_GrpWidget::addChild(std::shared_ptr<Frtk_Widget> w);
-
+        void addChild(std::shared_ptr<Frtk_Widget> w);
         bool navigate_focus(int key);
-        
+
     protected:
         virtual void draw()  override;
         virtual int handle(int ev) override;
+        dimPos_float_t mainGui() const override;
 
         std::vector<std::shared_ptr<Frtk_Widget>> m_children;
         bool set_child_focus(Frtk_Widget* w) override;
         Frtk_Widget* m_childFocus;  //keep track of focused widget
     private:
-
     };
 }
 #endif // !FRTK_GRPWIDGET_H

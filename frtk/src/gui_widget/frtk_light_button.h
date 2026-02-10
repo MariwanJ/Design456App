@@ -35,6 +35,13 @@ namespace FR {
 	{
 	public:
 		Frtk_Light_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b = FRTK_UP_BOX);
+		void drawKnob(NVGcontext* vg, float cx, float cy, float r, NVGcolor color);
+		void drawToggleOn(NVGcontext* vg, float x, float y, float w, float h, NVGcolor knobColor);
+		void drawToggleOff(NVGcontext* vg, float x, float y, float w, float h, NVGcolor knobColor);
+		void drawToggleBase(NVGcontext* vg, float x, float y, float w, float h, NVGcolor top, NVGcolor bottom);
+		
+	protected: 
+		virtual void draw() override;
 	};
 }
 #endif // FRTK_LIGHT_BUTTON_H

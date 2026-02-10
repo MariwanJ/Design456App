@@ -26,7 +26,6 @@
 //
 
 #include <Fr_Log.h>
-
 #include <spdlog/sinks/stdout_color_sinks.h>
 namespace FR {
     std::shared_ptr<spdlog::logger> Fr_Log::s_FRTKLogger;

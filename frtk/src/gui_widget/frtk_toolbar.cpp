@@ -28,28 +28,55 @@
 #include <gui_widget/frtk_toolbar.h>
 
 namespace FR {
-    // class constructor
-    Frtk_ToolBar::Frtk_ToolBar(NVGcontext* vg, float x, float y, float w, float h, const char* l, BOX_TYPE b ):Frtk_GrpWidget(vg,x, y, w, h, l,b)
-    {
+    Frtk_ToolBar::Frtk_ToolBar(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl,
+        const std::vector<toolbBTN_t>& tools, BOX_TYPE b) : Frtk_GrpWidget(vg, X, Y, W, H, lbl, b) , dockingBTN(NULL),m_padding(1.0f) {
         m_wdgType = FRTK_TOOLBAR;
-      
+        
+        m_horizontal = true;
+        btnDim = { 0.0f,Y + 1.f }; //offset 1.0 pixel
+        addButton(tools);
+    }
+    Frtk_ToolBar::~Frtk_ToolBar()
+    {
     }
     bool Frtk_ToolBar::dockable()
     {
         return m_dockable;
     }
+    void Frtk_ToolBar::horizontal(bool val)
+    {
+        m_horizontal = val;
+    }
+
+    void Frtk_ToolBar::addButton(const std::vector<toolbBTN_t>& btns)
+    {
+        btnDim = { 0.0f, 1.0f };
+        for (const auto& item : btns) {
+            auto btn = std::make_shared<Frtk_ToolBar_Button>(m_vg,btnDim.x, btnDim.y, item.size.w, item.size.h, item.lbl);
+            btn->name(item.name);
+            btn->tooltips(item.tooltips);
+            btnDim.x += item.size.w+m_padding;
+            btn->wdgImage(item.icon);
+            btn->cellStyle(FR_IMG_OVER_TEXT_CENTER);
+            btn->set_callback(item.callback_);
+            addChild(btn);
+        }
+    }
+
+    int Frtk_ToolBar::removeButton(std::string& name)
+    {
+        for (auto& wdg : m_children){
+            if (auto* btn = dynamic_cast<Frtk_ToolBar_Button*>(wdg.get()))
+                if (btn->name() == name) {
+                    remove_child(wdg);
+            }
+        }
+        return 0;
+    }
+
     void Frtk_ToolBar::dockable(bool val)
     {
         m_dockable = val;
-    }
-    int Frtk_ToolBar::handle(int e)
-    {
-        return Frtk_GrpWidget::handle(e);
-    }
-
-        void Frtk_ToolBar::draw()
-    {
-
     }
 
 }

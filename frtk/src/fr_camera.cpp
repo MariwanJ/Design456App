@@ -217,10 +217,10 @@ namespace FR {
      *
      * \param data ref variable keeps the configuration
      */
-    void Fr_Camera::getCamData(userData_& data)
+    void Fr_Camera::getCamData(userData_t& data)
     {
         data.aspectRatio_ = m_aspect_ratio;
-        data.camm_position = m_position;
+        data.cam_pos_ = m_position;
         data.camType_ = m_camType;
         data.direction_ = m_direction;
         data.fovy_ = m_fovy;
@@ -230,10 +230,10 @@ namespace FR {
         data.orthoSize_ = m_OrthographicSize;
     }
 
-    void Fr_Camera::setCamData(userData_& data)
+    void Fr_Camera::setCamData(userData_t& data)
     {
         //aspectRatio_ = data.aspectRatio_;
-        m_position = data.camm_position;
+        m_position = data.cam_pos_;
         m_camType = data.camType_;
         m_direction = data.direction_;
         m_fovy = data.fovy_;

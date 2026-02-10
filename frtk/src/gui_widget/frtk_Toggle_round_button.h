@@ -35,6 +35,9 @@ namespace FR {
 	{
 	public:
 		Frtk_Toggle_Round_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b = FRTK_UP_BOX);
+	protected:
+		virtual void draw();
+
 	};
 }
 #endif // FRTK_TOGGLE_ROUND_BUTTON_H

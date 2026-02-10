@@ -74,7 +74,7 @@ namespace FR {
                 newObj->m_Texture2D->setup2DTexture();      //Don't forget to do this always
             }
             else {
-                DEBUG_BREAK;
+                FR_DEBUG_BREAK;
             }
             newObj->hasTexture(1);
             //convert fName to be a unique name
@@ -84,7 +84,7 @@ namespace FR {
             return;
         }
         else {
-            DEBUG_BREAK;
+            FR_DEBUG_BREAK;
             //Not implemented yet  - here .obj should be treated.
         }
         return;

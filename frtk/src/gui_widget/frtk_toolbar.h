@@ -27,22 +27,42 @@
 
 #ifndef FRTK_TOOLBAR_H
 #define FRTK_TOOLBAR_H
+
+#include <fr_core.h>
 #include <gui_widget/frtk_grpwidget.h>
-#include <gui_widget/frtk_toolbar_button.h>
+#include <gui_widget/frtk_draw.h>
+#include<gui_widget/frtk_toolbar_button.h>
 
 namespace FR {
+
+    typedef struct {
+        std::string lbl;
+        std::string name;
+        dimSize_float_t size;
+        std::string icon;
+        Frtk_Widget::Callback callback_;
+        std::string tooltips; //not implemented yet!!
+    }toolbBTN_t;
+
     class Frtk_ToolBar : public Frtk_GrpWidget
     {
     public:
-        // class constructor
-        Frtk_ToolBar(NVGcontext* vg, float x, float y, float w, float h, const char* l, BOX_TYPE b = FRTK_UP_BOX);
+        Frtk_ToolBar(NVGcontext* vg, float , float Y , float W , float H, std::string lbl, const std::vector<toolbBTN_t>& tools = {}, BOX_TYPE b = FRTK_UP_BOX);
+        virtual ~Frtk_ToolBar();
+
         void    dockable(bool val);
         bool    dockable();
+        void horizontal(bool val);
+        void addButton(const std::vector<toolbBTN_t>& btns);
+
+        int removeButton(size_t index);
+        int removeButton(std::string & name);
     protected:
-        virtual  int handle(int e);
-        virtual  void draw();
-    private:
+        bool m_horizontal; //is the toolbar horizontal or vertical??
+        std::shared_ptr<Frtk_ToolBar_Button> dockingBTN; //Used to interact with the toolbar itself.
         bool m_dockable; 
+        dimPos_float_t btnDim;
+        float m_padding;
     };
 }
 #endif // FL_TOOLBAR_H

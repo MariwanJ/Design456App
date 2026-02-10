@@ -52,16 +52,21 @@ namespace FR {
                           (double)FL_MINOR_VERSION * 0.01 + \
                           (double)FL_PATCH_VERSION * 0.0001 )
 
-#define ICON_SIZE  ImVec2(32,32)
-#define ICON_FONT_SIZE 24
-#define MAX_FOV_ZOOM 165
+// VERY IMPORTANT ! Standard Toolbar height, icon size, font size for toolbars is here
+#define FRTK_ICON_SIZE  ImVec2(32.0f,32.0f)   //<---- We should change this to 24
+#define FRTK_TOOLBAR_HEIGHT  36.0f
+/*  This is the best size as it is used by FreeCAD and 
+    many other software, we define only height 
+    as width could be variable */
+#define FRTK_TOOLBAR_BUTTON_HEGHT 32.0f
+#define FRTK_TOOLBAR_BUTTON_FONT_SIZE 14
 
+
+#define MAX_FOV_ZOOM 165
 #define MAX_CAMERAS 8  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING uint8_t menu
 
 const unsigned int RECURSION_COUNT = 200;
 const float RAY_RANGE = 6000.0f;
-
-const unsigned char TOOLBAR_HEIGHT = 36;
 
 const float DEFAULT_SIHOUETTE = 0.15f;
 
@@ -77,7 +82,7 @@ const float DEFAULT_SIHOUETTE = 0.15f;
     };
 
 typedef T FR_COLOR;
-    namespace COLOR {
+    namespace COLOR {               //R         G          B          A
 #define FR_TRANSPARENCY         -1.0000f, -1.0000f, -1.0000f,  1.0000f           // No color
 #define FR_IRON                  0.5600f,  0.5700f,  0.58000f, 1.0000f
 #define FR_SILVER                0.9720f,  0.9600f,  0.91500f, 1.0000f
@@ -151,7 +156,19 @@ typedef T FR_COLOR;
 #define FR_FIREBRICK             0.6980f,  0.1333f,  0.1333f,  1.0000f
 #define FR_PALETURQUOISE         0.6863f,  0.9333f,  0.9333f,  1.0000f
 #define FR_PALEGOLDENROD         0.9333f,  0.9098f,  0.6667f,  1.0000f
-#define FR_GRAY                  0.5020f,  0.5020f,  0.5020f,  1.0000f
+        //Better Gray calcification
+#define FR_GRAY02                0.0020f,  0.0020f,  0.0020f,  1.0000f
+#define FR_GRAY05                0.0500f,  0.0500f,  0.0500f,  1.0000f
+#define FR_GRAY10                0.1000f,  0.1000f,  0.1000f,  1.0000f
+#define FR_GRAY20                0.2000f,  0.2000f,  0.2000f,  1.0000f
+#define FR_GRAY30                0.3000f,  0.3000f,  0.3000f,  1.0000f
+#define FR_GRAY40                0.4000f,  0.4000f,  0.4000f,  1.0000f
+#define FR_GRAY50                0.5000f,  0.5000f,  0.5000f,  1.0000f
+#define FR_GRAY60                0.6000f,  0.6000f,  0.6000f,  1.0000f
+#define FR_GRAY70                0.7000f,  0.7000f,  0.7000f,  1.0000f
+#define FR_GRAY80                0.8000f,  0.8000f,  0.8000f,  1.0000f
+#define FR_GRAY90                0.9000f,  0.9000f,  0.9000f,  1.0000f
+
 #define FR_MEDIUMSEAGREEN        0.2353f,  0.7020f,  0.4431f,  1.0000f
 #define FR_MOCCASIN              1.0000f,  0.8941f,  0.7098f,  1.0000f
 #define FR_IVORY                 1.0000f,  1.0000f,  0.9412f,  1.0000f
@@ -188,7 +205,6 @@ typedef T FR_COLOR;
 #define FR_TURQUOISE             0.2510f,  0.8784f,  0.8157f,  1.0000f
 #define FR_MEDIUMVIOLETRED       0.7804f,  0.0824f,  0.5216f,  1.0000f
 #define FR_DARKVIOLET            0.5804f,  0.0000f,  0.8275f,  1.0000f
-#define FR_DARKGRAY              0.6627f,  0.6627f,  0.6627f,  1.0000f
 #define FR_SPECIAL_GRA           0.9101f,  0.9101f,  0.9101f,  1.0000f
 #define FR_SALMON                0.9804f,  0.5020f,  0.4471f,  1.0000f
 #define FR_DARKMAGENTA           0.5451f,  0.0000f,  0.5451f,  1.0000f
@@ -200,9 +216,6 @@ typedef T FR_COLOR;
 #define FR_AQUA                  0.0000f,  1.0000f,  1.0000f,  1.0000f
 #define FR_FORESTGREEN           0.1333f,  0.5451f,  0.1333f,  1.0000f
 #define FR_LEMONCHIFFON          1.0000f,  0.9804f,  0.8039f,  1.0000f
-#define FR_LIGHTSLATEGRAY        0.4667f,  0.5333f,  0.6000f,  1.0000f
-#define FR_SLATEGRAY             0.4392f,  0.5020f,  0.5647f,  1.0000f
-#define FR_LIGHTGRAY             0.8275f,  0.8275f,  0.8275f,  1.0000f
 #define FR_INDIGO                0.2941f,  0.0000f,  0.5098f,  1.0000f
 #define FR_CADETBLUE             0.3725f,  0.6196f,  0.6275f,  1.0000f
 #define FR_LIGHTYELLOW           1.0000f,  1.0000f,  0.8784f,  1.0000f
@@ -219,9 +232,12 @@ typedef T FR_COLOR;
 #define FR_YELLOWGREEN           0.6039f,  0.8039f,  0.1961f,  1.0000f
 #define FR_AQUAMARINE            0.4980f,  1.0000f,  0.8314f,  1.0000f
 #define FR_LIGHTCORAL            0.9412f,  0.5020f,  0.5020f,  1.0000f
+#define FR_SLATEGRAY             0.4392f,  0.5020f,  0.5647f,  1.0000f
+#define FR_LIGHTSLATEGRAY        0.4667f,  0.5333f,  0.6000f,  1.0000f
 #define FR_DARKSLATEGRAY         0.1843f,  0.3098f,  0.3098f,  1.0000f
 #define FR_KHAKI                 0.9412f,  0.9020f,  0.5490f,  1.0000f
-#define FR_DARKGREY              0.6627f,  0.6627f,  0.6627f,  1.0000f
+#define FR_DARKGREY1             0.6627f,  0.6627f,  0.6627f,  1.0000f
+#define FR_DARKGREY2             0.5627f,  0.5627f,  0.5627f,  1.0000f
 #define FR_BURLYWOOD             0.8706f,  0.7216f,  0.5294f,  1.0000f
 #define FR_LIGHTGOLDENRODYELLOW  0.9804f,  0.9804f,  0.8235f,  1.0000f
 #define FR_MEDIUMBLUE            0.0000f,  0.0000f,  0.8039f,  1.0000f

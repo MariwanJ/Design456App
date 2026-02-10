@@ -38,7 +38,7 @@ namespace FR {
     class Fr_Shape : public Fr_Widget {
     public:
 
-        Fr_Shape(const std::string& path, glm::vec4 color = glm::vec4(FR_GRAY), float silhouette = DEFAULT_SIHOUETTE);
+        Fr_Shape(const std::string& path, glm::vec4 color = glm::vec4(FR_GRAY50), float silhouette = DEFAULT_SIHOUETTE);
         Fr_Shape();
         ~Fr_Shape();
 

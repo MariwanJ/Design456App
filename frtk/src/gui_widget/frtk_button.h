@@ -37,7 +37,7 @@ namespace FR {
     class Frtk_Button : public Frtk_Box
     {
     public:
-        Frtk_Button(NVGcontext*vg, float x, float y, float w, float h, std::string l, BOX_TYPE b= FRTK_UP_BOX);
+        Frtk_Button(NVGcontext*vg, float x , float y , float w , float h , std::string l="Button", BOX_TYPE b = FRTK_UP_BOX);
 
         void Frtk_Button::value(uint8_t val);
         uint8_t value() const;

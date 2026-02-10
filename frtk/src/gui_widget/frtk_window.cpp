@@ -28,9 +28,10 @@
 #include<gui_widget/frtk_window.h>
 
 namespace FR {
-    frtk_Win_Mouse_t Frtk_Window::m_mouseDim = { 0 };   //TODO : THIS IS BAD ... TEMPEORARY SOLUTION .. FIXME PLEASE!!
+   // frtk_Win_Mouse_t Frtk_Window::m_mouseDim = { 0 };   //TODO : THIS IS BAD ... TEMPEORARY SOLUTION .. FIXME PLEASE!!
 
-    Frtk_Window::Frtk_Window(float X, float Y, float W, float H, std::string lbl, BOX_TYPE b) :Frtk_GrpWidget(NULL, X, Y, W, H, lbl,b), m_nvgContext(NULL) {
+    Frtk_Window::Frtk_Window(float X, float Y, float W, float H, std::string lbl, BOX_TYPE b, bool hasHeader) :
+        Frtk_Widget(X, Y, W, H, lbl,b),m_hasHeader(hasHeader){
         init();
         m_data.fontBold = 0;
         m_data.fontEmoji = 0;
@@ -39,7 +40,7 @@ namespace FR {
         memset(m_data.images, 0, 12);
         m_color.w = 0.5f;  //Default Opacity
         ///Default style
-        m_WindowsStyle.height = 30.0f;
+        m_WindowsStyle.height = FRTK_WINDOWS_TITLE_HEIGHT;
         m_WindowsStyle.bevelHeight = 10.0f;
         m_WindowsStyle.cornerRadius = 3.0f;
 
@@ -65,7 +66,17 @@ namespace FR {
         m_has_focus = true;
         m_cantake_focus = true;
         m_wdgType = FRTK_WINDOW;
+        if (m_hasHeader) {
+            m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, X, Y + m_WindowsStyle.height, W, H - m_WindowsStyle.height);
+        }
+        else {
+            m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, X, Y , W, H);
+        }
+        m_guiWindow->boxType( FRTK_UP_BOX);
+        m_guiWindow->opacity(0.5f);
+        FRTK_CORE_APP_ASSERT(m_guiWindow);
     }
+    
 
     Frtk_Window::~Frtk_Window() {
     }
@@ -75,91 +86,58 @@ namespace FR {
 
         Fr_Camera& camera = m_mainWindow->activeScene->getActiveCamera();
         float ratio = camera.getRatio();
-        assert(m_nvgContext != nullptr);
+        FRTK_CORE_APP_ASSERT(m_vg != nullptr);
         float cornerRadius = 3.0f;
-
-        nvgBeginFrame(m_nvgContext, (float)m_mainWindow->w(), (float)m_mainWindow->h(), ratio);
-
-        nvgSave(m_nvgContext);
-
-        nvgBeginPath(m_nvgContext);
-        nvgRoundedRect(m_nvgContext, m_x, m_y, m_w, m_h, cornerRadius);
-        nvgFillColor(m_nvgContext, nvgRGBAf(m_color.x, m_color.y, m_color.z, m_color.w));
-        nvgFill(m_nvgContext);
-
-        NVGpaint shadowPaint = nvgBoxGradient(
-            m_nvgContext, m_x, m_y + 2, m_w, m_h, cornerRadius * 2, 10,
-            nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0)
-
-        );
-
-        nvgSave(m_nvgContext);
-        nvgResetScissor(m_nvgContext);
-
-        nvgBeginPath(m_nvgContext);
-        nvgRect(m_nvgContext, m_x - 10, m_y - 10, m_w + 20, m_h + 20);
-        nvgRoundedRect(m_nvgContext, m_x, m_y, m_w, m_h, cornerRadius);
-        nvgPathWinding(m_nvgContext, NVG_HOLE);
-        nvgFillPaint(m_nvgContext, shadowPaint);
-        nvgFill(m_nvgContext);
-
-        //nvgRestore(m_nvgContext);
-
-        draw_header();
+        nvgBeginFrame(m_vg, (float)m_mainWindow->w(), (float)m_mainWindow->h(), ratio);
+        m_guiWindow->draw();
+        if (m_hasHeader) {
+            draw_header();
+        }
         if (!m_label.empty())
             drawLabel();
-
-        //nvgSave(m_nvgContext);
-        nvgRestore(m_nvgContext);
-        nvgTranslate(m_nvgContext, m_x, m_y + m_WindowsStyle.height);
-        //Frtk_GrpWidget::draw(); We don't need to draw the group as it is the windows now.
-        Frtk_GrpWidget::draw_children();
-        nvgRestore(m_nvgContext);
-        nvgEndFrame(m_nvgContext);
+        m_guiWindow->draw_children(); 
+        nvgEndFrame(m_vg);
     }
 
     void Frtk_Window::draw_header() {
         // Header
         NVGpaint headerPaint;
-        headerPaint = nvgLinearGradient(m_nvgContext, m_x, m_y, m_x, m_y + 15, m_WindowsStyle.topColor, m_WindowsStyle.bottomColor);
-        nvgBeginPath(m_nvgContext);
-        nvgRoundedRect(m_nvgContext, m_x, m_y, m_w - 2, m_WindowsStyle.height, m_WindowsStyle.cornerRadius - 1);
-        nvgFillPaint(m_nvgContext, headerPaint);
-        nvgFill(m_nvgContext);
-        nvgBeginPath(m_nvgContext);
-        nvgRoundedRect(m_nvgContext, m_x, m_y, m_w, m_WindowsStyle.bevelHeight, m_WindowsStyle.cornerRadius);
-        nvgStrokeColor(m_nvgContext, m_WindowsStyle.strokeColor);
-        nvgSave(m_nvgContext);
-        nvgIntersectScissor(m_nvgContext, m_x, m_y, m_w, 0.5f);
-        nvgStroke(m_nvgContext);
-        nvgRestore(m_nvgContext);
+        headerPaint = nvgLinearGradient(m_vg, m_x, m_y, m_x, m_y + FRTK_WINDOWS_TITLE_HEIGHT, m_WindowsStyle.topColor, m_WindowsStyle.bottomColor);
+        nvgBeginPath(m_vg);
+        nvgRoundedRect(m_vg, m_x, m_y, m_w - 2, m_WindowsStyle.height, m_WindowsStyle.cornerRadius - 1);
+        nvgFillPaint(m_vg, headerPaint);
+        nvgFill(m_vg);
+        nvgBeginPath(m_vg);
+        nvgRoundedRect(m_vg, m_x, m_y, m_w, m_WindowsStyle.bevelHeight, m_WindowsStyle.cornerRadius);
+        nvgStrokeColor(m_vg, m_WindowsStyle.strokeColor);
+        nvgSave(m_vg);
+        nvgIntersectScissor(m_vg, m_x, m_y, m_w, 0.5f);
+        nvgStroke(m_vg);
+        nvgRestore(m_vg);
 
-        nvgBeginPath(m_nvgContext);
-        nvgMoveTo(m_nvgContext, m_x + 0.5f, m_y + m_WindowsStyle.bevelHeight - 1.5f);
-        nvgLineTo(m_nvgContext, m_x + m_w - 0.5f, m_y + m_WindowsStyle.bevelHeight - 1.5);
-        nvgStrokeColor(m_nvgContext, m_WindowsStyle.strokeColor);
-        nvgStroke(m_nvgContext);
+        nvgBeginPath(m_vg);
+        nvgMoveTo(m_vg, m_x + 0.5f, m_y + m_WindowsStyle.bevelHeight - 1.5f);
+        nvgLineTo(m_vg, m_x + m_w - 0.5f, m_y + m_WindowsStyle.bevelHeight - 1.5);
+        nvgStrokeColor(m_vg, m_WindowsStyle.strokeColor);
+        nvgStroke(m_vg);
     }
     void Frtk_Window::init(void)
     {
         assert(m_mainWindow);
-        m_nvgContext = m_mainWindow->getnvgContext();
-        assert(m_nvgContext != nullptr);
+        m_vg = m_mainWindow->getnvgContext();
+        assert(m_vg != nullptr);
 
-        if (!m_nvgContext) {
+        if (!m_vg) {
             throw std::runtime_error("NanoVG context not initialized");
         }
 
         default_font_path = EXE_CURRENT_DIR + "/frtk/vendor/nanovg/example/";
         loadFonts();
     }
-    void Frtk_Window::draw_focus(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 bkg)
-    {
-    }
     void Frtk_Window::drawLabel() {
         m_font.pos = { m_x, m_y };
         m_font.size = { m_w, m_WindowsStyle.height };
-        drawTextInBox(m_nvgContext, m_label, m_font);
+        drawTextInBox(m_vg, m_label, m_font);
     }
 
     void Frtk_Window::drawLabel(float X, float Y, float W, float H) {
@@ -173,70 +151,50 @@ namespace FR {
         return m_mainWindow->getnvgContext();
     }
 
-    void Frtk_Window::drawBox()
-    {
-    }
-
-    void Frtk_Window::drawBox(BOX_TYPE t, glm::vec4 c)
-    {
-    }
-
-    void Frtk_Window::drawBox(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 c)
-    {
-    }
-
-    void Frtk_Window::draw_focus()
-    {
-    }
-
-    void Frtk_Window::draw_focus(BOX_TYPE t, float X, float Y, float W, float H)
-    {
-    }
-
     int Frtk_Window::loadFonts()
     {
         int i;
 
-        if (m_nvgContext == NULL)
+        if (m_vg == NULL)
             return -1;
 
-        for (i = 0; i < 12; i++) {
+   /*     for (i = 0; i < 12; i++) {
             char file[128];
             std::string f;
             f = default_font_path + "images/";
             snprintf(file, 128, "%simage%d.jpg", f.c_str(), i + 1);
-            m_data.images[i] = nvgCreateImage(m_nvgContext, file, 0);
+            m_data.images[i] = nvgCreateImage(m_vg, file, 0);
             if (m_data.images[i] == 0) {
                 printf("Could not load %s.\n", file);
                 return -1;
             }
-        }
+        }*/
         std::string f = default_font_path + "entypo.ttf";
-        m_data.fontIcons = nvgCreateFont(m_nvgContext, "icons", f.c_str());
+        m_data.fontIcons = nvgCreateFont(m_vg, "icons", f.c_str());
         if (m_data.fontIcons == -1) {
             printf("Could not add font icons.\n");
             return -1;
         }
         f = default_font_path + "Roboto-Regular.ttf";
-        m_data.fontNormal = nvgCreateFont(m_nvgContext, "sans", f.c_str());
+        m_data.fontNormal = nvgCreateFont(m_vg, "sans", f.c_str());
         if (m_data.fontNormal == -1) {
             printf("Could not add font italic.\n");
             return -1;
         }
         f = default_font_path + "Roboto-Bold.ttf";
-        m_data.fontBold = nvgCreateFont(m_nvgContext, "sans-bold", f.c_str());
+        m_data.fontBold = nvgCreateFont(m_vg, "sans-bold", f.c_str());
         if (m_data.fontBold == -1) {
             printf("Could not add font bold.\n");
             return -1;
         }
         f = default_font_path + "NotoEmoji-Regular.ttf";
-        m_data.fontEmoji = nvgCreateFont(m_nvgContext, "emoji", f.c_str());
+        m_data.fontEmoji = nvgCreateFont(m_vg, "emoji", f.c_str());
         if (m_data.fontEmoji == -1) {
             printf("Could not add font emoji.\n");
             return -1;
         }
-        nvgAddFallbackFontId(m_nvgContext, m_data.fontNormal, m_data.fontEmoji);
-        nvgAddFallbackFontId(m_nvgContext, m_data.fontBold, m_data.fontEmoji);
+        nvgAddFallbackFontId(m_vg, m_data.fontNormal, m_data.fontEmoji);
+        nvgAddFallbackFontId(m_vg, m_data.fontBold, m_data.fontEmoji);
 
         return 0;
     }
@@ -250,37 +208,76 @@ namespace FR {
         const auto& mouse = m_mainWindow->m_sysEvents.mouse; // content-space mouse
         bool result = mouse.activeX >= m_x && mouse.activeX <= m_x + m_w &&
             mouse.activeY >= m_y && mouse.activeY <= m_y + m_WindowsStyle.height;
-
         return result;
     }
     int Frtk_Window::handle(int events)
     {
-        m_mouseDim.contentX = (float)m_mainWindow->m_sysEvents.mouse.activeX;
-        m_mouseDim.contentY = (float)m_mainWindow->m_sysEvents.mouse.activeY - m_WindowsStyle.height;
         auto& mouse = m_mainWindow->m_sysEvents.mouse;
         int result = 0;
-        if (should_getEvent(true)) {
+        if (should_getEvent()) {
+            m_mainWindow->deactivateNavi();
             result = 1;
-            if (Header_clicked() || m_dragging) {
-                if (events == FR_LEFT_DRAG_PUSH) {
-                    m_dragging = true;
-                    float dx, dy;
-                    dx = (float)( mouse.prevX - mouse.activeX);
-                    dy = (float)(mouse.prevY - mouse.activeY);
-                    position(m_x - dx, m_y - dy);
-                    return 1;
-                }
-                else if (m_dragging && events == FR_LEFT_RELEASE) {
-                    m_dragging = false;
-                    return 1;
+            if (m_hasHeader) {
+                if (Header_clicked() || m_dragging) {
+                    if (events == FR_LEFT_DRAG_PUSH) {
+                        m_dragging = true;
+                        float dx, dy;
+                        dx = (float)(mouse.prevX - mouse.activeX);
+                        dy = (float)(mouse.prevY - mouse.activeY);
+                        position(m_x - dx, m_y - dy);
+                        m_guiWindow->position(m_guiWindow->x() - dx, m_guiWindow->y() - dy);
+                        return 1;
+                    }
+                    else if (m_dragging && events == FR_LEFT_RELEASE) {
+                        m_dragging = false;
+                        m_mainWindow->activateNavi();
+                        return 1;
+                    }
                 }
             }
-        
+
         // WE MUST RETURN ALWAYS 1 .. events over the window should be consumed
         // we dont care if the group dosen't consume the events
         // Scene should not get events if the mouse was over a frtk-window!!!! IMPORTANT TO REMEMBER!!!
-        Frtk_GrpWidget::handle(events);
+            if(!m_dragging)
+                m_mainWindow->activateNavi();
+            m_guiWindow->handle(events);
+
         return result;
         }
     }
+
+    dimPos_float_t Frtk_Window::mainGui() const
+    {
+        return { x(),y() };
+    }
+
+    bool Frtk_Window::should_getEvent() const
+    {
+        const auto& mouse = m_mainWindow->m_sysEvents.mouse; // content-space mouse
+        bool result;
+        result = mouse.activeX >= m_x&& mouse.activeX <= m_x + m_w &&
+            mouse.activeY >= m_y && mouse.activeY <= m_y + m_h;
+        return result;
+    }
+
+    void Frtk_Window::remove_child_at(size_t &index){
+        m_guiWindow->remove_child_at(index);
+    }
+    void Frtk_Window::remove_child(std::shared_ptr<Frtk_Widget>& wdg){
+        m_guiWindow->remove_child(wdg);
+    }
+    void Frtk_Window::remove_all(){
+        m_guiWindow->remove_all();
+    }
+    void Frtk_Window::addChild(std::shared_ptr<Frtk_Widget> w) {
+        m_guiWindow->addChild(w);
+    }
+    bool Frtk_Window::hasHeader() const{
+        return m_hasHeader;
+    }
+    void Frtk_Window::hasHeader(bool val) {
+        m_hasHeader = val;
+    }
+
 }

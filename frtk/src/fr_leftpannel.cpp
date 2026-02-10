@@ -43,7 +43,7 @@ namespace FR {
             // |  ImGuiWindowFlags_NoDecoration;   // <- equivalent to disabling all decorations
             ;
         float menuBarHeight = ImGui::GetFrameHeight();
-        int start = (int)menuBarHeight + 2 + TOOLBAR_HEIGHT;
+        int start = (int)menuBarHeight + 2 + FRTK_TOOLBAR_HEIGHT;
         ImGui::SetNextWindowPos(ImVec2(x(), y() + start));
         //ImGui::SetNextWindowSize(ImVec2(450, h() - start));
         ImGui::Begin("LeftPannel", NULL, window_flags); {
@@ -131,7 +131,7 @@ namespace FR {
                     ImGui::Text("RAY pos : (%.1f, %.1f, %.1f)", ray.position.x, ray.position.y, ray.position.z);
                     ImGui::Text("RAY dire : (%.1f, %.1f, %.1f)", ray.direction.x, ray.direction.y, ray.direction.z);
 
-                    if (ImGui::Button(GLYPH_CHART_PIE, ImVec2(ICON_SIZE)))
+                    if (ImGui::Button(GLYPH_CHART_PIE, ImVec2(FRTK_ICON_SIZE)))
                         mnuDrawLine_cb(nullptr);
                     ImGui::Button(GLYPH_BOX_1_FILL);
                     ImGui::EndTabItem();

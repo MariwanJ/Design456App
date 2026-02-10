@@ -23,12 +23,13 @@ project "yaml-cpp"
         pic "On"
         staticruntime "On"
         systemversion "latest"
-        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto" ,"-ggdb"}
+        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto" ,"-ggdb" ,  "-finput-charset=UTF-8", "-fexec-charset=UTF-8"}
  
     filter {}
     filter "system:windows"
         systemversion "latest"
-
+        buildoptions { "/utf-8" }
+        
         filter "configurations:Debug"
             runtime "Debug"
             targetsuffix "d"

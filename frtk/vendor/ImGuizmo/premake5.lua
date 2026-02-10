@@ -5,7 +5,8 @@ project "ImGuizmo"
     
     targetdir ("../../../bin/")
     objdir ("../../../bin_obj/")
-
+    
+    
     files
     {
         "src/*.h",
@@ -38,7 +39,7 @@ project "ImGuizmo"
     
     filter "system:windows"
         systemversion "latest"
-
+        buildoptions { "/utf-8" }
         filter "configurations:Debug"
             runtime "Debug"
             targetsuffix "d"

@@ -28,6 +28,7 @@
 #ifndef FR_LOG_H
 #define FR_LOG_H
 
+//#define SPDLOG_WCHAR_TO_UTF8_SUPPORT
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
 

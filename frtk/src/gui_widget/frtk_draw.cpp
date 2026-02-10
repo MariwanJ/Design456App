@@ -382,6 +382,7 @@ namespace FR {
     }
 
     void draw_box(NVGcontext* vg, BOX_TYPE b, Dim_float_t dim, float cornerRadius, float strokeWidth, NVGcolor c, NVGcolor shadowCol, bool up) {
+
         switch (b) {
         case FRTK_NO_BOX: {
             return; //DRAW Nothing
@@ -393,22 +394,22 @@ namespace FR {
 
         case FRTK_UP_BOX:
         case FRTK_DOWN_BOX:
-            drawBoxUpDown(vg, dim, cornerRadius, strokeWidth, c, shadowCol, b == FRTK_UP_BOX);
+            drawBoxUpDown(vg, dim, cornerRadius, strokeWidth, c, shadowCol, b == FRTK_UP_BOX && up);
             break;
 
         case FRTK_THIN_UP_BOX:
         case FRTK_THIN_DOWN_BOX:
-            drawBoxUpDown(vg, dim, cornerRadius, THIN_BORDER, c, shadowCol, b == FRTK_THIN_UP_BOX);
+            drawBoxUpDown(vg, dim, cornerRadius, THIN_BORDER, c, shadowCol, b == FRTK_THIN_UP_BOX && up);
             break;
 
         case FRTK_ROUNDED_BOX_UP:
         case FRTK_ROUNDED_BOX_DOWN:
-            drawBoxUpDown(vg, dim, cornerRadius + 10.f, strokeWidth, c, shadowCol, b == FRTK_ROUNDED_BOX_UP);
+            drawBoxUpDown(vg, dim, cornerRadius + 10.f, strokeWidth, c, shadowCol, b == FRTK_ROUNDED_BOX_UP && up) ;
             break;
 
         case FRTK_ROUND_UP_BOX:
         case FRTK_ROUND_DOWN_BOX:
-            drawSolidCircleWithState(vg, dim, cornerRadius, THIN_BORDER, c, shadowCol, b == FRTK_ROUND_UP_BOX);
+            drawSolidCircleWithState(vg, dim, cornerRadius, THIN_BORDER, c, shadowCol, b == FRTK_ROUND_UP_BOX && up);
             break;
 
         case FRTK_ROUND_FLAT_BOX:
@@ -417,28 +418,28 @@ namespace FR {
 
         case FRTK_UP_FRAME:
         case FRTK_DOWN_FRAME:
-            drawFrameRect(vg, dim, cornerRadius, THICK_BORDER, c, shadowCol, b == FRTK_UP_FRAME);
+            drawFrameRect(vg, dim, cornerRadius, THICK_BORDER, c, shadowCol, b == FRTK_UP_FRAME && up);
             break;
 
         case FRTK_ROUNDED_UP_FRAME:
         case FRTK_ROUNDED_DOWN_FRAME:
-            drawFrameRect(vg, dim, cornerRadius + 10.f, THIN_BORDER, c, shadowCol, b == FRTK_ROUNDED_UP_FRAME);
+            drawFrameRect(vg, dim, cornerRadius + 10.f, THIN_BORDER, c, shadowCol, b == FRTK_ROUNDED_UP_FRAME && up);
             break;
 
         case FRTK_THIN_UP_FRAME:
         case FRTK_THIN_DOWN_FRAME:
-            drawFrameRect(vg, dim, cornerRadius, NORMAL_BORDER, c, shadowCol, b == FRTK_THIN_UP_FRAME);
+            drawFrameRect(vg, dim, cornerRadius, NORMAL_BORDER, c, shadowCol, b == FRTK_THIN_UP_FRAME && up);
             break;
 
         case FRTK_ROUND_SHADOW_UP_BOX:
         case FRTK_ROUND_SHADOW_DOWN_BOX:
-            drawFilledRect(vg, dim, cornerRadius + 8.0f, NORMAL_BORDER, c, shadowCol, b == FRTK_ROUND_SHADOW_UP_BOX);
-            drawShadowBox(vg, dim, cornerRadius + 12.0f, NORMAL_BORDER, c, shadowCol, b == FRTK_ROUND_SHADOW_UP_BOX);
+            drawFilledRect(vg, dim, cornerRadius + 8.0f, NORMAL_BORDER, c, shadowCol, b == FRTK_ROUND_SHADOW_UP_BOX && up);
+            drawShadowBox(vg, dim, cornerRadius + 12.0f, NORMAL_BORDER, c, shadowCol, b == FRTK_ROUND_SHADOW_UP_BOX && up);
             break;
 
         case FRTK_DIAMOND_UP_BOX:
         case FRTK_DIAMOND_DOWN_BOX:
-            drawDiamondWithState(vg, dim, cornerRadius, NORMAL_BORDER, c, shadowCol, b == FRTK_DIAMOND_UP_BOX);
+            drawDiamondWithState(vg, dim, cornerRadius, NORMAL_BORDER, c, shadowCol, b == FRTK_DIAMOND_UP_BOX && up);
             break;
 
         case FRTK_OVALFLAT_BOX:
@@ -446,17 +447,17 @@ namespace FR {
             break;
         case FRTK_OVAL_UP_BOX:
         case FRTK_OVAL_DOWN_BOX:
-            drawSolidOvalWithState(vg, dim, cornerRadius, NORMAL_BORDER, c, shadowCol, b == FRTK_OVAL_UP_BOX);
+            drawSolidOvalWithState(vg, dim, cornerRadius, NORMAL_BORDER, c, shadowCol, b == FRTK_OVAL_UP_BOX && up);
             break;
 
         case FRTK_OVAL_UP_FRAME:
         case FRTK_OVAL_DOWN_FRAME:
-            drawOvalFrameWithState(vg, dim, cornerRadius, NORMAL_BORDER, c, shadowCol, b == FRTK_OVAL_UP_FRAME);
+            drawOvalFrameWithState(vg, dim, cornerRadius, NORMAL_BORDER, c, shadowCol, b == FRTK_OVAL_UP_FRAME && up);
             break;
 
         case FRTK_OSHADOW_UP_BOX:
         case FRTK_OSHADOW_DOWN_BOX:
-            drawShadowBox(vg, dim, cornerRadius, THICK_BORDER, c, shadowCol, b == FRTK_OSHADOW_UP_BOX);
+            drawShadowBox(vg, dim, cornerRadius, THICK_BORDER, c, shadowCol, b == FRTK_OSHADOW_UP_BOX && up);
             break;
         }
     }
@@ -489,14 +490,11 @@ namespace FR {
     {
         nvgFontSize(vg, fnt.fontSize);
         nvgFontFace(vg, fnt.fName.c_str());
-
-        // baseline alignment
         nvgTextAlign(vg, fnt.hAlign | NVG_ALIGN_BASELINE);
-
         float asc, desc, lineh;
         nvgTextMetrics(vg, &asc, &desc, &lineh);
 
-        // vertical alignment  - baselineY 
+        // vertical alignment  
         float baselineY = fnt.pos.y + asc;
 
         switch (fnt.vAlign)
@@ -550,4 +548,14 @@ namespace FR {
         nvgText(vg, drawX, baselineY, text.c_str(), nullptr);
     }
 
+    // Function to draw a check mark
+    void drawCheckMark(NVGcontext* vg, float x, float y, float size, NVGcolor col) {
+        nvgBeginPath(vg);
+        nvgMoveTo(vg, x, y + size * 0.5f); 
+        nvgLineTo(vg, x + size * 0.3f, y + size); 
+        nvgLineTo(vg, x + size, y); 
+        nvgStrokeColor(vg, col); 
+        nvgStrokeWidth(vg, 5.0f); 
+        nvgStroke(vg); 
+    }
 }

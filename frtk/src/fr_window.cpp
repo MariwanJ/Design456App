@@ -43,8 +43,8 @@
 //#include <glad/glad.h>    // must be included first
 
 #include <gui_widget/frtk_window.h>
-#include <gui_widget/demo.h>
-
+#include <gui_widget/demo2.h>
+#include <gui_widget/buttons_demo.h>
  /** Fr_Window */
 
   //Remove me later : TODO
@@ -89,50 +89,50 @@ namespace FR {
         return spWindow;
     }
     void Fr_Window::initSystemEvents() {
-        auto &ev = m_sysEvents;
-            ev.mouse.activeX = -1;
-            ev.mouse.activeY = -1;
-            ev.mouse.prevX = -1;
-            ev.mouse.prevY = -1;
-            ev.mouse.mouseEntered = -1;
-            ev.mouse.worldPos[0] = 0.0f;
-            ev.mouse.worldPos[1] = 0.0f;
-            ev.mouse.worldPos[2] = 0.0f;
-            ev.mouse.button = -1;
-            ev.mouse.isDClick = -1;
-            ev.mouse.L_Down = false;
-            ev.mouse.R_Down = false;
-            ev.mouse.M_Down = false;
-            ev.mouse.L_Pressed = false;
-            ev.mouse.L_Released = false;
-            ev.mouse.L_Drag = false;
-            ev.mouse.R_Pressed = false;
-            ev.mouse.R_Released = false;
-            ev.mouse.R_Drag = false;
-            ev.mouse.M_Pressed = false;
-            ev.mouse.M_Released = false;
-            ev.mouse.M_Drag = false;
-            ev.mouse.mouseMoved = false;
-            ev.mouse.lastMAction = -1;
-            ev.mouse.lastMod = -1;
-            memset(ev.keyB.keyDown, 0, sizeof(ev.keyB.keyDown));
-            memset(ev.keyB.prevKeyDown, 0, sizeof(ev.keyB.prevKeyDown));
+        auto& ev = m_sysEvents;
+        ev.mouse.activeX = -1;
+        ev.mouse.activeY = -1;
+        ev.mouse.prevX = -1;
+        ev.mouse.prevY = -1;
+        ev.mouse.mouseEntered = -1;
+        ev.mouse.worldPos[0] = 0.0f;
+        ev.mouse.worldPos[1] = 0.0f;
+        ev.mouse.worldPos[2] = 0.0f;
+        ev.mouse.button = -1;
+        ev.mouse.isDClick = -1;
+        ev.mouse.L_Down = false;
+        ev.mouse.R_Down = false;
+        ev.mouse.M_Down = false;
+        ev.mouse.L_Pressed = false;
+        ev.mouse.L_Released = false;
+        ev.mouse.L_Drag = false;
+        ev.mouse.R_Pressed = false;
+        ev.mouse.R_Released = false;
+        ev.mouse.R_Drag = false;
+        ev.mouse.M_Pressed = false;
+        ev.mouse.M_Released = false;
+        ev.mouse.M_Drag = false;
+        ev.mouse.mouseMoved = false;
+        ev.mouse.lastMAction = -1;
+        ev.mouse.lastMod = -1;
+        memset(ev.keyB.keyDown, 0, sizeof(ev.keyB.keyDown));
+        memset(ev.keyB.prevKeyDown, 0, sizeof(ev.keyB.prevKeyDown));
 
-            ev.keyB.lastKey = -1;
-            ev.keyB.lastKAction = -1;
-            ev.keyB.lastMod = -1;
-            ev.keyB.scancode = -1;
-            ev.keyB.shiftDown = false;
-            ev.keyB.ctrlDown = false;
-            ev.keyB.altDown = false;
-            ev.keyB.superDown = false;
-        }
-    
+        ev.keyB.lastKey = -1;
+        ev.keyB.lastKAction = -1;
+        ev.keyB.lastMod = -1;
+        ev.keyB.scancode = -1;
+        ev.keyB.shiftDown = false;
+        ev.keyB.ctrlDown = false;
+        ev.keyB.altDown = false;
+        ev.keyB.superDown = false;
+    }
+
     Fr_Window::Fr_Window(int x, int y, int w, int h, const std::string& label)
         : m_label(label), showOpenDialog(false),
         cursorHand(nullptr), cursorCrosshair(nullptr),
         runCode(false), activeScene(nullptr), m_nvgContext(nullptr),
-        gl_version_major(4), gl_version_minor(6),
+        gl_version_major(4), gl_version_minor(6),m_NaviCube(true),
         mouseDefaults{ 0 }, radiusXYZ(0.0f), m_winType(FRTK_WIN_TYPE::NORMAL)
     {
         showOpenDialog = false;
@@ -325,7 +325,7 @@ namespace FR {
 #endif
 
         // glfw window creation
-        // --------------------
+        //---------------
         pGLFWWindow = glfwCreateWindow(m_ViewPort.size.w, m_ViewPort.size.h, m_label.c_str(), NULL, NULL);
         if (pGLFWWindow == NULL)
         {
@@ -339,7 +339,7 @@ namespace FR {
         glfwSetWindowPos(pGLFWWindow, (int)m_ViewPort.pos.x, (int)m_ViewPort.pos.y);
 
         // glad: load all OpenGL function pointers
-        // ---------------------------------------
+        //----------------------------------
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
         {
             std::cout << "Failed to initialize GLAD" << std::endl;
@@ -428,7 +428,7 @@ namespace FR {
         icons_config.PixelSnapH = true;
         static const ImWchar icons_ranges[] = { ICON_MIN, ICON_MAX, 0 };
 
-        io.Fonts->AddFontFromFileTTF(PathICON.c_str(), ICON_FONT_SIZE, &icons_config, icons_ranges);
+        io.Fonts->AddFontFromFileTTF(PathICON.c_str(), FRTK_TOOLBAR_BUTTON_FONT_SIZE, &icons_config, icons_ranges);
         ImGui::StyleColorsLight();
 
         GLFWwindow* window = Fr_Window::getCurrentGLWindow();
@@ -440,23 +440,23 @@ namespace FR {
 
         glfwGetFramebufferSize(pGLFWWindow, &m_ViewPort.size.w, &m_ViewPort.size.h);
 
-        userData_ data;
+        userData_t data;
         //Temporary Code -- TODO : Remove Me when you are done with the new GUI SYSTEM !!!!!  2026-01-30 Mariwan
+        m_frtkWindow.push_back(runFRTKdemo2());
         m_frtkWindow.push_back(runFRTKdemo());
         while (!glfwWindowShouldClose(pGLFWWindow))
         {
             //ALL 3D Drawings
             activeScene->RenderScene();
+            
             renderNewGUI(); //temporary code
 
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplGlfw_NewFrame();
 
             ImGui::NewFrame();
-
             ImGuizmo::BeginFrame();
             //This Renders all GUI (imGui) widgets and windows- not viewport.
-
             renderimGUI(data);
 
             ImGuiIO io = ImGui::GetIO();
@@ -533,24 +533,24 @@ namespace FR {
         auto& em = m_sysEvents.mouse;
 
         // LEFT BUTTON
-        em.L_Pressed =  (em.button == GLFW_MOUSE_BUTTON_LEFT  && em.lastMAction == GLFW_PRESS);
+        em.L_Pressed = (em.button == GLFW_MOUSE_BUTTON_LEFT && em.lastMAction == GLFW_PRESS);
         em.L_Released = (em.button == GLFW_MOUSE_BUTTON_LEFT && em.lastMAction == GLFW_RELEASE);
         em.L_Drag = (em.L_Down && em.mouseMoved);  // true if dragging
 
         // RIGHT BUTTON
-        em.R_Pressed = ( em.button == GLFW_MOUSE_BUTTON_RIGHT && em.lastMAction == GLFW_PRESS);
+        em.R_Pressed = (em.button == GLFW_MOUSE_BUTTON_RIGHT && em.lastMAction == GLFW_PRESS);
         em.R_Released = (em.button == GLFW_MOUSE_BUTTON_RIGHT && em.lastMAction == GLFW_RELEASE);
         em.R_Drag = (em.R_Down && em.mouseMoved); // true if dragging
 
         // MIDDLE BUTTON
-        em.M_Pressed  = (em.button == GLFW_MOUSE_BUTTON_MIDDLE && em.lastMAction == GLFW_PRESS);
+        em.M_Pressed = (em.button == GLFW_MOUSE_BUTTON_MIDDLE && em.lastMAction == GLFW_PRESS);
         em.M_Released = (em.button == GLFW_MOUSE_BUTTON_MIDDLE && em.lastMAction == GLFW_RELEASE);
         em.M_Drag = (em.M_Down && em.mouseMoved); // true if dragging
 
         //Keyboard
         auto& ek = m_sysEvents.keyB;
         for (int k = 0; k <= GLFW_KEY_LAST; ++k) {
-            bool justPressed =  (ek.keyDown[k] && !ek.prevKeyDown[k]);
+            bool justPressed = (ek.keyDown[k] && !ek.prevKeyDown[k]);
             bool justReleased = (!ek.keyDown[k] && ek.prevKeyDown[k]);
 
             // You can store these in temp arrays or call handle()
@@ -581,8 +581,8 @@ namespace FR {
 
         //Keyboard Events
         for (int k = 0; k <= GLFW_KEY_LAST; ++k) {
-            bool justPressed  =  ek.keyDown[k] && !ek.prevKeyDown[k];
-            bool justReleased = !ek.keyDown[k] &&  ek.prevKeyDown[k];
+            bool justPressed = ek.keyDown[k] && !ek.prevKeyDown[k];
+            bool justReleased = !ek.keyDown[k] && ek.prevKeyDown[k];
             if (justPressed || justReleased) {
                 ek.lastKey = k;
                 ek.lastKAction = justPressed ? GLFW_PRESS : GLFW_RELEASE;
@@ -654,5 +654,14 @@ namespace FR {
         default: {}
         }
         return activeScene->handle(events);
+    }
+    void Fr_Window::deactivateNavi()
+    {
+        m_NaviCube = false;
+    }
+
+    void Fr_Window::activateNavi()
+    {
+        m_NaviCube = true;
     }
 }

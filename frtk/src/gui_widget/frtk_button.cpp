@@ -26,13 +26,6 @@
 //
 
 #include <gui_widget/frtk_button.h>
-#include <gui_widget/frtk_check_button.h>
-#include <gui_widget/frtk_round_button.h>
-#include <gui_widget/frtk_return_button.h>
-#include <gui_widget/frtk_repeat_button.h>
-#include <gui_widget/frtk_light_button.h>
-#include <gui_widget/frtk_toggle_round_button.h>
-#include <gui_widget/frtk_toggle_light_button.h>
 
 namespace FR {
     Frtk_Button::Frtk_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :
@@ -41,8 +34,7 @@ namespace FR {
         assert(vg != NULL);
         m_value = m_oldValue = 0;
         m_wdgType = FRTK_NORMAL_BUTTON;
-        m_color = glm::vec4(FR_LIGHTGRAY);
-      //  m_cellStyle = FR_PIC_OVER_TEXT_RIGHT;
+        m_color = glm::vec4(FR_GRAY80);
     }
 
     void Frtk_Button::value(uint8_t val) {
@@ -58,73 +50,82 @@ namespace FR {
 
     void Frtk_Button::draw()
     {
+        glm::vec4 actualColor = m_color;
+        if (!m_active)
+            actualColor = m_color_diabled;
         if (m_value == 0) {
             //UP
-            draw_box(m_vg, m_boxType, m_dim, 0.0f, THICK_BORDER, nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a), nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), true);
+            draw_box(m_vg, m_boxType, {{ m_x,m_y }, { m_w,m_h }}, 0.0f, THICK_BORDER, 
+                nvgRGBAf(actualColor.r, actualColor.g, actualColor.b, actualColor.a), 
+                nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), true);
         }
         else if (m_value == 1)
         {
             //DOWN
-            draw_box(m_vg, (BOX_TYPE)((int)(m_boxType)+1), m_dim, 0.0f, THICK_BORDER, nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a), nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), false);
+            draw_box(m_vg, (BOX_TYPE)((int)(m_boxType)+1), {{ m_x,m_y }, { m_w,m_h }}, 0.0f, THICK_BORDER, 
+                nvgRGBAf(actualColor.r, actualColor.g, actualColor.b, actualColor.a), 
+                nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), false);
         }
         else
         {
             //Inactive
         }
-        
-        if (m_IconTexture != 0)
-            drawImage();//Dimensions are already calculated using style
-        
-        drawLabel();
 
+        if (m_IconTexture != 0) {
+            drawImage();//Dimensions are already calculated using style
+        }
+        else {
+            applyStyle(); //We still need to apply style
+        }
+
+        drawLabel();
     }
     int Frtk_Button::handle(int e) {
-        if (should_getEvent(false)) {
-            if (e == FR_LEFT_PUSH) {
-                if (m_wdgType == FRTK_CHECK_BUTTON) {
-                    m_value = ~m_value;
-                    if (m_value == 1) {
-                        m_Image.opacity = 0.5;
-                    }else{
-                        m_Image.opacity = 1.0;
-                    }
-                }else{
-                    m_value = 1;
+        if (e == FR_LEFT_PUSH) {
+            if (m_wdgType == FRTK_CHECK_BUTTON ||
+                m_wdgType == FRTK_TOGGLE_LIGHT_BUTTON ||
+                m_wdgType == FRTK_LIGHT_BUTTON ||
+                m_wdgType == FRTK_TOGGLE_ROUND_BUTTON ||
+                m_wdgType == FRTK_SWITCH_BUTTON ||
+                m_wdgType == FRTK_ROUND_BUTTON) {
+                m_value = ~m_value;
+                if (m_value == 1) {
                     m_Image.opacity = 0.5;
                 }
-                callback();
-                return 1;
-            }
-            else if (e == FR_LEFT_RELEASE) {
-                if (m_wdgType != FRTK_CHECK_BUTTON){
-                m_value = 0;
-                m_Image.opacity = 1.0f;
-                    //callback(); Optional if you want to execute the callback even when mouse is released.
-                return 1;
+                else {
+                    m_Image.opacity = 1.0;
                 }
             }
+            else {
+                m_value = 1;
+                m_Image.opacity = 0.5;
+            }
+            do_callback();
+            return 1;
+        }
+        else if (e == FR_LEFT_RELEASE) {
+            if (!(m_wdgType == FRTK_CHECK_BUTTON ||
+                m_wdgType == FRTK_TOGGLE_LIGHT_BUTTON ||
+                m_wdgType == FRTK_TOGGLE_ROUND_BUTTON ||
+                m_wdgType == FRTK_SWITCH_BUTTON ||
+                m_wdgType == FRTK_LIGHT_BUTTON ||
+                m_wdgType == FRTK_ROUND_BUTTON)) {
+                m_value = 0;
+                m_Image.opacity = 1.0f;
+                //callback(); Optional if you want to execute the callback even when mouse is released.
+                return 1;
+            }
+        }
+        //TODO : FIX ME .. THIS SHOULD EXECUTE ONLY WHEN IT LOOSES FOCUS WHICH IS NOT DONE HERE!! IN GROUP WIDGET OR WINDOWS
+    //Lost focus we should make the value 0
+        if (!(m_wdgType == FRTK_CHECK_BUTTON ||
+            m_wdgType == FRTK_TOGGLE_LIGHT_BUTTON ||
+            m_wdgType == FRTK_TOGGLE_ROUND_BUTTON ||
+            m_wdgType == FRTK_SWITCH_BUTTON ||
+            m_wdgType == FRTK_LIGHT_BUTTON ||
+            m_wdgType == FRTK_ROUND_BUTTON)) {
+            m_value = 0;
         }
         return 0;
-    }
-
-    // implementations for all other button types, drawing is done in the base class:
-
-    Frtk_Round_Button::Frtk_Round_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :Frtk_Button(vg, x, y, w, h, l, b) {
-        m_wdgType = FRTK_ROUND_BUTTON;
-    }
-    Frtk_Return_Button::Frtk_Return_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :Frtk_Button(vg, x, y, w, h, l, b) {
-        m_wdgType = FRTK_RETURN_BUTTON;
-    }
-    Frtk_Repeat_Button::Frtk_Repeat_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :Frtk_Button(vg, x, y, w, h, l, b) {
-        m_wdgType = FRTK_REPEAT_BUTTON;
-    }
-    Frtk_Light_Button::Frtk_Light_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :Frtk_Button(vg, x, y, w, h, l, b) {
-        m_wdgType = FRTK_LIGHT_BUTTON;
-    }
-    Frtk_Toggle_Round_Button::Frtk_Toggle_Round_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :Frtk_Button(vg, x, y, w, h, l, b) {
-        m_wdgType = FRTK_TOGGLE_ROUND_BUTTON;
-    }
-    Frtk_Toggle_Light_Button::Frtk_Toggle_Light_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :Frtk_Button(vg, x, y, w, h, l, b) {
-        m_wdgType = FRTK_TOGGLE_LIGHT_BUTTON;
     }
 }

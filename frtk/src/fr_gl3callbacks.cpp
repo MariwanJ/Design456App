@@ -40,11 +40,11 @@ namespace FR {
         spWindow->m_ViewPort.size.w = width;
         spWindow->m_ViewPort.size.h = height;
 
-        glfwGetWindowPos(pGLFWWindow,&m_ViewPort.pos.x, &m_ViewPort.pos.y); //update even position
+        glfwGetWindowPos(pGLFWWindow, &m_ViewPort.pos.x, &m_ViewPort.pos.y); //update even position
 
         uint8_t index = spWindow->activeScene->m_active_camera;
-        if(spWindow->m_ViewPort.size.h!=0){
-            //Avoid divide by zero, keep the last ratio 
+        if (spWindow->m_ViewPort.size.h != 0) {
+            //Avoid divide by zero, keep the last ratio
             spWindow->activeScene->m_cameras[index].m_aspect_ratio = static_cast<float>(spWindow->m_ViewPort.size.w) / spWindow->m_ViewPort.size.h;
         }
     }
@@ -107,14 +107,14 @@ namespace FR {
             return; //do nothing
 
         auto& em = spWindow->m_sysEvents.mouse;
-        
-        //Avoid View jumping , we should initialize the current theta and phi 
+
+        //Avoid View jumping , we should initialize the current theta and phi
         if (spWindow->runCode && button == GLFW_MOUSE_BUTTON_MIDDLE) {
             spWindow->runCode = false;
             Fr_Camera& cam = spWindow->activeScene->getActiveCamera();
             spWindow->theta = glm::degrees(atan2(cam.GetCamPosition().x, cam.GetCamPosition().y));
             spWindow->phi = glm::degrees(asin(cam.GetCamPosition().z / glm::length(cam.GetCamPosition())));
-         }
+        }
         else if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_RELEASE) {
             spWindow->runCode = true;
         }
@@ -135,7 +135,7 @@ namespace FR {
         mouse.activeX = xpos;
         mouse.activeY = ypos;
         spWindow->calculateScreenRay();
-        // ----- SIGNALS -----
+        // SIGNALS
         spWindow->m_sysEvents.mouse.mouseMoved = true;
     }
 
@@ -162,7 +162,7 @@ namespace FR {
     //DON'T CHANGE ME WORKS GOOD !!!! 2025-10-22
     void Fr_Window::cameraPAN(GLFWwindow* win)
     {
-        userData_ data;
+        userData_t data;
         if (!spWindow)
             return;
 
@@ -177,7 +177,7 @@ namespace FR {
 
         float xoffset = float(deltax) * spWindow->mouseDefaults.MouseXYScale;
         float yoffset = float(deltay) * spWindow->mouseDefaults.MouseXYScale;
-        data.camm_position = glm::vec3(data.camm_position.x + xoffset, data.camm_position.y - yoffset, data.camm_position.z);
+        data.cam_pos_ = glm::vec3(data.cam_pos_.x + xoffset, data.cam_pos_.y - yoffset, data.cam_pos_.z);
         data.direction_ = glm::vec3(data.direction_.x + xoffset, data.direction_.y - yoffset, data.direction_.z);
         spWindow->activeScene->getActiveCamera().setCamData(data);
     }
@@ -211,7 +211,7 @@ namespace FR {
 
     void Fr_Window::cameraZoom(GLFWwindow* win)
     {
-        userData_ data;
+        userData_t data;
         activeScene->getActiveCamera().getCamData(data);
         if (spWindow->activeScene->getActiveCamera().getType() == ORTHOGRAPHIC) {
             data.orthoSize_ = data.orthoSize_ + float(m_sysEvents.mouse.scrollY) * spWindow->mouseDefaults.MouseScrollScale;
@@ -227,8 +227,8 @@ namespace FR {
             {
                 scale_ = spWindow->mouseDefaults.MouseScrollScale;
             }
-            glm::vec3 forward = glm::normalize(data.direction_ - data.camm_position); // forward direction
-            data.camm_position += forward * scale_;   // move camera
+            glm::vec3 forward = glm::normalize(data.direction_ - data.cam_pos_); // forward direction
+            data.cam_pos_ += forward * scale_;   // move camera
             data.direction_ += forward * scale_;  // move target along with camera
         }
         spWindow->activeScene->getActiveCamera().setCamData(data);
@@ -260,7 +260,7 @@ namespace FR {
 
             if (!fileDialog->IsOpened() || fileDialog->isCanceled()) {
                 showOpenDialog = false;
-                fileDialog.reset();             
+                fileDialog.reset();
                 ImGui::CloseCurrentPopup();
             }
             else if (fileDialog->HasSelected()) {
@@ -269,18 +269,19 @@ namespace FR {
                 }
                 fileDialog->ClearSelected();
                 showOpenDialog = false;
-                fileDialog.reset();             
+                fileDialog.reset();
                 ImGui::CloseCurrentPopup();
             }
 
             if (ImGui::Button("Close")) {
                 showOpenDialog = false;
-                fileDialog.reset();             
+                fileDialog.reset();
                 ImGui::CloseCurrentPopup();
             }
             ImGui::EndPopup();
         }
     }
+
 
 
     /**  callbacks */

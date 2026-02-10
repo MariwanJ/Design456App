@@ -197,7 +197,7 @@ namespace FR {
 
         static screenDim_t getScreenDim(void);
 
-        int renderimGUI(userData_& data);
+        int renderimGUI(userData_t& data);
 
         int renderNewGUI(); //temporary function 
 
@@ -222,8 +222,6 @@ namespace FR {
         int createGLFWwindow();
 
         int imguimzo_init();
-
-        
 
         static screenDim_t m_ViewPort;
 
@@ -280,11 +278,15 @@ namespace FR {
         void mnuDrawLine_cb(void* Data);
 
         void createOpenDialog(void);
+        void deactivateNavi();
+        void activateNavi();
+
         /**
          * GLAD VERSION DEFINITION
          * Currently it is 4.3.
          */
     private:
+        bool m_NaviCube;
         int gl_version_major;
         int gl_version_minor;
         mouseScale_t mouseDefaults;

@@ -25,17 +25,62 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef FRTK_REPEAT_BUTTON_H
-#define FRTK_REPEAT_BUTTON_H
-
-#include <gui_widget/frtk_button.h> 
+#include <gui_widget/frtk_repeat_button.h>
 
 namespace FR {
-	class Frtk_Repeat_Button : public Frtk_Button
-	{
-	public:
-		 Frtk_Repeat_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b = FRTK_UP_BOX);
+    Frtk_Repeat_Button::Frtk_Repeat_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :
+        Frtk_Button(vg, x, y, w, h, l, b),
+        m_delayBeforeStart(0.5f), m_delayBetweenCallbacks(0.1f), m_repeatTimer(0.0f)
+    {
+        m_wdgType = FRTK_REPEAT_BUTTON;
+        m_lastTime = std::chrono::high_resolution_clock::now();
+    }
+    void Frtk_Repeat_Button::delayBetweenCallbacks(float val)
+    {
+        m_delayBetweenCallbacks = val;
+    }
+    void Frtk_Repeat_Button::startDelay(float val)
+    {
+        m_delayBeforeStart = val;
+    }
+    float Frtk_Repeat_Button::delayBetweenCallbacks()
+    {
+        return m_delayBetweenCallbacks;
+    }
+    float Frtk_Repeat_Button::startDelay()
+    {
+        return m_delayBeforeStart;
+    }
 
-	};
+    int Frtk_Repeat_Button::handle(int e) {
+        auto now = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<float> delta = now - m_lastTime;
+        m_lastTime = now;
+        float delta_time = delta.count();
+
+            if (e == FR_LEFT_PUSH) {
+                m_repeatTimer = m_delayBeforeStart;
+                m_value = 1;
+                m_Image.opacity = 0.5;
+
+                return 1;
+            }
+            else if (e == FR_LEFT_RELEASE) {
+                m_repeatTimer = 0.0f; // stop repeating
+                m_value = 0;
+                m_Image.opacity = 1.0;
+
+                return 1;
+            }
+
+        // Update repeat timer if button is held
+        if (m_repeatTimer > 0.0f) {
+            m_repeatTimer -= delta_time;
+            if (m_repeatTimer <= 0.0f) {
+                do_callback();
+                m_repeatTimer = m_delayBetweenCallbacks; 
+            }
+        }
+        return 0;
+    }
 }
-#endif // FRTK_REPEATE_BUTTON_H

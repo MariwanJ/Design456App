@@ -72,10 +72,10 @@ namespace FR {
 
         //ImGui::Begin("SelectionToolbar", NULL, window_flags);
 
-        //ImVec4 dummy_col = ImVec4(FR_LIGHTGRAY);
+        //ImVec4 dummy_col = ImVec4(FR_GRAY80);
         ////All TOOLBARS ARE HERE !!
         //ImVec4 pressedCol = ImVec4(FR_BEIGE);
-        //ImVec4 normalCol = ImVec4(FR_LIGHTGRAY);
+        //ImVec4 normalCol = ImVec4(FR_GRAY80);
 
         //if (IconButtonPressed(GLYPH_CUBES, m_currentSelMode == SelectionMode::Mesh, ICON_SIZE))
         //{
@@ -127,64 +127,64 @@ namespace FR {
         
         float menuBarHeight = ImGui::GetFrameHeight();
         ImGui::SetNextWindowPos(ImVec2( x(), y()+ (int)menuBarHeight+3 ));
-        ImGui::SetNextWindowSize(ImVec2(ImGui::GetIO().DisplaySize.x, TOOLBAR_HEIGHT));
+        ImGui::SetNextWindowSize(ImVec2(ImGui::GetIO().DisplaySize.x, FRTK_TOOLBAR_HEIGHT));
 
         ImGui::Begin("TOOLBAR", NULL, window_flags);
 
-        ImVec4 dummy_col = ImVec4(FR_LIGHTGRAY);
+        ImVec4 dummy_col = ImVec4(FR_GRAY80);
         //All TOOLBARS ARE HERE !!
         ImVec4 pressedCol = ImVec4(FR_BEIGE);
-        ImVec4 normalCol = ImVec4(FR_LIGHTGRAY);
+        ImVec4 normalCol = ImVec4(FR_GRAY80);
 
         // ImGui::Dummy(ImVec2(0.0f, 20.0f));           //space -- Vertically
         ImGui::SameLine(0,2);
-        if (ImGui::Button(GLYPH_FILE_CIRCLE_PLUS, ICON_SIZE))   mnuFileNew_cb(nullptr);               //FILE NEW
+        if (ImGui::Button(GLYPH_FILE_CIRCLE_PLUS, FRTK_ICON_SIZE))   mnuFileNew_cb(nullptr);               //FILE NEW
         // ImGui::Dummy(ImVec2(36.0f, 0.0f));
         ImGui::SameLine(0, 2);
 
   
 
-        if (ImGui::Button(GLYPH_FOLDER_OPEN_LINE, ICON_SIZE))     mnuFileOpen_cb(nullptr);            //FILE OPEN
+        if (ImGui::Button(GLYPH_FOLDER_OPEN_LINE, FRTK_ICON_SIZE))     mnuFileOpen_cb(nullptr);            //FILE OPEN
         ImGui::SameLine(0, 2);
-        if (ImGui::Button(GLYPH_SAVE_LINE, ICON_SIZE))   mnuFileSave_cb(nullptr);                     //FILE SAVE
+        if (ImGui::Button(GLYPH_SAVE_LINE, FRTK_ICON_SIZE))   mnuFileSave_cb(nullptr);                     //FILE SAVE
         ImGui::SameLine(0, 2);
-        if (ImGui::Button(GLYPH_SAVE_2_LINE, ICON_SIZE))   mnuFileSaveAs_cb(nullptr);                 //FILE SAVE AS
+        if (ImGui::Button(GLYPH_SAVE_2_LINE, FRTK_ICON_SIZE))   mnuFileSaveAs_cb(nullptr);                 //FILE SAVE AS
         ImGui::SameLine(0, 2);
-        if (ImGui::Button(GLYPH_CLOSE_CIRCLE_LINE, ICON_SIZE))   mnuFileClose_cb(nullptr);            //FILE CLOSE
+        if (ImGui::Button(GLYPH_CLOSE_CIRCLE_LINE, FRTK_ICON_SIZE))   mnuFileClose_cb(nullptr);            //FILE CLOSE
         ImGui::SameLine(0, 2);
-        if (ImGui::Button(GLYPH_IMPORT_FILL, ICON_SIZE))   mnuFileImport_cb(nullptr);                 //FILE IMPORT
+        if (ImGui::Button(GLYPH_IMPORT_FILL, FRTK_ICON_SIZE))   mnuFileImport_cb(nullptr);                 //FILE IMPORT
         ImGui::SameLine(0, 2);
-        if (ImGui::Button(GLYPH_EXPORT_LINE, ICON_SIZE))   mnuFileExport_cb(nullptr);                 //FILE EXPORT
+        if (ImGui::Button(GLYPH_EXPORT_LINE, FRTK_ICON_SIZE))   mnuFileExport_cb(nullptr);                 //FILE EXPORT
         
         ImGui::SameLine(0, 2);
         
         // SELECTION TOOLBAR !!
         float toolbarWidth = ImGui::GetWindowWidth()/2;
         const float BTN_SPACING = 2.0f;
-        float rightWidth = 4 * ICON_SIZE.x + 2 * BTN_SPACING ;
+        float rightWidth = 4 * FRTK_ICON_SIZE.x + 2 * BTN_SPACING ;
         
         ImGui::SetCursorPosX(toolbarWidth - rightWidth/2);
 
         uint8_t selectionButtNo = 5;
-        if (IconButtonPressed(GLYPH_CUBES, m_currentSelMode == SelectionMode::MESH, ICON_SIZE))
+        if (IconButtonPressed(GLYPH_CUBES, m_currentSelMode == SelectionMode::MESH, FRTK_ICON_SIZE))
         {
             m_currentSelMode = SelectionMode::MESH;
             mnuSelMesh_cb(nullptr);
         }
         ImGui::SameLine(0, 2);
-        if (IconButtonPressed(GLYPH_BOX_1_FILL, m_currentSelMode == SelectionMode::FACE, ICON_SIZE))
+        if (IconButtonPressed(GLYPH_BOX_1_FILL, m_currentSelMode == SelectionMode::FACE, FRTK_ICON_SIZE))
         {
             m_currentSelMode = SelectionMode::FACE;
             mnuSelFace_cb(nullptr);
         }
         ImGui::SameLine(0, 2);
-        if (IconButtonPressed(GLYPH_SHAPE_2_FILL, m_currentSelMode == SelectionMode::EDGE, ICON_SIZE))
+        if (IconButtonPressed(GLYPH_SHAPE_2_FILL, m_currentSelMode == SelectionMode::EDGE, FRTK_ICON_SIZE))
         {
             m_currentSelMode = SelectionMode::EDGE;
             mnuSelEdges_cb(nullptr);
         }
         ImGui::SameLine(0, 2);
-        if (IconButtonPressed(GLYPH_BORDER_TOP_LEFT, m_currentSelMode == SelectionMode::VERTEX, ICON_SIZE))
+        if (IconButtonPressed(GLYPH_BORDER_TOP_LEFT, m_currentSelMode == SelectionMode::VERTEX, FRTK_ICON_SIZE))
         {
             m_currentSelMode = SelectionMode::VERTEX;
             mnuSelVertex_cb(nullptr);

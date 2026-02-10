@@ -4,7 +4,8 @@ project "GLFW"
     
     targetdir ("../../../bin/")
     objdir ("../../../bin_obj/")
-
+    
+    
     files
     {
         "include/GLFW/glfw3.h",
@@ -34,12 +35,13 @@ project "GLFW"
         defines { "_GLFW_X11",
                     "GLFW_EXPOSE_NATIVE_X11" 
                 }
-        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto","-ggdb"  }
+        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto","-ggdb" ,"-finput-charset=UTF-8", "-fexec-charset=UTF-8" }
 
     filter {}
     filter "system:windows"
         staticruntime "On"
         systemversion "latest"
+         buildoptions { "/utf-8" }
 
         defines 
         { 

@@ -3,7 +3,8 @@ project "frtk"
     language "C++"
     cppdialect "C++17"
     staticruntime "on"
-
+    
+    
     --[[       Note: Windows Only
             To use /MT in premake:
             staticruntime "on"
@@ -127,7 +128,7 @@ project "frtk"
     filter {}
     -- Linux-specific
     filter "system:linux"
-        buildoptions { "-Wall", "-Wextra","-fPIC", "-fdiagnostics-color=auto","-ggdb" }
+        buildoptions { "-Wall", "-Wextra","-fPIC", "-fdiagnostics-color=auto","-ggdb" , "-finput-charset=UTF-8", "-fexec-charset=UTF-8" }
         defines
         {
             "GLFW_EXPOSE_NATIVE_X11",

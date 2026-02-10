@@ -25,17 +25,52 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef FRTK_ROUND_BUTTON_H
-#define FRTK_ROUND_BUTTON_H
-
-#include <gui_widget/frtk_button.h> 
+#include <gui_widget/frtk_round_button.h>
 
 namespace FR {
-	class Frtk_Round_Button : public Frtk_Button
-	{
-	public:
-		 Frtk_Round_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b = FRTK_UP_BOX);
-		
-	};
+    Frtk_Round_Button::Frtk_Round_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :Frtk_Button(vg, x, y, w, h, l, b)
+    {
+        m_wdgType = FRTK_ROUND_BUTTON;
+        m_cellStyle = FR_IMG_RIGHT_TO_TEXT;
+        m_specialDrawingSize = m_h * 0.4f;
+    }
+    void Frtk_Round_Button::draw()
+    {
+        Dim_float_t dim = { { m_x,m_y },{m_w,m_h} };
+        NVGcolor lightCol = nvgRGBAf(FR_WHITE);
+
+        //body
+        draw_box(m_vg, FRTK_FLAT_BOX, dim, 0.0f, m_borderWidth,
+            nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a),
+            nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), true);
+        dim.pos.x = m_x + m_padding;
+        dim.pos.y = m_y + m_h / 2 - m_specialDrawingSize / 2;
+        dim.size = { m_specialDrawingSize,m_specialDrawingSize };
+
+        //draw the round indicator
+        if (m_value) {
+            draw_box(m_vg, FRTK_ROUND_UP_BOX, dim, 0.0f, THIN_BORDER,
+                lightCol,
+                nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), false);
+            dim.pos.x = m_x + m_padding + m_specialDrawingSize / 4;
+            dim.pos.y = m_y + m_h / 2 - m_specialDrawingSize / 4;
+            dim.size = { m_specialDrawingSize/2 ,m_specialDrawingSize/2 };
+
+            draw_box(m_vg, FRTK_ROUND_UP_BOX, dim, 0.0f, THIN_BORDER,
+                nvgRGBAf(FR_BLACK),
+                nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), false);
+        }
+        else {
+            draw_box(m_vg, FRTK_ROUND_UP_BOX, dim, 0.0f, THIN_BORDER,
+                lightCol,
+                nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), false);
+        }
+        if (m_IconTexture != 0) {
+            drawImage();//Dimensions are already calculated using style
+        }
+        else {
+            applyStyle(); //We still need to apply style
+        }
+        drawLabel();
+    }
 }
-#endif // FRTK_RETURN_BUTTON_H

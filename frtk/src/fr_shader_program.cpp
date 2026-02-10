@@ -82,7 +82,7 @@ namespace FR {
     void ShaderProgram::SetUniformInteger(const std::string name, int value) {
         GLuint location = glGetUniformLocation(m_program, name.c_str());
         if (location == -1)
-            DEBUG_BREAK;
+            FR_DEBUG_BREAK;
         glCheckFunc(glUniform1i(location, value));
     }
     //Send data to a variable inside the shader by the variable name which is retrieved by get location.
@@ -90,7 +90,7 @@ namespace FR {
     void ShaderProgram::SetUniformFloat(const std::string name, float value) {
         GLuint location = glGetUniformLocation(m_program, name.c_str());
         if (location == -1)
-            DEBUG_BREAK;
+            FR_DEBUG_BREAK;
 
         glCheckFunc(glUniform1f(location, value));
     }
@@ -99,7 +99,7 @@ namespace FR {
     void ShaderProgram::SetUniformVec3(const std::string name, const glm::vec3& value) {
         GLuint location = glGetUniformLocation(m_program, name.c_str());
         if (location == -1)
-            DEBUG_BREAK;
+            FR_DEBUG_BREAK;
 
         glCheckFunc(glUniform3fv(location, 1, glm::value_ptr(value)));
     }
@@ -108,7 +108,7 @@ namespace FR {
     void ShaderProgram::SetUniformVec2Int(const std::string name, const glm::ivec2& value) {
         GLuint location = glGetUniformLocation(m_program, name.c_str());
         if (location == -1)
-            DEBUG_BREAK;
+            FR_DEBUG_BREAK;
 
         glCheckFunc(glUniform2i(location, value.x, value.y));
     }
@@ -118,7 +118,7 @@ namespace FR {
     void ShaderProgram::SetUniformVec2(const std::string name, const glm::vec2& value) {
         GLuint location = glGetUniformLocation(m_program, name.c_str());
         if (location == -1)
-            DEBUG_BREAK;
+            FR_DEBUG_BREAK;
 
         glCheckFunc(glUniform2f(location, value.x, value.y));
     }
@@ -128,7 +128,7 @@ namespace FR {
     void ShaderProgram::SetUniformVec4(const std::string name, const glm::vec4& value) {
         GLuint location = glGetUniformLocation(m_program, name.c_str());
         if (location == -1)
-            DEBUG_BREAK;
+            FR_DEBUG_BREAK;
 
         glCheckFunc(glUniform4fv(location, 1, glm::value_ptr(value)));
     }
@@ -137,7 +137,7 @@ namespace FR {
     void ShaderProgram::SetUniformMat4(const std::string name, const glm::mat4& value) {
         GLuint location = glGetUniformLocation(m_program, name.c_str());
         if (location == -1)
-            DEBUG_BREAK;
+            FR_DEBUG_BREAK;
 
         glCheckFunc(glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value)));
     }
@@ -148,7 +148,7 @@ namespace FR {
     void ShaderProgram::SetUniformCamPosition(const char* name) {
         GLuint location = glGetUniformLocation(m_program, name);
         if (location == -1)
-            DEBUG_BREAK;
+            FR_DEBUG_BREAK;
         if (auto win = FR::Fr_Window::getFr_Window()) {
             glm::vec3 campos = win->activeScene->m_cameras[win->activeScene->m_active_camera].GetCamPosition();
             glCheckFunc(glUniform3fv(location, 1, glm::value_ptr(campos)));

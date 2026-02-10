@@ -6,6 +6,7 @@ project "nanovg"
 	targetdir ("../../../bin/")
     objdir ("../../../bin_obj/")
     
+
     files { 
 	"src/*.c",
     "src/*.h",
@@ -22,7 +23,7 @@ project "nanovg"
         pic "On"
         staticruntime "On"
         systemversion "latest"
-        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto","-ggdb" }
+        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto","-ggdb" ,"-finput-charset=UTF-8", "-fexec-charset=UTF-8"}
  
     filter {}
     filter "system:windows"

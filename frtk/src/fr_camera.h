@@ -84,8 +84,8 @@ namespace FR {
          */
         void SetPerspective(float fovy, float znear, float zfar);
 
-        void getCamData(userData_& data);
-        void setCamData(userData_& data);
+        void getCamData(userData_t& data);
+        void setCamData(userData_t& data);
 
         /**
          * Sets the camera

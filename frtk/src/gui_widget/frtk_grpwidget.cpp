@@ -46,8 +46,16 @@ namespace FR {
         else                                     return 0;
     }
 
-    Frtk_GrpWidget::Frtk_GrpWidget(NVGcontext* vg, float X, float Y, float W, float H, std::string label, BOX_TYPE b) :Frtk_Widget(X, Y, W, H, label, b) {
+    Frtk_GrpWidget::Frtk_GrpWidget(NVGcontext* vg, float X, float Y, float W, float H, std::string label, BOX_TYPE b) :
+        Frtk_Widget(X, Y, W, H, label, b), m_childFocus(NULL) {
+        m_vg = vg;
         m_wdgType = FRTK_GROUP;
+        m_font.pos.x = m_x;
+        m_font.pos.y = m_y;
+        m_font.size.w = m_w;
+        m_font.size.h = m_h;
+
+
     }
     Frtk_GrpWidget::~Frtk_GrpWidget() {
     }
@@ -57,57 +65,50 @@ namespace FR {
             drawBox();
             draw_focus();
             drawLabel();
+            draw_children();
         }
     }
     void Frtk_GrpWidget::draw_children() {
+        nvgSave(m_vg);                // save current transform and state
+        float y = m_parent ? m_y : m_y + FRTK_WINDOWS_TITLE_HEIGHT;
+        nvgTranslate(m_vg, x(), y);  // shift drawing origin to parent
         for (auto wdg : m_children) {
-            if (wdg->visible()) {
+            if (wdg->visible() && wdg->active()) {
                 wdg->draw();
             }
         }
-    }
-
-    void Frtk_GrpWidget::redraw_children()
-    {
-        for (auto wdg : m_children) {
-            if (wdg->visible()) {
-                wdg->redraw();
-            }
-        }
+        nvgRestore(m_vg);             // restore previous transform
     }
 
     void Frtk_GrpWidget::redraw() {
         if (visible()) {
             draw();
-            drawLabel();
         }
     }
 
     void Frtk_GrpWidget::drawBox() {
         if (visible()) {
-            drawBox(BOX_TYPE::FRTK_UP_FRAME, m_x, m_y, m_w, m_h, m_color);
-            for (auto wdg : m_children) {
-                drawBox(wdg->boxtype(), wdg->x(), wdg->y(), wdg->w(), wdg->h(), wdg->color());
-            }
+            draw_box(m_vg, m_boxType, { {m_x, m_y}, {m_w, m_h} }, 0.0, NORMAL_BORDER,
+                nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a), nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), true);
         }
     }
 
     void Frtk_GrpWidget::drawBox(BOX_TYPE t, glm::vec4 c) {
         if (visible()) {
-            color(c);
-            drawBox(t, m_x, m_y, m_w, m_h, c);
-
-            for (auto wdg : m_children) {
-                drawBox(wdg->boxtype(), wdg->x(), wdg->y(), wdg->w(), wdg->h(), wdg->color());
-            }
+            m_color = c;
+            m_boxType = t;
+            drawBox();
         }
     }
     void Frtk_GrpWidget::drawBox(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 c) {
         if (visible()) {
-            //we should draw the box here :
-            for (auto wdg : m_children) {
-                drawBox(wdg->boxtype(), wdg->x(), wdg->y(), wdg->w(), wdg->h(), wdg->color());
-            }
+            m_x = X;
+            m_y = Y;
+            m_w = W;
+            m_h = H;
+            m_boxType = t;
+            m_color = c;
+            drawBox();
         }
     }
     void Frtk_GrpWidget::draw_focus() {
@@ -118,9 +119,8 @@ namespace FR {
     }
 
     int Frtk_GrpWidget::send_event(Frtk_Widget& w, int ev) {
-        if (w.should_getEvent(false)) {
             return w.handle(ev);
-        }
+
     }
     int Frtk_GrpWidget::findIndex(const std::shared_ptr<Frtk_Widget>& w) const {
         auto it = std::find(m_children.begin(), m_children.end(), w);
@@ -129,16 +129,23 @@ namespace FR {
         return -1;
     }
 
-    void Frtk_GrpWidget::remove_children(size_t index) {
+    void Frtk_GrpWidget::remove_child_at(size_t index) {
         m_children.erase(m_children.begin() + index);
     }
+    void Frtk_GrpWidget::remove_child(std::shared_ptr<Frtk_Widget> &wdg) {
+        auto it = std::find(m_children.begin(), m_children.end(), wdg);
+        if (it != m_children.end()) {
+            m_children.erase(it);
+        }
+    }
+
     void Frtk_GrpWidget::remove_all() {
         m_children.clear();
     }
     void Frtk_GrpWidget::addChild(std::shared_ptr<Frtk_Widget> w)
     {
         w->parent(this);
-        m_children.push_back(std::move(w));
+        m_children.emplace_back(std::move(w));
     }
 
     bool Frtk_GrpWidget::restore_focus() {
@@ -217,84 +224,102 @@ namespace FR {
     //Return = 1 Event consumed
    //Return = 0 or -1 Event should continue to be delivered to other widgets
     int Frtk_GrpWidget::handle(int ev) {
-        switch (ev) {
-        case FR_FOCUS: {
-            switch (navkey()) {
-            default: {
-                if (m_childFocus != nullptr && m_childFocus->take_focus()) {
-                    return 1;
+        if (should_getEvent()) {
+            if (!(m_active && m_visible))
+                return 0;              //inactive widget - we don't care
+            switch (ev) {
+            case FR_FOCUS: {
+                switch (navkey()) {
+                default: {
+                    if (m_childFocus != nullptr && m_childFocus->take_focus()) {
+                        return 1;
+                    }
+                    return 0;
+                }
+
+                case GLFW_KEY_RIGHT:
+                case GLFW_KEY_DOWN: {
+                    for (auto& wdg : m_children) {
+                        if (wdg->take_focus()) return 1;
+                    }
+                    break;
+                }
+
+                case GLFW_KEY_LEFT:
+                case GLFW_KEY_UP: {
+                    for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
+                        if ((*it)->take_focus()) return 1;
+                    }
+                    break;
+                }
                 }
                 return 0;
             }
 
-            case GLFW_KEY_RIGHT:
-            case GLFW_KEY_DOWN: {
-                for (auto& wdg : m_children) {
-                    if (wdg->take_focus()) return 1;
-                }
-                break;
-            }
+            case FR_UNFOCUS: {
+                m_childFocus = g_focusedWdgt.prev;
+                return 0;
+            } break;
+            case FR_KEYBOARD: {
+                return (navigate_focus(navkey()));
+            }break;
 
-            case GLFW_KEY_LEFT:
-            case GLFW_KEY_UP: {
+            case FR_ENTER:
+            case FR_MOUSE_MOVE:
+            {
+                // Iterate children in reverse order (topmost child first)
                 for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
-                    if ((*it)->take_focus()) return 1;
-                }
-                break;
-            }
-            }
-            return 0;
-        }
+                    Frtk_Widget* child = it->get();
 
-        case FR_UNFOCUS: {
-            m_childFocus = g_focusedWdgt.prev;
-            return 0;
-        } break;
-        case FR_KEYBOARD: {
-            return (navigate_focus(navkey()));
-        }break;
+                    if (!child->visible()) continue;
 
-        case FR_ENTER:
-        case FR_MOUSE_MOVE:
-        {
-            // Iterate children in reverse order (topmost child first)
-            for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
-                Frtk_Widget* child = it->get();
-
-                if (!child->visible()) continue;
-
-                // Check if mouse is inside this child
-                if (child->should_getEvent(false)) {
-                    if (child->hasBelowMouse()) {
-                        return send_event(*child, FR_MOUSE_MOVE);
-                    }
-                    else {
-                        // Mouse just entered this child
-                        set_BeloMouse();
-                        if (send_event(*child, FR_ENTER)) return 1;
+                    // Check if mouse is inside this child
+                    if (child->should_getEvent()) {
+                        if (child->hasBelowMouse()) {
+                            return send_event(*child, FR_MOUSE_MOVE);
+                        }
+                        else {
+                            // Mouse just entered this child
+                            set_BeloMouse();
+                            if (send_event(*child, FR_ENTER)) return 1;
+                        }
                     }
                 }
+                // No child handled it // mark this group as under the mouse
+                set_BeloMouse();
+                return 1;
+            }break;
+            return 0;
             }
-            // No child handled it // mark this group as under the mouse
-            set_BeloMouse();
-            return 1;
-        }break;
-        return 0;
-        }
 
-        if (should_getEvent(false)) {
             for (auto& wdg : m_children) {
-                int result = wdg->handle(ev);
-                if (result == 1) {
-                    return 1; // Event is consumed
-                }
+                //We should not allow sending events to inactive widget
+                int result = 0;
+                if (wdg->active() && wdg->visible()) {
+                        if (wdg->should_getEvent()){
+                            int result = wdg->handle(ev);
+                            if (result == 1) {
+                                return 1; // Event is consumed
+                            }
+                        }
+                        else
+                        {
+                            if (wdg->label() == "New")
+                                ;//FR_DEBUG_BREAK;;
+                        }
+                    }
             }
-        }
+        
+    }
         return 0;
     }
 
     bool Frtk_GrpWidget::set_child_focus(Frtk_Widget* w) {
         m_childFocus = w;
         return true;
+    }
+
+    dimPos_float_t Frtk_GrpWidget::mainGui() const {
+        return { m_x, m_y + FRTK_WINDOWS_TITLE_HEIGHT};
     }
 }

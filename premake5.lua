@@ -2,7 +2,7 @@
 workspace "Design456App"
     architecture "x64"
     startproject "Design456App"
-
+	multiprocessorcompile "on"
     
 
     configurations
@@ -11,11 +11,7 @@ workspace "Design456App"
         "Release"
     }
 
-    flags
-    {
-        "MultiProcessorCompile",
-    }
-
+  
     -- Set a single output directory
     outputdir = "bin/"
     debugdir (outputdir)  -- This sets the working directory to bin/
@@ -43,6 +39,8 @@ project "Design456App"
 
     targetdir (outputdir )  -- Will output to bin
     objdir ("bin_obj/")  -- Object files also in respective folders
+    
+    
 
 --[[         files
         {

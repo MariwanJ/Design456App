@@ -29,38 +29,41 @@
 namespace FR {
     Frtk_Check_Button::Frtk_Check_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :Frtk_Button(vg, x, y, w, h, l, b) {
         m_wdgType = FRTK_CHECK_BUTTON;
-   
-
+        m_cellStyle = FR_IMG_LEFT_TO_TEXT;
+        m_specialDrawingSize = m_h * 0.4f;
     }
     void Frtk_Check_Button::draw()
     {
         Dim_float_t dim = { { m_x,m_y },{m_w,m_h} };
-        const float padding = m_w * 0.1f;
-        const float lightSize = m_h * 0.3f;
-        NVGcolor lightCol = nvgRGBAf(FR_ORANGE);
-        if (m_value) {
-            drawBoxUpDown(m_vg, dim, 0.0f, m_borderWidth,
-                nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a),
-                nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), true);
-            dim.pos.x = m_x + padding;
-            dim.pos.y = m_y + m_h / 2 - lightSize / 2;
-            dim.size = { lightSize,lightSize };
 
-            drawBoxUpDown(m_vg, dim, 0.0f, THIN_BORDER,
+        NVGcolor lightCol = nvgRGBAf(FR_WHITE);
+        //draw body
+        draw_box(m_vg, FRTK_FLAT_BOX, dim, 0.0f, m_borderWidth,
+            nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a),
+            nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), true);
+
+        dim.pos.x = m_x + m_padding;
+        dim.pos.y = m_y + m_h / 2 - m_specialDrawingSize / 2 -m_padding;
+        dim.size = { m_specialDrawingSize,m_specialDrawingSize };
+
+        if (m_value) {
+            //You cannot use FRTK_FLAT_BOX as it does not have DOWN option.
+            draw_box(m_vg, FRTK_DOWN_BOX, dim, 0.0f, THIN_BORDER,
+                lightCol,
+                nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), false);
+            drawCheckMark(m_vg, dim.pos.x, dim.pos.y, m_specialDrawingSize * 0.9f);
+        }
+        else {
+            draw_box(m_vg, FRTK_FLAT_BOX, dim, 0.0f, THIN_BORDER,
                 lightCol,
                 nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), false);
         }
-        else {
-            drawBoxUpDown(m_vg, dim, 0.0f, m_borderWidth,
-                nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a),
-                nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), true);
-            dim.pos.x = m_x + padding;
-            dim.pos.y = m_y + m_h / 2 - lightSize / 2;
-            dim.size = { lightSize,lightSize };
-            lightCol = nvgRGBAf(FR_WHITE);
-            drawBoxUpDown(m_vg, dim, 0.0f, THIN_BORDER,
-                lightCol,
-                nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), true);
+        if (m_IconTexture != 0) {
+            drawImage();//Dimensions are already calculated using style
         }
+        else {
+            applyStyle(); //We still need to apply style
+        }
+        drawLabel();
     }
 }

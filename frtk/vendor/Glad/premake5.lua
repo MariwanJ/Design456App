@@ -5,7 +5,8 @@ project "Glad"
     
     targetdir ("../../../bin/")
     objdir ("../../../bin_obj/")
-
+    
+    
     files
     {
         "include/glad/glad.h",
@@ -24,11 +25,12 @@ project "Glad"
         "include"
     }
     filter "system:linux"
-        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto", "-ggdb" }
+        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto", "-ggdb" , "-finput-charset=UTF-8", "-fexec-charset=UTF-8" }
 
     filter {}
     filter "system:windows"
         systemversion "latest"
+         buildoptions { "/utf-8" }
 
     filter "configurations:Debug"
         runtime "Debug"

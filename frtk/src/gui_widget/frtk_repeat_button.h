@@ -28,14 +28,32 @@
 #ifndef FRTK_REPEAT_BUTTON_H
 #define FRTK_REPEAT_BUTTON_H
 
-#include <gui_widget/frtk_button.h> 
+#include <gui_widget/frtk_button.h>
 
 namespace FR {
-	class Frtk_Repeat_Button : public Frtk_Button
-	{
-	public:
-		 Frtk_Repeat_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b = FRTK_UP_BOX);
+    class Frtk_Repeat_Button : public Frtk_Button
+    {
+    public:
+        Frtk_Repeat_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b = FRTK_UP_BOX);
+        void delayBetweenCallbacks(float val);
+        void startDelay(float val);
 
-	};
+        float delayBetweenCallbacks();
+        float startDelay();
+
+    protected:
+        virtual int handle(int e) override;
+
+        float inline computeDeltaTime() {
+            auto now = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<float> elapsed = now - m_lastTime;
+            m_lastTime = now;
+            return elapsed.count(); // seconds as float
+        }
+        float m_delayBeforeStart;     // seconds before first repeat
+        float m_delayBetweenCallbacks;  // seconds between each repeats
+        float m_repeatTimer; 
+        std::chrono::time_point<std::chrono::high_resolution_clock> m_lastTime;
+    };
 }
 #endif // FRTK_REPEATE_BUTTON_H

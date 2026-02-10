@@ -112,28 +112,70 @@ namespace FR {
         int hAlign  ;
     }font_t;
 
-
+    //frtk_no_box
+    void drawFilledRect(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth= NORMAL_BORDER, 
+        NVGcolor baseCol = nvgRGBAf(FR_GRAY80),
+        NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW), 
+        bool up = false);
+    //Frtk_box_up/down - Square or rounded edges based on r
     void drawBoxUpDown(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = NORMAL_BORDER,
-        NVGcolor baseCol = nvgRGBAf(FR_LIGHTGRAY),
+        NVGcolor baseCol = nvgRGBAf(FR_GRAY80),
         NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW), bool up = true);
 
      
 
-    
+    //Frtk_up_frame:      frtk_down_frame:     frtk_thin_up_frame:     frtk_thin_down_frame:
+    void drawFrameRect(NVGcontext* vg, Dim_float_t dim, float r, float t, NVGcolor c, NVGcolor shadowCol, bool up);
 
-    float getTextWidth(NVGcontext* vg, const std::string& str, float fontSize, const char* fontFace);
-    void draw_box(NVGcontext* vg, BOX_TYPE b, Dim_float_t dim, float cornerRadius=0.0f, float strokeWidth=1.0f, 
-                    NVGcolor c = nvgRGBAf(FR_BLANCHEDALMOND), NVGcolor shadowCol= nvgRGBAf(FR_DARK_SHADOW), bool up=true);
+    //Frtk_diamond_up_box:  frtk_diamond_down_box:
+    void drawDiamondWithState(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = NORMAL_BORDER,
+        NVGcolor baseCol = nvgRGBAf(FR_GRAY80),
+        NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
+        bool up = false);
 
+    void drawSolidCircleWithState(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = NORMAL_BORDER,
+        NVGcolor baseCol = nvgRGBAf(FR_GRAY80),
+        NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
+        bool up = false);
     
+    void drawOvalFrameWithState(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = NORMAL_BORDER,
+        NVGcolor baseCol = nvgRGBAf(FR_GRAY80),
+        NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
+        bool up = false);
+    
+    void drawSolidOvalWithState(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = NORMAL_BORDER,
+        NVGcolor baseCol = nvgRGBAf(FR_GRAY80),
+        NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
+        bool up = false);
+    
+    void drawShadowBox(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = NORMAL_BORDER,
+        NVGcolor baseCol = nvgRGBAf(FR_GRAY80),
+        NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
+        bool up = false);
+    void drawOvalFLAT(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = NORMAL_BORDER,
+        NVGcolor baseCol = nvgRGBAf(FR_GRAY80),
+        NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
+        bool up = false);
+    
+    void drawOval(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = NORMAL_BORDER,
+        NVGcolor baseCol = nvgRGBAf(FR_GRAY80),
+        NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
+        bool up = false);
+
+    void draw_box(NVGcontext* vg, BOX_TYPE b, Dim_float_t dim, float cornerRadius, float strokeWidth, NVGcolor c, NVGcolor shadowCol, bool up);
+
     float getTextLeftBearing(NVGcontext* vg, const std::string& text, const font_t& fnt);
 
-    //TEXT Drawing :: 
-   // void draw_label(NVGcontext* vg, const std::string& text,  font_t& fnt);
+    //Horizontal = NVG_ALIGN_CENTER,    NVG_ALIGN_LEFT / NVG_ALIGN_CENTER / NVG_ALIGN_RIGHT
+    //Vertical =  NVG_ALIGN_MIDDLE    NVG_ALIGN_TOP / NVG_ALIGN_MIDDLE / NVG_ALIGN_BOTTOM
     void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt);
 
-
+    // Function to draw a check mark with default color = BLACK
+    void drawCheckMark(NVGcontext* vg, float x, float y, float size, NVGcolor col = nvgRGBAf(FR_BLACK));
 
 }
+
+
+
 
 #endif // !FRTK_DDRAW_H

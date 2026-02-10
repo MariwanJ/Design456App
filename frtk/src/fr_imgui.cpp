@@ -45,7 +45,7 @@ namespace FR {
 
     void Fr_Window::RenderGizmo(void) {
         Fr_Camera& cam = activeScene->getActiveCamera();
-        userData_ data;
+        userData_t data;
         ImGuiIO& io = ImGui::GetIO();
         cam.getCamData(data);
          ImGuizmo::SetRect(0.f, 0.f, (float)w(), (float)h());
@@ -61,12 +61,12 @@ namespace FR {
             size,
             0x60606060                        
         );
-        view = glm::inverse(view);
-        data.camm_position= glm::vec3(view[3]);
-        data.up_=(glm::vec3(view[1]));
-        cam.setCamData(data);
-        
-        
+        if (m_NaviCube){
+            view = glm::inverse(view);
+            data.cam_pos_= glm::vec3(view[3]);
+            data.up_=(glm::vec3(view[1]));
+            cam.setCamData(data);
+        }
         //Axis under Navi Cube
         const float gizmoSize = 500.f;
         const float margin = 150.0f;
@@ -97,7 +97,7 @@ namespace FR {
     /************************
     *   Contains all ImGUI and ImGuimzo functions
     */
-    int Fr_Window::renderimGUI(userData_& data) {
+    int Fr_Window::renderimGUI(userData_t& data) {
         static bool opt_fullscreen = true;
         static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
@@ -175,7 +175,7 @@ namespace FR {
     }
 
     void Fr_Window::CameraOptions() {
-        userData_ data;
+        userData_t data;
         activeScene->m_cameras[activeScene->m_active_camera].getCamData(data);
         static float f = 0.0f;
         static int counter = 0;
@@ -186,15 +186,15 @@ namespace FR {
             ImGui::DragFloat("OrthoSize", &f, 0.2f, -1000.0f, 1000.0f);
             data.orthoSize_ = f;
 
-            f = data.camm_position[0];
+            f = data.cam_pos_[0];
             ImGui::DragFloat("m_positionx", &f, 0.2f, -1000.0f, 1000.0f);
-            data.camm_position[0] = f;
-            f = data.camm_position[1];
+            data.cam_pos_[0] = f;
+            f = data.cam_pos_[1];
             ImGui::DragFloat("m_positiony", &f, 0.2f, -1000.0f, 1000.0f);
-            data.camm_position[1] = f;
-            f = data.camm_position[2];
+            data.cam_pos_[1] = f;
+            f = data.cam_pos_[2];
             ImGui::DragFloat("m_positionz", &f, 0.2f, -1000.0f, 1000.0f);
-            data.camm_position[2] = f;
+            data.cam_pos_[2] = f;
 
             f = data.direction_[0];
             ImGui::DragFloat("Target_x", &f, 0.2f, -1000.0f, 1000.0f);

@@ -22,7 +22,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-//  Author :Mariwan Jalal    mariwan.jalal@gmail.com
+//  Author : Mariwan Jalal   mariwan.jalal@gmail.com
 //
 
 #ifndef FR_CORE_H
@@ -32,7 +32,7 @@
 
 
 
-// -------------------- OpenGL / GLAD / GLFW --------------------
+//  OpenGL / GLAD / GLFW 
 #if defined(__APPLE__)
 #error FRTK NOT IMPLEMENTED FOR APPLE
 #else
@@ -51,7 +51,7 @@
 #include <imgui_impl_opengl3.h>
 
 
-// -------------------- Standard Libraries --------------------
+// Standard Libraries
 #include <string>
 #include <cstring>
 #include <cerrno>
@@ -64,7 +64,7 @@
 #include <unistd.h>  // getcwd
 #endif
 
-// -------------------- Get Current Directory --------------------
+// Get Current Directory 
 #if defined(_WIN32) || defined(_WIN64)
 #define GET_CURRENT_DIRECTORY() []() -> std::string { \
         char buffer[MAX_PATH]; \
@@ -89,14 +89,18 @@
     }()
 #endif
 
-// -------------------- Logging / Instrumentation --------------------
+// Logging / Instrumentation 
 #include <fr_constants.h>
 #include <Fr_Log.h>
+
+
+#define SPDLOG_WCHAR_TO_UTF8_SUPPORT
+#define SPDLOG_FMT_EXTERNAL
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
 #include "../instrumentation/Instrumentor.h"
 
-// -------------------- ImGui / GLM / Widgets --------------------
+// ImGui / GLM / Widgets 
 #include <glm/glm.hpp>
 #include <imgui.h>
 #include <ImGuizmo.h>
@@ -106,14 +110,14 @@
 // ImGui Fonts
 #include "imguiFont/shapes_ttf.h"
 
-// -------------------- STB Image --------------------
+// STB Image 
 #include "../vendor/stb_image/src/stb_image.h"
 
-// -------------------- OpenMesh --------------------
+// OpenMesh 
 // Must be included after GLAD/OpenGL
 using MyMesh = FR::FrOpenMesh;
 
-// -------------------- FRTK Core --------------------
+// FRTK Core 
 namespace FR {
     // VBO buffers
    // VBO buffers
@@ -123,9 +127,6 @@ namespace FR {
     constexpr int POSITION_TEXCOORD_VB = 2;
     constexpr int INDICES_VB = 3;
     constexpr int POSITION_POINTS_VB = 4;
-
-    //constexpr int COLOR_POINTS_VB = 5;
-    //constexpr int POSITION_TEXT_VB = 6;
 
     //Shader position - this is NOT VBO position
     constexpr int SHADER_POS_VERTEX_VB = 0;
@@ -137,19 +138,19 @@ namespace FR {
     extern std::string EXE_CURRENT_DIR;
     extern std::string fontPath;
 
-    // Debug break
+// FR DEBUG BREAK, USE IT WHEN YOU WANT TO BREAK WITH SOME IF CONDITION 2026/02/09
 #if defined(_WIN32)
-#define DEBUG_BREAK __debugbreak()
+#define FR_DEBUG_BREAK __debugbreak()
 #elif defined(__linux__) || defined(__APPLE__)
 #include <signal.h>
-#define DEBUG_BREAK raise(SIGTRAP)
+#define FR_DEBUG_BREAK raise(SIGTRAP)
 #else
-#define DEBUG_BREAK ((void)0)
+#define FR_DEBUG_BREAK ((void)0)
 #endif
 
 // Assertions
 #ifdef FRTK_ENABLE_ASSERTS
-#define FRTK_CORE_APP_ASSERT(x, ...) do { if(!(x)) DEBUG_BREAK; } while(0)
+#define FRTK_CORE_APP_ASSERT(x, ...) do { if(!(x)) FR_DEBUG_BREAK; } while(0)
 #else
 #define FRTK_CORE_APP_ASSERT(x, ...)
 #endif
@@ -252,8 +253,8 @@ namespace FR {
 
 
 
-    struct userData_S {
-        glm::vec3 camm_position;
+    typedef struct {
+        glm::vec3 cam_pos_;
         glm::vec3 direction_;
         glm::vec3 up_;
         float fovy_;
@@ -261,10 +262,9 @@ namespace FR {
         float zfar_;
         float aspectRatio_;
         float orthoSize_;
-        //        projectionm_Matrix(glm::ortho(-600, 600, -600, 600, -1, 1)),
         uint8_t camType_;
-    };
-    typedef userData_S userData_;
+    }userData_t;
+
 
     static unsigned char GLLogCall() {
         while (GLenum error = glGetError()) {
@@ -321,12 +321,12 @@ namespace FR {
     Events explanations: 
     1- FR_FOCUS :(Click example When you click a widget :    
                         -FLTK sends FL_PUSH        
-                        -Widget’s handle() runs
+                        -Widgets handle() runs
                         -If the widget does NOT call Fl::focus(this)  -> nothing happens        
                         -Keyboard focus stays where it was
     2- FR_XXX_PUSH ->    Mouse button xxx pushed
     3- FR_XXX_RELEASE    Mouse button xxx released
-    4- FR_XXX_DRAG_PUSH  Mouse button xxx is pushed continously and MOUSE-MOVE also happend
+    4- FR_XXX_DRAG_PUSH  Mouse button xxx is pushed continuously and MOUSE-MOVE also happen
     5- FR_MOUSE_MOVE     Mouse moves 
     6- FR_SCROLL         Scroll wheel rotated
     7- FR_ENTER          Enter pressed (Left - Right)
@@ -419,6 +419,7 @@ You call window->hide()
         FRTK_RETURN_BUTTON,
         FRTK_REPEAT_BUTTON,
         FRTK_LIGHT_BUTTON ,
+        FRTK_SWITCH_BUTTON,
         FRTK_CHECK_BUTTON ,
         FRTK_ROUND_BUTTON ,
         FRTK_RADIO_BUTTON ,
@@ -494,7 +495,7 @@ You call window->hide()
 }Keybaord_t;
     
     /*Structure changed to prevent bugs 
-    (Keyboards events are seperated from mouse 
+    (Keyboards events are separated from mouse 
      as some of the variable names are the same)*/
     typedef struct {
         mouse_t mouse;  

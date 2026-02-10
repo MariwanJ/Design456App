@@ -61,6 +61,7 @@
 #include <string>
 #include <stdint.h>
 #include <stack>
+#include <optional>
 
  //for ResourcePath
 #if defined(_WIN32)

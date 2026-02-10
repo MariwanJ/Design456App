@@ -5,7 +5,8 @@ project "OpenMesh"
 
     targetdir ("../../../bin/")
     objdir ("../../../bin_obj/")
-
+    
+    
     files
     {
         -- headers
@@ -143,13 +144,14 @@ project "OpenMesh"
         staticruntime "On"
         systemversion "latest"
         defines { "_GLFW_X11", "GLFW_EXPOSE_NATIVE_X11" }
-        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto","-ggdb" }
+        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto","-ggdb" ,"-finput-charset=UTF-8", "-fexec-charset=UTF-8"}
 
     filter {}
     -- windows specifics
     filter "system:windows"
         staticruntime "On"
         systemversion "latest"
+         buildoptions { "/utf-8" }
 
         defines
         {
@@ -158,7 +160,7 @@ project "OpenMesh"
             "_GLFW_WIN32",
             "_CRT_SECURE_NO_WARNINGS"
         }
-        buildoptions { "/bigobj" } --Windows specific solution for long path/obj names
+        buildoptions { "/bigobj" , "/utf-8"  } --Windows specific solution for long path/obj names
         
     filter "configurations:Debug"
         runtime "Debug"

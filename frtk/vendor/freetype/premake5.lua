@@ -5,6 +5,7 @@ project "freetype"
 
     targetdir ("../../../bin/")
     objdir ("../../../bin_obj/")
+    
 
     files
     {
@@ -90,7 +91,7 @@ project "freetype"
         pic "On"
         staticruntime "On"
         systemversion "latest"
-        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto","-ggdb" }
+        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto","-ggdb" , "-finput-charset=UTF-8", "-fexec-charset=UTF-8" }
 
    
     filter {}
@@ -98,6 +99,7 @@ project "freetype"
     filter "system:windows"
         defines { "WIN32", "_DEBUG" }
         systemversion "latest"
+         buildoptions { "/utf-8" }
 
     filter "configurations:Debug"
         runtime "Debug"

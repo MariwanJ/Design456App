@@ -44,9 +44,7 @@ project "Design456App"
         "../bin/lib/"
     }
 
-    -- Multi-threaded compile
-    flags { "MultiProcessorCompile" }
-
+    
     -- Common links
     local commonLinks = {
         "frtk",
@@ -76,7 +74,8 @@ project "Design456App"
     filter "system:windows"
         defines { "FRTK_PLATFORM_WINDOWS", "GLFW_EXPOSE_NATIVE_WIN32" }
         links { "opengl32.lib", "gdiplus.lib" }
-
+		buildoptions { "/utf-8"  }  -- Add UTF-8 support
+		
     -- Linux-specific
     filter "system:linux"
         defines { "FRTK_PLATFORM_LINUX" }
