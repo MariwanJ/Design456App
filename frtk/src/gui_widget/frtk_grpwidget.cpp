@@ -54,8 +54,6 @@ namespace FR {
         m_font.pos.y = m_y;
         m_font.size.w = m_w;
         m_font.size.h = m_h;
-
-
     }
     Frtk_GrpWidget::~Frtk_GrpWidget() {
     }
@@ -70,10 +68,10 @@ namespace FR {
     }
     void Frtk_GrpWidget::draw_children() {
         nvgSave(m_vg);                // save current transform and state
-        float y = m_parent ? m_y : m_y + FRTK_WINDOWS_TITLE_HEIGHT;
+        float y = m_parent ? m_y : m_y /*+ FRTK_WINDOWS_TITLE_HEIGHT*/;
         nvgTranslate(m_vg, x(), y);  // shift drawing origin to parent
         for (auto wdg : m_children) {
-            if (wdg->visible() && wdg->active()) {
+            if (wdg->visible()) {
                 wdg->draw();
             }
         }
@@ -89,7 +87,8 @@ namespace FR {
     void Frtk_GrpWidget::drawBox() {
         if (visible()) {
             draw_box(m_vg, m_boxType, { {m_x, m_y}, {m_w, m_h} }, 0.0, NORMAL_BORDER,
-                nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a), nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), true);
+                nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a), 
+                nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), true);
         }
     }
 
@@ -129,14 +128,23 @@ namespace FR {
         return -1;
     }
 
-    void Frtk_GrpWidget::remove_child_at(size_t index) {
+    int Frtk_GrpWidget::remove_child_at(size_t index) {
+        if (index > m_children.size()) return -1;
         m_children.erase(m_children.begin() + index);
+        return 0;
     }
-    void Frtk_GrpWidget::remove_child(std::shared_ptr<Frtk_Widget> &wdg) {
+    const std::vector<std::shared_ptr<Frtk_Widget>>& Frtk_GrpWidget:: getChildren() const {
+        return m_children;
+    }
+
+
+    int Frtk_GrpWidget::remove_child(std::shared_ptr<Frtk_Widget> &wdg) {
         auto it = std::find(m_children.begin(), m_children.end(), wdg);
         if (it != m_children.end()) {
             m_children.erase(it);
+            return 0;
         }
+        return -1;
     }
 
     void Frtk_GrpWidget::remove_all() {

@@ -38,6 +38,7 @@ namespace FR {
 		friend Frtk_Toolbar;
 	public:
 		Frtk_ToolBar_Button(NVGcontext* vg, float x, float y, float w , float h , std::string l="ToolbarBTN", BOX_TYPE b = FRTK_UP_BOX);
+
 		void name(const std::string& name);
 		const std::string& name(void);
 		void tooltips(const std::string& val);

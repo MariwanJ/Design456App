@@ -438,6 +438,7 @@ You call window->hide()
         FRTK_HSCROLL,
         FRTK_IMAGE,
         FRTK_TOOLBAR,
+        FRTK_TOOLBARWIN,
         FRTK_TOOLBAR_BUTTON,
     };
 

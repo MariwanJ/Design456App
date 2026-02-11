@@ -38,13 +38,15 @@
 #include <nanovg.h>
 #include <nanovg_gl.h>
 
-#include "fr_window.h"
-#include "fr_widget.h"
+#include <fr_window.h>
+#include <fr_widget.h>
 //#include <glad/glad.h>    // must be included first
 
 #include <gui_widget/frtk_window.h>
-#include <gui_widget/demo2.h>
-#include <gui_widget/buttons_demo.h>
+#include <gui_widget/examples/demo2.h>
+#include <gui_widget/examples/buttons_demo.h>
+#include <gui_widget/examples/toolbarExample.h>
+
  /** Fr_Window */
 
   //Remove me later : TODO
@@ -442,8 +444,10 @@ namespace FR {
 
         userData_t data;
         //Temporary Code -- TODO : Remove Me when you are done with the new GUI SYSTEM !!!!!  2026-01-30 Mariwan
-        m_frtkWindow.push_back(runFRTKdemo2());
-        m_frtkWindow.push_back(runFRTKdemo());
+      //  m_frtkWindow.push_back(runFRTKdemo2());
+       // m_frtkWindow.push_back(runFRTKdemo());
+        m_frtkWindow.push_back(runFRTKToolbarDemo());
+        
         while (!glfwWindowShouldClose(pGLFWWindow))
         {
             //ALL 3D Drawings

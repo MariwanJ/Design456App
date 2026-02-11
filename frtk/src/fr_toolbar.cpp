@@ -72,10 +72,10 @@ namespace FR {
 
         //ImGui::Begin("SelectionToolbar", NULL, window_flags);
 
-        //ImVec4 dummy_col = ImVec4(FR_GRAY80);
+        //ImVec4 dummy_col = ImVec4(FR_LIGHT_GRAY);
         ////All TOOLBARS ARE HERE !!
         //ImVec4 pressedCol = ImVec4(FR_BEIGE);
-        //ImVec4 normalCol = ImVec4(FR_GRAY80);
+        //ImVec4 normalCol = ImVec4(FR_LIGHT_GRAY);
 
         //if (IconButtonPressed(GLYPH_CUBES, m_currentSelMode == SelectionMode::Mesh, ICON_SIZE))
         //{
@@ -131,10 +131,10 @@ namespace FR {
 
         ImGui::Begin("TOOLBAR", NULL, window_flags);
 
-        ImVec4 dummy_col = ImVec4(FR_GRAY80);
+        ImVec4 dummy_col = ImVec4(FR_LIGHT_GRAY);
         //All TOOLBARS ARE HERE !!
         ImVec4 pressedCol = ImVec4(FR_BEIGE);
-        ImVec4 normalCol = ImVec4(FR_GRAY80);
+        ImVec4 normalCol = ImVec4(FR_LIGHT_GRAY);
 
         // ImGui::Dummy(ImVec2(0.0f, 20.0f));           //space -- Vertically
         ImGui::SameLine(0,2);

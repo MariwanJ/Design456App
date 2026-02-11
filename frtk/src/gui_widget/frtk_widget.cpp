@@ -48,7 +48,7 @@ namespace FR {
         m_cantake_focus(false), m_IconTexture(0), m_vg(NULL),
         m_borderColor(glm::vec4(FR_DARKSLATEGREY)), m_borderWidth(NORMAL_BORDER),
         m_callback(default_callback),
-        m_color(glm::vec4(FR_GRAY50)), m_bkg_color(FR_GRAY80) {
+        m_color(glm::vec4(FR_GAINSBORO)), m_bkg_color(FR_SILVER) {
         if (!m_mainWindow) {
             m_mainWindow = FR::Fr_Window::getFr_Window().get();
         }
@@ -60,6 +60,7 @@ namespace FR {
         m_font.vAlign = NVG_ALIGN_MIDDLE;
         m_font.pos = { 0.0, 0.0 };
         m_font.size = { 0.0, 0.0 };
+        m_font.Rotate = 0.0f;
         m_font.shadowCol = nvgRGBAf(0.0f, 0.0f, 0.0f, 0.38f);
         m_font.shadowOffs = { 0.5f,0.5f };
         m_Image.opacity = 1.0;
@@ -74,13 +75,8 @@ namespace FR {
     }
 
     float Frtk_Widget::absY() const {
-        float y = 0;
-        if (!m_parent) {
-            y = mainGui().y;//main windows container
-        }else{
-            y= m_parent ? m_parent->absY() + m_y : m_y ;
-        }
-        return y;
+        if (!m_parent) return m_y;           // just own position
+        return m_parent->absY() + m_y;       // sum with parent
     }
 
     void Frtk_Widget::parent(Frtk_Widget* parent) {
@@ -141,7 +137,7 @@ namespace FR {
     void Frtk_Widget::drawLabel() {
         drawTextInBox(m_vg, m_label, m_font);
     }
-    void Frtk_Widget::drawLabel(float X, float Y, float W, float H) {
+    void Frtk_Widget::drawLabel(float X, float Y, float W, float H ) {
         m_font.pos.x = X;
         m_font.pos.y = Y;
         m_font.size.w = W;

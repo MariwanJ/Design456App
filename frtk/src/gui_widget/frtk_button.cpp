@@ -34,7 +34,7 @@ namespace FR {
         assert(vg != NULL);
         m_value = m_oldValue = 0;
         m_wdgType = FRTK_NORMAL_BUTTON;
-        m_color = glm::vec4(FR_GRAY80);
+        m_color = glm::vec4(FR_LIGHT_GRAY);
     }
 
     void Frtk_Button::value(uint8_t val) {

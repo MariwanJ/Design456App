@@ -21,43 +21,50 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//  Original Author : Gabriel de Quadros  https://github.com/gligneul
-//  Modified to use with this project by :
+//
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef FR_NEW_MESH_H
-#define FR_NEW_MESH_H
+#ifndef FRTK_TOOLBARWIN_H
+#define FRTK_TOOLBARWIN_H
 
-#include<../src/frtk.h>
-#include<../src/fr_core.h>
-#include<../vendor/glm/glm/glm.hpp>
-#include<fr_widget.h>
+#include <gui_widget/frtk_window.h>
+#include <gui_widget/frtk_draw.h>
+#include<gui_widget/frtk_toolbar_button.h>
 
 namespace FR {
-    class Fr_Shape : public Fr_Widget {
+
+
+    typedef struct {
+        std::string lbl;
+        std::string name;
+        dimSize_float_t size;
+        std::string icon;
+        Frtk_Widget::Callback callback_;
+        std::string tooltips; //not implemented yet!!
+    }toolbBTN_t;
+
+    class Frtk_ToolBarWin : public Frtk_Window
+    {
     public:
-
-        Fr_Shape(const std::string& path, glm::vec4 color = glm::vec4(FR_GRAY), float silhouette = DEFAULT_SIHOUETTE);
-        Fr_Shape();
-        ~Fr_Shape();
-
-        virtual void draw() override;
-        void SetVertices(std::vector<float>& vertices, std::vector<unsigned int>& indices);
-        glm::vec3 GetVertex(unsigned int index, const float vertices[]);
-
-        std::shared_ptr<Fr_Texture2D> m_Texture2D;
-        void Render(RenderInfo& info) override;
-        void RenderText(RenderInfo& info)override;
-        void RenderSelection(RenderInfo& info) override;
-        int handle(int e) override;
+        Frtk_ToolBarWin(float , float Y , float W , float H, std::string lbl, const std::vector<toolbBTN_t>& tools = {}, bool horizontal=true, BOX_TYPE b = FRTK_UP_BOX);
+        void    dockable(bool val);
+        bool    dockable();
+        void horizontal(bool val);
+        void addButton(const std::vector<toolbBTN_t>& btns);
+        virtual int removeButton(std::string & name);
+        bool dockingBTN(void);
 
     protected:
-        bool normalized_;
-        Fr_Window* linktoMainWindow;
-        void LoadLights(std::shared_ptr<ShaderProgram> program, const std::vector<LightInfo>& lights);
-        void RenderSilhouette(const glm::mat4& mvp);
-        const size_t kMaxLights = 8;
+        void drawVerticalDivider();
+        virtual void draw() override;
+        virtual int handle(int ev)override;
+        bool m_horizontal; //is the toolbar horizontal or vertical??
+        bool m_dockable; 
+        float m_padding;
+        Dim_float_t m_dockingSize;
+        FontData_t m_data;
+        std::string default_font_path;
     };
 }
-#endif
+#endif // FL_TOOLBAR_H

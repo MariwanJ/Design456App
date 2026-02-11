@@ -25,7 +25,7 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include<gui_widget/buttons_demo.h>
+#include<gui_widget/examples/buttons_demo.h>
 
 #include <gui_widget/frtk_box.h>
 #include <gui_widget/frtk_button.h>
@@ -88,7 +88,7 @@ namespace FR {
 
         int counter = 0;
         int i = 0;
-        auto window = std::make_shared<Frtk_Window>(500.f, 200.f, 500.f, 500.f, "Testing1 FRTK GUI Toolkit",FRTK_UP_BOX);
+        auto window = std::make_shared<Frtk_Window>(500.f, 200.f, 500.f, 500.f, "Testing buttons, toolbars",FRTK_UP_BOX);
         //frtk_check_button
         //frtk_light_button
         //frtk_repeat_button
@@ -108,11 +108,13 @@ namespace FR {
             {"Close","Close" ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath + "Folder-Close-32x32.png" , [](Frtk_Widget* w) { doCallback(2); }, ""},
         };
 
+        std::shared_ptr<Frtk_ToolBar> tb1=std::make_shared<Frtk_ToolBar>(window->getContext(), 0.f, 350.0f, window->w(), FRTK_TOOLBAR_HEIGHT, "Toolbar1", tools);
+        std::shared_ptr<Frtk_ToolBar> tb2 = std::make_shared<Frtk_ToolBar>(window->getContext(),350.f, 0.0f, FRTK_TOOLBAR_HEIGHT, window->h(), "Toolbar2", tools,false);
+        tb1->parent(window.get());
+        window->addChild(tb1);
 
-        std::shared_ptr<Frtk_ToolBar> tb=std::make_shared<Frtk_ToolBar>(window->getContext(), 0.f, 250.0f, window->w(), FRTK_TOOLBAR_HEIGHT, "Toolbar", tools);
-        tb->parent(window.get());
-        window->addChild(tb);
-
+        tb2->parent(window.get());
+        window->addChild(tb2);
 
         float xx, yy, ww, hh;
         xx = 10.0f;

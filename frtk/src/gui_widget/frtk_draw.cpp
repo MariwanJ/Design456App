@@ -484,68 +484,67 @@ namespace FR {
         return -bounds[0];  
     }
 
-    //Horizontal = NVG_ALIGN_CENTER,    NVG_ALIGN_LEFT / NVG_ALIGN_CENTER / NVG_ALIGN_RIGHT
-    //Vertical =  NVG_ALIGN_MIDDLE    NVG_ALIGN_TOP / NVG_ALIGN_MIDDLE / NVG_ALIGN_BOTTOM
+    // Draws text inside a box with alignment, shadow, and optional rotation (radians)
     void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt)
     {
+        // Set font
         nvgFontSize(vg, fnt.fontSize);
         nvgFontFace(vg, fnt.fName.c_str());
         nvgTextAlign(vg, fnt.hAlign | NVG_ALIGN_BASELINE);
+
+        // Get text metrics
         float asc, desc, lineh;
         nvgTextMetrics(vg, &asc, &desc, &lineh);
 
-        // vertical alignment  
+        // Vertical alignment
         float baselineY = fnt.pos.y + asc;
-
         switch (fnt.vAlign)
         {
         case NVG_ALIGN_TOP:
             baselineY = fnt.pos.y + asc;
             break;
-
         case NVG_ALIGN_MIDDLE:
             baselineY = fnt.pos.y + (fnt.size.h - lineh) * 0.5f + asc;
             break;
-
         case NVG_ALIGN_BOTTOM:
             baselineY = fnt.pos.y + fnt.size.h - lineh + asc;
             break;
         }
 
-        // horizontal alignment - drawX
+        // Horizontal alignment
         float drawX = fnt.pos.x;
-
         if (fnt.hAlign & NVG_ALIGN_CENTER)
-        {
             drawX = fnt.pos.x + fnt.size.w * 0.5f;
-        }
         else if (fnt.hAlign & NVG_ALIGN_RIGHT)
-        {
             drawX = fnt.pos.x + fnt.size.w;
-        }
         else // LEFT
-        {
             drawX = fnt.pos.x + getTextLeftBearing(vg, text, fnt);
-        }
 
-        // shadow 
+        // Save transform state
+        nvgSave(vg);
+
+        // Translate to the text origin
+        nvgTranslate(vg, drawX, baselineY);
+
+        // Apply rotation if needed
+        if (fnt.Rotate != 0.0f)
+            nvgRotate(vg, glm::radians(fnt.Rotate));
+
+        // Draw shadow if any
         if (fnt.blur > 0.0f)
         {
             nvgFontBlur(vg, fnt.blur);
             nvgFillColor(vg, fnt.shadowCol);
-            nvgText(
-                vg,
-                drawX + fnt.shadowOffs.x,
-                baselineY + fnt.shadowOffs.y,
-                text.c_str(),
-                nullptr
-            );
+            nvgText(vg, fnt.shadowOffs.x, fnt.shadowOffs.y, text.c_str(), nullptr);
         }
 
-        // main text
+        // Draw main text
         nvgFontBlur(vg, 0.0f);
         nvgFillColor(vg, fnt.forgColor);
-        nvgText(vg, drawX, baselineY, text.c_str(), nullptr);
+        nvgText(vg, 0.0f, 0.0f, text.c_str(), nullptr);
+
+        // Restore transform
+        nvgRestore(vg);
     }
 
     // Function to draw a check mark

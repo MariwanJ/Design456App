@@ -25,41 +25,53 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include <gui_widget/frtk_toolbar_button.h> 
-
+#include <gui_widget/frtk_toolbar_button.h>
 
 namespace FR {
     Frtk_ToolBar_Button::Frtk_ToolBar_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :
         Frtk_Button(vg, x, y, w, h, l, b), m_divider(false), m_padding(2.0f),
-        m_thickness(1.0f), m_lineColor(nvgRGBAf(FR_GRAY80)),m_name(""),m_tooltips("")
+        m_thickness(1.0f), m_lineColor(nvgRGBAf(FR_LIGHT_GRAY_90)), m_name(""), m_tooltips("")
     {
         // USE "OR" SYMBOLE FOR DIVIDER BUTTON
-        if (!l.empty() ){
+        if (!l.empty()) {
             if (l.size() == 1 && l == "|") {
                 m_divider = 1;
-                disable(); // It's a divider
             }
         }
         m_wdgType = FRTK_TOOLBAR_BUTTON;
+     
+       
     }
     void Frtk_ToolBar_Button::drawVerticalDivider()
     {
+        const float cx = m_x + m_w * 0.5f;
+        const float top = m_y + m_padding;
+        const float bottom = m_y + m_h - m_padding;
+
+        const float lineSpacing = 4.0f;
+        const float strokeWidth = 1.0f;
+
+        nvgStrokeWidth(m_vg, strokeWidth);
+        nvgStrokeColor(m_vg, nvgRGBA(160, 160, 160, 180));
+
         nvgBeginPath(m_vg);
-        nvgMoveTo(m_vg, m_x+m_w/2-m_thickness, m_y + m_padding);          
-        nvgLineTo(m_vg, m_x + m_w/2-m_thickness, m_y + m_h- m_padding);     
-        nvgStrokeColor(m_vg, m_lineColor);
-        nvgStrokeWidth(m_vg, m_thickness);
-        nvgMoveTo(m_vg, m_x + m_w / 2 + m_thickness , m_y + m_padding);          
-        nvgLineTo(m_vg, m_x + m_w / 2 + m_thickness , m_y + m_h - m_padding);    
-        nvgStrokeColor(m_vg, nvgRGBAf(FR_GRAY50));
-        nvgStrokeWidth(m_vg, m_thickness);
+
+        // Draw 3 vertical grip lines
+        for (int i = -1; i <= 1; ++i)
+        {
+            float x = floorf(cx + i * lineSpacing) + 0.5f; // pixel aligned
+            nvgMoveTo(m_vg, x, top);
+            nvgLineTo(m_vg, x, bottom);
+        }
+
         nvgStroke(m_vg);
-        
     }
+
+
     void Frtk_ToolBar_Button::name(const std::string& name) {
         m_name = name;
     }
-    const std::string& Frtk_ToolBar_Button::name(void)  {
+    const std::string& Frtk_ToolBar_Button::name(void) {
         return m_name;
     }
     void Frtk_ToolBar_Button::tooltips(const std::string& val) {
@@ -69,33 +81,31 @@ namespace FR {
         return m_tooltips;
     }
 
-
     void Frtk_ToolBar_Button::draw() {
-       if(m_value ==0){
-            draw_box(m_vg, (m_boxType), { { m_x,m_y }, { m_w,m_h } }, 0.0f, NORMAL_BORDER, 
-                nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a), 
+        if (m_divider) {
+            m_padding = 0.0f;
+            m_thickness = 1.0f;
+            m_boxType = FRTK_NO_BOX;
+            drawVerticalDivider();
+            applyStyle(); //We still need to apply style
+            return;
+        }
+        if (m_value == 0) {
+            draw_box(m_vg, (m_boxType), { { m_x,m_y }, { m_w,m_h } }, 0.0f, NORMAL_BORDER,
+                nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a),
                 nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), true);
             m_Image.opacity = 1.0f;
         }
-       else if (m_value == 1) {
-           draw_box(m_vg, (BOX_TYPE)((int)(m_boxType)+1), { { m_x,m_y }, { m_w,m_h } },
-               0.0f, NORMAL_BORDER, nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a),
-               nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), false);
-           m_Image.opacity = 0.5f;
-       }
-
-       if (m_divider) {
-            drawVerticalDivider();
+        else if (m_value == 1) {
+            draw_box(m_vg, (BOX_TYPE)((int)(m_boxType)+1), { { m_x,m_y }, { m_w,m_h } },
+                0.0f, NORMAL_BORDER, nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a),
+                nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), false);
+            m_Image.opacity = 0.5f;
         }
-        if (m_IconTexture != 0){
-            if (!m_divider){
+        if (m_IconTexture != 0) {
             drawImage();//Dimensions are already calculated using style
-            }
         }
-        else {
-            applyStyle(); //We still need to apply style
-        }
-        if(!m_divider)
+        if (!m_label.empty())
             drawLabel();
     }
     void Frtk_ToolBar_Button::setThicknessPadding(float padding, float thickness)
@@ -103,5 +113,4 @@ namespace FR {
         m_padding = padding;
         m_thickness = thickness;
     }
-
 }

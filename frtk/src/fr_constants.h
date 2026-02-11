@@ -157,17 +157,22 @@ typedef T FR_COLOR;
 #define FR_PALETURQUOISE         0.6863f,  0.9333f,  0.9333f,  1.0000f
 #define FR_PALEGOLDENROD         0.9333f,  0.9098f,  0.6667f,  1.0000f
         //Better Gray calcification
-#define FR_GRAY02                0.0020f,  0.0020f,  0.0020f,  1.0000f
-#define FR_GRAY05                0.0500f,  0.0500f,  0.0500f,  1.0000f
-#define FR_GRAY10                0.1000f,  0.1000f,  0.1000f,  1.0000f
-#define FR_GRAY20                0.2000f,  0.2000f,  0.2000f,  1.0000f
-#define FR_GRAY30                0.3000f,  0.3000f,  0.3000f,  1.0000f
-#define FR_GRAY40                0.4000f,  0.4000f,  0.4000f,  1.0000f
-#define FR_GRAY50                0.5000f,  0.5000f,  0.5000f,  1.0000f
-#define FR_GRAY60                0.6000f,  0.6000f,  0.6000f,  1.0000f
-#define FR_GRAY70                0.7000f,  0.7000f,  0.7000f,  1.0000f
-#define FR_GRAY80                0.8000f,  0.8000f,  0.8000f,  1.0000f
-#define FR_GRAY90                0.9000f,  0.9000f,  0.9000f,  1.0000f
+#define FR_LIGHT_GRAY_90         0.9010f,  0.9010f,  0.9010f,  1.0000f 
+#define FR_LIGHT_GRAY_93         0.9330f,  0.9330f,  0.9330f,  1.0000f 
+#define FR_LIGHT_GRAY_94         0.9490f,  0.9490f,  0.9490f,  1.0000f 
+#define FR_LIGHT_GRAY_97         0.9720f,  0.9720f,  0.9720f,  1.0000f 
+#define FR_LIGHT_GRAY            0.8280f,  0.8280f,  0.8280f,  1.0000f
+#define FR_SILVER                0.7530f,  0.7530f,  0.7530f,  1.0000f
+#define FR_GRAY                  0.5020f,  0.5020f,  0.5020f,  1.0000f
+#define FR_DARK_GRAY             0.6620f,  0.6620f,  0.6620f,  1.0000f
+#define FR_DIM_GRAY              0.4120f,  0.4120f,  0.4120f,  1.0000f
+#define FR_SLATE_GRAY            0.4390f,  0.5020f,  0.5610f,  1.0000f
+#define FR_GAINSBORO             0.8620f,  0.8620f,  0.8620f,  1.0000f
+#define FR_ASH_GRAY              0.6660f,  0.6660f,  0.6660f,  1.0000f
+#define FR_CHARCOAL              0.2110f,  0.2110f,  0.2110f,  1.0000f
+#define FR_PAYNE_GRAY            0.2570f,  0.2570f,  0.3220f,  1.0000f
+#define FR_CLOUD_GRAY            0.7800f,  0.7800f,  0.8000f,  1.0000f
+#define FR_STONE_GRAY            0.4470f,  0.4470f,  0.4470f,  1.0000f
 
 #define FR_MEDIUMSEAGREEN        0.2353f,  0.7020f,  0.4431f,  1.0000f
 #define FR_MOCCASIN              1.0000f,  0.8941f,  0.7098f,  1.0000f

@@ -50,8 +50,6 @@
 
 
 
-
-
 /** end Fr_Window */
 namespace FR {
     class Frtk_Window;
@@ -211,6 +209,8 @@ namespace FR {
         
         static Fr_InputEvent_t m_sysEvents;
         void initSystemEvents();
+        void deactivateNavi();
+        void activateNavi();
 
     protected:
         FRTK_WIN_TYPE m_winType;
@@ -278,8 +278,6 @@ namespace FR {
         void mnuDrawLine_cb(void* Data);
 
         void createOpenDialog(void);
-        void deactivateNavi();
-        void activateNavi();
 
         /**
          * GLAD VERSION DEFINITION

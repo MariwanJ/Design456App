@@ -31,7 +31,7 @@ namespace FR {
   
     Frtk_Switch_Button::Frtk_Switch_Button(NVGcontext* m_vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :Frtk_Button(m_vg, x, y, w, h, l, b) {
         m_wdgType = FRTK_SWITCH_BUTTON;
-        m_bkg_color = glm::vec4(FR_GRAY20);
+        m_bkg_color = glm::vec4(FR_CHARCOAL);
         m_font.fName="sans-bold";
         m_specialDrawingSize = m_h * 0.5f;
     }
@@ -77,7 +77,7 @@ namespace FR {
         nvgFillPaint(m_vg, active);
         nvgFill(m_vg);
 
-        NVGpaint inner = nvgBoxGradient( m_vg, x, y + 1, w, h, radius, 14, nvgRGBAf(FR_GRAY30), nvgRGBAf(FR_WHITE));
+        NVGpaint inner = nvgBoxGradient( m_vg, x, y + 1, w, h, radius, 14, nvgRGBAf(FR_PAYNE_GRAY), nvgRGBAf(FR_WHITE));
 
         nvgBeginPath(m_vg);
         nvgRoundedRect(m_vg, x, y, w, h, radius);
@@ -92,7 +92,7 @@ namespace FR {
 
         nvgTextAlign(m_vg, m_font.hAlign|m_font.vAlign);
         // ON
-        nvgFillColor(m_vg, onActive ? nvgRGBAf(FR_GREEN) : nvgRGBAf(FR_GRAY40));
+        nvgFillColor(m_vg, onActive ? nvgRGBAf(FR_GREEN) : nvgRGBAf(FR_DIM_GRAY));
         nvgText(m_vg, cxOn, cy, "ON", NULL);
 
         // OFF

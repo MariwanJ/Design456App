@@ -55,13 +55,15 @@ namespace FR {
 
         int send_event(Frtk_Widget& w, int ev);
 
-        int findIndex(const std::shared_ptr<Frtk_Widget>& w) const;
-        void remove_child_at(size_t index);
-        void remove_child(std::shared_ptr<Frtk_Widget> &wdg);
-        void remove_all();
+        virtual int findIndex(const std::shared_ptr<Frtk_Widget>& w) const;
+        virtual int remove_child_at(size_t index);
+        virtual int remove_child(std::shared_ptr<Frtk_Widget> &wdg);
+        virtual void remove_all();
 
-        void addChild(std::shared_ptr<Frtk_Widget> w);
-        bool navigate_focus(int key);
+        virtual void addChild(std::shared_ptr<Frtk_Widget> w);
+        virtual bool navigate_focus(int key);
+        //Return a const reference to prevent modification
+        const std::vector<std::shared_ptr<Frtk_Widget>>& getChildren() const;
 
     protected:
         virtual void draw()  override;

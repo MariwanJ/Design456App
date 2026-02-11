@@ -21,43 +21,19 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//  Original Author : Gabriel de Quadros  https://github.com/gligneul
-//  Modified to use with this project by :
+//
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef FR_NEW_MESH_H
-#define FR_NEW_MESH_H
+#ifndef FRTK_TOOLBAR_DEMO_H
+#define FRTK_TOOLBAR_DEMO_H
 
-#include<../src/frtk.h>
-#include<../src/fr_core.h>
-#include<../vendor/glm/glm/glm.hpp>
-#include<fr_widget.h>
 
-namespace FR {
-    class Fr_Shape : public Fr_Widget {
-    public:
+#include <gui_widget/Frtk_ToolBarWin.h>
 
-        Fr_Shape(const std::string& path, glm::vec4 color = glm::vec4(FR_GRAY), float silhouette = DEFAULT_SIHOUETTE);
-        Fr_Shape();
-        ~Fr_Shape();
 
-        virtual void draw() override;
-        void SetVertices(std::vector<float>& vertices, std::vector<unsigned int>& indices);
-        glm::vec3 GetVertex(unsigned int index, const float vertices[]);
 
-        std::shared_ptr<Fr_Texture2D> m_Texture2D;
-        void Render(RenderInfo& info) override;
-        void RenderText(RenderInfo& info)override;
-        void RenderSelection(RenderInfo& info) override;
-        int handle(int e) override;
-
-    protected:
-        bool normalized_;
-        Fr_Window* linktoMainWindow;
-        void LoadLights(std::shared_ptr<ShaderProgram> program, const std::vector<LightInfo>& lights);
-        void RenderSilhouette(const glm::mat4& mvp);
-        const size_t kMaxLights = 8;
-    };
-}
-#endif
+namespace FR{
+    std::shared_ptr<Frtk_ToolBarWin>  runFRTKToolbarDemo();
+} 
+#endif  /FRTK_TOOLBAR_DEMO

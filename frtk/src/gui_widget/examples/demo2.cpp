@@ -25,7 +25,7 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include<gui_widget/demo2.h>
+#include<gui_widget/examples/demo2.h>
 
 #include <gui_widget/frtk_box.h>
 #include <gui_widget/frtk_button.h>
@@ -64,7 +64,7 @@ namespace FR {
         */
         static int counter = 1;
         static int i= 0;
-        auto window = std::make_shared<Frtk_Window>(500.f, 200.f, 500.f, 500.f, "Testing FRTK GUI Toolkit");
+        auto window = std::make_shared<Frtk_Window>(500.f, 200.f, 500.f, 500.f, "Testing Buttons");
         std::shared_ptr<Frtk_Box> box;
         std::string imagePath = EXE_CURRENT_DIR + "/resources/icons/32x32/House-32x32.png";
 

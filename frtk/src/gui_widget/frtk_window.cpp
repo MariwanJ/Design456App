@@ -28,8 +28,6 @@
 #include<gui_widget/frtk_window.h>
 
 namespace FR {
-   // frtk_Win_Mouse_t Frtk_Window::m_mouseDim = { 0 };   //TODO : THIS IS BAD ... TEMPEORARY SOLUTION .. FIXME PLEASE!!
-
     Frtk_Window::Frtk_Window(float X, float Y, float W, float H, std::string lbl, BOX_TYPE b, bool hasHeader) :
         Frtk_Widget(X, Y, W, H, lbl,b),m_hasHeader(hasHeader){
         init();
@@ -37,7 +35,6 @@ namespace FR {
         m_data.fontEmoji = 0;
         m_data.fontIcons = 0;
         m_data.fontNormal = 0;
-        memset(m_data.images, 0, 12);
         m_color.w = 0.5f;  //Default Opacity
         ///Default style
         m_WindowsStyle.height = FRTK_WINDOWS_TITLE_HEIGHT;
@@ -56,7 +53,7 @@ namespace FR {
         m_font.vAlign = NVG_ALIGN_MIDDLE;
 
         /*When windows start to be visible, it will be the focused widget.
-        this can change later as children get focus. currnt and prev will be the same here
+        this can change later as children get focus. current and prev will be the same here
         */
         //global variables
         g_focusedWdgt.current = this;
@@ -72,8 +69,7 @@ namespace FR {
         else {
             m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, X, Y , W, H);
         }
-        m_guiWindow->boxType( FRTK_UP_BOX);
-        m_guiWindow->opacity(0.5f);
+        m_guiWindow->boxType( b);
         FRTK_CORE_APP_ASSERT(m_guiWindow);
     }
     
@@ -123,9 +119,9 @@ namespace FR {
     }
     void Frtk_Window::init(void)
     {
-        assert(m_mainWindow);
+        FRTK_CORE_APP_ASSERT(m_mainWindow);
         m_vg = m_mainWindow->getnvgContext();
-        assert(m_vg != nullptr);
+        FRTK_CORE_APP_ASSERT(m_vg != nullptr);
 
         if (!m_vg) {
             throw std::runtime_error("NanoVG context not initialized");
@@ -154,21 +150,10 @@ namespace FR {
     int Frtk_Window::loadFonts()
     {
         int i;
-
+        //TODO FIXME: Do we need emoji fonts?? don't think so.
         if (m_vg == NULL)
             return -1;
 
-   /*     for (i = 0; i < 12; i++) {
-            char file[128];
-            std::string f;
-            f = default_font_path + "images/";
-            snprintf(file, 128, "%simage%d.jpg", f.c_str(), i + 1);
-            m_data.images[i] = nvgCreateImage(m_vg, file, 0);
-            if (m_data.images[i] == 0) {
-                printf("Could not load %s.\n", file);
-                return -1;
-            }
-        }*/
         std::string f = default_font_path + "entypo.ttf";
         m_data.fontIcons = nvgCreateFont(m_vg, "icons", f.c_str());
         if (m_data.fontIcons == -1) {

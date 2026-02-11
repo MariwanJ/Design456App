@@ -34,7 +34,6 @@ namespace FR{
     //TODO: Temporary code -- FIXME
     typedef struct FontData_t {
         int fontNormal, fontBold, fontIcons, fontEmoji;
-        int images[12];
     };    
     
     typedef struct {
@@ -49,11 +48,6 @@ namespace FR{
         float m_cornerRadius;
     } Frtk_HeaderStyle_t;
     
-    typedef struct {
-        float contentX;
-        float contentY;
-    }frtk_Win_Mouse_t;
-
     class Frtk_Window : public Frtk_Widget {
         friend Fr_Window;
     public:
