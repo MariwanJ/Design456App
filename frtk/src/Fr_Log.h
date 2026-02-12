@@ -1,4 +1,4 @@
-//
+﻿//
 // This file is a part of the Open Source Design456App
 // MIT License
 //
@@ -31,8 +31,16 @@
 //#define SPDLOG_WCHAR_TO_UTF8_SUPPORT
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 namespace FR {
+
+#ifdef _WIN32
+#include <windows.h>
+    struct WinUtf8Console { WinUtf8Console() { SetConsoleOutputCP(CP_UTF8); } };
+    static WinUtf8Console _utf8fix; // set UTF-8 at startup
+#endif
+
     class Fr_Log
     {
     public:
@@ -46,17 +54,17 @@ namespace FR {
     };
 
     // log macros
-#define FRTK_CORE_TRACE(...)    Fr_Log::GetFRTKLogger()->trace(__VA_ARGS__)
-#define FRTK_CORE_INFO(...)     Fr_Log::GetFRTKLogger()->info(__VA_ARGS__)
-#define FRTK_CORE_WARN(...)     Fr_Log::GetFRTKLogger()->warn(__VA_ARGS__)
-#define FRTK_CORE_ERROR(...)    Fr_Log::GetFRTKLogger()->error(__VA_ARGS__)
-#define FRTK_CORE_FATAL(...)    Fr_Log::GetFRTKLogger()->critical(__VA_ARGS__)
+#define FRTK_CORE_TRACE(...)    Fr_Log::GetFRTKLogger()->trace(   u8"📜 " __VA_ARGS__)
+#define FRTK_CORE_INFO(...)     Fr_Log::GetFRTKLogger()->info(    u8"ℹ️ " __VA_ARGS__)
+#define FRTK_CORE_WARN(...)     Fr_Log::GetFRTKLogger()->warn(    u8"⚠️ " __VA_ARGS__)
+#define FRTK_CORE_ERROR(...)    Fr_Log::GetFRTKLogger()->error(   u8"❌ " __VA_ARGS__)
+#define FRTK_CORE_FATAL(...)    Fr_Log::GetFRTKLogger()->critical(u8"🔥 " __VA_ARGS__)
 
 // Application
-#define APP_APP_TRACE(...)       Fr_Log::GetAPPLogger()->trace(__VA_ARGS__)
-#define APP_APP_INFO(...)       Fr_Log::GetAPPLogger()->info(__VA_ARGS__)
-#define APP_APP_WARN(...)       Fr_Log::GetAPPLogger()->warn(__VA_ARGS__)
-#define APP_APP_ERROR(...)       Fr_Log::GetAPPLogger()->error(__VA_ARGS__)
-#define APP_APP_FATAL(...)       Fr_Log::GetAPPLogger()->critical(__VA_ARGS__)
+#define APP_APP_TRACE(...)       Fr_Log::GetAPPLogger()->trace(   u8"📜 " __VA_ARGS__)
+#define APP_APP_INFO(...)       Fr_Log::GetAPPLogger()->info(     u8"ℹ️ " __VA_ARGS__)
+#define APP_APP_WARN(...)       Fr_Log::GetAPPLogger()->warn(     u8"⚠️ " __VA_ARGS__)
+#define APP_APP_ERROR(...)       Fr_Log::GetAPPLogger()->error(   u8"❌ " __VA_ARGS__)
+#define APP_APP_FATAL(...)       Fr_Log::GetAPPLogger()->critical(u8"🔥 " __VA_ARGS__)
 }
 #endif

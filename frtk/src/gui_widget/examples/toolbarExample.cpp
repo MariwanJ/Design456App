@@ -36,7 +36,7 @@ namespace FR {
 
 
 
-        std::string iconPath =EXE_CURRENT_DIR + "/resources/icons/32x32/";
+        std::string iconPath = EXE_CURRENT_DIR + "/resources/icons/32x32/";
         std::string imagePath = EXE_CURRENT_DIR + "/resources/icons/32x32/House-32x32.png";
         
 
@@ -48,7 +48,7 @@ namespace FR {
         };
         
         
-        std::shared_ptr<Frtk_ToolBarWin> tb1=std::make_shared<Frtk_ToolBarWin>( 450.f, 300.0f,350, FRTK_TOOLBAR_HEIGHT, "Testing WinToolbar", tools,true);
+        std::shared_ptr<Frtk_ToolBarWin> tb1=std::make_shared<Frtk_ToolBarWin>( 450.f, 300.0f,350, FRTK_TOOLBAR_HEIGHT, "", tools,true);
         
         return tb1;
     }

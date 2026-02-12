@@ -35,7 +35,7 @@ namespace FR {
         m_data.fontEmoji = 0;
         m_data.fontIcons = 0;
         m_data.fontNormal = 0;
-        m_color.w = 0.5f;  //Default Opacity
+        //m_color.w = 0.5f;  //Default Opacity
         ///Default style
         m_WindowsStyle.height = FRTK_WINDOWS_TITLE_HEIGHT;
         m_WindowsStyle.bevelHeight = 10.0f;
@@ -43,8 +43,8 @@ namespace FR {
 
         m_WindowsStyle.topColor = nvgRGBAf(FR_DARKBLUE);
         m_WindowsStyle.bottomColor = nvgRGBAf(FR_DARKCYAN);
-        m_WindowsStyle.strokeColor = nvgRGBA(0, 0, 0, 32);
-        m_WindowsStyle.strokeAlpha = 32.0f / 255.0f;
+        m_WindowsStyle.strokeColor = nvgRGBAf(0.0f, 0.0f, 0.0f, 0.1254f);
+        m_WindowsStyle.strokeAlpha = 0.1254f;
         m_WindowsStyle.m_cornerRadius = 3.0f;
 
         m_font.fontSize = 18.0;
@@ -95,28 +95,37 @@ namespace FR {
         nvgEndFrame(m_vg);
     }
 
-    void Frtk_Window::draw_header() {
-        // Header
-        NVGpaint headerPaint;
-        headerPaint = nvgLinearGradient(m_vg, m_x, m_y, m_x, m_y + FRTK_WINDOWS_TITLE_HEIGHT, m_WindowsStyle.topColor, m_WindowsStyle.bottomColor);
+    void Frtk_Window::draw_header()
+    {
+        float headerHeight = m_WindowsStyle.height;
+
+        // Gradient background
+        NVGpaint headerPaint = nvgLinearGradient( m_vg, m_x, m_y, m_x, m_y + headerHeight, 
+                                m_WindowsStyle.topColor, m_WindowsStyle.bottomColor);
+
         nvgBeginPath(m_vg);
-        nvgRoundedRect(m_vg, m_x, m_y, m_w - 2, m_WindowsStyle.height, m_WindowsStyle.cornerRadius - 1);
+        nvgRoundedRect(m_vg, m_x, m_y, m_w, headerHeight, m_WindowsStyle.cornerRadius);
         nvgFillPaint(m_vg, headerPaint);
         nvgFill(m_vg);
+
+        // Top bevel stroke
         nvgBeginPath(m_vg);
         nvgRoundedRect(m_vg, m_x, m_y, m_w, m_WindowsStyle.bevelHeight, m_WindowsStyle.cornerRadius);
+        nvgStrokeWidth(m_vg, 1.0f);
         nvgStrokeColor(m_vg, m_WindowsStyle.strokeColor);
+
         nvgSave(m_vg);
-        nvgIntersectScissor(m_vg, m_x, m_y, m_w, 0.5f);
+        nvgIntersectScissor(m_vg, m_x, m_y, m_w, 1.0f);
         nvgStroke(m_vg);
         nvgRestore(m_vg);
 
+        // Bottom separator line
         nvgBeginPath(m_vg);
-        nvgMoveTo(m_vg, m_x + 0.5f, m_y + m_WindowsStyle.bevelHeight - 1.5f);
-        nvgLineTo(m_vg, m_x + m_w - 0.5f, m_y + m_WindowsStyle.bevelHeight - 1.5);
-        nvgStrokeColor(m_vg, m_WindowsStyle.strokeColor);
+        nvgMoveTo(m_vg, floorf(m_x) + 0.5f, floorf(m_y + m_WindowsStyle.bevelHeight - 1.0f) + 0.5f);
+        nvgLineTo(m_vg, floorf(m_x + m_w) - 0.5f, floorf(m_y + m_WindowsStyle.bevelHeight - 1.0f) + 0.5f);
         nvgStroke(m_vg);
     }
+
     void Frtk_Window::init(void)
     {
         FRTK_CORE_APP_ASSERT(m_mainWindow);
@@ -136,9 +145,10 @@ namespace FR {
         drawTextInBox(m_vg, m_label, m_font);
     }
 
-    void Frtk_Window::drawLabel(float X, float Y, float W, float H) {
+    void Frtk_Window::drawLabel(float X, float Y, float W, float H, float rotateAngle) {
         m_font.size.w = W;
         m_font.size.h = H;
+        m_font.Rotate = rotateAngle;
         drawLabel();
     }
 

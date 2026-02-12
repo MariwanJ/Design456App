@@ -74,12 +74,24 @@ project "Design456App"
     filter "system:windows"
         defines { "FRTK_PLATFORM_WINDOWS", "GLFW_EXPOSE_NATIVE_WIN32" }
         links { "opengl32.lib", "gdiplus.lib" }
-		buildoptions { "/utf-8"  }  -- Add UTF-8 support
-		
+        buildoptions { "/W4", "/utf-8" }
+        
     -- Linux-specific
     filter "system:linux"
         defines { "FRTK_PLATFORM_LINUX" }
-        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto" }
+         buildoptions {
+         "-Wall",
+         "-Wextra",
+         "-Wconversion",
+         "-Wfloat-conversion",
+         "-Werror",
+         "-fPIC",
+         "-ggdb",
+         "-fdiagnostics-color=auto",
+         "-finput-charset=UTF-8",
+         "-fexec-charset=UTF-8"
+      }
+
         links {
             "GL",
             "dl",

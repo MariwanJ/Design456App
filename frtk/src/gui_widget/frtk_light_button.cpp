@@ -53,7 +53,7 @@ namespace FR {
 
     // Draw functions : 
     void Frtk_Light_Button::drawKnob(NVGcontext* vg, float cx, float cy, float r, NVGcolor color) {
-        NVGpaint knob = nvgRadialGradient(vg, cx - r * 0.3f, cy - r * 0.3f, r * 0.2f, r, nvgRGBA(255, 255, 255, 220), color);
+        NVGpaint knob = nvgRadialGradient(vg, cx - r * 0.3f, cy - r * 0.3f, r * 0.2f, r, nvgRGBAf(1.0f, 1.0f, 1.0f, 0.88f), color);
 
         nvgBeginPath(vg);
         nvgCircle(vg, cx, cy, r);
@@ -61,7 +61,7 @@ namespace FR {
         nvgFill(vg);
     }
     void Frtk_Light_Button::drawToggleOn(NVGcontext* vg, float x, float y, float w, float h, NVGcolor knobColor) {
-        drawToggleBase(vg, x, y, w, h, nvgRGB(120, 220, 120),   /* top green*/ nvgRGB(40, 160, 40)      /* bottom green*/);
+        drawToggleBase(vg, x, y, w, h, nvgRGBAf(0.4705f, 0.88f, 0.4705f, 1.0f),   /* top green*/ nvgRGBAf(0.1568f, 0.6274f, 0.1568f, 1.0f)      /* bottom green*/);
 
         float knobR = h * 0.4f;
         float cx = x + w - h * 0.5f;
@@ -70,7 +70,7 @@ namespace FR {
         m_Image.dim.pos.x = cx - knobR;
     }
     void Frtk_Light_Button::drawToggleOff(NVGcontext* vg, float x, float y, float w, float h, NVGcolor knobColor) {
-        drawToggleBase(vg, x, y, w, h, nvgRGB(220, 120, 120),   /* top red*/ nvgRGB(160, 40, 40)      /* bottom red*/);
+        drawToggleBase(vg, x, y, w, h, nvgRGBAf(0.8627f, 0.4705f, 0.4705f, 1.0f),   /* top red*/ nvgRGBAf(0.6274f, 0.1568f, 0.1568f, 1.0f)      /* bottom red*/);
         float knobR = h * 0.4f;
         float cx = x + h * 0.5f;
         float cy = y + h * 0.5f;
@@ -90,7 +90,7 @@ namespace FR {
         nvgFill(vg);
 
         // Inner shadow
-        NVGpaint inner = nvgBoxGradient(vg, x, y + 1, w, h, r, 4, nvgRGBA(0, 0, 0, 80), nvgRGBA(0, 0, 0, 0));
+        NVGpaint inner = nvgBoxGradient(vg, x, y + 1, w, h, r, 4, nvgRGBAf(0.0f, 0.0f, 0.0f, 0.3137f), nvgRGBAf(0.f, 0.0f, 0.0f, 0.0f));
 
         nvgBeginPath(vg);
         nvgRoundedRect(vg, x, y, w, h, r);

@@ -57,14 +57,14 @@ namespace FR {
             //UP
             draw_box(m_vg, m_boxType, {{ m_x,m_y }, { m_w,m_h }}, 0.0f, THICK_BORDER, 
                 nvgRGBAf(actualColor.r, actualColor.g, actualColor.b, actualColor.a), 
-                nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), true);
+                glmToNVG(m_borderColor), true);
         }
         else if (m_value == 1)
         {
             //DOWN
             draw_box(m_vg, (BOX_TYPE)((int)(m_boxType)+1), {{ m_x,m_y }, { m_w,m_h }}, 0.0f, THICK_BORDER, 
                 nvgRGBAf(actualColor.r, actualColor.g, actualColor.b, actualColor.a), 
-                nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), false);
+                glmToNVG(m_borderColor), false);
         }
         else
         {

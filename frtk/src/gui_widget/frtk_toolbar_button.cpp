@@ -52,7 +52,7 @@ namespace FR {
         const float strokeWidth = 1.0f;
 
         nvgStrokeWidth(m_vg, strokeWidth);
-        nvgStrokeColor(m_vg, nvgRGBA(160, 160, 160, 180));
+        nvgStrokeColor(m_vg, nvgRGBAf(0.6274f,0.6274f,0.6274f,0.7058f));
 
         nvgBeginPath(m_vg);
 
@@ -83,7 +83,6 @@ namespace FR {
 
     void Frtk_ToolBar_Button::draw() {
         if (m_divider) {
-            m_padding = 0.0f;
             m_thickness = 1.0f;
             m_boxType = FRTK_NO_BOX;
             drawVerticalDivider();
@@ -92,14 +91,14 @@ namespace FR {
         }
         if (m_value == 0) {
             draw_box(m_vg, (m_boxType), { { m_x,m_y }, { m_w,m_h } }, 0.0f, NORMAL_BORDER,
-                nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a),
-                nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), true);
+                glmToNVG(m_color),
+                glmToNVG(m_borderColor), true);
             m_Image.opacity = 1.0f;
         }
         else if (m_value == 1) {
             draw_box(m_vg, (BOX_TYPE)((int)(m_boxType)+1), { { m_x,m_y }, { m_w,m_h } },
-                0.0f, NORMAL_BORDER, nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a),
-                nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), false);
+                0.0f, NORMAL_BORDER, glmToNVG(m_color),
+                glmToNVG(m_borderColor), false);
             m_Image.opacity = 0.5f;
         }
         if (m_IconTexture != 0) {

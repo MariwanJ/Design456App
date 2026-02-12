@@ -38,6 +38,22 @@
 namespace FR {
 #define FRTK_WINDOWS_TITLE_HEIGHT 30.0f
 
+
+//***********************************************************************************************************************************
+// IMPORTANT: Always use float colors (nvgRGBAf or glmToNVG).                                                                       *
+// nvgRGBA (integer RGBA) is forbidden in this project.                                                                             *
+#ifdef nvgRGBA                                                                                                                    //*
+#undef nvgRGBA                                                                                                                    //*
+#endif                                                                                                                            //*
+                                                                                                                                  //*
+#define nvgRGBA(...) \
+    __pragma(message("ERROR: nvgRGBA (integer RGBA) is forbidden. " \
+                     "Use nvgRGBAf(float r,g,b,a) or glmToNVG(glm::vec4) instead.")) \
+    static_assert(false, "ERROR: nvgRGBA (integer RGBA) is forbidden. " \
+                         "Use nvgRGBAf(float r,g,b,a) or glmToNVG(glm::vec4) instead.");                                                                                                                   //*
+//***********************************************************************************************************************************
+
+
     class FRTK_API Frtk_Widget {
         friend class Frtk_GrpWidget;
 
@@ -71,7 +87,9 @@ namespace FR {
         virtual void draw_focus(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 bkg);
 
         virtual void drawLabel();
-        virtual void drawLabel(float X, float Y, float W, float H = 18.0 * 1.3f);
+        virtual void drawLabel(float X, float Y, float W, float H = 18.0 * 1.3f, float rotateAngle =0.0f);
+        virtual void rotateLabel(float angle =0.0f);
+        virtual float lblRotateAngle() const;
 
         //Widget Icon/image
         virtual int wdgImage(std::string path, std::optional<glm::vec4> tint = std::nullopt);
@@ -87,6 +105,10 @@ namespace FR {
         void color(float R, float G, float B, float A = 1.0f);
         void color(glm::vec4 col);
         glm::vec4 color(void) const;
+        inline NVGcolor glmToNVG(const glm::vec4& c)
+        {
+            return nvgRGBAf(c.r, c.g, c.b, c.a);
+        }
 
         void  opacity(float A = 1.0f);
         void  opacity(uint8_t A = 255);

@@ -1,90 +1,5 @@
-//
-// This file is a part of the Open Source Design456App
-// MIT License
-//
-// Copyright (c) 2026
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-//
-//  Author :Mariwan Jalal    mariwan.jalal@gmail.com
-//
-
-/** \file
-    FR static variable/classes.
- */
-
-#ifndef FR_CONSTANTS_H
-#define FR_CONSTANTS_H
-namespace FR {
-    /**
-       The major release version
-     */
-
-#define FR_MAJOR_VERSION        0
-
-     /**
-        The minor release version for this library.
-      */
-#define FR_MINOR_VERSION        0
-
-      /**
-         The patch version for this library.
-       */
-#define FR_PATCH_VERSION        1
-
-#define FR_VERSION      ( (double)FL_MAJOR_VERSION + \
-                          (double)FL_MINOR_VERSION * 0.01 + \
-                          (double)FL_PATCH_VERSION * 0.0001 )
-
-// VERY IMPORTANT ! Standard Toolbar height, icon size, font size for toolbars is here
-#define FRTK_ICON_SIZE  ImVec2(32.0f,32.0f)   //<---- We should change this to 24
-#define FRTK_TOOLBAR_HEIGHT  36.0f
-/*  This is the best size as it is used by FreeCAD and 
-    many other software, we define only height 
-    as width could be variable */
-#define FRTK_TOOLBAR_BUTTON_HEGHT 32.0f
-#define FRTK_TOOLBAR_BUTTON_FONT_SIZE 14
-
-
-#define MAX_FOV_ZOOM 165
-#define MAX_CAMERAS 8  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING uint8_t menu
-
-const unsigned int RECURSION_COUNT = 200;
-const float RAY_RANGE = 6000.0f;
-
-const float DEFAULT_SIHOUETTE = 0.15f;
-
-       // Transparency - No color will be applied
-    /* [Color definition used in all widgets consist of
-        a tuple of three float values between 0.0 and 1.0]
-    */
-    struct T {
-        float R = 1.0;
-        float G = 1.0;
-        float B = 1.0;
-        float A = 1.0;
-    };
-
-typedef T FR_COLOR;
-    namespace COLOR {               //R         G          B          A
-        //Other colors 
-    #define FR_TRANSPARENCY          0.0000f,  0.0000f,  0.0000f,  0.0000f           // No color
+color_definitions = """
+    #define FR_TRANSPARENCY          0.0000f,  0.0000f,  0.0000f,  0.0000f         
     #define FR_BLACK                 0.0000f,  0.0000f,  0.0000f,  1.0000f
     #define FR_BROWN                 0.6471f,  0.1647f,  0.1647f,  1.0000f
     #define FR_ROSYBROWN             0.7373f,  0.5608f,  0.5608f,  1.0000f
@@ -213,73 +128,57 @@ typedef T FR_COLOR;
     #define FR_TITANIUM              0.5420f,  0.4970f,  0.44900f, 1.0000f
     #define FR_COBALT                0.6620f,  0.6550f,  0.63400f, 1.0000f
 
-   
+"""
+import re
+# Regex to capture name and RGBA floats
+pattern = re.compile(r"#define\s+(\w+)\s+([\d.]+)f,\s+([\d.]+)f,\s+([\d.]+)f,\s+([\d.]+)f")
 
-};
+# Convert to hex colors
+colors = []
+for match in pattern.finditer(color_definitions):
+    name = match.group(1)
+    r = float(match.group(2))
+    g = float(match.group(3))
+    b = float(match.group(4))
+    hex_color = '#{:02X}{:02X}{:02X}'.format(int(r*255), int(g*255), int(b*255))
+    colors.append((name, hex_color))
 
-#define WITH_ALPHA(c, alpha) ((c.A *= (alpha), c.A = (c.A < 0.0f ? 0.0f : (c.A > 1.0f ? 1.0f : c.A)), c.R), (c.G), (c.B), (c.A))
-
-    namespace SPECULAR {
-        //Material             BaseColor(R, G, B)
-#define FR_METAL           0.50f, 0.50f, 0.50f,  1.0
-#define FR_PLASTIC         0.250f, 0.250f, 0.250f , 1.0
-    };
-   
-
-    //static variables used for mouse events inside fr_glw.
-    //TODO : FIXME : Remove these .. we shouldn't have them here.
-    static bool CamerOptionVisible = false;
-
-    
-
-    //cameras
-    #define  TOTAL_CAMS   8 
-    extern const char* camNames[];
-
-    enum {
-        GLFW_WINDOW_CLOSE,
-        GLFW_WINDOW_RESIZE,
-        GLFW_FOCUSE,
-        GLFW_APP_RENDER,
-        GLFW_KEY_PRESSED,
-        GLFW_KEY_RELEASED,
-        GLFW_KEY_TYPED,
-
-        //MOUSE
-        GLFW_MOUSE_LEFT_PUSH,
-        GLFW_MOUSE_RIGHT_PUSH,
-        GLFW_MOUSE_LEFT_RELEASE,
-        GLFW_MOUSE_RIGHT_RELEASE,
-        GLFW_MOUSE_MIDDLE_PUSH,
-        GLFW_MOUSE_MIDDLE_RELEASE,
-        GLFW_MOUSE_DOUBLE_CLICK,   //ONE CLICK IS JUST PUSH
-
-        GLFW_MOUSE_MOVE,
-        GLFW_MOUSE_SCROLL,
-    };
-
-    enum {
-        FR_ABSTRACT_WIDGET = 0,
-        FR_GROUP_WIDGET = 1,
-        FR_BOX_WIDGET = 2,
-        FR_LBL_WIDGET = 3,
-        FR_BUTTON_WIDGET = 4,
-        //More will be added later
-    };
-
-    //Note all will directly be implemented : TODO: Implemente these 2026/02/05
-    typedef enum {
-        NORMAL      =0,
-        INACTIVE     =1<<1, //Visible, dosent take events
-        HEADERLESS   =1<<2,
-        CAN_CLOSE    =1<<3,
-        CAN_MINIMIZE =1<<4,
-        CAN_MAXIMIZE =1<<5,
-        MAXIMIZED    =1<<6,
-        MINIMIZED    =1<<7,
-        ANIMATED     =1<<8,
-        MODAL        =1<<9,
-        POPUP_MODAL  =1 << 10,
-    }FRTK_WIN_TYPE;
+# Generate HTML
+html = '<!DOCTYPE html>\n<html><head><style>'
+html += """
+body {font-family: sans-serif;}
+.palette {
+    display: flex;
+    flex-wrap: wrap;
+    width: 1600px; /* 10 blocks * 100px + margins */
 }
-#endif // !FR_H
+.color-container {
+    margin: 5px;
+    text-align: center;
+    width: 150px; /* each block width */
+}
+.color-box {
+    width: 150px;
+    height: 50px;
+    border: 1px solid #000;
+}
+.color-name {
+    font-size: 12px;
+    margin-top: 4px;
+}
+"""
+html += "</style></head><body>\n"
+html += '<div class="palette">\n'
+
+for name, hex_color in colors:
+    html += f'<div class="color-container">'
+    html += f'<div class="color-box" style="background-color:{hex_color};"></div>'
+    html += f'<div class="color-name">{name}<br>{hex_color}</div>'
+    html += '</div>\n'
+
+html += '</div>\n</body></html>'
+
+with open("colors.html", "w") as f:
+    f.write(html)
+
+print("Done!")

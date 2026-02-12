@@ -47,17 +47,19 @@ namespace FR {
         float w = dim.size.w;
         float h = dim.size.h;
 
-        NVGcolor top = nvgLerpRGBA(baseCol, nvgRGBA(255, 255, 255, 255), 0.1f);
-        NVGcolor bot = nvgLerpRGBA(baseCol, nvgRGBA(0, 0, 0, 255), 0.1f);
+        NVGcolor top = nvgLerpRGBA(baseCol, nvgRGBAf(FR_WHITE), 0.1f);
+        NVGcolor bot = nvgLerpRGBA(baseCol, nvgRGBAf(FR_BLACK), 0.1f);
+
+
         NVGpaint grad = nvgLinearGradient(vg, x, y, x, y + h - r, top, bot);
+
 
         nvgBeginPath(vg);
         nvgRoundedRect(vg, x, y, w, h, r);
         nvgFillPaint(vg, grad);
         nvgFill(vg);
 
-        NVGcolor highlight = nvgLerpRGBA(
-            baseCol, nvgRGBA(255, 255, 255, baseCol.a), 0.4f);
+        NVGcolor highlight = nvgLerpRGBA( baseCol, nvgRGBAf(1.0f, 1.0f, 1.0f, baseCol.a), 0.4f);
         float offcet1 = 1.0f;
         float offcet2 = 2.0f;
         if (r == 0.0) {
@@ -155,8 +157,8 @@ namespace FR {
         float w = dim.size.w;
         float h = dim.size.h;
 
-        NVGcolor top = up ? nvgRGBA(255, 255, 255, 100) : nvgRGBA(0, 0, 0, 100);
-        NVGcolor bottom = up ? nvgRGBA(0, 0, 0, 100) : nvgRGBA(255, 255, 255, 100);
+        NVGcolor top = up ? nvgRGBAf(1.f, 1.f, 1.f, 0.3921f) : nvgRGBAf(0.0f, 0.0f, 0.0f, 0.3921f);
+        NVGcolor bottom = up ? nvgRGBAf(0.0f, 0.0f, 0.0f, 0.3921f) : nvgRGBAf(1.0f, 1.0f, 1.f, 0.3921f);
         NVGpaint grad = nvgLinearGradient(vg, x, y, x + w, y + h, top, bottom);
 
         nvgBeginPath(vg);
@@ -181,7 +183,7 @@ namespace FR {
         nvgFill(vg);
 
         nvgStrokeWidth(vg, t);
-        nvgStrokeColor(vg, up ? shadowCol : nvgRGBA(100, 100, 100, 100));
+        nvgStrokeColor(vg, up ? shadowCol : nvgRGBAf(0.3921f, 0.3921f, 0.3921f, 0.3921f));
         nvgStroke(vg);
     }
 
@@ -192,8 +194,8 @@ namespace FR {
         float w = dim.size.w;
         float h = dim.size.h;
 
-        NVGcolor top = up ? nvgRGBA(255, 255, 255, 100) : nvgRGBA(0, 0, 0, 100);
-        NVGcolor bottom = up ? nvgRGBA(0, 0, 0, 100) : nvgRGBA(255, 255, 255, 100);
+        NVGcolor top = up ? nvgRGBAf(1.0f, 1.0f, 1.0f, 0.3921f) : nvgRGBAf(0.0f, 0.0f, 0.0f, 0.3921f);
+        NVGcolor bottom = up ? nvgRGBAf(0.0f, 0.0f, 0.0f, 0.3921f) : nvgRGBAf(1.0f, 1.0f, 1.0f, 0.3921f);
         NVGpaint grad = nvgRadialGradient(vg, x + w * 0.5f, y + h * 0.5f, w * 0.1f, w * 0.5f, top, bottom);
 
         nvgBeginPath(vg);
@@ -207,7 +209,7 @@ namespace FR {
         nvgFill(vg);
 
         nvgStrokeWidth(vg, t);
-        nvgStrokeColor(vg, up ? shadowCol : nvgRGBA(100, 100, 100, 100));
+        nvgStrokeColor(vg, up ? shadowCol : nvgRGBAf(0.3921f, 0.3921f, 0.3921f, 0.3921f));
         nvgStroke(vg);
     }
 
@@ -316,10 +318,10 @@ namespace FR {
         NVGpaint shadow;
 
         if (up) {
-            shadow = nvgBoxGradient(vg, x, y, w, h, r * 2, 10, nvgRGBA(0, 0, 0, 50), nvgRGBA(0, 0, 0, 0));
+            shadow = nvgBoxGradient(vg, x, y, w, h, r * 2, 10, nvgRGBAf(0.0f, 0.0f, 0.0f, 0.196f), nvgRGBAf(0.f, 0.0f, 0.0f, 0.0f));
         }
         else {
-            shadow = nvgBoxGradient(vg, x, y, w, h, r * 2, 10, nvgRGBA(0, 0, 0, 100), nvgRGBA(0, 0, 0, 0));
+            shadow = nvgBoxGradient(vg, x, y, w, h, r * 2, 10, nvgRGBAf(0.0f, 0.0f, 0.0f, 0.3921f), nvgRGBAf(0.f, 0.0f, 0.0f, 0.0f));
         }
 
         nvgBeginPath(vg);
@@ -333,10 +335,10 @@ namespace FR {
         NVGpaint gradient;
 
         if (up) {
-            gradient = nvgLinearGradient(vg, x, y, x, y + h, nvgRGBA(255, 255, 255, 200), baseCol);
+            gradient = nvgLinearGradient(vg, x, y, x, y + h, nvgRGBAf(1.0f, 1.0f, 1.0f, 0.784f), baseCol);
         }
         else {
-            gradient = nvgLinearGradient(vg, x, y, x, y + h, baseCol, nvgRGBA(255, 255, 255, 100));
+            gradient = nvgLinearGradient(vg, x, y, x, y + h, baseCol, nvgRGBAf(1.0f, 1.0f, 1.0f, 0.3921f));
         }
 
         nvgBeginPath(vg);
@@ -365,8 +367,8 @@ namespace FR {
         float w = dim.size.w;
         float h = dim.size.h;
 
-        NVGcolor highlight = up ? nvgRGBA(255, 255, 255, 100) : nvgRGBA(0, 0, 0, 100);
-        NVGcolor shadow = up ? nvgRGBA(0, 0, 0, 100) : nvgRGBA(255, 255, 255, 100);
+        NVGcolor highlight = up ? nvgRGBAf(1.0f, 1.0f, 1.0f, 0.3921f) : nvgRGBAf(0.0f, 0.0f, 0.0f, 0.3921f);
+        NVGcolor shadow = up ? nvgRGBAf(0.0f, 0.0f, 0.0f, 0.3921f) : nvgRGBAf(1.0f, 1.0f, 1.0f, 0.3921f);
 
         NVGpaint grad = nvgRadialGradient(vg, x + w * 0.5f, y + h * 0.5f, w * 0.1f, w * 0.5f, highlight, shadow);
 

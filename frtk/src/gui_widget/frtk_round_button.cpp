@@ -41,8 +41,8 @@ namespace FR {
 
         //body
         draw_box(m_vg, FRTK_FLAT_BOX, dim, 0.0f, m_borderWidth,
-            nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a),
-            nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), true);
+            glmToNVG(m_color),
+            glmToNVG(m_borderColor), true);
         dim.pos.x = m_x + m_padding;
         dim.pos.y = m_y + m_h / 2 - m_specialDrawingSize / 2;
         dim.size = { m_specialDrawingSize,m_specialDrawingSize };
@@ -51,19 +51,19 @@ namespace FR {
         if (m_value) {
             draw_box(m_vg, FRTK_ROUND_UP_BOX, dim, 0.0f, THIN_BORDER,
                 lightCol,
-                nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), false);
+                glmToNVG(m_borderColor), false);
             dim.pos.x = m_x + m_padding + m_specialDrawingSize / 4;
             dim.pos.y = m_y + m_h / 2 - m_specialDrawingSize / 4;
             dim.size = { m_specialDrawingSize/2 ,m_specialDrawingSize/2 };
 
             draw_box(m_vg, FRTK_ROUND_UP_BOX, dim, 0.0f, THIN_BORDER,
                 nvgRGBAf(FR_BLACK),
-                nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), false);
+                glmToNVG(m_borderColor), false);
         }
         else {
             draw_box(m_vg, FRTK_ROUND_UP_BOX, dim, 0.0f, THIN_BORDER,
                 lightCol,
-                nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), false);
+                glmToNVG(m_borderColor), false);
         }
         if (m_IconTexture != 0) {
             drawImage();//Dimensions are already calculated using style

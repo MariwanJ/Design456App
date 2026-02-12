@@ -59,7 +59,7 @@ namespace FR {
     }
 
     void Frtk_GrpWidget::draw() {
-        if (visible()) {
+        if (m_visible) {
             drawBox();
             draw_focus();
             drawLabel();
@@ -79,28 +79,28 @@ namespace FR {
     }
 
     void Frtk_GrpWidget::redraw() {
-        if (visible()) {
+        if (m_visible) {
             draw();
         }
     }
 
     void Frtk_GrpWidget::drawBox() {
-        if (visible()) {
+        if (m_visible) {
             draw_box(m_vg, m_boxType, { {m_x, m_y}, {m_w, m_h} }, 0.0, NORMAL_BORDER,
-                nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a), 
-                nvgRGBAf(m_borderColor.r, m_borderColor.g, m_borderColor.b, m_borderColor.a), true);
+                glmToNVG(m_color), 
+                glmToNVG(m_borderColor), true);
         }
     }
 
     void Frtk_GrpWidget::drawBox(BOX_TYPE t, glm::vec4 c) {
-        if (visible()) {
+        if (m_visible) {
             m_color = c;
             m_boxType = t;
             drawBox();
         }
     }
     void Frtk_GrpWidget::drawBox(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 c) {
-        if (visible()) {
+        if (m_visible) {
             m_x = X;
             m_y = Y;
             m_w = W;

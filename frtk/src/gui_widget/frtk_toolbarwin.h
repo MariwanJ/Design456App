@@ -54,11 +54,15 @@ namespace FR {
         void addButton(const std::vector<toolbBTN_t>& btns);
         virtual int removeButton(std::string & name);
         bool dockingBTN(void);
+        void addButtonAtPos(std::shared_ptr<Frtk_ToolBar_Button>& w);
 
     protected:
         void drawVerticalDivider();
         virtual void draw() override;
+        void setLayoutHorizontal();
+        void setLayoutVertical();
         virtual int handle(int ev)override;
+        
         bool m_horizontal; //is the toolbar horizontal or vertical??
         bool m_dockable; 
         float m_padding;

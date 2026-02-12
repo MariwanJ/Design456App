@@ -137,12 +137,21 @@ namespace FR {
     void Frtk_Widget::drawLabel() {
         drawTextInBox(m_vg, m_label, m_font);
     }
-    void Frtk_Widget::drawLabel(float X, float Y, float W, float H ) {
+    void Frtk_Widget::drawLabel(float X, float Y, float W, float H, float rotateAngle ) {
         m_font.pos.x = X;
         m_font.pos.y = Y;
         m_font.size.w = W;
         m_font.size.h = H;
+        m_font.Rotate = rotateAngle;
         drawTextInBox(m_vg, m_label, m_font);
+    }
+
+    void Frtk_Widget::rotateLabel(float angle)
+    {
+        m_font.Rotate = angle;
+    }
+    float Frtk_Widget::lblRotateAngle()  const{
+        return m_font.Rotate;
     }
 
     void Frtk_Widget::boxType(BOX_TYPE nType)
@@ -246,6 +255,17 @@ namespace FR {
         m_y = Y;
         m_w = W;
         m_h = H;
+        
+        m_Image.dim.pos.x = X;
+        m_Image.dim.pos.y = Y;
+        m_Image.dim.size.w = W;
+        m_Image.dim.size.h = H;
+
+        m_font.pos.x = X ;
+        m_font.pos.y = Y;
+        m_font.size.w = W;
+        m_font.size.h = H;
+
     }
     void Frtk_Widget::position(float X, float Y) {
         resize(X, Y, m_w, m_h);

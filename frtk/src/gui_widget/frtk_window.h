@@ -56,7 +56,7 @@ namespace FR{
         std::shared_ptr<Frtk_GrpWidget> m_guiWindow;
         void init(void);
         void drawLabel()  override;
-        void drawLabel(float X, float Y, float W, float H)   override;
+        void drawLabel(float X, float Y, float W, float H, float rotateAngle=0.0f)   override;
         NVGcontext* getContext(void);
 
         virtual void remove_child_at(size_t &index);

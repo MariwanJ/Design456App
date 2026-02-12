@@ -31,17 +31,14 @@ namespace FR {
 #define DOCKING_BTN_SIZE FRTK_TOOLBAR_BUTTON_HEGHT/2
     Frtk_ToolBarWin::Frtk_ToolBarWin(float X, float Y, float W, float H, std::string lbl,
         const std::vector<toolbBTN_t>& tools, bool horizontal, BOX_TYPE b) : Frtk_Window(X, Y, W, H, lbl, FRTK_FLAT_BOX, false),
-        m_dockable(false), m_padding(1.0f), m_horizontal(horizontal) {
+        m_dockable(false), m_padding(2.0f), m_horizontal(horizontal) {
         m_boxType = FRTK_FLAT_BOX;
-        m_color = glm::vec4(FR_RED);
-
         init();
         m_wdgType = FRTK_TOOLBARWIN;
         if (m_horizontal)
             m_dockingSize = { {0.0,0.0},{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_HEIGHT} };
         else
             m_dockingSize = { {0.0,0.0},{FRTK_TOOLBAR_HEIGHT,FRTK_TOOLBAR_BUTTON_HEGHT} };
-
         //Create the buttons
         addButton(tools);
     }
@@ -67,9 +64,9 @@ namespace FR {
             FRTK_CORE_APP_ASSERT((m_w) >= ((float)btns.size() * FRTK_TOOLBAR_HEIGHT));
         else
             FRTK_CORE_APP_ASSERT((m_h) >= ((float)btns.size() * FRTK_TOOLBAR_HEIGHT));
-        
+
         for (const auto& item : btns) {
-            auto btn = std::make_shared<Frtk_ToolBar_Button>(m_vg, btnDim.pos.x, btnDim.pos.y+m_padding, item.size.w, item.size.h, item.lbl);
+            auto btn = std::make_shared<Frtk_ToolBar_Button>(m_vg, btnDim.pos.x, btnDim.pos.y + m_padding, item.size.w, item.size.h, item.lbl);
             btn->name(item.name);
             btn->tooltips(item.tooltips);
 
@@ -105,41 +102,132 @@ namespace FR {
     }
     bool Frtk_ToolBarWin::dockingBTN(void) {
         const auto& mouse = m_mainWindow->m_sysEvents.mouse;
-        bool result = mouse.activeX >= m_dockingSize.pos.x +m_x && mouse.activeX <= m_dockingSize.pos.x +m_x + m_dockingSize.size.w &&
+        bool result = mouse.activeX >= m_dockingSize.pos.x + m_x && mouse.activeX <= m_dockingSize.pos.x + m_x + m_dockingSize.size.w &&
             mouse.activeY >= m_dockingSize.pos.y + m_y && mouse.activeY <= m_dockingSize.pos.y + m_y + m_dockingSize.size.h;
         return result;
     }
+    void Frtk_ToolBarWin::addButtonAtPos(std::shared_ptr<Frtk_ToolBar_Button>& w)
+    {
+        m_guiWindow->addChild(w);
+    }
     void Frtk_ToolBarWin::drawVerticalDivider()
     {
-        const float cx = m_x + 20.f * 0.5f;
-        const float top = m_y + m_padding;
-        const float bottom = m_y + m_h - m_padding;
+        const float cx = m_x + DOCKING_BTN_SIZE * 0.5f;
+        const float cy = m_y + DOCKING_BTN_SIZE * 0.5f;
+
+        const float strokeWidth = 1.5f;
         const float lineSpacing = 4.0f;
-        const float strokeWidth = 1.0f;
-        FRTK_CORE_INFO("{} {} {} {}", cx, top, bottom, m_x);
+
         nvgStrokeWidth(m_vg, strokeWidth);
-        nvgStrokeColor(m_vg, nvgRGBA(FR_RED));
+        nvgStrokeColor(m_vg, nvgRGBAf(0.6274f, 0.6274f, 0.6274f, 1.0f));
         nvgBeginPath(m_vg);
-        // Draw 3 vertical grip lines
-        for (int i = -1; i <= 10; ++i)
+
+        float top, bottom;
+
+        if (m_horizontal) {
+            top = m_y + m_padding;
+            bottom = m_y + m_h - m_padding;
+        }
+        else
         {
-            float x = floorf(cx + i * lineSpacing) + 0.5f; // pixel aligned
-            nvgMoveTo(m_vg, x, top);
-            nvgLineTo(m_vg, x, bottom);
+            top = m_x + m_padding;
+            bottom = m_x + m_w - m_padding;
         }
 
+        // Draw 3 vertical grip lines
+        for (int i = -1; i <= 1; ++i)
+        {
+            if (m_horizontal) {
+                float x = floorf(cx + i * lineSpacing) + 0.5f; // pixel aligned
+                nvgMoveTo(m_vg, x, top);
+                nvgLineTo(m_vg, x, bottom);
+            }
+            else
+            {
+                float y = floorf(cy + i * lineSpacing) + 0.5f;
+                nvgMoveTo(m_vg, top, y);
+                nvgLineTo(m_vg, bottom, y);
+            }
+        }
         nvgStroke(m_vg);
     }
 
     void Frtk_ToolBarWin::draw() {
-      
-       Frtk_Window::draw();
-       drawVerticalDivider();
-     
+        if (!m_visible)
+            return;
+        Fr_Camera& camera = m_mainWindow->activeScene->getActiveCamera();
+        float ratio = camera.getRatio();
+        FRTK_CORE_APP_ASSERT(m_vg != nullptr);
+        float cornerRadius = 3.0f;
+        nvgBeginFrame(m_vg, (float)m_mainWindow->w(), (float)m_mainWindow->h(), ratio);
+        m_guiWindow->redraw();
+        drawVerticalDivider();
+        if (!m_label.empty())
+            drawLabel();
+        nvgEndFrame(m_vg);
     }
+
+    void Frtk_ToolBarWin::setLayoutHorizontal() {
+        
+        m_font.Rotate = 0.0f;
+
+        float temp = m_h;
+        h(m_w);
+        w(temp);
+        m_guiWindow->h(m_h);
+        m_guiWindow->w(m_w);
+
+        m_horizontal = true;
+        float offsetX = DOCKING_BTN_SIZE;
+        float offsetY = 0.0f;
+        auto children = m_guiWindow->getChildren();
+        std::vector<std::shared_ptr<Frtk_Widget>> tempChildren(children.begin(), children.end());
+        m_guiWindow->remove_all();
+
+        for (auto& item : tempChildren) {
+            item->position(offsetX, offsetY+m_padding);
+            offsetX += item->w() + m_padding;
+            m_guiWindow->addChild(item);
+        }
+        redraw();
+       
+    }
+
+    void Frtk_ToolBarWin::setLayoutVertical() {
+        m_font.Rotate = 90.0f;
+        float temp = m_h;
+        h(m_w);
+        w(temp);
+        m_guiWindow->h(m_h);
+        m_guiWindow->w(m_w);
+
+        m_horizontal = false;
+
+        float offsetX = 0.0f;
+        float offsetY = DOCKING_BTN_SIZE;
+        auto children = m_guiWindow->getChildren();
+        std::vector<std::shared_ptr<Frtk_Widget>> tempChildren(children.begin(), children.end());
+        m_guiWindow->remove_all();
+        for (auto& item : tempChildren) {
+            item->position(offsetX, offsetY + m_padding);
+            offsetY += item->h() + m_padding;
+            m_guiWindow->addChild(item);
+        }
+    }
+
     int Frtk_ToolBarWin::handle(int ev)
     {
-        if ( should_getEvent()) {
+        float snapThreshold = 10.0f; // pixels
+        float winWidth = m_mainWindow->w();
+        float winHeight = m_mainWindow->h();
+
+        // Check edges
+        bool snapLeft = (m_x <= snapThreshold);
+        bool snapRight = (m_x + m_w >= winWidth - snapThreshold);
+        bool snapTop = (m_y <= snapThreshold);
+        bool snapBottom = (m_y + m_w >= winHeight - snapThreshold);
+
+        if (should_getEvent() || m_dragging) {
             if (dockingBTN() || m_dragging) {
                 if (ev == FR_LEFT_DRAG_PUSH) {
                     m_dragging = true;
@@ -153,6 +241,56 @@ namespace FR {
                 }
                 else if (m_dragging && ev == FR_LEFT_RELEASE) {
                     m_dragging = false;
+
+                    float snapThreshold = 20.0f;  // how close to edge to dock
+                    float winWidth = m_mainWindow->w();
+                    float winHeight = m_mainWindow->h();
+
+                    // Snap to edges individually if within threshold
+                    if (m_y <= snapThreshold) {
+                        // Snap to top
+                        if (!m_horizontal) {
+                            m_horizontal = true;
+                            setLayoutHorizontal();
+                        }
+                        m_y = 0.f;
+                        //m_x = 0.f;
+                    }
+                    else if (m_y + m_h >= winHeight - snapThreshold) {
+                        // Snap to bottom
+
+                        if (!m_horizontal) {
+                            m_horizontal = true;
+                            setLayoutHorizontal();
+                        }
+                        m_horizontal = true;
+                        m_y = winHeight - m_h;
+                        //m_x = 0.0f;
+                    }
+                    else
+
+                        if (m_x <= snapThreshold) {
+                            // Snap to left
+
+                            if (m_horizontal) {
+                                m_horizontal = false;
+                                setLayoutVertical();
+                            }
+                            m_x = 0;
+                        }
+                        else if (m_x + m_w >= winWidth - snapThreshold) {
+                            // Snap to right
+
+                            if (m_horizontal) {
+                                m_horizontal = false;
+                                setLayoutVertical();
+                            }
+                            m_x = winWidth - m_w;
+                        }
+
+                    m_guiWindow->position(m_x, m_y);
+                    this->position(m_x, m_y);
+
                     m_mainWindow->activateNavi();
                     return 1;
                 }

@@ -32,16 +32,25 @@ project "GLFW"
         pic "On"
         staticruntime "On"
         systemversion "latest"
-        defines { "_GLFW_X11",
-                    "GLFW_EXPOSE_NATIVE_X11" 
-                }
-        buildoptions { "-Wall", "-Wextra", "-fPIC", "-fdiagnostics-color=auto","-ggdb" ,"-finput-charset=UTF-8", "-fexec-charset=UTF-8" }
+        defines { "_GLFW_X11", "GLFW_EXPOSE_NATIVE_X11" }
+        buildoptions {
+         "-Wall",
+         "-Wextra",
+         "-Wconversion",
+         "-Wfloat-conversion",
+         "-Werror",
+         "-fPIC",
+         "-ggdb",
+         "-fdiagnostics-color=auto",
+         "-finput-charset=UTF-8",
+         "-fexec-charset=UTF-8"
+      }
 
     filter {}
     filter "system:windows"
         staticruntime "On"
-        systemversion "latest"
-         buildoptions { "/utf-8" }
+        buildoptions { "/W4", "/utf-8" }
+        buildoptions { "/utf-8"}
 
         defines 
         { 

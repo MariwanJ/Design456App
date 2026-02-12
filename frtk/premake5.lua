@@ -89,8 +89,7 @@ project "frtk"
     -- Windows-specific
     filter "system:windows"
         systemversion "latest"
-        buildoptions { "/utf-8" }
-        systemversion "latest"
+        buildoptions { "/W4", "/utf-8" }        systemversion "latest"
         defines
         {
             "GLFW_EXPOSE_NATIVE_WIN32",
