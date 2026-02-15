@@ -27,27 +27,21 @@
 
 #include <fr_window.h>
 #include<fr_menu.h>
-#include<fr_toolbar.h>
 #include <glm/gtx/string_cast.hpp>
 #include<Math/fr_math.h>
 #include<fr_constants.h>
 namespace FR {
     int Fr_Window::imgui_LeftPanel()
     {
-        // bool sho = true;
-        // ImGui::ShowDemoWindow(&sho);
-
         ImGuiWindowFlags window_flags = 0//ImGuiWindowFlags_NoTitleBar |
             | ImGuiWindowFlags_NoMove
-            | ImGuiWindowFlags_NoCollapse
-            // |  ImGuiWindowFlags_NoDecoration;   // <- equivalent to disabling all decorations
-            ;
-        float menuBarHeight = ImGui::GetFrameHeight();
-        int start = (int)menuBarHeight + 2 + FRTK_TOOLBAR_HEIGHT;
+            | ImGuiWindowFlags_NoCollapse      ;
+
+        m_menuHeight = ImGui::GetFrameHeight();
+        int start = (int)m_menuHeight + 2 + FRTK_TOOLBAR_HEIGHT;
         ImGui::SetNextWindowPos(ImVec2(x(), y() + start));
-        //ImGui::SetNextWindowSize(ImVec2(450, h() - start));
+
         ImGui::Begin("LeftPannel", NULL, window_flags); {
-            // Get the current style
             ImGuiStyle& style = ImGui::GetStyle();
             style.WindowPadding = ImVec2(1, 1);
             style.FramePadding = ImVec2(1, 1);
@@ -70,7 +64,6 @@ namespace FR {
                     static ImGuiTreeNodeFlags base_flags = ImGuiTreeNodeFlags_DrawLinesFull | ImGuiTreeNodeFlags_DefaultOpen;
                     ImGuiTreeNodeFlags leaf_flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 
-                    // Root node
                     if (ImGui::TreeNodeEx("Root", base_flags))
                     {
                         for (int i = 0; i < activeScene->m_world.size(); ++i)
@@ -80,7 +73,6 @@ namespace FR {
                             ImGui::PushFont(SystemFont.toolbarFont.get());
                             std::string res = GLYPH_CUBE + activeScene->m_world[i].name + " - " + std::to_string(activeScene->m_world[i].id);
 
-                            // Leaf node
                             ImGui::TreeNodeEx(res.c_str(), leaf_flags);
                             ImGui::PopFont();
 
@@ -90,7 +82,7 @@ namespace FR {
                             }
                             ImGui::PopID();
                         }
-                        ImGui::TreePop(); // Only pop for root
+                        ImGui::TreePop(); 
                     }
 
                     ImGui::EndChild();

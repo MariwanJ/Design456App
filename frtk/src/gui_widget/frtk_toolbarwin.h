@@ -55,6 +55,8 @@ namespace FR {
         virtual int removeButton(std::string & name);
         bool dockingBTN(void);
         void addButtonAtPos(std::shared_ptr<Frtk_ToolBar_Button>& w);
+        Fr_Window* parent(void);
+        void parent(Fr_Window* w);
 
     protected:
         void drawVerticalDivider();
@@ -62,6 +64,9 @@ namespace FR {
         void setLayoutHorizontal();
         void setLayoutVertical();
         virtual int handle(int ev)override;
+       
+
+       void applyDocking(void);
         
         bool m_horizontal; //is the toolbar horizontal or vertical??
         bool m_dockable; 
@@ -69,6 +74,7 @@ namespace FR {
         Dim_float_t m_dockingSize;
         FontData_t m_data;
         std::string default_font_path;
+        Fr_Window* m_parent;
     };
 }
 #endif // FL_TOOLBAR_H

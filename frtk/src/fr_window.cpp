@@ -45,7 +45,7 @@
 #include <gui_widget/frtk_window.h>
 #include <gui_widget/examples/demo2.h>
 #include <gui_widget/examples/buttons_demo.h>
-#include <gui_widget/frtk_main_toolbar.h>
+#include <gui_widget/frtk_toolbarwin.h>
 
  /** Fr_Window */
 
@@ -134,8 +134,8 @@ namespace FR {
         : m_label(label), showOpenDialog(false),
         cursorHand(nullptr), cursorCrosshair(nullptr),
         runCode(false), activeScene(nullptr), m_nvgContext(nullptr),
-        gl_version_major(4), gl_version_minor(6),m_NaviCube(true),
-        mouseDefaults{ 0 }, radiusXYZ(0.0f), m_winType(FRTK_WIN_TYPE::NORMAL)
+        gl_version_major(4), gl_version_minor(6),m_NaviCube(true), m_MainToolbar(nullptr),
+        mouseDefaults{ 0 }, radiusXYZ(0.0f), m_winType(FRTK_WIN_TYPE::NORMAL),m_menuHeight(10.0f)
     {
         showOpenDialog = false;
 
@@ -442,7 +442,9 @@ namespace FR {
         //Temporary Code -- TODO : Remove Me when you are done with the new GUI SYSTEM !!!!!  2026-01-30 Mariwan
       //  m_frtkWindow.push_back(runFRTKdemo2());
        // m_frtkWindow.push_back(runFRTKdemo());
-        m_frtkWindow.push_back(createMainToolbar());
+        m_MainToolbar = createMainToolbar();
+        m_MainToolbar->parent(this);
+        m_frtkWindow.emplace_back(m_MainToolbar);
         
         while (!glfwWindowShouldClose(pGLFWWindow))
         {
@@ -663,5 +665,8 @@ namespace FR {
     void Fr_Window::activateNavi()
     {
         m_NaviCube = true;
+    }
+    float  Fr_Window::menuHeight(void) const {
+        return m_menuHeight;
     }
 }

@@ -53,6 +53,7 @@
 /** end Fr_Window */
 namespace FR {
     class Frtk_Window;
+    class Frtk_ToolBarWin;
     FRTK_API class  Fr_Window {
         /** from Fr_Window */
         friend Frtk_Window;
@@ -212,11 +213,14 @@ namespace FR {
         void deactivateNavi();
         void activateNavi();
 
+        float menuHeight(void) const;
+        
+        std::shared_ptr<Frtk_ToolBarWin>  createMainToolbar();
+
     protected:
+        std::shared_ptr<Frtk_ToolBarWin> m_MainToolbar;
         FRTK_WIN_TYPE m_winType;
         int imgui_LeftPanel();
-        int imgui_ToolbarPannel();
-        int imgui_SelectionToolbar();
         int imgui_menu();
 
         int createGLFWwindow();
@@ -284,6 +288,7 @@ namespace FR {
          * Currently it is 4.3.
          */
     private:
+        float m_menuHeight;
         bool m_NaviCube;
         int gl_version_major;
         int gl_version_minor;
@@ -325,6 +330,7 @@ namespace FR {
         static GLFWwindow* pGLFWWindow;
         
         NVGcontext* m_nvgContext; //NanoVG Context
+
 
     };
 }

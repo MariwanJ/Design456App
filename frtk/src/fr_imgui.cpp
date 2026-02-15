@@ -26,7 +26,6 @@
 //
 
 #include<fr_menu.h>
-#include<fr_toolbar.h>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -110,8 +109,6 @@ namespace FR {
         style.FramePadding = ImVec2(1, 1);
         // Your other UI code goes here
         if (imgui_menu() < 0) return -1;
-        if (imgui_ToolbarPannel() < 0) return -1;
-        if (imgui_SelectionToolbar() < 0) return -1;
         if (imgui_LeftPanel() < 0) return -1;
         //if (CamerOptionVisible) CameraOptions();
         //SunOptions();

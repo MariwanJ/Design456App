@@ -26,6 +26,8 @@
 //
 
 #include <gui_widget/frtk_main_toolbar.h>
+#include <gui_widget/Frtk_ToolBarWin.h>
+#include <fr_file_dialog.h>
 
 namespace FR {
     void mainToolbar_callback(size_t index) {
@@ -65,7 +67,7 @@ namespace FR {
         }
     }
 
-    std::shared_ptr<Frtk_ToolBarWin> createMainToolbar() {
+    std::shared_ptr<Frtk_ToolBarWin> Fr_Window::createMainToolbar() {
         std::vector<toolbBTN_t> tools = {
             // std::string lbl; std::string name; dimSize_float_t size; std::string icon; Frtk_Widget::Callback callback_; std::string tooltips !!
             {"New","New"   ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath + "Folder-Create-32x32.png",[](Frtk_Widget* w) { mainToolbar_callback(FR_FILE_NEW); }, ""},
@@ -75,7 +77,7 @@ namespace FR {
         };
         
         
-        std::shared_ptr<Frtk_ToolBarWin> tb1=std::make_shared<Frtk_ToolBarWin>( 450.f, 300.0f,350, FRTK_TOOLBAR_HEIGHT, "", tools,true);
+        std::shared_ptr<Frtk_ToolBarWin> tb1=std::make_shared<Frtk_ToolBarWin>( 0.0f, y()+menuHeight(), 350, FRTK_TOOLBAR_HEIGHT, "", tools, true);
         
         return tb1;
     }

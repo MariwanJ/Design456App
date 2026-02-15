@@ -29,9 +29,9 @@
 
 namespace FR {
 #define DOCKING_BTN_SIZE FRTK_TOOLBAR_BUTTON_HEGHT/2
-    Frtk_ToolBarWin::Frtk_ToolBarWin(float X, float Y, float W, float H, std::string lbl,
+    Frtk_ToolBarWin::Frtk_ToolBarWin(float X, float Y, float W, float H, std::string lbl, 
         const std::vector<toolbBTN_t>& tools, bool horizontal, BOX_TYPE b) : Frtk_Window(X, Y, W, H, lbl, FRTK_FLAT_BOX, false),
-        m_dockable(false), m_padding(2.0f), m_horizontal(horizontal) {
+        m_dockable(false), m_padding(2.0f), m_horizontal(horizontal), m_parent(NULL) {
         m_boxType = FRTK_FLAT_BOX;
         init();
         m_wdgType = FRTK_TOOLBARWIN;
@@ -42,6 +42,13 @@ namespace FR {
         //Create the buttons
         addButton(tools);
     }
+    Fr_Window* Frtk_ToolBarWin::parent(void) {
+       return m_parent;
+    }
+    void Frtk_ToolBarWin::parent(Fr_Window* w) {
+        m_parent = w;
+    }
+
     bool Frtk_ToolBarWin::dockable()
     {
         return m_dockable;
@@ -217,6 +224,9 @@ namespace FR {
 
     int Frtk_ToolBarWin::handle(int ev)
     {
+        Fr_Window* win =  m_parent; //just to make it clear what m_parent is here
+        FRTK_CORE_APP_ASSERT(m_parent);
+
         float snapThreshold = 10.0f; // pixels
         float winWidth = m_mainWindow->w();
         float winHeight = m_mainWindow->h();
@@ -230,82 +240,97 @@ namespace FR {
         bool mouseOnDockBtn = dockingBTN();  // True if mouse over the docking button
         bool mouseInsideWindow = isMouse_inside();
         
-        if (isMouse_inside() || m_dragging) {
-            if ((dockingBTN() && !m_dragging) || m_dragging) {
+        if ((isMouse_inside() && dockingBTN()) || m_dragging) {
                 if (ev == FR_LEFT_DRAG_PUSH) {
-                    if(dockingBTN()){
                         m_dragging = true;
                         float dx, dy;
                         const auto& mouse = m_mainWindow->m_sysEvents.mouse; // content-space mouse
                         dx = (float)(mouse.prevX - mouse.activeX);
                         dy = (float)(mouse.prevY - mouse.activeY);
                         m_guiWindow->position(m_x - dx, m_y - dy);
-                        this->position(m_x - dx, m_y - dy);
+                        bool stoppit=false;
+                        if (m_x - dx < 0) {
+                            stoppit = true;
+                        }
+                        if (m_y - dy < 0) {
+                            stoppit = true;
+                        } 
+                        if ((m_x + m_w - dx) > (win->w())) {
+                            stoppit = true;
+
+                        }
+                        if ((m_y + m_h  - dy) > (win->h())) {
+                            stoppit = true;
+                        }
+                            FRTK_CORE_INFO("{} {} {} {} ",m_x, m_y, (m_x - dx), (m_y + m_h));
+                            if (!stoppit)
+                                this->position(m_x - dx, m_y - dy);
+                            else{
+                                m_dragging = false;
+                                applyDocking();
+                            }
                         return 1;
-                    }
-                    m_dragging = false;
                 }
                 else if (m_dragging && ev == FR_LEFT_RELEASE) {
                     m_dragging = false;
-
-                    float snapThreshold = 20.0f;  // how close to edge to dock
-                    float winWidth = m_mainWindow->w();
-                    float winHeight = m_mainWindow->h();
-
-                    // Snap to edges individually if within threshold
-                    if (m_y <= snapThreshold) {
-                        // Snap to top
-                        if (!m_horizontal) {
-                            m_horizontal = true;
-                            setLayoutHorizontal();
-                        }
-                        m_y = 0.f;
-                        //m_x = 0.f;
-                    }
-                    else if (m_y + m_h >= winHeight - snapThreshold) {
-                        // Snap to bottom
-
-                        if (!m_horizontal) {
-                            m_horizontal = true;
-                            setLayoutHorizontal();
-                        }
-                        m_horizontal = true;
-                        m_y = winHeight - m_h;
-                        //m_x = 0.0f;
-                    }
-                    else
-
-                        if (m_x <= snapThreshold) {
-                            // Snap to left
-
-                            if (m_horizontal) {
-                                m_horizontal = false;
-                                setLayoutVertical();
-                            }
-                            m_x = 0;
-                        }
-                        else if (m_x + m_w >= winWidth - snapThreshold) {
-                            // Snap to right
-
-                            if (m_horizontal) {
-                                m_horizontal = false;
-                                setLayoutVertical();
-                            }
-                            m_x = winWidth - m_w;
-                        }
-
-                    m_guiWindow->position(m_x, m_y);
-                    this->position(m_x, m_y);
-
+                    applyDocking();
                     m_mainWindow->activateNavi();
                     return 1;
                 }else
                     if (ev == FR_LEAVE) {
                         m_dragging = false;
                     }
-            }
+            
         }
         m_dragging = false;
         Frtk_Window::handle(ev);
+    }
+    void Frtk_ToolBarWin::applyDocking() {
+        float snapThreshold = 20.0f;            // how close to edge to dock
+        float winWidth = m_mainWindow->w();
+        float winHeight = m_mainWindow->h();
+        Fr_Window* win = (Fr_Window*)m_parent; //make it clear what m_parent is
+        FRTK_CORE_APP_ASSERT(win);
+
+        // Snap to edges individually if within threshold
+        if (m_y <= snapThreshold) {
+            // Snap to top
+            if (!m_horizontal) {
+                m_horizontal = true;
+                setLayoutHorizontal();
+            }
+            m_y = win->menuHeight();
+        }
+        else if (m_y + m_h >= winHeight - snapThreshold) {
+            // Snap to bottom
+
+            if (!m_horizontal) {
+                m_horizontal = true;
+                setLayoutHorizontal();
+            }
+            m_horizontal = true;
+            m_y = m_y+winHeight - m_h;
+
+        }
+        else
+            if (m_x <= snapThreshold) {
+                // Snap to left
+                if (m_horizontal) {
+                    m_horizontal = false;
+                    setLayoutVertical();
+                }
+                m_x = 0;
+            }
+            else if (m_x + m_w >= winWidth - snapThreshold) {
+                // Snap to right
+                if (m_horizontal) {
+                    m_horizontal = false;
+                    setLayoutVertical();
+                }
+                m_x = winWidth - m_w;
+            }
+
+        m_guiWindow->position(m_x, m_y);
+        this->position(m_x, m_y);
     }
 }

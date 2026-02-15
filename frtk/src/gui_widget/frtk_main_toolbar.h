@@ -29,11 +29,10 @@
 #define FRTK_MAIN_TOOLBAR_H
 
 
-#include <gui_widget/Frtk_ToolBarWin.h>
-#include <fr_file_dialog.h>
+
 
 
 namespace FR{
-    std::shared_ptr<Frtk_ToolBarWin>  createMainToolbar();
+   
 } 
 #endif  //FRTK_MAIN_TOOLBAR_H
