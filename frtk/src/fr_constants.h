@@ -281,5 +281,20 @@ typedef T FR_COLOR;
         MODAL        =1<<9,
         POPUP_MODAL  =1 << 10,
     }FRTK_WIN_TYPE;
+
+    enum {
+        FR_TOOLBAR_SPACER    = -1,
+        FR_FILE_NEW          = 0,
+        FR_FILE_OPEN            ,      
+        FR_FILE_CLOSE           ,     
+        FR_FILE_SAVE            ,      
+        FR_FILE_SAVEAS          ,    
+        FR_FILE_IMPORT          ,    
+        FR_FILE_EXPORT          ,    
+        FR_EDIT_COPY            ,      
+        FR_EDIT_CUT             ,       
+        FR_EDIT_DUPLICATE       , 
+        FR_EDIT_PASTE      
+    };
 }
 #endif // !FR_H

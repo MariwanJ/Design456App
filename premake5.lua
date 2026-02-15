@@ -30,6 +30,7 @@ workspace "Design456App"
     IncludeDir["OpenMesh"]  = "../frtk/vendor/OpenMesh/src"
     IncludeDir["freetype"]  = "../frtk/vendor/freetype/include"
     IncludeDir["nanovg"]  = "../frtk/vendor/nanovg/src"
+    IncludeDir["tinyfiledialogs"]  = "../frtk/vendor/tinyfiledialogs/src"
 
 
 -- Configure projects
@@ -66,6 +67,7 @@ project "Design456App"
         IncludeDir["yaml-cpp"],
         IncludeDir["freetype"],
         IncludeDir["nanovg"],
+        IncludeDir["tinyfiledialogs"],
     }
 
     filter "configurations:Debug"
@@ -93,6 +95,7 @@ group "Dependencies"
         include "frtk/vendor/OpenMesh"
         include "frtk/vendor/freetype"
         include "frtk/vendor/nanovg"
+        include "frtk/vendor/tinyfiledialogs"
 
     -- Don't remove the below line. Without this, the following names will be grouped as dependencies.
 group ""

@@ -137,6 +137,7 @@ namespace FR {
     //used to find path for diff resources
     extern std::string EXE_CURRENT_DIR;
     extern std::string fontPath;
+    extern std::string iconPath;
 
 // FR DEBUG BREAK, USE IT WHEN YOU WANT TO BREAK WITH SOME IF CONDITION 2026/02/09
 #if defined(_WIN32)
@@ -365,6 +366,7 @@ You call window->hide()
         FR_SCROLL,
 
         FR_ENTER,
+        FR_LEAVE,
         FR_FOCUS,
         FR_UNFOCUS,
         FR_KEYBOARD,

@@ -116,6 +116,10 @@ namespace FR {
                 return 1;
             }
         }
+        else if (e == FR_LEAVE) {
+            m_value = 0;
+        }
+
         //TODO : FIX ME .. THIS SHOULD EXECUTE ONLY WHEN IT LOOSES FOCUS WHICH IS NOT DONE HERE!! IN GROUP WIDGET OR WINDOWS
     //Lost focus we should make the value 0
       /*  if (!(m_wdgType == FRTK_CHECK_BUTTON ||

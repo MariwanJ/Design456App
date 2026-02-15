@@ -78,7 +78,7 @@ namespace FR{
     protected:
         virtual int handle(int event) override;
         dimPos_float_t mainGui() const override;
-        bool should_getEvent() const override;
+        bool isMouse_inside() const override;
         virtual void draw(void) override;
         virtual void draw_header();
         FontData_t m_data;

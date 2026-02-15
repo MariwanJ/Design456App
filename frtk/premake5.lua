@@ -1,6 +1,6 @@
 project "frtk"
     kind "StaticLib"
-    language "C++"
+    language "C"
     cppdialect "C++17"
     staticruntime "on"
     
@@ -66,6 +66,7 @@ project "frtk"
         "%{IncludeDir.objloader}",
         "%{IncludeDir.freetype}",
         "%{IncludeDir.nanovg}",
+		"%{IncludeDir.tinyfiledialogs}",
         "$(SolutionDir)frtk/vendor/instrumentation"
     }
 
@@ -123,6 +124,7 @@ project "frtk"
             "yaml-cpp%{cfg.targetsuffix}",
             "freetype%{cfg.targetsuffix}",
             "nanovg%{cfg.targetsuffix}",
+			"tinyfiledialogs%{cfg.targetsuffix}",
         }
     filter {}
     -- Linux-specific
@@ -174,6 +176,7 @@ filter "system:linux"
     "cd " .. project_root .. "/bin &&  ar -x " .. (project_root ..  "/bin/libOpenMesh%{cfg.targetsuffix}.a"   ),
     "cd " .. project_root .. "/bin &&  ar -x " .. (project_root ..  "/bin/libfreetype%{cfg.targetsuffix}.a"   ),
     "cd " .. project_root .. "/bin &&  ar -x " .. (project_root ..  "/bin/nanovg%{cfg.targetsuffix}.a"   ),
+	"cd " .. project_root .. "/bin &&  ar -x " .. (project_root ..  "/bin/tinyfiledialogs%{cfg.targetsuffix}.a"   ),
     "cd " .. project_root .. "/bin &&  ar -rcs " .. (project_root  .. "/bin/libfrtk%{cfg.targetsuffix}.a ") .. (project_root  .. "/bin/*.o" ),          --create static lib 
     "cd " .. project_root .. "/bin &&  g++ -shared -o " .. (project_root  .. "/bin/libfrtk%{cfg.targetsuffix}.so ") .. (project_root  .. "/bin/*.o" ),  --create shared lib also.
     "cd " .. project_root .. "/bin &&  rm -f " .. (project_root  .. "/bin/*.o" ),         -- Remove temporary object files
@@ -192,6 +195,7 @@ group "Dependencies"
         include "frtk/vendor/OpenMesh"
         include "frtk/vendor/freetype"
         include "frtk/vendor/nanovg"
+		include "frtk/vendor/tinyfiledialogs"
 
 -- Reset group
 group ""

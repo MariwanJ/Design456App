@@ -73,6 +73,7 @@ namespace FR {
         std::vector<std::shared_ptr<Frtk_Widget>> m_children;
         bool set_child_focus(Frtk_Widget* w) override;
         Frtk_Widget* m_childFocus;  //keep track of focused widget
+        Frtk_Widget* m_grabbedChild;
     private:
     };
 }

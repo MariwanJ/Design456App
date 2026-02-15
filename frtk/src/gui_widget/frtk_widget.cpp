@@ -24,7 +24,7 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-
+#include <frtk.h>
 #include <gui_widget/frtk_widget.h>
 #include <fr_window.h>
 
@@ -96,7 +96,7 @@ namespace FR {
     }
 
     //The bool value is to skip using the header part of the windows if it is true (i.e. windows)
-    bool Frtk_Widget::should_getEvent() const
+    bool Frtk_Widget::isMouse_inside() const
     {
         const auto& mouse = m_mainWindow->m_sysEvents.mouse; // content-space mouse
 
@@ -423,9 +423,13 @@ namespace FR {
         return g_focusedWdgt.g_underMouse == this;
     }
 
-    // Set this widget as the one under the mouse
-    void Frtk_Widget::set_BeloMouse() {
+    
+    void Frtk_Widget::set_BelowMouse() {
         g_focusedWdgt.g_underMouse = this;
+    }
+    
+    void Frtk_Widget::clear_BelowMouse() {
+        g_focusedWdgt.g_underMouse = nullptr;
     }
 
     void Frtk_Widget::set_callback(Callback cb)

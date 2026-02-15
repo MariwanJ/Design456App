@@ -73,7 +73,7 @@ namespace FR {
           Main this toolkit window, SHOULD consume the event
           so we prevent Scene get the event*/
 
-        virtual bool Frtk_Widget::should_getEvent() const;
+        virtual bool Frtk_Widget::isMouse_inside() const;
 
         void label(const std::string& lbl);
         const std::string& label() const;
@@ -155,8 +155,10 @@ namespace FR {
         void focus(bool val);
         void lose_focus();
         bool take_focus(void);
+
         bool hasBelowMouse() const;
-        void set_BeloMouse();
+        void set_BelowMouse();
+        void clear_BelowMouse();
 
         //Callback function definition
         using Callback = std::function<void(Frtk_Widget*)>;

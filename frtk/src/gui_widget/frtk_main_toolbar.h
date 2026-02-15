@@ -24,32 +24,16 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-#include <fr_application.h>
-#include <glm/gtx/transform.hpp>
-#include <fr_camera.h>
-#include <fr_core.h>
+
+#ifndef FRTK_MAIN_TOOLBAR_H
+#define FRTK_MAIN_TOOLBAR_H
 
 
+#include <gui_widget/Frtk_ToolBarWin.h>
+#include <fr_file_dialog.h>
 
-namespace FR {
 
-    std::string EXE_CURRENT_DIR;
-    std::string fontPath;
-    std::string iconPath;
-
-    Fr_Application::Fr_Application(int x, int y, int w, int h, const char* l) :Fr_Window(x, y, w, h, l)
-    {
-
-    }
-
-    Fr_Application::~Fr_Application()
-    {
-    }
-#include <fr_icons.h>
-
-    int Fr_Application::run(int argc, char** argv)
-    {
-        createGLFWwindow();
-        return GLFWrun();
-    }
-}
+namespace FR{
+    std::shared_ptr<Frtk_ToolBarWin>  createMainToolbar();
+} 
+#endif  //FRTK_MAIN_TOOLBAR_H

@@ -45,7 +45,7 @@
 #include <gui_widget/frtk_window.h>
 #include <gui_widget/examples/demo2.h>
 #include <gui_widget/examples/buttons_demo.h>
-#include <gui_widget/examples/toolbarExample.h>
+#include <gui_widget/frtk_main_toolbar.h>
 
  /** Fr_Window */
 
@@ -205,11 +205,7 @@ namespace FR {
         }
 
         fontPath = EXE_CURRENT_DIR + "/resources/fonts/";
-
-        //NanoVg initialization
-
-        //TODO : Check these flags
-
+        iconPath = EXE_CURRENT_DIR + "/resources/icons/32x32/";
         initSystemEvents();
     }
 
@@ -446,7 +442,7 @@ namespace FR {
         //Temporary Code -- TODO : Remove Me when you are done with the new GUI SYSTEM !!!!!  2026-01-30 Mariwan
       //  m_frtkWindow.push_back(runFRTKdemo2());
        // m_frtkWindow.push_back(runFRTKdemo());
-        m_frtkWindow.push_back(runFRTKToolbarDemo());
+        m_frtkWindow.push_back(createMainToolbar());
         
         while (!glfwWindowShouldClose(pGLFWWindow))
         {

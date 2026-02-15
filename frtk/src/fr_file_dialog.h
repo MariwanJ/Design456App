@@ -24,32 +24,27 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-#include <fr_application.h>
-#include <glm/gtx/transform.hpp>
-#include <fr_camera.h>
+
+#ifndef FILE_DIALOG_H
+#define FILE_DIALOG_H
+#include <frtk.h>
 #include <fr_core.h>
-
-
-
+#include <tinyfiledialogs.h>
 namespace FR {
-
-    std::string EXE_CURRENT_DIR;
-    std::string fontPath;
-    std::string iconPath;
-
-    Fr_Application::Fr_Application(int x, int y, int w, int h, const char* l) :Fr_Window(x, y, w, h, l)
-    {
-
-    }
-
-    Fr_Application::~Fr_Application()
-    {
-    }
-#include <fr_icons.h>
-
-    int Fr_Application::run(int argc, char** argv)
-    {
-        createGLFWwindow();
-        return GLFWrun();
-    }
+    class FRTK_API fileDialog {
+    public:
+        fileDialog(std::string path, 
+            std::vector<std::string> filter = { "*.off", "*.obj", "*.*" } ,
+                    std::string title="Open Document");
+        void filter(std::vector<std::string> &filter);
+        std::string openFile();
+        std::string saveFile(std::string fileName);
+        std::vector<std::string>& filter();
+    protected:
+        std::vector<std::string> m_filters;
+        std::string m_defaultpath;
+        std::string m_title;
+    };
 }
+
+#endif FILE_DIALOG_H

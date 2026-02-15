@@ -47,7 +47,7 @@ namespace FR {
     }
 
     Frtk_GrpWidget::Frtk_GrpWidget(NVGcontext* vg, float X, float Y, float W, float H, std::string label, BOX_TYPE b) :
-        Frtk_Widget(X, Y, W, H, label, b), m_childFocus(NULL) {
+        Frtk_Widget(X, Y, W, H, label, b), m_childFocus(NULL), m_grabbedChild(NULL) {
         m_vg = vg;
         m_wdgType = FRTK_GROUP;
         m_font.pos.x = m_x;
@@ -87,7 +87,7 @@ namespace FR {
     void Frtk_GrpWidget::drawBox() {
         if (m_visible) {
             draw_box(m_vg, m_boxType, { {m_x, m_y}, {m_w, m_h} }, 0.0, NORMAL_BORDER,
-                glmToNVG(m_color), 
+                glmToNVG(m_color),
                 glmToNVG(m_borderColor), true);
         }
     }
@@ -118,8 +118,7 @@ namespace FR {
     }
 
     int Frtk_GrpWidget::send_event(Frtk_Widget& w, int ev) {
-            return w.handle(ev);
-
+        return w.handle(ev);
     }
     int Frtk_GrpWidget::findIndex(const std::shared_ptr<Frtk_Widget>& w) const {
         auto it = std::find(m_children.begin(), m_children.end(), w);
@@ -133,12 +132,11 @@ namespace FR {
         m_children.erase(m_children.begin() + index);
         return 0;
     }
-    const std::vector<std::shared_ptr<Frtk_Widget>>& Frtk_GrpWidget:: getChildren() const {
+    const std::vector<std::shared_ptr<Frtk_Widget>>& Frtk_GrpWidget::getChildren() const {
         return m_children;
     }
 
-
-    int Frtk_GrpWidget::remove_child(std::shared_ptr<Frtk_Widget> &wdg) {
+    int Frtk_GrpWidget::remove_child(std::shared_ptr<Frtk_Widget>& wdg) {
         auto it = std::find(m_children.begin(), m_children.end(), wdg);
         if (it != m_children.end()) {
             m_children.erase(it);
@@ -229,10 +227,21 @@ namespace FR {
         g_focusedWdgt.current = nullptr;
     }
 
+    bool Frtk_GrpWidget::set_child_focus(Frtk_Widget* w) {
+        m_childFocus = w;
+        return true;
+    }
+
+    dimPos_float_t Frtk_GrpWidget::mainGui() const {
+        return { m_x, m_y + FRTK_WINDOWS_TITLE_HEIGHT };
+    }
+
     //Return = 1 Event consumed
    //Return = 0 or -1 Event should continue to be delivered to other widgets
+       //Return = 1 Event consumed
+   //Return = 0 or -1 Event should continue to be delivered to other widgets
     int Frtk_GrpWidget::handle(int ev) {
-        if (should_getEvent()) {
+        if (isMouse_inside()) {
             if (!(m_active && m_visible))
                 return 0;              //inactive widget - we don't care
             switch (ev) {
@@ -275,59 +284,78 @@ namespace FR {
             case FR_ENTER:
             case FR_MOUSE_MOVE:
             {
-                // Iterate children in reverse order (topmost child first)
-                for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
-                    Frtk_Widget* child = it->get();
+                if (m_grabbedChild) {
+                    return m_grabbedChild->handle(ev);
+                }
+                Frtk_Widget* hovered = nullptr;
+                for (auto& wdg : m_children) {
+                    if (!wdg->visible() || !wdg->active())
+                        continue;
 
-                    if (!child->visible()) continue;
+                    if (wdg->isMouse_inside()) {
+                        hovered = wdg.get();
+                        break;      // top-most hit wins
+                    }
+                }
 
-                    // Check if mouse is inside this child
-                    if (child->should_getEvent()) {
-                        if (child->hasBelowMouse()) {
-                            return send_event(*child, FR_MOUSE_MOVE);
+                for (auto& wdg : m_children) {
+                    if (!wdg->visible())
+                        continue;
+
+                    if (wdg.get() == hovered) {
+                        if (!wdg->hasBelowMouse()) {
+                            wdg->set_BelowMouse();
+                            if (wdg->handle(FR_ENTER) == 1)
+                                return 1;
                         }
-                        else {
-                            // Mouse just entered this child
-                            set_BeloMouse();
-                            if (send_event(*child, FR_ENTER)) return 1;
+                    }
+                    else {
+                        if (wdg->hasBelowMouse()) {
+                            wdg->clear_BelowMouse();
+                            if (wdg->handle(FR_LEAVE) == 1) {
+                                return 1;
+                            }
                         }
                     }
                 }
-                // No child handled it // mark this group as under the mouse
-                set_BeloMouse();
-                return 1;
-            }break;
-            return 0;
-            }
 
+                //if (hovered) {
+                //    if (hovered->handle(ev) == 1)
+                //        return 1;
+                //}
+
+                //if (isMouse_inside()) {
+                //    if (!hasBelowMouse()) {
+                //        set_BelowMouse();
+                //        if (handle(FR_ENTER) == 1) {
+                //            return 1;
+                //        }
+                //    }
+                //}
+                //else
+                //{
+                //    if (hasBelowMouse()) {
+                //        clear_BelowMouse();
+                //        if (handle(FR_LEAVE) == 1) {
+                //            return 1;
+                //        }
+                //    }
+                //}
+            }break;
+            }
             for (auto& wdg : m_children) {
                 //We should not allow sending events to inactive widget
                 int result = 0;
                 if (wdg->active() && wdg->visible()) {
-                        if (wdg->should_getEvent()){
-                            int result = wdg->handle(ev);
-                            if (result == 1) {
-                                return 1; // Event is consumed
-                            }
-                        }
-                        else
-                        {
-                            if (wdg->label() == "New")
-                                ;//FR_DEBUG_BREAK;;
+                    if (wdg->isMouse_inside()) {
+                        int result = wdg->handle(ev);
+                        if (result == 1) {
+                            return result; // Event is consumed
                         }
                     }
+                }
             }
-        
-    }
+        }
         return 0;
-    }
-
-    bool Frtk_GrpWidget::set_child_focus(Frtk_Widget* w) {
-        m_childFocus = w;
-        return true;
-    }
-
-    dimPos_float_t Frtk_GrpWidget::mainGui() const {
-        return { m_x, m_y + FRTK_WINDOWS_TITLE_HEIGHT};
     }
 }

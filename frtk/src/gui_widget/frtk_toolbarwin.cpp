@@ -226,18 +226,24 @@ namespace FR {
         bool snapRight = (m_x + m_w >= winWidth - snapThreshold);
         bool snapTop = (m_y <= snapThreshold);
         bool snapBottom = (m_y + m_w >= winHeight - snapThreshold);
-
-        if (should_getEvent() || m_dragging) {
-            if (dockingBTN() || m_dragging) {
+        
+        bool mouseOnDockBtn = dockingBTN();  // True if mouse over the docking button
+        bool mouseInsideWindow = isMouse_inside();
+        
+        if (isMouse_inside() || m_dragging) {
+            if ((dockingBTN() && !m_dragging) || m_dragging) {
                 if (ev == FR_LEFT_DRAG_PUSH) {
-                    m_dragging = true;
-                    float dx, dy;
-                    const auto& mouse = m_mainWindow->m_sysEvents.mouse; // content-space mouse
-                    dx = (float)(mouse.prevX - mouse.activeX);
-                    dy = (float)(mouse.prevY - mouse.activeY);
-                    m_guiWindow->position(m_x - dx, m_y - dy);
-                    this->position(m_x - dx, m_y - dy);
-                    return 1;
+                    if(dockingBTN()){
+                        m_dragging = true;
+                        float dx, dy;
+                        const auto& mouse = m_mainWindow->m_sysEvents.mouse; // content-space mouse
+                        dx = (float)(mouse.prevX - mouse.activeX);
+                        dy = (float)(mouse.prevY - mouse.activeY);
+                        m_guiWindow->position(m_x - dx, m_y - dy);
+                        this->position(m_x - dx, m_y - dy);
+                        return 1;
+                    }
+                    m_dragging = false;
                 }
                 else if (m_dragging && ev == FR_LEFT_RELEASE) {
                     m_dragging = false;
@@ -293,9 +299,13 @@ namespace FR {
 
                     m_mainWindow->activateNavi();
                     return 1;
-                }
+                }else
+                    if (ev == FR_LEAVE) {
+                        m_dragging = false;
+                    }
             }
         }
+        m_dragging = false;
         Frtk_Window::handle(ev);
     }
 }

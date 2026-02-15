@@ -98,14 +98,14 @@ namespace FR {
         //frtk_toggle_round_button
         //frtk_toolbar_button
         
-        std::string iconPath =EXE_CURRENT_DIR + "/resources/icons/32x32/";
-        std::string imagePath = EXE_CURRENT_DIR + "/resources/icons/32x32/House-32x32.png";
+        std::string iconPath1 =EXE_CURRENT_DIR + "/resources/icons/32x32/";
+        std::string imagePath1 = EXE_CURRENT_DIR + "/resources/icons/32x32/House-32x32.png";
         
         std::vector<toolbBTN_t> tools = {
             // std::string lbl; std::string name; dimSize_float_t size; std::string icon; Frtk_Widget::Callback callback_; std::string tooltips !!
-            {"New","New"   ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath + "Folder-Create-32x32.png",[](Frtk_Widget* w) { doCallback(0); }, ""},
-            {"Open","Open"  ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath + "Folder-Import-32x32.png", [](Frtk_Widget* w) { doCallback(1); }, ""},
-            {"Close","Close" ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath + "Folder-Close-32x32.png" , [](Frtk_Widget* w) { doCallback(2); }, ""},
+            {"New","New"   ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath1 + "Folder-Create-32x32.png",[](Frtk_Widget* w) { doCallback(0); }, ""},
+            {"Open","Open"  ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath1 + "Folder-Import-32x32.png", [](Frtk_Widget* w) { doCallback(1); }, ""},
+            {"Close","Close" ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath1 + "Folder-Close-32x32.png" , [](Frtk_Widget* w) { doCallback(2); }, ""},
         };
 
         std::shared_ptr<Frtk_ToolBar> tb1=std::make_shared<Frtk_ToolBar>(window->getContext(), 0.f, 350.0f, window->w(), FRTK_TOOLBAR_HEIGHT, "Toolbar1", tools);
@@ -124,43 +124,43 @@ namespace FR {
 
         std::shared_ptr<Frtk_Check_Button>b1 = std::make_shared<Frtk_Check_Button>(window->getContext(), xx + ww * counter + 10.0f, yy, ww, hh, "CHECK");
         counter++;
-        b1->wdgImage(imagePath);
+        b1->wdgImage(imagePath1);
         window->addChild(b1);
 
         std::shared_ptr<Frtk_Light_Button>b2 = std::make_shared<Frtk_Light_Button>(window->getContext(), xx + ww * counter + 10.0f, yy, ww, hh, std::to_string(counter));
-        b2->wdgImage(imagePath);
+        b2->wdgImage(imagePath1);
         counter++;
         window->addChild(b2);
         std::shared_ptr<Frtk_Repeat_Button>b3 = std::make_shared<Frtk_Repeat_Button>(window->getContext(), xx + ww * counter + 10.0f, yy, ww, hh, std::to_string(counter), FRTK_DIAMOND_UP_BOX);
         counter++;
         window->addChild(b3);
-        b3->wdgImage(imagePath);
+        b3->wdgImage(imagePath1);
         std::shared_ptr<Frtk_Return_Button>b4 = std::make_shared<Frtk_Return_Button>(window->getContext(), xx + ww * counter + 10.0f, yy, ww, hh, std::to_string(counter));
         counter++;
         window->addChild(b4);
 
         counter = 0;
         std::shared_ptr<Frtk_Round_Button>b5 = std::make_shared<Frtk_Round_Button>(window->getContext(), xx + counter , yy + 60.f, ww, hh, std::to_string(counter));      
-        b5->wdgImage(imagePath);
+        b5->wdgImage(imagePath1);
         window->addChild(b5);
         counter+=ww+10.0f;
         std::shared_ptr<Frtk_Toggle_Light_Button>b6 = std::make_shared<Frtk_Toggle_Light_Button>(window->getContext(), xx + counter , yy + 60.f, ww, hh, std::to_string(counter));
 
-        b6->wdgImage(imagePath);
+        b6->wdgImage(imagePath1);
         window->addChild(b6);
         counter += ww + 10.0f;
         std::shared_ptr<Frtk_Toggle_Round_Button>b7 = std::make_shared<Frtk_Toggle_Round_Button>(window->getContext(), xx + counter , yy + 60.f, ww, hh, std::to_string(counter));
         
-        b7->wdgImage(imagePath);
+        b7->wdgImage(imagePath1);
         window->addChild(b7);
         counter += ww + 10.0f;
         std::shared_ptr<Frtk_ToolBar_Button>b8 = std::make_shared<Frtk_ToolBar_Button>(window->getContext(), xx + counter , yy + 60.f, FRTK_TOOLBAR_BUTTON_HEGHT, FRTK_TOOLBAR_BUTTON_HEGHT, "");
-        b8->wdgImage(imagePath);
+        b8->wdgImage(imagePath1);
         window->addChild(b8);
 
         counter = 0;
         std::shared_ptr<Frtk_Switch_Button>b9 = std::make_shared<Frtk_Switch_Button>(window->getContext(), xx + ww * counter + 10.0f, yy + 120.f, ww, hh, std::to_string(counter));
-        b9->wdgImage(imagePath);
+        b9->wdgImage(imagePath1);
         window->addChild(b9);
         counter++;
 

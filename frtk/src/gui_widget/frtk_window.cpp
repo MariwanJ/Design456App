@@ -209,7 +209,7 @@ namespace FR {
     {
         auto& mouse = m_mainWindow->m_sysEvents.mouse;
         int result = 0;
-        if (should_getEvent()) {
+        if (isMouse_inside()) {
             m_mainWindow->deactivateNavi();
             result = 1;
             if (m_hasHeader) {
@@ -247,7 +247,7 @@ namespace FR {
         return { x(),y() };
     }
 
-    bool Frtk_Window::should_getEvent() const
+    bool Frtk_Window::isMouse_inside() const
     {
         const auto& mouse = m_mainWindow->m_sysEvents.mouse; // content-space mouse
         bool result;
