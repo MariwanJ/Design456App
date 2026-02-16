@@ -132,7 +132,7 @@ namespace FR {
         { "Save",
         "Save",
         {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},
-        iconPath + "Folder-Save-32x32.png",
+        iconPath + "Save-32x32.png",
         [this](Frtk_Widget* w) { this->mainToolbar_callback(FR_FILE_CLOSE); },
         FRTK_UP_BOX,
         "" },
