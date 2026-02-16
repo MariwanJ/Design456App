@@ -40,7 +40,7 @@ namespace FR {
     Frtk_ToolBarWin::Frtk_ToolBarWin(float X, float Y, float W, float H, std::string lbl,
         const std::vector<toolbBTN_t>& tools, bool horizontal, BOX_TYPE b, WIDGTYPE btnType) : Frtk_Window(X, Y, W, H, lbl, b, false),
         m_dockable(false), m_padding(1.0f), m_horizontal(horizontal), m_parent(NULL), m_buttonsType(btnType) {
-        m_boxType = FRTK_FLAT_BOX;
+        m_boxType = b;
         init();
         m_wdgType = FRTK_TOOLBARWIN;
         if (m_horizontal)
@@ -127,7 +127,7 @@ namespace FR {
                 btnDim.pos.y += item.size.h + m_padding;
             }
             btn->wdgImage(item.icon);
-            btn->cellStyle(FR_IMG_OVER_TEXT_CENTER);
+            btn->cellStyle(FR_IMG_LEFT_TO_TEXT);
             btn->set_callback(item.callback_);
             m_guiWindow->addChild(btn);
         }
@@ -345,15 +345,12 @@ namespace FR {
         float winWidth = m_mainWindow->w();
         float winHeight = m_mainWindow->h();
 
-        // Check edges
+
         bool snapLeft = (m_x <= snapThreshold);
         bool snapRight = (m_x + m_w >= winWidth - snapThreshold);
         bool snapTop = (m_y <= snapThreshold);
         bool snapBottom = (m_y + m_w >= winHeight - snapThreshold);
 
-        // FRTK_CORE_INFO("I... {} {}", mouseOnDockBtn, mouseInsideWindow);
-
-        FRTK_CORE_INFO("{} ", m_dragging);
         if (dockingBTN() && ev == FR_LEFT_DRAG_PUSH) {
             m_dragging = true;
         }
@@ -408,25 +405,31 @@ namespace FR {
             size_t index = 0;
             size_t noOfChildren = m_guiWindow->getChildrenNo();
             bool allZero = false;
-            for (size_t i = 0; i < noOfChildren; ++i) {
-                auto wdg = m_guiWindow->getChildAt(i);
-                std::shared_ptr<Frtk_Button> btn = std::dynamic_pointer_cast<Frtk_Button>(wdg);
-                if (ev == FR_LEFT_PUSH) {
-                    if (btn->isMouse_inside()) {
-                        if (btn->value() == 1) {
-                            ;
+            if (m_wdgType == FRTK_TOOLBARWIN_TOOGLE) {
+                //ONLY ACTIVE WHEN WE HAVE TOOGLE BUTTONS TOOLBAR  
+                for (size_t i = 0; i < noOfChildren; ++i) {
+                    auto wdg = m_guiWindow->getChildAt(i);
+                    std::shared_ptr<Frtk_Button> btn = std::dynamic_pointer_cast<Frtk_Button>(wdg);
+                    if (ev == FR_LEFT_PUSH) {
+                        if (btn->isMouse_inside()) {
+                            if (btn->value() == 1) {
+                                ;
+                            }
+                            else {
+                                btn->value(1);
+                                btn->activate(); //do-callback
+                            }
                         }
                         else {
-                            btn->value(1);
+                            btn->value(0);
                         }
-                    }
-                    else {
-                        btn->value(0);
                     }
                 }
             }
+            else {
+                return Frtk_Window::handle(ev);
+            }
         }
-
         return result;
     }
 }

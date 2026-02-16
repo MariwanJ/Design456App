@@ -446,9 +446,9 @@ You call window->hide()
         FRTK_VSCROLL,
         FRTK_HSCROLL,
         FRTK_IMAGE,
-        FRTK_TOOLBAR,
-        FRTK_TOOLBARWIN,
-        FRTK_TOOLBARWIN_TOOGLE,
+        FRTK_TOOLBAR,           //No separate FRTK windows will be created
+        FRTK_TOOLBARWIN,        //Separate FRTK Window is created 
+        FRTK_TOOLBARWIN_TOOGLE, //Separate FRTK Window is created - but buttons are TOGGLE buttons
         FRTK_TOOLBAR_BUTTON,
     };
 

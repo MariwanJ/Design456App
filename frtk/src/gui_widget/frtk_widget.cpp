@@ -460,4 +460,12 @@ namespace FR {
     dimPos_float_t Frtk_Widget::mainGui() const {
         throw NotImplementedException();
     }
+    WIDGTYPE Frtk_Widget::widgetType() const
+    {
+        return m_wdgType;
+    }
+    void Frtk_Widget::widgetType(WIDGTYPE nVal)
+    {
+        m_wdgType = nVal;
+    }
 }

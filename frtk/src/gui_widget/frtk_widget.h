@@ -196,6 +196,8 @@ namespace FR {
         void set_callback(Callback cb);
         
         virtual dimPos_float_t mainGui() const;
+        WIDGTYPE widgetType() const;
+        void widgetType(WIDGTYPE nVal);
 
     protected:
         virtual void draw(void);
