@@ -56,6 +56,8 @@ namespace FR {
         int send_event(Frtk_Widget& w, int ev);
 
         virtual int findIndex(const std::shared_ptr<Frtk_Widget>& w) const;
+        virtual std::shared_ptr<Frtk_Widget>  getChildAt(size_t index);
+        virtual int getChildrenNo();
         virtual int remove_child_at(size_t index);
         virtual int remove_child(std::shared_ptr<Frtk_Widget> &wdg);
         virtual void remove_all();

@@ -25,41 +25,16 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef FRTK_BUTTON_H
-#define FRTK_BUTTON_H
+#ifndef FRTK_TOGGLE_BUTTON_H
+#define FRTK_TOGGLE_BUTTON_H
 
-#include <frtk.h>
-#include <gui_widget/frtk_Box.h>
+#include <gui_widget/frtk_button.h>
 
 namespace FR {
-
-   
-    class Frtk_Button : public Frtk_Box
+    class Frtk_Toggle_Button : public Frtk_Button
     {
     public:
-        Frtk_Button(NVGcontext*vg, float x , float y , float w , float h , std::string l="Button", BOX_TYPE b = FRTK_UP_BOX);
-
-        void Frtk_Button::value(uint8_t val);
-        uint8_t value() const;
-        uint8_t oldValue() const;		
-        
-        void name(const std::string& name);
-        const std::string& name(void);
-        void tooltips(const std::string& val);
-        const std::string& tooltips(void);
-        virtual void activate() override;
-        virtual void disable() override;
-
-    protected:
-        virtual void draw() override;
-        virtual int  handle(int e) override;
-
-        //Either 0 or 1 
-        uint8_t m_value;   
-        uint8_t m_oldValue;
-        std::string m_name;
-        std::string m_tooltips; // not implemented yet.
-
+        Frtk_Toggle_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b = FRTK_UP_BOX);
     };
 }
-#endif // FL_BUTTON_H
+#endif // FRTK_SWITCH_BUTTON_H

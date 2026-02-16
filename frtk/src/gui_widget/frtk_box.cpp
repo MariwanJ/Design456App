@@ -31,7 +31,7 @@
 // class constructor
 namespace FR {
     Frtk_Box::Frtk_Box(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :
-        Frtk_Widget(x, y, w, h, l, b), m_cellStyle(FR_IMG_LEFT_TO_TEXT), m_Text{ 0 },
+        Frtk_Widget(x, y, w, h, l, b),  m_Text{ 0 },
         m_specialDrawingSize( 0.f), m_padding(2.0f)
     {
         m_vg = vg;
@@ -185,13 +185,6 @@ namespace FR {
         m_Text.size = { textW, textH };
     }
 
-    void Frtk_Box::cellStyle(FRTK_PICTXT_STYLE StyleType)
-    {
-        m_cellStyle = StyleType;
-        applyStyle();
-        redraw();
-    }
-
     int Frtk_Box::wdgImage(std::string path, std::optional<glm::vec4> tint)
     {
         int result = Frtk_Widget::wdgImage(path, tint);
@@ -209,8 +202,4 @@ namespace FR {
         return 0;
     }
 
-    int Frtk_Box::cellStyle() const
-    {
-        return m_cellStyle;
-    }
 }

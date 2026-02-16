@@ -43,7 +43,7 @@ namespace FR {
     Fr_Window* Frtk_Widget::m_mainWindow = nullptr;
     Frtk_Widget::Frtk_Widget(float X, float Y, float W, float H, std::string label, BOX_TYPE b) :m_x(X), m_y(Y), m_w(W), m_h(H),
         m_label(label), m_wdgType(FRTK_WIDGET), m_boxType(b), m_has_focus(false),
-        m_Image({ nullptr, {{0.f, 0.f}, {0.f, 0.f}} }),
+        m_Image({ nullptr, {{0.f, 0.f}, {0.f, 0.f}} }), m_cellStyle(FR_IMG_LEFT_TO_TEXT),
         m_visible(true), m_dragging(false), m_active(true),
         m_cantake_focus(false), m_IconTexture(0), m_vg(NULL),
         m_borderColor(glm::vec4(FR_DARKSLATEGREY)), m_borderWidth(NORMAL_BORDER),
@@ -158,6 +158,22 @@ namespace FR {
     {
         m_boxType = nType;
         redraw();
+    }
+
+    int Frtk_Widget::cellStyle() const
+    {
+        return m_cellStyle;
+    }
+
+    void Frtk_Widget::cellStyle(FRTK_PICTXT_STYLE value)
+    {
+        m_cellStyle = value;
+        applyStyle();
+        redraw();
+    }
+
+    void Frtk_Widget::applyStyle() {
+        throw NotImplementedException();
     }
 
     BOX_TYPE Frtk_Widget::boxtype() const {

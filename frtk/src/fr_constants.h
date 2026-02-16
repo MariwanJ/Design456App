@@ -294,7 +294,14 @@ typedef T FR_COLOR;
         FR_EDIT_COPY            ,      
         FR_EDIT_CUT             ,       
         FR_EDIT_DUPLICATE       , 
-        FR_EDIT_PASTE      
+        FR_EDIT_PASTE           ,
+        FR_EDIT_UNDO            ,
+        FR_EDIT_REDO            ,
+        //Selection toolbar
+        FR_SELECTION_MESH       ,
+        FR_SELECTION_FACE       ,
+        FR_SELECTION_EDGE       ,
+        FR_SELECTION_VERTEX     ,
     };
 }
 #endif // !FR_H

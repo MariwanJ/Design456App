@@ -858,7 +858,7 @@ inline void ImGui::FileBrowser::Display()
             IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows) &&
             IsKeyPressed(ImGuiKey_Escape));
 
-    if (shouldClose_)
+    if (shouldClose)
     {
         CloseCurrentPopup();
         isCanceled_ = true;

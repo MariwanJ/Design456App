@@ -191,7 +191,7 @@ namespace FR {
 
         bool Resizable();
         bool active();
-        void activate(bool value);
+        virtual void activate(bool value);
         bool has_focus();
         void has_focus(bool value);
         void visible(bool value);

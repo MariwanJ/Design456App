@@ -29,7 +29,7 @@
 
 namespace FR {
     Frtk_Button::Frtk_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :
-        Frtk_Box(vg, x, y, w, h, l, b), m_value(-1)
+        Frtk_Box(vg, x, y, w, h, l, b), m_value(-1), m_name(""), m_tooltips("")
     {
         assert(vg != NULL);
         m_value = m_oldValue = 0;
@@ -38,8 +38,8 @@ namespace FR {
     }
 
     void Frtk_Button::value(uint8_t val) {
-        val = val ? 1 : 0;
-        m_oldValue = val;
+        m_oldValue = m_value;
+        m_value = val;
     }
     uint8_t Frtk_Button::oldValue()const {
         return m_oldValue;
@@ -87,6 +87,7 @@ namespace FR {
                 m_wdgType == FRTK_LIGHT_BUTTON ||
                 m_wdgType == FRTK_TOGGLE_ROUND_BUTTON ||
                 m_wdgType == FRTK_SWITCH_BUTTON ||
+                m_wdgType == FRTK_TOGGLE_BUTTON ||
                 m_wdgType == FRTK_ROUND_BUTTON) {
                 m_value = ~m_value;
                 if (m_value == 1) {
@@ -108,6 +109,7 @@ namespace FR {
                 m_wdgType == FRTK_TOGGLE_LIGHT_BUTTON ||
                 m_wdgType == FRTK_TOGGLE_ROUND_BUTTON ||
                 m_wdgType == FRTK_SWITCH_BUTTON ||
+                m_wdgType == FRTK_TOGGLE_BUTTON ||
                 m_wdgType == FRTK_LIGHT_BUTTON ||
                 m_wdgType == FRTK_ROUND_BUTTON)) {
                 m_value = 0;
@@ -117,19 +119,49 @@ namespace FR {
             }
         }
         else if (e == FR_LEAVE) {
-            m_value = 0;
+            if (!(m_wdgType == FRTK_CHECK_BUTTON ||
+                m_wdgType == FRTK_TOGGLE_LIGHT_BUTTON ||
+                m_wdgType == FRTK_TOGGLE_ROUND_BUTTON ||
+                m_wdgType == FRTK_SWITCH_BUTTON ||
+                m_wdgType == FRTK_TOGGLE_BUTTON||
+                m_wdgType == FRTK_LIGHT_BUTTON ||
+                m_wdgType == FRTK_ROUND_BUTTON)){
+                m_Image.opacity = 1.0f;
+                m_value = 0;
+            }
         }
-
-        //TODO : FIX ME .. THIS SHOULD EXECUTE ONLY WHEN IT LOOSES FOCUS WHICH IS NOT DONE HERE!! IN GROUP WIDGET OR WINDOWS
-    //Lost focus we should make the value 0
-      /*  if (!(m_wdgType == FRTK_CHECK_BUTTON ||
-            m_wdgType == FRTK_TOGGLE_LIGHT_BUTTON ||
-            m_wdgType == FRTK_TOGGLE_ROUND_BUTTON ||
-            m_wdgType == FRTK_SWITCH_BUTTON ||
-            m_wdgType == FRTK_LIGHT_BUTTON ||
-            m_wdgType == FRTK_ROUND_BUTTON)) {
-            m_value = 0;
-        }*/
         return 0;
     }
+
+
+    void Frtk_Button::name(const std::string& name) {
+        m_name = name;
+    }
+    const std::string& Frtk_Button::name(void) {
+        return m_name;
+    }
+    void Frtk_Button::tooltips(const std::string& val) {
+        m_tooltips = val;
+    }
+    const std::string& Frtk_Button::tooltips(void) {
+        return m_tooltips;
+    }
+
+    void Frtk_Button::activate()
+    {
+        m_active == true;
+        if (m_value) {
+                do_callback();
+            }
+        }
+    void Frtk_Button::disable()
+    {
+        m_active == false;
+        if (m_value) {
+            // TODO Should we have a callback here??? 
+            do_callback();
+        }
+    }
+
+
 }

@@ -267,14 +267,21 @@ namespace FR {
     }userData_t;
 
 
-    static unsigned char GLLogCall() {
-        while (GLenum error = glGetError()) {
+    static bool GLLogCall()
+    {
+        bool ok = true;
+        GLenum error;
+
+        while ((error = glGetError()) != GL_NO_ERROR)
+        {
             std::cout << "[OpenGL Error] {" << error << "}\n";
-            std::flush(std::cout);
-            return 0;
+            ok = false;
         }
-        return 1;
+
+        std::cout << std::flush;
+        return ok;
     }
+
 
     /**
 * Holds the light information
@@ -422,9 +429,9 @@ You call window->hide()
         FRTK_REPEAT_BUTTON,
         FRTK_LIGHT_BUTTON ,
         FRTK_SWITCH_BUTTON,
+        FRTK_TOGGLE_BUTTON,
         FRTK_CHECK_BUTTON ,
         FRTK_ROUND_BUTTON ,
-        FRTK_RADIO_BUTTON ,
         FRTK_TOGGLE_ROUND_BUTTON,
         FRTK_TOGGLE_LIGHT_BUTTON,
 
@@ -441,6 +448,7 @@ You call window->hide()
         FRTK_IMAGE,
         FRTK_TOOLBAR,
         FRTK_TOOLBARWIN,
+        FRTK_TOOLBARWIN_TOOGLE,
         FRTK_TOOLBAR_BUTTON,
     };
 

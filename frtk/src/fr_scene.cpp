@@ -492,9 +492,10 @@ namespace FR {
     {
         int res = handle_selection(ev);
         for (auto& obj : m_world) {
-            obj.Sceneitem->handle(ev);
+            if (obj.Sceneitem->handle(ev) == 1) {
+                return 1; //Event is consumed 
+           }
         }
-
         return 0; //We could not use the event .. Return 0 as we don't care , Never return value >0 if you don't care
     }
 

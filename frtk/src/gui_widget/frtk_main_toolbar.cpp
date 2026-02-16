@@ -28,9 +28,10 @@
 #include <gui_widget/frtk_main_toolbar.h>
 #include <gui_widget/Frtk_ToolBarWin.h>
 #include <fr_file_dialog.h>
+#include <fr_window.h>
 
 namespace FR {
-    void mainToolbar_callback(size_t index) {
+    void Fr_Window::mainToolbar_callback(size_t index, void* data) {
         std::shared_ptr<Fr_Window> win = Fr_Window::getFr_Window();
         switch (index) {
         case FR_FILE_NEW: {
@@ -67,18 +68,107 @@ namespace FR {
         }
     }
 
-    std::shared_ptr<Frtk_ToolBarWin> Fr_Window::createMainToolbar() {
-        std::vector<toolbBTN_t> tools = {
-            // std::string lbl; std::string name; dimSize_float_t size; std::string icon; Frtk_Widget::Callback callback_; std::string tooltips !!
-            {"New","New"   ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath + "Folder-Create-32x32.png",[](Frtk_Widget* w) { mainToolbar_callback(FR_FILE_NEW); }, ""},
-            {"Open","Open"  ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath + "Folder-Import-32x32.png", [](Frtk_Widget* w) { mainToolbar_callback(FR_FILE_OPEN); }, ""},
-            {"Close","Close" ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath + "Folder-Close-32x32.png" , [](Frtk_Widget* w) { mainToolbar_callback(FR_FILE_CLOSE); }, ""},
-            {"Save","Save" ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath + "Folder-Close-32x32.png" , [](Frtk_Widget* w) { mainToolbar_callback(FR_FILE_CLOSE); }, ""},
-        };
-        
-        
-        std::shared_ptr<Frtk_ToolBarWin> tb1=std::make_shared<Frtk_ToolBarWin>( 0.0f, y()+menuHeight(), 350, FRTK_TOOLBAR_HEIGHT, "", tools, true);
-        
-        return tb1;
+    void Fr_Window::selectionToolbar_callback(size_t index, void* data) {
+        std::shared_ptr<Fr_Window> win = Fr_Window::getFr_Window();
+        FRTK_CORE_APP_ASSERT(win);
+        switch (index) {
+        case FR_SELECTION_MESH: {
+            m_currentSelMode = SelectionMode::MESH;
+            win->mnuSelMesh_cb(nullptr);
+        } break;
+        case FR_SELECTION_FACE: {
+            m_currentSelMode = SelectionMode::FACE;
+            win->mnuSelFace_cb(nullptr);
+        } break;
+        case FR_SELECTION_EDGE: {
+            m_currentSelMode = SelectionMode::EDGE;
+            win->mnuSelEdges_cb(nullptr);
+        } break;
+        case FR_SELECTION_VERTEX: {
+            m_currentSelMode = SelectionMode::VERTEX;
+            win->mnuSelVertex_cb(nullptr);
+        } break;
+        default: {
+            m_currentSelMode = SelectionMode::MESH;
+            win->mnuSelMesh_cb(nullptr);
+        }
+        }
     }
+    std::shared_ptr<Frtk_ToolBarWin> Fr_Window::createMainToolbar() {
+        std::vector<toolbBTN_t> tools1 = {
+        {"New",                                                                                 // std::string lbl
+            "New",                                                                              //std::string name
+            {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},                              //dimSize_float_t size
+                iconPath + "Folder-Create-32x32.png",                                           //std::string icon
+                [this](Frtk_Widget* w) { this->mainToolbar_callback(FR_FILE_NEW); },            //Frtk_Widget::Callback callback_
+                FRTK_UP_BOX,                                                                    //WIDGTYPE boxType
+                "",                                                                             //std::string tooltips;  //not implemented y
+        },
+        { "Open",
+         "Open",
+        {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},
+        iconPath + "Folder-Import-32x32.png",
+        [this](Frtk_Widget* w) { this->mainToolbar_callback(FR_FILE_OPEN); },
+        FRTK_UP_BOX,
+        "" },
+        { "Close",
+         "Close",
+         {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},
+         iconPath + "Folder-Close-32x32.png",
+         [this](Frtk_Widget* w) { this->mainToolbar_callback(FR_FILE_CLOSE); },
+         FRTK_UP_BOX,
+         "" },
+        { "Save",
+        "Save",
+        {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},
+        iconPath + "Folder-Close-32x32.png",
+        [this](Frtk_Widget* w) { this->mainToolbar_callback(FR_FILE_CLOSE); },
+        FRTK_UP_BOX,
+        "" },
+    };
+    return std::make_shared<Frtk_ToolBarWin>(0.0f, y() + menuHeight(), 350, FRTK_TOOLBAR_HEIGHT, "", tools1, true);
+}
+
+std::shared_ptr<Frtk_ToolBarWin> Fr_Window::createSelectionToolbar() {
+    std::vector<toolbBTN_t> tools2 = {
+        {"Mesh",                                                                                            // std::string lbl
+        "Mesh",                                                                                             //std::string name
+        {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},                                              //dimSize_float_t size
+        iconPath + "SelectionModeBody.png",                                                                 //std::string icon
+        [this](Frtk_Widget* w) { this->selectionToolbar_callback(FR_SELECTION_MESH); },                     //Frtk_Widget::Callback callback_
+        FRTK_FLAT_BOX,                                                                                      //BOX_TYPE boxType
+        ""},                                                                                                //std::string tooltips;  //not implemented y
+        {"Face",
+        "Face",
+        {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},
+        iconPath + "Folder-SelectionModeFace.png",
+        [this](Frtk_Widget* w) { this->selectionToolbar_callback(FR_SELECTION_FACE); }, 
+        FRTK_FLAT_BOX, 
+        ""},
+        {"Edge",
+        "Edge",
+        {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath + "SelectionModeEdges.png", 
+        [this](Frtk_Widget* w) { this->selectionToolbar_callback(FR_SELECTION_EDGE);},
+        FRTK_FLAT_BOX, 
+        ""},
+        {"Vertex",
+        "Vertex",
+        {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath + "SelectionModeVertex.png",
+        [this](Frtk_Widget* w) { this->selectionToolbar_callback(FR_SELECTION_VERTEX);},
+        FRTK_FLAT_BOX,
+        ""},
+    };
+    //Frtk_ToolBarWin(float, float Y, float W, float H, std::string lbl, const std::vector<toolbBTN_t>&tools = {}, bool horizontal = true, BOX_TYPE b = FRTK_UP_BOX, WIDGTYPE btnType = FRTK_TOOLBAR_BUTTON);
+    std::shared_ptr<Frtk_ToolBarWin> tb2 = std::make_shared<Frtk_ToolBarWin>(w() / 2 - FRTK_TOOLBAR_HEIGHT * 2,
+        y() + menuHeight(),
+        FRTK_TOOLBAR_HEIGHT * 4 + FRTK_TOOLBAR_HEIGHT / 2,
+        FRTK_TOOLBAR_HEIGHT, "",
+        tools2, true,
+        FRTK_FLAT_BOX, FRTK_TOGGLE_BUTTON);
+    int childrens = tb2->m_guiWindow->getChildrenNo();
+    for (size_t i = 0; i < childrens; ++i) {
+        tb2->m_guiWindow->getChildAt(i)->cellStyle(FR_IMG_LEFT_TO_TEXT); //Make both be in the center;
+    }
+    return tb2;
+}
 }

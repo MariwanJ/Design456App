@@ -53,6 +53,34 @@ namespace FR {
                          "Use nvgRGBAf(float r,g,b,a) or glmToNVG(glm::vec4) instead.");                                                                                                                   //*
 //***********************************************************************************************************************************
 
+    typedef enum FRTK_PICTXT_STYLE
+    {	// align() values                                               
+        // picture Over Text and (Center, Left & Right)                 
+        /*
+                L   C   R
+                v   v   v
+                .........
+        */
+        FR_IMG_OVER_TEXT_CENTER = 0,
+        FR_IMG_OVER_TEXT_LEFT = 1,
+        FR_IMG_OVER_TEXT_RIGHT = 2,
+
+        /*
+        L   C   R
+        .........
+        ^   ^   ^     <
+        */
+
+        // picture Under Text and (Center,  Left & Right)
+        FR_IMG_UNDER_TEXT_CENTER = 3,
+        FR_IMG_UNDER_TEXT_LEFT = 4,
+        FR_IMG_UNDER_TEXT_RIGHT = 5,
+
+        // picture Left To Text and (Center,Left & Right)
+        FR_IMG_LEFT_TO_TEXT = 6,
+        // picture Right To Text and (Center, Left & Right)
+        FR_IMG_RIGHT_TO_TEXT = 7
+    };
 
     class FRTK_API Frtk_Widget {
         friend class Frtk_GrpWidget;
@@ -141,10 +169,13 @@ namespace FR {
         void hide();
         bool visible() const;
         bool active(void) const;
-        void activate(void);
-        void disable(void);
+        virtual void activate(void);
+        virtual void disable(void);
 
         virtual void boxType(BOX_TYPE nType);
+        virtual void cellStyle(FRTK_PICTXT_STYLE value); 
+        int cellStyle() const;
+        virtual void applyStyle();
 
         virtual BOX_TYPE boxtype() const;
         Frtk_Widget* parent();
@@ -174,6 +205,8 @@ namespace FR {
        
 
         Frtk_Widget* m_parent = nullptr;
+        
+        FRTK_PICTXT_STYLE m_cellStyle;
 
         NVGcontext* m_vg;
         float m_x, m_y, m_w, m_h;

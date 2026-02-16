@@ -39,17 +39,13 @@ namespace FR {
 	public:
 		Frtk_ToolBar_Button(NVGcontext* vg, float x, float y, float w , float h , std::string l="ToolbarBTN", BOX_TYPE b = FRTK_UP_BOX);
 
-		void name(const std::string& name);
-		const std::string& name(void);
-		void tooltips(const std::string& val);
-		const std::string& tooltips(void);
+
 		void setThicknessPadding(float padding, float thickness);
 
 	protected:
 		virtual void drawVerticalDivider();
 		virtual void draw() override;
-		std::string m_name;
-		std::string m_tooltips; // not implemented yet.
+
 
 	private:
 		bool m_divider;

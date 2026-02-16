@@ -68,8 +68,7 @@ namespace FR {
     }
     void Frtk_GrpWidget::draw_children() {
         nvgSave(m_vg);                // save current transform and state
-        float y = m_parent ? m_y : m_y /*+ FRTK_WINDOWS_TITLE_HEIGHT*/;
-        nvgTranslate(m_vg, x(), y);  // shift drawing origin to parent
+        nvgTranslate(m_vg, x(), m_y);  // shift drawing origin to parent
         for (auto wdg : m_children) {
             if (wdg->visible()) {
                 wdg->draw();
@@ -126,6 +125,18 @@ namespace FR {
             return std::distance(m_children.begin(), it);
         return -1;
     }
+    
+    int Frtk_GrpWidget::getChildrenNo() {
+        return m_children.size();
+    }
+
+    std::shared_ptr<Frtk_Widget> Frtk_GrpWidget::getChildAt(size_t index) {
+        if (index >= 0 && index < m_children.size()) {
+            return m_children.at(index);
+        }
+        else return nullptr;
+    }
+
 
     int Frtk_GrpWidget::remove_child_at(size_t index) {
         if (index > m_children.size()) return -1;
@@ -276,10 +287,10 @@ namespace FR {
             case FR_UNFOCUS: {
                 m_childFocus = g_focusedWdgt.prev;
                 return 0;
-            } break;
+            } 
             case FR_KEYBOARD: {
                 return (navigate_focus(navkey()));
-            }break;
+            }
 
             case FR_ENTER:
             case FR_MOUSE_MOVE:
@@ -345,7 +356,6 @@ namespace FR {
             }
             for (auto& wdg : m_children) {
                 //We should not allow sending events to inactive widget
-                int result = 0;
                 if (wdg->active() && wdg->visible()) {
                     if (wdg->isMouse_inside()) {
                         int result = wdg->handle(ev);

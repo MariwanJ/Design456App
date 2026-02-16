@@ -33,7 +33,6 @@
 #if 1
 #include <fr_transform.h>       //just for debug - remove it when done TODO : FIXME
 #include <fr_camera.h>
-
 #endif
 /** Fr_Window */
 
@@ -53,7 +52,10 @@
 /** end Fr_Window */
 namespace FR {
     class Frtk_Window;
+    
     class Frtk_ToolBarWin;
+    class Frtk_Radio_ToolbarWin;
+
     FRTK_API class  Fr_Window {
         /** from Fr_Window */
         friend Frtk_Window;
@@ -215,9 +217,15 @@ namespace FR {
 
         float menuHeight(void) const;
         
-        std::shared_ptr<Frtk_ToolBarWin>  createMainToolbar();
 
     protected:
+
+        std::shared_ptr<Frtk_ToolBarWin>  createMainToolbar();
+        std::shared_ptr<Frtk_ToolBarWin> createSelectionToolbar();
+
+        void mainToolbar_callback(size_t index, void *data=nullptr);
+        void selectionToolbar_callback(size_t index, void *data=nullptr);
+
         std::shared_ptr<Frtk_ToolBarWin> m_MainToolbar;
         FRTK_WIN_TYPE m_winType;
         int imgui_LeftPanel();
@@ -281,8 +289,6 @@ namespace FR {
 
         void mnuDrawLine_cb(void* Data);
 
-        void createOpenDialog(void);
-
         /**
          * GLAD VERSION DEFINITION
          * Currently it is 4.3.
@@ -314,10 +320,6 @@ namespace FR {
         /**
          * Keep track of the active camera.
          */
-
-        std::shared_ptr<ImGui::FileBrowser> fileDialog;
-
-        bool showOpenDialog;
         //will be true if rotate/pan starts.
         static bool MouseOnce;
 

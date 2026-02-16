@@ -27,11 +27,19 @@
 
 #include <gui_widget/frtk_toolbarwin.h>
 
+#include <gui_widget/frtk_toggle_button.h>
+#include <gui_widget/frtk_Toggle_light_button.h>
+#include <gui_widget/frtk_Toggle_round_button.h>
+#include <gui_widget/frtk_check_button.h>
+#include <gui_widget/frtk_switch_button.h>
+#include <gui_widget/frtk_light_button.h>
+#include <gui_widget/frtk_round_button.h>
+
 namespace FR {
 #define DOCKING_BTN_SIZE FRTK_TOOLBAR_BUTTON_HEGHT/2
-    Frtk_ToolBarWin::Frtk_ToolBarWin(float X, float Y, float W, float H, std::string lbl, 
-        const std::vector<toolbBTN_t>& tools, bool horizontal, BOX_TYPE b) : Frtk_Window(X, Y, W, H, lbl, FRTK_FLAT_BOX, false),
-        m_dockable(false), m_padding(2.0f), m_horizontal(horizontal), m_parent(NULL) {
+    Frtk_ToolBarWin::Frtk_ToolBarWin(float X, float Y, float W, float H, std::string lbl,
+        const std::vector<toolbBTN_t>& tools, bool horizontal, BOX_TYPE b, WIDGTYPE btnType) : Frtk_Window(X, Y, W, H, lbl, b, false),
+        m_dockable(false), m_padding(1.0f), m_horizontal(horizontal), m_parent(NULL), m_buttonsType(btnType) {
         m_boxType = FRTK_FLAT_BOX;
         init();
         m_wdgType = FRTK_TOOLBARWIN;
@@ -43,7 +51,7 @@ namespace FR {
         addButton(tools);
     }
     Fr_Window* Frtk_ToolBarWin::parent(void) {
-       return m_parent;
+        return m_parent;
     }
     void Frtk_ToolBarWin::parent(Fr_Window* w) {
         m_parent = w;
@@ -57,6 +65,7 @@ namespace FR {
     {
         m_horizontal = val;
     }
+
     void Frtk_ToolBarWin::addButton(const std::vector<toolbBTN_t>& btns)
     {
         Dim_float_t btnDim;
@@ -71,10 +80,42 @@ namespace FR {
             FRTK_CORE_APP_ASSERT((m_w) >= ((float)btns.size() * FRTK_TOOLBAR_HEIGHT));
         else
             FRTK_CORE_APP_ASSERT((m_h) >= ((float)btns.size() * FRTK_TOOLBAR_HEIGHT));
-
+        bool first = false;
         for (const auto& item : btns) {
-            auto btn = std::make_shared<Frtk_ToolBar_Button>(m_vg, btnDim.pos.x, btnDim.pos.y + m_padding, item.size.w, item.size.h, item.lbl);
+            std::shared_ptr<Frtk_Button> btn;
+
+            switch (m_buttonsType) {
+            case FRTK_LIGHT_BUTTON: {
+                btn = std::make_shared<Frtk_Light_Button>(m_vg, btnDim.pos.x, btnDim.pos.y + m_padding, item.size.w, item.size.h, item.lbl);
+            } break;
+            case FRTK_SWITCH_BUTTON: {
+                btn = std::make_shared<Frtk_Switch_Button>(m_vg, btnDim.pos.x, btnDim.pos.y + m_padding, item.size.w, item.size.h, item.lbl);
+            } break;
+            case FRTK_TOGGLE_BUTTON: {
+                btn = std::make_shared<Frtk_Toggle_Button>(m_vg, btnDim.pos.x, btnDim.pos.y + m_padding, item.size.w, item.size.h, item.lbl);
+            } break;
+            case FRTK_CHECK_BUTTON: {
+                btn = std::make_shared<Frtk_Check_Button>(m_vg, btnDim.pos.x, btnDim.pos.y + m_padding, item.size.w, item.size.h, item.lbl);
+            } break;
+            case FRTK_ROUND_BUTTON: {
+                btn = std::make_shared<Frtk_Round_Button>(m_vg, btnDim.pos.x, btnDim.pos.y + m_padding, item.size.w, item.size.h, item.lbl);
+            } break;
+            case FRTK_TOGGLE_ROUND_BUTTON: {
+                btn = std::make_shared<Frtk_Toggle_Round_Button>(m_vg, btnDim.pos.x, btnDim.pos.y + m_padding, item.size.w, item.size.h, item.lbl);
+            } break;
+            case FRTK_TOGGLE_LIGHT_BUTTON: {
+                btn = std::make_shared<Frtk_Toggle_Light_Button>(m_vg, btnDim.pos.x, btnDim.pos.y + m_padding, item.size.w, item.size.h, item.lbl);
+            } break;
+            default: {
+                btn = std::make_shared<Frtk_ToolBar_Button>(m_vg, btnDim.pos.x, btnDim.pos.y + m_padding, item.size.w, item.size.h, item.lbl);
+            }
+            }
             btn->name(item.name);
+            if (first) {
+                btn->value(1);
+                first = true;//First get ON value
+            }
+            btn->boxType(item.boxType);
             btn->tooltips(item.tooltips);
 
             if (m_horizontal) {
@@ -91,11 +132,12 @@ namespace FR {
             m_guiWindow->addChild(btn);
         }
     }
-    int Frtk_ToolBarWin::removeButton(std::string& name)
+
+    int Frtk_ToolBarWin::removeButton(const std::string& name)
     {
         auto btnchildren = m_guiWindow->getChildren();
         for (auto& wdg : btnchildren) {
-            if (auto* btn = dynamic_cast<Frtk_ToolBar_Button*>(wdg.get()))
+            if (auto* btn = dynamic_cast<Frtk_Button*>(wdg.get()))
                 if (btn->name() == name) {
                     remove_child(wdg);
                 }
@@ -113,7 +155,7 @@ namespace FR {
             mouse.activeY >= m_dockingSize.pos.y + m_y && mouse.activeY <= m_dockingSize.pos.y + m_y + m_dockingSize.size.h;
         return result;
     }
-    void Frtk_ToolBarWin::addButtonAtPos(std::shared_ptr<Frtk_ToolBar_Button>& w)
+    void Frtk_ToolBarWin::addButtonAtPos(const std::shared_ptr<Frtk_ToolBar_Button>& w)
     {
         m_guiWindow->addChild(w);
     }
@@ -175,7 +217,6 @@ namespace FR {
     }
 
     void Frtk_ToolBarWin::setLayoutHorizontal() {
-        
         m_font.Rotate = 0.0f;
 
         float temp = m_h;
@@ -192,12 +233,12 @@ namespace FR {
         m_guiWindow->remove_all();
 
         for (auto& item : tempChildren) {
-            item->position(offsetX, offsetY+m_padding);
+            item->position(offsetX, offsetY + m_padding);
+            item->cellStyle(FR_IMG_OVER_TEXT_CENTER);
             offsetX += item->w() + m_padding;
             m_guiWindow->addChild(item);
         }
         redraw();
-       
     }
 
     void Frtk_ToolBarWin::setLayoutVertical() {
@@ -217,14 +258,87 @@ namespace FR {
         m_guiWindow->remove_all();
         for (auto& item : tempChildren) {
             item->position(offsetX, offsetY + m_padding);
+            item->cellStyle(FR_IMG_OVER_TEXT_CENTER);
             offsetY += item->h() + m_padding;
             m_guiWindow->addChild(item);
         }
     }
 
+    void Frtk_ToolBarWin::applyDocking() {
+        float snapThreshold = 20.0f;            // how close to edge to dock
+        float winWidth = m_mainWindow->w();
+        float winHeight = m_mainWindow->h();
+        Fr_Window* win = (Fr_Window*)m_parent; //make it clear what m_parent is
+        FRTK_CORE_APP_ASSERT(win);
+
+        /*
+        This functionality is highly dependent on the application.
+        All four types are implemented;
+        however, I've disabled left docking because
+        I will have other widgets in the left panel.
+        */
+        if (m_y <= snapThreshold) {
+            // Snap to top
+            if (!m_horizontal) {
+                m_horizontal = true;
+                setLayoutHorizontal();
+            }
+            m_y = win->menuHeight() + 1.0f;
+            m_x = 0.0f;
+        }
+        else if (m_y + m_h >= winHeight - snapThreshold) {
+            // Snap to bottom
+
+            if (!m_horizontal) {
+                m_horizontal = true;
+                setLayoutHorizontal();
+            }
+            m_horizontal = true;
+            m_y = m_parent->h() - m_h - 1.0f;
+            m_x = 0.0f;
+        }
+        else
+            if (m_x <= snapThreshold) {
+                //For this application, treat it as snap-to-top
+                {
+                    if (!m_horizontal)
+                    {
+                        m_horizontal = true;
+                        setLayoutHorizontal();
+                    }
+                    m_y = win->menuHeight() + 1.0f;
+                    m_x = 0.0f;
+                }
+                /*
+                 -- TODO: Use me if you want snap-to-left and remove the above 5 lines of code
+                */
+                // Snap to left
+                 /*
+                    if (m_horizontal) {
+                        m_horizontal = false;
+                        setLayoutVertical();
+                    }
+                    m_x = 0.0f;
+                    m_y = m_parent->menuHeight()+1.0f;
+                */
+            }
+            else if (m_x + m_w >= winWidth - snapThreshold) {
+                // Snap to right
+                if (m_horizontal) {
+                    m_horizontal = false;
+                    setLayoutVertical();
+                }
+                m_x = winWidth - m_w + 1;
+                m_y = m_parent->h() - m_h; //We have navibox at the right side, we cannot take the toolbar at the top
+            }
+
+        m_guiWindow->position(m_x, m_y);
+        this->position(m_x, m_y);
+    }
+
     int Frtk_ToolBarWin::handle(int ev)
     {
-        Fr_Window* win =  m_parent; //just to make it clear what m_parent is here
+        Fr_Window* win = m_parent; //just to make it clear what m_parent is here
         FRTK_CORE_APP_ASSERT(m_parent);
 
         float snapThreshold = 10.0f; // pixels
@@ -236,101 +350,83 @@ namespace FR {
         bool snapRight = (m_x + m_w >= winWidth - snapThreshold);
         bool snapTop = (m_y <= snapThreshold);
         bool snapBottom = (m_y + m_w >= winHeight - snapThreshold);
-        
-        bool mouseOnDockBtn = dockingBTN();  // True if mouse over the docking button
-        bool mouseInsideWindow = isMouse_inside();
-        
-        if ((isMouse_inside() && dockingBTN()) || m_dragging) {
-                if (ev == FR_LEFT_DRAG_PUSH) {
+
+        // FRTK_CORE_INFO("I... {} {}", mouseOnDockBtn, mouseInsideWindow);
+
+        FRTK_CORE_INFO("{} ", m_dragging);
+        if (dockingBTN() && ev == FR_LEFT_DRAG_PUSH) {
+            m_dragging = true;
+        }
+
+        if (dockingBTN() || m_dragging) {
+            if (ev == FR_LEFT_DRAG_PUSH) {
+                float dx, dy;
+                const auto& mouse = m_mainWindow->m_sysEvents.mouse; // content-space mouse
+                dx = (float)(mouse.prevX - mouse.activeX);
+                dy = (float)(mouse.prevY - mouse.activeY);
+                m_x = m_x - dx;
+                m_y = m_y - dy;
+                m_guiWindow->position(m_x, m_y);
+                return 1;
+            }
+            else if (m_dragging && ev == FR_LEFT_RELEASE) {
+                m_dragging = false;
+                applyDocking();
+                m_mainWindow->activateNavi();
+                return 1;
+            }
+        }
+
+        auto& mouse = m_mainWindow->m_sysEvents.mouse;
+        int result = 0;
+        if (isMouse_inside() || m_dragging) {
+            m_mainWindow->deactivateNavi();
+            result = 1;
+            if (m_hasHeader) {
+                if (Header_clicked() || m_dragging) {
+                    if (ev == FR_LEFT_DRAG_PUSH) {
                         m_dragging = true;
                         float dx, dy;
-                        const auto& mouse = m_mainWindow->m_sysEvents.mouse; // content-space mouse
                         dx = (float)(mouse.prevX - mouse.activeX);
                         dy = (float)(mouse.prevY - mouse.activeY);
-                        m_guiWindow->position(m_x - dx, m_y - dy);
-                        bool stoppit=false;
-                        if (m_x - dx < 0) {
-                            stoppit = true;
-                        }
-                        if (m_y - dy < 0) {
-                            stoppit = true;
-                        } 
-                        if ((m_x + m_w - dx) > (win->w())) {
-                            stoppit = true;
-
-                        }
-                        if ((m_y + m_h  - dy) > (win->h())) {
-                            stoppit = true;
-                        }
-                            FRTK_CORE_INFO("{} {} {} {} ",m_x, m_y, (m_x - dx), (m_y + m_h));
-                            if (!stoppit)
-                                this->position(m_x - dx, m_y - dy);
-                            else{
-                                m_dragging = false;
-                                applyDocking();
-                            }
+                        position(m_x - dx, m_y - dy);
+                        m_guiWindow->position(m_guiWindow->x() - dx, m_guiWindow->y() - dy);
                         return 1;
-                }
-                else if (m_dragging && ev == FR_LEFT_RELEASE) {
-                    m_dragging = false;
-                    applyDocking();
-                    m_mainWindow->activateNavi();
-                    return 1;
-                }else
-                    if (ev == FR_LEAVE) {
-                        m_dragging = false;
                     }
-            
-        }
-        m_dragging = false;
-        Frtk_Window::handle(ev);
-    }
-    void Frtk_ToolBarWin::applyDocking() {
-        float snapThreshold = 20.0f;            // how close to edge to dock
-        float winWidth = m_mainWindow->w();
-        float winHeight = m_mainWindow->h();
-        Fr_Window* win = (Fr_Window*)m_parent; //make it clear what m_parent is
-        FRTK_CORE_APP_ASSERT(win);
-
-        // Snap to edges individually if within threshold
-        if (m_y <= snapThreshold) {
-            // Snap to top
-            if (!m_horizontal) {
-                m_horizontal = true;
-                setLayoutHorizontal();
-            }
-            m_y = win->menuHeight();
-        }
-        else if (m_y + m_h >= winHeight - snapThreshold) {
-            // Snap to bottom
-
-            if (!m_horizontal) {
-                m_horizontal = true;
-                setLayoutHorizontal();
-            }
-            m_horizontal = true;
-            m_y = m_y+winHeight - m_h;
-
-        }
-        else
-            if (m_x <= snapThreshold) {
-                // Snap to left
-                if (m_horizontal) {
-                    m_horizontal = false;
-                    setLayoutVertical();
+                    else if (m_dragging && ev == FR_LEFT_RELEASE) {
+                        m_dragging = false;
+                        m_mainWindow->activateNavi();
+                        return 1;
+                    }
                 }
-                m_x = 0;
             }
-            else if (m_x + m_w >= winWidth - snapThreshold) {
-                // Snap to right
-                if (m_horizontal) {
-                    m_horizontal = false;
-                    setLayoutVertical();
+            // WE MUST RETURN ALWAYS 1 .. events over the window should be consumed
+            // we dont care if the group dosen't consume the events
+            // Scene should not get events if the mouse was over a frtk-window!!!! IMPORTANT TO REMEMBER!!!
+            if (!m_dragging)
+                m_mainWindow->activateNavi();
+            size_t index = 0;
+            size_t noOfChildren = m_guiWindow->getChildrenNo();
+            bool allZero = false;
+            for (size_t i = 0; i < noOfChildren; ++i) {
+                auto wdg = m_guiWindow->getChildAt(i);
+                std::shared_ptr<Frtk_Button> btn = std::dynamic_pointer_cast<Frtk_Button>(wdg);
+                if (ev == FR_LEFT_PUSH) {
+                    if (btn->isMouse_inside()) {
+                        if (btn->value() == 1) {
+                            ;
+                        }
+                        else {
+                            btn->value(1);
+                        }
+                    }
+                    else {
+                        btn->value(0);
+                    }
                 }
-                m_x = winWidth - m_w;
             }
+        }
 
-        m_guiWindow->position(m_x, m_y);
-        this->position(m_x, m_y);
+        return result;
     }
 }

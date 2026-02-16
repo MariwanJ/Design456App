@@ -29,8 +29,8 @@
 
 namespace FR {
     Frtk_ToolBar_Button::Frtk_ToolBar_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :
-        Frtk_Button(vg, x, y, w, h, l, b), m_divider(false), m_padding(2.0f),
-        m_thickness(1.0f), m_lineColor(nvgRGBAf(FR_LIGHT_GRAY_90)), m_name(""), m_tooltips("")
+        Frtk_Button(vg, x, y, w, h, l, b), m_divider(false), m_padding(1.5f),
+        m_thickness(1.0f), m_lineColor(nvgRGBAf(FR_LIGHT_GRAY_90))
     {
         // USE "OR" SYMBOLE FOR DIVIDER BUTTON
         if (!l.empty()) {
@@ -39,8 +39,6 @@ namespace FR {
             }
         }
         m_wdgType = FRTK_TOOLBAR_BUTTON;
-     
-       
     }
     void Frtk_ToolBar_Button::drawVerticalDivider()
     {
@@ -68,18 +66,6 @@ namespace FR {
     }
 
 
-    void Frtk_ToolBar_Button::name(const std::string& name) {
-        m_name = name;
-    }
-    const std::string& Frtk_ToolBar_Button::name(void) {
-        return m_name;
-    }
-    void Frtk_ToolBar_Button::tooltips(const std::string& val) {
-        m_tooltips = val;
-    }
-    const std::string& Frtk_ToolBar_Button::tooltips(void) {
-        return m_tooltips;
-    }
 
     void Frtk_ToolBar_Button::draw() {
         if (m_divider) {

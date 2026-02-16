@@ -234,83 +234,35 @@ namespace FR {
         spWindow->activeScene->getActiveCamera().setCamData(data);
     }
 
-    void Fr_Window::createOpenDialog()
-    {
-        ImGuiWindowFlags window_flags =
-            ImGuiWindowFlags_NoDocking |
-            ImGuiWindowFlags_NoResize |
-            ImGuiWindowFlags_NoScrollbar |
-            ImGuiFileBrowserFlags_MultipleSelection;
-
-        if (showOpenDialog) {
-            ImGui::OpenPopup("File Browser");
-        }
-
-        if (ImGui::BeginPopupModal("File Browser", nullptr,
-            ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar))
-        {
-            if (!fileDialog) {
-                fileDialog = std::make_shared<ImGui::FileBrowser>(window_flags, EXE_CURRENT_DIR);
-                fileDialog->SetTitle("Open file");
-                fileDialog->SetTypeFilters({ ".obj", ".off" });
-            }
-
-            fileDialog->Open();
-            fileDialog->Display();
-
-            if (!fileDialog->IsOpened() || fileDialog->isCanceled()) {
-                showOpenDialog = false;
-                fileDialog.reset();
-                ImGui::CloseCurrentPopup();
-            }
-            else if (fileDialog->HasSelected()) {
-                for (const auto& obj : fileDialog->GetMultiSelected()) {
-                    activeScene->add3DObject(obj.string());
-                }
-                fileDialog->ClearSelected();
-                showOpenDialog = false;
-                fileDialog.reset();
-                ImGui::CloseCurrentPopup();
-            }
-
-            if (ImGui::Button("Close")) {
-                showOpenDialog = false;
-                fileDialog.reset();
-                ImGui::CloseCurrentPopup();
-            }
-            ImGui::EndPopup();
-        }
-    }
-
 
 
     /**  callbacks */
     void Fr_Window::mnuFileNew_cb(void* Data) {
-        std::cout << "File new callback\n";
+        mainToolbar_callback(FR_FILE_NEW);
     }
 
     void Fr_Window::mnuFileOpen_cb(void* Data) {
-        showOpenDialog = true;
+        mainToolbar_callback(FR_FILE_OPEN);
     }
 
     void Fr_Window::mnuFileClose_cb(void* Data) {
-        std::cout << "File close callback\n";
+        mainToolbar_callback(FR_FILE_CLOSE);
     }
 
     void Fr_Window::mnuFileSave_cb(void* Data) {
-        std::cout << "File save callback\n";
+        mainToolbar_callback(FR_FILE_SAVE);
     }
 
     void Fr_Window::mnuFileSaveAs_cb(void* Data) {
-        std::cout << "File save as callback\n";
+        mainToolbar_callback(FR_FILE_SAVEAS);
     }
 
     void Fr_Window::mnuFileExport_cb(void* Data) {
-        std::cout << "File export callback\n";
+        mainToolbar_callback(FR_FILE_EXPORT);
     }
 
     void Fr_Window::mnuFileImport_cb(void* Data) {
-        std::cout << "File import callback\n";
+        mainToolbar_callback(FR_FILE_IMPORT);
     }
 
     void Fr_Window::mnuFileExit_cb(void* Data) {
@@ -320,38 +272,42 @@ namespace FR {
     //Selection toolbar callbacks
     void Fr_Window::mnuSelMesh_cb(void* data)
     {
+        //TODO: NOT SURE WHAT TO HAVE HERE !!2026-02-16
     }
 
     void Fr_Window::mnuSelFace_cb(void* data)
     {
+        //TODO: NOT SURE WHAT TO HAVE HERE !!2026-02-16
     }
 
     void Fr_Window::mnuSelEdges_cb(void* data)
     {
+        //TODO: NOT SURE WHAT TO HAVE HERE !!2026-02-16
     }
 
     void Fr_Window::mnuSelVertex_cb(void* data)
     {
+        //TODO: NOT SURE WHAT TO HAVE HERE !!2026-02-16
     }
 
     void Fr_Window::mnuEditUndo(void* Data) {
-        std::cout << "undo\n";
+        mainToolbar_callback(FR_EDIT_UNDO);
     }
 
     void Fr_Window::mnuEditRedo(void* Data) {
-        std::cout << "Redo\n";
+        mainToolbar_callback(FR_EDIT_REDO);
     }
 
     void Fr_Window::mnuEditCopy(void* Data) {
-        std::cout << "Copy\n";
+        mainToolbar_callback(FR_EDIT_COPY);
     }
 
     void Fr_Window::mnuEditCut(void* Data) {
-        std::cout << "Cut\n";
+        mainToolbar_callback(FR_EDIT_CUT);
     }
 
     void Fr_Window::mnuEditPaste(void* Data) {
-        std::cout << "Paste\n";
+        mainToolbar_callback(FR_EDIT_PASTE);
     }
 
     //Special Toolbars

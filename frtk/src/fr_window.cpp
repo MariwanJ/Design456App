@@ -131,14 +131,12 @@ namespace FR {
     }
 
     Fr_Window::Fr_Window(int x, int y, int w, int h, const std::string& label)
-        : m_label(label), showOpenDialog(false),
+        : m_label(label), 
         cursorHand(nullptr), cursorCrosshair(nullptr),
         runCode(false), activeScene(nullptr), m_nvgContext(nullptr),
         gl_version_major(4), gl_version_minor(6),m_NaviCube(true), m_MainToolbar(nullptr),
         mouseDefaults{ 0 }, radiusXYZ(0.0f), m_winType(FRTK_WIN_TYPE::NORMAL),m_menuHeight(10.0f)
     {
-        showOpenDialog = false;
-
         /** from Fr_Window */
         mouseDefaults.MouseScrollScale = 5.0f;
         mouseDefaults.MouseXYScale = 0.5f;
@@ -440,12 +438,20 @@ namespace FR {
 
         userData_t data;
         //Temporary Code -- TODO : Remove Me when you are done with the new GUI SYSTEM !!!!!  2026-01-30 Mariwan
-      //  m_frtkWindow.push_back(runFRTKdemo2());
-       // m_frtkWindow.push_back(runFRTKdemo());
+       // auto TB = runFRTKdemo2();
+       // m_frtkWindow.emplace_back(TB);
+        //m_frtkWindow.push_back(runFRTKdemo());
+
+
+        //TOOLBAR CREATION  - USING NEW GUI TOOLKIT
+       
         m_MainToolbar = createMainToolbar();
         m_MainToolbar->parent(this);
         m_frtkWindow.emplace_back(m_MainToolbar);
         
+        std::shared_ptr<Frtk_ToolBarWin> selectionTB = createSelectionToolbar();
+        selectionTB->parent(this); //do not forget this !!!
+        m_frtkWindow.emplace_back(std::move(selectionTB));
         while (!glfwWindowShouldClose(pGLFWWindow))
         {
             //ALL 3D Drawings

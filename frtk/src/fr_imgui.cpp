@@ -113,8 +113,6 @@ namespace FR {
         //if (CamerOptionVisible) CameraOptions();
         //SunOptions();
         RenderGizmo();
-        
-        if (showOpenDialog) createOpenDialog();
         return 1;
     }
     

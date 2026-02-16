@@ -74,8 +74,6 @@ namespace FR {
  
         void RenderSilhouette(const glm::mat4& mvp);
  
-        auto SearchIntersection(const glm::vec3& ray);
-
         std::string getUniqueName(const std::string& name, const std::vector<std::string>& names);
 
         SceneItemStruct CreateDefaultSunLight(void);

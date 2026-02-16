@@ -187,6 +187,7 @@ namespace FR {
 
     int Fr_Line_Widget::handle(int e)
     {
+
         if (!m_active)
             return 0; //we don't use the event/we don't care
         return 0;

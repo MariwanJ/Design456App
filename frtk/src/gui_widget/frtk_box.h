@@ -34,34 +34,7 @@
 
 namespace FR {
     // Only Image alignment - text is aligned using font struct.
-    typedef enum FRTK_PICTXT_STYLE             
-    {	// align() values                                               
-        // picture Over Text and (Center, Left & Right)                 
-        /*
-                L   C   R
-                v   v   v
-                .........
-        */
-        FR_IMG_OVER_TEXT_CENTER = 0,
-        FR_IMG_OVER_TEXT_LEFT   = 1,
-        FR_IMG_OVER_TEXT_RIGHT  = 2,
-
-        /*
-        L   C   R
-        .........
-        ^   ^   ^     <
-        */
-
-        // picture Under Text and (Center,  Left & Right)
-        FR_IMG_UNDER_TEXT_CENTER  = 3,
-        FR_IMG_UNDER_TEXT_LEFT    = 4,
-        FR_IMG_UNDER_TEXT_RIGHT   = 5,
-
-        // picture Left To Text and (Center,Left & Right)
-        FR_IMG_LEFT_TO_TEXT        = 6,
-        // picture Right To Text and (Center, Left & Right)
-        FR_IMG_RIGHT_TO_TEXT       = 7
-    };
+   
 
     class Frtk_Box : public Frtk_Widget
     {
@@ -71,18 +44,14 @@ namespace FR {
 
         void computeBoxLayout();
 
-        int cellStyle() const;
-        void cellStyle(FRTK_PICTXT_STYLE style);
+
+//        void cellStyle(FRTK_PICTXT_STYLE style);
         virtual int wdgImage(std::string path, std::optional<glm::vec4> tint = std::nullopt) override;
         virtual int wdgImage(const std::vector<uint8_t>& pngData, std::optional<glm::vec4> tint = std::nullopt)override;
     protected:
         Dim_float_t m_Text;
         float m_padding ;
         float m_specialDrawingSize;
-
-
-        FRTK_PICTXT_STYLE m_cellStyle;
-
 
         virtual void draw() override;
         virtual int  handle(int e) override;

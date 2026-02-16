@@ -34,39 +34,41 @@
 
 namespace FR {
 
-
-    typedef struct {
+    struct toolbBTN_t {
         std::string lbl;
         std::string name;
         dimSize_float_t size;
         std::string icon;
         Frtk_Widget::Callback callback_;
+        BOX_TYPE boxType;
         std::string tooltips; //not implemented yet!!
-    }toolbBTN_t;
+    };
 
     class Frtk_ToolBarWin : public Frtk_Window
     {
     public:
-        Frtk_ToolBarWin(float , float Y , float W , float H, std::string lbl, const std::vector<toolbBTN_t>& tools = {}, bool horizontal=true, BOX_TYPE b = FRTK_UP_BOX);
+        Frtk_ToolBarWin(float , float Y , float W , float H, std::string lbl, const std::vector<toolbBTN_t>& tools = {}, bool horizontal=true, BOX_TYPE b = FRTK_UP_BOX, WIDGTYPE btnType= FRTK_TOOLBAR_BUTTON);
         void    dockable(bool val);
         bool    dockable();
         void horizontal(bool val);
-        void addButton(const std::vector<toolbBTN_t>& btns);
-        virtual int removeButton(std::string & name);
-        bool dockingBTN(void);
-        void addButtonAtPos(std::shared_ptr<Frtk_ToolBar_Button>& w);
+        
+        virtual void addButton(const std::vector<toolbBTN_t>& btns);
+        virtual int removeButton(const std::string & name);
+        virtual bool dockingBTN(void);
+        virtual void addButtonAtPos(const std::shared_ptr<Frtk_ToolBar_Button>& w);
+
         Fr_Window* parent(void);
         void parent(Fr_Window* w);
 
     protected:
         void drawVerticalDivider();
         virtual void draw() override;
-        void setLayoutHorizontal();
-        void setLayoutVertical();
+        virtual void setLayoutHorizontal();
+        virtual void setLayoutVertical();
         virtual int handle(int ev)override;
        
 
-       void applyDocking(void);
+       virtual void applyDocking(void);
         
         bool m_horizontal; //is the toolbar horizontal or vertical??
         bool m_dockable; 
@@ -75,6 +77,7 @@ namespace FR {
         FontData_t m_data;
         std::string default_font_path;
         Fr_Window* m_parent;
+        WIDGTYPE m_buttonsType;
     };
 }
 #endif // FL_TOOLBAR_H

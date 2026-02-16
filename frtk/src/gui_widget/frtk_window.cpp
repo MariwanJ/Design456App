@@ -209,7 +209,7 @@ namespace FR {
     {
         auto& mouse = m_mainWindow->m_sysEvents.mouse;
         int result = 0;
-        if (isMouse_inside()) {
+        if (isMouse_inside() || m_dragging) {
             m_mainWindow->deactivateNavi();
             result = 1;
             if (m_hasHeader) {
@@ -230,16 +230,15 @@ namespace FR {
                     }
                 }
             }
-
         // WE MUST RETURN ALWAYS 1 .. events over the window should be consumed
         // we dont care if the group dosen't consume the events
         // Scene should not get events if the mouse was over a frtk-window!!!! IMPORTANT TO REMEMBER!!!
             if(!m_dragging)
                 m_mainWindow->activateNavi();
-            m_guiWindow->handle(events);
-
-        return result;
+            m_guiWindow->handle(events); // we don't care about the results     
         }
+        
+        return result;
     }
 
     dimPos_float_t Frtk_Window::mainGui() const
