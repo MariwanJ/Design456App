@@ -60,8 +60,6 @@ namespace FR {
         g_focusedWdgt.prev = this;
 
         // widgets specific variables
-        m_has_focus = false;
-        m_cantake_focus = true;
         m_wdgType = FRTK_WINDOW;
         if (m_hasHeader) {
             m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, X, Y + m_WindowsStyle.height, W, H - m_WindowsStyle.height);
@@ -73,8 +71,6 @@ namespace FR {
         FRTK_CORE_APP_ASSERT(m_guiWindow);
     }
 
-    Frtk_Window::~Frtk_Window() {
-    }
     void Frtk_Window::draw() {
         if (!m_visible)
             return;
@@ -227,7 +223,7 @@ namespace FR {
                 }
             }
             // WE MUST RETURN ALWAYS 1 .. events over the window should be consumed
-            // we dont care if the group dosen't consume the events
+            // we don't care if the group doesn't consume the events
             // Scene should not get events if the mouse was over a frtk-window!!!! IMPORTANT TO REMEMBER!!!
             if (!m_dragging)
                 m_mainWindow->activateNavi();
@@ -239,7 +235,7 @@ namespace FR {
 
     dimPos_float_t Frtk_Window::mainGui() const
     {
-        return { x(),y() };
+        return { x(), y() };
     }
 
     bool Frtk_Window::isMouse_inside() const

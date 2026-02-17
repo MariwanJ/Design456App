@@ -82,6 +82,8 @@ namespace FR {
         FR_IMG_RIGHT_TO_TEXT = 7
     };
 
+#define FOCUS_OPACITY_VALUE 0.35f
+
     class FRTK_API Frtk_Widget {
         friend class Frtk_GrpWidget;
 

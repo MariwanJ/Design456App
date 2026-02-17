@@ -28,32 +28,28 @@
 #ifndef FRTK_TOOLBAR_BUTTON_H
 #define FRTK_TOOLBAR_BUTTON_H
 
-#include <gui_widget/frtk_button.h> 
+#include <gui_widget/frtk_button.h>
 
 class Frtk_Toolbar;
 
 namespace FR {
-	class Frtk_ToolBar_Button : public Frtk_Button
-	{
-		friend Frtk_Toolbar;
-	public:
-		Frtk_ToolBar_Button(NVGcontext* vg, float x, float y, float w , float h , std::string l="ToolbarBTN", BOX_TYPE b = FRTK_UP_BOX);
+    class Frtk_ToolBar_Button : public Frtk_Button
+    {
+        friend Frtk_Toolbar;
+    public:
+        Frtk_ToolBar_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l = "ToolbarBTN", BOX_TYPE b = FRTK_UP_BOX);
 
+        void setThicknessPadding(float padding, float thickness);
 
-		void setThicknessPadding(float padding, float thickness);
+    protected:
+        virtual void drawVerticalDivider();
+        virtual void draw() override;
 
-	protected:
-		virtual void drawVerticalDivider();
-		virtual void draw() override;
-
-
-	private:
-		bool m_divider;
-		float m_padding;
-		float m_thickness;
-		NVGcolor m_lineColor;
-
-
-	};
+    private:
+        bool m_divider;
+        float m_padding;
+        float m_thickness;
+        NVGcolor m_lineColor;
+    };
 }
 #endif // FRTK_TOOLBAR_BUTTON_H

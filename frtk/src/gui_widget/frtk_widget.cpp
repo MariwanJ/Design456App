@@ -131,7 +131,7 @@ namespace FR {
         return;
         nvgBeginPath(m_vg);
         nvgRect(m_vg, m_x, m_y, m_w, m_h);  
-        nvgStrokeColor(m_vg, nvgRGBAf(0, 0.501f, 1.0f, 1.0f)); // Blue focus outline
+        nvgStrokeColor(m_vg, nvgRGBAf(0, 0.501f, 1.0f, FOCUS_OPACITY_VALUE)); // Blue focus outline
         nvgStrokeWidth(m_vg, 2.0f);
         nvgStroke(m_vg);
     }
@@ -140,7 +140,7 @@ namespace FR {
             return;
         nvgBeginPath(m_vg);
         nvgRect(m_vg, X, Y, W, H);
-        nvgStrokeColor(m_vg, nvgRGBAf(0, 0.501f, 1.0f, 1.0f)); // Blue focus outline
+        nvgStrokeColor(m_vg, nvgRGBAf(0, 0.501f, 1.0f, FOCUS_OPACITY_VALUE)); // Blue focus outline
         nvgStrokeWidth(m_vg, 2.0f);
         nvgStroke(m_vg);
     }
@@ -435,6 +435,7 @@ namespace FR {
         // Group keeps m_savedFocus pointing to last focused child
         if (m_parent)
             m_parent->set_child_focus(g_focusedWdgt.prev);
+
         g_focusedWdgt.prev = g_focusedWdgt.current;
         g_focusedWdgt.current = nullptr;
         m_has_focus = false;

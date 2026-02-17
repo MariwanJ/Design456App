@@ -55,15 +55,15 @@ namespace FR {
             actualColor = m_color_diabled;
         if (m_value == 0) {
             //UP
-            draw_box(m_vg, m_boxType, {{ m_x,m_y }, { m_w,m_h }}, 0.0f, THICK_BORDER, 
-                nvgRGBAf(actualColor.r, actualColor.g, actualColor.b, actualColor.a), 
+            draw_box(m_vg, m_boxType, { { m_x,m_y }, { m_w,m_h } }, 0.0f, THICK_BORDER,
+                nvgRGBAf(actualColor.r, actualColor.g, actualColor.b, actualColor.a),
                 glmToNVG(m_borderColor), true);
         }
         else if (m_value == 1)
         {
             //DOWN
-            draw_box(m_vg, (BOX_TYPE)((int)(m_boxType)+1), {{ m_x,m_y }, { m_w,m_h }}, 0.0f, THICK_BORDER, 
-                nvgRGBAf(actualColor.r, actualColor.g, actualColor.b, actualColor.a), 
+            draw_box(m_vg, (BOX_TYPE)((int)(m_boxType)+1), { { m_x,m_y }, { m_w,m_h } }, 0.0f, THICK_BORDER,
+                nvgRGBAf(actualColor.r, actualColor.g, actualColor.b, actualColor.a),
                 glmToNVG(m_borderColor), false);
         }
         else
@@ -91,18 +91,14 @@ namespace FR {
                 m_wdgType == FRTK_TOGGLE_BUTTON ||
                 m_wdgType == FRTK_ROUND_BUTTON) {
                 m_value = ~m_value;
-                if (m_value == 1) {
-                    m_Image.opacity = 0.5;
-                }
-                else {
-                    m_Image.opacity = 1.0;
-                }
+                do_callback(); //For toggle buttons, we do callback when pressed
             }
             else {
                 m_value = 1;
-                m_Image.opacity = 0.5;
             }
-            do_callback();
+            if (m_value == 1)  m_Image.opacity = 0.5;
+            else               m_Image.opacity = 1.0;
+
             return 1;
         }
         else if (e == FR_LEFT_RELEASE) {
@@ -115,7 +111,8 @@ namespace FR {
                 m_wdgType == FRTK_ROUND_BUTTON)) {
                 m_value = 0;
                 m_Image.opacity = 1.0f;
-                //callback(); Optional if you want to execute the callback even when mouse is released.
+                //Button Callbacks SHOULD AND MUST be fired up only on release, and mouse is on the widget.
+                do_callback();
                 return 1;
             }
         }
@@ -124,16 +121,15 @@ namespace FR {
                 m_wdgType == FRTK_TOGGLE_LIGHT_BUTTON ||
                 m_wdgType == FRTK_TOGGLE_ROUND_BUTTON ||
                 m_wdgType == FRTK_SWITCH_BUTTON ||
-                m_wdgType == FRTK_TOGGLE_BUTTON||
+                m_wdgType == FRTK_TOGGLE_BUTTON ||
                 m_wdgType == FRTK_LIGHT_BUTTON ||
-                m_wdgType == FRTK_ROUND_BUTTON)){
+                m_wdgType == FRTK_ROUND_BUTTON)) {
                 m_Image.opacity = 1.0f;
                 m_value = 0;
             }
         }
         return 0;
     }
-
 
     void Frtk_Button::name(const std::string& name) {
         m_name = name;
@@ -152,17 +148,15 @@ namespace FR {
     {
         m_active == true;
         if (m_value) {
-                do_callback();
-            }
+            do_callback();
         }
+    }
     void Frtk_Button::disable()
     {
         m_active == false;
         if (m_value) {
-            // TODO Should we have a callback here??? 
+            // TODO Should we have a callback here???
             do_callback();
         }
     }
-
-
 }

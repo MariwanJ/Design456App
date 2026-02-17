@@ -646,10 +646,14 @@ namespace FR {
         {
             if (events == FR_LEFT_PUSH)
             {
-                if (gui_win->isMouse_inside())
-                    gui_win->take_focus();
-                else 
-                    gui_win->lose_focus();
+                if (auto grp = std::dynamic_pointer_cast<Frtk_GrpWidget>(gui_win)) {
+                    if (grp->isMouse_inside()) {
+                        grp->take_focus();
+                    }
+                    else {
+                        grp->lose_focus();
+                    }
+                }
             }
             if (gui_win->handle(events) == 1)
                 return 1; // Event consumed

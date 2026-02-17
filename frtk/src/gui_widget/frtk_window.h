@@ -31,6 +31,8 @@
 #include<gui_widget/frtk_grpwidget.h>
 
 namespace FR{
+
+
     //TODO: Temporary code -- FIXME
     typedef struct FontData_t {
         int fontNormal, fontBold, fontIcons, fontEmoji;
@@ -52,7 +54,7 @@ namespace FR{
         friend Fr_Window;
     public:
         Frtk_Window(float X, float Y, float W, float H, std::string lbl = "Frtk_Window", BOX_TYPE b=FRTK_UP_BOX, bool hasHeader = true);
-        ~Frtk_Window();
+
         std::shared_ptr<Frtk_GrpWidget> m_guiWindow;
         void init(void);
         void drawLabel()  override;

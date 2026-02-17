@@ -45,27 +45,22 @@ namespace FR {
         const float cx = m_x + m_w * 0.5f;
         const float top = m_y + m_padding;
         const float bottom = m_y + m_h - m_padding;
-
         const float lineSpacing = 4.0f;
         const float strokeWidth = 1.0f;
 
         nvgStrokeWidth(m_vg, strokeWidth);
-        nvgStrokeColor(m_vg, nvgRGBAf(0.6274f,0.6274f,0.6274f,0.7058f));
-
+        nvgStrokeColor(m_vg, nvgRGBAf(0.6274f, 0.6274f, 0.6274f, 0.7058f));
         nvgBeginPath(m_vg);
 
-        // Draw 3 vertical grip lines
+        // Draw 3 vertical lines
         for (int i = -1; i <= 1; ++i)
         {
-            float x = floorf(cx + i * lineSpacing) + 0.5f; // pixel aligned
+            float x = floorf(cx + i * lineSpacing) + 0.5f;
             nvgMoveTo(m_vg, x, top);
             nvgLineTo(m_vg, x, bottom);
         }
-
         nvgStroke(m_vg);
     }
-
-
 
     void Frtk_ToolBar_Button::draw() {
         if (m_divider) {
