@@ -50,16 +50,14 @@ namespace FR {
         NVGcolor top = nvgLerpRGBA(baseCol, nvgRGBAf(FR_WHITE), 0.1f);
         NVGcolor bot = nvgLerpRGBA(baseCol, nvgRGBAf(FR_BLACK), 0.1f);
 
-
         NVGpaint grad = nvgLinearGradient(vg, x, y, x, y + h - r, top, bot);
-
 
         nvgBeginPath(vg);
         nvgRoundedRect(vg, x, y, w, h, r);
         nvgFillPaint(vg, grad);
         nvgFill(vg);
 
-        NVGcolor highlight = nvgLerpRGBA( baseCol, nvgRGBAf(1.0f, 1.0f, 1.0f, baseCol.a), 0.4f);
+        NVGcolor highlight = nvgLerpRGBA(baseCol, nvgRGBAf(1.0f, 1.0f, 1.0f, baseCol.a), 0.4f);
         float offcet1 = 1.0f;
         float offcet2 = 2.0f;
         if (r == 0.0) {
@@ -383,8 +381,78 @@ namespace FR {
         nvgFill(vg);
     }
 
-    void draw_box(NVGcontext* vg, BOX_TYPE b, Dim_float_t dim, float cornerRadius, float strokeWidth, NVGcolor c, NVGcolor shadowCol, bool up) {
+    void draw_nice_round_box(NVGcontext* vg, Dim_float_t dim, float r, float t, NVGcolor baseCol, NVGcolor shadowCol, bool pressed) {
+        float x = dim.pos.x;
+        float y = dim.pos.y;
+        float w = dim.size.w;
+        float h = dim.size.h;
 
+        // Drop Shadow
+        NVGpaint shadow = nvgBoxGradient(vg, x, y + 2, w, h, r, 12.0f, nvgRGBAf(0, 0, 0, 0.25f), nvgRGBAf(0, 0, 0, 0.0f));
+
+        nvgBeginPath(vg);
+        nvgRoundedRect(vg, x, y + 2, w, h, r);
+        nvgFillPaint(vg, shadow);
+        nvgFill(vg);
+
+        // Main Background Gradient
+        NVGcolor topCol = pressed ? shadowCol : nvgRGBAf(baseCol.r * 1.08f, baseCol.g * 1.08f, baseCol.b * 1.08f, baseCol.a);
+        NVGcolor bottomCol = pressed ? baseCol : shadowCol;
+
+        NVGpaint bg = nvgLinearGradient(vg, x, y, x, y + h, topCol, bottomCol);
+
+        nvgBeginPath(vg);
+        nvgRoundedRect(vg, x, y, w, h, r);
+        nvgFillPaint(vg, bg);
+        nvgFill(vg);
+
+        // Top Highlight
+
+        NVGpaint highlight = nvgLinearGradient(vg, x, y, x, y + h * 0.5f, nvgRGBAf(1, 1, 1, pressed ? 0.05f : 0.18f), nvgRGBAf(1, 1, 1, 0.0f));
+        nvgBeginPath(vg);
+        nvgRoundedRect(vg, x + 1, y + 1, w - 2, h - 2, r - 1);
+        nvgFillPaint(vg, highlight);
+        nvgFill(vg);
+
+        // Inner Shadow (Depth)
+        NVGpaint innerShadow = nvgLinearGradient(vg, x, y, x, y + h, nvgRGBAf(0, 0, 0, pressed ? 0.15f : 0.08f), nvgRGBAf(0, 0, 0, 0.0f));
+
+        nvgBeginPath(vg);
+        nvgRoundedRect(vg, x + 1, y + 1, w - 2, h - 2, r - 1);
+        nvgFillPaint(vg, innerShadow);
+        nvgFill(vg);
+
+        // Border
+        nvgBeginPath(vg);
+        nvgRoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, r);
+        nvgStrokeColor(vg, nvgRGBAf(0, 0, 0, 0.25f));
+        nvgStrokeWidth(vg, 1.0f);
+        nvgStroke(vg);
+    }
+
+    //TODO FIX ME TO CREATE BETTER WIDGETS!!!!!!
+    void draw_nice_squre(NVGcontext* vg, Dim_float_t dim, float r, float t, NVGcolor baseCol, NVGcolor shadowCol, bool pressed) {
+        NVGpaint shadowPaint;
+        float thumb = 60.0f;
+        nvgBeginPath(vg);
+        nvgRoundedRect(vg, dim.pos.x, dim.pos.y, thumb,thumb, 5);
+        nvgFill(vg);
+        shadowPaint = nvgBoxGradient(vg, dim.pos.x - 1, dim.pos.y, thumb + 2,thumb + 2, 5, 3, nvgRGBA(0,0,0,128), nvgRGBA(0,0,0,0));
+        nvgBeginPath(vg);
+        nvgRect(vg, dim.pos.x - 5, dim.pos.y - 5, thumb + 10,thumb + 10);
+        nvgRoundedRect(vg, dim.pos.x, dim.pos.y, thumb,thumb, 6);
+        nvgPathWinding(vg, NVG_HOLE);
+        nvgFillPaint(vg, shadowPaint);
+        nvgFill(vg);
+
+        nvgBeginPath(vg);
+        nvgRoundedRect(vg, dim.pos.x + 0.5f, dim.pos.y + 0.5f, thumb - 1,thumb - 1, 4 - 0.5f);
+        nvgStrokeWidth(vg,1.0f);
+        nvgStrokeColor(vg, nvgRGBA(255,255,255,192));
+        nvgStroke(vg);
+    }
+
+    void draw_box(NVGcontext* vg, BOX_TYPE b, Dim_float_t dim, float cornerRadius, float strokeWidth, NVGcolor c, NVGcolor shadowCol, bool up) {
         switch (b) {
         case FRTK_NO_BOX: {
             return; //DRAW Nothing
@@ -406,7 +474,7 @@ namespace FR {
 
         case FRTK_ROUNDED_BOX_UP:
         case FRTK_ROUNDED_BOX_DOWN:
-            drawBoxUpDown(vg, dim, cornerRadius + 10.f, strokeWidth, c, shadowCol, b == FRTK_ROUNDED_BOX_UP && up) ;
+            drawBoxUpDown(vg, dim, cornerRadius + 10.f, strokeWidth, c, shadowCol, b == FRTK_ROUNDED_BOX_UP && up);
             break;
 
         case FRTK_ROUND_UP_BOX:
@@ -463,7 +531,7 @@ namespace FR {
             break;
         }
     }
-    float getTextWidth( NVGcontext* vg, const std::string& str, float fontSize, const char* fontFace)
+    float getTextWidth(NVGcontext* vg, const std::string& str, float fontSize, const char* fontFace)
     {
         nvgFontFace(vg, fontFace);
         nvgFontSize(vg, fontSize);
@@ -473,8 +541,7 @@ namespace FR {
         return bounds[2] - bounds[0];
     }
 
-
-    float getTextLeftBearing( NVGcontext* vg, const std::string& text, const font_t& fnt)
+    float getTextLeftBearing(NVGcontext* vg, const std::string& text, const font_t& fnt)
     {
         nvgFontSize(vg, fnt.fontSize);
         nvgFontFace(vg, fnt.fName.c_str());
@@ -483,7 +550,7 @@ namespace FR {
         float bounds[4];
         nvgTextBounds(vg, 0.0f, 0.0f, text.c_str(), nullptr, bounds);
 
-        return -bounds[0];  
+        return -bounds[0];
     }
 
     // Draws text inside a box with alignment, shadow, and optional rotation (radians)
@@ -552,11 +619,11 @@ namespace FR {
     // Function to draw a check mark
     void drawCheckMark(NVGcontext* vg, float x, float y, float size, NVGcolor col) {
         nvgBeginPath(vg);
-        nvgMoveTo(vg, x, y + size * 0.5f); 
-        nvgLineTo(vg, x + size * 0.3f, y + size); 
-        nvgLineTo(vg, x + size, y); 
-        nvgStrokeColor(vg, col); 
-        nvgStrokeWidth(vg, 5.0f); 
-        nvgStroke(vg); 
+        nvgMoveTo(vg, x, y + size * 0.5f);
+        nvgLineTo(vg, x + size * 0.3f, y + size);
+        nvgLineTo(vg, x + size, y);
+        nvgStrokeColor(vg, col);
+        nvgStrokeWidth(vg, 5.0f);
+        nvgStroke(vg);
     }
 }

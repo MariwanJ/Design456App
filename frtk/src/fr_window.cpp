@@ -45,6 +45,7 @@
 #include <gui_widget/frtk_window.h>
 #include <gui_widget/examples/demo2.h>
 #include <gui_widget/examples/buttons_demo.h>
+#include <gui_widget/examples/input_output.h>
 #include <gui_widget/frtk_toolbarwin.h>
 
  /** Fr_Window */
@@ -441,7 +442,7 @@ namespace FR {
        // auto TB = runFRTKdemo2();
        // m_frtkWindow.emplace_back(TB);
         //m_frtkWindow.push_back(runFRTKdemo());
-
+        m_frtkWindow.push_back(runInputOutput());
 
         //TOOLBAR CREATION  - USING NEW GUI TOOLKIT
        
@@ -527,8 +528,19 @@ namespace FR {
 
     int Fr_Window::renderNewGUI() {
         //We might have multiple windows!!!
-        for (auto guiWin : m_frtkWindow)
+        /*
+            Important to remember!!! 
+            If you have only one GLFW windows, you should 
+            NEVER call nvgBeginFrame/nvgEndFrame per windows.
+            use nvgBeginFrame/nvgEndFrame  per each GLFW windows OUNCE!!
+
+        */
+        float ratio = activeScene->getActiveCamera().getRatio();
+        nvgBeginFrame(m_nvgContext, (float)w(), (float)h(), ratio);
+        for (auto guiWin : m_frtkWindow){
             guiWin->draw();
+        }
+        nvgEndFrame(m_nvgContext);
         return 0;
     }
 
@@ -630,11 +642,19 @@ namespace FR {
     }
     int Fr_Window::handle(int events)
     {
-        //send the event
-        for (auto gui_win : m_frtkWindow) {
+        for (auto gui_win : m_frtkWindow)
+        {
+            if (events == FR_LEFT_PUSH)
+            {
+                if (gui_win->isMouse_inside())
+                    gui_win->take_focus();
+                else 
+                    gui_win->lose_focus();
+            }
             if (gui_win->handle(events) == 1)
-                return 1; //We consumed the event
+                return 1; // Event consumed
         }
+
         auto& em = m_sysEvents.mouse;
         auto& ek = m_sysEvents.keyB;
 

@@ -25,74 +25,23 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef FRTK_H
-#define FRTK_H
-/**
- *  PUT HERE ONLY HEADER FILES THAT ARE PRE-COMPILED HEADER FIELS
- *
- * .
- */
+#include<gui_widget/examples/demo2.h>
 
-#define NOMINMAX    //Prevent min max of MS SDK macros to run
+#include <gui_widget/frtk_search_box.h>
+#include <gui_widget/frtk_input_base.h>
+namespace FR {
 
-#include <array>
+    std::shared_ptr<Frtk_Window> runInputOutput() {
+        
+        auto window = std::make_shared<Frtk_Window>(500.f, 200.f, 500.f, 500.f, "Testing buttons, toolbars", FRTK_UP_BOX);
 
-#include <algorithm>
-#include <cinttypes>
-#include <cmath>
-#include <fstream>
-#include <filesystem>
-#include <functional>
-#include <iostream>
-#include <limits>
-#include <memory>
-#include <sstream>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdexcept>
-#include <stdio.h>
-#include <stdlib.h>
-#include <tuple>
-#include <unordered_map>
-#include <unordered_set>
-#include <utility>
-#include <variant>
-#include <vector>
-#include <string>
-#include <stdint.h>
-#include <stack>
-#include <optional>
+        std::shared_ptr<Frtk_Search_Box> input1 = std::make_shared<Frtk_Search_Box>(window->getContext(), 10.0f, 10.0f, 300.0f, 100.0f, "Search", FRTK_UP_BOX);
+        std::shared_ptr<Frtk_Input_Base> input2 = std::make_shared<Frtk_Input_Base>(window->getContext(), 10.0f, 120.0f, 300.0f, 25.0f, "Search", FRTK_UP_BOX);
+        input1->value("Please search for something");
+        input2->value("Please search for something");
 
-#include <charconv>//for conversion
-
- //for ResourcePath
-#if defined(_WIN32)
-//#include <windows.h>
-#include <Shlwapi.h>
-#include <io.h>
-
-#define access _access_s
-#endif
-
-#ifdef __APPLE__
-#include <libgen.h>
-#include <limits.h>
-#include <mach-o/dyld.h>
-#include <unistd.h>
-#endif
-
-#ifdef __linux__
-#include <limits.h>
-#include <libgen.h>
-#include <unistd.h>
-
-#if defined(__sun)
-#define PROC_SELF_EXE "/proc/self/path/"
-#else
-#define PROC_SELF_EXE "/proc/self/exe/"
-#endif
-
-#endif
-//end for ResourcePath
-
-#endif
+        window->addChild(input1);
+        window->addChild(input2);
+         return window;
+    }
+}

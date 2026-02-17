@@ -25,74 +25,14 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef FRTK_H
-#define FRTK_H
-/**
- *  PUT HERE ONLY HEADER FILES THAT ARE PRE-COMPILED HEADER FIELS
- *
- * .
- */
+#ifndef INPUT_OUTPUT_H_
+#define INPUT_OUTPUT_H_
 
-#define NOMINMAX    //Prevent min max of MS SDK macros to run
 
-#include <array>
+#include <gui_widget/frtk_window.h>
 
-#include <algorithm>
-#include <cinttypes>
-#include <cmath>
-#include <fstream>
-#include <filesystem>
-#include <functional>
-#include <iostream>
-#include <limits>
-#include <memory>
-#include <sstream>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdexcept>
-#include <stdio.h>
-#include <stdlib.h>
-#include <tuple>
-#include <unordered_map>
-#include <unordered_set>
-#include <utility>
-#include <variant>
-#include <vector>
-#include <string>
-#include <stdint.h>
-#include <stack>
-#include <optional>
 
-#include <charconv>//for conversion
-
- //for ResourcePath
-#if defined(_WIN32)
-//#include <windows.h>
-#include <Shlwapi.h>
-#include <io.h>
-
-#define access _access_s
-#endif
-
-#ifdef __APPLE__
-#include <libgen.h>
-#include <limits.h>
-#include <mach-o/dyld.h>
-#include <unistd.h>
-#endif
-
-#ifdef __linux__
-#include <limits.h>
-#include <libgen.h>
-#include <unistd.h>
-
-#if defined(__sun)
-#define PROC_SELF_EXE "/proc/self/path/"
-#else
-#define PROC_SELF_EXE "/proc/self/exe/"
-#endif
-
-#endif
-//end for ResourcePath
-
-#endif
+namespace FR{
+    std::shared_ptr<Frtk_Window>  runInputOutput();
+}
+#endif/INPUT_OUTPUT_H_

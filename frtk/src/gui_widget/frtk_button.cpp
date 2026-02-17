@@ -79,6 +79,7 @@ namespace FR {
         }
 
         drawLabel();
+        draw_focus();
     }
     int Frtk_Button::handle(int e) {
         if (e == FR_LEFT_PUSH) {

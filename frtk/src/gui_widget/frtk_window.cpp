@@ -29,7 +29,7 @@
 
 namespace FR {
     Frtk_Window::Frtk_Window(float X, float Y, float W, float H, std::string lbl, BOX_TYPE b, bool hasHeader) :
-        Frtk_Widget(X, Y, W, H, lbl,b),m_hasHeader(hasHeader){
+        Frtk_Widget(X, Y, W, H, lbl, b), m_hasHeader(hasHeader) {
         init();
         m_data.fontBold = 0;
         m_data.fontEmoji = 0;
@@ -60,39 +60,35 @@ namespace FR {
         g_focusedWdgt.prev = this;
 
         // widgets specific variables
-        m_has_focus = true;
+        m_has_focus = false;
         m_cantake_focus = true;
         m_wdgType = FRTK_WINDOW;
         if (m_hasHeader) {
             m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, X, Y + m_WindowsStyle.height, W, H - m_WindowsStyle.height);
         }
         else {
-            m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, X, Y , W, H);
+            m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, X, Y, W, H);
         }
-        m_guiWindow->boxType( b);
+        m_guiWindow->boxType(b);
         FRTK_CORE_APP_ASSERT(m_guiWindow);
     }
-    
 
     Frtk_Window::~Frtk_Window() {
     }
     void Frtk_Window::draw() {
         if (!m_visible)
             return;
-
-        Fr_Camera& camera = m_mainWindow->activeScene->getActiveCamera();
-        float ratio = camera.getRatio();
         FRTK_CORE_APP_ASSERT(m_vg != nullptr);
         float cornerRadius = 3.0f;
-        nvgBeginFrame(m_vg, (float)m_mainWindow->w(), (float)m_mainWindow->h(), ratio);
+
         m_guiWindow->draw();
         if (m_hasHeader) {
             draw_header();
         }
         if (!m_label.empty())
             drawLabel();
-        m_guiWindow->draw_children(); 
-        nvgEndFrame(m_vg);
+        draw_focus();
+        m_guiWindow->draw_children();
     }
 
     void Frtk_Window::draw_header()
@@ -100,8 +96,8 @@ namespace FR {
         float headerHeight = m_WindowsStyle.height;
 
         // Gradient background
-        NVGpaint headerPaint = nvgLinearGradient( m_vg, m_x, m_y, m_x, m_y + headerHeight, 
-                                m_WindowsStyle.topColor, m_WindowsStyle.bottomColor);
+        NVGpaint headerPaint = nvgLinearGradient(m_vg, m_x, m_y, m_x, m_y + headerHeight,
+            m_WindowsStyle.topColor, m_WindowsStyle.bottomColor);
 
         nvgBeginPath(m_vg);
         nvgRoundedRect(m_vg, m_x, m_y, m_w, headerHeight, m_WindowsStyle.cornerRadius);
@@ -230,14 +226,14 @@ namespace FR {
                     }
                 }
             }
-        // WE MUST RETURN ALWAYS 1 .. events over the window should be consumed
-        // we dont care if the group dosen't consume the events
-        // Scene should not get events if the mouse was over a frtk-window!!!! IMPORTANT TO REMEMBER!!!
-            if(!m_dragging)
+            // WE MUST RETURN ALWAYS 1 .. events over the window should be consumed
+            // we dont care if the group dosen't consume the events
+            // Scene should not get events if the mouse was over a frtk-window!!!! IMPORTANT TO REMEMBER!!!
+            if (!m_dragging)
                 m_mainWindow->activateNavi();
-            m_guiWindow->handle(events); // we don't care about the results     
+            m_guiWindow->handle(events); // we don't care about the results
         }
-        
+
         return result;
     }
 
@@ -250,28 +246,27 @@ namespace FR {
     {
         const auto& mouse = m_mainWindow->m_sysEvents.mouse; // content-space mouse
         bool result;
-        result = mouse.activeX >= m_x&& mouse.activeX <= m_x + m_w &&
+        result = mouse.activeX >= m_x && mouse.activeX <= m_x + m_w &&
             mouse.activeY >= m_y && mouse.activeY <= m_y + m_h;
         return result;
     }
 
-    void Frtk_Window::remove_child_at(size_t &index){
+    void Frtk_Window::remove_child_at(size_t& index) {
         m_guiWindow->remove_child_at(index);
     }
-    void Frtk_Window::remove_child(std::shared_ptr<Frtk_Widget>& wdg){
+    void Frtk_Window::remove_child(std::shared_ptr<Frtk_Widget>& wdg) {
         m_guiWindow->remove_child(wdg);
     }
-    void Frtk_Window::remove_all(){
+    void Frtk_Window::remove_all() {
         m_guiWindow->remove_all();
     }
     void Frtk_Window::addChild(std::shared_ptr<Frtk_Widget> w) {
         m_guiWindow->addChild(w);
     }
-    bool Frtk_Window::hasHeader() const{
+    bool Frtk_Window::hasHeader() const {
         return m_hasHeader;
     }
     void Frtk_Window::hasHeader(bool val) {
         m_hasHeader = val;
     }
-
 }

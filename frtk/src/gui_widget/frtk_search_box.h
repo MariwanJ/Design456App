@@ -25,74 +25,42 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef FRTK_H
-#define FRTK_H
-/**
- *  PUT HERE ONLY HEADER FILES THAT ARE PRE-COMPILED HEADER FIELS
- *
- * .
- */
+#ifndef  FRTK_SEARCH_BOX_H
+#define  FRTK_SEARCH_BOX_H
 
-#define NOMINMAX    //Prevent min max of MS SDK macros to run
+#include <frtk.h>
+#include <gui_widget/frtk_box.h>
+#include <gui_widget/frtk_draw.h>
 
-#include <array>
 
-#include <algorithm>
-#include <cinttypes>
-#include <cmath>
-#include <fstream>
-#include <filesystem>
-#include <functional>
-#include <iostream>
-#include <limits>
-#include <memory>
-#include <sstream>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdexcept>
-#include <stdio.h>
-#include <stdlib.h>
-#include <tuple>
-#include <unordered_map>
-#include <unordered_set>
-#include <utility>
-#include <variant>
-#include <vector>
-#include <string>
-#include <stdint.h>
-#include <stack>
-#include <optional>
 
-#include <charconv>//for conversion
+    namespace FR {
+        class Frtk_Search_Box : public Frtk_Box {
+        public:
+            Frtk_Search_Box(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b = FRTK_FLAT_BOX);
+            int value(const std::string& str);
 
- //for ResourcePath
-#if defined(_WIN32)
-//#include <windows.h>
-#include <Shlwapi.h>
-#include <io.h>
+        protected:
+            virtual int handle(int ev) override;
+            virtual void draw();
 
-#define access _access_s
-#endif
 
-#ifdef __APPLE__
-#include <libgen.h>
-#include <limits.h>
-#include <mach-o/dyld.h>
-#include <unistd.h>
-#endif
+            virtual void draw_focus() override;
+            virtual void draw_focus(BOX_TYPE t, float X, float Y, float W, float H) override;
+            virtual void draw_focus(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 bkg) override;
+            
 
-#ifdef __linux__
-#include <limits.h>
-#include <libgen.h>
-#include <unistd.h>
 
-#if defined(__sun)
-#define PROC_SELF_EXE "/proc/self/path/"
-#else
-#define PROC_SELF_EXE "/proc/self/exe/"
-#endif
+            std::string m_searchWords;
 
-#endif
-//end for ResourcePath
+            dimPos_float_t m_SearchIconPos;
+            dimPos_float_t m_CloseIconPos;
 
-#endif
+            int m_cursorPos;
+            int m_mark;
+            int m_tab_nav;
+            float m_cornerRadius;
+
+        };
+}
+#endif // ! FRTK_SEARCH_BOX_H

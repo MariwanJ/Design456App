@@ -208,12 +208,11 @@ namespace FR {
         float ratio = camera.getRatio();
         FRTK_CORE_APP_ASSERT(m_vg != nullptr);
         float cornerRadius = 3.0f;
-        nvgBeginFrame(m_vg, (float)m_mainWindow->w(), (float)m_mainWindow->h(), ratio);
         m_guiWindow->redraw();
         drawVerticalDivider();
         if (!m_label.empty())
             drawLabel();
-        nvgEndFrame(m_vg);
+        draw_focus();
     }
 
     void Frtk_ToolBarWin::setLayoutHorizontal() {

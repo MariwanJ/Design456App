@@ -65,5 +65,6 @@ namespace FR {
             applyStyle(); //We still need to apply style
         }
         drawLabel();
+        draw_focus();
     }
 }

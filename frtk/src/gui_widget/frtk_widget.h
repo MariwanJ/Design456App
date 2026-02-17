@@ -182,10 +182,10 @@ namespace FR {
 
         
         void parent(Frtk_Widget* parent);
-        bool has_focus(void);
-        void focus(bool val);
-        void lose_focus();
-        bool take_focus(void);
+        virtual bool has_focus(void);
+        virtual void focus(bool val);
+        virtual void lose_focus();
+        virtual bool take_focus(void);
 
         bool hasBelowMouse() const;
         void set_BelowMouse();
@@ -226,8 +226,8 @@ namespace FR {
         float m_borderWidth;
         font_t m_font;
         BOX_TYPE m_boxType;
-        bool m_has_focus;
-        bool m_cantake_focus;
+        bool m_has_focus;       
+        bool m_cantake_focus;  //is it allowed to get focus 
         iconImageSize_t m_Image;
 
         Callback m_callback;

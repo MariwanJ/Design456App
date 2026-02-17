@@ -45,7 +45,7 @@ namespace FR {
         m_label(label), m_wdgType(FRTK_WIDGET), m_boxType(b), m_has_focus(false),
         m_Image({ nullptr, {{0.f, 0.f}, {0.f, 0.f}} }), m_cellStyle(FR_IMG_LEFT_TO_TEXT),
         m_visible(true), m_dragging(false), m_active(true),
-        m_cantake_focus(false), m_IconTexture(0), m_vg(NULL),
+        m_cantake_focus(true), m_IconTexture(0), m_vg(NULL),
         m_borderColor(glm::vec4(FR_DARKSLATEGREY)), m_borderWidth(NORMAL_BORDER),
         m_callback(default_callback),
         m_color(glm::vec4(FR_GAINSBORO)), m_bkg_color(FR_SILVER) {
@@ -90,6 +90,7 @@ namespace FR {
         if (m_IconTexture != 0)
             drawImage();//Dimensions are already calculated using style
         drawLabel();
+        draw_focus();
     }
     int Frtk_Widget::handle(int ev) {
         throw NotImplementedException();  // this method should be implemented by subclassing the widget
@@ -126,13 +127,25 @@ namespace FR {
     }
 
     void Frtk_Widget::draw_focus() {
-        throw NotImplementedException();  // this method should be implemented by subclassing the widget
+    if (!m_has_focus) 
+        return;
+        nvgBeginPath(m_vg);
+        nvgRect(m_vg, m_x, m_y, m_w, m_h);  
+        nvgStrokeColor(m_vg, nvgRGBAf(0, 0.501f, 1.0f, 1.0f)); // Blue focus outline
+        nvgStrokeWidth(m_vg, 2.0f);
+        nvgStroke(m_vg);
     }
     void Frtk_Widget::draw_focus(BOX_TYPE t, float X, float Y, float W, float H) {
-        throw NotImplementedException();  // this method should be implemented by subclassing the widget
+        if (!m_has_focus)
+            return;
+        nvgBeginPath(m_vg);
+        nvgRect(m_vg, X, Y, W, H);
+        nvgStrokeColor(m_vg, nvgRGBAf(0, 0.501f, 1.0f, 1.0f)); // Blue focus outline
+        nvgStrokeWidth(m_vg, 2.0f);
+        nvgStroke(m_vg);
     }
     void Frtk_Widget::draw_focus(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 bkg) {
-        throw NotImplementedException();  // this method should be implemented by subclassing the widget
+        draw_box(m_vg, t, { {X,Y},{W,H} }, 0.0f, NORMAL_BORDER, nvgRGBAf(0, 0.501f, 1.0f, 1.0f), nvgRGBAf(bkg.r, bkg.g, bkg.b, bkg.a), true);
     }
     void Frtk_Widget::drawLabel() {
         drawTextInBox(m_vg, m_label, m_font);
@@ -416,22 +429,35 @@ namespace FR {
     void Frtk_Widget::focus(bool val) {
         m_has_focus = val;
     }
-
-    bool set_child_focus(Frtk_Widget* w) {
-        // default: do nothing
-        return false;
+    
+    void Frtk_Widget::lose_focus() {
+        // Called when widget loses focus
+        // Group keeps m_savedFocus pointing to last focused child
+        if (m_parent)
+            m_parent->set_child_focus(g_focusedWdgt.prev);
+        g_focusedWdgt.prev = g_focusedWdgt.current;
+        g_focusedWdgt.current = nullptr;
+        m_has_focus = false;
     }
+
     bool Frtk_Widget::take_focus() {
         if (!can_focus()) return false; // widget may be non-focusable
 
-        // Update global tracker
+        if (g_focusedWdgt.current == this)
+            return true;
+
+        // Clear previous focus
+        if (g_focusedWdgt.current)
+            g_focusedWdgt.current->m_has_focus = false;
+
         g_focusedWdgt.prev = g_focusedWdgt.current;
         g_focusedWdgt.current = this;
 
-        // Update group saved focus
-        if (m_parent->m_wdgType == FRTK_GROUP) {
-            set_child_focus(this);
-        }
+        m_has_focus = true;
+
+        if (m_parent && m_parent->m_wdgType == FRTK_GROUP)
+            m_parent->set_child_focus(this);
+
         return true;
     }
 

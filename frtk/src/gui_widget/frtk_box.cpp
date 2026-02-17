@@ -70,12 +70,15 @@ namespace FR {
             glmToNVG(m_color), 
             glmToNVG(m_borderColor), true);
         drawLabel();
+
         if (m_IconTexture != 0) {
             drawImage(m_x, m_y, m_w, m_h);
         }
         else {
             applyStyle(); //We still need to apply style
         }
+
+        draw_focus();
     }
     int Frtk_Box::handle(int e)
     {

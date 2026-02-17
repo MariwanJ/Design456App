@@ -52,6 +52,7 @@ namespace FR {
             applyStyle(); //We still need to apply style
         }
         drawLabel();
+        draw_focus();
     }
     // draw functions: 
     void Frtk_Switch_Button::drawToggleFrame() {

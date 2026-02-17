@@ -547,7 +547,7 @@ namespace FR {
         return false;
     }
 
-    void Fr_Widget::RenderTexture2D() {
+     void Fr_Widget::RenderTexture2D() {
     }
     void Fr_Widget::isActive(bool active) {
         m_active = active;

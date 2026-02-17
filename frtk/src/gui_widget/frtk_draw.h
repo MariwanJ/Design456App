@@ -163,6 +163,9 @@ namespace FR {
         NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
         bool up = false);
 
+    void draw_nice_round_box(NVGcontext* vg, Dim_float_t dim, float r, float t, NVGcolor col, NVGcolor shadowCol, bool up);
+    void draw_nice_squre(NVGcontext* vg, Dim_float_t dim, float r, float t, NVGcolor baseCol, NVGcolor shadowCol, bool pressed);
+
     void draw_box(NVGcontext* vg, BOX_TYPE b, Dim_float_t dim, float cornerRadius, float strokeWidth, NVGcolor c, NVGcolor shadowCol, bool up);
 
     float getTextLeftBearing(NVGcontext* vg, const std::string& text, const font_t& fnt);

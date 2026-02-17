@@ -49,10 +49,6 @@ namespace FR {
         virtual void drawBox(BOX_TYPE t, glm::vec4 c) override;
         virtual void drawBox(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 c) override;
 
-        virtual void draw_focus() override;
-        virtual void draw_focus(BOX_TYPE t, float X, float Y, float W, float H) override;
-        virtual void draw_focus(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 bkg)  override;
-
         int send_event(Frtk_Widget& w, int ev);
 
         virtual int findIndex(const std::shared_ptr<Frtk_Widget>& w) const;
@@ -71,9 +67,10 @@ namespace FR {
         virtual void draw()  override;
         virtual int handle(int ev) override;
         dimPos_float_t mainGui() const override;
+        virtual void lose_focus() override;
 
         std::vector<std::shared_ptr<Frtk_Widget>> m_children;
-        bool set_child_focus(Frtk_Widget* w) override;
+        virtual bool set_child_focus(Frtk_Widget* w) override;
         Frtk_Widget* m_childFocus;  //keep track of focused widget
         Frtk_Widget* m_grabbedChild;
     private:

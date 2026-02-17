@@ -92,6 +92,7 @@ namespace FR {
         }
         if (!m_label.empty())
             drawLabel();
+        draw_focus();
     }
     void Frtk_ToolBar_Button::setThicknessPadding(float padding, float thickness)
     {

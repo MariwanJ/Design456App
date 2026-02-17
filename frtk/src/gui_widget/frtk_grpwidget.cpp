@@ -109,13 +109,7 @@ namespace FR {
             drawBox();
         }
     }
-    void Frtk_GrpWidget::draw_focus() {
-    }
-    void Frtk_GrpWidget::draw_focus(BOX_TYPE t, float X, float Y, float W, float H) {
-    }
-    void Frtk_GrpWidget::draw_focus(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 bkg) {
-    }
-
+ 
     int Frtk_GrpWidget::send_event(Frtk_Widget& w, int ev) {
         return w.handle(ev);
     }
@@ -136,7 +130,6 @@ namespace FR {
         }
         else return nullptr;
     }
-
 
     int Frtk_GrpWidget::remove_child_at(size_t index) {
         if (index > m_children.size()) return -1;
@@ -230,12 +223,17 @@ namespace FR {
         return false;
     }
 
-    void Frtk_Widget::lose_focus() {
+    void Frtk_GrpWidget::lose_focus() {
         // Called when widget loses focus
         // Group keeps m_savedFocus pointing to last focused child
-        if (m_parent) m_parent->set_child_focus(g_focusedWdgt.prev);
+        if (m_parent) 
+            m_parent->set_child_focus(g_focusedWdgt.prev);
         g_focusedWdgt.prev = g_focusedWdgt.current;
         g_focusedWdgt.current = nullptr;
+        m_has_focus = false;
+        for (auto& wdg : m_children) {
+            wdg->lose_focus();
+        }
     }
 
     bool Frtk_GrpWidget::set_child_focus(Frtk_Widget* w) {
@@ -359,6 +357,9 @@ namespace FR {
                 if (wdg->active() && wdg->visible()) {
                     if (wdg->isMouse_inside()) {
                         int result = wdg->handle(ev);
+                        if (ev==FR_LEFT_PUSH){
+                            result|= wdg->take_focus();
+                        }
                         if (result == 1) {
                             return result; // Event is consumed
                         }
