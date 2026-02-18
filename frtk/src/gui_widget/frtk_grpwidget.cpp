@@ -30,24 +30,30 @@
 namespace FR {
     // translate the current keystroke into up/down/left/right for navigation:
     static int navkey() {
-        FRTK_CORE_INFO("HERE..");
-        if (Fr_Window::spWindow == nullptr)
-            return 0; //do nothing
+        if (!Fr_Window::spWindow)
+            return 0;
+
         Fr_Window* win = Fr_Window::spWindow.get();
         auto& ek = win->m_sysEvents.keyB;
 
-        // The app may want these for hotkeys, check key state
-        if (ek.ctrlDown || ek.shiftDown || ek.altDown) return 0;
-        else if (ek.keyDown[GLFW_KEY_TAB]) {
-            if (ek.shiftDown) return GLFW_KEY_RIGHT;
-            else return GLFW_KEY_LEFT;
+        // Ctrl/Alt cancel navigation (used for shortcuts)
+        if (ek.ctrlDown || ek.altDown)
+            return 0;
+
+        // Tab navigation (Shift reverses direction)
+        if (ek.keyDown[GLFW_KEY_TAB]) {
+            return ek.shiftDown ? GLFW_KEY_LEFT : GLFW_KEY_RIGHT;
         }
-        else if (ek.keyDown[GLFW_KEY_RIGHT])      return GLFW_KEY_RIGHT;
-        else if (ek.keyDown[GLFW_KEY_LEFT])       return GLFW_KEY_LEFT;
-        else if (ek.keyDown[GLFW_KEY_UP])         return GLFW_KEY_UP;
-        else if (ek.keyDown[GLFW_KEY_DOWN])       return GLFW_KEY_DOWN;
-        else                                     return 0;
+
+        // Arrow navigation
+        if (ek.keyDown[GLFW_KEY_RIGHT]) return GLFW_KEY_RIGHT;
+        if (ek.keyDown[GLFW_KEY_LEFT])  return GLFW_KEY_LEFT;
+        if (ek.keyDown[GLFW_KEY_UP])    return GLFW_KEY_UP;
+        if (ek.keyDown[GLFW_KEY_DOWN])  return GLFW_KEY_DOWN;
+
+        return 0;
     }
+
 
     Frtk_GrpWidget::Frtk_GrpWidget(NVGcontext* vg, float X, float Y, float W, float H, std::string label, BOX_TYPE b) :
         Frtk_Widget(X, Y, W, H, label, b), m_childFocus(NULL), m_grabbedChild(NULL) {

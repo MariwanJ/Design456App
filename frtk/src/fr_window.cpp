@@ -572,11 +572,10 @@ namespace FR {
         for (int k = 0; k <= GLFW_KEY_LAST; ++k) {
             bool justPressed = (ek.keyDown[k] && !ek.prevKeyDown[k]);
             bool justReleased = (!ek.keyDown[k] && ek.prevKeyDown[k]);
-
-            // You can store these in temp arrays or call handle()
             if (justPressed || justReleased) {
                 ek.lastKey = k;
                 ek.lastKAction = justPressed ? GLFW_PRESS : GLFW_RELEASE;
+                FRTK_CORE_INFO("KEY {}", k);
                 handle(FR_KEYBOARD);
             }
         }
