@@ -97,7 +97,6 @@ namespace FR {
     *   Contains all ImGUI and ImGuimzo functions
     */
     int Fr_Window::renderimGUI(userData_t& data) {
-        static bool opt_fullscreen = true;
         static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
         //FR_PROFILE_FUNCTION();
@@ -161,7 +160,7 @@ namespace FR {
             }
             if (ImGui::BeginMenu("Tools"))
             {
-                ImGui::MenuItem("Show/Hide Camera Options", "", &CamerOptionVisible);
+              //  ImGui::MenuItem("Show/Hide Camera Options", "", &CamerOptionVisible);
                 ImGui::EndMenu();
             }
         }

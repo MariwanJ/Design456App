@@ -54,7 +54,7 @@ namespace FR {
             ReadMeshString(fpath);
         }
         else {
-            assert("ERROR: No mesh provided to the class");
+            FRTK_CORE_APP_ASSERT("ERROR: No mesh provided to the class");
         }
         init(); //This will initializes all Openmesh, vertices, edget ..etc
 
@@ -158,7 +158,7 @@ namespace FR {
         m_shader->wdg_prog->SetUniformMat4("mvp", mvp);
 
         std::shared_ptr<FR::Fr_Window> win = FR::Fr_Window::getFr_Window();
-        assert(win);
+        FRTK_CORE_APP_ASSERT(win);
         if (m_mesh.isMeshSelected())
             m_shader->wdg_prog->SetUniformVec4("color", glm::vec4(FR_YELLOW));       //Object color - not light color
         else

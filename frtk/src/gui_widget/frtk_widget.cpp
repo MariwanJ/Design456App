@@ -126,12 +126,55 @@ namespace FR {
         throw NotImplementedException();  // this method should be implemented by subclassing the widget
     }
 
+
+    bool Frtk_Widget::can_focus() const {
+        return (m_visible && m_active && m_cantake_focus);
+    }
+    bool Frtk_Widget::has_focus(void) {
+        return m_has_focus;
+    }
+    void Frtk_Widget::focus(bool val) {
+        m_has_focus = val;
+    }
+
+    void Frtk_Widget::lose_focus() {
+        // Called when widget loses focus
+        // Group keeps m_savedFocus pointing to last focused child
+        if (m_parent)
+            m_parent->set_child_focus(g_focusedWdgt.prev);
+
+        g_focusedWdgt.prev = g_focusedWdgt.current;
+        g_focusedWdgt.current = nullptr;
+        m_has_focus = false;
+    }
+
+    bool Frtk_Widget::take_focus() {
+        if (!can_focus()) return false; // widget may be non-focusable
+
+        if (g_focusedWdgt.current == this)
+            return true;
+
+        // Clear previous focus
+        if (g_focusedWdgt.current)
+            g_focusedWdgt.current->m_has_focus = false;
+
+        g_focusedWdgt.prev = g_focusedWdgt.current;
+        g_focusedWdgt.current = this;
+
+        m_has_focus = true;
+
+        if (m_parent && m_parent->m_wdgType == FRTK_GROUP)
+            m_parent->set_child_focus(this);
+
+        return true;
+    }
+
     void Frtk_Widget::draw_focus() {
     if (!m_has_focus) 
         return;
         nvgBeginPath(m_vg);
         nvgRect(m_vg, m_x, m_y, m_w, m_h);  
-        nvgStrokeColor(m_vg, nvgRGBAf(0, 0.501f, 1.0f, FOCUS_OPACITY_VALUE)); // Blue focus outline
+        nvgStrokeColor(m_vg, nvgRGBAf(0, 0.501f, 1.0f, FRTK_FOCUS_OPACITY_VALUE)); // Blue focus outline
         nvgStrokeWidth(m_vg, 2.0f);
         nvgStroke(m_vg);
     }
@@ -140,7 +183,7 @@ namespace FR {
             return;
         nvgBeginPath(m_vg);
         nvgRect(m_vg, X, Y, W, H);
-        nvgStrokeColor(m_vg, nvgRGBAf(0, 0.501f, 1.0f, FOCUS_OPACITY_VALUE)); // Blue focus outline
+        nvgStrokeColor(m_vg, nvgRGBAf(0, 0.501f, 1.0f, FRTK_FOCUS_OPACITY_VALUE)); // Blue focus outline
         nvgStrokeWidth(m_vg, 2.0f);
         nvgStroke(m_vg);
     }
@@ -420,47 +463,6 @@ namespace FR {
         drawImage();
     }
 
-    bool Frtk_Widget::can_focus() const {
-        return (m_visible && m_active && m_cantake_focus);
-    }
-    bool Frtk_Widget::has_focus(void) {
-        return m_has_focus;
-    }
-    void Frtk_Widget::focus(bool val) {
-        m_has_focus = val;
-    }
-    
-    void Frtk_Widget::lose_focus() {
-        // Called when widget loses focus
-        // Group keeps m_savedFocus pointing to last focused child
-        if (m_parent)
-            m_parent->set_child_focus(g_focusedWdgt.prev);
-
-        g_focusedWdgt.prev = g_focusedWdgt.current;
-        g_focusedWdgt.current = nullptr;
-        m_has_focus = false;
-    }
-
-    bool Frtk_Widget::take_focus() {
-        if (!can_focus()) return false; // widget may be non-focusable
-
-        if (g_focusedWdgt.current == this)
-            return true;
-
-        // Clear previous focus
-        if (g_focusedWdgt.current)
-            g_focusedWdgt.current->m_has_focus = false;
-
-        g_focusedWdgt.prev = g_focusedWdgt.current;
-        g_focusedWdgt.current = this;
-
-        m_has_focus = true;
-
-        if (m_parent && m_parent->m_wdgType == FRTK_GROUP)
-            m_parent->set_child_focus(this);
-
-        return true;
-    }
 
     bool Frtk_Widget::hasBelowMouse() const {
         return g_focusedWdgt.g_underMouse == this;

@@ -32,9 +32,8 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
-
+#include <frtk.h>
 namespace FR {
-
 #ifdef _WIN32
 #include <windows.h>
     struct WinUtf8Console { WinUtf8Console() { SetConsoleOutputCP(CP_UTF8); } };

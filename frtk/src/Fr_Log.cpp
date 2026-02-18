@@ -25,7 +25,7 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include <Fr_Log.h>
+#include <fr_log.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 namespace FR {
     std::shared_ptr<spdlog::logger> Fr_Log::s_FRTKLogger;

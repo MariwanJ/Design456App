@@ -41,7 +41,8 @@ namespace FR {
     std::shared_ptr < unsigned char> loadImage::getImage(std::string img) {
         int width, height, channels;
         // unsigned char* imgg = stbi_load(EXE_CURRENT_DIR + "/resources/48/home.png", &width, &height, &channels, 0);
-        unsigned char* imgg = stbi_load(std::string(EXE_CURRENT_DIR+"/resources/48/home.png").c_str(), &width, &height, &channels, 0);
+        unsigned char* imgg = stbi_load(img.c_str(), &width, &height, &channels, 0);
+        //unsigned char* imgg = stbi_load(std::string(EXE_CURRENT_DIR+"/resources/48/home.png").c_str(), &width, &height, &channels, 0);
         if (imgg == NULL) {
             printf("Error in loading the image\n");
             exit(1);

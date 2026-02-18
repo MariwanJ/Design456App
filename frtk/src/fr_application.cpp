@@ -49,6 +49,9 @@ namespace FR {
 
     int Fr_Application::run(int argc, char** argv)
     {
+        (void) argc; //avoid warning 
+        (void) argv; //avoid warning 
+
         createGLFWwindow();
         return GLFWrun();
     }

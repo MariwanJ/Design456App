@@ -192,18 +192,36 @@ namespace FR {
         m_WindowsStyle = STYLE;
     }
     bool Frtk_Window::Header_clicked(void) {
-        const auto& mouse = m_mainWindow->m_sysEvents.mouse; // content-space mouse
+        const auto& mouse = m_mainWindow->m_sysEvents.mouse;
         bool result = mouse.activeX >= m_x && mouse.activeX <= m_x + m_w &&
             mouse.activeY >= m_y && mouse.activeY <= m_y + m_WindowsStyle.height;
         return result;
     }
     int Frtk_Window::handle(int events)
     {
-        auto& mouse = m_mainWindow->m_sysEvents.mouse;
+       
+        if (events == FR_LEFT_PUSH)
+        {
+            if (isMouse_inside() && g_focusedWdgt.keyboardOwner != this)
+            {
+                // Window gains keyboard
+                if (g_focusedWdgt.keyboardOwner)
+                    g_focusedWdgt.keyboardOwner->m_guiWindow->handle(FR_UNFOCUS);
+
+                g_focusedWdgt.keyboardOwner = this;
+            }
+            else if (!isMouse_inside() && g_focusedWdgt.keyboardOwner == this)
+            {
+                // Click outside this window -> lose keyboard
+                g_focusedWdgt.keyboardOwner = nullptr;
+            }
+        }
+
         int result = 0;
         if (isMouse_inside() || m_dragging) {
             m_mainWindow->deactivateNavi();
             result = 1;
+            auto& mouse = m_mainWindow->m_sysEvents.mouse;
             if (m_hasHeader) {
                 if (Header_clicked() || m_dragging) {
                     if (events == FR_LEFT_DRAG_PUSH) {
@@ -229,7 +247,6 @@ namespace FR {
                 m_mainWindow->activateNavi();
             m_guiWindow->handle(events); // we don't care about the results
         }
-
         return result;
     }
 

@@ -31,7 +31,7 @@ namespace FR {
     Frtk_Button::Frtk_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :
         Frtk_Box(vg, x, y, w, h, l, b), m_value(-1), m_name(""), m_tooltips("")
     {
-        assert(vg != NULL);
+        FRTK_CORE_APP_ASSERT(vg != NULL);
         m_value = m_oldValue = 0;
         m_wdgType = FRTK_NORMAL_BUTTON;
         m_color = glm::vec4(FR_LIGHT_GRAY);
@@ -56,14 +56,14 @@ namespace FR {
         if (m_value == 0) {
             //UP
             draw_box(m_vg, m_boxType, { { m_x,m_y }, { m_w,m_h } }, 0.0f, THICK_BORDER,
-                nvgRGBAf(actualColor.r, actualColor.g, actualColor.b, actualColor.a),
+                glmToNVG(actualColor),
                 glmToNVG(m_borderColor), true);
         }
         else if (m_value == 1)
         {
             //DOWN
             draw_box(m_vg, (BOX_TYPE)((int)(m_boxType)+1), { { m_x,m_y }, { m_w,m_h } }, 0.0f, THICK_BORDER,
-                nvgRGBAf(actualColor.r, actualColor.g, actualColor.b, actualColor.a),
+                glmToNVG(actualColor),
                 glmToNVG(m_borderColor), false);
         }
         else

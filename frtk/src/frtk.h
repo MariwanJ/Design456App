@@ -62,6 +62,7 @@
 #include <stdint.h>
 #include <stack>
 #include <optional>
+#include <cstring>
 
 #include <charconv>//for conversion
 

@@ -57,7 +57,7 @@ namespace FR {
         FRTK_ALIGN_CENTER_RIGHT = FRTK_ALIGN_CENTER | FRTK_ALIGN_RIGHT,
         FRTK_ALIGN_CENTER_CENTER = FRTK_ALIGN_CENTER | FRTK_ALIGN_CENTER,
 
-    };
+    }LBL_ALIGN;
     typedef enum BOX_TYPE {
         FRTK_NO_BOX                =  0,
         FRTK_FLAT_BOX              =  1,
@@ -97,7 +97,7 @@ namespace FR {
         FRTK_OSHADOW_UP_BOX        = 26,
         FRTK_OSHADOW_DOWN_BOX      = 27,
                                       
-    };
+    }BOX_TYPE;
 
     typedef struct {
         dimPos_float_t pos  ;

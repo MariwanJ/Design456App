@@ -62,15 +62,13 @@ namespace FR {
                 FRTK_OVALFLAT_BOX,
 
         */
-        static int counter = 1;
-        static int i= 0;
         auto window = std::make_shared<Frtk_Window>(500.f, 200.f, 500.f, 500.f, "Testing Buttons");
         std::shared_ptr<Frtk_Box> box;
         std::string imagePath = EXE_CURRENT_DIR + "/resources/icons/32x32/House-32x32.png";
 
         float FF, NN;
         FF = NN = 40;
-        float next = FF + 5;
+        //float next = FF + 5;
         std::shared_ptr<Frtk_Check_Button> button2 = std::make_shared<Frtk_Check_Button>(window->getContext(), 10.0f, 50.0f, 200.0f, 56.0f, "button244", FRTK_UP_BOX);
         std::shared_ptr<Frtk_Button> button3       = std::make_shared<Frtk_Button>(window->getContext(), 10.0f, 150.0f, 200.0f, 56.0f, "button3", FRTK_UP_BOX);
         std::shared_ptr<Frtk_Button> button1       = std::make_shared<Frtk_Button>(window->getContext(), 10.0f, 250.0f, 200.0f, 56.0f, "demo2 button1", FRTK_UP_BOX);
@@ -104,7 +102,9 @@ namespace FR {
         window->addChild(button22);
         window->addChild(button33);
 
+       //static int counter = 1;
        //for (int i = 1; i < 4; i++){
+       // 
        //     for (int j=0;j<9;j++)
        //     {
        //         std::string str= std::to_string(counter);

@@ -50,7 +50,7 @@ namespace FR {
     __pragma(message("ERROR: nvgRGBA (integer RGBA) is forbidden. " \
                      "Use nvgRGBAf(float r,g,b,a) or glmToNVG(glm::vec4) instead.")) \
     static_assert(false, "ERROR: nvgRGBA (integer RGBA) is forbidden. " \
-                         "Use nvgRGBAf(float r,g,b,a) or glmToNVG(glm::vec4) instead.");                                                                                                                   //*
+                         "Use nvgRGBAf(float r,g,b,a) or glmToNVG(glm::vec4) instead.");
 //***********************************************************************************************************************************
 
     typedef enum FRTK_PICTXT_STYLE
@@ -80,9 +80,9 @@ namespace FR {
         FR_IMG_LEFT_TO_TEXT = 6,
         // picture Right To Text and (Center, Left & Right)
         FR_IMG_RIGHT_TO_TEXT = 7
-    };
+    }FRTK_PICTXT_STYLE;
 
-#define FOCUS_OPACITY_VALUE 0.35f
+
 
     class FRTK_API Frtk_Widget {
         friend class Frtk_GrpWidget;
@@ -103,7 +103,7 @@ namespace FR {
           Main this toolkit window, SHOULD consume the event
           so we prevent Scene get the event*/
 
-        virtual bool Frtk_Widget::isMouse_inside() const;
+        virtual bool isMouse_inside() const;
 
         void label(const std::string& lbl);
         const std::string& label() const;
@@ -204,7 +204,7 @@ namespace FR {
     protected:
         virtual void draw(void);
         virtual int handle(int ev);
-        virtual bool set_child_focus(Frtk_Widget* w) { return false; } // default: do nothing
+        virtual bool set_child_focus(Frtk_Widget* w) { (void)w;  return false; } // default: do nothing
         void do_callback();
        
 
@@ -251,6 +251,7 @@ namespace FR {
         Frtk_Widget* current;
         Frtk_Widget* prev;
         Frtk_Widget* g_underMouse;
+        Frtk_Window* keyboardOwner;
     }global_focus_tracker_t;
 
     extern global_focus_tracker_t g_focusedWdgt;

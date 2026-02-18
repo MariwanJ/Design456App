@@ -35,7 +35,7 @@ namespace FR {
         m_specialDrawingSize( 0.f), m_padding(2.0f)
     {
         m_vg = vg;
-        assert(vg != NULL);
+        FRTK_CORE_APP_ASSERT(vg != NULL);
         m_font.size.w = w;
         m_font.size.h = h;
         m_font.hAlign = NVG_ALIGN_LEFT;

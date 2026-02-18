@@ -168,7 +168,7 @@ namespace FR {
          * \return      One if no events remained and all consumed, 0 if the events needs further treatment
          */
         int handle(int ev);
-        bool Fr_Scene::pickAFace(size_t IndexOfclosestItem, OpenMesh::FaceHandle& pickedFace, float& outT);
+        bool pickAFace(size_t IndexOfclosestItem, OpenMesh::FaceHandle& pickedFace, float& outT);
         Fr_Camera m_cameras[TOTAL_CAMS];
         std::vector<SceneItemStruct> m_world;
         

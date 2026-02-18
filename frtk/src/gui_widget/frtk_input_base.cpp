@@ -71,7 +71,7 @@ namespace FR {
     {
         NVGpaint bg;
         // Edit
-        bg = nvgBoxGradient(m_vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a), nvgRGBAf(m_bkg_color.r, m_bkg_color.g, m_bkg_color.b, m_bkg_color.a));
+        bg = nvgBoxGradient(m_vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, glmToNVG(m_color), glmToNVG(m_bkg_color));
         nvgBeginPath(m_vg);
         nvgRoundedRect(m_vg, x + 1, y + 1, w - 2, h - 2, 4 - 1);
         nvgFillPaint(m_vg, bg);

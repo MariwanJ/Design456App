@@ -34,9 +34,9 @@ namespace FR{
 
 
     //TODO: Temporary code -- FIXME
-    typedef struct FontData_t {
+    typedef struct {
         int fontNormal, fontBold, fontIcons, fontEmoji;
-    };    
+    }FontData_t;
     
     typedef struct {
         float height;

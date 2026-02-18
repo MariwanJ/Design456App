@@ -85,8 +85,8 @@ namespace FR {
 
     void Frtk_Search_Box::draw() {
         draw_nice_round_box(m_vg, { {m_x,m_y}, {m_w,m_h} }, m_cornerRadius, NORMAL_BORDER,
-            nvgRGBAf(m_color.r, m_color.g, m_color.b, m_color.a),
-            nvgRGBAf(m_bkg_color.r, m_bkg_color.g, m_bkg_color.b, m_bkg_color.a), true);
+            glmToNVG(m_color),
+            glmToNVG(m_bkg_color), true);
 
         //draw text :
         nvgFontSize(m_vg, m_font.fontSize);
@@ -115,7 +115,7 @@ namespace FR {
     void Frtk_Search_Box::draw_focus() {
         if (!m_has_focus) 
             return;
-        auto col = nvgRGBAf(0, 0.501f, 1.0f, FOCUS_OPACITY_VALUE);
+        auto col = nvgRGBAf(0, 0.501f, 1.0f, FRTK_FOCUS_OPACITY_VALUE);
         nvgBeginPath(m_vg);
         nvgRoundedRect(m_vg, m_x + 0.5f, m_y + 0.5f, m_w - 1, m_h - 1, m_cornerRadius);
         nvgStrokeColor(m_vg, col);

@@ -35,13 +35,15 @@ namespace FR {
         
         auto window = std::make_shared<Frtk_Window>(500.f, 200.f, 500.f, 500.f, "Testing buttons, toolbars", FRTK_UP_BOX);
 
-        std::shared_ptr<Frtk_Search_Box> input1 = std::make_shared<Frtk_Search_Box>(window->getContext(), 10.0f, 10.0f, 300.0f, 100.0f, "Search", FRTK_UP_BOX);
-        std::shared_ptr<Frtk_Input_Base> input2 = std::make_shared<Frtk_Input_Base>(window->getContext(), 10.0f, 120.0f, 300.0f, 25.0f, "Search", FRTK_UP_BOX);
-        input1->value("Please search for something");
-        input2->value("Please search for something");
-
+        std::shared_ptr<Frtk_Search_Box> input1 = std::make_shared<Frtk_Search_Box>(window->getContext(), 10.0f, 10.0f, 200.0f, 100.0f, "Search1", FRTK_UP_BOX);
+        std::shared_ptr<Frtk_Input_Base> input2 = std::make_shared<Frtk_Input_Base>(window->getContext(), 10.0f, 120.0f, 300.0f, 25.0f, "Search2", FRTK_UP_BOX);
+        std::shared_ptr<Frtk_Input_Base> input3 = std::make_shared<Frtk_Input_Base>(window->getContext(), 210.0f, 10.0f, 200.0f, 25.0f, "Search3", FRTK_UP_BOX);
+        input1->value("Please search1 for something");
+        input2->value("Please search2 for something");
+        input3->value("Please search3 ");
         window->addChild(input1);
         window->addChild(input2);
+        window->addChild(input3);
          return window;
     }
 }

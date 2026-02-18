@@ -90,7 +90,7 @@ namespace FR {
         void lbl_visible(bool v);
         bool lbl_visible();
         void lblType(uint8_t lbltype);
-        const uint8_t lblType(void);
+        uint8_t lblType(void);
 
 
     protected:

@@ -103,7 +103,7 @@ namespace FR {
 
 
     //    std::shared_ptr<FR::Fr_Window> win = FR::Fr_Window::getFr_Window();
-    //    assert(win);
+    //    FRTK_CORE_APP_ASSERT(win);
 
     //    userData_ data;
     //    win->activeScene->getActiveCamera().getCamData(data);
@@ -131,9 +131,9 @@ bool intersectLineSegment3D(const ray_t& ray, const std::vector<glm::vec3>& line
 {
     if (line.size() < 2)
         return false;
-
+    
     std::shared_ptr<FR::Fr_Window> win = FR::Fr_Window::getFr_Window();
-    assert(win);
+    FRTK_CORE_APP_ASSERT(win);
     const glm::vec3& A = line[0];
     const glm::vec3& B = line[1];
     glm::mat4 view = win->activeScene->getActiveCamera().GetViewMatrix();

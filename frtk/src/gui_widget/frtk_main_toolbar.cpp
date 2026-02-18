@@ -180,7 +180,7 @@ std::shared_ptr<Frtk_ToolBarWin> Fr_Window::createSelectionToolbar() {
         FRTK_TOOLBAR_HEIGHT, "",
         tools2, true,
         FRTK_FLAT_BOX, FRTK_TOGGLE_BUTTON);
-    int childrens = tb2->m_guiWindow->getChildrenNo();
+    size_t childrens = tb2->m_guiWindow->getChildrenNo();
     for (size_t i = 0; i < childrens; ++i) {
         tb2->m_guiWindow->getChildAt(i)->cellStyle(FR_IMG_LEFT_TO_TEXT); //Make both be in the center;
     }

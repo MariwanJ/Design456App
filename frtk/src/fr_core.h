@@ -30,9 +30,7 @@
 
 #include <frtk.h>
 
-
-
-//  OpenGL / GLAD / GLFW 
+//  OpenGL / GLAD / GLFW
 #if defined(__APPLE__)
 #error FRTK NOT IMPLEMENTED FOR APPLE
 #else
@@ -40,8 +38,9 @@
 #include <glad/glad.h>          // Modern OpenGL loader
 #include <GLFW/glfw3.h>         // GLFW context and window
 #include <GLFW/glfw3native.h>   // Native access (X11 on Linux)
+#include <fr_core_macros.h>
 
-//NanoVG 
+//NanoVG
 #include <nanovg.h>
 
 #undef None                      // Fix X11 macro conflict
@@ -49,7 +48,6 @@
 
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
-
 
 // Standard Libraries
 #include <string>
@@ -64,35 +62,9 @@
 #include <unistd.h>  // getcwd
 #endif
 
-// Get Current Directory 
-#if defined(_WIN32) || defined(_WIN64)
-#define GET_CURRENT_DIRECTORY() []() -> std::string { \
-        char buffer[MAX_PATH]; \
-        if (_getcwd(buffer, sizeof(buffer)) != NULL) { \
-            return std::string(buffer); \
-        } else { \
-            return std::string("Error: Unable to get current directory."); \
-        } \
-    }()
-#else
-#include <limits.h> // For PATH_MAX
-#include <cstring>  // For strerror
-#include <cerrno>   // For errno
-
-#define GET_CURRENT_DIRECTORY() []() -> std::string { \
-        char buffer[PATH_MAX]; \
-        if (getcwd(buffer, sizeof(buffer))) { \
-            return std::string(buffer); \
-        } else { \
-            return std::string("Error: ") + strerror(errno); \
-        } \
-    }()
-#endif
-
-// Logging / Instrumentation 
+// Logging / Instrumentation
 #include <fr_constants.h>
 #include <Fr_Log.h>
-
 
 #define SPDLOG_WCHAR_TO_UTF8_SUPPORT
 #define SPDLOG_FMT_EXTERNAL
@@ -100,24 +72,23 @@
 #include <spdlog/fmt/ostr.h>
 #include "../instrumentation/Instrumentor.h"
 
-// ImGui / GLM / Widgets 
+// ImGui / GLM / Widgets
 #include <glm/glm.hpp>
 #include <imgui.h>
 #include <ImGuizmo.h>
-#include "widgets/imgui_toolbars.h"
 #include <fr_openmesh.h>
 
 // ImGui Fonts
 #include "imguiFont/shapes_ttf.h"
 
-// STB Image 
+// STB Image
 #include "../vendor/stb_image/src/stb_image.h"
 
-// OpenMesh 
+// OpenMesh
 // Must be included after GLAD/OpenGL
 using MyMesh = FR::FrOpenMesh;
 
-// FRTK Core 
+// FRTK Core
 namespace FR {
     // VBO buffers
    // VBO buffers
@@ -139,59 +110,6 @@ namespace FR {
     extern std::string fontPath;
     extern std::string iconPath;
 
-// FR DEBUG BREAK, USE IT WHEN YOU WANT TO BREAK WITH SOME IF CONDITION 2026/02/09
-#if defined(_WIN32)
-#define FR_DEBUG_BREAK __debugbreak()
-#elif defined(__linux__) || defined(__APPLE__)
-#include <signal.h>
-#define FR_DEBUG_BREAK raise(SIGTRAP)
-#else
-#define FR_DEBUG_BREAK ((void)0)
-#endif
-
-// Assertions
-#ifdef FRTK_ENABLE_ASSERTS
-#define FRTK_CORE_APP_ASSERT(x, ...) do { if(!(x)) FR_DEBUG_BREAK; } while(0)
-#else
-#define FRTK_CORE_APP_ASSERT(x, ...)
-#endif
-
-// OpenGL error helpers
-#define GLResetError() while(glGetError() != GL_NO_ERROR)
-#ifdef _DEBUG
-#define glCheckFunc(x) do { GLResetError(); x; FRTK_CORE_APP_ASSERT(GLLogCall()); } while(0)
-#else
-#define glCheckFunc(x) x
-#endif
-
-// Cross-platform API export macros
-#if defined(_WIN32)
-#ifdef FR_BUILD_STATIC
-#define FRTK_API
-#else
-#ifdef FR_BUILD_DLL
-#define FRTK_API __declspec(dllexport)
-#else
-#define FRTK_API __declspec(dllimport)
-#endif
-#endif
-#elif defined(__linux__)
-#ifdef FR_BUILD_STATIC
-#define FRTK_API
-#else
-#ifdef FR_BUILD_DLL
-#define FRTK_API __attribute__((visibility("default")))
-#else
-#define FRTK_API
-#endif
-#endif
-#else
-#error FRTK NOT IMPLEMENTED FOR THIS PLATFORM
-#endif
-
-#define setBIT(x) (1 << x)
-#define clearBIT(x) (0 << x)
-
     std::string separateFN(std::string& st);
 
     class Fr_Window;
@@ -205,12 +123,6 @@ namespace FR {
 #define RIGHT         6
 #define LEFT          7
 
-    class NotImplementedException : public std::logic_error
-    {
-    public:
-        NotImplementedException() : std::logic_error{ "not implemented." } {}
-    };
-
 // Function to convert string to int
     uint8_t getCameraIndex(const char* name);
     const char* getCameraName(uint8_t v);
@@ -220,7 +132,7 @@ namespace FR {
         glm::vec3 position;
         glm::vec3 direction;
     }ray_t;
-    
+
     typedef struct {
         float w;
         float h;
@@ -251,9 +163,6 @@ namespace FR {
         dimSize_int_t size;
     } screenDim_t;
 
-
-
-
     typedef struct {
         glm::vec3 cam_pos_;
         glm::vec3 direction_;
@@ -265,23 +174,6 @@ namespace FR {
         float orthoSize_;
         uint8_t camType_;
     }userData_t;
-
-
-    static bool GLLogCall()
-    {
-        bool ok = true;
-        GLenum error;
-
-        while ((error = glGetError()) != GL_NO_ERROR)
-        {
-            std::cout << "[OpenGL Error] {" << error << "}\n";
-            ok = false;
-        }
-
-        std::cout << std::flush;
-        return ok;
-    }
-
 
     /**
 * Holds the light information
@@ -326,22 +218,18 @@ namespace FR {
         FR_BSPLINE,
     };
     /*
-    Events explanations: 
-    1- FR_FOCUS :(Click example When you click a widget :    
-                        -FLTK sends FL_PUSH        
-                        -Widgets handle() runs
-                        -If the widget does NOT call Fl::focus(this)  -> nothing happens        
-                        -Keyboard focus stays where it was
+    Events explanations:
+    1- FR_FOCUS :
     2- FR_XXX_PUSH ->    Mouse button xxx pushed
     3- FR_XXX_RELEASE    Mouse button xxx released
     4- FR_XXX_DRAG_PUSH  Mouse button xxx is pushed continuously and MOUSE-MOVE also happen
-    5- FR_MOUSE_MOVE     Mouse moves 
+    5- FR_MOUSE_MOVE     Mouse moves
     6- FR_SCROLL         Scroll wheel rotated
     7- FR_ENTER          Enter pressed (Left - Right)
-    8- FR_KEYBOAR        Keyboard pressed 
+    8- FR_KEYBOAR        Keyboard pressed
     9- FR_CLOSE          User clicks the window manager X button
                          User presses Alt+F4 / Cmd+W
-    10-FR_DEACTIVATE     Windows sends the event .. 
+    10-FR_DEACTIVATE     Windows sends the event ..
        FR_ACTIVATE
     11-FR_HIDE/SHOW      Windows sends these event to childrens
     12-FR_WINDOW_RESIZE/ Windows sends these events
@@ -389,35 +277,30 @@ You call window->hide()
 
     //Define all kind of MESH-widgets here, YOU MUST DO THIS!!
     typedef enum NODETYPE {
-        FR_NODE                 = 0,
-        FR_GROUP                = 100,
-        FR_LIGHT                = 101,
-        FR_AXIS3D               = 102,
-        FR_WIDGET               = 103,
-        FR_WINDOW               = 104,
-        FR_GRID                 = 105,
-   //   FR_TRANSFORM            =    ,
-   //   FR_CAMERA               =    ,
+        FR_NODE = 0,
+        FR_GROUP = 100,
+        FR_LIGHT = 101,
+        FR_AXIS3D = 102,
+        FR_WIDGET = 103,
+        FR_WINDOW = 104,
+        FR_GRID = 105,
+        //   FR_TRANSFORM            =    ,
+        //   FR_CAMERA               =    ,
 
-
-        //point-based widgets 2D
-        FR_POINT_WIDGET         =10000,
-
+             //point-based widgets 2D
+        FR_POINT_WIDGET = 10000,
 
         //line/edge-based widgets 2D
-        FR_LINE_WIDGET          =20000,
-        
-        
+        FR_LINE_WIDGET = 20000,
+
         //Face based widgets (polygon) 2D
-        FR_FACE_WIDGET          =30000,
-        
+        FR_FACE_WIDGET = 30000,
+
         //3D based widgets
-        FR_SHAPE                =40000,
-
-
+        FR_SHAPE = 40000,
     }NODETYPE;
 
-    //Update this as needed - FRTK GUI ENUM 
+    //Update this as needed - FRTK GUI ENUM
     typedef enum WIDGTYPE {
         FRTK_WIDGET,
         FRTK_GROUP,
@@ -427,15 +310,13 @@ You call window->hide()
         FRTK_NORMAL_BUTTON,
         FRTK_RETURN_BUTTON,
         FRTK_REPEAT_BUTTON,
-        FRTK_LIGHT_BUTTON ,
+        FRTK_LIGHT_BUTTON,
         FRTK_SWITCH_BUTTON,
         FRTK_TOGGLE_BUTTON,
-        FRTK_CHECK_BUTTON ,
-        FRTK_ROUND_BUTTON ,
+        FRTK_CHECK_BUTTON,
+        FRTK_ROUND_BUTTON,
         FRTK_TOGGLE_ROUND_BUTTON,
         FRTK_TOGGLE_LIGHT_BUTTON,
-
-
 
         FRTK_LABEL,
         FRTK_INPUT,
@@ -447,12 +328,12 @@ You call window->hide()
         FRTK_HSCROLL,
         FRTK_IMAGE,
         FRTK_TOOLBAR,           //No separate FRTK windows will be created
-        FRTK_TOOLBARWIN,        //Separate FRTK Window is created 
+        FRTK_TOOLBARWIN,        //Separate FRTK Window is created
         FRTK_TOOLBARWIN_TOOGLE, //Separate FRTK Window is created - but buttons are TOGGLE buttons
         FRTK_TOOLBAR_BUTTON,
-    };
+    } WIDGTYPE;
 
-    typedef enum
+    typedef enum SelectionMode
     {
         MESH = 0,
         FACE,
@@ -488,7 +369,6 @@ You call window->hide()
 
         int button;              // which button triggered last action
         int isDClick;            // double click flag
-
     }mouse_t;
 
     typedef struct {
@@ -503,13 +383,13 @@ You call window->hide()
         bool ctrlDown;
         bool altDown;
         bool superDown;
-}Keybaord_t;
-    
-    /*Structure changed to prevent bugs 
-    (Keyboards events are separated from mouse 
+    }Keybaord_t;
+
+    /*Structure changed to prevent bugs
+    (Keyboards events are separated from mouse
      as some of the variable names are the same)*/
     typedef struct {
-        mouse_t mouse;  
+        mouse_t mouse;
         Keybaord_t keyB;
     } Fr_InputEvent_t;
 
@@ -520,8 +400,6 @@ You call window->hide()
         float opacity;
     } iconImageSize_t;
 
-    //TODO: FIX ME .. IS THIS CORRECT ??? 
-    const float ICONE_IMAGE_PADDING = 8.0f;
-
+    extern float mouseClickCircleRadious;
 } //FR
 #endif

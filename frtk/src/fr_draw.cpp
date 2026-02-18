@@ -83,6 +83,9 @@ namespace FR {
             FRTK_CORE_INFO("NOT IMPLEMENTED YET!");
             break;
         }
+        case FR_NOT_DEFINED: {
+            FRTK_CORE_WARN(" UNDEFINED MESH 2D DRAWING");
+        }
         }
         if (type == FR_NOT_DEFINED)
             return;
@@ -93,7 +96,7 @@ namespace FR {
     {
         glCheckFunc(glBindVertexArray(m_vao));
         glCheckFunc(glLineWidth(m_lineWidth));
-        switch (lineType()) {
+        switch (m_lineType) {
         case FR_POINT: {
         }
         case FR_LINES: {
@@ -120,6 +123,9 @@ namespace FR {
         case FR_BSPLINE: {
             FRTK_CORE_INFO("NOT IMPLEMENTED YET!");
             break;
+        }
+        case FR_NOT_DEFINED: {
+            FRTK_CORE_INFO("NOT DEFINED OBJECT!");
         }
         }
         glCheckFunc(glBindVertexArray(0));
@@ -200,7 +206,6 @@ namespace FR {
 
         if (m_mesh.has_face_sel() > 0) {
             unsigned int indexCounter = 0;
-            unsigned int i = 0;
             for (const auto& face : m_mesh.faces()) {
                 if (!m_mesh.isFaceSelected(face)) continue;
 
@@ -262,7 +267,6 @@ namespace FR {
         if (m_mesh.has_vert_sel() > 0) {
             //2 Points for each edge
 
-            unsigned int indexCounter = 0;
             for (const auto& vh : m_mesh.vertices())
             {
                 if (!m_mesh.isVertexSelected(vh)) continue;

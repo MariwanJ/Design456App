@@ -34,7 +34,7 @@ project "imGui"
          "-Wextra",
          "-Wconversion",
          "-Wfloat-conversion",
-         "-Werror",
+      ---   "-Werror",
          "-fPIC",
          "-ggdb",
          "-fdiagnostics-color=auto",

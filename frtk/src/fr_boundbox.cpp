@@ -32,9 +32,19 @@ namespace FR {
     //******************************************************************************************************
     cBoundBox3D::cBoundBox3D(bool type) :m_threeD(type)
     {
-        m_minX = m_maxX = m_minY = m_maxY = m_minY = m_maxY = m_Xlength = m_Ylength = m_Zlength = m_minZ = m_maxZ = 0.0f;
+        m_minX      = 0.0f;  
+        m_maxX      = 0.0f;  
+        m_minY      = 0.0f;  
+        m_maxY      = 0.0f;  
+        m_minY      = 0.0f;  
+        m_maxY      = 0.0f;  
+        m_Xlength   = 0.0f;  
+        m_Ylength   = 0.0f;  
+        m_Zlength   = 0.0f;  
+        m_minZ      = 0.0f;  
+        m_maxZ      = 0.0f;  
+        
         pad = 0.1f;
-
     }
 
     float cBoundBox3D::minX()

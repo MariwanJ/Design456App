@@ -141,7 +141,7 @@ namespace FR {
         }
 
         std::vector<unsigned int> indices;
-        for (int i = 0; i <= vertices.size(); i++) {
+        for (size_t i = 0; i <= vertices.size(); i++) {
             indices.push_back(i);
         }
         std::shared_ptr<Fr_Primatives> primative = std::make_shared<Fr_Primatives>();

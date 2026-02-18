@@ -61,6 +61,8 @@ namespace FR {
 #define FRTK_TOOLBAR_BUTTON_HEGHT 32.0f
 #define FRTK_TOOLBAR_BUTTON_FONT_SIZE 14
 
+#define FRTK_FOCUS_OPACITY_VALUE 0.35f
+
 
 #define MAX_FOV_ZOOM 165
 #define MAX_CAMERAS 8  //JUST FOR CLARIFICATION - SHOULD NOT BE CHANGE WITHOUT CHAINING uint8_t menu
@@ -217,20 +219,16 @@ typedef T FR_COLOR;
 
 };
 
-#define WITH_ALPHA(c, alpha) ((c.A *= (alpha), c.A = (c.A < 0.0f ? 0.0f : (c.A > 1.0f ? 1.0f : c.A)), c.R), (c.G), (c.B), (c.A))
 
     namespace SPECULAR {
         //Material             BaseColor(R, G, B)
 #define FR_METAL           0.50f, 0.50f, 0.50f,  1.0
 #define FR_PLASTIC         0.250f, 0.250f, 0.250f , 1.0
     };
-   
 
     //static variables used for mouse events inside fr_glw.
     //TODO : FIXME : Remove these .. we shouldn't have them here.
-    static bool CamerOptionVisible = false;
-
-    
+   // static bool CamerOptionVisible = false;
 
     //cameras
     #define  TOTAL_CAMS   8 

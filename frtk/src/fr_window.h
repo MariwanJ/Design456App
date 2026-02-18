@@ -27,21 +27,16 @@
 #ifndef FR_WINDOW_H
 #define FR_WINDOW_H
 
+#include <fr_core.h>
 #include<fr_scene.h>
 #include <fr_boundbox.h>
-#include <fr_core.h>
-#if 1
 #include <fr_transform.h>       //just for debug - remove it when done TODO : FIXME
 #include <fr_camera.h>
-#endif
-/** Fr_Window */
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include<../src/halfedge/fr_shape.h>
-
-#include <fr_filebrowser.h>
 #include <mesh_widget/fr_line_widget.h>  //TODO: Put me somewhere else
 #include <mesh_widget/fr_face_widget.h>  //TODO: Put me somewhere else
 
@@ -57,7 +52,6 @@ namespace FR {
     class Frtk_Radio_ToolbarWin;
 
     FRTK_API class  Fr_Window {
-        /** from Fr_Window */
         friend Frtk_Window;
     public:
         virtual ~Fr_Window();

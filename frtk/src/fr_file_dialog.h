@@ -47,4 +47,4 @@ namespace FR {
     };
 }
 
-#endif FILE_DIALOG_H
+#endif //FILE_DIALOG_H

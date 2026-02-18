@@ -102,20 +102,20 @@ namespace FR {
     float Fr_Camera::m_aspect_ratio = 1.9f;
 
     Fr_Camera::Fr_Camera() : Fr_Transform(),
+        m_camType(PERSPECTIVE), 
         m_position{ 15.f, 11.f,  102.f },
         m_direction{ -.098f, -1.372f, 0.0f },
         m_up{ -58.84f, 628.451f, 29.412f },
         m_fovy{ 102.f },
         m_znear{ 0.01f },
         m_zfar{ 100000.f },
-        m_OrthographicSize{ 10.f },
         m_ProjectionMatrix(glm::perspective(glm::radians(m_fovy), m_aspect_ratio, m_znear, m_zfar)), 
-        m_camType(PERSPECTIVE) {
+        m_OrthographicSize{ 10.f } {
         int width, height;
 
         //This should not happen
         GLFWwindow* g = Fr_Window::getCurrentGLWindow();
-        assert(g != nullptr);
+        FRTK_CORE_APP_ASSERT(g != nullptr);
 
         if (g == nullptr)
             return;
@@ -143,7 +143,7 @@ namespace FR {
 
         // Ensure the current GLFW window is valid
         GLFWwindow* g = Fr_Window::getCurrentGLWindow();
-        assert(g != nullptr);
+        FRTK_CORE_APP_ASSERT(g != nullptr);
 
         int w, h;
         if (glfwGetWindowAttrib(g, GLFW_ICONIFIED)) {

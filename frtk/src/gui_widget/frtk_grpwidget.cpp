@@ -30,9 +30,12 @@
 namespace FR {
     // translate the current keystroke into up/down/left/right for navigation:
     static int navkey() {
+        FRTK_CORE_INFO("HERE..");
         if (Fr_Window::spWindow == nullptr)
             return 0; //do nothing
-        auto& ek = Fr_Window::spWindow->m_sysEvents.keyB;
+        Fr_Window* win = Fr_Window::spWindow.get();
+        auto& ek = win->m_sysEvents.keyB;
+
         // The app may want these for hotkeys, check key state
         if (ek.ctrlDown || ek.shiftDown || ek.altDown) return 0;
         else if (ek.keyDown[GLFW_KEY_TAB]) {
@@ -109,7 +112,7 @@ namespace FR {
             drawBox();
         }
     }
- 
+
     int Frtk_GrpWidget::send_event(Frtk_Widget& w, int ev) {
         return w.handle(ev);
     }
@@ -119,7 +122,7 @@ namespace FR {
             return std::distance(m_children.begin(), it);
         return -1;
     }
-    
+
     int Frtk_GrpWidget::getChildrenNo() {
         return m_children.size();
     }
@@ -159,7 +162,8 @@ namespace FR {
     }
 
     bool Frtk_GrpWidget::restore_focus() {
-        // Try saved focus first
+        // Try saved
+        // first
         if (m_childFocus) {
             if (m_childFocus->take_focus()) {
                 return true;
@@ -226,7 +230,7 @@ namespace FR {
     void Frtk_GrpWidget::lose_focus() {
         // Called when widget loses focus
         // Group keeps m_savedFocus pointing to last focused child
-        if (m_parent) 
+        if (m_parent)
             m_parent->set_child_focus(g_focusedWdgt.prev);
         g_focusedWdgt.prev = g_focusedWdgt.current;
         g_focusedWdgt.current = nullptr;
@@ -250,46 +254,47 @@ namespace FR {
        //Return = 1 Event consumed
    //Return = 0 or -1 Event should continue to be delivered to other widgets
     int Frtk_GrpWidget::handle(int ev) {
-        if (isMouse_inside()) {
-            if (!(m_active && m_visible))
+        
+        //Keyboard events
+        switch (ev) {
+        case FR_FOCUS: {
+            switch (navkey()) {
+            default: {
+                if (m_childFocus != nullptr && m_childFocus->take_focus()) {
+                    return 1;
+                }
+                return 0;
+            }
+
+            case GLFW_KEY_RIGHT:
+            case GLFW_KEY_DOWN: {
+                for (auto& wdg : m_children) {
+                    if (wdg->take_focus()) return 1;
+                }
+                break;
+            }
+
+            case GLFW_KEY_LEFT:
+            case GLFW_KEY_UP: {
+                for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
+                    if ((*it)->take_focus()) return 1;
+                    }break;
+                }
+            }
+            return 0;
+        }
+        case FR_UNFOCUS: {
+            m_childFocus = g_focusedWdgt.prev;
+            return 0;
+        }
+        case FR_KEYBOARD: {
+            return (navigate_focus(navkey()));
+            }
+        }
+        //Mouse 
+           if (!(m_active && m_visible))
                 return 0;              //inactive widget - we don't care
             switch (ev) {
-            case FR_FOCUS: {
-                switch (navkey()) {
-                default: {
-                    if (m_childFocus != nullptr && m_childFocus->take_focus()) {
-                        return 1;
-                    }
-                    return 0;
-                }
-
-                case GLFW_KEY_RIGHT:
-                case GLFW_KEY_DOWN: {
-                    for (auto& wdg : m_children) {
-                        if (wdg->take_focus()) return 1;
-                    }
-                    break;
-                }
-
-                case GLFW_KEY_LEFT:
-                case GLFW_KEY_UP: {
-                    for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
-                        if ((*it)->take_focus()) return 1;
-                    }
-                    break;
-                }
-                }
-                return 0;
-            }
-
-            case FR_UNFOCUS: {
-                m_childFocus = g_focusedWdgt.prev;
-                return 0;
-            } 
-            case FR_KEYBOARD: {
-                return (navigate_focus(navkey()));
-            }
-
             case FR_ENTER:
             case FR_MOUSE_MOVE:
             {
@@ -357,8 +362,8 @@ namespace FR {
                 if (wdg->active() && wdg->visible()) {
                     if (wdg->isMouse_inside()) {
                         int result = wdg->handle(ev);
-                        if (ev==FR_LEFT_PUSH){
-                            result|= wdg->take_focus();
+                        if (ev == FR_LEFT_PUSH) {
+                            result |= wdg->take_focus();
                         }
                         if (result == 1) {
                             return result; // Event is consumed
@@ -366,7 +371,6 @@ namespace FR {
                     }
                 }
             }
-        }
-        return 0;
-    }
+            return 0;
+        }  
 }

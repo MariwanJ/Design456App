@@ -36,35 +36,38 @@ namespace FR {
     {
         if (spWindow == nullptr)
             return;
+        Fr_Window* pwin = spWindow.get();
+        pwin->m_ViewPort.size.w = width;
+        pwin->m_ViewPort.size.h = height;
 
-        spWindow->m_ViewPort.size.w = width;
-        spWindow->m_ViewPort.size.h = height;
-
-        glfwGetWindowPos(pGLFWWindow, &m_ViewPort.pos.x, &m_ViewPort.pos.y); //update even position
+        glfwGetWindowPos(window, &m_ViewPort.pos.x, &m_ViewPort.pos.y); //update even position
 
         uint8_t index = spWindow->activeScene->m_active_camera;
-        if (spWindow->m_ViewPort.size.h != 0) {
+        if (pwin->m_ViewPort.size.h != 0) {
             //Avoid divide by zero, keep the last ratio
-            spWindow->activeScene->m_cameras[index].m_aspect_ratio = static_cast<float>(spWindow->m_ViewPort.size.w) / spWindow->m_ViewPort.size.h;
+            pwin->activeScene->m_cameras[index].m_aspect_ratio = static_cast<float>(pwin->m_ViewPort.size.w) / pwin->m_ViewPort.size.h;
         }
     }
     void Fr_Window::glfwWindPos(GLFWwindow* window, int pos_x, int pos_y)
     {
         if (spWindow == nullptr)
             return;
-        spWindow->m_ViewPort.pos.x = pos_x;
-        spWindow->m_ViewPort.pos.y = pos_y;
+        (void)window;
+        Fr_Window* pwin = spWindow.get();
+        pwin->m_ViewPort.pos.x = pos_x;
+        pwin->m_ViewPort.pos.y = pos_y;
     }
     void Fr_Window::framebuffer_size_callback(GLFWwindow* window, int width, int height)
     {
         if (spWindow == nullptr)
             return;
-        spWindow->m_ViewPort.size.w = width;
-        spWindow->m_ViewPort.size.h = height;
+        Fr_Window* pwin = spWindow.get();
+        pwin->m_ViewPort.size.w = width;
+        pwin->m_ViewPort.size.h = height;
         if (s_GladInitialized && s_GLFWInitialized) {
             glViewport(0, 0, width, width);
         }
-        spWindow->handle(FR_WINDOW_RESIZE);
+        pwin->handle(FR_WINDOW_RESIZE);
     }
 
     /*
@@ -85,8 +88,9 @@ namespace FR {
     {
         if (spWindow == nullptr)
             return; //do nothing
-
-        auto& ek = spWindow->m_sysEvents.keyB;
+        (void)window;
+        Fr_Window* pwin = spWindow.get();    
+        auto& ek = pwin->m_sysEvents.keyB;  
         ek.lastKey = key;
         ek.scancode = scancode;
         ek.lastKAction = action;
@@ -101,12 +105,13 @@ namespace FR {
             ek.keyDown[key] = (action != GLFW_RELEASE);
     }
 
-    void Fr_Window::mouse_button_callback(GLFWwindow* win, int button, int action, int mods)
+    void Fr_Window::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     {
         if (spWindow == nullptr)
             return; //do nothing
-
-        auto& em = spWindow->m_sysEvents.mouse;
+        (void)window;
+        Fr_Window* pwin = spWindow.get();    
+        auto& em = pwin->m_sysEvents.mouse;
 
         //Avoid View jumping , we should initialize the current theta and phi
         if (spWindow->runCode && button == GLFW_MOUSE_BUTTON_MIDDLE) {
@@ -127,47 +132,54 @@ namespace FR {
         em.lastMod = mods;
         em.mouseEntered = true;
     }
-    void Fr_Window::cursor_m_positioncallback(GLFWwindow* win, double xpos, double ypos)
+    void Fr_Window::cursor_m_positioncallback(GLFWwindow* window, double xpos, double ypos)
     {
         if (!spWindow)
             return;
-        auto& mouse = spWindow->m_sysEvents.mouse;
+        (void)window;
+        Fr_Window* pwin = spWindow.get();
+        auto& mouse = pwin->m_sysEvents.mouse;
         mouse.activeX = xpos;
         mouse.activeY = ypos;
         spWindow->calculateScreenRay();
         // SIGNALS
-        spWindow->m_sysEvents.mouse.mouseMoved = true;
+        pwin->m_sysEvents.mouse.mouseMoved = true;
     }
 
-    void Fr_Window::cursor_enter_callback(GLFWwindow* win, int entered)
+    void Fr_Window::cursor_enter_callback(GLFWwindow* window, int entered)
     {
         if (spWindow == nullptr)
             return; //do nothing
-        spWindow->m_sysEvents.mouse.mouseEntered = (entered != 0);
+        (void)window;
+        Fr_Window* pwin = spWindow.get();
+        pwin->m_sysEvents.mouse.mouseEntered = (entered != 0);
         //Reset DRAG
-        spWindow->m_sysEvents.mouse.L_Drag = false;
-        spWindow->m_sysEvents.mouse.R_Drag = false;
-        spWindow->m_sysEvents.mouse.M_Drag = false;
+        pwin->m_sysEvents.mouse.L_Drag = false;
+        pwin->m_sysEvents.mouse.R_Drag = false;
+        pwin->m_sysEvents.mouse.M_Drag = false;
     }
 
-    void Fr_Window::scroll_callback(GLFWwindow* win, double xoffset, double yoffset)
+    void Fr_Window::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     {
         if (spWindow == nullptr)
             return;
-        auto& m = spWindow->m_sysEvents.mouse;
+        (void)window;
+        Fr_Window* pwin = spWindow.get();
+        auto& m = pwin->m_sysEvents.mouse;
         m.scrollX = xoffset;
         m.scrollY = yoffset;
     }
 
     //DON'T CHANGE ME WORKS GOOD !!!! 2025-10-22
-    void Fr_Window::cameraPAN(GLFWwindow* win)
+    void Fr_Window::cameraPAN(GLFWwindow* window)
     {
         userData_t data;
         if (!spWindow)
             return;
-
+        (void)window;
+        Fr_Window* pwin = spWindow.get();
         spWindow->activeScene->getActiveCamera().getCamData(data);
-        auto& mouse = spWindow->m_sysEvents.mouse;
+        auto& mouse = pwin->m_sysEvents.mouse;
         double deltax = mouse.prevX - mouse.activeX;
         double deltay = mouse.prevY - mouse.activeY;
         // Only perform the panning if there is a significant change
@@ -182,56 +194,63 @@ namespace FR {
         spWindow->activeScene->getActiveCamera().setCamData(data);
     }
     //DON'T CHANGE ME WORKS GOOD !!!! 2025-10-22
-    void Fr_Window::cameraRotate(GLFWwindow* win)
+    void Fr_Window::cameraRotate(GLFWwindow* window)
     {
         if (spWindow == nullptr)
             return;
-        Fr_Camera& cam = spWindow->activeScene->getActiveCamera();
+        (void)window;
+        Fr_Window* pwin = spWindow.get();
 
-        spWindow->radiusXYZ = glm::length(cam.m_position);
+        Fr_Camera& cam = pwin->activeScene->getActiveCamera();
+
+        pwin->radiusXYZ = glm::length(cam.m_position);
 
         // Compute deltas
-        auto& mouse = spWindow->m_sysEvents.mouse;
-        float deltax = float(mouse.activeX - mouse.prevX) * spWindow->mouseDefaults.MouseXYScale;
-        float deltay = float(mouse.activeY - mouse.prevY) * spWindow->mouseDefaults.MouseXYScale;
+        auto& mouse = pwin->m_sysEvents.mouse;
+        float deltax = float(mouse.activeX - mouse.prevX) * pwin->mouseDefaults.MouseXYScale;
+        float deltay = float(mouse.activeY - mouse.prevY) * pwin->mouseDefaults.MouseXYScale;
 
-        spWindow->theta += deltax;
-        spWindow->phi -= deltay;
+        pwin->theta += deltax;
+        pwin->phi -= deltay;
 
-        spWindow->phi = std::clamp(spWindow->phi, -89.99f, 89.99f);
+        pwin->phi = std::clamp(pwin->phi, -89.99f, 89.99f);
 
-        float radTheta = glm::radians(spWindow->theta);
-        float radPhi = glm::radians(spWindow->phi);
+        float radTheta = glm::radians(pwin->theta);
+        float radPhi = glm::radians(pwin->phi);
 
-        float x = spWindow->radiusXYZ * cos(radPhi) * sin(radTheta);
-        float y = spWindow->radiusXYZ * cos(radPhi) * cos(radTheta);
-        float z = spWindow->radiusXYZ * sin(radPhi);
+        float x = pwin->radiusXYZ * cos(radPhi) * sin(radTheta);
+        float y = pwin->radiusXYZ * cos(radPhi) * cos(radTheta);
+        float z = pwin->radiusXYZ * sin(radPhi);
         cam.m_position = glm::vec3(x, y, z);
     }
 
-    void Fr_Window::cameraZoom(GLFWwindow* win)
+    void Fr_Window::cameraZoom(GLFWwindow* window)
     {
+        if (spWindow == nullptr)
+            return;
+        (void)window;
+        Fr_Window* pwin = spWindow.get();
         userData_t data;
         activeScene->getActiveCamera().getCamData(data);
-        if (spWindow->activeScene->getActiveCamera().getType() == ORTHOGRAPHIC) {
-            data.orthoSize_ = data.orthoSize_ + float(m_sysEvents.mouse.scrollY) * spWindow->mouseDefaults.MouseScrollScale;
+        if (pwin->activeScene->getActiveCamera().getType() == ORTHOGRAPHIC) {
+            data.orthoSize_ = data.orthoSize_ + float(m_sysEvents.mouse.scrollY) * pwin->mouseDefaults.MouseScrollScale;
         }
         else
         {
             //Scroll zooming using the correct method of zooming. Use camera position by scaling the view-matrix
             float scale_;
             if (m_sysEvents.mouse.scrollY < 0) {
-                scale_ = -1 * spWindow->mouseDefaults.MouseScrollScale;
+                scale_ = -1 * pwin->mouseDefaults.MouseScrollScale;
             }
             else
             {
-                scale_ = spWindow->mouseDefaults.MouseScrollScale;
+                scale_ = pwin->mouseDefaults.MouseScrollScale;
             }
             glm::vec3 forward = glm::normalize(data.direction_ - data.cam_pos_); // forward direction
             data.cam_pos_ += forward * scale_;   // move camera
             data.direction_ += forward * scale_;  // move target along with camera
         }
-        spWindow->activeScene->getActiveCamera().setCamData(data);
+        pwin->activeScene->getActiveCamera().setCamData(data);
     }
 
 

@@ -69,8 +69,8 @@ namespace FR {
         std::vector<float> verticesGreen;
         std::vector<float> verticesBlue;
         std::vector<float> verticesZBlue;
-        float x, y, z;
-        x = y = z = 0;
+ /*       float x, y, z;
+        x = y = z = 0;*/
 
         verticesRed = {
              end,    0.0f,     0.0f,
@@ -104,12 +104,12 @@ namespace FR {
 
         std::vector<unsigned int> indicesRed;
 
-        for (int i = 0; i <= verticesRed.size(); i++) {
+        for (size_t i = 0; i <= verticesRed.size(); i++) {
             indicesRed.push_back(i);
         }
         std::vector<unsigned int> indicesGreen;
 
-        for (int i = 0; i <= verticesGreen.size(); i++) {
+        for (size_t i = 0; i <= verticesGreen.size(); i++) {
             indicesGreen.push_back(i);
         }
         std::vector<unsigned int> indicesBlue;
@@ -125,11 +125,11 @@ namespace FR {
             verticesZBlue.push_back(float(zBlueSize / 2));
             verticesZBlue.push_back(float(i));
         }
-        for (int i = 0; i <= verticesZBlue.size(); i++) {
+        for (size_t i = 0; i <= verticesZBlue.size(); i++) {
             indicesZBlue.push_back(i);
         }
 
-        for (int i = 0; i <= verticesBlue.size(); i++) {
+        for (size_t i = 0; i <= verticesBlue.size(); i++) {
             indicesBlue.push_back(i);
         }
 

@@ -170,7 +170,7 @@ namespace FR {
     }
 
     void Fr_Widget::init(void) {
-        assert(!m_vertices->empty() && "ERROR: You should provide vertices before initializing the object");
+        FRTK_CORE_APP_ASSERT(!m_vertices->empty() && "ERROR: You should provide vertices before initializing the object");
         CreateShader();
         m_boundBox = std::make_shared <cBoundBox3D>();
         m_boundBox->setVertices(m_vertices);

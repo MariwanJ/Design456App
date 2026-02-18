@@ -429,7 +429,7 @@ namespace FR {
         ImGui::StyleColorsLight();
 
         GLFWwindow* window = Fr_Window::getCurrentGLWindow();
-        assert(window != nullptr);
+        FRTK_CORE_APP_ASSERT(window != nullptr);
 
         ImGui_ImplGlfw_InitForOpenGL(window, true);
 
@@ -577,7 +577,7 @@ namespace FR {
             if (justPressed || justReleased) {
                 ek.lastKey = k;
                 ek.lastKAction = justPressed ? GLFW_PRESS : GLFW_RELEASE;
-                // SHIFT - CTL - ALT
+                handle(FR_KEYBOARD);
             }
         }
         // Update prevKeyDown for next frame
@@ -599,16 +599,6 @@ namespace FR {
         if (em.R_Drag)           handle(FR_RIGHT_DRAG_PUSH);
         if (em.M_Drag)           handle(FR_MIDDLE_DRAG_PUSH);
 
-        //Keyboard Events
-        for (int k = 0; k <= GLFW_KEY_LAST; ++k) {
-            bool justPressed = ek.keyDown[k] && !ek.prevKeyDown[k];
-            bool justReleased = !ek.keyDown[k] && ek.prevKeyDown[k];
-            if (justPressed || justReleased) {
-                ek.lastKey = k;
-                ek.lastKAction = justPressed ? GLFW_PRESS : GLFW_RELEASE;
-                handle(FR_KEYBOARD);
-            }
-        }
         //scroll happened
         bool scrollHappened = (em.scrollX != 0.0 || em.scrollY != 0.0);
         if (scrollHappened) {
@@ -642,23 +632,55 @@ namespace FR {
     }
     int Fr_Window::handle(int events)
     {
-        for (auto gui_win : m_frtkWindow)
+        //FRTK GUI HANDLE 
+        for (auto it = m_frtkWindow.rbegin(); it != m_frtkWindow.rend(); ++it)
         {
+            auto& gui_win = *it;
             if (events == FR_LEFT_PUSH)
             {
-                if (auto grp = std::dynamic_pointer_cast<Frtk_GrpWidget>(gui_win)) {
-                    if (grp->isMouse_inside()) {
+                if (auto grp = std::dynamic_pointer_cast<Frtk_GrpWidget>(gui_win))
+                {
+                    if (grp->isMouse_inside())
                         grp->take_focus();
-                    }
-                    else {
+                    else
                         grp->lose_focus();
+                }
+            }else
+
+            //Further down Keyboard translation : 
+            if (events == FR_KEYBOARD) {
+                if (g_focusedWdgt.keyboardOwner) {
+                    auto& ek = m_sysEvents.keyB;
+                    int key = ek.lastKey;
+                    int action = ek.lastKAction;
+
+                    if (action == GLFW_PRESS) {
+                        switch (key) {
+                        case GLFW_KEY_TAB:
+                        case GLFW_KEY_RIGHT:
+                        case GLFW_KEY_DOWN:
+                        case GLFW_KEY_LEFT:
+                        case GLFW_KEY_UP:
+                            // Translate navigation keys to FR_FOCUS
+                            g_focusedWdgt.keyboardOwner->handle(FR_FOCUS);
+                            break;
+
+                        default:
+                            // Other keys -> normal FR_KEYBOARD
+                            g_focusedWdgt.keyboardOwner->handle(FR_KEYBOARD);
+                            break;
+                        }
                     }
                 }
+
+
+
             }
             if (gui_win->handle(events) == 1)
                 return 1; // Event consumed
         }
 
+        //SCENE PART 
         auto& em = m_sysEvents.mouse;
         auto& ek = m_sysEvents.keyB;
 

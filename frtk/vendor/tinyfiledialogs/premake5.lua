@@ -24,7 +24,7 @@ project "tinyfiledialogs"
          "-Wextra",
          "-Wconversion",
          "-Wfloat-conversion",
-         "-Werror",
+   ---      "-Werror",
          "-fPIC",
          "-ggdb",
          "-fdiagnostics-color=auto",

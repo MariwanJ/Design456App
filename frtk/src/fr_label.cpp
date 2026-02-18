@@ -284,7 +284,7 @@ namespace FR {
     void Fr_Label::lblType(uint8_t lbltype) {
         m_lblData.type = lbltype;
     }
-    const uint8_t Fr_Label::lblType(void) {
+     uint8_t Fr_Label::lblType(void) {
         return m_lblData.type;
     }
 }

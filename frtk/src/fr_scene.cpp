@@ -299,7 +299,7 @@ namespace FR {
 
     void Fr_Scene::RenderScene() {
         std::shared_ptr<FR::Fr_Window> win = FR::Fr_Window::getFr_Window();
-        assert(win != nullptr);
+        FRTK_CORE_APP_ASSERT(win != nullptr);
 
         ImGuiWindowFlags window_flags = 0 | ImGuiWindowFlags_NoTitleBar;
         /*        FR_PROFILE_FUNCTION();
@@ -551,7 +551,7 @@ namespace FR {
     }
     int Fr_Scene::findClosestMeshToRay(const ray_t& m_activeRay) {
         std::shared_ptr<FR::Fr_Window> win = FR::Fr_Window::getFr_Window();
-        assert(win != nullptr);
+        FRTK_CORE_APP_ASSERT(win != nullptr);
         glm::vec3 intersectionPoint(0.0f, 0.0f, 0.0f);
         float closestT = std::numeric_limits<float>::max();
         float t;
@@ -627,7 +627,7 @@ namespace FR {
                 else if (isPointWidget)
                 {
                     float closestPointT = std::numeric_limits<float>::max();
-                    auto& verts = m_world[i].Sceneitem->getVertices();
+                    const auto& verts = m_world[i].Sceneitem->getVertices();
 
                     for (size_t j = 0; j + 2 < verts->size(); j += 3)
                     {
@@ -679,7 +679,7 @@ namespace FR {
         std::vector<VertexItem> sel_vert;
 
         std::shared_ptr<FR::Fr_Window> win = FR::Fr_Window::getFr_Window();
-        assert(win != nullptr);
+        FRTK_CORE_APP_ASSERT(win != nullptr);
         GLFWwindow* glfWin = Fr_Window::getCurrentGLWindow();
 
         auto& em = win->m_sysEvents.mouse;

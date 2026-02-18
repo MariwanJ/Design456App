@@ -57,14 +57,14 @@ namespace FR {
     // draw functions: 
     void Frtk_Switch_Button::drawToggleFrame() {
         float r = m_h * 0.25f;
-        NVGpaint bg = nvgLinearGradient( m_vg, m_x, m_y, m_x, m_y + m_h, nvgRGBAf(m_color.r,m_color.g,m_color.b,m_color.a), nvgRGBAf(m_bkg_color.r, m_bkg_color.g, m_bkg_color.b, m_bkg_color.a));
+        NVGpaint bg = nvgLinearGradient( m_vg, m_x, m_y, m_x, m_y + m_h, glmToNVG(m_color), glmToNVG(m_bkg_color));
         nvgBeginPath(m_vg);
         nvgRoundedRect(m_vg, m_x, m_y, m_w, m_h, r);
         nvgFillPaint(m_vg, bg);
         nvgFill(m_vg);
 
         nvgStrokeWidth(m_vg, 1.0f);
-        nvgStrokeColor(m_vg, nvgRGBAf(m_borderColor.r,m_borderColor.g,m_borderColor.b,m_borderColor.a));
+        nvgStrokeColor(m_vg, glmToNVG(m_borderColor));
         nvgStroke(m_vg);
         m_font.hAlign = NVG_ALIGN_CENTER;
         m_font.vAlign = NVG_ALIGN_MIDDLE;

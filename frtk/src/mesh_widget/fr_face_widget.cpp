@@ -39,8 +39,10 @@ namespace FR {
             MyMesh::VertexHandle vh = m_mesh.add_vertex(p);
             vertexHandles.push_back(vh);
         }
-        OpenMesh::FaceHandle fh = m_mesh.add_face(vertexHandles); 
 
+        OpenMesh::FaceHandle fh = m_mesh.add_face(vertexHandles); 
+        //TODO : FIXME  - WHAT TO DO HERE ? 
+        (void)fh;
         lineWidth(1);
         init();
         m_WidgType = NODETYPE::FR_FACE_WIDGET;
@@ -167,7 +169,10 @@ namespace FR {
     {
         if (!m_active)
             return 0; //we don't use the event/we don't care
-
+        
+        //TODO : FIXME !!!!
+         
+        
         //std::shared_ptr<FR::Fr_Window> win = FR::Fr_Window::getFr_Window();
         ///*  if (m_pointPicker)*/ {
         //    /*

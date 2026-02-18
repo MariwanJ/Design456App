@@ -97,9 +97,10 @@ namespace FR {
         void isFake(bool val);
 
     private:
-        size_t m_has_vert_sel;
-        size_t m_has_edge_sel;
         size_t m_has_face_sel;
+        size_t m_has_edge_sel;
+        size_t m_has_vert_sel;
+        
     };
 }
 #endif //#define FR_OPENMESH_H

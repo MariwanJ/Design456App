@@ -39,9 +39,6 @@ namespace FR {
     public:
         Frtk_Button(NVGcontext*vg, float x , float y , float w , float h , std::string l="Button", BOX_TYPE b = FRTK_UP_BOX);
 
-        void Frtk_Button::value(uint8_t val);
-        uint8_t value() const;
-        uint8_t oldValue() const;		
         
         void name(const std::string& name);
         const std::string& name(void);
@@ -49,6 +46,10 @@ namespace FR {
         const std::string& tooltips(void);
         virtual void activate() override;
         virtual void disable() override;
+
+        void value(uint8_t val);
+        uint8_t value() const;
+        uint8_t oldValue() const;
 
     protected:
         virtual void draw() override;

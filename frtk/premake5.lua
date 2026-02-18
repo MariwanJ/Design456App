@@ -175,7 +175,7 @@ filter "system:linux"
     "cd " .. project_root .. "/bin &&  ar -x " .. (project_root ..  "/bin/libobjloader%{cfg.targetsuffix}.a"  ),
     "cd " .. project_root .. "/bin &&  ar -x " .. (project_root ..  "/bin/libOpenMesh%{cfg.targetsuffix}.a"   ),
     "cd " .. project_root .. "/bin &&  ar -x " .. (project_root ..  "/bin/libfreetype%{cfg.targetsuffix}.a"   ),
-    "cd " .. project_root .. "/bin &&  ar -x " .. (project_root ..  "/bin/nanovg%{cfg.targetsuffix}.a"   ),
+    "cd " .. project_root .. "/bin &&  ar -x " .. (project_root ..  "/bin/libnanovg%{cfg.targetsuffix}.a"   ),
 	"cd " .. project_root .. "/bin &&  ar -x " .. (project_root ..  "/bin/tinyfiledialogs%{cfg.targetsuffix}.a"   ),
     "cd " .. project_root .. "/bin &&  ar -rcs " .. (project_root  .. "/bin/libfrtk%{cfg.targetsuffix}.a ") .. (project_root  .. "/bin/*.o" ),          --create static lib 
     "cd " .. project_root .. "/bin &&  g++ -shared -o " .. (project_root  .. "/bin/libfrtk%{cfg.targetsuffix}.so ") .. (project_root  .. "/bin/*.o" ),  --create shared lib also.
