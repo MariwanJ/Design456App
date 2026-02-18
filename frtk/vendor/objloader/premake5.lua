@@ -45,7 +45,7 @@ project "objloader"
     filter {}
     filter "system:windows"
         systemversion "latest"
-        buildoptions { "/W4", "/utf-8" }
+        buildoptions {   "/utf-8" }
          
 
     filter "configurations:Debug"

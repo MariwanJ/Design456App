@@ -86,8 +86,8 @@ namespace FR {
 
 
 
-        int counter = 0;
-        int i = 0;
+        float counter = 0.f;
+        //int i = 0;
         auto window = std::make_shared<Frtk_Window>(500.f, 200.f, 500.f, 500.f, "Testing buttons, toolbars",FRTK_UP_BOX);
         //frtk_check_button
         //frtk_light_button
@@ -103,9 +103,9 @@ namespace FR {
         
         std::vector<toolbBTN_t> tools = {
             // std::string lbl; std::string name; dimSize_float_t size; std::string icon; Frtk_Widget::Callback callback_; std::string tooltips !!
-            {"New","New"   ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath1 + "Folder-Create-32x32.png",[](Frtk_Widget* w) { doCallback(0); }, ""},
-            {"Open","Open"  ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath1 + "Folder-Import-32x32.png", [](Frtk_Widget* w) { doCallback(1); }, ""},
-            {"Close","Close" ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath1 + "Folder-Close-32x32.png" , [](Frtk_Widget* w) { doCallback(2); }, ""},
+            {"New","New"   ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath1 + "Folder-Create-32x32.png",[](Frtk_Widget* w)    { (void)w; doCallback(0); }, ""},
+            {"Open","Open"  ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath1 + "Folder-Import-32x32.png", [](Frtk_Widget* w)  { (void)w; doCallback(1); }, ""},
+            {"Close","Close" ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath1 + "Folder-Close-32x32.png" , [](Frtk_Widget* w) { (void)w; doCallback(2); }, ""},
         };
 
         std::shared_ptr<Frtk_ToolBar> tb1=std::make_shared<Frtk_ToolBar>(window->getContext(), 0.f, 350.0f, window->w(), FRTK_TOOLBAR_HEIGHT, "Toolbar1", tools);

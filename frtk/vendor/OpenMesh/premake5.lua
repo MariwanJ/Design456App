@@ -163,7 +163,7 @@ project "OpenMesh"
     filter "system:windows"
         staticruntime "On"
         systemversion "latest"
-        buildoptions { "/W4", "/utf-8" } 
+        buildoptions {  "/external:W0", "/utf-8" } 
 
         defines
         {

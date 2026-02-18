@@ -51,7 +51,7 @@ project "ImGuizmo"
     
     filter "system:windows"
         systemversion "latest"
-        buildoptions { "/W4", "/utf-8" }
+        buildoptions { "/external:W0",   "/utf-8" }
         filter "configurations:Debug"
             runtime "Debug"
             targetsuffix "d"

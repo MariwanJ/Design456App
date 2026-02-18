@@ -110,7 +110,7 @@ project "freetype"
     filter "system:windows"
         defines { "WIN32", "_DEBUG" }
         systemversion "latest"
-        buildoptions { "/W4", "/utf-8" }
+        buildoptions {  "/external:W0", "/utf-8" }
         
     filter "configurations:Debug"
         runtime "Debug"

@@ -49,8 +49,8 @@ project "GLFW"
     filter {}
     filter "system:windows"
         staticruntime "On"
-        buildoptions { "/W4", "/utf-8" }
-        buildoptions { "/utf-8"}
+        buildoptions { "/external:W0", "/utf-8" }
+
 
         defines 
         { 

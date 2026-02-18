@@ -203,15 +203,18 @@ namespace FR {
 
     void Fr_Widget::Render(RenderInfo& info)
     {
+        (void)info;
         return; //do nothing , should be sub-classed
     }
 
     void Fr_Widget::RenderSelection(RenderInfo& info)
     {
+        (void)info;
         return; //do nothing should be sub-classed
     }
 
     void RenderText(RenderInfo& info) {
+        (void)info;
         return;//do nothing should be sub-classed
     }
 

@@ -84,7 +84,7 @@ namespace FR {
             break;
         }
         case FR_NOT_DEFINED: {
-            FRTK_CORE_WARN(" UNDEFINED MESH 2D DRAWING");
+            //FRTK_CORE_WARN(" UNDEFINED MESH 2D DRAWING");
         }
         }
         if (type == FR_NOT_DEFINED)
@@ -125,7 +125,7 @@ namespace FR {
             break;
         }
         case FR_NOT_DEFINED: {
-            FRTK_CORE_INFO("NOT DEFINED OBJECT!");
+          //  FRTK_CORE_INFO("NOT DEFINED OBJECT!");
         }
         }
         glCheckFunc(glBindVertexArray(0));
