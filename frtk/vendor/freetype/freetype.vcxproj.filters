@@ -663,9 +663,6 @@
     <ClInclude Include="src\raster\ftraster.h">
       <Filter>src\raster</Filter>
     </ClInclude>
-    <ClInclude Include="src\raster\ftrend1.h">
-      <Filter>src\raster</Filter>
-    </ClInclude>
     <ClInclude Include="src\raster\rasterrs.h">
       <Filter>src\raster</Filter>
     </ClInclude>
@@ -739,9 +736,6 @@
       <Filter>src\sfnt</Filter>
     </ClInclude>
     <ClInclude Include="src\smooth\ftgrays.h">
-      <Filter>src\smooth</Filter>
-    </ClInclude>
-    <ClInclude Include="src\smooth\ftsmerrs.h">
       <Filter>src\smooth</Filter>
     </ClInclude>
     <ClInclude Include="src\smooth\ftsmooth.h">
@@ -1166,9 +1160,6 @@
     <ClCompile Include="src\raster\ftraster.c">
       <Filter>src\raster</Filter>
     </ClCompile>
-    <ClCompile Include="src\raster\ftrend1.c">
-      <Filter>src\raster</Filter>
-    </ClCompile>
     <ClCompile Include="src\raster\raster.c">
       <Filter>src\raster</Filter>
     </ClCompile>
@@ -1245,9 +1236,6 @@
       <Filter>src\smooth</Filter>
     </ClCompile>
     <ClCompile Include="src\smooth\ftsmooth.c">
-      <Filter>src\smooth</Filter>
-    </ClCompile>
-    <ClCompile Include="src\smooth\smooth.c">
       <Filter>src\smooth</Filter>
     </ClCompile>
     <ClCompile Include="src\svg\ftsvg.c">

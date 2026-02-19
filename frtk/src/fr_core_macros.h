@@ -86,29 +86,26 @@ namespace FR {
 #endif
 
 // Cross-platform API export macros
-#if defined(_WIN32)
-#ifdef FR_BUILD_STATIC
+#if defined(FR_BUILD_STATIC)
 #define FRTK_API
-#else
-#ifdef FR_BUILD_DLL
+
+// Windows
+#elif defined(_WIN32) || defined(__CYGWIN__)
+#if defined(FR_BUILD_DLL)
 #define FRTK_API __declspec(dllexport)
 #else
 #define FRTK_API __declspec(dllimport)
 #endif
-#endif
-#elif defined(__linux__)
-#ifdef FR_BUILD_STATIC
-#define FRTK_API
-#else
-#ifdef FR_BUILD_DLL
+
+// GCC / Clang (Linux, macOS, etc.)
+#elif defined(__GNUC__) || defined(__clang__)
 #define FRTK_API __attribute__((visibility("default")))
+
+// Fallback
 #else
 #define FRTK_API
 #endif
-#endif
-#else
-#error FRTK NOT IMPLEMENTED FOR THIS PLATFORM
-#endif
+
 
 #define setBIT(x) (1 << x)
 #define clearBIT(x) (0 << x)

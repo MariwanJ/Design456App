@@ -29,13 +29,13 @@
 #define  FRTK_SEARCH_BOX_H
 
 #include <frtk.h>
-#include <gui_widget/frtk_box.h>
+#include <gui_widget/frtk_input_base.h>
 #include <gui_widget/frtk_draw.h>
 
 
 
     namespace FR {
-        class Frtk_Search_Box : public Frtk_Box {
+        class Frtk_Search_Box : public Frtk_Input_Base {
         public:
             Frtk_Search_Box(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b = FRTK_FLAT_BOX);
             int value(const std::string& str);

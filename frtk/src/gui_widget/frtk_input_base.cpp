@@ -33,7 +33,7 @@ namespace FR {
 #define ICON_CIRCLED_CROSS 0x2716
 
     Frtk_Input_Base::Frtk_Input_Base(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b) :
-        Frtk_Box(vg, X, Y, W, H, lbl, b), m_tab_nav(0), m_text{"", 0,0,0}
+        Frtk_Box(vg, X, Y, W, H, lbl, b), m_tab_nav(0), m_text{ "", 0,0 }
     {
         m_color = glm::vec4(FR_WHITE);
         m_color.a = 0.1254f;
@@ -45,27 +45,33 @@ namespace FR {
     }
 
 
+    std::string Frtk_Input_Base::cpToUTF8(uint32_t cp) {
+        if (cp > 0x10FFFF || (cp >= 0xD800 && cp <= 0xDFFF)) {
+            throw std::runtime_error("Invalid Unicode code point");
+        }
 
-    static char* cpToUTF8(int cp, char* str)
-    {
-        int n = 0;
-        if (cp < 0x80) n = 1;
-        else if (cp < 0x800) n = 2;
-        else if (cp < 0x10000) n = 3;
-        else if (cp < 0x200000) n = 4;
-        else if (cp < 0x4000000) n = 5;
-        else if (cp <= 0x7fffffff) n = 6;
-        str[n] = '\0';
-        switch (n) {
-        case 6: str[5] = 0x80 | (cp & 0x3f); cp = cp >> 6; cp |= 0x4000000;
-        case 5: str[4] = 0x80 | (cp & 0x3f); cp = cp >> 6; cp |= 0x200000;
-        case 4: str[3] = 0x80 | (cp & 0x3f); cp = cp >> 6; cp |= 0x10000;
-        case 3: str[2] = 0x80 | (cp & 0x3f); cp = cp >> 6; cp |= 0x800;
-        case 2: str[1] = 0x80 | (cp & 0x3f); cp = cp >> 6; cp |= 0xc0;
-        case 1: str[0] = cp;
+        std::string str;
+        if (cp <= 0x7F) {               // 1 byte
+            str.push_back(static_cast<char>(cp));
+        }
+        else if (cp <= 0x7FF) {       // 2 bytes
+            str.push_back(static_cast<char>(0xC0 | ((cp >> 6) & 0x1F)));
+            str.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+        }
+        else if (cp <= 0xFFFF) {      // 3 bytes
+            str.push_back(static_cast<char>(0xE0 | ((cp >> 12) & 0x0F)));
+            str.push_back(static_cast<char>(0x80 | ((cp >> 6) & 0x3F)));
+            str.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+        }
+        else {                        // 4 bytes
+            str.push_back(static_cast<char>(0xF0 | ((cp >> 18) & 0x07)));
+            str.push_back(static_cast<char>(0x80 | ((cp >> 12) & 0x3F)));
+            str.push_back(static_cast<char>(0x80 | ((cp >> 6) & 0x3F)));
+            str.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
         }
         return str;
     }
+
 
     void Frtk_Input_Base::drawEditBoxBase(float x, float y, float w, float h)
     {
@@ -92,6 +98,7 @@ namespace FR {
         nvgText(m_vg, m_x + m_h * 0.3f, m_y + m_h * 0.5f, m_text.value.c_str(), NULL);
         if (m_has_focus) {
             draw_focus();
+            draw_cursor();
         }
     }
 
@@ -107,13 +114,12 @@ namespace FR {
     }
     void Frtk_Input_Base::value(const char* value) {
         m_text.value = value;
-
     }
     void Frtk_Input_Base::value(std::string& value) {
         m_text.value = value;
     }
     int Frtk_Input_Base::ivalue() const {
-           return std::stoi(m_text.value);
+        return std::stoi(m_text.value);
     }
     double Frtk_Input_Base::dvalue() const {
         return std::stod(m_text.value);
@@ -140,9 +146,33 @@ namespace FR {
     int  Frtk_Input_Base::insert(const char* t, int length) {
         return 0;
     }
-    int  Frtk_Input_Base::copy(int clipboard) {
-        return 0;
+    int Frtk_Input_Base::copy() {
+
+        if (m_text.selStart == m_text.cursorPos)
+            return 0; // nothing selected
+
+        int start = std::min(m_text.selStart, m_text.cursorPos);
+        int end = std::max(m_text.selStart, m_text.cursorPos);
+        std::string selected = m_text.value.substr(start, end - start);
+        glfwSetClipboardString( m_mainWindow->getCurrentGLWindow(), selected.c_str());
+        return 1;
     }
+
+    int Frtk_Input_Base::paste()
+    {
+        const char* clip = glfwGetClipboardString(m_mainWindow->getCurrentGLWindow());
+        if (!clip)
+            return 0; // nothing to paste
+        std::string textToInsert = clip;
+        if (m_text.selStart != m_text.cursorPos)
+            delSel();
+        m_text.value.insert(m_text.cursorPos, textToInsert);
+        m_text.cursorPos += (int)textToInsert.length();
+        m_text.selStart = m_text.cursorPos;
+        return 1;
+    }
+
+
     int  Frtk_Input_Base::undo() {
         return 0;
     }
@@ -156,13 +186,66 @@ namespace FR {
         return 0;
     }
     void Frtk_Input_Base::readonly(bool val) {
-
     }
     int  Frtk_Input_Base::wrap() const {
         return 0;
     }
     void Frtk_Input_Base::wratp(int b) {
+    }
+    //    FRTK_BASE_INPUT = 0,
+    //    FRTK_INT_INPUT,
+    //    FRTK_FLOAT_INPUT,
+    //    FRTK_INPUT,
+    //    FRTK_INPUT_WRAP,          //one line only
+    //    FRTK_MULTILINE_INPUT,     //mulit lines
+    //    FRTK_MULTILINE_INPUT_WRAP,
+    //    FRTK_SECRET_INPUT,
+    //
+    //    FRTK_NORMAL_OUTPUT,
+    //    FRTK_MULTILINE_OUTPUT,
+    //    FRTK_MULTILINE_OUTPUT_WRAP,
+    //    FRTK_NORMAL_OUTPUT_READONLY,
+    //    FRTK_MULTILINE_OUTPUT_READONLY,
+    //    FRTK_MULTILINE_OUTPUT_WRAP_READONLY,
 
+    bool Frtk_Input_Base::isEditable() const
+    {
+        return (
+            m_wdgType == FRTK_INT_INPUT || FRTK_BASE_INPUT||
+            m_wdgType == FRTK_FLOAT_INPUT ||
+            m_wdgType == FRTK_INPUT ||
+            m_wdgType == FRTK_INPUT_WRAP ||
+            m_wdgType == FRTK_MULTILINE_INPUT ||
+            m_wdgType == FRTK_MULTILINE_INPUT_WRAP ||
+            m_wdgType == FRTK_SECRET_INPUT
+            );
+    }
+
+    bool Frtk_Input_Base::isSelectable() const
+    {
+        return !((m_wdgType == FRTK_NORMAL_OUTPUT_READONLY ||
+            m_wdgType == FRTK_MULTILINE_OUTPUT_READONLY ||
+            m_wdgType == FRTK_MULTILINE_OUTPUT_WRAP_READONLY));
+    }
+    bool Frtk_Input_Base::isSingleLine() const {
+        //notice that, the widget can be readonly but still multi-line
+        return (!(m_wdgType == FRTK_MULTILINE_INPUT_WRAP ||
+            m_wdgType == FRTK_MULTILINE_OUTPUT_WRAP ||
+            m_wdgType == FRTK_MULTILINE_OUTPUT_READONLY ||
+            m_wdgType == FRTK_MULTILINE_OUTPUT_WRAP_READONLY));
+    }
+    bool Frtk_Input_Base::isWrapped() const
+    {
+        return (
+            m_wdgType == FRTK_INPUT_WRAP ||
+            m_wdgType == FRTK_MULTILINE_INPUT_WRAP ||
+            m_wdgType == FRTK_MULTILINE_OUTPUT_WRAP ||
+            m_wdgType == FRTK_MULTILINE_OUTPUT_WRAP_READONLY);
+    }
+
+    bool Frtk_Input_Base::isSecret() const
+    {
+        return  (m_wdgType == FRTK_SECRET_INPUT);
     }
 
     int  Frtk_Input_Base::word_start(int ind) const {
@@ -173,8 +256,54 @@ namespace FR {
     }
     int  Frtk_Input_Base::line_end(int ind) const {
         return 0;
-    }   
-    
+    }
+    bool Frtk_Input_Base::delSel() {
+        // Ensure selStart <= cursorPos
+        if (m_text.selStart > m_text.cursorPos)
+            std::swap(m_text.selStart, m_text.cursorPos);
+
+        // Nothing to delete
+        if (m_text.selStart >= m_text.value.size() && m_text.selStart == m_text.cursorPos)
+            return false;
+
+        if (m_text.selStart == m_text.cursorPos) {
+            // Delete single character if within bounds
+            if (m_text.selStart < m_text.value.size())
+                m_text.value.erase(m_text.value.begin() + m_text.selStart);
+        }
+        else {
+            // Delete selection range
+            m_text.value.erase(
+                m_text.value.begin() + m_text.selStart,
+                m_text.value.begin() + std::min((int)m_text.cursorPos, (int)m_text.value.size())
+            );
+        }
+
+        // Move cursor to start of deleted range
+        m_text.cursorPos = m_text.selStart;
+        m_text.selStart = m_text.cursorPos;  // selection collapsed
+        return true;
+    }
+    void Frtk_Input_Base::draw_cursor()
+    {
+        if (!m_has_focus)
+            return;
+
+        NVGglyphPosition glyphs[512];
+        int count = nvgTextGlyphPositions( m_vg, m_x, m_y, m_text.value.c_str(), nullptr, glyphs, 512);
+        float cursorX;
+        if (m_text.cursorPos < count)
+            cursorX = glyphs[m_text.cursorPos].x;
+        else if (count > 0)
+            cursorX = glyphs[count - 1].maxx;
+        else
+            cursorX = m_x;
+        float asc, desc, lineh;
+        nvgTextMetrics(m_vg, &asc, &desc, &lineh);
+
+        drawFilledRect(m_vg,{  cursorX, m_y +m_h/2 - asc, 2, lineh }, 0, NORMAL_BORDER, nvgRGBAf(FR_BLACK), glmToNVG(m_color_diabled) );
+    }
+
     int Frtk_Input_Base::handle(int ev)
     {
         /*
@@ -182,14 +311,132 @@ namespace FR {
                     -Typing characters ->insert at cursor, handle selection
                     -Arrow/Home/End -> move cursor
                     -Backspace/Delete -> remove selected or adjacent characters
-                    -Clipboard/IME handling 
-            
-        
-        */
-       /* switch (ev) {
-        }*/
+                    -Clipboard/IME handling
 
-        /*}*/
+        */
+
+
+        switch (ev) {
+        case (FR_FOCUS): {
+            m_text.cursorPos = m_text.value.size();
+            m_text.selStart = m_text.cursorPos;
+            return 1;
+        }
+        case (FR_KEYBOARD): {
+            FRTK_CORE_INFO("IAM HERE");
+            if (!(m_active || m_visible))
+                return 0;
+            auto& ek = m_mainWindow->m_sysEvents.keyB;
+            if (isEditable() && m_has_focus) {
+                if (ek.lastKAction == GLFW_PRESS || ek.lastKAction == GLFW_REPEAT) {
+                    switch (ek.lastKey) {
+                        //Left key
+                    case GLFW_KEY_LEFT: {
+                        if (!ek.shiftDown) {
+                            // collapse selection first
+                            m_text.selStart = m_text.cursorPos;
+                        }
+                        if (m_text.cursorPos > 0)
+                            m_text.cursorPos--;
+                    } break;
+
+                    case GLFW_KEY_RIGHT: {
+                        if (!ek.shiftDown) {
+                            m_text.selStart = m_text.cursorPos;
+                        }
+                        if (m_text.cursorPos < (int)m_text.value.size())
+                            m_text.cursorPos++;
+                    } break;
+
+                    case GLFW_KEY_HOME: {
+                        if (!ek.shiftDown) {
+                            m_text.selStart = m_text.cursorPos;
+                        }
+                        m_text.cursorPos = 0;
+                    } break;
+
+                    case GLFW_KEY_END: {
+                        if (!ek.shiftDown) {
+                            m_text.selStart = m_text.cursorPos;
+                        }
+                        m_text.cursorPos = (int)m_text.value.size();
+                    } break;
+
+                    case GLFW_KEY_BACKSPACE: {
+                        if (m_text.selStart != m_text.cursorPos) {
+                            delSel();
+                        }
+                        else if (m_text.cursorPos > 0) {
+                            m_text.value.erase(m_text.value.begin() + m_text.cursorPos - 1);
+                            m_text.cursorPos--;
+                        }
+                    } break;
+                    case GLFW_KEY_DELETE: {
+                        if (m_text.selStart != m_text.cursorPos) {
+                            delSel();
+                        }
+                        else if (m_text.cursorPos < (int)m_text.value.size()) {
+                            m_text.value.erase(m_text.value.begin() + m_text.cursorPos);
+                        }
+                    } break;
+
+                    case GLFW_KEY_ENTER:
+                    case GLFW_KEY_KP_ENTER: {
+                        if (isSingleLine()) {
+                            m_text.selStart = 0;
+                            m_text.cursorPos = 0;
+                            do_callback();
+                            m_has_focus = false;
+                        }
+                        else {
+                            m_text.value.insert(m_text.value.begin() + m_text.cursorPos, '\n');
+                            m_text.cursorPos++;
+                            m_text.selStart = m_text.cursorPos;
+                        }
+                    }break;
+                   }
+                }
+                if (ek.ctrlDown && ek.lastKAction == GLFW_KEY_A) {
+                    m_text.cursorPos = (int) m_text.value.size();
+                    m_text.selStart = 0;
+                }else if (ek.ctrlDown && ek.lastKAction == GLFW_KEY_X) {
+                    copy();
+                    delSel();
+                 }
+                else if (ek.ctrlDown && ek.lastKAction == GLFW_KEY_C) {
+                    copy();
+                }
+                else if (ek.ctrlDown && ek.lastKAction == GLFW_KEY_V) {
+                    delSel();
+                    paste();
+                }
+            }
+            // We dont have special char .. unicode char to be processed
+
+            if (!m_mainWindow->m_unicodeChars.empty()) {
+                delSel(); // delete selection if any
+
+                for (auto& item : m_mainWindow->m_unicodeChars) {
+                    std::string utf8 = cpToUTF8(item.codepoint); // convert codepoint to UTF-8
+                    m_text.value.insert(
+                        m_text.value.begin() + m_text.cursorPos,
+                        utf8.begin(),
+                        utf8.end()
+                    );
+                    m_text.cursorPos += utf8.size(); 
+                }
+
+                m_text.selStart = m_text.cursorPos;   // update selection start
+                m_mainWindow->m_unicodeChars.clear(); // clear queue after processing
+            }
+        }
+        
+        
+        case (FR_LEFT_PUSH): {
+
+        }
+        }
+
         return 0;
     }
 }

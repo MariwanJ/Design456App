@@ -79,10 +79,10 @@
 #include <fr_openmesh.h>
 
 // ImGui Fonts
-#include "imguiFont/shapes_ttf.h"
+#include <imguiFont/shapes_ttf.h>
 
 // STB Image
-#include "../vendor/stb_image/src/stb_image.h"
+#include <stb_image.h>
 
 // OpenMesh
 // Must be included after GLAD/OpenGL
@@ -191,6 +191,11 @@ namespace FR {
         float exponent;
     };
 
+    //Holds Unicode char for later processing 
+   typedef struct {
+        uint32_t codepoint;
+    } CharEvent_t;
+
     /**
      * Holds the render information
      */
@@ -265,6 +270,7 @@ You call window->hide()
         FR_FOCUS,
         FR_UNFOCUS,
         FR_KEYBOARD,
+        FR_UNICODE,
         FR_CLOSE,
         FR_DEACIVATE,
         FR_ACTIVE,
@@ -319,11 +325,23 @@ You call window->hide()
         FRTK_TOGGLE_LIGHT_BUTTON,
 
         FRTK_LABEL,
+        //input widgets
+        FRTK_BASE_INPUT ,
+        FRTK_INT_INPUT,
+        FRTK_FLOAT_INPUT,
         FRTK_INPUT,
-        FRTK_INPUT_FLOAT,
-        FRTK_INPUT_INT,
-        FRTK_INPUT_TEXT,
-        FRTK_INPUT_MULTI_TEXT,
+        FRTK_MULTILINE_INPUT,
+        FRTK_SECRET_INPUT,
+        FRTK_INPUT_READONLY,
+        FRTK_NORMAL_OUTPUT,
+        FRTK_MULTILINE_OUTPUT,
+        FRTK_INPUT_WRAP,
+        FRTK_MULTILINE_INPUT_WRAP,
+        FRTK_MULTILINE_OUTPUT_WRAP,
+        FRTK_NORMAL_OUTPUT_READONLY,
+        FRTK_MULTILINE_OUTPUT_READONLY,
+        FRTK_MULTILINE_OUTPUT_WRAP_READONLY,
+
         FRTK_VSCROLL,
         FRTK_HSCROLL,
         FRTK_IMAGE,

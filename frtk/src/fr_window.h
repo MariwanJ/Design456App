@@ -210,7 +210,7 @@ namespace FR {
         void activateNavi();
 
         float menuHeight(void) const;
-        
+        std::vector<CharEvent_t> m_unicodeChars;
 
     protected:
 
@@ -227,6 +227,8 @@ namespace FR {
 
         int createGLFWwindow();
 
+  
+
         int imguimzo_init();
 
         static screenDim_t m_ViewPort;
@@ -240,7 +242,8 @@ namespace FR {
         static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
         static void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-
+        static void char_callback(GLFWwindow* window, unsigned int codepoint);
+        
         static void cursor_m_positioncallback(GLFWwindow* win, double xpos, double ypos);
 
         static void cursor_enter_callback(GLFWwindow* win, int entered);

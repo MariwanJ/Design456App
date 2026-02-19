@@ -33,7 +33,7 @@ namespace FR {
 #define ICON_SEARCH 0x1F50D
 #define ICON_CIRCLED_CROSS 0x2716
     Frtk_Search_Box::Frtk_Search_Box(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b) :
-        Frtk_Box(vg, X, Y, W, H, lbl, b), m_cornerRadius(m_h * .5f)
+        Frtk_Input_Base(vg, X, Y, W, H, lbl, b), m_cornerRadius(m_h * .5f)
     {
         m_color = glm::vec4(FR_WHITE);
         m_bkg_color = glm::vec4(FR_GRAY);
@@ -52,35 +52,6 @@ namespace FR {
     int Frtk_Search_Box::handle(int ev)
     {
         return 0;
-    }
-
-    std::string cpToUTF8(int cp) {
-        if (cp < 0 || cp > 0x10FFFF || (cp >= 0xD800 && cp <= 0xDFFF)) {
-            FRTK_CORE_FATAL("Invalid Unicode code point");
-        }
-
-        std::string str;
-        int n = 0;
-
-        // Determine the number of bytes needed
-        if (cp < 0x80) n = 1;
-        else if (cp < 0x800) n = 2;
-        else if (cp < 0x10000) n = 3;
-        else if (cp < 0x200000) n = 4;
-        else if (cp < 0x4000000) n = 5;
-        else n = 6;
-
-        str.resize(n);  // Resize the string to hold the UTF-8 bytes
-
-        switch (n) {
-        case 6: str[5] = 0x80 | (cp & 0x3f); cp >>= 6; cp |= 0x4000000;
-        case 5: str[4] = 0x80 | (cp & 0x3f); cp >>= 6; cp |= 0x200000;
-        case 4: str[3] = 0x80 | (cp & 0x3f); cp >>= 6; cp |= 0x10000;
-        case 3: str[2] = 0x80 | (cp & 0x3f); cp >>= 6; cp |= 0x800;
-        case 2: str[1] = 0x80 | (cp & 0x3f); cp >>= 6; cp |= 0xc0;
-        case 1: str[0] = static_cast<char>(cp);
-        }
-        return str;  // result in UTF-8 string
     }
 
     void Frtk_Search_Box::draw() {
@@ -113,7 +84,7 @@ namespace FR {
     }
 
     void Frtk_Search_Box::draw_focus() {
-        if (!m_has_focus) 
+        if (!m_has_focus)
             return;
         auto col = nvgRGBAf(0, 0.501f, 1.0f, FRTK_FOCUS_OPACITY_VALUE);
         nvgBeginPath(m_vg);

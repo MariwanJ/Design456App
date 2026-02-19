@@ -26,7 +26,7 @@
 //
 
 #include <../../src/fr_texture2d.h>
-#include <../../vendor/stb_image/src/stb_image.h>
+#include <../../vendor/nanovg/src/stb_image.h>
 #include <fr_core.h>
 
 namespace FR {

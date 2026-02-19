@@ -34,33 +34,18 @@
 
 
 namespace FR {
-        //We should implement similar input widget as FLTK, It will not be a copy-paste code for sure
-        enum FR_INPUT_TYPE {
-            FR_NORMAL_INPUT = 0,
-            FR_FLOAT_INPUT = 1,
-            FR_INT_INPUT = 2,
-            FR_HIDDEN_INPUT = 3,
-            FR_MULTILINE_INPUT = 4,
-            FR_SECRET_INPUT = 5,
-            FR_INPUT_TYPE = 7,
-            FR_INPUT_READONLY = 8,
-            FR_NORMAL_OUTPUT = (FR_NORMAL_INPUT | FR_INPUT_READONLY),
-            FR_MULTILINE_OUTPUT = (FR_MULTILINE_INPUT | FR_INPUT_READONLY),
-            FR_INPUT_WRAP = 16,
-            FR_MULTILINE_INPUT_WRAP = (FR_MULTILINE_INPUT | FR_INPUT_WRAP),
-            FR_MULTILINE_OUTPUT_WRAP = (FR_MULTILINE_INPUT | FR_INPUT_READONLY | FR_INPUT_WRAP),
-        };
-
     struct TextInput {
         std::string value; //float, double, int & string values: Everything will be string, easier to edit. 
         size_t cursorPos; 
-        size_t selStart;
-        size_t selEnd;
+        size_t selStart;  
+      //  int selEnd;    
     };
 
     class Frtk_Input_Base : public Frtk_Box {
     public:
         Frtk_Input_Base(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b = FRTK_FLAT_BOX);
+
+        std::string cpToUTF8(uint32_t cp);
 
         void value(int value);
         void value(float value);
@@ -81,7 +66,8 @@ namespace FR {
 
         int insert(const char* t, int length);
 
-        int copy(int clipboard);
+        int copy();
+        int paste();
 
         int undo();
         bool can_undo() const;
@@ -93,20 +79,31 @@ namespace FR {
         void wratp(int b);
 
 
+        //Type checks
+        bool isEditable() const;
+        bool isSelectable() const;
+        bool isWrapped() const;
+        bool isSingleLine() const;
+        bool isSecret() const;
+
     protected:
         virtual int handle(int ev) override;
         void drawEditBoxBase(float x, float y, float w, float h);
-        virtual void draw();
+        virtual void draw() override;
+        virtual void draw_cursor();
 
         int word_start(int ind) const;
         int word_end(int ind) const;
         int line_strart(int ind) const;
         int line_end(int ind) const;
 
+        bool delSel();
+
         TextInput m_text;
         int m_tab_nav;
 
     private:
+
         bool isInteger(const std::string& str, int& value) {
             auto [ptr, ec] = std::from_chars(str.data(), str.data() + str.size(), value);
             return ec == std::errc() && ptr == str.data() + str.size();

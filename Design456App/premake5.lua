@@ -24,7 +24,6 @@ project "Design456App"
         "%{IncludeDir.glm}",
         "%{IncludeDir.OpenMesh}",
         "%{IncludeDir.freeImage}",
-        "%{IncludeDir.stb_image}",
         "%{IncludeDir.objloader}",
         "%{IncludeDir.spdlog}",
         "%{IncludeDir.freetype}",
@@ -41,18 +40,12 @@ project "Design456App"
 
     -- Library directories
     libdirs {
-        "../bin/lib/"
+        "../bin/"
     }
 
-    
-    -- Common links
     local commonLinks = {
         "frtk",
     }
-
-    ------------------------------
-    -- CONFIGURATION FILTERS
-    ------------------------------
 
     filter "configurations:Debug"
         defines { "FRTK_DEBUG" }
@@ -66,17 +59,16 @@ project "Design456App"
         optimize "on"
         links { commonLinks }
 
-    ------------------------------
-    -- PLATFORM FILTERS
-    ------------------------------
-
-    -- Windows-specific
     filter "system:windows"
         defines { "FRTK_PLATFORM_WINDOWS", "GLFW_EXPOSE_NATIVE_WIN32" }
         links { "opengl32.lib", "gdiplus.lib" }
         buildoptions { "/W4", "/utf-8" }
-        
-    -- Linux-specific
+
+        --  -- Windows runtime: ensure DLL is next to EXE
+        -- postbuildcommands {
+        --     "{COPY} ../bin/freetype.dll %{cfg.targetdir}"
+        -- }
+
     filter "system:linux"
         defines { "FRTK_PLATFORM_LINUX" }
          buildoptions {
@@ -84,14 +76,17 @@ project "Design456App"
          "-Wextra",
          "-Wconversion",
          "-Wfloat-conversion",
-         "-Werror",
+         --"-Werror",
          "-fPIC",
          "-ggdb",
          "-fdiagnostics-color=auto",
          "-finput-charset=UTF-8",
          "-fexec-charset=UTF-8"
       }
-
+        -- linkoptions {
+        --     "-Wl,-rpath,$ORIGIN"  -- look for .so in the folder
+        -- }
+        
         links {
             "GL",
             "dl",

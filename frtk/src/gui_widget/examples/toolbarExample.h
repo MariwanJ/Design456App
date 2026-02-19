@@ -25,8 +25,8 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef FRTK_TOOLBAR_DEMO_H
-#define FRTK_TOOLBAR_DEMO_H
+#ifndef FRTK_TOOLBAREXAMPLE_H_H
+#define FRTK_TOOLBAREXAMPLE_H_H
 
 
 #include <gui_widget/Frtk_ToolBarWin.h>
@@ -36,4 +36,4 @@
 namespace FR{
     std::shared_ptr<Frtk_ToolBarWin>  runFRTKToolbarDemo();
 } 
-#endif  /FRTK_TOOLBAR_DEMO
+#endif  //FRTK_TOOLBAREXAMPLE_H

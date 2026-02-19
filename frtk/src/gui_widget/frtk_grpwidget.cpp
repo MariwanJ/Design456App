@@ -141,7 +141,8 @@ namespace FR {
     }
 
     int Frtk_GrpWidget::remove_child_at(size_t index) {
-        if (index > m_children.size()) return -1;
+        if (index > m_children.size()) 
+            return -1;
         m_children.erase(m_children.begin() + index);
         return 0;
     }
@@ -284,8 +285,8 @@ namespace FR {
             case GLFW_KEY_UP: {
                 for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
                     if ((*it)->take_focus()) return 1;
-                    }break;
-                }
+                }break;
+            }
             }
             return 0;
         }
@@ -294,9 +295,16 @@ namespace FR {
             return 0;
         }
         case FR_KEYBOARD: {
-            return (navigate_focus(navkey()));
+            if (m_childFocus && m_childFocus->active() && m_childFocus->visible()) {
+                if (m_childFocus->handle(FR_KEYBOARD) == 1)
+                    return 1;   // child consumed key
+            }
+            if (navigate_focus(navkey()))
+                return 1;
+            return 0;
             }
         }
+
         //Mouse 
            if (!(m_active && m_visible))
                 return 0;              //inactive widget - we don't care
@@ -338,29 +346,6 @@ namespace FR {
                         }
                     }
                 }
-
-                //if (hovered) {
-                //    if (hovered->handle(ev) == 1)
-                //        return 1;
-                //}
-
-                //if (isMouse_inside()) {
-                //    if (!hasBelowMouse()) {
-                //        set_BelowMouse();
-                //        if (handle(FR_ENTER) == 1) {
-                //            return 1;
-                //        }
-                //    }
-                //}
-                //else
-                //{
-                //    if (hasBelowMouse()) {
-                //        clear_BelowMouse();
-                //        if (handle(FR_LEAVE) == 1) {
-                //            return 1;
-                //        }
-                //    }
-                //}
             }break;
             }
             for (auto& wdg : m_children) {

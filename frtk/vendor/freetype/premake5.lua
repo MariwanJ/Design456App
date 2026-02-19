@@ -7,56 +7,60 @@ project "freetype"
     objdir ("../../../bin_obj/")
     
 
-    files
+     files
     {
-        --- Source files
-        "src/autofit/*.c",
-        "src/base/*.c",
-        "src/bdf/*.c",
-        --"src/bzip2/*.c",       -- optional, disabled
-        "src/cache/*.c",
-        "src/cff/*.c",
-        "src/cid/*.c",
-        "src/dlg/*.c",
-       -- "src/gxvalid/*.c",
-        --"src/gzip/*.c",        -- optional, disabled
-        --"src/otvalid/*.c",
-        "src/pcf/*.c",
-        "src/pfr/*.c",
-        "src/psaux/*.c",
-        "src/pshinter/*.c",
-        "src/psnames/*.c",
-        "src/raster/*.c",
-        "src/sdf/*.c",
-        "src/sfnt/*.c",
-        "src/smooth/*.c",
-        "src/svg/*.c",
-        "src/truetype/*.c",
-        "src/type1/*.c",
-        "src/type42/*.c",
-        "src/winfonts/*.c",
-        "src/*",
-        --- Header files
-        "src/autofit/*.h",
+        --- Mandatory FreeType source files ---
+        "src/base/*.c",        
+        "src/bdf/*.c",         
+        "src/sdf/*.c",                 
+        "src/cache/*.c",       
+        "src/cff/*.c",         
+        "src/cid/*.c",         
+        "src/dlg/*.c",         
+        "src/pcf/*.c",         
+        "src/pfr/*.c",         
+        "src/psaux/*.c",       
+        "src/psnames/*.c",     
+        "src/raster/ftraster.c",  
+        "src/raster/raster.c",  
+        "src/sfnt/*.c",        
+        "src/smooth/ftsmooth.c",
+        "src/smooth/ftgrays.c",
+        "src/svg/*.c",         
+        "src/truetype/*.c",    
+        "src/type1/*.c",       
+        "src/type42/*.c",      
+        "src/winfonts/*.c",    
+
+        --- Optional modules (enable if needed) ---
+         "src/autofit/*.c",   
+        "src/pshinter/*.c",   
+        --"src/gxvalid/*.c",  
+        --"src/otvalid/*.c",  
+        --"src/bzip2/*.c",    
+        --"src/gzip/*.c",     
+
+        --- Header files ---
+        --- 
         "src/base/*.h",
+        "src/autofit/*.h",   -- auto-hinting
+        "src/pshinter/*.h", -- PostScript hinting (needed for PS fonts)
         "src/bdf/*.h",
-        --"src/bzip2/*.h",       -- optional, disabled
+        "src/sdf/*.h",
         "src/cache/*.h",
         "src/cff/*.h",
         "src/cid/*.h",
         "src/dlg/*.h",
-        --"src/gxvalid/*.h",
-        --"src/gzip/*.h",        -- optional, disabled
-        --"src/otvalid/*.h",
         "src/pcf/*.h",
         "src/pfr/*.h",
         "src/psaux/*.h",
-        "src/pshinter/*.h",
         "src/psnames/*.h",
-        "src/raster/*.h",
-        "src/sdf/*.h",
+        "src/raster/ftraster.h",
+        "src/raster/rasterrs.h",
+        "src/raster/ftmisc.h",
         "src/sfnt/*.h",
-        "src/smooth/*.h",
+        "src/smooth/ftsmooth.h",
+        "src/smooth/ftgrays.h",
         "src/svg/*.h",
         "src/truetype/*.h",
         "src/type1/*.h",
@@ -64,6 +68,8 @@ project "freetype"
         "src/winfonts/*.h",
         "include/**"
     }
+
+
 
     includedirs
     {
@@ -84,7 +90,6 @@ project "freetype"
         "_CRT_SECURE_NO_WARNINGS",
         "FT_DEBUG_LEVEL_ERROR",
         "FT_DEBUG_LEVEL_TRACE",
-        "DLL_EXPORT"
     }
 
     filter "system:linux"

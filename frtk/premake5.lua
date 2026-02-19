@@ -120,7 +120,6 @@ project "frtk"
             "objloader%{cfg.targetsuffix}",
             "OpenMesh%{cfg.targetsuffix}",
             "spdlog%{cfg.targetsuffix}",
-            "stb_image%{cfg.targetsuffix}",
             "yaml-cpp%{cfg.targetsuffix}",
             "freetype%{cfg.targetsuffix}",
             "nanovg%{cfg.targetsuffix}",
@@ -171,12 +170,11 @@ filter "system:linux"
     "cd " .. project_root .. "/bin &&  ar -x " .. (project_root ..  "/bin/libspdlog%{cfg.targetsuffix}.a"     ),
     "cd " .. project_root .. "/bin &&  ar -x " .. (project_root ..  "/bin/libyaml-cpp%{cfg.targetsuffix}.a"   ),
     "cd " .. project_root .. "/bin &&  ar -x " .. (project_root ..  "/bin/libGLFW%{cfg.targetsuffix}.a"       ),
-    "cd " .. project_root .. "/bin &&  ar -x " .. (project_root ..  "/bin/libstb_image%{cfg.targetsuffix}.a"  ),
     "cd " .. project_root .. "/bin &&  ar -x " .. (project_root ..  "/bin/libobjloader%{cfg.targetsuffix}.a"  ),
     "cd " .. project_root .. "/bin &&  ar -x " .. (project_root ..  "/bin/libOpenMesh%{cfg.targetsuffix}.a"   ),
     "cd " .. project_root .. "/bin &&  ar -x " .. (project_root ..  "/bin/libfreetype%{cfg.targetsuffix}.a"   ),
     "cd " .. project_root .. "/bin &&  ar -x " .. (project_root ..  "/bin/libnanovg%{cfg.targetsuffix}.a"   ),
-	"cd " .. project_root .. "/bin &&  ar -x " .. (project_root ..  "/bin/tinyfiledialogs%{cfg.targetsuffix}.a"   ),
+	"cd " .. project_root .. "/bin &&  ar -x " .. (project_root ..  "/bin/libtinyfiledialogs%{cfg.targetsuffix}.a"   ),
     "cd " .. project_root .. "/bin &&  ar -rcs " .. (project_root  .. "/bin/libfrtk%{cfg.targetsuffix}.a ") .. (project_root  .. "/bin/*.o" ),          --create static lib 
     "cd " .. project_root .. "/bin &&  g++ -shared -o " .. (project_root  .. "/bin/libfrtk%{cfg.targetsuffix}.so ") .. (project_root  .. "/bin/*.o" ),  --create shared lib also.
     "cd " .. project_root .. "/bin &&  rm -f " .. (project_root  .. "/bin/*.o" ),         -- Remove temporary object files
@@ -190,7 +188,6 @@ group "Dependencies"
         include "frtk/vendor/ImGuizmo"
         include "frtk/vendor/spdlog"
         include "frtk/vendor/yaml-cpp"
-        include "frtk/vendor/stb_image"
         include "frtk/vendor/objloader"
         include "frtk/vendor/OpenMesh"
         include "frtk/vendor/freetype"

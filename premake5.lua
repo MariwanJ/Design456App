@@ -25,7 +25,6 @@ workspace "Design456App"
     IncludeDir["glm"]       = "../frtk/vendor/glm"
     IncludeDir["yaml-cpp"]  = "../frtk/vendor/yaml-cpp"
     IncludeDir["GLFW"]      = "../frtk/vendor/GLFW/include"
-    IncludeDir["stb_image"] = "../frtk/vendor/stb_image/src"
     IncludeDir["objloader"] = "../frtk/vendor/objloader"
     IncludeDir["OpenMesh"]  = "../frtk/vendor/OpenMesh/src"
     IncludeDir["freetype"]  = "../frtk/vendor/freetype/include"
@@ -63,7 +62,6 @@ project "Design456App"
         IncludeDir["objloader"],
         IncludeDir["OpenMesh"],
         IncludeDir["spdlog"],
-        IncludeDir["stb_image"],
         IncludeDir["yaml-cpp"],
         IncludeDir["freetype"],
         IncludeDir["nanovg"],
@@ -90,7 +88,6 @@ group "Dependencies"
         include "frtk/vendor/ImGuizmo"
         include "frtk/vendor/spdlog"
         include "frtk/vendor/yaml-cpp"
-        include "frtk/vendor/stb_image"
         include "frtk/vendor/objloader"
         include "frtk/vendor/OpenMesh"
         include "frtk/vendor/freetype"

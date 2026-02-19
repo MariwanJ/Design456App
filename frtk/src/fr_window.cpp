@@ -346,6 +346,7 @@ namespace FR {
         // GLFW callbacks  https://www.glfw.org/docs/3.3/input_guide.html
         glfwSetFramebufferSizeCallback(pGLFWWindow, framebuffer_size_callback);
         glfwSetKeyCallback(pGLFWWindow, keyboard_callback);
+        glfwSetCharCallback(pGLFWWindow, char_callback);
         glfwSetCursorPosCallback(pGLFWWindow, cursor_m_positioncallback);
         glfwSetCursorEnterCallback(pGLFWWindow, cursor_enter_callback);
         glfwSetMouseButtonCallback(pGLFWWindow, mouse_button_callback);
@@ -356,9 +357,7 @@ namespace FR {
         return 1;
     }
 
-    void Fr_Window::joystick_callback(int jid, int events)
-    {
-    }
+   
 
     void Fr_Window::resize(int x, int y, int w, int h)
     {
@@ -575,7 +574,6 @@ namespace FR {
             if (justPressed || justReleased) {
                 ek.lastKey = k;
                 ek.lastKAction = justPressed ? GLFW_PRESS : GLFW_RELEASE;
-                FRTK_CORE_INFO("KEY {}", k);
                 handle(FR_KEYBOARD);
             }
         }

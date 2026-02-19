@@ -105,6 +105,15 @@ namespace FR {
             ek.keyDown[key] = (action != GLFW_RELEASE);
     }
 
+    void Fr_Window::char_callback(GLFWwindow* window, unsigned int codepoint)
+    {
+        if (!spWindow) return;
+        spWindow->m_unicodeChars.push_back({ codepoint });
+    }
+
+    void Fr_Window::joystick_callback(int jid, int events)
+    {
+    }
     void Fr_Window::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     {
         if (spWindow == nullptr)
