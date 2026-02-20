@@ -715,7 +715,6 @@ namespace FR {
                         case SelectionMode::FACE:
                         {
                             OpenMesh::FaceHandle pickedFace;
-                            float t;
                             if (m_world.at(IndexOfclosestItem).Sceneitem->is3Dobj()) {
                                 if (pickAFace(IndexOfclosestItem, pickedFace, t)) {
                                     if (pickedFace.is_valid())

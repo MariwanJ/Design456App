@@ -177,15 +177,14 @@ namespace FR {
             }
         }
 
-        // try the first focusable child
+        // try the first can focus child
         for (auto& wdg : m_children) {
             if (wdg->take_focus()) return true;
         }
         return false;
     }
     bool Frtk_GrpWidget::navigate_focus(int key) {
-        if (m_children.size() <= 1) return false;  // nothing to navigate
-
+        if (m_children.empty()) return false; // nothing to navigate
         int currentIndex = -1;
         for (size_t i = 0; i < m_children.size(); i++) {
             if (m_children[i].get() == m_childFocus) {
@@ -197,41 +196,64 @@ namespace FR {
         int startIndex = currentIndex;
 
         while (true) {
-            // move index
+            // Move index based on key
             switch (key) {
             case GLFW_KEY_RIGHT:
             case GLFW_KEY_DOWN:
                 currentIndex++;
-                if (currentIndex >= static_cast<int>(m_children.size())) currentIndex = 0; // wrap
+                if (currentIndex >= static_cast<int>(m_children.size()))
+                    currentIndex = 0; // wrap
                 break;
 
             case GLFW_KEY_LEFT:
             case GLFW_KEY_UP:
                 currentIndex--;
-                if (currentIndex < 0) currentIndex = static_cast<int>(m_children.size()) - 1; // wrap
+                if (currentIndex < 0)
+                    currentIndex = static_cast<int>(m_children.size()) - 1; // wrap
                 break;
 
             default:
-                return false;  // unknown key
+                return false; // unknown key
             }
 
+            // Came back to start -> stop
             if (currentIndex == startIndex) return false;
 
             Frtk_Widget* candidate = m_children[currentIndex].get();
 
-            if (key == GLFW_KEY_UP || key == GLFW_KEY_DOWN) {
-                if (m_childFocus) {
-                    int prevX = m_childFocus->x();
-                    int prevW = m_childFocus->w();
-                    int candX = candidate->x();
-                    int candW = candidate->w();
-                    if (candX >= prevX + prevW || candX + candW <= prevX) continue;
+            // If candidate is a group, recursively navigate inside it
+            if (candidate->m_wdgType== FRTK_GROUP) {
+                Frtk_GrpWidget* group = static_cast<Frtk_GrpWidget*>(candidate);
+                Frtk_Widget* nested = group->first_focusable_widget();
+                if (nested && nested->take_focus()) {
+                    m_childFocus = nested;
+                    return true;
                 }
             }
-
-            if (candidate->take_focus()) return true;
+            else {
+                // Leaf widget -> try to take focus
+                if (candidate->take_focus()) {
+                    m_childFocus = candidate;
+                    return true;
+                }
+            }
         }
+
         return false;
+    }
+    Frtk_Widget* Frtk_GrpWidget::first_focusable_widget() {
+        for (auto& child : m_children) {
+            Frtk_Widget* w = child.get();
+
+            if (w->can_focus()) return w;
+
+            if (w->m_wdgType == FRTK_GROUP) {
+                Frtk_GrpWidget* group = static_cast<Frtk_GrpWidget*>(w);
+                Frtk_Widget* nested = group->first_focusable_widget();
+                if (nested) return nested;
+            }
+        }
+        return nullptr;
     }
 
     void Frtk_GrpWidget::lose_focus() {
@@ -247,6 +269,11 @@ namespace FR {
         }
     }
 
+    Frtk_Widget* Frtk_GrpWidget::focusedChild()
+    {
+        return m_childFocus;
+    }
+
     bool Frtk_GrpWidget::set_child_focus(Frtk_Widget* w) {
         m_childFocus = w;
         return true;
@@ -257,11 +284,10 @@ namespace FR {
     }
 
     //Return = 1 Event consumed
-   //Return = 0 or -1 Event should continue to be delivered to other widgets
-       //Return = 1 Event consumed
-   //Return = 0 or -1 Event should continue to be delivered to other widgets
+    //Return = 0 or -1 Event should continue to be delivered to other widgets
+    //Return = 1 Event consumed
+    //Return = 0 or -1 Event should continue to be delivered to other widgets
     int Frtk_GrpWidget::handle(int ev) {
-        
         //Keyboard events
         switch (ev) {
         case FR_FOCUS: {
@@ -346,6 +372,7 @@ namespace FR {
                         }
                     }
                 }
+             
             }break;
             }
             for (auto& wdg : m_children) {
@@ -364,4 +391,13 @@ namespace FR {
             }
             return 0;
         }  
+        bool Frtk_GrpWidget::take_focus() {
+            m_has_focus = true;
+            Frtk_Widget* first = first_focusable_widget();
+            if (!first) return false;
+
+            return first->take_focus();
+        }
+    
+
 }

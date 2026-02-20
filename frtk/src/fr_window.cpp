@@ -66,8 +66,6 @@ namespace FR {
 
     std::shared_ptr<Fr_Window> Fr_Window::spWindow = nullptr;
 
-    Fr_InputEvent_t Fr_Window::m_sysEvents{ 0 };
-
     GLFWwindow* Fr_Window::pGLFWWindow = nullptr;
     bool Fr_Window::MouseOnce = true;
 
@@ -119,7 +117,6 @@ namespace FR {
         ev.mouse.lastMAction = -1;
         ev.mouse.lastMod = -1;
         memset(ev.keyB.keyDown, 0, sizeof(ev.keyB.keyDown));
-        memset(ev.keyB.prevKeyDown, 0, sizeof(ev.keyB.prevKeyDown));
 
         ev.keyB.lastKey = -1;
         ev.keyB.lastKAction = -1;
@@ -130,13 +127,48 @@ namespace FR {
         ev.keyB.altDown = false;
         ev.keyB.superDown = false;
     }
+    Fr_InputEvent_t Fr_Window::m_sysEvents = {
+        // mouse
+        {
+            0.0, 0.0,   // activeX, activeY
+            0.0, 0.0,   // prevX, prevY
+            0.0, 0.0,   // scrollX, scrollY
+            false, false, false,   // L_Down, R_Down, M_Down
+            false, false, false,   // L_Pressed, L_Released, L_Drag
+            false, false, false,   // R_Pressed, R_Released, R_Drag
+            false, false, false,   // M_Pressed, M_Released, M_Drag
+            false,                // mouseMoved
+            false,                // mouseEntered
+            -1, 0,                // lastMAction, lastMod
+            glm::vec3(0.0f),      // worldPos
+            -1, 0                 // button, isDClick
+        },
+        // keyboard
+        {
+            {},                   // keyDown array will zero-initialize
+            {},                   // events vector empty
+            -1, -1,               // lastKey, lastKAction
+            0, 0,                 // scancode, lastMod
+            false, false, false, false // shift, ctrl, alt, super
+        }
+    };
+
 
     Fr_Window::Fr_Window(int x, int y, int w, int h, const std::string& label)
         : m_label(label), 
-        cursorHand(nullptr), cursorCrosshair(nullptr),
-        runCode(false), activeScene(nullptr), m_nvgContext(nullptr),
-        gl_version_major(4), gl_version_minor(6),m_NaviCube(true), m_MainToolbar(nullptr),
-        mouseDefaults{ 0 }, radiusXYZ(0.0f), m_winType(FRTK_WIN_TYPE::NORMAL),m_menuHeight(10.0f)
+        cursorHand(nullptr), 
+        cursorCrosshair(nullptr),
+        runCode(false),
+        activeScene(nullptr), 
+        m_nvgContext(nullptr),
+        gl_version_major(4), 
+        gl_version_minor(6),
+        m_NaviCube(true), 
+        m_MainToolbar(nullptr),
+        mouseDefaults{ 0 }, 
+        radiusXYZ(0.0f), 
+        m_winType(FRTK_WIN_TYPE::NORMAL),
+        m_menuHeight(10.0f)
     {
         /** from Fr_Window */
         mouseDefaults.MouseScrollScale = 5.0f;
@@ -169,15 +201,12 @@ namespace FR {
         m_ViewPort.size.h = h;
         m_ViewPort.size.w = w;
 
-        // std::string fname = "R";
-         // auto n = loadImage();
-          //std::shared_ptr<BYTE> IMG = n.getImage("nofile");
         EXE_CURRENT_DIR = GET_CURRENT_DIRECTORY();
         if (EXE_CURRENT_DIR.find("Error:") != std::string::npos) {
             std::cerr << EXE_CURRENT_DIR << std::endl;  // Print the error message
             exit(1);  // Exit with a non-zero status indicating failure
         }
-        printf("Current Dir = %s\n", EXE_CURRENT_DIR.c_str());
+        std::cout <<EXE_CURRENT_DIR<<std::endl;
 
 #if defined(_WIN32) || defined(_WIN64)
         auto it = EXE_CURRENT_DIR.find("\\bin");
@@ -194,12 +223,12 @@ namespace FR {
         //DEFAULT_FONT = fontPath + "SUSEMono-Thin.ttf";
 
         while (true) {
-            size_t it = EXE_CURRENT_DIR.find("\\"); // Find the backslash
-            if (it != std::string::npos) { // Check if found
+            size_t it = EXE_CURRENT_DIR.find("\\"); 
+            if (it != std::string::npos) { 
                 EXE_CURRENT_DIR.replace(it, 1, "/"); // Replace with a forward slash
             }
             else {
-                break; // Exit the loop if no more backslashes
+                break; 
             }
         }
 
@@ -207,8 +236,6 @@ namespace FR {
         iconPath = EXE_CURRENT_DIR + "/resources/icons/32x32/";
         initSystemEvents();
     }
-
-    /* from Fr_Window*/
 
     void Fr_Window::flush() {
         glad_glFlush();
@@ -252,12 +279,6 @@ namespace FR {
     {
         glfwMakeContextCurrent(nullptr);
         glfwDestroyWindow(pGLFWWindow);
-    }
-
-    static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-    {
-        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-            glfwSetWindowShouldClose(window, GLFW_TRUE);
     }
 
     void Fr_Window::deinitializeGlad()
@@ -379,7 +400,7 @@ namespace FR {
         if (!m_nvgContext) {
             FRTK_CORE_FATAL("Failed to create context for NanoVG");
             glfwTerminate();
-            std::abort(); // stop execution since we can’t continue
+            std::abort(); // stop execution since we can't continue
         }
         // Wrap in shared_ptr with proper deleting
 
@@ -531,7 +552,7 @@ namespace FR {
             Important to remember!!! 
             If you have only one GLFW windows, you should 
             NEVER call nvgBeginFrame/nvgEndFrame per windows.
-            use nvgBeginFrame/nvgEndFrame  per each GLFW windows OUNCE!!
+            use nvgBeginFrame/nvgEndFrame  per each GLFW windows once!!
 
         */
         float ratio = activeScene->getActiveCamera().getRatio();
@@ -568,17 +589,13 @@ namespace FR {
 
         //Keyboard
         auto& ek = m_sysEvents.keyB;
-        for (int k = 0; k <= GLFW_KEY_LAST; ++k) {
-            bool justPressed = (ek.keyDown[k] && !ek.prevKeyDown[k]);
-            bool justReleased = (!ek.keyDown[k] && ek.prevKeyDown[k]);
-            if (justPressed || justReleased) {
-                ek.lastKey = k;
-                ek.lastKAction = justPressed ? GLFW_PRESS : GLFW_RELEASE;
-                handle(FR_KEYBOARD);
-            }
+        for (auto& e : ek.events) {
+            ek.lastKey = e.key;
+            ek.lastKAction = e.action;
+            ek.lastMod = e.mods;
+            handle(FR_KEYBOARD);
         }
-        // Update prevKeyDown for next frame
-        std::copy(std::begin(ek.keyDown), std::end(ek.keyDown), std::begin(ek.prevKeyDown));
+        ek.events.clear(); //clear evenst as we processed them. 
 
         if (em.mouseMoved)       handle(FR_MOUSE_MOVE);
         if (em.L_Pressed)        handle(FR_LEFT_PUSH);
@@ -632,51 +649,91 @@ namespace FR {
         //FRTK GUI HANDLE 
         for (auto it = m_frtkWindow.rbegin(); it != m_frtkWindow.rend(); ++it)
         {
-            auto& gui_win = *it;
+           std::shared_ptr<Frtk_Window> gui_win = *it ;
+           
+           if (gui_win->handle(events) == 1)
+               return 1; // consumed by a child widget
+
             if (events == FR_LEFT_PUSH)
             {
-                if (auto grp = std::dynamic_pointer_cast<Frtk_GrpWidget>(gui_win))
-                {
-                    if (grp->isMouse_inside())
-                        grp->take_focus();
+                    if (gui_win->isMouse_inside())
+                        gui_win->take_focus();
                     else
-                        grp->lose_focus();
-                }
-            }else
+                        gui_win->lose_focus();
+            }
+            else
+                //Further down Keyboard translation : 
+                if (events == FR_KEYBOARD) {
+                    if (g_focusedWdgt.keyboardOwner) {
+                        auto& ek = m_sysEvents.keyB;
+                        int key = ek.lastKey;
+                        int action = ek.lastKAction;
 
-            //Further down Keyboard translation : 
-            if (events == FR_KEYBOARD) {
-                if (g_focusedWdgt.keyboardOwner) {
-                    auto& ek = m_sysEvents.keyB;
-                    int key = ek.lastKey;
-                    int action = ek.lastKAction;
+                        if (action == GLFW_PRESS) {
 
-                    if (action == GLFW_PRESS) {
-                        switch (key) {
-                        case GLFW_KEY_TAB:
-                        case GLFW_KEY_RIGHT:
-                        case GLFW_KEY_DOWN:
-                        case GLFW_KEY_LEFT:
-                        case GLFW_KEY_UP:
-                            // Translate navigation keys to FR_FOCUS
-                            g_focusedWdgt.keyboardOwner->handle(FR_FOCUS);
-                            break;
+                            if (g_focusedWdgt.current &&
+                                g_focusedWdgt.keyboardOwner->m_guiWindow->send_event(*g_focusedWdgt.current, FR_KEYBOARD) == 1)
+                            {
+                                return 1; // consumed by the widget
+                            }
 
-                        default:
-                            // Other keys -> normal FR_KEYBOARD
-                            g_focusedWdgt.keyboardOwner->handle(FR_KEYBOARD);
-                            break;
+
+                            switch (key) {
+                            case GLFW_KEY_TAB:
+                            case GLFW_KEY_RIGHT:
+                            case GLFW_KEY_DOWN:
+                            case GLFW_KEY_LEFT:
+                            case GLFW_KEY_UP:
+                            {
+                                // Compute next focusable widget in this GUI window
+                                Frtk_Widget* next = nullptr;
+
+                                if (g_focusedWdgt.current) {
+                                    // There is a focused child -> find next widget inside the window
+                                    Frtk_Widget* w = g_focusedWdgt.current;
+                                    while (w->parent() && !dynamic_cast<Frtk_Window*>(w->parent()))
+                                    {
+                                        w = w->parent();
+                                    }
+
+                                    // Use tree traversal starting from topGroup
+                                    Frtk_GrpWidget* topGroup = dynamic_cast<Frtk_GrpWidget*>(w);
+                                    if (topGroup->navigate_focus(key))
+                                        next = topGroup->focusedChild();
+                                }
+                                else {
+                                    // No focused widget -> pick first focusable child
+                                    if (g_focusedWdgt.keyboardOwner->m_guiWindow->navigate_focus(key))
+                                        next = g_focusedWdgt.keyboardOwner->m_guiWindow->focusedChild();
+                                }
+
+                                if (next) {
+                                    g_focusedWdgt.prev = g_focusedWdgt.current;
+                                    g_focusedWdgt.current = next;
+                                    // notify the widget it gained focus
+                                    g_focusedWdgt.keyboardOwner->m_guiWindow->send_event(*next, FR_FOCUS);
+                                }
+                                return 1; // event consumed
+                            }
+
+                            default:
+                                // Other keys -> forward to focused widget if any
+                                if (g_focusedWdgt.current) {
+                                    g_focusedWdgt.keyboardOwner->m_guiWindow->send_event(*g_focusedWdgt.current, FR_KEYBOARD);
+                                    return 1;
+                                }
+                                break;
+                            }
                         }
                     }
                 }
-
-
-
-            }
-            if (gui_win->handle(events) == 1)
-                return 1; // Event consumed
         }
-
+        //at the end, we should forwared the events
+        if(g_focusedWdgt.keyboardOwner){
+            if (g_focusedWdgt.keyboardOwner->handle(events)) {
+                return 1; //consumed.
+            }
+        }
         //SCENE PART 
         auto& em = m_sysEvents.mouse;
         auto& ek = m_sysEvents.keyB;
@@ -704,6 +761,7 @@ namespace FR {
         }break;
         default: {}
         }
+        // Send event to Scene Container (Mesh objects)
         return activeScene->handle(events);
     }
     void Fr_Window::deactivateNavi()

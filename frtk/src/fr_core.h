@@ -388,10 +388,17 @@ You call window->hide()
         int button;              // which button triggered last action
         int isDClick;            // double click flag
     }mouse_t;
+    
+    typedef struct {
+        int key;
+        int scancode;
+        int action;
+        int mods;
+    }KeyEvent_t;
 
     typedef struct {
         bool keyDown[GLFW_KEY_LAST + 1];
-        bool prevKeyDown[GLFW_KEY_LAST + 1];
+        std::vector<KeyEvent_t> events;
         int lastKey;
         int lastKAction;
 

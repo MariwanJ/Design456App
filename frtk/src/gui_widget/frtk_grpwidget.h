@@ -60,18 +60,18 @@ namespace FR {
 
         virtual void addChild(std::shared_ptr<Frtk_Widget> w);
         virtual bool navigate_focus(int key);
+        Frtk_Widget* first_focusable_widget();
         //Return a const reference to prevent modification
         const std::vector<std::shared_ptr<Frtk_Widget>>& getChildren() const;
         virtual void lose_focus() override;
-
-
+        Frtk_Widget* focusedChild();
+        virtual bool set_child_focus(Frtk_Widget* w=nullptr) override;
+        virtual bool take_focus() override;
     protected:
         virtual void draw()  override;
         virtual int handle(int ev) override;
         dimPos_float_t mainGui() const override;
-
         std::vector<std::shared_ptr<Frtk_Widget>> m_children;
-        virtual bool set_child_focus(Frtk_Widget* w) override;
         Frtk_Widget* m_childFocus;  //keep track of focused widget
         Frtk_Widget* m_grabbedChild;
     private:

@@ -42,8 +42,8 @@ namespace FR {
         m_font.fontSize = 14.f;
         m_font.forgColor = nvgRGBAf(FR_BLACK);
         m_font.shadowCol = nvgRGBAf(FR_DARKGREY2);
-        m_font.hAlign = FRTK_ALIGN_LEFT;
-        m_font.vAlign = FRTK_ALIGN_TOP;
+        m_font.hAlign = NVG_ALIGN_LEFT;
+        m_font.vAlign = NVG_ALIGN_TOP;
 
         m_SearchIconPos = { m_x, m_y + m_h / 2.0f };
         m_CloseIconPos = { m_x + m_w - (m_font.fontSize * 2.2f), m_y + m_h / 2.0f };

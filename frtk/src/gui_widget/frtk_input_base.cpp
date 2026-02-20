@@ -27,6 +27,7 @@
 
 #include <gui_widget/frtk_input_base.h>
 #include<nanovg.h>
+#include <frtk.h>
 
 namespace FR {
 #define ICON_SEARCH 0x1F50D
@@ -40,10 +41,13 @@ namespace FR {
         m_bkg_color = glm::vec4(0.1254f, 0.1254f, 0.1254f, 0.1254f);
         m_borderColor = glm::uvec4(FR_DARKGREY2);
         m_font.fontSize = 14.f;
-        m_font.hAlign = FRTK_ALIGN_LEFT;
-        m_font.vAlign = FRTK_ALIGN_TOP;
+        m_font.hAlign = NVG_ALIGN_LEFT;
+        m_font.vAlign = NVG_ALIGN_TOP;
+        m_font.pos.x = m_x;
+        m_font.pos.y = m_y;
+        m_font.size.w = m_w;
+        m_font.size.h = m_h;
     }
-
 
     std::string Frtk_Input_Base::cpToUTF8(uint32_t cp) {
         if (cp > 0x10FFFF || (cp >= 0xD800 && cp <= 0xDFFF)) {
@@ -72,7 +76,6 @@ namespace FR {
         return str;
     }
 
-
     void Frtk_Input_Base::drawEditBoxBase(float x, float y, float w, float h)
     {
         NVGpaint bg;
@@ -91,11 +94,13 @@ namespace FR {
 
     void Frtk_Input_Base::draw() {
         drawEditBoxBase(m_x, m_y, m_w, m_h);
-        nvgFontSize(m_vg, m_font.fontSize);
+ /*       nvgFontSize(m_vg, m_font.fontSize);
         nvgFontFace(m_vg, m_font.fName.c_str());
         nvgFillColor(m_vg, m_font.forgColor);
         nvgTextAlign(m_vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
         nvgText(m_vg, m_x + m_h * 0.3f, m_y + m_h * 0.5f, m_text.value.c_str(), NULL);
+        */
+        drawTextInBox(m_vg, m_text.value, m_font);
         if (m_has_focus) {
             draw_focus();
             draw_cursor();
@@ -147,14 +152,13 @@ namespace FR {
         return 0;
     }
     int Frtk_Input_Base::copy() {
-
         if (m_text.selStart == m_text.cursorPos)
             return 0; // nothing selected
 
         int start = std::min(m_text.selStart, m_text.cursorPos);
         int end = std::max(m_text.selStart, m_text.cursorPos);
         std::string selected = m_text.value.substr(start, end - start);
-        glfwSetClipboardString( m_mainWindow->getCurrentGLWindow(), selected.c_str());
+        glfwSetClipboardString(m_mainWindow->getCurrentGLWindow(), selected.c_str());
         return 1;
     }
 
@@ -171,7 +175,6 @@ namespace FR {
         m_text.selStart = m_text.cursorPos;
         return 1;
     }
-
 
     int  Frtk_Input_Base::undo() {
         return 0;
@@ -192,26 +195,12 @@ namespace FR {
     }
     void Frtk_Input_Base::wratp(int b) {
     }
-    //    FRTK_BASE_INPUT = 0,
-    //    FRTK_INT_INPUT,
-    //    FRTK_FLOAT_INPUT,
-    //    FRTK_INPUT,
-    //    FRTK_INPUT_WRAP,          //one line only
-    //    FRTK_MULTILINE_INPUT,     //mulit lines
-    //    FRTK_MULTILINE_INPUT_WRAP,
-    //    FRTK_SECRET_INPUT,
-    //
-    //    FRTK_NORMAL_OUTPUT,
-    //    FRTK_MULTILINE_OUTPUT,
-    //    FRTK_MULTILINE_OUTPUT_WRAP,
-    //    FRTK_NORMAL_OUTPUT_READONLY,
-    //    FRTK_MULTILINE_OUTPUT_READONLY,
-    //    FRTK_MULTILINE_OUTPUT_WRAP_READONLY,
 
     bool Frtk_Input_Base::isEditable() const
     {
         return (
-            m_wdgType == FRTK_INT_INPUT || FRTK_BASE_INPUT||
+            m_wdgType == FRTK_INT_INPUT ||
+            FRTK_BASE_INPUT || //  <----- this one is temporary .. just to test this widget - TODO:remove it
             m_wdgType == FRTK_FLOAT_INPUT ||
             m_wdgType == FRTK_INPUT ||
             m_wdgType == FRTK_INPUT_WRAP ||
@@ -258,21 +247,17 @@ namespace FR {
         return 0;
     }
     bool Frtk_Input_Base::delSel() {
-        // Ensure selStart <= cursorPos
         if (m_text.selStart > m_text.cursorPos)
             std::swap(m_text.selStart, m_text.cursorPos);
 
-        // Nothing to delete
         if (m_text.selStart >= m_text.value.size() && m_text.selStart == m_text.cursorPos)
             return false;
 
         if (m_text.selStart == m_text.cursorPos) {
-            // Delete single character if within bounds
             if (m_text.selStart < m_text.value.size())
                 m_text.value.erase(m_text.value.begin() + m_text.selStart);
         }
         else {
-            // Delete selection range
             m_text.value.erase(
                 m_text.value.begin() + m_text.selStart,
                 m_text.value.begin() + std::min((int)m_text.cursorPos, (int)m_text.value.size())
@@ -288,9 +273,10 @@ namespace FR {
     {
         if (!m_has_focus)
             return;
-
-        NVGglyphPosition glyphs[512];
-        int count = nvgTextGlyphPositions( m_vg, m_x, m_y, m_text.value.c_str(), nullptr, glyphs, 512);
+        const size_t max_glyphs = 1024;
+        NVGglyphPosition glyphs[max_glyphs];
+        int fs= m_font.fontSize;
+        int count = nvgTextGlyphPositions(m_vg, m_font.pos.x, m_font.pos.y, m_text.value.c_str(), nullptr, glyphs, max_glyphs);
         float cursorX;
         if (m_text.cursorPos < count)
             cursorX = glyphs[m_text.cursorPos].x;
@@ -300,8 +286,10 @@ namespace FR {
             cursorX = m_x;
         float asc, desc, lineh;
         nvgTextMetrics(m_vg, &asc, &desc, &lineh);
+        
+        drawFilledRect(m_vg, { cursorX  , m_y   , 2, lineh }, 0, NORMAL_BORDER, nvgRGBAf(FR_RED), glmToNVG(m_color_diabled));
 
-        drawFilledRect(m_vg,{  cursorX, m_y +m_h/2 - asc, 2, lineh }, 0, NORMAL_BORDER, nvgRGBAf(FR_BLACK), glmToNVG(m_color_diabled) );
+
     }
 
     int Frtk_Input_Base::handle(int ev)
@@ -315,20 +303,19 @@ namespace FR {
 
         */
 
-
         switch (ev) {
+        case (FR_LEFT_PUSH):
         case (FR_FOCUS): {
             m_text.cursorPos = m_text.value.size();
             m_text.selStart = m_text.cursorPos;
             return 1;
-        }
+        }break;
         case (FR_KEYBOARD): {
-            FRTK_CORE_INFO("IAM HERE");
-            if (!(m_active || m_visible))
+             if (!(m_active && m_visible))
                 return 0;
             auto& ek = m_mainWindow->m_sysEvents.keyB;
             if (isEditable() && m_has_focus) {
-                if (ek.lastKAction == GLFW_PRESS || ek.lastKAction == GLFW_REPEAT) {
+                if (ek.lastKAction == GLFW_PRESS || ek.lastKAction == GLFW_REPEAT ) {
                     switch (ek.lastKey) {
                         //Left key
                     case GLFW_KEY_LEFT: {
@@ -338,6 +325,7 @@ namespace FR {
                         }
                         if (m_text.cursorPos > 0)
                             m_text.cursorPos--;
+                        return 1;
                     } break;
 
                     case GLFW_KEY_RIGHT: {
@@ -346,6 +334,7 @@ namespace FR {
                         }
                         if (m_text.cursorPos < (int)m_text.value.size())
                             m_text.cursorPos++;
+                        return 1;
                     } break;
 
                     case GLFW_KEY_HOME: {
@@ -353,6 +342,7 @@ namespace FR {
                             m_text.selStart = m_text.cursorPos;
                         }
                         m_text.cursorPos = 0;
+                        return 1;
                     } break;
 
                     case GLFW_KEY_END: {
@@ -360,6 +350,7 @@ namespace FR {
                             m_text.selStart = m_text.cursorPos;
                         }
                         m_text.cursorPos = (int)m_text.value.size();
+                        return 1;
                     } break;
 
                     case GLFW_KEY_BACKSPACE: {
@@ -370,6 +361,7 @@ namespace FR {
                             m_text.value.erase(m_text.value.begin() + m_text.cursorPos - 1);
                             m_text.cursorPos--;
                         }
+                        return 1;
                     } break;
                     case GLFW_KEY_DELETE: {
                         if (m_text.selStart != m_text.cursorPos) {
@@ -378,6 +370,7 @@ namespace FR {
                         else if (m_text.cursorPos < (int)m_text.value.size()) {
                             m_text.value.erase(m_text.value.begin() + m_text.cursorPos);
                         }
+                        return 1;
                     } break;
 
                     case GLFW_KEY_ENTER:
@@ -393,25 +386,31 @@ namespace FR {
                             m_text.cursorPos++;
                             m_text.selStart = m_text.cursorPos;
                         }
+                        return 1;
                     }break;
-                   }
+                    }
                 }
-                if (ek.ctrlDown && ek.lastKAction == GLFW_KEY_A) {
-                    m_text.cursorPos = (int) m_text.value.size();
+                if (ek.ctrlDown && ek.lastKey == GLFW_KEY_A) {
+                    m_text.cursorPos = (int)m_text.value.size();
                     m_text.selStart = 0;
-                }else if (ek.ctrlDown && ek.lastKAction == GLFW_KEY_X) {
+                    return 1;
+                }
+                else if (ek.ctrlDown && ek.lastKey == GLFW_KEY_X) {
                     copy();
                     delSel();
-                 }
-                else if (ek.ctrlDown && ek.lastKAction == GLFW_KEY_C) {
-                    copy();
+                    return 1;
                 }
-                else if (ek.ctrlDown && ek.lastKAction == GLFW_KEY_V) {
+                else if (ek.ctrlDown && ek.lastKey == GLFW_KEY_C) {
+                    copy();
+                    return 1;
+                }
+                else if (ek.ctrlDown && ek.lastKey == GLFW_KEY_V) {
                     delSel();
                     paste();
+                    return 1;
                 }
             }
-            // We dont have special char .. unicode char to be processed
+            // We don't have special char .. Unicode char to be processed
 
             if (!m_mainWindow->m_unicodeChars.empty()) {
                 delSel(); // delete selection if any
@@ -423,20 +422,15 @@ namespace FR {
                         utf8.begin(),
                         utf8.end()
                     );
-                    m_text.cursorPos += utf8.size(); 
+                    m_text.cursorPos += utf8.size();
                 }
 
                 m_text.selStart = m_text.cursorPos;   // update selection start
                 m_mainWindow->m_unicodeChars.clear(); // clear queue after processing
+                return 1;
             }
         }
-        
-        
-        case (FR_LEFT_PUSH): {
-
         }
-        }
-
         return 0;
     }
 }

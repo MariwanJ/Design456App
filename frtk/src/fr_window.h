@@ -87,11 +87,6 @@ namespace FR {
          * Create Scene graph.
          */
         virtual void CreateScene();  //Must be overridden to get the desired results
-        /**
-         * Create Sun (<Fr_Light>) inside the Scene graph.
-         *
-         * \return
-         */
 
          /**
           * Resize Fr_Window size which affects glfw windows.
@@ -102,15 +97,8 @@ namespace FR {
           * \param h height of the window
           */
         virtual void resize(int x, int y, int w, int h);
-        /**
-         * Show the window. This will also create different objects - See implementation
-         */
-        virtual void show();           //both
 
-        /**
-         * Hide the window which
-         *
-         */
+        virtual void show();
         virtual void hide();
 
         virtual int GLFWrun();
@@ -128,7 +116,7 @@ namespace FR {
         glm::vec3 calculateMouseWorldPos();
 
 
-        defaultFont SystemFont;
+        
 
         /**
          * Function to change the initialization variable of glad to false.
@@ -136,7 +124,7 @@ namespace FR {
          * while it is not initialized.
          */
         static void deinitializeGlad();
-        GLFWcursor* MainWinCursor;  //needed to change to hand, rotation.
+
 
         int  x()const;
         int  y()const;
@@ -196,6 +184,15 @@ namespace FR {
 
         int renderNewGUI(); //temporary function 
 
+
+        static Fr_InputEvent_t m_sysEvents;
+        void initSystemEvents();
+        void deactivateNavi();
+        void activateNavi();
+
+        float menuHeight(void) const;
+        
+		defaultFont SystemFont;
         static std::shared_ptr<Fr_Window> spWindow;
 
         std::vector<std::shared_ptr<Frtk_Window>> m_frtkWindow;
@@ -203,25 +200,25 @@ namespace FR {
         std::shared_ptr<Fr_Scene> activeScene;
 
         ImVec4 clear_color;
-        
-        static Fr_InputEvent_t m_sysEvents;
-        void initSystemEvents();
-        void deactivateNavi();
-        void activateNavi();
 
-        float menuHeight(void) const;
+        GLFWcursor* MainWinCursor;  //needed to change to hand, rotation.
         std::vector<CharEvent_t> m_unicodeChars;
 
     protected:
 
         std::shared_ptr<Frtk_ToolBarWin>  createMainToolbar();
         std::shared_ptr<Frtk_ToolBarWin> createSelectionToolbar();
+        std::shared_ptr<Frtk_ToolBarWin> m_MainToolbar;
+        FRTK_WIN_TYPE m_winType;
+        static screenDim_t m_ViewPort;
+
+        GLFWcursor* cursorHand = nullptr;
+        GLFWcursor* cursorCrosshair = nullptr;
+
 
         void mainToolbar_callback(size_t index, void *data=nullptr);
         void selectionToolbar_callback(size_t index, void *data=nullptr);
 
-        std::shared_ptr<Frtk_ToolBarWin> m_MainToolbar;
-        FRTK_WIN_TYPE m_winType;
         int imgui_LeftPanel();
         int imgui_menu();
 
@@ -231,10 +228,6 @@ namespace FR {
 
         int imguimzo_init();
 
-        static screenDim_t m_ViewPort;
-
-        GLFWcursor* cursorHand = nullptr;
-        GLFWcursor* cursorCrosshair = nullptr;
 
         static void glfwWindosResize(GLFWwindow* window, int width, int height);
         static void glfwWindPos(GLFWwindow* window, int pos_x, int pos_y);
@@ -291,19 +284,17 @@ namespace FR {
          * Currently it is 4.3.
          */
     private:
+        std::string m_label;
         float m_menuHeight;
         bool m_NaviCube;
         int gl_version_major;
         int gl_version_minor;
         mouseScale_t mouseDefaults;
 
-
         //Mouse picker variable
         static int RECURSION_COUNT;
         static float RAY_RANGE;
         static bool m_RotateActive;
-
-        void flush();
 
         /**
          * Boolean variable keeps information about GLFW window if it is initialized or not.
@@ -313,7 +304,7 @@ namespace FR {
          * Boolean variable to know if GLAD is initialized or not.
          */
         static bool s_GladInitialized;
-        std::string m_label;
+
         /**
          * Keep track of the active camera.
          */
@@ -327,8 +318,9 @@ namespace FR {
         bool runCode;
 
         static GLFWwindow* pGLFWWindow;
-        
         NVGcontext* m_nvgContext; //NanoVG Context
+
+        void flush();
 
 
     };

@@ -76,7 +76,9 @@ namespace FR{
         
         bool hasHeader()const;
         void hasHeader(bool val);
-
+        virtual bool set_child_focus(Frtk_Widget* w=nullptr);
+        virtual  bool take_focus() override; 
+        virtual void lose_focus() override;
     protected:
         virtual int handle(int event) override;
         dimPos_float_t mainGui() const override;

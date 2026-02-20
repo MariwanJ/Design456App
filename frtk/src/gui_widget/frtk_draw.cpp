@@ -559,7 +559,7 @@ namespace FR {
         // Set font
         nvgFontSize(vg, fnt.fontSize);
         nvgFontFace(vg, fnt.fName.c_str());
-        nvgTextAlign(vg, fnt.hAlign | NVG_ALIGN_BASELINE);
+        nvgTextAlign(vg, fnt.hAlign | fnt.vAlign | NVG_ALIGN_BASELINE);
 
         // Get text metrics
         float asc, desc, lineh;

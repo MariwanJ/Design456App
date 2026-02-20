@@ -44,7 +44,6 @@ namespace FR {
 
         uint8_t index = spWindow->activeScene->m_active_camera;
         if (pwin->m_ViewPort.size.h != 0) {
-            //Avoid divide by zero, keep the last ratio
             pwin->activeScene->m_cameras[index].m_aspect_ratio = static_cast<float>(pwin->m_ViewPort.size.w) / pwin->m_ViewPort.size.h;
         }
     }
@@ -72,8 +71,6 @@ namespace FR {
 
     /*
 
-    void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-
         window: A pointer to the GLFW window that received the event.
         key: The keyboard key that was pressed or released.
         scancode: The system-specific scancode of the key.
@@ -89,6 +86,10 @@ namespace FR {
         if (spWindow == nullptr)
             return; //do nothing
         (void)window;
+
+        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+            spWindow->Exit();
+
         Fr_Window* pwin = spWindow.get();    
         auto& ek = pwin->m_sysEvents.keyB;  
         ek.lastKey = key;
@@ -100,9 +101,8 @@ namespace FR {
         ek.altDown = (mods & GLFW_MOD_ALT) != 0;
         ek.superDown = (mods & GLFW_MOD_SUPER) != 0;
 
-        // Update the current key state
-        if (key >= 0 && key <= GLFW_KEY_LAST)
-            ek.keyDown[key] = (action != GLFW_RELEASE);
+        //save key events for pooling later
+        ek.events.push_back({ key, scancode, action, mods });
     }
 
     void Fr_Window::char_callback(GLFWwindow* window, unsigned int codepoint)

@@ -35,4 +35,4 @@
 namespace FR{
     std::shared_ptr<Frtk_Window>  runInputOutput();
 }
-#endif/INPUT_OUTPUT_H_
+#endif//INPUT_OUTPUT_H_

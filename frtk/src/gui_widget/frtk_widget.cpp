@@ -345,7 +345,7 @@ namespace FR {
     void Frtk_Widget::size(float W, float H) {
         resize(m_x, m_y, W, H);
     }
-    void Frtk_Widget::align(LBL_ALIGN ALIGN) {
+    void Frtk_Widget::align(int ALIGN) {
         throw NotImplementedException();  // this method should be implemented by subclassing the widget
     }
     bool Frtk_Widget::active(void) const {
@@ -497,4 +497,9 @@ namespace FR {
     {
         m_wdgType = nVal;
     }
+    bool Frtk_Widget::set_child_focus(Frtk_Widget* w ) { 
+        (void)w;  
+        return false; 
+        // default: do nothing
+    } 
 }

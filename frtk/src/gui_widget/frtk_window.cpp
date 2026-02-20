@@ -199,26 +199,28 @@ namespace FR {
     }
     int Frtk_Window::handle(int events)
     {
-       
+        bool mouseIsInside = isMouse_inside();
         if (events == FR_LEFT_PUSH)
         {
-            if (isMouse_inside() && g_focusedWdgt.keyboardOwner != this)
+            if (mouseIsInside && g_focusedWdgt.keyboardOwner != this)
             {
                 // Window gains keyboard
                 if (g_focusedWdgt.keyboardOwner)
                     g_focusedWdgt.keyboardOwner->m_guiWindow->handle(FR_UNFOCUS);
 
                 g_focusedWdgt.keyboardOwner = this;
+                m_has_focus = true;
             }
-            else if (!isMouse_inside() && g_focusedWdgt.keyboardOwner == this)
+            else if (!mouseIsInside && g_focusedWdgt.keyboardOwner == this)
             {
                 // Click outside this window -> lose keyboard
                 g_focusedWdgt.keyboardOwner = nullptr;
+                m_has_focus = false;
             }
         }
 
         int result = 0;
-        if (isMouse_inside() || m_dragging) {
+        if (mouseIsInside || m_dragging) {
             m_mainWindow->deactivateNavi();
             result = 1;
             auto& mouse = m_mainWindow->m_sysEvents.mouse;
@@ -245,7 +247,8 @@ namespace FR {
             // Scene should not get events if the mouse was over a frtk-window!!!! IMPORTANT TO REMEMBER!!!
             if (!m_dragging)
                 m_mainWindow->activateNavi();
-            m_guiWindow->handle(events); // we don't care about the results
+            m_guiWindow->handle(events); /* we don't care about the results, 
+                                            forward all events to container widget */
         }
         return result;
     }
@@ -282,4 +285,33 @@ namespace FR {
     void Frtk_Window::hasHeader(bool val) {
         m_hasHeader = val;
     }
+    void Frtk_Window::lose_focus()
+    {
+        m_has_focus = false;
+        Frtk_Widget::lose_focus();
+        m_guiWindow->lose_focus();
+        
+        if (g_focusedWdgt.keyboardOwner == this) {
+            g_focusedWdgt.keyboardOwner = nullptr;
+            g_focusedWdgt.prev = g_focusedWdgt.current;
+            g_focusedWdgt.current = nullptr;
+        }
+    }
+    bool Frtk_Window::set_child_focus(Frtk_Widget* w) {
+        if(w){
+            m_guiWindow->set_child_focus(w);
+        }
+        return false;
+    }
+
+    bool Frtk_Window::take_focus()
+    {
+        if (can_focus()){
+            Frtk_Widget::take_focus();
+            m_guiWindow->take_focus();
+            return true;
+        }
+        return false;
+    }
+
 }

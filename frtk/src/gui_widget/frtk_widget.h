@@ -38,10 +38,9 @@
 namespace FR {
 #define FRTK_WINDOWS_TITLE_HEIGHT 30.0f
 
-
-//***********************************************************************************************************************************
-// IMPORTANT: Always use float colors (nvgRGBAf or glmToNVG).                                                                       *
-// nvgRGBA (integer RGBA) is forbidden in this project.                                                                             *
+    //***********************************************************************************************************************************
+    // IMPORTANT: Always use float colors (nvgRGBAf or glmToNVG).                                                                       *
+    // nvgRGBA (integer RGBA) is forbidden in this project.                                                                             *
 #ifdef nvgRGBA                                                                                                                    //*
 #undef nvgRGBA                                                                                                                    //*
 #endif                                                                                                                            //*
@@ -54,8 +53,8 @@ namespace FR {
 //***********************************************************************************************************************************
 
     typedef enum FRTK_PICTXT_STYLE
-    {	// align() values                                               
-        // picture Over Text and (Center, Left & Right)                 
+    {	// align() values
+        // picture Over Text and (Center, Left & Right)
         /*
                 L   C   R
                 v   v   v
@@ -82,13 +81,11 @@ namespace FR {
         FR_IMG_RIGHT_TO_TEXT = 7
     }FRTK_PICTXT_STYLE;
 
-
-
     class FRTK_API Frtk_Widget {
         friend class Frtk_GrpWidget;
 
     protected:
-        Frtk_Widget(float X, float Y, float W, float H, std::string label= "Widget", BOX_TYPE b = FRTK_NO_BOX);
+        Frtk_Widget(float X, float Y, float W, float H, std::string label = "Widget", BOX_TYPE b = FRTK_NO_BOX);
         virtual ~Frtk_Widget() = default;
 
         Frtk_Widget(const Frtk_Widget&) = delete;
@@ -117,8 +114,8 @@ namespace FR {
         virtual void draw_focus(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 bkg);
 
         virtual void drawLabel();
-        virtual void drawLabel(float X, float Y, float W, float H = 18.0 * 1.3f, float rotateAngle =0.0f);
-        virtual void rotateLabel(float angle =0.0f);
+        virtual void drawLabel(float X, float Y, float W, float H = 18.0 * 1.3f, float rotateAngle = 0.0f);
+        virtual void rotateLabel(float angle = 0.0f);
         virtual float lblRotateAngle() const;
 
         //Widget Icon/image
@@ -156,7 +153,7 @@ namespace FR {
         void y(float v);
         void w(float v);
         void h(float v);
-        
+
         float x(void) const;
         float y(void) const;
         float w(void) const;
@@ -167,7 +164,7 @@ namespace FR {
         virtual void resize(float X, float Y, float W, float H);
         void position(float X, float Y);
         void size(float W, float H);
-        void align(LBL_ALIGN ALIGN);
+        void align(int ALIGN);
         void hide();
         bool visible() const;
         bool active(void) const;
@@ -175,14 +172,12 @@ namespace FR {
         virtual void disable(void);
 
         virtual void boxType(BOX_TYPE nType);
-        virtual void cellStyle(FRTK_PICTXT_STYLE value); 
+        virtual void cellStyle(FRTK_PICTXT_STYLE value);
         int cellStyle() const;
         virtual void applyStyle();
 
         virtual BOX_TYPE boxtype() const;
-        Frtk_Widget* parent();
 
-        
         void parent(Frtk_Widget* parent);
         virtual bool has_focus(void);
         virtual void focus(bool val);
@@ -196,20 +191,21 @@ namespace FR {
         //Callback function definition
         using Callback = std::function<void(Frtk_Widget*)>;
         void set_callback(Callback cb);
-        
+
         virtual dimPos_float_t mainGui() const;
         WIDGTYPE widgetType() const;
         void widgetType(WIDGTYPE nVal);
 
+        Frtk_Widget* parent();
+
     protected:
         virtual void draw(void);
         virtual int handle(int ev);
-        virtual bool set_child_focus(Frtk_Widget* w) { (void)w;  return false; } // default: do nothing
+        virtual bool set_child_focus(Frtk_Widget* w = nullptr);
         void do_callback();
-       
 
         Frtk_Widget* m_parent = nullptr;
-        
+
         FRTK_PICTXT_STYLE m_cellStyle;
 
         NVGcontext* m_vg;
@@ -228,13 +224,13 @@ namespace FR {
         float m_borderWidth;
         font_t m_font;
         BOX_TYPE m_boxType;
-        bool m_has_focus;       
-        bool m_cantake_focus;  //is it allowed to get focus 
+        bool m_has_focus;
+        bool m_cantake_focus;  //is it allowed to get focus
         iconImageSize_t m_Image;
 
         Callback m_callback;
         GLuint m_IconTexture;
-        
+
         inline glm::vec4 disabled_color()
         {
             return {
