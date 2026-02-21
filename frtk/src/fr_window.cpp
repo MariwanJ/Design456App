@@ -168,7 +168,7 @@ namespace FR {
         mouseDefaults{ 0 }, 
         radiusXYZ(0.0f), 
         m_winType(FRTK_WIN_TYPE::NORMAL),
-        m_menuHeight(10.0f)
+        m_menuHeight(5.0f)
     {
         /** from Fr_Window */
         mouseDefaults.MouseScrollScale = 5.0f;
@@ -473,6 +473,7 @@ namespace FR {
         std::shared_ptr<Frtk_ToolBarWin> selectionTB = createSelectionToolbar();
         selectionTB->parent(this); //do not forget this !!!
         m_frtkWindow.emplace_back(std::move(selectionTB));
+        bool onlyOnce = false;
         while (!glfwWindowShouldClose(pGLFWWindow))
         {
             //ALL 3D Drawings
@@ -508,6 +509,10 @@ namespace FR {
             glCheckFunc(glfwPollEvents());
             glViewport(0, 0, w(), h());
             updateInputEvents(); //Process events.
+            if (!onlyOnce) {
+                m_MainToolbar->y(m_menuHeight+1);
+                onlyOnce = true;
+            }
         }
 
         //IMPORTANT!!!!

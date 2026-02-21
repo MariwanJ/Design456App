@@ -77,6 +77,44 @@ namespace FR {
 
         FRTK_CORE_APP_ASSERT(m_guiWindow);
     }
+    void Frtk_Window::x(float v) {
+        m_x = v;
+        m_guiWindow->x(v);
+    }
+    void Frtk_Window::y(float v) {
+        m_y = v;
+        m_guiWindow->y(v);
+
+    }
+    void Frtk_Window::w(float v) {
+        m_w = v;
+        m_guiWindow->w(v);
+
+    }
+    void Frtk_Window::h(float v) {
+        m_h = v;
+        m_guiWindow->h(v);
+    }
+
+    float Frtk_Window::x() const
+    {
+        return m_x;
+    }
+
+    float Frtk_Window::y() const
+    {
+        return m_y;
+    }
+
+    float Frtk_Window::w() const
+    {
+        return m_w;
+    }
+
+    float Frtk_Window::h() const
+    {
+        return m_h;
+    }
 
     void Frtk_Window::draw() {
         if (!m_visible)

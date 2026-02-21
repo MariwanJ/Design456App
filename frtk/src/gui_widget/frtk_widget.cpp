@@ -87,9 +87,11 @@ namespace FR {
     void Frtk_Widget::parent(Frtk_Widget* parent) {
         m_parent = parent;
     }
+
     void Frtk_Widget::draw() {
         throw NotImplementedException();  // this method should be implemented by subclassing the widget
     }
+
     void Frtk_Widget::redraw() {
         draw();
         if (m_IconTexture != 0)
@@ -97,6 +99,7 @@ namespace FR {
         drawLabel();
         draw_focus();
     }
+
     int Frtk_Widget::handle(int ev) {
         throw NotImplementedException();  // this method should be implemented by subclassing the widget
     }
@@ -130,7 +133,6 @@ namespace FR {
     void Frtk_Widget::drawBox(BOX_TYPE t, glm::vec4 c) {
         throw NotImplementedException();  // this method should be implemented by subclassing the widget
     }
-
 
     bool Frtk_Widget::can_focus() const {
         return (m_visible && m_active && m_cantake_focus);
@@ -175,10 +177,10 @@ namespace FR {
     }
 
     void Frtk_Widget::draw_focus() {
-    if (!m_has_focus) 
-        return;
+        if (!m_has_focus)
+            return;
         nvgBeginPath(m_vg);
-        nvgRect(m_vg, m_x, m_y, m_w, m_h);  
+        nvgRect(m_vg, m_x, m_y, m_w, m_h);
         nvgStrokeColor(m_vg, nvgRGBAf(0, 0.501f, 1.0f, FRTK_FOCUS_OPACITY_VALUE)); // Blue focus outline
         nvgStrokeWidth(m_vg, 2.0f);
         nvgStroke(m_vg);
@@ -196,22 +198,22 @@ namespace FR {
         draw_box(m_vg, t, { {X,Y},{W,H} }, 0.0f, NORMAL_BORDER, nvgRGBAf(0, 0.501f, 1.0f, 1.0f), nvgRGBAf(bkg.r, bkg.g, bkg.b, bkg.a), true);
     }
     void Frtk_Widget::drawLabel() {
-        drawTextInBox(m_vg, m_label, m_font,true, m_linkTofrtkWindow->getFontData());
+        drawTextInBox(m_vg, m_label, m_font, true, m_linkTofrtkWindow->getFontData());
     }
-    void Frtk_Widget::drawLabel(float X, float Y, float W, float H, float rotateAngle ) {
+    void Frtk_Widget::drawLabel(float X, float Y, float W, float H, float rotateAngle) {
         m_font.pos.x = X + m_font.fontSize * 0.4f;
         m_font.pos.y = Y + m_font.fontSize * 0.4f;
         m_font.size.w = W;
         m_font.size.h = H;
         m_font.Rotate = rotateAngle;
-        drawTextInBox(m_vg, m_label, m_font,true, m_linkTofrtkWindow->getFontData());
+        drawTextInBox(m_vg, m_label, m_font, true, m_linkTofrtkWindow->getFontData());
     }
 
     void Frtk_Widget::rotateLabel(float angle)
     {
         m_font.Rotate = angle;
     }
-    float Frtk_Widget::lblRotateAngle()  const{
+    float Frtk_Widget::lblRotateAngle()  const {
         return m_font.Rotate;
     }
 
@@ -335,17 +337,16 @@ namespace FR {
         m_y = Y;
         m_w = W;
         m_h = H;
-        
+
         m_Image.dim.pos.x = X;
         m_Image.dim.pos.y = Y;
         m_Image.dim.size.w = W;
         m_Image.dim.size.h = H;
 
-        m_font.pos.x = X ;
+        m_font.pos.x = X;
         m_font.pos.y = Y;
         m_font.size.w = W;
         m_font.size.h = H;
-
     }
     void Frtk_Widget::position(float X, float Y) {
         resize(X, Y, m_w, m_h);
@@ -483,15 +484,14 @@ namespace FR {
         drawImage();
     }
 
-
     bool Frtk_Widget::hasBelowMouse() const {
         return g_focusedWdgt.g_underMouse == this;
     }
-        
+
     void Frtk_Widget::set_BelowMouse() {
         g_focusedWdgt.g_underMouse = this;
     }
-    
+
     void Frtk_Widget::clear_BelowMouse() {
         g_focusedWdgt.g_underMouse = nullptr;
     }
@@ -516,9 +516,9 @@ namespace FR {
     {
         m_wdgType = nVal;
     }
-    bool Frtk_Widget::set_child_focus(Frtk_Widget* w ) { 
-        (void)w;  
-        return false; 
+    bool Frtk_Widget::set_child_focus(Frtk_Widget* w) {
+        (void)w;
+        return false;
         // default: do nothing
-    } 
+    }
 }

@@ -165,6 +165,7 @@ namespace FR {
             }
         }
         ImGui::EndMainMenuBar();
+        m_menuHeight = ImGui::GetFrameHeight();
         return 0;
     }
 

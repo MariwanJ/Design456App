@@ -66,7 +66,10 @@ namespace FR {
         virtual void setLayoutHorizontal();
         virtual void setLayoutVertical();
         virtual int handle(int ev)override;
-       
+        
+
+
+
 
        virtual void applyDocking(void);
         

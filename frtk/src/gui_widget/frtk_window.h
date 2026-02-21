@@ -76,6 +76,17 @@ namespace FR{
         virtual  bool take_focus() override; 
         virtual void lose_focus() override;
         FontData_t getFontData()  const;
+
+        virtual void x(float v) override;
+        virtual void y(float v) override;
+        virtual void w(float v) override;
+        virtual void h(float v) override;
+
+        virtual float x() const override;
+        virtual float y() const override;
+        virtual float w() const override;
+        virtual float h() const override;
+
     protected:
         virtual int handle(int event) override;
         dimPos_float_t mainGui() const override;

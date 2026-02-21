@@ -36,7 +36,7 @@ namespace FR {
     {
         m_vg = vg;
         FRTK_CORE_APP_ASSERT(vg != NULL);
-        m_font.lblAlign = NVG_ALIGN_MIDDLE_CENTER | NVG_ALIGN_INSIDE;
+        m_font.lblAlign = NVG_ALIGN_MIDDLE_CENTER;
         m_font.txtAlign = NVG_ALIGN_MIDDLE_CENTER | NVG_ALIGN_INSIDE;
         m_borderColor = glm::vec4(FR_BLACK);
         m_font.pos.x = m_x ;

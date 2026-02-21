@@ -67,6 +67,7 @@ namespace FR {
         m_horizontal = val;
     }
 
+
     void Frtk_ToolBarWin::addButton(const std::vector<toolbBTN_t>& btns)
     {
         Dim_float_t btnDim;

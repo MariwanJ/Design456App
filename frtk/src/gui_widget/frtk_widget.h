@@ -149,15 +149,16 @@ namespace FR {
         void  bkg_opacity(uint8_t A = 255);
         float bkg_opacity(void) const;
 
-        void x(float v);
-        void y(float v);
-        void w(float v);
-        void h(float v);
+        virtual void x(float v);
+        virtual void y(float v);
+        virtual void w(float v);
+        virtual void h(float v);
 
-        float x(void) const;
-        float y(void) const;
-        float w(void) const;
-        float h(void) const;
+        virtual float x(void) const;
+        virtual float y(void) const;
+        virtual float w(void) const;
+        virtual float h(void) const;
+
         virtual float absX() const;
         virtual float absY() const;
 
