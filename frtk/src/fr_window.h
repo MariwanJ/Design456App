@@ -209,6 +209,8 @@ namespace FR {
         std::shared_ptr<Frtk_ToolBarWin>  createMainToolbar();
         std::shared_ptr<Frtk_ToolBarWin> createSelectionToolbar();
         std::shared_ptr<Frtk_ToolBarWin> m_MainToolbar;
+        std::shared_ptr<Frtk_ToolBarWin> m_selectionTB;
+
         FRTK_WIN_TYPE m_winType;
         static screenDim_t m_ViewPort;
 

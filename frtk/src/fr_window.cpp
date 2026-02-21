@@ -470,9 +470,9 @@ namespace FR {
         m_MainToolbar->parent(this);
         m_frtkWindow.emplace_back(m_MainToolbar);
         
-        std::shared_ptr<Frtk_ToolBarWin> selectionTB = createSelectionToolbar();
-        selectionTB->parent(this); //do not forget this !!!
-        m_frtkWindow.emplace_back(std::move(selectionTB));
+         m_selectionTB = createSelectionToolbar();
+        m_selectionTB->parent(this); //do not forget this !!!
+        m_frtkWindow.emplace_back(m_selectionTB);
         bool onlyOnce = false;
         while (!glfwWindowShouldClose(pGLFWWindow))
         {
@@ -511,6 +511,7 @@ namespace FR {
             updateInputEvents(); //Process events.
             if (!onlyOnce) {
                 m_MainToolbar->y(m_menuHeight+1);
+                m_selectionTB->y(m_menuHeight + 1);
                 onlyOnce = true;
             }
         }
