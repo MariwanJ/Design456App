@@ -61,6 +61,13 @@ namespace FR {
     //}int;
 
 
+   //TODO: Temporary code -- FIXME
+    typedef struct {
+        int fontNormal, fontBold, fontIcons, fontEmoji;
+    }FontData_t;
+
+
+
     typedef enum BOX_TYPE {
         FRTK_NO_BOX                =  0,
         FRTK_FLAT_BOX              =  1,
@@ -105,14 +112,15 @@ namespace FR {
     typedef struct {
         dimPos_float_t pos  ;
         dimSize_float_t size ;
+        dimPos_float_t realPos;
         NVGcolor forgColor  ;
         NVGcolor shadowCol  ;
         float fontSize  ;
         std::string fName;
         dimPos_float_t  shadowOffs  ;
         float blur  ;
-        int vAlign  ;
-        int hAlign  ;
+        int lblAlign  ; //for labels of widgets
+        int txtAlign  ; //for text (special for input widgets
         float Rotate;
     }font_t;
 
@@ -176,7 +184,7 @@ namespace FR {
     //Horizontal = NVG_ALIGN_CENTER,    NVG_ALIGN_LEFT / NVG_ALIGN_CENTER / NVG_ALIGN_RIGHT
     //Vertical =  NVG_ALIGN_MIDDLE    NVG_ALIGN_TOP / NVG_ALIGN_MIDDLE / NVG_ALIGN_BOTTOM
     //Rotation =0.0 by default
-    void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt);
+    void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt, bool isLabel, FontData_t &fnttData);
 
     // Function to draw a check mark with default color = BLACK
     void drawCheckMark(NVGcontext* vg, float x, float y, float size, NVGcolor col = nvgRGBAf(FR_BLACK));

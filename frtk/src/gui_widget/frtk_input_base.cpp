@@ -26,6 +26,7 @@
 //
 
 #include <gui_widget/frtk_input_base.h>
+#include <gui_widget/frtk_window.h>
 #include<nanovg.h>
 #include <frtk.h>
 
@@ -41,10 +42,10 @@ namespace FR {
         m_bkg_color = glm::vec4(0.1254f, 0.1254f, 0.1254f, 0.1254f);
         m_borderColor = glm::uvec4(FR_DARKGREY2);
         m_font.fontSize = 14.f;
-        m_font.hAlign = NVG_ALIGN_LEFT;
-        m_font.vAlign = NVG_ALIGN_TOP;
-        m_font.pos.x = m_x;
-        m_font.pos.y = m_y;
+        m_font.lblAlign = NVG_ALIGN_TOP_RIGHT;
+        m_font.txtAlign = NVG_ALIGN_TOP_LEFT | NVG_ALIGN_INSIDE ;
+        m_font.pos.x = m_x + m_font.fontSize * 0.4f;
+        m_font.pos.y = m_y + m_font.fontSize * 0.4f;
         m_font.size.w = m_w;
         m_font.size.h = m_h;
     }
@@ -94,17 +95,13 @@ namespace FR {
 
     void Frtk_Input_Base::draw() {
         drawEditBoxBase(m_x, m_y, m_w, m_h);
- /*       nvgFontSize(m_vg, m_font.fontSize);
-        nvgFontFace(m_vg, m_font.fName.c_str());
-        nvgFillColor(m_vg, m_font.forgColor);
-        nvgTextAlign(m_vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-        nvgText(m_vg, m_x + m_h * 0.3f, m_y + m_h * 0.5f, m_text.value.c_str(), NULL);
-        */
-        drawTextInBox(m_vg, m_text.value, m_font);
+        drawTextInBox(m_vg, m_text.value, m_font, false, m_linkTofrtkWindow->getFontData());
+        drawLabel();
         if (m_has_focus) {
             draw_focus();
             draw_cursor();
         }
+        draw_selection();
     }
 
     void Frtk_Input_Base::value(int value) {
@@ -206,8 +203,7 @@ namespace FR {
             m_wdgType == FRTK_INPUT_WRAP ||
             m_wdgType == FRTK_MULTILINE_INPUT ||
             m_wdgType == FRTK_MULTILINE_INPUT_WRAP ||
-            m_wdgType == FRTK_SECRET_INPUT
-            );
+            m_wdgType == FRTK_SECRET_INPUT);
     }
 
     bool Frtk_Input_Base::isSelectable() const
@@ -217,7 +213,7 @@ namespace FR {
             m_wdgType == FRTK_MULTILINE_OUTPUT_WRAP_READONLY));
     }
     bool Frtk_Input_Base::isSingleLine() const {
-        //notice that, the widget can be readonly but still multi-line
+        //notice that, the widget can be read only but still multi-line
         return (!(m_wdgType == FRTK_MULTILINE_INPUT_WRAP ||
             m_wdgType == FRTK_MULTILINE_OUTPUT_WRAP ||
             m_wdgType == FRTK_MULTILINE_OUTPUT_READONLY ||
@@ -238,6 +234,10 @@ namespace FR {
     }
 
     int  Frtk_Input_Base::word_start(int ind) const {
+        return 0;
+    }
+    int Frtk_Input_Base::word_end(int ind) const
+    {
         return 0;
     }
     int  Frtk_Input_Base::line_strart(int ind) const {
@@ -266,30 +266,63 @@ namespace FR {
 
         // Move cursor to start of deleted range
         m_text.cursorPos = m_text.selStart;
-        m_text.selStart = m_text.cursorPos;  // selection collapsed
+        m_text.selStart = m_text.cursorPos;  // selection removed
         return true;
     }
+
+    void Frtk_Input_Base::draw_selection()
+    {
+        if (m_text.selStart == m_text.cursorPos)
+            return;
+
+        const size_t max_glyphs = 1024;
+        std::vector<NVGglyphPosition> glyphs(max_glyphs);
+
+        int count = nvgTextGlyphPositions(m_vg, m_font.realPos.x, m_font.realPos.y, m_text.value.c_str(), nullptr, glyphs.data(), max_glyphs);
+
+        if (count <= 0)
+            return;
+
+        int start = std::min(m_text.selStart, m_text.cursorPos);
+        int end = std::min(std::max((int)m_text.selStart, (int)m_text.cursorPos), count);
+
+        float startX = (start < count) ? glyphs[start].x : glyphs[count - 1].maxx;
+        float endX = (end < count) ? glyphs[end].x : glyphs[count - 1].maxx;
+
+        float asc, desc, lineh;
+        nvgTextMetrics(m_vg, &asc, &desc, &lineh);
+
+        Dim_float_t dim;
+        dim.pos.x = startX;
+        dim.pos.y = m_font.realPos.y - asc;
+        dim.size.w = endX - startX;
+        dim.size.h = lineh;
+
+        glm::vec4 col = glm::vec4(FR_LIGHTBLUE);
+        APPLY_OPACITY(col, 0.5f);
+
+        drawFilledRect(m_vg, dim, m_font.Rotate, THIN_BORDER, glmToNVG(col), nvgRGBAf(FR_GRAY));
+    }
+
     void Frtk_Input_Base::draw_cursor()
     {
         if (!m_has_focus)
             return;
         const size_t max_glyphs = 1024;
-        NVGglyphPosition glyphs[max_glyphs];
-        int fs= m_font.fontSize;
-        int count = nvgTextGlyphPositions(m_vg, m_font.pos.x, m_font.pos.y, m_text.value.c_str(), nullptr, glyphs, max_glyphs);
+        NVGglyphPosition* glyphs = new NVGglyphPosition[max_glyphs];
+        int fs = m_font.fontSize;
+        int count = nvgTextGlyphPositions(m_vg, m_font.realPos.x, m_font.realPos.y, m_text.value.c_str(), nullptr, glyphs, max_glyphs);
         float cursorX;
         if (m_text.cursorPos < count)
             cursorX = glyphs[m_text.cursorPos].x;
         else if (count > 0)
             cursorX = glyphs[count - 1].maxx;
         else
-            cursorX = m_x;
+            cursorX = m_font.realPos.x;
         float asc, desc, lineh;
         nvgTextMetrics(m_vg, &asc, &desc, &lineh);
-        
-        drawFilledRect(m_vg, { cursorX  , m_y   , 2, lineh }, 0, NORMAL_BORDER, nvgRGBAf(FR_RED), glmToNVG(m_color_diabled));
-
-
+        drawFilledRect(m_vg, { cursorX  , m_font.realPos.y - asc, 2, lineh }, 0, NORMAL_BORDER, nvgRGBAf(FR_RED), glmToNVG(m_color_diabled));
+        delete[] glyphs;
     }
 
     int Frtk_Input_Base::handle(int ev)
@@ -311,45 +344,46 @@ namespace FR {
             return 1;
         }break;
         case (FR_KEYBOARD): {
-             if (!(m_active && m_visible))
+            if (!(m_active && m_visible))
                 return 0;
             auto& ek = m_mainWindow->m_sysEvents.keyB;
             if (isEditable() && m_has_focus) {
-                if (ek.lastKAction == GLFW_PRESS || ek.lastKAction == GLFW_REPEAT ) {
+                if (ek.lastKAction == GLFW_PRESS || ek.lastKAction == GLFW_REPEAT) {
                     switch (ek.lastKey) {
                         //Left key
                     case GLFW_KEY_LEFT: {
+                        if (m_text.cursorPos > 0)
+                            m_text.cursorPos--;
                         if (!ek.shiftDown) {
                             // collapse selection first
                             m_text.selStart = m_text.cursorPos;
                         }
-                        if (m_text.cursorPos > 0)
-                            m_text.cursorPos--;
+
                         return 1;
                     } break;
 
                     case GLFW_KEY_RIGHT: {
+                        if (m_text.cursorPos < (int)m_text.value.size())
+                            m_text.cursorPos++;
                         if (!ek.shiftDown) {
                             m_text.selStart = m_text.cursorPos;
                         }
-                        if (m_text.cursorPos < (int)m_text.value.size())
-                            m_text.cursorPos++;
                         return 1;
                     } break;
 
                     case GLFW_KEY_HOME: {
+                        m_text.cursorPos = 0;
                         if (!ek.shiftDown) {
                             m_text.selStart = m_text.cursorPos;
                         }
-                        m_text.cursorPos = 0;
                         return 1;
                     } break;
 
                     case GLFW_KEY_END: {
+                        m_text.cursorPos = (int)m_text.value.size();
                         if (!ek.shiftDown) {
                             m_text.selStart = m_text.cursorPos;
                         }
-                        m_text.cursorPos = (int)m_text.value.size();
                         return 1;
                     } break;
 
@@ -360,6 +394,7 @@ namespace FR {
                         else if (m_text.cursorPos > 0) {
                             m_text.value.erase(m_text.value.begin() + m_text.cursorPos - 1);
                             m_text.cursorPos--;
+                            m_text.selStart = m_text.cursorPos;
                         }
                         return 1;
                     } break;

@@ -33,6 +33,5 @@ namespace FR {
            Frtk_Button(m_vg, x, y, w, h, l, b) {
         m_wdgType = FRTK_TOGGLE_BUTTON;
         m_bkg_color = glm::vec4(FR_CHARCOAL);
-        m_font.fName="sans-bold";
     }
 }

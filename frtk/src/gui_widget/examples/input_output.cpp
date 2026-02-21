@@ -33,16 +33,32 @@ namespace FR {
 
     std::shared_ptr<Frtk_Window> runInputOutput() {
         
-        auto window = std::make_shared<Frtk_Window>(500.f, 200.f, 500.f, 500.f, "Testing buttons, toolbars", FRTK_UP_BOX);
+        auto window = std::make_shared<Frtk_Window>(500.f, 200.f, 700.f, 700.f, "Testing buttons, toolbars", FRTK_UP_BOX);
+        for (int i = 0; i < 3; ++i)
+            for (int j = 0; j < 3; ++j)
+            {
+                auto input = std::make_shared<Frtk_Input_Base>(window->getContext(), 50.0f + j * 160.0f, 30.0f + i * 70.0f, 150.0f, 50.0f,"TESTIT", FRTK_UP_BOX);
 
-        std::shared_ptr<Frtk_Search_Box> input1 = std::make_shared<Frtk_Search_Box>(window->getContext(), 10.0f, 10.0f, 200.0f, 100.0f, "Search1", FRTK_UP_BOX);
-        std::shared_ptr<Frtk_Input_Base> input2 = std::make_shared<Frtk_Input_Base>(window->getContext(), 10.0f, 120.0f, 300.0f, 50.0f, "Search2", FRTK_UP_BOX);
-       // std::shared_ptr<Frtk_Input_Base> input3 = std::make_shared<Frtk_Input_Base>(window->getContext(), 210.0f, 10.0f, 200.0f, 25.0f, "Search3", FRTK_UP_BOX);
-        input1->value("Please search1 for something");
-        input2->value("Please search2 for something");
-      //  input3->value("Please search3 ");
-        window->addChild(input1);
-        window->addChild(input2);
+                switch (i * 3 + j)
+                {
+                case 0: input->lblAlign(NVG_ALIGN_TOP_LEFT);      input->value("top - left"); break;
+                case 1: input->lblAlign(NVG_ALIGN_TOP_CENTER);    input->value("top - center"); break;
+                case 2: input->lblAlign(NVG_ALIGN_TOP_RIGHT);     input->value("top - right"); break;
+
+                case 3: input->lblAlign(NVG_ALIGN_MIDDLE_LEFT);   input->value("MIDDLE - left"); break;
+                case 4: input->lblAlign(NVG_ALIGN_MIDDLE_CENTER); input->value("MIDDLE - center"); break;
+                case 5: input->lblAlign(NVG_ALIGN_MIDDLE_RIGHT);  input->value("MIDDLE - right"); break;
+
+                case 6: input->lblAlign(NVG_ALIGN_BOTTOM_LEFT);   input->value("BOTTOM - left"); break;
+                case 7: input->lblAlign(NVG_ALIGN_BOTTOM_CENTER); input->value("BOTTOM - center"); break;
+                case 8: input->lblAlign(NVG_ALIGN_BOTTOM_RIGHT);  input->value("BOTTOM - right"); break;
+                }
+
+                input->txtAlign(NVG_ALIGN_MIDDLE_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE);
+                window->addChild(input);
+            }
+
+        
     //    window->addChild(input3);
          return window;
     }

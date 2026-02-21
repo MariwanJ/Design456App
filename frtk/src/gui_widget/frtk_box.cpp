@@ -36,11 +36,13 @@ namespace FR {
     {
         m_vg = vg;
         FRTK_CORE_APP_ASSERT(vg != NULL);
-        m_font.size.w = w;
-        m_font.size.h = h;
-        m_font.hAlign = NVG_ALIGN_LEFT;
-        m_font.vAlign = NVG_ALIGN_MIDDLE;
+        m_font.lblAlign = NVG_ALIGN_MIDDLE_CENTER | NVG_ALIGN_INSIDE;
+        m_font.txtAlign = NVG_ALIGN_MIDDLE_CENTER | NVG_ALIGN_INSIDE;
         m_borderColor = glm::vec4(FR_BLACK);
+        m_font.pos.x = m_x ;
+        m_font.pos.y = m_y ;
+        m_font.size.w = m_w;
+        m_font.size.h = m_h;
     }
     void Frtk_Box::applyStyle() {
         nvgFontSize(m_vg, m_font.fontSize);

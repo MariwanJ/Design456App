@@ -51,7 +51,7 @@ namespace FR {
     static_assert(false, "ERROR: nvgRGBA (integer RGBA) is forbidden. " \
                          "Use nvgRGBAf(float r,g,b,a) or glmToNVG(glm::vec4) instead.");
 //***********************************************************************************************************************************
-
+ 
     typedef enum FRTK_PICTXT_STYLE
     {	// align() values
         // picture Over Text and (Center, Left & Right)
@@ -113,8 +113,6 @@ namespace FR {
         virtual void draw_focus(BOX_TYPE t, float X, float Y, float W, float H);
         virtual void draw_focus(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 bkg);
 
-        virtual void drawLabel();
-        virtual void drawLabel(float X, float Y, float W, float H = 18.0 * 1.3f, float rotateAngle = 0.0f);
         virtual void rotateLabel(float angle = 0.0f);
         virtual float lblRotateAngle() const;
 
@@ -128,14 +126,16 @@ namespace FR {
 
         bool can_focus() const;
 
-        void color(uint8_t R, uint8_t G, uint8_t B, uint8_t A = 255);
-        void color(float R, float G, float B, float A = 1.0f);
-        void color(glm::vec4 col);
-        glm::vec4 color(void) const;
         inline NVGcolor glmToNVG(const glm::vec4& c)
         {
             return nvgRGBAf(c.r, c.g, c.b, c.a);
         }
+
+        void color(uint8_t R, uint8_t G, uint8_t B, uint8_t A = 255);
+        void color(float R, float G, float B, float A = 1.0f);
+        void color(glm::vec4 col);
+        glm::vec4 color(void) const;
+
 
         void  opacity(float A = 1.0f);
         void  opacity(uint8_t A = 255);
@@ -164,7 +164,13 @@ namespace FR {
         virtual void resize(float X, float Y, float W, float H);
         void position(float X, float Y);
         void size(float W, float H);
-        void align(int ALIGN);
+        
+        void lblAlign(int ALIGN);
+        void txtAlign(int ALIGN);
+
+        int lblAlign(void);
+        int txtAlign(void);
+
         void hide();
         bool visible() const;
         bool active(void) const;
@@ -197,9 +203,13 @@ namespace FR {
         void widgetType(WIDGTYPE nVal);
 
         Frtk_Widget* parent();
+        Frtk_Window* m_linkTofrtkWindow;
 
     protected:
         virtual void draw(void);
+        virtual void drawLabel();
+        virtual void drawLabel(float X, float Y, float W, float H = 18.0 * 1.3f, float rotateAngle = 0.0f);
+
         virtual int handle(int ev);
         virtual bool set_child_focus(Frtk_Widget* w = nullptr);
         void do_callback();

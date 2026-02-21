@@ -435,20 +435,20 @@ namespace FR {
         NVGpaint shadowPaint;
         float thumb = 60.0f;
         nvgBeginPath(vg);
-        nvgRoundedRect(vg, dim.pos.x, dim.pos.y, thumb,thumb, 5);
+        nvgRoundedRect(vg, dim.pos.x, dim.pos.y, thumb, thumb, 5);
         nvgFill(vg);
-        shadowPaint = nvgBoxGradient(vg, dim.pos.x - 1, dim.pos.y, thumb + 2,thumb + 2, 5, 3, nvgRGBA(0,0,0,128), nvgRGBA(0,0,0,0));
+        shadowPaint = nvgBoxGradient(vg, dim.pos.x - 1, dim.pos.y, thumb + 2, thumb + 2, 5, 3, nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
         nvgBeginPath(vg);
-        nvgRect(vg, dim.pos.x - 5, dim.pos.y - 5, thumb + 10,thumb + 10);
-        nvgRoundedRect(vg, dim.pos.x, dim.pos.y, thumb,thumb, 6);
+        nvgRect(vg, dim.pos.x - 5, dim.pos.y - 5, thumb + 10, thumb + 10);
+        nvgRoundedRect(vg, dim.pos.x, dim.pos.y, thumb, thumb, 6);
         nvgPathWinding(vg, NVG_HOLE);
         nvgFillPaint(vg, shadowPaint);
         nvgFill(vg);
 
         nvgBeginPath(vg);
-        nvgRoundedRect(vg, dim.pos.x + 0.5f, dim.pos.y + 0.5f, thumb - 1,thumb - 1, 4 - 0.5f);
-        nvgStrokeWidth(vg,1.0f);
-        nvgStrokeColor(vg, nvgRGBA(255,255,255,192));
+        nvgRoundedRect(vg, dim.pos.x + 0.5f, dim.pos.y + 0.5f, thumb - 1, thumb - 1, 4 - 0.5f);
+        nvgStrokeWidth(vg, 1.0f);
+        nvgStrokeColor(vg, nvgRGBA(255, 255, 255, 192));
         nvgStroke(vg);
     }
 
@@ -531,11 +531,26 @@ namespace FR {
             break;
         }
     }
-    float getTextWidth(NVGcontext* vg, const std::string& str, float fontSize, const char* fontFace)
+    // Function to draw a check mark
+    void drawCheckMark(NVGcontext* vg, float x, float y, float size, NVGcolor col) {
+        nvgBeginPath(vg);
+        nvgMoveTo(vg, x, y + size * 0.5f);
+        nvgLineTo(vg, x + size * 0.3f, y + size);
+        nvgLineTo(vg, x + size, y);
+        nvgStrokeColor(vg, col);
+        nvgStrokeWidth(vg, 5.0f);
+        nvgStroke(vg);
+    }
+
+    ///////////////////////***************************************////////////////////////////////////////////////////
+    ///                            Text related drawings                                                           ///
+    ///////////////////////***************************************////////////////////////////////////////////////////
+
+    float getTextWidth(NVGcontext* vg, const std::string& str, float fontSize, const char* fontName)
     {
-        nvgFontFace(vg, fontFace);
+        nvgFontFace(vg, fontName);
         nvgFontSize(vg, fontSize);
-        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE); // nutral alignment for measuring width
+        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE); // neutral alignment for measuring width
         float bounds[4];
         nvgTextBounds(vg, 0.0f, 0.0f, str.c_str(), nullptr, bounds);
         return bounds[2] - bounds[0];
@@ -553,53 +568,89 @@ namespace FR {
         return -bounds[0];
     }
 
-    // Draws text inside a box with alignment, shadow, and optional rotation (radians)
-    void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt)
+    //Draws text inside/outside a box with alignment, shadow, and optional rotation
+    void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt, bool isLabel, FontData_t& fnttData)
     {
-        // Set font
         nvgFontSize(vg, fnt.fontSize);
         nvgFontFace(vg, fnt.fName.c_str());
-        nvgTextAlign(vg, fnt.hAlign | fnt.vAlign | NVG_ALIGN_BASELINE);
 
-        // Get text metrics
+        int align = isLabel ? fnt.lblAlign : fnt.txtAlign;
+        bool inside = (align & NVG_ALIGN_INSIDE) != 0;
+
+        int nvgAlign = (align & 0x7F) | NVG_ALIGN_BASELINE;
+        nvgTextAlign(vg, nvgAlign);
+
         float asc, desc, lineh;
         nvgTextMetrics(vg, &asc, &desc, &lineh);
 
-        // Vertical alignment
-        float baselineY = fnt.pos.y + asc;
-        switch (fnt.vAlign)
-        {
-        case NVG_ALIGN_TOP:
-            baselineY = fnt.pos.y + asc;
-            break;
-        case NVG_ALIGN_MIDDLE:
-            baselineY = fnt.pos.y + (fnt.size.h - lineh) * 0.5f + asc;
-            break;
-        case NVG_ALIGN_BOTTOM:
-            baselineY = fnt.pos.y + fnt.size.h - lineh + asc;
-            break;
-        }
+        const float boxX = fnt.pos.x;
+        const float boxY = fnt.pos.y;
+        const float boxW = fnt.size.w;
+        const float boxH = fnt.size.h;
+
+        float drawX = boxX;
+        float baselineY = boxY;
+        float textW = getTextWidth(vg, text, fnt.fontSize, fnt.fName.c_str());
 
         // Horizontal alignment
-        float drawX = fnt.pos.x;
-        if (fnt.hAlign & NVG_ALIGN_CENTER)
-            drawX = fnt.pos.x + fnt.size.w * 0.5f;
-        else if (fnt.hAlign & NVG_ALIGN_RIGHT)
-            drawX = fnt.pos.x + fnt.size.w;
-        else // LEFT
-            drawX = fnt.pos.x + getTextLeftBearing(vg, text, fnt);
+        if (align & NVG_ALIGN_CENTER) {
+            //This will generate error if the lbl is inside
+            drawX = boxX + boxW * 0.5f - textW * 0.5f;
+            FRTK_CORE_WARN("NVG_ALIGN_CENTER when inside is not supported!");
+        }
+        else if (align & NVG_ALIGN_RIGHT) {
+            if (inside) {
+                drawX = boxX + boxW - textW;
+            }
+            else
+            {
+                drawX = boxX + boxW + (asc - desc) * 0.5f;
+            }
+        }
+        else if (align & NVG_ALIGN_LEFT)
+            if (inside) {
+                drawX = boxX;
+            }
+            else
+            {
+                drawX = boxX - textW - (asc - desc) * 0.5f;
+            }
 
-        // Save transform state
+        // Vertical alignment
+        if (inside)
+        {
+            if (align & NVG_ALIGN_TOP)
+                baselineY = boxY + asc * 1.2;
+            else if (align & NVG_ALIGN_MIDDLE)
+                baselineY = boxY + (boxH - (asc - desc)) * 0.5f;
+            else if (align & NVG_ALIGN_BOTTOM)
+                baselineY = boxY + boxH - desc;
+            else
+                baselineY = boxY + asc;
+        }
+        else
+        {
+            if (align & NVG_ALIGN_TOP)
+                baselineY = boxY - (asc - desc) * 0.6f;
+            else if (align & NVG_ALIGN_BOTTOM)
+                baselineY = boxY + boxH + (asc - desc) * 0.4f;
+            else if (align & NVG_ALIGN_MIDDLE) {
+                //Here we have left and right which works , middle dose not work!!
+                baselineY = boxY + (boxH - (asc - desc)) * 0.5f;
+            }
+        }
+        if(!isLabel){
+            fnt.realPos.x = drawX;
+            fnt.realPos.y = baselineY;
+        }
+        // Draw
         nvgSave(vg);
-
-        // Translate to the text origin
         nvgTranslate(vg, drawX, baselineY);
 
-        // Apply rotation if needed
         if (fnt.Rotate != 0.0f)
             nvgRotate(vg, glm::radians(fnt.Rotate));
 
-        // Draw shadow if any
+        // Shadow
         if (fnt.blur > 0.0f)
         {
             nvgFontBlur(vg, fnt.blur);
@@ -607,23 +658,10 @@ namespace FR {
             nvgText(vg, fnt.shadowOffs.x, fnt.shadowOffs.y, text.c_str(), nullptr);
         }
 
-        // Draw main text
+        // Main text
         nvgFontBlur(vg, 0.0f);
         nvgFillColor(vg, fnt.forgColor);
         nvgText(vg, 0.0f, 0.0f, text.c_str(), nullptr);
-
-        // Restore transform
         nvgRestore(vg);
-    }
-
-    // Function to draw a check mark
-    void drawCheckMark(NVGcontext* vg, float x, float y, float size, NVGcolor col) {
-        nvgBeginPath(vg);
-        nvgMoveTo(vg, x, y + size * 0.5f);
-        nvgLineTo(vg, x + size * 0.3f, y + size);
-        nvgLineTo(vg, x + size, y);
-        nvgStrokeColor(vg, col);
-        nvgStrokeWidth(vg, 5.0f);
-        nvgStroke(vg);
     }
 }

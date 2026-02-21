@@ -33,11 +33,7 @@
 namespace FR{
 
 
-    //TODO: Temporary code -- FIXME
-    typedef struct {
-        int fontNormal, fontBold, fontIcons, fontEmoji;
-    }FontData_t;
-    
+
     typedef struct {
         float height;
         float bevelHeight;
@@ -79,6 +75,7 @@ namespace FR{
         virtual bool set_child_focus(Frtk_Widget* w=nullptr);
         virtual  bool take_focus() override; 
         virtual void lose_focus() override;
+        FontData_t getFontData()  const;
     protected:
         virtual int handle(int event) override;
         dimPos_float_t mainGui() const override;

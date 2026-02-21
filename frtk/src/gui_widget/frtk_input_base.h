@@ -56,6 +56,8 @@ namespace FR {
         double dvalue() const;
         int size() const;
 
+        void draw_selection();
+
         int mark(int markIndex);
 
         int insert_position(int p, int m);

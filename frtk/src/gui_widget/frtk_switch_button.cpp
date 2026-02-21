@@ -66,8 +66,8 @@ namespace FR {
         nvgStrokeWidth(m_vg, 1.0f);
         nvgStrokeColor(m_vg, glmToNVG(m_borderColor));
         nvgStroke(m_vg);
-        m_font.hAlign = NVG_ALIGN_CENTER;
-        m_font.vAlign = NVG_ALIGN_MIDDLE;
+        m_font.lblAlign = NVG_ALIGN_MIDDLE_CENTER;
+        m_font.txtAlign = NVG_ALIGN_MIDDLE_CENTER;
     }
 
     void Frtk_Switch_Button::drawActiveSegment(float x, float y, float w, float h, float radius){
@@ -91,7 +91,7 @@ namespace FR {
         nvgFontFace(m_vg, m_font.fName.c_str());
         nvgFontSize(m_vg, m_font.fontSize);
 
-        nvgTextAlign(m_vg, m_font.hAlign | m_font.vAlign |NVG_ALIGN_BASELINE);
+        nvgTextAlign(m_vg, m_font.lblAlign|NVG_ALIGN_BASELINE);
         // ON
         nvgFillColor(m_vg, onActive ? nvgRGBAf(FR_GREEN) : nvgRGBAf(FR_DIM_GRAY));
         nvgText(m_vg, cxOn, cy, "ON", NULL);

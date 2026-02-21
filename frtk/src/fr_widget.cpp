@@ -322,11 +322,7 @@ namespace FR {
         m_color.baseColor = c;
     }
 
-    void Fr_Widget::SetOpacity(float alpha)
-    {
-        m_color.baseColor[3] = alpha;
-    }
-
+   
     void Fr_Widget::do_callback()
     {
         throw NotImplementedException();

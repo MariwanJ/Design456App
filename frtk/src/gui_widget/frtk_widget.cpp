@@ -26,6 +26,7 @@
 //
 #include <frtk.h>
 #include <gui_widget/frtk_widget.h>
+#include <gui_widget/frtk_window.h>
 #include <fr_window.h>
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -45,7 +46,7 @@ namespace FR {
         m_label(label), m_wdgType(FRTK_WIDGET), m_boxType(b), m_has_focus(false),
         m_Image({ nullptr, {{0.f, 0.f}, {0.f, 0.f}} }), m_cellStyle(FR_IMG_LEFT_TO_TEXT),
         m_visible(true), m_dragging(false), m_active(true),
-        m_cantake_focus(true), m_IconTexture(0), m_vg(NULL),
+        m_cantake_focus(true), m_IconTexture(0), m_vg(NULL), m_linkTofrtkWindow(nullptr),
         m_borderColor(glm::vec4(FR_DARKSLATEGREY)), m_borderWidth(NORMAL_BORDER),
         m_callback(default_callback),
         m_color(glm::vec4(FR_GAINSBORO)), m_bkg_color(FR_SILVER) {
@@ -56,10 +57,14 @@ namespace FR {
         m_font.fName = "sans";
         m_font.fontSize = FRTK_TOOLBAR_BUTTON_FONT_SIZE;
         m_font.forgColor = nvgRGBAf(FR_BLACK);
-        m_font.hAlign = NVG_ALIGN_LEFT;
-        m_font.vAlign = NVG_ALIGN_MIDDLE;
-        m_font.pos = { 0.0, 0.0 };
-        m_font.size = { 0.0, 0.0 };
+        m_font.lblAlign = NVG_ALIGN_MIDDLE_LEFT;
+        m_font.txtAlign = NVG_ALIGN_MIDDLE_LEFT;
+
+        m_font.pos.x = m_x + m_font.fontSize * 0.4f;
+        m_font.pos.y = m_y + m_font.fontSize * 0.4f;
+        m_font.size.w = m_w;
+        m_font.size.h = m_h;
+        m_font.realPos = m_font.pos; // initial, we should calculate this depending on alignments
         m_font.Rotate = 0.0f;
         m_font.shadowCol = nvgRGBAf(0.0f, 0.0f, 0.0f, 0.38f);
         m_font.shadowOffs = { 0.5f,0.5f };
@@ -191,15 +196,15 @@ namespace FR {
         draw_box(m_vg, t, { {X,Y},{W,H} }, 0.0f, NORMAL_BORDER, nvgRGBAf(0, 0.501f, 1.0f, 1.0f), nvgRGBAf(bkg.r, bkg.g, bkg.b, bkg.a), true);
     }
     void Frtk_Widget::drawLabel() {
-        drawTextInBox(m_vg, m_label, m_font);
+        drawTextInBox(m_vg, m_label, m_font,true, m_linkTofrtkWindow->getFontData());
     }
     void Frtk_Widget::drawLabel(float X, float Y, float W, float H, float rotateAngle ) {
-        m_font.pos.x = X;
-        m_font.pos.y = Y;
+        m_font.pos.x = X + m_font.fontSize * 0.4f;
+        m_font.pos.y = Y + m_font.fontSize * 0.4f;
         m_font.size.w = W;
         m_font.size.h = H;
         m_font.Rotate = rotateAngle;
-        drawTextInBox(m_vg, m_label, m_font);
+        drawTextInBox(m_vg, m_label, m_font,true, m_linkTofrtkWindow->getFontData());
     }
 
     void Frtk_Widget::rotateLabel(float angle)
@@ -213,7 +218,6 @@ namespace FR {
     void Frtk_Widget::boxType(BOX_TYPE nType)
     {
         m_boxType = nType;
-        redraw();
     }
 
     int Frtk_Widget::cellStyle() const
@@ -225,7 +229,6 @@ namespace FR {
     {
         m_cellStyle = value;
         applyStyle();
-        redraw();
     }
 
     void Frtk_Widget::applyStyle() {
@@ -259,6 +262,11 @@ namespace FR {
     glm::vec4 Frtk_Widget::color(void) const
     {
         return m_color;
+    }
+
+    void Fr_Widget::SetOpacity(float alpha)
+    {
+        m_color.baseColor[3] = alpha;
     }
 
     void Frtk_Widget::opacity(float A) {
@@ -345,9 +353,21 @@ namespace FR {
     void Frtk_Widget::size(float W, float H) {
         resize(m_x, m_y, W, H);
     }
-    void Frtk_Widget::align(int ALIGN) {
-        throw NotImplementedException();  // this method should be implemented by subclassing the widget
+
+    int Frtk_Widget::lblAlign() {
+        return m_font.lblAlign;
     }
+    int Frtk_Widget::txtAlign() {
+        return m_font.txtAlign;
+    }
+
+    void Frtk_Widget::txtAlign(int ALIGN) {
+        m_font.txtAlign = ALIGN;
+    }
+    void Frtk_Widget::lblAlign(int ALIGN) {
+        m_font.lblAlign = ALIGN;
+    }
+
     bool Frtk_Widget::active(void) const {
         return m_active;
     }
@@ -467,8 +487,7 @@ namespace FR {
     bool Frtk_Widget::hasBelowMouse() const {
         return g_focusedWdgt.g_underMouse == this;
     }
-
-    
+        
     void Frtk_Widget::set_BelowMouse() {
         g_focusedWdgt.g_underMouse = this;
     }

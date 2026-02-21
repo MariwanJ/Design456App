@@ -30,9 +30,7 @@
 #include <fr_core.h>
 
 namespace FR {
-
-
-    // Get Current Directory 
+    // Get Current Directory
 #if defined(_WIN32) || defined(_WIN64)
 #define GET_CURRENT_DIRECTORY() []() -> std::string { \
         char buffer[MAX_PATH]; \
@@ -56,9 +54,6 @@ namespace FR {
         } \
     }()
 #endif
-
-
-
 
 // FR DEBUG BREAK, USE IT WHEN YOU WANT TO BREAK WITH SOME IF CONDITION 2026/02/09
 #if defined(_WIN32)
@@ -106,11 +101,9 @@ namespace FR {
 #define FRTK_API
 #endif
 
-
 #define setBIT(x) (1 << x)
 #define clearBIT(x) (0 << x)
-#define WITH_ALPHA(c, alpha) ((c.A *= (alpha), c.A = (c.A < 0.0f ? 0.0f : (c.A > 1.0f ? 1.0f : c.A)), c.R), (c.G), (c.B), (c.A))
-
+#define APPLY_OPACITY(c, alpha) ((c.a *= (alpha), c.a = (c.a < 0.0f ? 0.0f : (c.a > 1.0f ? 1.0f : c.a)), c.r), (c.g), (c.b), (c.a))
 
     class NotImplementedException : public std::logic_error
     {
@@ -132,8 +125,6 @@ namespace FR {
         std::cout << std::flush;
         return ok;
     }
-
-
 }
 
 #endif

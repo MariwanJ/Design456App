@@ -165,7 +165,9 @@ namespace FR {
     void Frtk_GrpWidget::addChild(std::shared_ptr<Frtk_Widget> w)
     {
         w->parent(this);
+        w->m_linkTofrtkWindow = getParentWindow();
         m_children.emplace_back(std::move(w));
+        
     }
 
     bool Frtk_GrpWidget::restore_focus() {
@@ -267,6 +269,9 @@ namespace FR {
         for (auto& wdg : m_children) {
             wdg->lose_focus();
         }
+    }
+    Frtk_Window* Frtk_GrpWidget::getParentWindow() {
+      return (Frtk_Window*)m_linkTofrtkWindow;
     }
 
     Frtk_Widget* Frtk_GrpWidget::focusedChild()

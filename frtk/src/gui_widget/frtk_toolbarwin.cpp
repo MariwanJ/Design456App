@@ -49,6 +49,7 @@ namespace FR {
             m_dockingSize = { {0.0,0.0},{FRTK_TOOLBAR_HEIGHT,FRTK_TOOLBAR_BUTTON_HEGHT} };
         //Create the buttons
         addButton(tools);
+        m_linkTofrtkWindow = this;
     }
     Fr_Window* Frtk_ToolBarWin::parent(void) {
         return m_parent;
@@ -129,7 +130,7 @@ namespace FR {
             btn->wdgImage(item.icon);
             btn->cellStyle(FR_IMG_LEFT_TO_TEXT);
             btn->set_callback(item.callback_);
-            m_guiWindow->addChild(btn);
+            addChild(btn);
         }
     }
 

@@ -49,8 +49,12 @@ namespace FR {
 
         m_font.fontSize = 18.0;
         m_font.fName = "sans-bold";
-        m_font.hAlign = NVG_ALIGN_CENTER;
-        m_font.vAlign = NVG_ALIGN_MIDDLE;
+        m_font.lblAlign = NVG_ALIGN_MIDDLE_CENTER | NVG_ALIGN_INSIDE;
+        m_font.txtAlign = NVG_ALIGN_MIDDLE_CENTER;
+        m_font.pos.x = m_x + m_font.fontSize * 0.4f;
+        m_font.pos.y = m_y + m_font.fontSize * 0.4f;
+        m_font.size.w = m_w;
+        m_font.size.h = m_h;
 
         /*When windows start to be visible, it will be the focused widget.
         this can change later as children get focus. current and prev will be the same here
@@ -61,13 +65,16 @@ namespace FR {
 
         // widgets specific variables
         m_wdgType = FRTK_WINDOW;
+        m_linkTofrtkWindow = this;
         if (m_hasHeader) {
             m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, X, Y + m_WindowsStyle.height, W, H - m_WindowsStyle.height);
         }
         else {
             m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, X, Y, W, H);
         }
+        m_guiWindow->m_linkTofrtkWindow = this;
         m_guiWindow->boxType(b);
+
         FRTK_CORE_APP_ASSERT(m_guiWindow);
     }
 
@@ -134,7 +141,7 @@ namespace FR {
     void Frtk_Window::drawLabel() {
         m_font.pos = { m_x, m_y };
         m_font.size = { m_w, m_WindowsStyle.height };
-        drawTextInBox(m_vg, m_label, m_font);
+        drawTextInBox(m_vg, m_label, m_font,true, m_linkTofrtkWindow->getFontData());
     }
 
     void Frtk_Window::drawLabel(float X, float Y, float W, float H, float rotateAngle) {
@@ -277,6 +284,7 @@ namespace FR {
         m_guiWindow->remove_all();
     }
     void Frtk_Window::addChild(std::shared_ptr<Frtk_Widget> w) {
+        w->m_linkTofrtkWindow = this;
         m_guiWindow->addChild(w);
     }
     bool Frtk_Window::hasHeader() const {
@@ -296,6 +304,10 @@ namespace FR {
             g_focusedWdgt.prev = g_focusedWdgt.current;
             g_focusedWdgt.current = nullptr;
         }
+    }
+    FontData_t Frtk_Window::getFontData() const
+    {
+        return m_data;
     }
     bool Frtk_Window::set_child_focus(Frtk_Widget* w) {
         if(w){
