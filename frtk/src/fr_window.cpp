@@ -734,7 +734,7 @@ namespace FR {
                     }
                 }
         }
-        //at the end, we should forwared the events
+        //at the end, we should forward the events
         if(g_focusedWdgt.keyboardOwner){
             if (g_focusedWdgt.keyboardOwner->handle(events)) {
                 return 1; //consumed.

@@ -105,7 +105,7 @@ namespace FR {
         int m_tab_nav;
 
     private:
-
+        NVGcolor m_cursorColor;
         bool isInteger(const std::string& str, int& value) {
             auto [ptr, ec] = std::from_chars(str.data(), str.data() + str.size(), value);
             return ec == std::errc() && ptr == str.data() + str.size();

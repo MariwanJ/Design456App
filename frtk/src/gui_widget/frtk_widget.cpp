@@ -151,23 +151,23 @@ namespace FR {
             m_parent->set_child_focus(g_focusedWdgt.prev);
 
         g_focusedWdgt.prev = g_focusedWdgt.current;
-        g_focusedWdgt.current = nullptr;
+       // g_focusedWdgt.current = nullptr;
         m_has_focus = false;
     }
 
     bool Frtk_Widget::take_focus() {
-        if (!can_focus()) return false; // widget may be non-focusable
+        if (!can_focus()) 
+            return false; 
 
         if (g_focusedWdgt.current == this)
             return true;
 
         // Clear previous focus
-        if (g_focusedWdgt.current)
-            g_focusedWdgt.current->m_has_focus = false;
-
+        if (g_focusedWdgt.current) {
+            g_focusedWdgt.current->lose_focus();
+        }
         g_focusedWdgt.prev = g_focusedWdgt.current;
         g_focusedWdgt.current = this;
-
         m_has_focus = true;
 
         if (m_parent && m_parent->m_wdgType == FRTK_GROUP)
@@ -518,6 +518,7 @@ namespace FR {
     }
     bool Frtk_Widget::set_child_focus(Frtk_Widget* w) {
         (void)w;
+        throw NotImplementedException();
         return false;
         // default: do nothing
     }

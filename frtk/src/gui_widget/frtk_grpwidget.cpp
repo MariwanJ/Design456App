@@ -264,7 +264,7 @@ namespace FR {
         if (m_parent)
             m_parent->set_child_focus(g_focusedWdgt.prev);
         g_focusedWdgt.prev = g_focusedWdgt.current;
-        g_focusedWdgt.current = nullptr;
+        //g_focusedWdgt.current = nullptr;
         m_has_focus = false;
         for (auto& wdg : m_children) {
             wdg->lose_focus();
@@ -380,21 +380,22 @@ namespace FR {
              
             }break;
             }
+            int result=0;
             for (auto& wdg : m_children) {
                 //We should not allow sending events to inactive widget
                 if (wdg->active() && wdg->visible()) {
                     if (wdg->isMouse_inside()) {
-                        int result = wdg->handle(ev);
-                        if (ev == FR_LEFT_PUSH) {
-                            result |= wdg->take_focus();
-                        }
-                        if (result == 1) {
-                            return result; // Event is consumed
-                        }
+                        result = wdg->handle(ev);
+                        //if (ev == FR_LEFT_PUSH) {
+                        //    ;//   result |= wdg->take_focus();
+                        //}
+                        ////if (result == 1) {
+                        ////    return result; // Event is consumed
+                        ////}
                     }
                 }
             }
-            return 0;
+            return result;
         }  
         bool Frtk_GrpWidget::take_focus() {
             m_has_focus = true;

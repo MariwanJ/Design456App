@@ -48,6 +48,8 @@ namespace FR {
         m_font.pos.y = m_y + m_font.fontSize * 0.4f;
         m_font.size.w = m_w;
         m_font.size.h = m_h;
+        m_cursorColor = nvgRGBAf(FR_CHARCOAL);
+        m_cursorColor.a = 0.5f;//Opacity
     }
 
     std::string Frtk_Input_Base::cpToUTF8(uint32_t cp) {
@@ -321,7 +323,8 @@ namespace FR {
             cursorX = m_font.realPos.x;
         float asc, desc, lineh;
         nvgTextMetrics(m_vg, &asc, &desc, &lineh);
-        drawFilledRect(m_vg, { cursorX  , m_font.realPos.y - asc, 2, lineh }, 0, NORMAL_BORDER, nvgRGBAf(FR_RED), glmToNVG(m_color_diabled));
+        
+        drawFilledRect(m_vg, { cursorX  , m_font.realPos.y - asc, 0.75f, lineh }, 0, NORMAL_BORDER, m_cursorColor, glmToNVG(m_color_diabled));
         delete[] glyphs;
     }
 
@@ -339,9 +342,12 @@ namespace FR {
         switch (ev) {
         case (FR_LEFT_PUSH):
         case (FR_FOCUS): {
+            if (take_focus()){
             m_text.cursorPos = m_text.value.size();
             m_text.selStart = m_text.cursorPos;
             return 1;
+            }
+            return 0;
         }break;
         case (FR_KEYBOARD): {
             if (!(m_active && m_visible))
