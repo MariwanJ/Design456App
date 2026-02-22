@@ -88,11 +88,14 @@ namespace FR {
         bool isSingleLine() const;
         bool isSecret() const;
 
+        virtual void lose_focus() override;
     protected:
         virtual int handle(int ev) override;
         void drawEditBoxBase(float x, float y, float w, float h);
         virtual void draw() override;
         virtual void draw_cursor();
+
+        int mouseXToCharIndex();
 
         int word_start(int ind) const;
         int word_end(int ind) const;

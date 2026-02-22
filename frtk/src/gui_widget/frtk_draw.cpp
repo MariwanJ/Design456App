@@ -568,100 +568,176 @@ namespace FR {
         return -bounds[0];
     }
 
-    //Draws text inside/outside a box with alignment, shadow, and optional rotation
-    void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt, bool isLabel, FontData_t& fnttData)
-    {
-        nvgFontSize(vg, fnt.fontSize);
-        nvgFontFace(vg, fnt.fName.c_str());
+    ////Draws text inside/outside a box with alignment, shadow, and optional rotation
+    //void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt, bool isLabel, FontData_t& fnttData)
+    //{
+    //    nvgFontSize(vg, fnt.fontSize);
+    //    nvgFontFace(vg, fnt.fName.c_str());
 
-        int align = isLabel ? fnt.lblAlign : fnt.txtAlign;
-        bool inside = (align & NVG_ALIGN_INSIDE) != 0;
+    //    int align = isLabel ? fnt.lblAlign : fnt.txtAlign;
+    //    bool inside = (align & NVG_ALIGN_INSIDE) != 0;
 
-        int nvgAlign = (align & 0x7F) | NVG_ALIGN_BASELINE;
-        nvgTextAlign(vg, nvgAlign);
+    //    int nvgAlign = (align & 0x7F) | NVG_ALIGN_BASELINE;
+    //    nvgTextAlign(vg, nvgAlign);
 
-        float asc, desc, lineh;
-        nvgTextMetrics(vg, &asc, &desc, &lineh);
+    //    float asc, desc, lineh;
+    //    nvgTextMetrics(vg, &asc, &desc, &lineh);
 
-        const float boxX = fnt.pos.x;
-        const float boxY = fnt.pos.y;
-        const float boxW = fnt.size.w;
-        const float boxH = fnt.size.h;
+    //    const float boxX = fnt.pos.x;
+    //    const float boxY = fnt.pos.y;
+    //    const float boxW = fnt.size.w;
+    //    const float boxH = fnt.size.h;
 
-        float drawX = boxX;
-        float baselineY = boxY;
-        float textW = getTextWidth(vg, text, fnt.fontSize, fnt.fName.c_str());
+    //    float drawX = boxX;
+    //    float baselineY = boxY;
+    //    float textW = getTextWidth(vg, text, fnt.fontSize, fnt.fName.c_str());
 
-        // Horizontal alignment
-        if (align & NVG_ALIGN_CENTER) {
-            //This will generate error if the lbl is inside
-            drawX = boxX + boxW * 0.5f - textW * 0.5f;
-            FRTK_CORE_WARN("NVG_ALIGN_CENTER when inside is not supported!");
-        }
-        else if (align & NVG_ALIGN_RIGHT) {
-            if (inside) {
-                drawX = boxX + boxW - textW;
-            }
-            else
-            {
-                drawX = boxX + boxW + (asc - desc) * 0.5f;
-            }
-        }
-        else if (align & NVG_ALIGN_LEFT)
-            if (inside) {
-                drawX = boxX;
-            }
-            else
-            {
-                drawX = boxX - textW - (asc - desc) * 0.5f;
-            }
+    //    // Horizontal alignment
+    //    if (align & NVG_ALIGN_CENTER) {
+    //        //This will generate error if the lbl is inside
+    //        drawX = boxX + boxW * 0.5f - textW * 0.5f;
+    //       // FRTK_CORE_WARN("NVG_ALIGN_CENTER when inside is not supported!");
+    //    }
+    //    else if (align & NVG_ALIGN_RIGHT) {
+    //        if (inside) {
+    //            drawX = boxX + boxW - textW;
+    //        }
+    //        else
+    //        {
+    //            drawX = boxX + boxW + (asc - desc) * 0.5f;
+    //        }
+    //    }
+    //    else if (align & NVG_ALIGN_LEFT)
+    //        if (inside) {
+    //            drawX = boxX;
+    //        }
+    //        else
+    //        {
+    //            drawX = boxX - textW - (asc - desc) * 0.5f;
+    //        }
 
-        // Vertical alignment
-        if (inside)
-        {
-            if (align & NVG_ALIGN_TOP)
-                baselineY = boxY + asc * 1.2;
-            else if (align & NVG_ALIGN_MIDDLE)
-                baselineY = boxY + (boxH - (asc - desc)) * 0.5f;
-            else if (align & NVG_ALIGN_BOTTOM)
-                baselineY = boxY + boxH - desc;
-            else
-                baselineY = boxY + asc;
-        }
-        else
-        {
-            if (align & NVG_ALIGN_TOP)
-                baselineY = boxY - (asc - desc) * 0.6f;
-            else if (align & NVG_ALIGN_BOTTOM)
-                baselineY = boxY + boxH + (asc - desc) * 0.4f;
-            else if (align & NVG_ALIGN_MIDDLE) {
-                //Here we have left and right which works , middle dose not work!!
-                baselineY = boxY + (boxH - (asc - desc)) * 0.5f;
-            }
-        }
-        if(!isLabel){
-            fnt.realPos.x = drawX;
-            fnt.realPos.y = baselineY;
-        }
-        // Draw
-        nvgSave(vg);
-        nvgTranslate(vg, drawX, baselineY);
+    //    // Vertical alignment
+    //    if (inside)
+    //    {
+    //        if (align & NVG_ALIGN_TOP)
+    //            baselineY = boxY + asc * 1.2;
+    //        else if (align & NVG_ALIGN_MIDDLE)
+    //            baselineY = boxY + (boxH - (asc - desc)) * 0.5f;
+    //        else if (align & NVG_ALIGN_BOTTOM)
+    //            baselineY = boxY + boxH - desc;
+    //        else
+    //            baselineY = boxY + asc;
+    //    }
+    //    else
+    //    {
+    //        if (align & NVG_ALIGN_TOP)
+    //            baselineY = boxY - (asc - desc) * 0.6f;
+    //        else if (align & NVG_ALIGN_BOTTOM)
+    //            baselineY = boxY + boxH + (asc - desc) * 0.4f;
+    //        else if (align & NVG_ALIGN_MIDDLE) {
+    //            //Here we have left and right which works , middle dose not work!!
+    //            baselineY = boxY + (boxH - (asc - desc)) * 0.5f;
+    //        }
+    //    }
+    //    if(!isLabel){
+    //        fnt.realPos.x = drawX;
+    //        fnt.realPos.y = baselineY;
+    //    }
+    //    // Draw
+    //    nvgSave(vg);
+    //    nvgTranslate(vg, drawX, baselineY);
 
-        if (fnt.Rotate != 0.0f)
-            nvgRotate(vg, glm::radians(fnt.Rotate));
+    //    if (fnt.Rotate != 0.0f)
+    //        nvgRotate(vg, glm::radians(fnt.Rotate));
 
-        // Shadow
-        if (fnt.blur > 0.0f)
-        {
-            nvgFontBlur(vg, fnt.blur);
-            nvgFillColor(vg, fnt.shadowCol);
-            nvgText(vg, fnt.shadowOffs.x, fnt.shadowOffs.y, text.c_str(), nullptr);
-        }
+    //    // Shadow
+    //    if (fnt.blur > 0.0f)
+    //    {
+    //        nvgFontBlur(vg, fnt.blur);
+    //        nvgFillColor(vg, fnt.shadowCol);
+    //        nvgText(vg, fnt.shadowOffs.x, fnt.shadowOffs.y, text.c_str(), nullptr);
+    //    }
 
-        // Main text
-        nvgFontBlur(vg, 0.0f);
-        nvgFillColor(vg, fnt.forgColor);
-        nvgText(vg, 0.0f, 0.0f, text.c_str(), nullptr);
-        nvgRestore(vg);
+    //    // Main text
+    //    nvgFontBlur(vg, 0.0f);
+    //    nvgFillColor(vg, fnt.forgColor);
+    //    nvgText(vg, 0.0f, 0.0f, text.c_str(), nullptr);
+    //    nvgRestore(vg);
+    //}
+
+
+
+void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt, bool isLabel, FontData_t& fnttData)
+{
+    nvgFontSize(vg, fnt.fontSize);
+    nvgFontFace(vg, fnt.fName.c_str());
+
+    int align = isLabel ? fnt.lblAlign : fnt.txtAlign;
+    bool inside = (align & NVG_ALIGN_INSIDE) != 0;
+
+    int nvgAlign = (align & 0x7F) | NVG_ALIGN_BASELINE;
+    nvgTextAlign(vg, nvgAlign);
+
+    float asc, desc, lineh;
+    nvgTextMetrics(vg, &asc, &desc, &lineh);
+
+    const float boxX = fnt.pos.x;
+    const float boxY = fnt.pos.y;
+    const float boxW = fnt.size.w;
+    const float boxH = fnt.size.h;
+
+    float textW = getTextWidth(vg, text, fnt.fontSize, fnt.fName.c_str());
+
+    // Compute visual left edge for horizontal alignment
+    float visualX = boxX;
+    if (align & NVG_ALIGN_CENTER) {
+        visualX = boxX + boxW * 0.5f - textW * 0.5f;
     }
+    else if (align & NVG_ALIGN_RIGHT) {
+        visualX = inside ? (boxX + boxW - textW) : (boxX + boxW + (asc - desc) * 0.5f);
+    }
+    else if (align & NVG_ALIGN_LEFT) {
+        visualX = inside ? boxX : (boxX - textW - (asc - desc) * 0.5f);
+    }
+
+    // Compute baseline Y for vertical alignment
+    float visualY = boxY;
+    if (inside) {
+        if (align & NVG_ALIGN_TOP) visualY = boxY + asc * 1.2f;
+        else if (align & NVG_ALIGN_MIDDLE) visualY = boxY +boxH * 0.5F -(asc + desc) * 0.5f;
+        else if (align & NVG_ALIGN_BOTTOM) visualY = boxY + boxH - desc;
+        else visualY = boxY + asc;
+    }
+    else {
+        if (align & NVG_ALIGN_TOP) visualY = boxY - (asc - desc) * 0.6f;
+        else if (align & NVG_ALIGN_MIDDLE) visualY = boxY + boxH *.5 - (asc +desc) * 0.5f;
+        else if (align & NVG_ALIGN_BOTTOM) visualY = boxY + boxH + (asc - desc) * 0.4f;
+    }
+
+    // Store visual origin in fnt.realPos for hit-testing
+    if (!isLabel) {
+        fnt.realPos.x = visualX;   // left edge of text
+        fnt.realPos.y = visualY;   // baseline Y
+    }
+
+    // Draw text relative to visual origin
+    nvgSave(vg);
+    nvgTranslate(vg, visualX, visualY);
+    if (fnt.Rotate != 0.0f)
+        nvgRotate(vg, glm::radians(fnt.Rotate));
+
+    // Shadow
+    if (fnt.blur > 0.0f) {
+        nvgFontBlur(vg, fnt.blur);
+        nvgFillColor(vg, fnt.shadowCol);
+        nvgText(vg, fnt.shadowOffs.x, fnt.shadowOffs.y, text.c_str(), nullptr);
+    }
+
+    // Main text
+    nvgFontBlur(vg, 0.0f);
+    nvgFillColor(vg, fnt.forgColor);
+    nvgText(vg, 0.0f, 0.0f, text.c_str(), nullptr);
+
+    nvgRestore(vg);
+}
 }

@@ -255,12 +255,15 @@ You call window->hide()
 
         FR_LEFT_DRAG_PUSH,
         FR_LEFT_DRAG_RELEASE,
+        FR_LEFT_DRAG_MOVE,
 
         FR_RIGHT_DRAG_PUSH,
         FR_RIGHT_DRAG_RELEASE,
+        FR_RIGHT_DRAG_MOVE,
 
         FR_MIDDLE_DRAG_PUSH,
         FR_MIDDLE_DRAG_RELEASE,
+        FR_MIDDLE_DRAG_MOVE,
 
         FR_MOUSE_MOVE,
         FR_SCROLL,
@@ -379,6 +382,10 @@ You call window->hide()
         bool L_Pressed, L_Released, L_Drag;
         bool R_Pressed, R_Released, R_Drag;
         bool M_Pressed, M_Released, M_Drag;
+        
+        bool L_WasDragging ,R_WasDragging, M_WasDragging ;
+        bool L_DragReleased ,R_DragReleased, M_DragReleased ;
+
         bool mouseMoved;
         bool mouseEntered; //Entered Windows area or not
         int lastMAction;

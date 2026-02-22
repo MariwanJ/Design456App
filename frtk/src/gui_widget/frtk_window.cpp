@@ -179,8 +179,8 @@ namespace FR {
     void Frtk_Window::drawLabel() {
         m_font.pos = { m_x, m_y };
         m_font.size = { m_w, m_WindowsStyle.height };
-        drawTextInBox(m_vg, m_label, m_font,true, m_linkTofrtkWindow->getFontData());
-    }
+         drawTextInBox(m_vg, m_label, m_font,true, m_linkTofrtkWindow->getFontData());
+     }
 
     void Frtk_Window::drawLabel(float X, float Y, float W, float H, float rotateAngle) {
         m_font.size.w = W;
@@ -271,7 +271,7 @@ namespace FR {
             auto& mouse = m_mainWindow->m_sysEvents.mouse;
             if (m_hasHeader) {
                 if (Header_clicked() || m_dragging) {
-                    if (events == FR_LEFT_DRAG_PUSH) {
+                    if (events == FR_LEFT_DRAG_MOVE) {
                         m_dragging = true;
                         float dx, dy;
                         dx = (float)(mouse.prevX - mouse.activeX);
@@ -280,7 +280,7 @@ namespace FR {
                         m_guiWindow->position(m_guiWindow->x() - dx, m_guiWindow->y() - dy);
                         return 1;
                     }
-                    else if (m_dragging && events == FR_LEFT_RELEASE) {
+                    else if (m_dragging && events == FR_LEFT_DRAG_RELEASE) {
                         m_dragging = false;
                         m_mainWindow->activateNavi();
                         return 1;

@@ -49,7 +49,7 @@ namespace FR {
         m_font.size.w = m_w;
         m_font.size.h = m_h;
         m_cursorColor = nvgRGBAf(FR_CHARCOAL);
-        m_cursorColor.a = 0.5f;//Opacity
+        m_cursorColor.a = 0.75f;//Opacity
     }
 
     std::string Frtk_Input_Base::cpToUTF8(uint32_t cp) {
@@ -235,6 +235,14 @@ namespace FR {
         return  (m_wdgType == FRTK_SECRET_INPUT);
     }
 
+    void Frtk_Input_Base::lose_focus()
+    {
+        //avoid having diff otherwise draw_selection will draw it.
+        m_text.selStart = 0;
+        m_text.cursorPos = 0;
+        Frtk_Widget::lose_focus();
+    }
+
     int  Frtk_Input_Base::word_start(int ind) const {
         return 0;
     }
@@ -328,6 +336,32 @@ namespace FR {
         delete[] glyphs;
     }
 
+    int Frtk_Input_Base::mouseXToCharIndex()
+    {
+        if (m_text.value.empty())
+            return 0;
+
+        NVGglyphPosition glyphs[256];
+        auto mouse = m_mainWindow->m_sysEvents.mouse;
+        float localMouseX = mouse.activeX - absX();
+        
+        FRTK_CORE_INFO("{} {} {} ", localMouseX, mouse.activeX, absX());
+
+        int count = nvgTextGlyphPositions( m_vg, m_font.pos.x, m_font.pos.y,   m_text.value.c_str(), nullptr, glyphs, m_text.value.size() );
+        
+        if (count == 0)
+            return 0;
+        if (localMouseX < glyphs[0].minx)
+            return 0;
+        for (int i = 0; i < count; ++i)
+        {
+            float mid = (glyphs[i].minx + glyphs[i].maxx) * 0.5f;
+            if (localMouseX < mid)
+                return i;
+        }
+        return count;
+    }
+
     int Frtk_Input_Base::handle(int ev)
     {
         /*
@@ -340,6 +374,25 @@ namespace FR {
         */
 
         switch (ev) {
+        case FR_LEFT_DRAG_PUSH:{
+            m_text.selStart = mouseXToCharIndex();
+          
+            FRTK_CORE_INFO("pos sel --{} {}", m_text.cursorPos, m_text.selStart);
+           // m_text.cursorPos = m_text.selStart;
+            return 1;
+        }break;
+        case FR_LEFT_DRAG_MOVE: {
+                m_text.cursorPos = mouseXToCharIndex();
+                FRTK_CORE_INFO("pos sel++ {} {}", m_text.cursorPos, m_text.selStart);
+                return 1;
+        }break;
+
+        case FR_LEFT_DRAG_RELEASE: {
+            m_text.cursorPos = mouseXToCharIndex();
+            m_mainWindow->m_sysEvents.mouse.L_WasDragging = false;
+            return 1;
+        }break;
+
         case (FR_LEFT_PUSH):
         case (FR_FOCUS): {
             if (take_focus()){

@@ -137,6 +137,8 @@ namespace FR {
             false, false, false,   // L_Pressed, L_Released, L_Drag
             false, false, false,   // R_Pressed, R_Released, R_Drag
             false, false, false,   // M_Pressed, M_Released, M_Drag
+            false, false, false,   //L_WasDragging ,R_WasDragging, M_WasDragging;
+            false, false, false,   //L_DragReleased ,R_DragReleased, M_DragReleased;
             false,                // mouseMoved
             false,                // mouseEntered
             -1, 0,                // lastMAction, lastMod
@@ -153,20 +155,19 @@ namespace FR {
         }
     };
 
-
     Fr_Window::Fr_Window(int x, int y, int w, int h, const std::string& label)
-        : m_label(label), 
-        cursorHand(nullptr), 
+        : m_label(label),
+        cursorHand(nullptr),
         cursorCrosshair(nullptr),
         runCode(false),
-        activeScene(nullptr), 
+        activeScene(nullptr),
         m_nvgContext(nullptr),
-        gl_version_major(4), 
+        gl_version_major(4),
         gl_version_minor(6),
-        m_NaviCube(true), 
+        m_NaviCube(true),
         m_MainToolbar(nullptr),
-        mouseDefaults{ 0 }, 
-        radiusXYZ(0.0f), 
+        mouseDefaults{ 0 },
+        radiusXYZ(0.0f),
         m_winType(FRTK_WIN_TYPE::NORMAL),
         m_menuHeight(5.0f)
     {
@@ -206,7 +207,7 @@ namespace FR {
             std::cerr << EXE_CURRENT_DIR << std::endl;  // Print the error message
             exit(1);  // Exit with a non-zero status indicating failure
         }
-        std::cout <<EXE_CURRENT_DIR<<std::endl;
+        std::cout << EXE_CURRENT_DIR << std::endl;
 
 #if defined(_WIN32) || defined(_WIN64)
         auto it = EXE_CURRENT_DIR.find("\\bin");
@@ -223,12 +224,12 @@ namespace FR {
         //DEFAULT_FONT = fontPath + "SUSEMono-Thin.ttf";
 
         while (true) {
-            size_t it = EXE_CURRENT_DIR.find("\\"); 
-            if (it != std::string::npos) { 
+            size_t it = EXE_CURRENT_DIR.find("\\");
+            if (it != std::string::npos) {
                 EXE_CURRENT_DIR.replace(it, 1, "/"); // Replace with a forward slash
             }
             else {
-                break; 
+                break;
             }
         }
 
@@ -378,8 +379,6 @@ namespace FR {
         return 1;
     }
 
-   
-
     void Fr_Window::resize(int x, int y, int w, int h)
     {
         glfwSetWindowPos(pGLFWWindow, x, y);
@@ -465,12 +464,12 @@ namespace FR {
         m_frtkWindow.push_back(runInputOutput());
 
         //TOOLBAR CREATION  - USING NEW GUI TOOLKIT
-       
+
         m_MainToolbar = createMainToolbar();
         m_MainToolbar->parent(this);
         m_frtkWindow.emplace_back(m_MainToolbar);
-        
-         m_selectionTB = createSelectionToolbar();
+
+        m_selectionTB = createSelectionToolbar();
         m_selectionTB->parent(this); //do not forget this !!!
         m_frtkWindow.emplace_back(m_selectionTB);
         bool onlyOnce = false;
@@ -478,7 +477,7 @@ namespace FR {
         {
             //ALL 3D Drawings
             activeScene->RenderScene();
-            
+
             renderNewGUI(); //temporary code
 
             ImGui_ImplOpenGL3_NewFrame();
@@ -510,7 +509,7 @@ namespace FR {
             glViewport(0, 0, w(), h());
             updateInputEvents(); //Process events.
             if (!onlyOnce) {
-                m_MainToolbar->y(m_menuHeight+1);
+                m_MainToolbar->y(m_menuHeight + 1);
                 m_selectionTB->y(m_menuHeight + 1);
                 onlyOnce = true;
             }
@@ -555,15 +554,15 @@ namespace FR {
     int Fr_Window::renderNewGUI() {
         //We might have multiple windows!!!
         /*
-            Important to remember!!! 
-            If you have only one GLFW windows, you should 
+            Important to remember!!!
+            If you have only one GLFW windows, you should
             NEVER call nvgBeginFrame/nvgEndFrame per windows.
             use nvgBeginFrame/nvgEndFrame  per each GLFW windows once!!
 
         */
         float ratio = activeScene->getActiveCamera().getRatio();
         nvgBeginFrame(m_nvgContext, (float)w(), (float)h(), ratio);
-        for (auto guiWin : m_frtkWindow){
+        for (auto guiWin : m_frtkWindow) {
             guiWin->draw();
         }
         nvgEndFrame(m_nvgContext);
@@ -593,6 +592,22 @@ namespace FR {
         em.M_Released = (em.button == GLFW_MOUSE_BUTTON_MIDDLE && em.lastMAction == GLFW_RELEASE);
         em.M_Drag = (em.M_Down && em.mouseMoved); // true if dragging
 
+        //Dragging update :
+        // Track if drag ever happened during this button-down session
+        if (em.L_Drag) em.L_WasDragging = true;
+        if (em.R_Drag) em.R_WasDragging = true;
+        if (em.M_Drag) em.M_WasDragging = true;
+
+        // Drag released = button released AND was dragging this session
+        em.L_DragReleased = em.L_Released && em.L_WasDragging;
+        em.R_DragReleased = em.R_Released && em.R_WasDragging;
+        em.M_DragReleased = em.M_Released && em.M_WasDragging;
+
+        // Clear WasDragging when button is released
+        if (em.L_Released) em.L_WasDragging = false;
+        if (em.R_Released) em.R_WasDragging = false;
+        if (em.M_Released) em.M_WasDragging = false;
+
         //Keyboard
         auto& ek = m_sysEvents.keyB;
         for (auto& e : ek.events) {
@@ -601,7 +616,7 @@ namespace FR {
             ek.lastMod = e.mods;
             handle(FR_KEYBOARD);
         }
-        ek.events.clear(); //clear evenst as we processed them. 
+        ek.events.clear(); //clear events as we processed them.
 
         if (em.mouseMoved)       handle(FR_MOUSE_MOVE);
         if (em.L_Pressed)        handle(FR_LEFT_PUSH);
@@ -615,9 +630,36 @@ namespace FR {
         if (em.M_Pressed)        handle(FR_MIDDLE_PUSH);
         if (em.M_Released)       handle(FR_MIDDLE_RELEASE);
 
-        if (em.L_Drag)           handle(FR_LEFT_DRAG_PUSH);
-        if (em.R_Drag)           handle(FR_RIGHT_DRAG_PUSH);
-        if (em.M_Drag)           handle(FR_MIDDLE_DRAG_PUSH);
+        if (em.L_Drag) {
+            if (!em.L_WasDragging) {
+                // Started drag this frame
+                handle(FR_LEFT_DRAG_PUSH);
+            }
+            else {
+                // Continuing drag
+                handle(FR_LEFT_DRAG_MOVE);
+            }
+        }
+        if (em.R_Drag) {
+            if (!em.R_WasDragging) {
+                handle(FR_RIGHT_DRAG_PUSH);
+            }
+            else {
+                handle(FR_RIGHT_DRAG_MOVE);
+            }
+        }
+        if (em.M_Drag) {
+            if (!em.M_WasDragging) {
+                handle(FR_MIDDLE_DRAG_PUSH);
+            }
+            else {
+                handle(FR_MIDDLE_DRAG_MOVE);
+            }
+        }
+
+        if (em.L_DragReleased) handle(FR_LEFT_DRAG_RELEASE);
+        if (em.R_DragReleased) handle(FR_RIGHT_DRAG_RELEASE);
+        if (em.M_DragReleased) handle(FR_MIDDLE_DRAG_RELEASE);
 
         //scroll happened
         bool scrollHappened = (em.scrollX != 0.0 || em.scrollY != 0.0);
@@ -652,23 +694,23 @@ namespace FR {
     }
     int Fr_Window::handle(int events)
     {
-        //FRTK GUI HANDLE 
+        //FRTK GUI HANDLE
         for (auto it = m_frtkWindow.rbegin(); it != m_frtkWindow.rend(); ++it)
         {
-           std::shared_ptr<Frtk_Window> gui_win = *it ;
-           
-           if (gui_win->handle(events) == 1)
-               return 1; // consumed by a child widget
+            std::shared_ptr<Frtk_Window> gui_win = *it;
+
+            if (gui_win->handle(events) == 1)
+                return 1; // consumed by a child widget
 
             if (events == FR_LEFT_PUSH)
             {
-                    if (gui_win->isMouse_inside())
-                        gui_win->take_focus();
-                    else
-                        gui_win->lose_focus();
+                if (gui_win->isMouse_inside())
+                    gui_win->take_focus();
+                else
+                    gui_win->lose_focus();
             }
             else
-                //Further down Keyboard translation : 
+                //Further down Keyboard translation :
                 if (events == FR_KEYBOARD) {
                     if (g_focusedWdgt.keyboardOwner) {
                         auto& ek = m_sysEvents.keyB;
@@ -676,13 +718,11 @@ namespace FR {
                         int action = ek.lastKAction;
 
                         if (action == GLFW_PRESS) {
-
                             if (g_focusedWdgt.current &&
                                 g_focusedWdgt.keyboardOwner->m_guiWindow->send_event(*g_focusedWdgt.current, FR_KEYBOARD) == 1)
                             {
                                 return 1; // consumed by the widget
                             }
-
 
                             switch (key) {
                             case GLFW_KEY_TAB:
@@ -735,12 +775,12 @@ namespace FR {
                 }
         }
         //at the end, we should forward the events
-        if(g_focusedWdgt.keyboardOwner){
+        if (g_focusedWdgt.keyboardOwner) {
             if (g_focusedWdgt.keyboardOwner->handle(events)) {
                 return 1; //consumed.
             }
         }
-        //SCENE PART 
+        //SCENE PART
         auto& em = m_sysEvents.mouse;
         auto& ek = m_sysEvents.keyB;
 
