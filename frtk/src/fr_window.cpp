@@ -178,7 +178,7 @@ namespace FR {
         if (!s_GLFWInitialized)
         {
             int success = glfwInit();
-            //FRTK_CORE_ASSERT(success, "Could not initialize GLFW!");
+            FRTK_CORE_APP_ASSERT(success, "Could not initialize GLFW!");
             s_GLFWInitialized = true;
         }
         //Hint to GLFW  - Window is visible, not decorated and gl version is 3.3
@@ -224,7 +224,7 @@ namespace FR {
         //DEFAULT_FONT = fontPath + "SUSEMono-Thin.ttf";
 
         while (true) {
-            size_t it = EXE_CURRENT_DIR.find("\\");
+            it = EXE_CURRENT_DIR.find("\\");
             if (it != std::string::npos) {
                 EXE_CURRENT_DIR.replace(it, 1, "/"); // Replace with a forward slash
             }
@@ -488,7 +488,7 @@ namespace FR {
             //This Renders all GUI (imGui) widgets and windows- not viewport.
             renderimGUI(data);
 
-            ImGuiIO io = ImGui::GetIO();
+            io = ImGui::GetIO();
 
             if (Fr_Window::getFr_Window() != nullptr) {
                 io.DisplaySize = ImVec2(float(Fr_Window::getFr_Window()->w()), float(Fr_Window::getFr_Window()->h()));
@@ -713,8 +713,8 @@ namespace FR {
                 //Further down Keyboard translation :
                 if (events == FR_KEYBOARD) {
                     if (g_focusedWdgt.keyboardOwner) {
+                        
                         auto& ek = m_sysEvents.keyB;
-                        int key = ek.lastKey;
                         int action = ek.lastKAction;
 
                         if (action == GLFW_PRESS) {
@@ -723,7 +723,8 @@ namespace FR {
                             {
                                 return 1; // consumed by the widget
                             }
-
+                            
+                            int key = ek.lastKey;
                             switch (key) {
                             case GLFW_KEY_TAB:
                             case GLFW_KEY_RIGHT:
@@ -804,7 +805,7 @@ namespace FR {
         case FR_SCROLL: {
             cameraZoom(pGLFWWindow);
             return 1;
-        }break;
+        }
         default: {}
         }
         // Send event to Scene Container (Mesh objects)

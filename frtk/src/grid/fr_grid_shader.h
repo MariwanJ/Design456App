@@ -31,7 +31,7 @@
 #include <fr_widget.h>
 namespace FR {
     class FRTK_API Fr_Primatives;
-    class FRTK_API ShaderProgram;
+    //class FRTK_API ShaderProgram;
 
     class FRTK_API Fr_GridShader {
     public:

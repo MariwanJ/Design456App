@@ -41,8 +41,8 @@ namespace FR {
         m_WindowsStyle.bevelHeight = 10.0f;
         m_WindowsStyle.cornerRadius = 3.0f;
 
-        m_WindowsStyle.topColor = nvgRGBAf(FR_DARKBLUE);
-        m_WindowsStyle.bottomColor = nvgRGBAf(FR_DARKCYAN);
+        m_WindowsStyle.topColor = nvgRGBAf(FR_AQUAMARINE);
+        m_WindowsStyle.bottomColor = nvgRGBAf(FR_DARKBLUE);
         m_WindowsStyle.strokeColor = nvgRGBAf(0.0f, 0.0f, 0.0f, 0.1254f);
         m_WindowsStyle.strokeAlpha = 0.1254f;
         m_WindowsStyle.m_cornerRadius = 3.0f;
@@ -120,8 +120,6 @@ namespace FR {
         if (!m_visible)
             return;
         FRTK_CORE_APP_ASSERT(m_vg != nullptr);
-        float cornerRadius = 3.0f;
-
         m_guiWindow->draw();
         if (m_hasHeader) {
             draw_header();
@@ -196,7 +194,6 @@ namespace FR {
 
     int Frtk_Window::loadFonts()
     {
-        int i;
         //TODO FIXME: Do we need emoji fonts?? don't think so.
         if (m_vg == NULL)
             return -1;
@@ -268,12 +265,13 @@ namespace FR {
         if (mouseIsInside || m_dragging) {
             m_mainWindow->deactivateNavi();
             result = 1;
-            auto& mouse = m_mainWindow->m_sysEvents.mouse;
+
             if (m_hasHeader) {
                 if (Header_clicked() || m_dragging) {
                     if (events == FR_LEFT_DRAG_MOVE) {
                         m_dragging = true;
                         float dx, dy;
+                        const auto& mouse = m_mainWindow->m_sysEvents.mouse;
                         dx = (float)(mouse.prevX - mouse.activeX);
                         dy = (float)(mouse.prevY - mouse.activeY);
                         position(m_x - dx, m_y - dy);

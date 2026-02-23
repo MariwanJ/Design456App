@@ -27,9 +27,9 @@
 
 #include <gui_widget/frtk_input_base.h>
 #include <gui_widget/frtk_window.h>
-#include<nanovg.h>
+#include <nanovg.h>
 #include <frtk.h>
-
+#include <fr_core.h>
 namespace FR {
 #define ICON_SEARCH 0x1F50D
 #define ICON_CIRCLED_CROSS 0x2716
@@ -38,18 +38,20 @@ namespace FR {
         Frtk_Box(vg, X, Y, W, H, lbl, b), m_tab_nav(0), m_text{ "", 0,0 }
     {
         m_color = glm::vec4(FR_WHITE);
+        m_bkg_color = glm::vec4(FR_BEIGE);
         m_color.a = 0.1254f;
         m_bkg_color = glm::vec4(0.1254f, 0.1254f, 0.1254f, 0.1254f);
         m_borderColor = glm::uvec4(FR_DARKGREY2);
         m_font.fontSize = 14.f;
         m_font.lblAlign = NVG_ALIGN_TOP_RIGHT;
-        m_font.txtAlign = NVG_ALIGN_TOP_LEFT | NVG_ALIGN_INSIDE ;
+        m_font.txtAlign = NVG_ALIGN_TOP_LEFT | NVG_ALIGN_INSIDE;
         m_font.pos.x = m_x + m_font.fontSize * 0.4f;
         m_font.pos.y = m_y + m_font.fontSize * 0.4f;
         m_font.size.w = m_w;
         m_font.size.h = m_h;
         m_cursorColor = nvgRGBAf(FR_CHARCOAL);
         m_cursorColor.a = 0.75f;//Opacity
+        m_wdgType = FRTK_BASE_INPUT;
     }
 
     std::string Frtk_Input_Base::cpToUTF8(uint32_t cp) {
@@ -82,17 +84,17 @@ namespace FR {
     void Frtk_Input_Base::drawEditBoxBase(float x, float y, float w, float h)
     {
         NVGpaint bg;
-        // Edit
-        bg = nvgBoxGradient(m_vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, glmToNVG(m_color), glmToNVG(m_bkg_color));
-        nvgBeginPath(m_vg);
-        nvgRoundedRect(m_vg, x + 1, y + 1, w - 2, h - 2, 4 - 1);
-        nvgFillPaint(m_vg, bg);
-        nvgFill(m_vg);
+        //bg = nvgBoxGradient(m_vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, glmToNVG(m_color), glmToNVG(m_bkg_color));
+        //nvgBeginPath(m_vg);
+        //nvgRoundedRect(m_vg, x + 1, y + 1, w - 2, h - 2, 4 - 1);
+        //nvgFillPaint(m_vg, bg);
+        //nvgFill(m_vg);
 
-        nvgBeginPath(m_vg);
-        nvgRoundedRect(m_vg, x + 0.5f, y + 0.5f, w - 1, h - 1, 4 - 0.5f);
-        nvgStrokeColor(m_vg, nvgRGBAf(0, 0, 0, 48));
-        nvgStroke(m_vg);
+        //nvgBeginPath(m_vg);
+        //nvgRoundedRect(m_vg, x + 0.5f, y + 0.5f, w - 1, h - 1, 4 - 0.5f);
+        //nvgStrokeColor(m_vg, nvgRGBAf(0, 0, 0, 48));
+        //nvgStroke(m_vg);
+        draw_box(m_vg, m_boxType, { {x,y} ,{ w,h } }, 0.01f, THIN_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), false);
     }
 
     void Frtk_Input_Base::draw() {
@@ -106,50 +108,162 @@ namespace FR {
         draw_selection();
     }
 
-    void Frtk_Input_Base::value(int value) {
-        m_text.value = std::to_string(value);
+    void Frtk_Input_Base::value(int v) {
+        m_text.value = std::to_string(v);
+        m_text.cursorPos = static_cast<int>(m_text.value.size());
+        m_text.selStart = m_text.cursorPos;
     }
 
-    void Frtk_Input_Base::value(float value) {
-        m_text.value = std::to_string(value);
+    void Frtk_Input_Base::value(float v) {
+        std::ostringstream oss;
+        oss << std::setprecision(7) << v; // float precision
+        m_text.value = oss.str();
+        m_text.cursorPos = static_cast<int>(m_text.value.size());
+        m_text.selStart = m_text.cursorPos;
     }
-    void Frtk_Input_Base::value(double value) {
-        m_text.value = std::to_string(value);
+
+    void Frtk_Input_Base::value(double v) {
+        std::ostringstream oss;
+        oss << std::setprecision(15) << v; // double precision
+        m_text.value = oss.str();
+        m_text.cursorPos = static_cast<int>(m_text.value.size());
+        m_text.selStart = m_text.cursorPos;
     }
-    void Frtk_Input_Base::value(const char* value) {
-        m_text.value = value;
+
+    void Frtk_Input_Base::value(const char* v) {
+        m_text.value = v ? v : "";
+        m_text.cursorPos = static_cast<int>(m_text.value.size());
+        m_text.selStart = m_text.cursorPos;
     }
-    void Frtk_Input_Base::value(std::string& value) {
-        m_text.value = value;
+
+    void Frtk_Input_Base::value(const std::string& v) {
+        m_text.value = v;
+        m_text.cursorPos = static_cast<int>(m_text.value.size());
+        m_text.selStart = m_text.cursorPos;
     }
+
     int Frtk_Input_Base::ivalue() const {
-        return std::stoi(m_text.value);
+        try {
+            return std::stoi(m_text.value);
+        }
+        catch (const std::exception&) {
+            FRTK_CORE_ERROR("Invalid int value '{}'", m_text.value);
+            return 0; // fallback
+        }
     }
+
+    float Frtk_Input_Base::fvalue() const {
+        try {
+            return std::stof(m_text.value);
+        }
+        catch (const std::exception&) {
+            FRTK_CORE_ERROR("Invalid float value '{}'", m_text.value);
+            return 0.f;
+        }
+    }
+
     double Frtk_Input_Base::dvalue() const {
-        return std::stod(m_text.value);
+        try {
+            return std::stod(m_text.value);
+        }
+        catch (const std::exception&) {
+            FRTK_CORE_ERROR("Invalid double value '{}'", m_text.value);
+            return 0.0;
+        }
     }
+
     int  Frtk_Input_Base::size() const {
         return m_text.value.size();
     }
     int  Frtk_Input_Base::mark(int markIndex) {
         return 0;
     }
-    int  Frtk_Input_Base::insert_position(int p, int m) {
-        return 0;
+
+    int  Frtk_Input_Base::insert_positionn(int p, std::string& t) {
+        if (!isEditable())
+            return 0; //
+
+        if (t.empty())
+            return 0;
+
+        m_text.value.insert(m_text.value.begin() + p, t.begin(), t.end());
+        m_text.cursorPos += static_cast<int>(t.size());
+        return static_cast<int>(t.size());
     }
+
+    int  Frtk_Input_Base::insert_positionn(int p, const char* t, int length) {
+        if (!isEditable())
+            return 0; //
+
+        if (!t || length <= 0)
+            return 0;
+        if (m_text.value.size() < p)
+            return -1; //error you cannot insert at that invalid location
+
+        m_text.value.insert(m_text.value.begin() + p, t, t + length);
+        m_text.cursorPos += length;
+        return length;
+    }
+
     int Frtk_Input_Base::replace(int beg, int end, const char* text, int ilen)
     {
-        return 0;
+        if (!isEditable())
+            return 0;
+
+        if (!text || ilen <= 0)
+            return 0;
+        beg = std::max(0, std::min(beg, static_cast<int>(m_text.value.size())));
+        end = std::max(beg, std::min(end, static_cast<int>(m_text.value.size())));
+        m_text.value.replace(beg, end - beg, text, ilen);
+        m_text.cursorPos = beg + ilen;
+        return ilen;
     }
+
     int  Frtk_Input_Base::cut(int n) {
-        return 0;
+        if (!isEditable())
+            return 0;
+
+        if (m_text.selStart > m_text.cursorPos) {
+            std::swap(m_text.selStart, m_text.cursorPos);
+        }
+        if (m_text.selStart + n > m_text.cursorPos) {
+            n = m_text.cursorPos - m_text.selStart;
+        }
+        return cut(m_text.selStart, m_text.selStart + n);
     }
+
     int  Frtk_Input_Base::cut(int beg, int end) {
-        return 0;
+        if (!isEditable())
+            return 0; //You cannot delete read-only text
+        if (beg < 0 || end < 0)
+            return 0; //nothing to do here
+        if (beg > end) {
+            std::swap(beg, end);
+        }
+        m_text.selStart = beg;
+        m_text.cursorPos = end;
+        cut(end - beg);
     }
-    int  Frtk_Input_Base::insert(const char* t, int length) {
-        return 0;
+    int Frtk_Input_Base::insert(const char* t, int length) {
+        if (!t || length <= 0)
+            return 0;
+
+        m_text.value.insert(m_text.value.begin() + m_text.cursorPos, t, t + length);
+        m_text.cursorPos += length;
+        return length;
     }
+
+    int Frtk_Input_Base::insert(const std::string& t) {
+        if (!isEditable())
+            return 0; //You cannot add to read-only text
+        if (t.empty())
+            return 0;
+
+        m_text.value.insert(m_text.value.begin() + m_text.cursorPos, t.begin(), t.end());
+        m_text.cursorPos += static_cast<int>(t.size());
+        return static_cast<int>(t.size());
+    }
+
     int Frtk_Input_Base::copy() {
         if (m_text.selStart == m_text.cursorPos)
             return 0; // nothing selected
@@ -158,11 +272,14 @@ namespace FR {
         int end = std::max(m_text.selStart, m_text.cursorPos);
         std::string selected = m_text.value.substr(start, end - start);
         glfwSetClipboardString(m_mainWindow->getCurrentGLWindow(), selected.c_str());
-        return 1;
+        return selected.size();
     }
 
     int Frtk_Input_Base::paste()
     {
+        if (!isEditable())
+            return 0; //You cannot chane read-only text
+
         const char* clip = glfwGetClipboardString(m_mainWindow->getCurrentGLWindow());
         if (!clip)
             return 0; // nothing to paste
@@ -185,10 +302,9 @@ namespace FR {
         return 0;
     }
     bool Frtk_Input_Base::readonly() const {
-        return 0;
+        return (!isEditable());
     }
-    void Frtk_Input_Base::readonly(bool val) {
-    }
+
     int  Frtk_Input_Base::wrap() const {
         return 0;
     }
@@ -199,7 +315,7 @@ namespace FR {
     {
         return (
             m_wdgType == FRTK_INT_INPUT ||
-            FRTK_BASE_INPUT || //  <----- this one is temporary .. just to test this widget - TODO:remove it
+            m_wdgType == FRTK_BASE_INPUT || //  <----- this one is temporary .. just to test this widget - TODO:remove it
             m_wdgType == FRTK_FLOAT_INPUT ||
             m_wdgType == FRTK_INPUT ||
             m_wdgType == FRTK_INPUT_WRAP ||
@@ -257,6 +373,8 @@ namespace FR {
         return 0;
     }
     bool Frtk_Input_Base::delSel() {
+        if (!isEditable())
+            return false; //You cannot delete read-only text
         if (m_text.selStart > m_text.cursorPos)
             std::swap(m_text.selStart, m_text.cursorPos);
 
@@ -320,7 +438,7 @@ namespace FR {
             return;
         const size_t max_glyphs = 1024;
         NVGglyphPosition* glyphs = new NVGglyphPosition[max_glyphs];
-        int fs = m_font.fontSize;
+
         int count = nvgTextGlyphPositions(m_vg, m_font.realPos.x, m_font.realPos.y, m_text.value.c_str(), nullptr, glyphs, max_glyphs);
         float cursorX;
         if (m_text.cursorPos < count)
@@ -331,7 +449,7 @@ namespace FR {
             cursorX = m_font.realPos.x;
         float asc, desc, lineh;
         nvgTextMetrics(m_vg, &asc, &desc, &lineh);
-        
+
         drawFilledRect(m_vg, { cursorX  , m_font.realPos.y - asc, 0.75f, lineh }, 0, NORMAL_BORDER, m_cursorColor, glmToNVG(m_color_diabled));
         delete[] glyphs;
     }
@@ -343,12 +461,12 @@ namespace FR {
 
         NVGglyphPosition glyphs[256];
         auto mouse = m_mainWindow->m_sysEvents.mouse;
-        float localMouseX = mouse.activeX - absX();
-        
-        FRTK_CORE_INFO("{} {} {} ", localMouseX, mouse.activeX, absX());
+        float localMouseX = mouse.activeX - absX() + m_x;
 
-        int count = nvgTextGlyphPositions( m_vg, m_font.pos.x, m_font.pos.y,   m_text.value.c_str(), nullptr, glyphs, m_text.value.size() );
-        
+        int count = nvgTextGlyphPositions(m_vg, m_font.realPos.x, m_font.realPos.y, m_text.value.c_str(), nullptr, glyphs, m_text.value.size());
+
+        FRTK_CORE_INFO("local mouse{} {}  absX {}  count {} ", localMouseX, mouse.activeX, absX(), count);
+
         if (count == 0)
             return 0;
         if (localMouseX < glyphs[0].minx)
@@ -360,6 +478,12 @@ namespace FR {
                 return i;
         }
         return count;
+    }
+    bool Frtk_Input_Base::validateChar(char c) const {
+        return true;
+    }
+    bool Frtk_Input_Base::validateString(const std::string& s) const {
+        return true;
     }
 
     int Frtk_Input_Base::handle(int ev)
@@ -374,34 +498,32 @@ namespace FR {
         */
 
         switch (ev) {
-        case FR_LEFT_DRAG_PUSH:{
+        case FR_LEFT_DRAG_PUSH: {
             m_text.selStart = mouseXToCharIndex();
-          
-            FRTK_CORE_INFO("pos sel --{} {}", m_text.cursorPos, m_text.selStart);
-           // m_text.cursorPos = m_text.selStart;
+
+            // m_text.cursorPos = m_text.selStart;
             return 1;
-        }break;
+        }
         case FR_LEFT_DRAG_MOVE: {
-                m_text.cursorPos = mouseXToCharIndex();
-                FRTK_CORE_INFO("pos sel++ {} {}", m_text.cursorPos, m_text.selStart);
-                return 1;
-        }break;
+            m_text.cursorPos = mouseXToCharIndex();
+            return 1;
+        }
 
         case FR_LEFT_DRAG_RELEASE: {
             m_text.cursorPos = mouseXToCharIndex();
             m_mainWindow->m_sysEvents.mouse.L_WasDragging = false;
             return 1;
-        }break;
+        }
 
         case (FR_LEFT_PUSH):
         case (FR_FOCUS): {
-            if (take_focus()){
-            m_text.cursorPos = m_text.value.size();
-            m_text.selStart = m_text.cursorPos;
-            return 1;
+            if (m_has_focus || take_focus()) {
+                m_text.cursorPos = mouseXToCharIndex();
+                m_text.selStart = m_text.cursorPos;
+                return 1;
             }
             return 0;
-        }break;
+        }
         case (FR_KEYBOARD): {
             if (!(m_active && m_visible))
                 return 0;
@@ -409,17 +531,15 @@ namespace FR {
             if (isEditable() && m_has_focus) {
                 if (ek.lastKAction == GLFW_PRESS || ek.lastKAction == GLFW_REPEAT) {
                     switch (ek.lastKey) {
-                        //Left key
                     case GLFW_KEY_LEFT: {
                         if (m_text.cursorPos > 0)
                             m_text.cursorPos--;
                         if (!ek.shiftDown) {
-                            // collapse selection first
+                            // remove selection first
                             m_text.selStart = m_text.cursorPos;
                         }
-
                         return 1;
-                    } break;
+                    }
 
                     case GLFW_KEY_RIGHT: {
                         if (m_text.cursorPos < (int)m_text.value.size())
@@ -428,7 +548,7 @@ namespace FR {
                             m_text.selStart = m_text.cursorPos;
                         }
                         return 1;
-                    } break;
+                    }
 
                     case GLFW_KEY_HOME: {
                         m_text.cursorPos = 0;
@@ -436,7 +556,7 @@ namespace FR {
                             m_text.selStart = m_text.cursorPos;
                         }
                         return 1;
-                    } break;
+                    }
 
                     case GLFW_KEY_END: {
                         m_text.cursorPos = (int)m_text.value.size();
@@ -444,7 +564,7 @@ namespace FR {
                             m_text.selStart = m_text.cursorPos;
                         }
                         return 1;
-                    } break;
+                    }
 
                     case GLFW_KEY_BACKSPACE: {
                         if (m_text.selStart != m_text.cursorPos) {
@@ -456,7 +576,7 @@ namespace FR {
                             m_text.selStart = m_text.cursorPos;
                         }
                         return 1;
-                    } break;
+                    }
                     case GLFW_KEY_DELETE: {
                         if (m_text.selStart != m_text.cursorPos) {
                             delSel();
@@ -465,7 +585,7 @@ namespace FR {
                             m_text.value.erase(m_text.value.begin() + m_text.cursorPos);
                         }
                         return 1;
-                    } break;
+                    }
 
                     case GLFW_KEY_ENTER:
                     case GLFW_KEY_KP_ENTER: {
@@ -481,7 +601,7 @@ namespace FR {
                             m_text.selStart = m_text.cursorPos;
                         }
                         return 1;
-                    }break;
+                    }
                     }
                 }
                 if (ek.ctrlDown && ek.lastKey == GLFW_KEY_A) {
@@ -509,13 +629,37 @@ namespace FR {
             if (!m_mainWindow->m_unicodeChars.empty()) {
                 delSel(); // delete selection if any
 
-                for (auto& item : m_mainWindow->m_unicodeChars) {
-                    std::string utf8 = cpToUTF8(item.codepoint); // convert codepoint to UTF-8
-                    m_text.value.insert(
-                        m_text.value.begin() + m_text.cursorPos,
-                        utf8.begin(),
-                        utf8.end()
-                    );
+                for (auto& item : m_mainWindow->m_unicodeChars)
+                {
+                    std::string utf8 = cpToUTF8(item.codepoint);
+
+                    // Build future string
+                    std::string future = m_text.value;
+                    future.insert(m_text.cursorPos, utf8);
+
+                    bool accept = true;
+
+                    if (m_wdgType == FRTK_INT_INPUT)
+                    {
+                        int v;
+                        accept = isSoftValidInt(future) || isInteger(future, v);
+                    }
+                    else if (m_wdgType == FRTK_FLOAT_INPUT)
+                    {
+                        float v;
+                        accept = isSoftValidFloat(future) || isFloat(future, v);
+                    }
+                    else if (m_wdgType == FRTK_FLOAT_INPUT)
+                    {
+                        double v;
+                        accept = isSoftValidDouble(future) || isDouble(future, v);
+                    }
+                    if (!accept) { 
+                        FRTK_BEEP; 
+                        continue;
+                    }
+                    // Commit insertion
+                    m_text.value = future;
                     m_text.cursorPos += utf8.size();
                 }
 

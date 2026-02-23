@@ -174,10 +174,10 @@ namespace FR {
                 for (int x = 0; x < width; ++x) {
                     int index = (y * width + x) * 4; // RGBA index
                     uint8_t alpha = face->glyph->bitmap.buffer[y * width + x];
-                    uint8_t colorValue = 255;
 
                     // Set RGBA based on alpha
                     if (alpha > 128) {                       // Threshold for alpha
+                        uint8_t colorValue = 255;
                         bitmapRGBA[index] = colorValue;     // Red
                         bitmapRGBA[index + 1] = colorValue; // Green
                         bitmapRGBA[index + 2] = colorValue; // Blue
@@ -229,7 +229,7 @@ namespace FR {
         FT_Done_Face(face);
     }
 
-    void Fr_Label::label(std::string& lbl)
+    void Fr_Label::label(const std::string& lbl)
     {
         m_lblData.text = lbl;
     }
@@ -237,12 +237,12 @@ namespace FR {
     {
         m_lblData.text = lbl;
     }
-    std::string Fr_Label::label() const
+    const std::string &Fr_Label::label() const
     {
         return m_lblData.text;
     }
 
-    void Fr_Label::font(std::string& forntName)
+    void Fr_Label::font(const std::string& forntName)
     {
         m_lblData.fnFont = forntName;
     }

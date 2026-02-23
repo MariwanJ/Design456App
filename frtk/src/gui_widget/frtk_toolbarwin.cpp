@@ -206,10 +206,7 @@ namespace FR {
     void Frtk_ToolBarWin::draw() {
         if (!m_visible)
             return;
-        Fr_Camera& camera = m_mainWindow->activeScene->getActiveCamera();
-        float ratio = camera.getRatio();
         FRTK_CORE_APP_ASSERT(m_vg != nullptr);
-        float cornerRadius = 3.0f;
         m_guiWindow->redraw();
         drawVerticalDivider();
         if (!m_label.empty())
@@ -269,7 +266,7 @@ namespace FR {
         float snapThreshold = 20.0f;            // how close to edge to dock
         float winWidth = m_mainWindow->w();
         float winHeight = m_mainWindow->h();
-        Fr_Window* win = (Fr_Window*)m_parent; //make it clear what m_parent is
+        Fr_Window* win = dynamic_cast<Fr_Window*>(m_parent); //make it clear what m_parent is
         FRTK_CORE_APP_ASSERT(win);
 
         /*
@@ -339,19 +336,9 @@ namespace FR {
 
     int Frtk_ToolBarWin::handle(int ev)
     {
-        Fr_Window* win = m_parent; //just to make it clear what m_parent is here
+   //        Fr_Window* win = m_parent; //just to make it clear what m_parent is here
+
         FRTK_CORE_APP_ASSERT(m_parent);
-
-        float snapThreshold = 10.0f; // pixels
-        float winWidth = m_mainWindow->w();
-        float winHeight = m_mainWindow->h();
-
-
-        bool snapLeft = (m_x <= snapThreshold);
-        bool snapRight = (m_x + m_w >= winWidth - snapThreshold);
-        bool snapTop = (m_y <= snapThreshold);
-        bool snapBottom = (m_y + m_w >= winHeight - snapThreshold);
-
         if (dockingBTN() && ev == FR_LEFT_DRAG_PUSH) {
             m_dragging = true;
         }
@@ -375,7 +362,7 @@ namespace FR {
             }
         }
 
-        auto& mouse = m_mainWindow->m_sysEvents.mouse;
+        
         int result = 0;
         if (isMouse_inside() || m_dragging) {
             m_mainWindow->deactivateNavi();
@@ -385,6 +372,7 @@ namespace FR {
                     if (ev == FR_LEFT_DRAG_PUSH) {
                         m_dragging = true;
                         float dx, dy;
+                        const auto& mouse = m_mainWindow->m_sysEvents.mouse;
                         dx = (float)(mouse.prevX - mouse.activeX);
                         dy = (float)(mouse.prevY - mouse.activeY);
                         position(m_x - dx, m_y - dy);
@@ -403,9 +391,7 @@ namespace FR {
             // Scene should not get events if the mouse was over a frtk-window!!!! IMPORTANT TO REMEMBER!!!
             if (!m_dragging)
                 m_mainWindow->activateNavi();
-            size_t index = 0;
             size_t noOfChildren = m_guiWindow->getChildrenNo();
-            bool allZero = false;
             if (m_wdgType == FRTK_TOOLBARWIN_TOOGLE) {
                 //ONLY ACTIVE WHEN WE HAVE TOOGLE BUTTONS TOOLBAR  
                 for (size_t i = 0; i < noOfChildren; ++i) {

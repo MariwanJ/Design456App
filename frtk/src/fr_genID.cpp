@@ -48,7 +48,7 @@ namespace FR {
     }
 
     // Generate a new unique ID
-    uint64_t genID::generate() {
+      uint64_t genID::generate() {
         uint64_t newID;
 
         // Ensure uniqueness

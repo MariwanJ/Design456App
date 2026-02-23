@@ -1,4 +1,4 @@
-//
+﻿//
 // This file is a part of the Open Source Design456App
 // MIT License
 //
@@ -254,8 +254,8 @@ namespace FR {
         float cx = x + w * 0.5f;
         float cy = y + h * 0.5f;
 
-        float r1 = w * 0.5f;
-        float r2 = h * 0.5f;
+        float r1;
+        float r2;
         if (w == h) {
             r1 = w * 0.55f;
             r2 = w * 0.45f;
@@ -456,7 +456,7 @@ namespace FR {
         switch (b) {
         case FRTK_NO_BOX: {
             return; //DRAW Nothing
-        }break;
+        }
 
         case FRTK_FLAT_BOX: {
             drawFilledRect(vg, dim, cornerRadius, strokeWidth, c, shadowCol, false);
@@ -667,7 +667,7 @@ namespace FR {
 
 
 
-void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt, bool isLabel, FontData_t& fnttData)
+void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt, bool isLabel, FontData_t& fnttData , const char* secrete)
 {
     nvgFontSize(vg, fnt.fontSize);
     nvgFontFace(vg, fnt.fName.c_str());
@@ -694,7 +694,7 @@ void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt, bool is
         visualX = boxX + boxW * 0.5f - textW * 0.5f;
     }
     else if (align & NVG_ALIGN_RIGHT) {
-        visualX = inside ? (boxX + boxW - textW) : (boxX + boxW + (asc - desc) * 0.5f);
+        visualX = inside ? (boxX + boxW - textW) : (boxX + boxW );
     }
     else if (align & NVG_ALIGN_LEFT) {
         visualX = inside ? boxX : (boxX - textW - (asc - desc) * 0.5f);
@@ -704,7 +704,12 @@ void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt, bool is
     float visualY = boxY;
     if (inside) {
         if (align & NVG_ALIGN_TOP) visualY = boxY + asc * 1.2f;
-        else if (align & NVG_ALIGN_MIDDLE) visualY = boxY +boxH * 0.5F -(asc + desc) * 0.5f;
+        else if (align & NVG_ALIGN_MIDDLE) { 
+            if (isLabel) 
+                visualY = boxY + boxH * 0.5F + (asc + desc) * 0.5f; 
+            else 
+                visualY = boxY + boxH * 0.5F - (asc + desc) * 0.5f; 
+        }
         else if (align & NVG_ALIGN_BOTTOM) visualY = boxY + boxH - desc;
         else visualY = boxY + asc;
     }
@@ -730,14 +735,36 @@ void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt, bool is
     if (fnt.blur > 0.0f) {
         nvgFontBlur(vg, fnt.blur);
         nvgFillColor(vg, fnt.shadowCol);
-        nvgText(vg, fnt.shadowOffs.x, fnt.shadowOffs.y, text.c_str(), nullptr);
+        if (secrete!=0) {
+            size_t maskLen = strlen(secrete);
+            size_t len = text.size(); // number of chars
+
+            std::vector<char> buf(len * maskLen + 1); // +1 for null
+            char* p = buf.data();
+
+            for (size_t i = 0; i < len; ++i)
+            {
+                memcpy(p, secrete, maskLen);
+                p += maskLen;
+            }
+
+            *p = '\0'; // null-terminate
+            nvgText(vg, fnt.shadowOffs.x, fnt.shadowOffs.y, buf.data(), nullptr);
+            nvgFontBlur(vg, 0.0f);
+            nvgFillColor(vg, fnt.forgColor);
+            nvgText(vg, 0.0f, 0.0f, buf.data(), nullptr);
+
+        }
+        else
+        {
+            nvgText(vg, fnt.shadowOffs.x, fnt.shadowOffs.y, text.c_str(), nullptr);
+            
+            // Main text
+            nvgFontBlur(vg, 0.0f);
+            nvgFillColor(vg, fnt.forgColor);
+            nvgText(vg, 0.0f, 0.0f, text.c_str(), nullptr);
+        }
     }
-
-    // Main text
-    nvgFontBlur(vg, 0.0f);
-    nvgFillColor(vg, fnt.forgColor);
-    nvgText(vg, 0.0f, 0.0f, text.c_str(), nullptr);
-
     nvgRestore(vg);
 }
 }

@@ -25,11 +25,11 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef FRTK_INPUT
-#define FRTK_INPUT
+#ifndef FRTK_INPUT_H
+#define FRTK_INPUT_H
 
 #include <gui_widget/frtk_input_base.h>
 
 
 
-#endif
+#endif //FRTK_INPUT_

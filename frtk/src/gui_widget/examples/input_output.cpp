@@ -29,15 +29,18 @@
 
 #include <gui_widget/frtk_search_box.h>
 #include <gui_widget/frtk_input_base.h>
+#include <gui_widget/frtk_int_input.h>
+#include <gui_widget/frtk_secret_input.h>
+
 namespace FR {
 
     std::shared_ptr<Frtk_Window> runInputOutput() {
-        
+
         auto window = std::make_shared<Frtk_Window>(500.f, 200.f, 700.f, 700.f, "Testing buttons, toolbars", FRTK_UP_BOX);
-        for (int i = 0; i < 3; ++i)
+        for (int i = 0; i < 3; ++i){
             for (int j = 0; j < 3; ++j)
             {
-                auto input = std::make_shared<Frtk_Input_Base>(window->getContext(), 50.0f + j * 160.0f, 30.0f + i * 70.0f, 150.0f, 50.0f,"TESTIT", FRTK_UP_BOX);
+                auto input = std::make_shared<Frtk_Input_Base>(window->getContext(), 50.0f + j * 160.0f, 30.0f + i * 70.0f, 150.0f, 50.0f, "TESTIT", FRTK_UP_BOX);
 
                 switch (i * 3 + j)
                 {
@@ -57,9 +60,20 @@ namespace FR {
                 input->txtAlign(NVG_ALIGN_MIDDLE_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE);
                 window->addChild(input);
             }
+        }
+        auto input = std::make_shared<Frtk_Int_Input>(window->getContext(), 50.0f , 250.0f  , 150.0f, 50.0f, "INT VALUE", FRTK_UP_BOX);
+        input->lblAlign(NVG_ALIGN_TOP_CENTER);
+        input->value("0");
+        input->txtAlign(NVG_ALIGN_MIDDLE_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE);
+        window->addChild(input);
 
-        
-    //    window->addChild(input3);
+        auto input1 = std::make_shared<Frtk_Secret_Input>(window->getContext(), 200.0f, 250.0f, 150.0f, 50.0f, "secrete", FRTK_UP_BOX);
+        input1->lblAlign(NVG_ALIGN_TOP_CENTER);
+        input1->value("This is secrete");
+        input1->txtAlign(NVG_ALIGN_MIDDLE_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE);
+        window->addChild(input1);
+
+
          return window;
     }
 }

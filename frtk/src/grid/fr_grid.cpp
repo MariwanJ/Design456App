@@ -101,8 +101,10 @@ namespace FR {
     void Fr_Grid::CreateGrid()
     {
         std::vector<float> vertices;
-        float x, y, z;
-        x = y = z = 0;
+        float x = 0.0f;
+        float y = 0.0f;
+        float z = 0.0f;
+
         float totalLength = (float)m_gridWidth * (float)m_sections;
         glm::vec3 limmitValue = glm::vec3(centerPos_[0] - (totalLength / 2), centerPos_[1] - (totalLength / 2), centerPos_[2]);
         //First lines

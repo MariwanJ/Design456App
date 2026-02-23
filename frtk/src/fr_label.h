@@ -59,7 +59,7 @@ namespace FR {
 
     class Fr_Label {
     public:
-        Fr_Label(label_t lblData = {
+        explicit Fr_Label(label_t lblData = {
             glm::vec3(15.0f,15.0f,0.0f),                      //Pos
             "Label",                                        //label
             (fontPath + "Techfont.ttf"),          //Default font
@@ -77,10 +77,10 @@ namespace FR {
 
 
 
-        void label(std::string& lbl);
+        void label(const std::string& lbl);
         void label(const char* lbl);
-        std::string label() const;
-        void font(std::string& forntName);
+        const std::string& label() const;
+        void font(const std::string& forntName);
         const std::string& font() const;
         void fontSize(int size_);
         void fontColor(glm::vec4 col);

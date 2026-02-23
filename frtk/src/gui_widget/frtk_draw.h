@@ -184,7 +184,7 @@ namespace FR {
     //Horizontal = NVG_ALIGN_CENTER,    NVG_ALIGN_LEFT / NVG_ALIGN_CENTER / NVG_ALIGN_RIGHT
     //Vertical =  NVG_ALIGN_MIDDLE    NVG_ALIGN_TOP / NVG_ALIGN_MIDDLE / NVG_ALIGN_BOTTOM
     //Rotation =0.0 by default
-    void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt, bool isLabel, FontData_t &fnttData);
+    void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt, bool isLabel, FontData_t &fnttData, const char *secrete = 0);
 
     // Function to draw a check mark with default color = BLACK
     void drawCheckMark(NVGcontext* vg, float x, float y, float size, NVGcolor col = nvgRGBAf(FR_BLACK));

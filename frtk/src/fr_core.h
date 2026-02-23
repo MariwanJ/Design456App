@@ -55,6 +55,26 @@
 #include <cerrno>
 #include <limits.h>
 
+
+//beep 
+#if defined(_WIN32)
+#include <windows.h>
+#define FRTK_BEEP MessageBeep(MB_ICONASTERISK)
+
+#elif defined(__APPLE__)
+
+#include <AudioToolbox/AudioToolbox.h>
+#define FRTK_BEEP AudioServicesPlayAlertSound(kSystemSoundID_UserPreferredAlert)
+
+#else
+
+#include <cstdio>
+#define FRTK_BEEP \
+        do { std::fputc('\a', stdout); std::fflush(stdout); } while (0)
+#endif
+
+
+
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 #include <direct.h>  // _getcwd
@@ -191,8 +211,8 @@ namespace FR {
         float exponent;
     };
 
-    //Holds Unicode char for later processing 
-   typedef struct {
+    //Holds Unicode char for later processing
+    typedef struct {
         uint32_t codepoint;
     } CharEvent_t;
 
@@ -239,8 +259,7 @@ namespace FR {
     11-FR_HIDE/SHOW      Windows sends these event to childrens
     12-FR_WINDOW_RESIZE/ Windows sends these events
        FR_WINDOW_MINIMIZE
-
-You call window->hide()
+      You call window->hide()
     */
     enum FR_EVENTS {
         FR_NO_EVENT = 0,     //DONT CARE EVENT
@@ -329,10 +348,11 @@ You call window->hide()
 
         FRTK_LABEL,
         //input widgets
-        FRTK_BASE_INPUT ,
+        FRTK_BASE_INPUT,
+        FRTK_INPUT,
         FRTK_INT_INPUT,
         FRTK_FLOAT_INPUT,
-        FRTK_INPUT,
+        FRTK_DOUBLE_INPUT,
         FRTK_MULTILINE_INPUT,
         FRTK_SECRET_INPUT,
         FRTK_INPUT_READONLY,
@@ -382,9 +402,9 @@ You call window->hide()
         bool L_Pressed, L_Released, L_Drag;
         bool R_Pressed, R_Released, R_Drag;
         bool M_Pressed, M_Released, M_Drag;
-        
-        bool L_WasDragging ,R_WasDragging, M_WasDragging ;
-        bool L_DragReleased ,R_DragReleased, M_DragReleased ;
+
+        bool L_WasDragging, R_WasDragging, M_WasDragging;
+        bool L_DragReleased, R_DragReleased, M_DragReleased;
 
         bool mouseMoved;
         bool mouseEntered; //Entered Windows area or not
@@ -395,7 +415,7 @@ You call window->hide()
         int button;              // which button triggered last action
         int isDClick;            // double click flag
     }mouse_t;
-    
+
     typedef struct {
         int key;
         int scancode;
@@ -433,5 +453,7 @@ You call window->hide()
     } iconImageSize_t;
 
     extern float mouseClickCircleRadious;
+
+
 } //FR
 #endif

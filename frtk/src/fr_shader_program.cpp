@@ -48,7 +48,6 @@ namespace FR {
     }
     std::string ShaderProgram::ReadFile(const std::string& path) {
         std::ifstream input(path);
-        std::string mm = std::filesystem::current_path().string();
         if (!input.is_open())
             throw std::runtime_error("Unable to open file: " + path);
         std::string output;
@@ -167,11 +166,15 @@ namespace FR {
             GLint length = 0;
             glCheckFunc(glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length));
 
-            char* log = new char(length);
-            glCheckFunc(glGetShaderInfoLog(shader, length, &length, log));
-            glCheckFunc(glDeleteShader(shader));
-            throw std::runtime_error(log);
-            delete log;
+            GLint logLength = 0;
+            glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logLength);
+            if (logLength > 0)
+            {
+                std::string log(logLength, '\0');
+                glGetShaderInfoLog(shader, logLength, nullptr, log.data());
+                glDeleteShader(shader);
+                FRTK_CORE_FATAL("Error: Failed to compile shader:\n{}", log);
+            }
         }
         glCheckFunc(glAttachShader(m_program, shader));
     }

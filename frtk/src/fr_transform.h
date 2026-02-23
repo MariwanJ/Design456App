@@ -28,8 +28,8 @@
 #ifndef FR_TRANSFORM_H
 #define FR_TRANSFORM_H
 #include <fr_core.h>
-
 #include <memory>
+
 namespace FR {
     class FRTK_API Fr_Transform {
     public:
@@ -70,9 +70,9 @@ namespace FR {
 
     public:
 
-         /**
-          * Accumulates the inverse of the manipulator matrix
-          */
+        /**
+         * Accumulates the inverse of the manipulator matrix
+         */
         virtual glm::mat4 GetViewMatrix();
         virtual glm::mat4 GetInverseViewMatrix();
 
@@ -98,10 +98,10 @@ namespace FR {
             kZoom,       //Left mouse and drag
             kNone       //nothing
         };
-  
+
         /** Computes the sphere vector for rotation */
         glm::vec3 computeSphereCoordinate(double x, double y);
-  
+
         glm::vec3 m_Position;
         Operation operation_;
         float x_, y_, z_;

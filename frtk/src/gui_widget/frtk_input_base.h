@@ -31,7 +31,7 @@
 #include <frtk.h>
 #include <gui_widget/frtk_box.h>
 #include <gui_widget/frtk_draw.h>
-
+#include <nanovg.h>
 
 namespace FR {
     struct TextInput {
@@ -43,16 +43,18 @@ namespace FR {
 
     class Frtk_Input_Base : public Frtk_Box {
     public:
-        Frtk_Input_Base(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b = FRTK_FLAT_BOX);
-
+        Frtk_Input_Base(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b = FRTK_DOWN_BOX);
+        
         std::string cpToUTF8(uint32_t cp);
 
         void value(int value);
         void value(float value);
         void value(double value);
         void value(const char* value);
-        void value(std::string& value);
+        void value(const std::string& v);
+
         int ivalue() const;
+        float fvalue() const; 
         double dvalue() const;
         int size() const;
 
@@ -60,13 +62,16 @@ namespace FR {
 
         int mark(int markIndex);
 
-        int insert_position(int p, int m);
+        int insert_positionn(int p, const char* t, int length) ;
+        int insert_positionn(int p, std::string & t);
         int replace(int beg, int end, const char* text, int ilen = 0);
 
         int cut(int n);
         int cut(int beg, int end);
 
         int insert(const char* t, int length);
+
+        int insert(const std::string& t);
 
         int copy();
         int paste();
@@ -76,7 +81,7 @@ namespace FR {
         int redo();
 
         bool readonly() const;
-        void readonly(bool val);
+
         int wrap() const;
         void wratp(int b);
 
@@ -89,7 +94,13 @@ namespace FR {
         bool isSecret() const;
 
         virtual void lose_focus() override;
+        
+        
     protected:
+        // Return true if character or string is allowed
+        virtual bool validateChar(char c) const;
+        virtual bool validateString(const std::string& s) const;
+
         virtual int handle(int ev) override;
         void drawEditBoxBase(float x, float y, float w, float h);
         virtual void draw() override;
@@ -109,23 +120,82 @@ namespace FR {
 
     private:
         NVGcolor m_cursorColor;
-        bool isInteger(const std::string& str, int& value) {
+        inline bool isInteger(const std::string& str, int& value) {
             auto [ptr, ec] = std::from_chars(str.data(), str.data() + str.size(), value);
             return ec == std::errc() && ptr == str.data() + str.size();
         }
 
-        bool isFloat(const std::string& str, float& value) {
+        inline bool isFloat(const std::string& str, float& value) {
             char* endptr = nullptr;
             value = std::strtof(str.c_str(), &endptr);
             return endptr == str.c_str() + str.size();
         }
 
-        bool isDouble(const std::string& str, double& value) {
+        inline bool isDouble(const std::string& str, double& value) {
             char* endptr = nullptr;
             value = std::strtod(str.c_str(), &endptr);
             return endptr == str.c_str() + str.size();
         }
 
+
+        inline bool isSoftValidFloat(const std::string& s)
+        {
+            if (s.empty()) return true;
+            if (s == "-" || s == "." || s == "-.") return true;
+            bool hasDot = false;
+            size_t i = (s[0] == '-') ? 1 : 0;
+            for (; i < s.size(); ++i)
+            {
+                if (std::isdigit((unsigned char)s[i]))
+                    continue;
+                if (s[i] == '.' && !hasDot)
+                {
+                    hasDot = true;
+                    continue;
+                }
+                return false;
+            }
+            return true;
+        }
+        inline bool isSoftValidDouble(const std::string& s)
+        {
+            if (s.empty()) return true;
+            if (s == "-" || s == "." || s == "-.") return true;
+            bool hasDot = false;
+            bool hasExp = false;
+            size_t i = (s[0] == '-') ? 1 : 0;
+            for (; i < s.size(); ++i)
+            {
+                char c = s[i];
+                if (std::isdigit((unsigned char)c))
+                    continue;
+                if (c == '.' && !hasDot && !hasExp)
+                {
+                    hasDot = true;
+                    continue;
+                }
+                if ((c == 'e' || c == 'E') && !hasExp)
+                {
+                    hasExp = true;
+                    continue;
+                }
+                if ((c == '-' || c == '+') && i > 0 &&
+                    (s[i - 1] == 'e' || s[i - 1] == 'E'))
+                    continue;
+                return false;
+            }
+            return true;
+        }
+        inline bool isSoftValidInt(const std::string& s)
+        {
+            if (s.empty()) return true;
+            if (s == "-") return true;
+            size_t i = (s[0] == '-') ? 1 : 0;
+            for (; i < s.size(); ++i)
+                if (!std::isdigit((unsigned char)s[i]))
+                    return false;
+            return true;
+        }
     };
 }
-#endif // ! FRTK_SEARCH_BOX_H
+#endif // FRTK_INPUT_BASE_H

@@ -1,4 +1,4 @@
-//
+﻿//
 // This file is a part of the Open Source Design456App
 // MIT License
 //
@@ -25,11 +25,23 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef FRTK_MULTILINE_OUTPUT
-#define FRTK_MULTILINE_OUTPUT
+#ifndef FRTK_SECRETE_INPUT_H
+#define FRTK_SECRETE_INPUT_H
 
 #include <gui_widget/frtk_input_base.h>
 
+namespace FR {
 
+#define MASK_CHAR 	 "*"
+    class Frtk_Secret_Input : public Frtk_Input_Base {
+    public:
+        Frtk_Secret_Input(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b);
 
-#endif //FRTK_MULTILINE_INPUT
+    protected:
+        virtual void draw() override;
+
+    };
+}
+
+#endif //FRTK_INT_INPUT_H
+ 

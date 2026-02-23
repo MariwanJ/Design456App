@@ -25,11 +25,16 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef FRTK_MULTILINE_OUTPUT
-#define FRTK_MULTILINE_OUTPUT
+#include <gui_widget/frtk_double_input.h>
+#include <frtk.h>
 
-#include <gui_widget/frtk_input_base.h>
+namespace FR {
+
+    Frtk_Double_Input::Frtk_Double_Input(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b) :
+        Frtk_Input_Base(vg, X, Y, W, H, lbl, b) {
+        m_wdgType = FRTK_DOUBLE_INPUT;
+    }
+}
 
 
 
-#endif //FRTK_MULTILINE_INPUT

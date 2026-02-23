@@ -398,7 +398,7 @@ namespace FR {
             const int pixels = w * h;
             for (int i = 0; i < pixels; ++i)
             {
-                uint8_t& a = data[i * 4 + 3];
+                const uint8_t& a = data[i * 4 + 3];
                 if (a == 0) continue;
                 data[i * 4 + 0] = tint->r;
                 data[i * 4 + 1] = tint->g;
@@ -440,7 +440,7 @@ namespace FR {
 
             for (int i = 0; i < w * h; ++i)
             {
-                uint8_t& a = decoded[i * 4 + 3];
+                const uint8_t& a = decoded[i * 4 + 3];
                 if (a == 0) continue; // transparent
 
                 decoded[i * 4 + 0] = r;
@@ -519,7 +519,6 @@ namespace FR {
     bool Frtk_Widget::set_child_focus(Frtk_Widget* w) {
         (void)w;
         throw NotImplementedException();
-        return false;
         // default: do nothing
     }
 }

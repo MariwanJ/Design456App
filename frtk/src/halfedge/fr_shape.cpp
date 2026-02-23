@@ -302,14 +302,11 @@ namespace FR {
         case FR_MOUSE_MOVE: {
             return 0;//
         }
-                          break;
 
         case  FR_LEFT_PUSH: {
             ray_t ray = win->activeScene->getRayValue();
-            bool result;
-
             return 0;
-        } break;
+        } 
 
         case FR_KEYBOARD: {
         } break;

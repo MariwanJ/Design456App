@@ -111,10 +111,12 @@ namespace FR {
             float maxW = origin_maxW;
             float maxH = origin_maxH;
 
-            if (m_cellStyle == FR_IMG_LEFT_TO_TEXT || m_cellStyle == FR_IMG_RIGHT_TO_TEXT)
+            if (m_cellStyle == FR_IMG_LEFT_TO_TEXT || m_cellStyle == FR_IMG_RIGHT_TO_TEXT){
                 maxW = origin_maxW - m_Image.dim.size.w + paddingX * 2;
-            else if (m_cellStyle <= FR_IMG_UNDER_TEXT_RIGHT)
+            }
+            else if (m_cellStyle <= FR_IMG_UNDER_TEXT_RIGHT){
                 maxH = origin_maxH * 0.5f;
+            }
             iconSize = scaleToFit(iconSize, origin_maxW, maxH);
         }
 

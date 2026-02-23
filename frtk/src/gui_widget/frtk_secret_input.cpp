@@ -25,11 +25,29 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef FRTK_MULTILINE_OUTPUT
-#define FRTK_MULTILINE_OUTPUT
+#include <gui_widget/frtk_input.h>
+#include "frtk_secret_input.h"
+#include <gui_widget/frtk_window.h>
 
-#include <gui_widget/frtk_input_base.h>
+namespace FR{
+
+FR::Frtk_Secret_Input::Frtk_Secret_Input(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b): 
+    Frtk_Input_Base(vg, X, Y, W,  H,lbl, b) 
+{
+    m_wdgType = FRTK_SECRET_INPUT;
+
+}
+
+void Frtk_Secret_Input::draw() {
+    drawEditBoxBase(m_x, m_y, m_w, m_h);
+    drawTextInBox(m_vg, m_text.value, m_font, false, m_linkTofrtkWindow->getFontData(), MASK_CHAR);
+    drawLabel();
+    if (m_has_focus) {
+        draw_focus();
+        draw_cursor();
+    }
+    draw_selection();
+}
 
 
-
-#endif //FRTK_MULTILINE_INPUT
+}

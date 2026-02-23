@@ -39,8 +39,8 @@ namespace FR {
     class FRTK_API genID {
     public:
         genID();                // Default constructor
-        genID(uint64_t u);     // Constructor with specific ID
-        uint64_t generate();
+        explicit genID(uint64_t u);     // Constructor with specific ID
+        static uint64_t generate();
         genID(const genID&) = default; // Default copy constructor
 
         operator uint64_t() const { return m_genID; } // Conversion operator

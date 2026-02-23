@@ -301,7 +301,7 @@ namespace FR {
         std::shared_ptr<FR::Fr_Window> win = FR::Fr_Window::getFr_Window();
         FRTK_CORE_APP_ASSERT(win != nullptr);
 
-        ImGuiWindowFlags window_flags = 0 | ImGuiWindowFlags_NoTitleBar;
+        ImGuiWindowFlags window_flags =  ImGuiWindowFlags_NoTitleBar;
         /*        FR_PROFILE_FUNCTION();
                 FR_PROFILE_SCOPE("imgui_ViewPort");   */
         int windowX, windowY;
@@ -483,7 +483,7 @@ namespace FR {
             }
         }
         else {
-            std::string result = name;
+            result = name;
         }
         return result;
     }
@@ -552,15 +552,14 @@ namespace FR {
     int Fr_Scene::findClosestMeshToRay(const ray_t& m_activeRay) {
         std::shared_ptr<FR::Fr_Window> win = FR::Fr_Window::getFr_Window();
         FRTK_CORE_APP_ASSERT(win != nullptr);
-        glm::vec3 intersectionPoint(0.0f, 0.0f, 0.0f);
-        float closestT = std::numeric_limits<float>::max();
-        float t;
 
-        int IndexOfclosestItem = -1;
+        float closestT = std::numeric_limits<float>::max();
+        glm::vec3 intersectionPoint(0.0f, 0.0f, 0.0f);
+           int IndexOfclosestItem = -1;
         for (size_t i = 0; i < m_world.size(); ++i) {
             if (m_world[i].Sceneitem->is2Dobj())
             {
-                auto& mesh = m_world[i].Sceneitem->m_mesh; // OpenMesh mesh
+                
                 NODETYPE type = m_world[i].Sceneitem->type();
                 bool isFaceWidget = (type >= FR_FACE_WIDGET && type < FR_FACE_WIDGET + 10000);
                 bool isEdgeWidget = (type >= FR_LINE_WIDGET && type < FR_LINE_WIDGET + 10000);
@@ -592,8 +591,8 @@ namespace FR {
                 else if (isFaceWidget)
                 {
                     float closestFaceT = std::numeric_limits<float>::max();
-                    glm::vec3 intersectionPoint;
 
+                    auto& mesh = m_world[i].Sceneitem->m_mesh; // OpenMesh mesh
                     for (auto f : mesh.faces())
                     {
                         std::vector<glm::vec3> faceVerts;
@@ -648,7 +647,7 @@ namespace FR {
             else {
                 if (m_world[i].Sceneitem->is3Dobj()) {
                     if (intersectRayOpenMesh(m_activeRay, m_world[i].Sceneitem->m_mesh, intersectionPoint)) {
-                        t = glm::length(intersectionPoint - m_activeRay.position);
+                        float t = glm::length(intersectionPoint - m_activeRay.position);
                         if (t < closestT) {
                             closestT = t;
                             IndexOfclosestItem = i;
@@ -663,8 +662,8 @@ namespace FR {
     int Fr_Scene::handle_selection(int ev) {
         //We need to find closest object to the screen,
         // if the object is behind another object, we should ignore it
-        Fr_Widget* closestItem = nullptr;
-        float t = 0.0f;
+       // Fr_Widget* closestItem = nullptr;
+       
 
         glm::vec3 intersectionPoint;
 
@@ -672,11 +671,6 @@ namespace FR {
         struct FaceItem { FaceHandle handle; Fr_Widget  widget; };
         struct EdgeItem { EdgeHandle handle; Fr_Widget  widget; };
         struct VertexItem { VertexHandle handle; Fr_Widget  widget; };
-
-        std::vector<MeshItem>   sel_mesh;
-        std::vector<FaceItem>   sel_face;
-        std::vector<EdgeItem>   sel_edge;
-        std::vector<VertexItem> sel_vert;
 
         std::shared_ptr<FR::Fr_Window> win = FR::Fr_Window::getFr_Window();
         FRTK_CORE_APP_ASSERT(win != nullptr);
@@ -716,6 +710,7 @@ namespace FR {
                         {
                             OpenMesh::FaceHandle pickedFace;
                             if (m_world.at(IndexOfclosestItem).Sceneitem->is3Dobj()) {
+                                float t = 0.0f;
                                 if (pickAFace(IndexOfclosestItem, pickedFace, t)) {
                                     if (pickedFace.is_valid())
                                     {
@@ -748,7 +743,6 @@ namespace FR {
                             float closestS = FLT_MAX;
                             OpenMesh::EdgeHandle bestEdge;
                             bool found = false;
-                            constexpr float depthEpsilon = 1e-3f;
                             int type = m_world.at(IndexOfclosestItem).Sceneitem->type();
 
                             bool isFaceWidget = (type >= FR_FACE_WIDGET && type < FR_FACE_WIDGET + 10000);

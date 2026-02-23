@@ -49,7 +49,7 @@ namespace FR {
 
             if (ImGui::BeginTabBar("Main")) {
                 if (ImGui::BeginTabItem("Model")) {
-                    ImGuiIO& io = ImGui::GetIO();
+                    const ImGuiIO& io = ImGui::GetIO();
                     ImVec2 avail = ImGui::GetContentRegionAvail();
 
                     static float topHeight = 0.0f;

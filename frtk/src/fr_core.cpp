@@ -41,7 +41,7 @@ namespace FR {
 
         // Use std::filesystem to get directory and file
         std::filesystem::path filePath(st);
-        std::filesystem::path dir = filePath.parent_path();
+       //std::filesystem::path dir = filePath.parent_path();
         std::filesystem::path file = filePath.filename();
 
         // Convert back to strings if needed

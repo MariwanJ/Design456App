@@ -120,7 +120,7 @@ namespace FR {
         for (size_t i = 0; i < nTriangles; ++i) {
             std::vector<MyMesh::VertexHandle> faceV;
             for (int j = 0; j < 3; ++j) {
-                unsigned int idx = (*m_indices)[3 * i + j];
+                idx = (*m_indices)[3 * i + j];
                 faceV.push_back(vhandles[idx]); // use stored handles!
             }
             auto fh = m_mesh.add_face(faceV);

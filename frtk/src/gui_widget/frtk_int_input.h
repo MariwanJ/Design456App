@@ -25,11 +25,18 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef FRTK_INPUT
-#define FRTK_INPUT
-
+#ifndef FRTK_INT_INPUT_H
+#define FRTK_INT_INPUT_H
 #include <gui_widget/frtk_input_base.h>
+ 
 
+namespace FR {
+    class Frtk_Int_Input : public Frtk_Input_Base {
+    public:
+        Frtk_Int_Input(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b);
+    protected:
 
-
-#endif
+    };
+}
+#endif //FRTK_INT_INPUT
+ 
