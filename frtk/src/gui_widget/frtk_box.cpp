@@ -68,7 +68,7 @@ namespace FR {
         //always check for all widgets
         if (!m_visible)
             return;
-        draw_box(m_vg, m_boxType, {{ m_x,m_y }, { m_w,m_h }}, 0.0f, NORMAL_BORDER, 
+        draw_box(m_vg, m_boxType, {{ m_x,m_y }, { m_w,m_h }}, 0.0f, FRTK_NORMAL_BORDER, 
             glmToNVG(m_color), 
             glmToNVG(m_borderColor), true);
         drawLabel();

@@ -36,30 +36,10 @@
 
 namespace FR {
 
-#define NO_BORDER      0.0f
-#define THIN_BORDER    0.3f
-#define NORMAL_BORDER  2.0f
-#define THICK_BORDER   3.0f
-
-    //typedef enum int {
-    //    FRTK_ALIGN_CENTERV      = NVG_ALIGN_MIDDLE,
-    //    FRTK_ALIGN_CENTERH      = NVG_ALIGN_CENTER,
-    //    FRTK_ALIGN_TOP          = NVG_ALIGN_TOP,
-    //    FRTK_ALIGN_BOTTOM       = NVG_ALIGN_BOTTOM,
-    //    FRTK_ALIGN_LEFT         = NVG_ALIGN_LEFT,
-    //    FRTK_ALIGN_RIGHT        = NVG_ALIGN_RIGHT,
-    //    FRTK_ALIGN_BASELINE     = NVG_ALIGN_BASELINE,
-    //    FRTK_ALIGN_INSIDE       = 1 << 7,
-    //    FRTK_ALIGN_TOP_LEFT = FRTK_ALIGN_TOP | FRTK_ALIGN_LEFT,
-    //    FRTK_ALIGN_TOP_RIGHT = FRTK_ALIGN_TOP | FRTK_ALIGN_RIGHT,
-    //    FRTK_ALIGN_BOTTOM_LEFT = FRTK_ALIGN_BOTTOM | FRTK_ALIGN_LEFT,
-    //    FRTK_ALIGN_BOTTOM_RIGHT = FRTK_ALIGN_BOTTOM | FRTK_ALIGN_RIGHT,
-
-    //    FRTK_ALIGN_CENTER_LEFT = FRTK_ALIGN_CENTERV | FRTK_ALIGN_LEFT,
-    //    FRTK_ALIGN_CENTER_RIGHT = FRTK_ALIGN_CENTERV | FRTK_ALIGN_RIGHT,
-    //    FRTK_ALIGN_CENTER_CENTER = FRTK_ALIGN_CENTERV | FRTK_ALIGN_CENTERH,
-    //}int;
-
+#define FRTK_NO_BORDER      0.0f
+#define FRTK_THIN_BORDER    0.3f
+#define FRTK_NORMAL_BORDER  2.0f
+#define FRTK_THICK_BORDER   3.0f
 
    //TODO: Temporary code -- FIXME
     typedef struct {
@@ -67,8 +47,7 @@ namespace FR {
     }FontData_t;
 
 
-
-    typedef enum BOX_TYPE {
+    typedef enum {
         FRTK_NO_BOX                =  0,
         FRTK_FLAT_BOX              =  1,
         FRTK_UP_BOX                =  2,
@@ -125,12 +104,12 @@ namespace FR {
     }font_t;
 
     //frtk_no_box
-    void drawFilledRect(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth= NORMAL_BORDER, 
+    void drawFilledRect(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth= FRTK_NORMAL_BORDER, 
         NVGcolor baseCol = nvgRGBAf(FR_LIGHT_GRAY),
         NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW), 
         bool up = false);
     //Frtk_box_up/down - Square or rounded edges based on r
-    void drawBoxUpDown(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = NORMAL_BORDER,
+    void drawBoxUpDown(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
         NVGcolor baseCol = nvgRGBAf(FR_LIGHT_GRAY),
         NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW), bool up = true);
 
@@ -140,36 +119,36 @@ namespace FR {
     void drawFrameRect(NVGcontext* vg, Dim_float_t dim, float r, float t, NVGcolor c, NVGcolor shadowCol, bool up);
 
     //Frtk_diamond_up_box:  frtk_diamond_down_box:
-    void drawDiamondWithState(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = NORMAL_BORDER,
+    void drawDiamondWithState(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
         NVGcolor baseCol = nvgRGBAf(FR_LIGHT_GRAY),
         NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
         bool up = false);
 
-    void drawSolidCircleWithState(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = NORMAL_BORDER,
+    void drawSolidCircleWithState(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
         NVGcolor baseCol = nvgRGBAf(FR_LIGHT_GRAY),
         NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
         bool up = false);
     
-    void drawOvalFrameWithState(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = NORMAL_BORDER,
+    void drawOvalFrameWithState(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
         NVGcolor baseCol = nvgRGBAf(FR_LIGHT_GRAY),
         NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
         bool up = false);
     
-    void drawSolidOvalWithState(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = NORMAL_BORDER,
+    void drawSolidOvalWithState(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
         NVGcolor baseCol = nvgRGBAf(FR_LIGHT_GRAY),
         NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
         bool up = false);
     
-    void drawShadowBox(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = NORMAL_BORDER,
+    void drawShadowBox(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
         NVGcolor baseCol = nvgRGBAf(FR_LIGHT_GRAY),
         NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
         bool up = false);
-    void drawOvalFLAT(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = NORMAL_BORDER,
+    void drawOvalFLAT(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
         NVGcolor baseCol = nvgRGBAf(FR_LIGHT_GRAY),
         NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
         bool up = false);
     
-    void drawOval(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = NORMAL_BORDER,
+    void drawOval(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
         NVGcolor baseCol = nvgRGBAf(FR_LIGHT_GRAY),
         NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
         bool up = false);

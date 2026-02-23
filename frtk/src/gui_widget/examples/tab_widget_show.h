@@ -25,36 +25,14 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include <gui_widget/frtk_return_button.h>
-namespace FR {
-    Frtk_Return_Button::Frtk_Return_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :
-        Frtk_Button(vg, x, y, w, h, l, b), m_ReturnSymbolColor (glm::vec4(FR_BLUE)) {
-        m_wdgType = FRTK_RETURN_BUTTON;
-        m_cellStyle = FR_IMG_RIGHT_TO_TEXT;
-        wdgImage(enter_sym);
-    }
-    void Frtk_Return_Button::changeImageColor(glm::vec4 col) {
-        m_ReturnSymbolColor = col;
-        std::vector<uint8_t> pngCopy = enter_sym;
-        wdgImage(pngCopy, m_ReturnSymbolColor);
-    }
+#ifndef TAB_WIDGET_SHOW_H
+#define TAB_WIDGET_SHOW_H
 
-    void Frtk_Return_Button::draw()
-    {
-        if (m_value == 0){
-            draw_box(m_vg, m_boxType, {{ m_x,m_y }, { m_w,m_h }}, 0.0f, FRTK_NORMAL_BORDER, glmToNVG(m_color), glmToNVG(m_borderColor), true);
-        }
-        else {
-            draw_box(m_vg, m_boxType, {{ m_x,m_y }, { m_w,m_h }}, 0.0f, FRTK_NORMAL_BORDER, glmToNVG(m_color), glmToNVG(m_borderColor), false);
-        }
-        if (m_IconTexture != 0){
-            drawImage();//Dimensions are already calculated using style
-        }
-        else {
-            applyStyle(); //We still need to apply style
-        }
-        drawLabel();
-        draw_focus();
-    }
-  
+
+#include <gui_widget/frtk_window.h>
+
+
+namespace FR{
+    std::shared_ptr<Frtk_Window>  runTabWidget();
 }
+#endif//TAB_WIDGET_SHOW_H

@@ -47,7 +47,7 @@ namespace FR {
         m_Image({ nullptr, {{0.f, 0.f}, {0.f, 0.f}} }), m_cellStyle(FR_IMG_LEFT_TO_TEXT),
         m_visible(true), m_dragging(false), m_active(true),
         m_cantake_focus(true), m_IconTexture(0), m_vg(NULL), m_linkTofrtkWindow(nullptr),
-        m_borderColor(glm::vec4(FR_DARKSLATEGREY)), m_borderWidth(NORMAL_BORDER),
+        m_borderColor(glm::vec4(FR_DARKSLATEGREY)), m_borderWidth(FRTK_NORMAL_BORDER),
         m_callback(default_callback),
         m_color(glm::vec4(FR_GAINSBORO)), m_bkg_color(FR_SILVER) {
         if (!m_mainWindow) {
@@ -195,7 +195,7 @@ namespace FR {
         nvgStroke(m_vg);
     }
     void Frtk_Widget::draw_focus(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 bkg) {
-        draw_box(m_vg, t, { {X,Y},{W,H} }, 0.0f, NORMAL_BORDER, nvgRGBAf(0, 0.501f, 1.0f, 1.0f), nvgRGBAf(bkg.r, bkg.g, bkg.b, bkg.a), true);
+        draw_box(m_vg, t, { {X,Y},{W,H} }, 0.0f, FRTK_NORMAL_BORDER, nvgRGBAf(0, 0.501f, 1.0f, 1.0f), nvgRGBAf(bkg.r, bkg.g, bkg.b, bkg.a), true);
     }
     void Frtk_Widget::drawLabel() {
         drawTextInBox(m_vg, m_label, m_font, true, m_linkTofrtkWindow->getFontData());

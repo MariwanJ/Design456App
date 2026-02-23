@@ -55,14 +55,14 @@ namespace FR {
             actualColor = m_color_diabled;
         if (m_value == 0) {
             //UP
-            draw_box(m_vg, m_boxType, { { m_x,m_y }, { m_w,m_h } }, 0.0f, THICK_BORDER,
+            draw_box(m_vg, m_boxType, { { m_x,m_y }, { m_w,m_h } }, 0.0f, FRTK_THICK_BORDER,
                 glmToNVG(actualColor),
                 glmToNVG(m_borderColor), true);
         }
         else if (m_value == 1)
         {
             //DOWN
-            draw_box(m_vg, (BOX_TYPE)((int)(m_boxType)+1), { { m_x,m_y }, { m_w,m_h } }, 0.0f, THICK_BORDER,
+            draw_box(m_vg, (BOX_TYPE)((int)(m_boxType)+1), { { m_x,m_y }, { m_w,m_h } }, 0.0f, FRTK_THICK_BORDER,
                 glmToNVG(actualColor),
                 glmToNVG(m_borderColor), false);
         }

@@ -469,7 +469,7 @@ namespace FR {
 
         case FRTK_THIN_UP_BOX:
         case FRTK_THIN_DOWN_BOX:
-            drawBoxUpDown(vg, dim, cornerRadius, THIN_BORDER, c, shadowCol, b == FRTK_THIN_UP_BOX && up);
+            drawBoxUpDown(vg, dim, cornerRadius, FRTK_THIN_BORDER, c, shadowCol, b == FRTK_THIN_UP_BOX && up);
             break;
 
         case FRTK_ROUNDED_BOX_UP:
@@ -479,55 +479,55 @@ namespace FR {
 
         case FRTK_ROUND_UP_BOX:
         case FRTK_ROUND_DOWN_BOX:
-            drawSolidCircleWithState(vg, dim, cornerRadius, THIN_BORDER, c, shadowCol, b == FRTK_ROUND_UP_BOX && up);
+            drawSolidCircleWithState(vg, dim, cornerRadius, FRTK_THIN_BORDER, c, shadowCol, b == FRTK_ROUND_UP_BOX && up);
             break;
 
         case FRTK_ROUND_FLAT_BOX:
-            drawOvalFLAT(vg, dim, cornerRadius, NO_BORDER, c, shadowCol, false);
+            drawOvalFLAT(vg, dim, cornerRadius, FRTK_NO_BORDER, c, shadowCol, false);
             break;
 
         case FRTK_UP_FRAME:
         case FRTK_DOWN_FRAME:
-            drawFrameRect(vg, dim, cornerRadius, THICK_BORDER, c, shadowCol, b == FRTK_UP_FRAME && up);
+            drawFrameRect(vg, dim, cornerRadius, FRTK_THICK_BORDER, c, shadowCol, b == FRTK_UP_FRAME && up);
             break;
 
         case FRTK_ROUNDED_UP_FRAME:
         case FRTK_ROUNDED_DOWN_FRAME:
-            drawFrameRect(vg, dim, cornerRadius + 10.f, THIN_BORDER, c, shadowCol, b == FRTK_ROUNDED_UP_FRAME && up);
+            drawFrameRect(vg, dim, cornerRadius + 10.f, FRTK_THIN_BORDER, c, shadowCol, b == FRTK_ROUNDED_UP_FRAME && up);
             break;
 
         case FRTK_THIN_UP_FRAME:
         case FRTK_THIN_DOWN_FRAME:
-            drawFrameRect(vg, dim, cornerRadius, NORMAL_BORDER, c, shadowCol, b == FRTK_THIN_UP_FRAME && up);
+            drawFrameRect(vg, dim, cornerRadius, FRTK_NORMAL_BORDER, c, shadowCol, b == FRTK_THIN_UP_FRAME && up);
             break;
 
         case FRTK_ROUND_SHADOW_UP_BOX:
         case FRTK_ROUND_SHADOW_DOWN_BOX:
-            drawFilledRect(vg, dim, cornerRadius + 8.0f, NORMAL_BORDER, c, shadowCol, b == FRTK_ROUND_SHADOW_UP_BOX && up);
-            drawShadowBox(vg, dim, cornerRadius + 12.0f, NORMAL_BORDER, c, shadowCol, b == FRTK_ROUND_SHADOW_UP_BOX && up);
+            drawFilledRect(vg, dim, cornerRadius + 8.0f, FRTK_NORMAL_BORDER, c, shadowCol, b == FRTK_ROUND_SHADOW_UP_BOX && up);
+            drawShadowBox(vg, dim, cornerRadius + 12.0f, FRTK_NORMAL_BORDER, c, shadowCol, b == FRTK_ROUND_SHADOW_UP_BOX && up);
             break;
 
         case FRTK_DIAMOND_UP_BOX:
         case FRTK_DIAMOND_DOWN_BOX:
-            drawDiamondWithState(vg, dim, cornerRadius, NORMAL_BORDER, c, shadowCol, b == FRTK_DIAMOND_UP_BOX && up);
+            drawDiamondWithState(vg, dim, cornerRadius, FRTK_NORMAL_BORDER, c, shadowCol, b == FRTK_DIAMOND_UP_BOX && up);
             break;
 
         case FRTK_OVALFLAT_BOX:
-            drawOval(vg, dim, cornerRadius, NORMAL_BORDER, c, shadowCol, false);
+            drawOval(vg, dim, cornerRadius, FRTK_NORMAL_BORDER, c, shadowCol, false);
             break;
         case FRTK_OVAL_UP_BOX:
         case FRTK_OVAL_DOWN_BOX:
-            drawSolidOvalWithState(vg, dim, cornerRadius, NORMAL_BORDER, c, shadowCol, b == FRTK_OVAL_UP_BOX && up);
+            drawSolidOvalWithState(vg, dim, cornerRadius, FRTK_NORMAL_BORDER, c, shadowCol, b == FRTK_OVAL_UP_BOX && up);
             break;
 
         case FRTK_OVAL_UP_FRAME:
         case FRTK_OVAL_DOWN_FRAME:
-            drawOvalFrameWithState(vg, dim, cornerRadius, NORMAL_BORDER, c, shadowCol, b == FRTK_OVAL_UP_FRAME && up);
+            drawOvalFrameWithState(vg, dim, cornerRadius, FRTK_NORMAL_BORDER, c, shadowCol, b == FRTK_OVAL_UP_FRAME && up);
             break;
 
         case FRTK_OSHADOW_UP_BOX:
         case FRTK_OSHADOW_DOWN_BOX:
-            drawShadowBox(vg, dim, cornerRadius, THICK_BORDER, c, shadowCol, b == FRTK_OSHADOW_UP_BOX && up);
+            drawShadowBox(vg, dim, cornerRadius, FRTK_THICK_BORDER, c, shadowCol, b == FRTK_OSHADOW_UP_BOX && up);
             break;
         }
     }

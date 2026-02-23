@@ -25,36 +25,28 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include <gui_widget/frtk_return_button.h>
+#ifndef FRTK_TAB_H
+#define FRTK_TAB_H
+#include <gui_widget/frtk_button.h>
+#include <gui_widget/frtk_grpwidget.h>
 namespace FR {
-    Frtk_Return_Button::Frtk_Return_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :
-        Frtk_Button(vg, x, y, w, h, l, b), m_ReturnSymbolColor (glm::vec4(FR_BLUE)) {
-        m_wdgType = FRTK_RETURN_BUTTON;
-        m_cellStyle = FR_IMG_RIGHT_TO_TEXT;
-        wdgImage(enter_sym);
-    }
-    void Frtk_Return_Button::changeImageColor(glm::vec4 col) {
-        m_ReturnSymbolColor = col;
-        std::vector<uint8_t> pngCopy = enter_sym;
-        wdgImage(pngCopy, m_ReturnSymbolColor);
-    }
+    class Frtk_Tab : public Frtk_GrpWidget {
+    public:
+        Frtk_Tab(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b = FRTK_FLAT_BOX);
+    protected:
+        virtual int handle(int ev) override;
 
-    void Frtk_Return_Button::draw()
-    {
-        if (m_value == 0){
-            draw_box(m_vg, m_boxType, {{ m_x,m_y }, { m_w,m_h }}, 0.0f, FRTK_NORMAL_BORDER, glmToNVG(m_color), glmToNVG(m_borderColor), true);
-        }
-        else {
-            draw_box(m_vg, m_boxType, {{ m_x,m_y }, { m_w,m_h }}, 0.0f, FRTK_NORMAL_BORDER, glmToNVG(m_color), glmToNVG(m_borderColor), false);
-        }
-        if (m_IconTexture != 0){
-            drawImage();//Dimensions are already calculated using style
-        }
-        else {
-            applyStyle(); //We still need to apply style
-        }
-        drawLabel();
-        draw_focus();
-    }
-  
+        virtual void draw() override;
+        virtual void draw_tabHeader();
+        virtual void draw_tabBody();
+
+        std::vector<Frtk_GrpWidget> m_tabChildren;
+        std::vector<Frtk_Button> m_navButton;
+
+    private:
+        float m_headSapce;
+        Dim_float_t m_headDim;
+        Dim_float_t m_bodyDim;
+    };
 }
+#endif //FRTK_TAB_H

@@ -46,7 +46,7 @@ namespace FR {
             dim.pos.y = m_y + m_h / 2 - lightSize / 2;
             dim.size = { lightSize,lightSize };
 
-            drawSolidCircleWithState(m_vg, dim, 0.0f, THIN_BORDER,lightCol,
+            drawSolidCircleWithState(m_vg, dim, 0.0f, FRTK_THIN_BORDER,lightCol,
                 glmToNVG(m_borderColor), false);
         }
         else {
@@ -57,7 +57,7 @@ namespace FR {
             dim.pos.y = m_y + m_h / 2 - lightSize / 2;
             dim.size = { lightSize,lightSize };
             lightCol = nvgRGBAf(FR_WHITE);
-            drawSolidCircleWithState(m_vg, dim, 0.0f, THIN_BORDER,lightCol,
+            drawSolidCircleWithState(m_vg, dim, 0.0f, FRTK_THIN_BORDER,lightCol,
                 glmToNVG(m_borderColor), true);
         }
         if (m_IconTexture != 0){

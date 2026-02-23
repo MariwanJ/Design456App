@@ -84,17 +84,7 @@ namespace FR {
     void Frtk_Input_Base::drawEditBoxBase(float x, float y, float w, float h)
     {
         NVGpaint bg;
-        //bg = nvgBoxGradient(m_vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, glmToNVG(m_color), glmToNVG(m_bkg_color));
-        //nvgBeginPath(m_vg);
-        //nvgRoundedRect(m_vg, x + 1, y + 1, w - 2, h - 2, 4 - 1);
-        //nvgFillPaint(m_vg, bg);
-        //nvgFill(m_vg);
-
-        //nvgBeginPath(m_vg);
-        //nvgRoundedRect(m_vg, x + 0.5f, y + 0.5f, w - 1, h - 1, 4 - 0.5f);
-        //nvgStrokeColor(m_vg, nvgRGBAf(0, 0, 0, 48));
-        //nvgStroke(m_vg);
-        draw_box(m_vg, m_boxType, { {x,y} ,{ w,h } }, 0.01f, THIN_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), false);
+        draw_box(m_vg, m_boxType, { {x,y} ,{ w,h } }, 0.01f, FRTK_THIN_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), false);
     }
 
     void Frtk_Input_Base::draw() {
@@ -148,7 +138,7 @@ namespace FR {
         }
         catch (const std::exception&) {
             FRTK_CORE_ERROR("Invalid int value '{}'", m_text.value);
-            return 0; // fallback
+            return 0;
         }
     }
 
@@ -278,7 +268,7 @@ namespace FR {
     int Frtk_Input_Base::paste()
     {
         if (!isEditable())
-            return 0; //You cannot chane read-only text
+            return 0; //You cannot change read-only text
 
         const char* clip = glfwGetClipboardString(m_mainWindow->getCurrentGLWindow());
         if (!clip)
@@ -429,7 +419,7 @@ namespace FR {
         glm::vec4 col = glm::vec4(FR_LIGHTBLUE);
         APPLY_OPACITY(col, 0.5f);
 
-        drawFilledRect(m_vg, dim, m_font.Rotate, THIN_BORDER, glmToNVG(col), nvgRGBAf(FR_GRAY));
+        drawFilledRect(m_vg, dim, m_font.Rotate, FRTK_THIN_BORDER, glmToNVG(col), nvgRGBAf(FR_GRAY));
     }
 
     void Frtk_Input_Base::draw_cursor()
@@ -450,7 +440,7 @@ namespace FR {
         float asc, desc, lineh;
         nvgTextMetrics(m_vg, &asc, &desc, &lineh);
 
-        drawFilledRect(m_vg, { cursorX  , m_font.realPos.y - asc, 0.75f, lineh }, 0, NORMAL_BORDER, m_cursorColor, glmToNVG(m_color_diabled));
+        drawFilledRect(m_vg, { cursorX  , m_font.realPos.y - asc, 0.75f, lineh }, 0, FRTK_NORMAL_BORDER, m_cursorColor, glmToNVG(m_color_diabled));
         delete[] glyphs;
     }
 
@@ -464,8 +454,6 @@ namespace FR {
         float localMouseX = mouse.activeX - absX() + m_x;
 
         int count = nvgTextGlyphPositions(m_vg, m_font.realPos.x, m_font.realPos.y, m_text.value.c_str(), nullptr, glyphs, m_text.value.size());
-
-        FRTK_CORE_INFO("local mouse{} {}  absX {}  count {} ", localMouseX, mouse.activeX, absX(), count);
 
         if (count == 0)
             return 0;
@@ -488,20 +476,9 @@ namespace FR {
 
     int Frtk_Input_Base::handle(int ev)
     {
-        /*
-                    -Mouse click inside widget -> focus
-                    -Typing characters ->insert at cursor, handle selection
-                    -Arrow/Home/End -> move cursor
-                    -Backspace/Delete -> remove selected or adjacent characters
-                    -Clipboard/IME handling
-
-        */
-
         switch (ev) {
         case FR_LEFT_DRAG_PUSH: {
             m_text.selStart = mouseXToCharIndex();
-
-            // m_text.cursorPos = m_text.selStart;
             return 1;
         }
         case FR_LEFT_DRAG_MOVE: {

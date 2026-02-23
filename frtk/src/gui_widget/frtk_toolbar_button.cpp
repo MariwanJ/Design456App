@@ -71,14 +71,14 @@ namespace FR {
             return;
         }
         if (m_value == 0) {
-            draw_box(m_vg, (m_boxType), { { m_x,m_y }, { m_w,m_h } }, 0.0f, NORMAL_BORDER,
+            draw_box(m_vg, (m_boxType), { { m_x,m_y }, { m_w,m_h } }, 0.0f, FRTK_NORMAL_BORDER,
                 glmToNVG(m_color),
                 glmToNVG(m_borderColor), true);
             m_Image.opacity = 1.0f;
         }
         else if (m_value == 1) {
             draw_box(m_vg, (BOX_TYPE)((int)(m_boxType)+1), { { m_x,m_y }, { m_w,m_h } },
-                0.0f, NORMAL_BORDER, glmToNVG(m_color),
+                0.0f, FRTK_NORMAL_BORDER, glmToNVG(m_color),
                 glmToNVG(m_borderColor), false);
             m_Image.opacity = 0.5f;
         }

@@ -1,3 +1,4 @@
+#include "frtk_tab.h"
 //
 // This file is a part of the Open Source Design456App
 // MIT License
@@ -25,36 +26,36 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include <gui_widget/frtk_return_button.h>
 namespace FR {
-    Frtk_Return_Button::Frtk_Return_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :
-        Frtk_Button(vg, x, y, w, h, l, b), m_ReturnSymbolColor (glm::vec4(FR_BLUE)) {
-        m_wdgType = FRTK_RETURN_BUTTON;
-        m_cellStyle = FR_IMG_RIGHT_TO_TEXT;
-        wdgImage(enter_sym);
-    }
-    void Frtk_Return_Button::changeImageColor(glm::vec4 col) {
-        m_ReturnSymbolColor = col;
-        std::vector<uint8_t> pngCopy = enter_sym;
-        wdgImage(pngCopy, m_ReturnSymbolColor);
-    }
-
-    void Frtk_Return_Button::draw()
+    Frtk_Tab::Frtk_Tab(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :
+        Frtk_GrpWidget(vg, x, y, w, h, l, b),
+        m_headSapce(2.0f)
     {
-        if (m_value == 0){
-            draw_box(m_vg, m_boxType, {{ m_x,m_y }, { m_w,m_h }}, 0.0f, FRTK_NORMAL_BORDER, glmToNVG(m_color), glmToNVG(m_borderColor), true);
-        }
-        else {
-            draw_box(m_vg, m_boxType, {{ m_x,m_y }, { m_w,m_h }}, 0.0f, FRTK_NORMAL_BORDER, glmToNVG(m_color), glmToNVG(m_borderColor), false);
-        }
-        if (m_IconTexture != 0){
-            drawImage();//Dimensions are already calculated using style
-        }
-        else {
-            applyStyle(); //We still need to apply style
-        }
-        drawLabel();
-        draw_focus();
+    m_headDim.pos  = {x + m_headSapce, y + m_headSapce};
+    m_headDim.size = {w - m_headSapce, h * 0.2f };
+    m_bodyDim.pos.x = m_headDim.pos.x;
+    m_bodyDim.pos.y = m_headDim.pos.y + m_headDim.size.h + 1.0f;
+    m_bodyDim.size.w = m_headDim.size.w ;
+    m_bodyDim.size.h = h - m_headDim.size.h - 1;
+    m_color = glm::vec4(FR_LIGHTGREY);
+    m_bkg_color = glm::vec4(FR_DARKGREY1);
     }
-  
+    int Frtk_Tab::handle(int ev)
+    {
+        return 0;
+    }
+    void Frtk_Tab::draw()
+    {
+        draw_tabHeader();
+        draw_tabBody();
+        
+    }
+    void Frtk_Tab::draw_tabHeader()
+    { 
+        draw_box(m_vg, FRTK_UP_BOX, m_headDim, 0.5f, FRTK_NORMAL_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
+    }
+    void Frtk_Tab::draw_tabBody()
+    {
+        draw_box(m_vg, FRTK_UP_BOX, m_bodyDim, 0.5f, FRTK_NORMAL_BORDER, nvgRGBAf( FR_GRAY), glmToNVG(m_color), true);
+    }
 }

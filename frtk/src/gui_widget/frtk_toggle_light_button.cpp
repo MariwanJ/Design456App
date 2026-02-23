@@ -45,7 +45,7 @@ namespace FR {
             dim.pos.y = m_y + m_h / 2 - m_specialDrawingSize / 2;
             dim.size = { m_specialDrawingSize,m_specialDrawingSize };
 
-            draw_box(m_vg, FRTK_UP_BOX, dim, 0.0f, THIN_BORDER,
+            draw_box(m_vg, FRTK_UP_BOX, dim, 0.0f, FRTK_THIN_BORDER,
                 lightCol,
                 glmToNVG(m_borderColor), false);
         }
@@ -57,7 +57,7 @@ namespace FR {
             dim.pos.y = m_y + m_h / 2 - m_specialDrawingSize / 2;
             dim.size = { m_specialDrawingSize,m_specialDrawingSize };
             lightCol = nvgRGBAf(FR_WHITE);
-            draw_box(m_vg, FRTK_UP_BOX, dim, 0.0f, THIN_BORDER,
+            draw_box(m_vg, FRTK_UP_BOX, dim, 0.0f, FRTK_THIN_BORDER,
                 lightCol,
                 glmToNVG(m_borderColor), true);
         }

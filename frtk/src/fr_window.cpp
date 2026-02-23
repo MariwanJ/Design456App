@@ -40,13 +40,17 @@
 
 #include <fr_window.h>
 #include <fr_widget.h>
-//#include <glad/glad.h>    // must be included first
 
+
+
+#if 1 //Temporary code  - testing gui toolkit
 #include <gui_widget/frtk_window.h>
 #include <gui_widget/examples/demo2.h>
 #include <gui_widget/examples/buttons_demo.h>
 #include <gui_widget/examples/input_output.h>
 #include <gui_widget/frtk_toolbarwin.h>
+#include <gui_widget/examples/tab_widget_show.h>
+#endif 
 
  /** Fr_Window */
 
@@ -461,8 +465,9 @@ namespace FR {
        // auto TB = runFRTKdemo2();
        // m_frtkWindow.emplace_back(TB);
         //m_frtkWindow.push_back(runFRTKdemo());
-        m_frtkWindow.push_back(runInputOutput());
+       // m_frtkWindow.push_back(runInputOutput());
 
+        m_frtkWindow.emplace_back(runTabWidget());
         //TOOLBAR CREATION  - USING NEW GUI TOOLKIT
 
         m_MainToolbar = createMainToolbar();

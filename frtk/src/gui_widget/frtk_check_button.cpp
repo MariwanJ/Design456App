@@ -48,13 +48,13 @@ namespace FR {
 
         if (m_value) {
             //You cannot use FRTK_FLAT_BOX as it does not have DOWN option.
-            draw_box(m_vg, FRTK_DOWN_BOX, dim, 0.0f, THIN_BORDER,
+            draw_box(m_vg, FRTK_DOWN_BOX, dim, 0.0f, FRTK_THIN_BORDER,
                 lightCol,
                 glmToNVG(m_borderColor), false);
             drawCheckMark(m_vg, dim.pos.x, dim.pos.y, m_specialDrawingSize * 0.9f);
         }
         else {
-            draw_box(m_vg, FRTK_FLAT_BOX, dim, 0.0f, THIN_BORDER,
+            draw_box(m_vg, FRTK_FLAT_BOX, dim, 0.0f, FRTK_THIN_BORDER,
                 lightCol,
                 glmToNVG(m_borderColor), false);
         }

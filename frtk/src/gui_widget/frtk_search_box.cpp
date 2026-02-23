@@ -56,7 +56,7 @@ namespace FR {
     }
 
     void Frtk_Search_Box::draw() {
-        draw_nice_round_box(m_vg, { {m_x,m_y}, {m_w,m_h} }, m_cornerRadius, NORMAL_BORDER,
+        draw_nice_round_box(m_vg, { {m_x,m_y}, {m_w,m_h} }, m_cornerRadius, FRTK_NORMAL_BORDER,
             glmToNVG(m_color),
             glmToNVG(m_bkg_color), true);
 

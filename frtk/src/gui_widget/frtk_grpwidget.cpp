@@ -94,7 +94,7 @@ namespace FR {
 
     void Frtk_GrpWidget::drawBox() {
         if (m_visible) {
-            draw_box(m_vg, m_boxType, { {m_x, m_y}, {m_w, m_h} }, 0.0, NORMAL_BORDER,
+            draw_box(m_vg, m_boxType, { {m_x, m_y}, {m_w, m_h} }, 0.0, FRTK_NORMAL_BORDER,
                 glmToNVG(m_color),
                 glmToNVG(m_borderColor), true);
         }
