@@ -67,7 +67,9 @@ namespace FR {
         Frtk_Widget* focusedChild();
         virtual bool set_child_focus(Frtk_Widget* w=nullptr) override;
         virtual bool take_focus() override;
+    
     protected:
+        virtual void parent_changed() override;
         Frtk_Window* getParentWindow();
         virtual void draw()  override;
         virtual int handle(int ev) override;

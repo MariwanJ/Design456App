@@ -29,9 +29,13 @@
 #define FRTK_TAB_H
 #include <gui_widget/frtk_button.h>
 #include <gui_widget/frtk_grpwidget.h>
+
 namespace FR {
 #define TAB_BUTTON_SIZE 20.0f
 #define padding         5.f
+
+
+
     FRTK_API class Frtk_Tabwdg : public Frtk_GrpWidget {
     public:
         Frtk_Tabwdg(NVGcontext* vg, float w, float h, std::string l = "Tabwdg", BOX_TYPE b = FRTK_FLAT_BOX);
@@ -70,7 +74,7 @@ namespace FR {
 
         virtual void draw() override;
         std::vector<std::shared_ptr<Frtk_Tabwdg>> m_tabChildren;
-        std::vector<Frtk_Button> m_navButton;
+        std::vector<std::shared_ptr<Frtk_Button>> m_navButton;
 
     private:
         

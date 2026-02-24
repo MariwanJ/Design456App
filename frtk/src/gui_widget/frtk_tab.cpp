@@ -74,14 +74,16 @@ namespace FR {
     }
     int Frtk_Tabwdg::handle(int ev)
     {
+        if (Frtk_GrpWidget::handle(ev) == 1)
+            return 1;
         return 0;
     }
     void Frtk_Tabwdg::draw()
     {
         draw_tabHeader();
         draWBody();
-      //  draw_focus();
-      //  drawLabel();
+        draw_focus();
+        drawLabel();
     }
 
     void Frtk_Tabwdg::draWBody()
@@ -140,6 +142,15 @@ namespace FR {
         m_font.size = { m_w,m_h };
         m_font.lblAlign = NVG_ALIGN_BOTTOM_CENTER | NVG_ALIGN_BASELINE;
         m_font.txtAlign = NVG_ALIGN_BOTTOM_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE;
+        const char* right = "\xE2\x96\xB6"; // >
+        const char* left= "\xE2\x97\x80"; // <
+
+        auto bt1 = std::make_shared<Frtk_Button>(m_vg, padding, padding, TAB_BUTTON_SIZE, m_font.fontSize * 2, left, FRTK_UP_BOX);
+        auto bt2 = std::make_shared<Frtk_Button>(m_vg, m_w-padding- TAB_BUTTON_SIZE, padding, TAB_BUTTON_SIZE, m_font.fontSize*2, right, FRTK_UP_BOX);
+        m_navButton.push_back(bt1);
+        m_navButton.push_back(bt2);
+        addChild(bt1);
+        addChild(bt2);
     }
     std::shared_ptr<Frtk_Tabwdg> Frtk_Tab::addTab()
     {
@@ -151,6 +162,9 @@ namespace FR {
 
     int Frtk_Tab::handle(int ev)
     {
+        if (Frtk_GrpWidget::handle(ev)) {
+            return 1;
+        }
         return 0;
     }
 
@@ -168,10 +182,12 @@ namespace FR {
         float currentX = startX;
         for (auto& child : m_children)
         {
+            if (child->widgetType() == FRTK_NORMAL_BUTTON) 
+                continue;
             auto tab = std::dynamic_pointer_cast<Frtk_Tabwdg>(child);
             float bounds[4];
             nvgTextBounds(m_vg, 0, 0, tab->label().c_str(), nullptr, bounds);
-            const float minWidth = 40.0f;
+            const float minWidth = 30.0f;
             const float maxWidth = m_w;
             float textWidth = bounds[2] - bounds[0];
             float width = std::clamp(textWidth, minWidth, maxWidth - padding);

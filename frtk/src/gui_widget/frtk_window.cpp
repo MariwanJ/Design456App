@@ -77,7 +77,7 @@ namespace FR {
             m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, X, Y, W, H);
         }
         m_guiWindow->m_linkTofrtkWindow = this;
-        m_guiWindow->m_parent = this;
+        m_guiWindow->parent(this);
         m_guiWindow->boxType(b);
 
         FRTK_CORE_APP_ASSERT(m_guiWindow);

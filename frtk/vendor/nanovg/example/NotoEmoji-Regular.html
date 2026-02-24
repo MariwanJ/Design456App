@@ -1,0 +1,1112 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Font Glyphs</title>
+    <style>
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('NotoEmoji-Regular.ttf') format('truetype');
+        }
+        body { font-family: Arial, sans-serif; }
+        table { width: 60%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .glyph { font-family: 'CustomFont'; font-size: 48px; }
+    </style>
+</head>
+<body>
+    <h1>Font Glyphs</h1>
+    <table>
+        <tr>
+            <th>Unicode Code Point</th>
+            <th>Glyph</th>
+            <th>Header Macro</th>
+            <th>CODE</th>
+        </tr>
+
+        <tr>
+            <td>U+0</td>
+            <td class="glyph">&#x0;</td>
+            <td>#define GLYPH_NULL</td>
+            <td> 0x0</td>
+
+        </tr>
+
+        <tr>
+            <td>U+D</td>
+            <td class="glyph">&#xD;</td>
+            <td>#define GLYPH_NONMARKINGRETURN</td>
+            <td> 0xD</td>
+
+        </tr>
+
+        <tr>
+            <td>U+20</td>
+            <td class="glyph">&#x20;</td>
+            <td>#define GLYPH_SPACE</td>
+            <td> 0x20</td>
+
+        </tr>
+
+        <tr>
+            <td>U+23</td>
+            <td class="glyph">&#x23;</td>
+            <td>#define GLYPH_NUMBERSIGN</td>
+            <td> 0x23</td>
+
+        </tr>
+
+        <tr>
+            <td>U+30</td>
+            <td class="glyph">&#x30;</td>
+            <td>#define GLYPH_ZERO</td>
+            <td> 0x30</td>
+
+        </tr>
+
+        <tr>
+            <td>U+31</td>
+            <td class="glyph">&#x31;</td>
+            <td>#define GLYPH_ONE</td>
+            <td> 0x31</td>
+
+        </tr>
+
+        <tr>
+            <td>U+32</td>
+            <td class="glyph">&#x32;</td>
+            <td>#define GLYPH_TWO</td>
+            <td> 0x32</td>
+
+        </tr>
+
+        <tr>
+            <td>U+33</td>
+            <td class="glyph">&#x33;</td>
+            <td>#define GLYPH_THREE</td>
+            <td> 0x33</td>
+
+        </tr>
+
+        <tr>
+            <td>U+34</td>
+            <td class="glyph">&#x34;</td>
+            <td>#define GLYPH_FOUR</td>
+            <td> 0x34</td>
+
+        </tr>
+
+        <tr>
+            <td>U+35</td>
+            <td class="glyph">&#x35;</td>
+            <td>#define GLYPH_FIVE</td>
+            <td> 0x35</td>
+
+        </tr>
+
+        <tr>
+            <td>U+36</td>
+            <td class="glyph">&#x36;</td>
+            <td>#define GLYPH_SIX</td>
+            <td> 0x36</td>
+
+        </tr>
+
+        <tr>
+            <td>U+37</td>
+            <td class="glyph">&#x37;</td>
+            <td>#define GLYPH_SEVEN</td>
+            <td> 0x37</td>
+
+        </tr>
+
+        <tr>
+            <td>U+38</td>
+            <td class="glyph">&#x38;</td>
+            <td>#define GLYPH_EIGHT</td>
+            <td> 0x38</td>
+
+        </tr>
+
+        <tr>
+            <td>U+39</td>
+            <td class="glyph">&#x39;</td>
+            <td>#define GLYPH_NINE</td>
+            <td> 0x39</td>
+
+        </tr>
+
+        <tr>
+            <td>U+A0</td>
+            <td class="glyph">&#xA0;</td>
+            <td>#define GLYPH_NONBREAKINGSPACE</td>
+            <td> 0xA0</td>
+
+        </tr>
+
+        <tr>
+            <td>U+A9</td>
+            <td class="glyph">&#xA9;</td>
+            <td>#define GLYPH_COPYRIGHT</td>
+            <td> 0xA9</td>
+
+        </tr>
+
+        <tr>
+            <td>U+AE</td>
+            <td class="glyph">&#xAE;</td>
+            <td>#define GLYPH_REGISTERED</td>
+            <td> 0xAE</td>
+
+        </tr>
+
+        <tr>
+            <td>U+203C</td>
+            <td class="glyph">&#x203C;</td>
+            <td>#define GLYPH_EXCLAMDBL</td>
+            <td> 0x203C</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2049</td>
+            <td class="glyph">&#x2049;</td>
+            <td>#define GLYPH_UNI2049</td>
+            <td> 0x2049</td>
+
+        </tr>
+
+        <tr>
+            <td>U+20E3</td>
+            <td class="glyph">&#x20E3;</td>
+            <td>#define GLYPH_UNI20E3</td>
+            <td> 0x20E3</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2122</td>
+            <td class="glyph">&#x2122;</td>
+            <td>#define GLYPH_TRADEMARK</td>
+            <td> 0x2122</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2139</td>
+            <td class="glyph">&#x2139;</td>
+            <td>#define GLYPH_UNI2139</td>
+            <td> 0x2139</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2194</td>
+            <td class="glyph">&#x2194;</td>
+            <td>#define GLYPH_ARROWBOTH</td>
+            <td> 0x2194</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2195</td>
+            <td class="glyph">&#x2195;</td>
+            <td>#define GLYPH_ARROWUPDN</td>
+            <td> 0x2195</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2196</td>
+            <td class="glyph">&#x2196;</td>
+            <td>#define GLYPH_UNI2196</td>
+            <td> 0x2196</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2197</td>
+            <td class="glyph">&#x2197;</td>
+            <td>#define GLYPH_UNI2197</td>
+            <td> 0x2197</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2198</td>
+            <td class="glyph">&#x2198;</td>
+            <td>#define GLYPH_UNI2198</td>
+            <td> 0x2198</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2199</td>
+            <td class="glyph">&#x2199;</td>
+            <td>#define GLYPH_UNI2199</td>
+            <td> 0x2199</td>
+
+        </tr>
+
+        <tr>
+            <td>U+21A9</td>
+            <td class="glyph">&#x21A9;</td>
+            <td>#define GLYPH_UNI21A9</td>
+            <td> 0x21A9</td>
+
+        </tr>
+
+        <tr>
+            <td>U+21AA</td>
+            <td class="glyph">&#x21AA;</td>
+            <td>#define GLYPH_UNI21AA</td>
+            <td> 0x21AA</td>
+
+        </tr>
+
+        <tr>
+            <td>U+231A</td>
+            <td class="glyph">&#x231A;</td>
+            <td>#define GLYPH_UNI231A</td>
+            <td> 0x231A</td>
+
+        </tr>
+
+        <tr>
+            <td>U+231B</td>
+            <td class="glyph">&#x231B;</td>
+            <td>#define GLYPH_UNI231B</td>
+            <td> 0x231B</td>
+
+        </tr>
+
+        <tr>
+            <td>U+23E9</td>
+            <td class="glyph">&#x23E9;</td>
+            <td>#define GLYPH_UNI23E9</td>
+            <td> 0x23E9</td>
+
+        </tr>
+
+        <tr>
+            <td>U+23EA</td>
+            <td class="glyph">&#x23EA;</td>
+            <td>#define GLYPH_UNI23EA</td>
+            <td> 0x23EA</td>
+
+        </tr>
+
+        <tr>
+            <td>U+23EB</td>
+            <td class="glyph">&#x23EB;</td>
+            <td>#define GLYPH_UNI23EB</td>
+            <td> 0x23EB</td>
+
+        </tr>
+
+        <tr>
+            <td>U+23EC</td>
+            <td class="glyph">&#x23EC;</td>
+            <td>#define GLYPH_UNI23EC</td>
+            <td> 0x23EC</td>
+
+        </tr>
+
+        <tr>
+            <td>U+23F0</td>
+            <td class="glyph">&#x23F0;</td>
+            <td>#define GLYPH_UNI23F0</td>
+            <td> 0x23F0</td>
+
+        </tr>
+
+        <tr>
+            <td>U+23F3</td>
+            <td class="glyph">&#x23F3;</td>
+            <td>#define GLYPH_UNI23F3</td>
+            <td> 0x23F3</td>
+
+        </tr>
+
+        <tr>
+            <td>U+24C2</td>
+            <td class="glyph">&#x24C2;</td>
+            <td>#define GLYPH_UNI24C2</td>
+            <td> 0x24C2</td>
+
+        </tr>
+
+        <tr>
+            <td>U+25AA</td>
+            <td class="glyph">&#x25AA;</td>
+            <td>#define GLYPH_H18543</td>
+            <td> 0x25AA</td>
+
+        </tr>
+
+        <tr>
+            <td>U+25AB</td>
+            <td class="glyph">&#x25AB;</td>
+            <td>#define GLYPH_H18551</td>
+            <td> 0x25AB</td>
+
+        </tr>
+
+        <tr>
+            <td>U+25B6</td>
+            <td class="glyph">&#x25B6;</td>
+            <td>#define GLYPH_UNI25B6</td>
+            <td> 0x25B6</td>
+
+        </tr>
+
+        <tr>
+            <td>U+25C0</td>
+            <td class="glyph">&#x25C0;</td>
+            <td>#define GLYPH_UNI25C0</td>
+            <td> 0x25C0</td>
+
+        </tr>
+
+        <tr>
+            <td>U+25CA</td>
+            <td class="glyph">&#x25CA;</td>
+            <td>#define GLYPH_LOZENGE</td>
+            <td> 0x25CA</td>
+
+        </tr>
+
+        <tr>
+            <td>U+25FB</td>
+            <td class="glyph">&#x25FB;</td>
+            <td>#define GLYPH_UNI25FB</td>
+            <td> 0x25FB</td>
+
+        </tr>
+
+        <tr>
+            <td>U+25FC</td>
+            <td class="glyph">&#x25FC;</td>
+            <td>#define GLYPH_UNI25FC</td>
+            <td> 0x25FC</td>
+
+        </tr>
+
+        <tr>
+            <td>U+25FD</td>
+            <td class="glyph">&#x25FD;</td>
+            <td>#define GLYPH_UNI25FD</td>
+            <td> 0x25FD</td>
+
+        </tr>
+
+        <tr>
+            <td>U+25FE</td>
+            <td class="glyph">&#x25FE;</td>
+            <td>#define GLYPH_UNI25FE</td>
+            <td> 0x25FE</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2600</td>
+            <td class="glyph">&#x2600;</td>
+            <td>#define GLYPH_UNI2600</td>
+            <td> 0x2600</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2601</td>
+            <td class="glyph">&#x2601;</td>
+            <td>#define GLYPH_UNI2601</td>
+            <td> 0x2601</td>
+
+        </tr>
+
+        <tr>
+            <td>U+260E</td>
+            <td class="glyph">&#x260E;</td>
+            <td>#define GLYPH_UNI260E</td>
+            <td> 0x260E</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2611</td>
+            <td class="glyph">&#x2611;</td>
+            <td>#define GLYPH_UNI2611</td>
+            <td> 0x2611</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2614</td>
+            <td class="glyph">&#x2614;</td>
+            <td>#define GLYPH_UNI2614</td>
+            <td> 0x2614</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2615</td>
+            <td class="glyph">&#x2615;</td>
+            <td>#define GLYPH_UNI2615</td>
+            <td> 0x2615</td>
+
+        </tr>
+
+        <tr>
+            <td>U+261D</td>
+            <td class="glyph">&#x261D;</td>
+            <td>#define GLYPH_UNI261D</td>
+            <td> 0x261D</td>
+
+        </tr>
+
+        <tr>
+            <td>U+263A</td>
+            <td class="glyph">&#x263A;</td>
+            <td>#define GLYPH_SMILEFACE</td>
+            <td> 0x263A</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2648</td>
+            <td class="glyph">&#x2648;</td>
+            <td>#define GLYPH_UNI2648</td>
+            <td> 0x2648</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2649</td>
+            <td class="glyph">&#x2649;</td>
+            <td>#define GLYPH_UNI2649</td>
+            <td> 0x2649</td>
+
+        </tr>
+
+        <tr>
+            <td>U+264A</td>
+            <td class="glyph">&#x264A;</td>
+            <td>#define GLYPH_UNI264A</td>
+            <td> 0x264A</td>
+
+        </tr>
+
+        <tr>
+            <td>U+264B</td>
+            <td class="glyph">&#x264B;</td>
+            <td>#define GLYPH_UNI264B</td>
+            <td> 0x264B</td>
+
+        </tr>
+
+        <tr>
+            <td>U+264C</td>
+            <td class="glyph">&#x264C;</td>
+            <td>#define GLYPH_UNI264C</td>
+            <td> 0x264C</td>
+
+        </tr>
+
+        <tr>
+            <td>U+264D</td>
+            <td class="glyph">&#x264D;</td>
+            <td>#define GLYPH_UNI264D</td>
+            <td> 0x264D</td>
+
+        </tr>
+
+        <tr>
+            <td>U+264E</td>
+            <td class="glyph">&#x264E;</td>
+            <td>#define GLYPH_UNI264E</td>
+            <td> 0x264E</td>
+
+        </tr>
+
+        <tr>
+            <td>U+264F</td>
+            <td class="glyph">&#x264F;</td>
+            <td>#define GLYPH_UNI264F</td>
+            <td> 0x264F</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2650</td>
+            <td class="glyph">&#x2650;</td>
+            <td>#define GLYPH_UNI2650</td>
+            <td> 0x2650</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2651</td>
+            <td class="glyph">&#x2651;</td>
+            <td>#define GLYPH_UNI2651</td>
+            <td> 0x2651</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2652</td>
+            <td class="glyph">&#x2652;</td>
+            <td>#define GLYPH_UNI2652</td>
+            <td> 0x2652</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2653</td>
+            <td class="glyph">&#x2653;</td>
+            <td>#define GLYPH_UNI2653</td>
+            <td> 0x2653</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2660</td>
+            <td class="glyph">&#x2660;</td>
+            <td>#define GLYPH_SPADE</td>
+            <td> 0x2660</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2663</td>
+            <td class="glyph">&#x2663;</td>
+            <td>#define GLYPH_CLUB</td>
+            <td> 0x2663</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2665</td>
+            <td class="glyph">&#x2665;</td>
+            <td>#define GLYPH_HEART</td>
+            <td> 0x2665</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2666</td>
+            <td class="glyph">&#x2666;</td>
+            <td>#define GLYPH_DIAMOND</td>
+            <td> 0x2666</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2668</td>
+            <td class="glyph">&#x2668;</td>
+            <td>#define GLYPH_UNI2668</td>
+            <td> 0x2668</td>
+
+        </tr>
+
+        <tr>
+            <td>U+267B</td>
+            <td class="glyph">&#x267B;</td>
+            <td>#define GLYPH_UNI267B</td>
+            <td> 0x267B</td>
+
+        </tr>
+
+        <tr>
+            <td>U+267F</td>
+            <td class="glyph">&#x267F;</td>
+            <td>#define GLYPH_UNI267F</td>
+            <td> 0x267F</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2693</td>
+            <td class="glyph">&#x2693;</td>
+            <td>#define GLYPH_UNI2693</td>
+            <td> 0x2693</td>
+
+        </tr>
+
+        <tr>
+            <td>U+26A0</td>
+            <td class="glyph">&#x26A0;</td>
+            <td>#define GLYPH_UNI26A0</td>
+            <td> 0x26A0</td>
+
+        </tr>
+
+        <tr>
+            <td>U+26A1</td>
+            <td class="glyph">&#x26A1;</td>
+            <td>#define GLYPH_UNI26A1</td>
+            <td> 0x26A1</td>
+
+        </tr>
+
+        <tr>
+            <td>U+26AA</td>
+            <td class="glyph">&#x26AA;</td>
+            <td>#define GLYPH_UNI26AA</td>
+            <td> 0x26AA</td>
+
+        </tr>
+
+        <tr>
+            <td>U+26AB</td>
+            <td class="glyph">&#x26AB;</td>
+            <td>#define GLYPH_UNI26AB</td>
+            <td> 0x26AB</td>
+
+        </tr>
+
+        <tr>
+            <td>U+26BD</td>
+            <td class="glyph">&#x26BD;</td>
+            <td>#define GLYPH_UNI26BD</td>
+            <td> 0x26BD</td>
+
+        </tr>
+
+        <tr>
+            <td>U+26BE</td>
+            <td class="glyph">&#x26BE;</td>
+            <td>#define GLYPH_UNI26BE</td>
+            <td> 0x26BE</td>
+
+        </tr>
+
+        <tr>
+            <td>U+26C4</td>
+            <td class="glyph">&#x26C4;</td>
+            <td>#define GLYPH_UNI26C4</td>
+            <td> 0x26C4</td>
+
+        </tr>
+
+        <tr>
+            <td>U+26C5</td>
+            <td class="glyph">&#x26C5;</td>
+            <td>#define GLYPH_UNI26C5</td>
+            <td> 0x26C5</td>
+
+        </tr>
+
+        <tr>
+            <td>U+26CE</td>
+            <td class="glyph">&#x26CE;</td>
+            <td>#define GLYPH_UNI26CE</td>
+            <td> 0x26CE</td>
+
+        </tr>
+
+        <tr>
+            <td>U+26D4</td>
+            <td class="glyph">&#x26D4;</td>
+            <td>#define GLYPH_UNI26D4</td>
+            <td> 0x26D4</td>
+
+        </tr>
+
+        <tr>
+            <td>U+26EA</td>
+            <td class="glyph">&#x26EA;</td>
+            <td>#define GLYPH_UNI26EA</td>
+            <td> 0x26EA</td>
+
+        </tr>
+
+        <tr>
+            <td>U+26F2</td>
+            <td class="glyph">&#x26F2;</td>
+            <td>#define GLYPH_UNI26F2</td>
+            <td> 0x26F2</td>
+
+        </tr>
+
+        <tr>
+            <td>U+26F3</td>
+            <td class="glyph">&#x26F3;</td>
+            <td>#define GLYPH_UNI26F3</td>
+            <td> 0x26F3</td>
+
+        </tr>
+
+        <tr>
+            <td>U+26F5</td>
+            <td class="glyph">&#x26F5;</td>
+            <td>#define GLYPH_UNI26F5</td>
+            <td> 0x26F5</td>
+
+        </tr>
+
+        <tr>
+            <td>U+26FA</td>
+            <td class="glyph">&#x26FA;</td>
+            <td>#define GLYPH_UNI26FA</td>
+            <td> 0x26FA</td>
+
+        </tr>
+
+        <tr>
+            <td>U+26FD</td>
+            <td class="glyph">&#x26FD;</td>
+            <td>#define GLYPH_UNI26FD</td>
+            <td> 0x26FD</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2702</td>
+            <td class="glyph">&#x2702;</td>
+            <td>#define GLYPH_UNI2702</td>
+            <td> 0x2702</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2705</td>
+            <td class="glyph">&#x2705;</td>
+            <td>#define GLYPH_UNI2705</td>
+            <td> 0x2705</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2708</td>
+            <td class="glyph">&#x2708;</td>
+            <td>#define GLYPH_UNI2708</td>
+            <td> 0x2708</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2709</td>
+            <td class="glyph">&#x2709;</td>
+            <td>#define GLYPH_UNI2709</td>
+            <td> 0x2709</td>
+
+        </tr>
+
+        <tr>
+            <td>U+270A</td>
+            <td class="glyph">&#x270A;</td>
+            <td>#define GLYPH_UNI270A</td>
+            <td> 0x270A</td>
+
+        </tr>
+
+        <tr>
+            <td>U+270B</td>
+            <td class="glyph">&#x270B;</td>
+            <td>#define GLYPH_UNI270B</td>
+            <td> 0x270B</td>
+
+        </tr>
+
+        <tr>
+            <td>U+270C</td>
+            <td class="glyph">&#x270C;</td>
+            <td>#define GLYPH_UNI270C</td>
+            <td> 0x270C</td>
+
+        </tr>
+
+        <tr>
+            <td>U+270F</td>
+            <td class="glyph">&#x270F;</td>
+            <td>#define GLYPH_UNI270F</td>
+            <td> 0x270F</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2712</td>
+            <td class="glyph">&#x2712;</td>
+            <td>#define GLYPH_UNI2712</td>
+            <td> 0x2712</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2714</td>
+            <td class="glyph">&#x2714;</td>
+            <td>#define GLYPH_UNI2714</td>
+            <td> 0x2714</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2716</td>
+            <td class="glyph">&#x2716;</td>
+            <td>#define GLYPH_UNI2716</td>
+            <td> 0x2716</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2728</td>
+            <td class="glyph">&#x2728;</td>
+            <td>#define GLYPH_UNI2728</td>
+            <td> 0x2728</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2733</td>
+            <td class="glyph">&#x2733;</td>
+            <td>#define GLYPH_UNI2733</td>
+            <td> 0x2733</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2734</td>
+            <td class="glyph">&#x2734;</td>
+            <td>#define GLYPH_UNI2734</td>
+            <td> 0x2734</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2744</td>
+            <td class="glyph">&#x2744;</td>
+            <td>#define GLYPH_UNI2744</td>
+            <td> 0x2744</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2747</td>
+            <td class="glyph">&#x2747;</td>
+            <td>#define GLYPH_UNI2747</td>
+            <td> 0x2747</td>
+
+        </tr>
+
+        <tr>
+            <td>U+274C</td>
+            <td class="glyph">&#x274C;</td>
+            <td>#define GLYPH_UNI274C</td>
+            <td> 0x274C</td>
+
+        </tr>
+
+        <tr>
+            <td>U+274E</td>
+            <td class="glyph">&#x274E;</td>
+            <td>#define GLYPH_UNI274E</td>
+            <td> 0x274E</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2753</td>
+            <td class="glyph">&#x2753;</td>
+            <td>#define GLYPH_UNI2753</td>
+            <td> 0x2753</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2754</td>
+            <td class="glyph">&#x2754;</td>
+            <td>#define GLYPH_UNI2754</td>
+            <td> 0x2754</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2755</td>
+            <td class="glyph">&#x2755;</td>
+            <td>#define GLYPH_UNI2755</td>
+            <td> 0x2755</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2757</td>
+            <td class="glyph">&#x2757;</td>
+            <td>#define GLYPH_UNI2757</td>
+            <td> 0x2757</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2764</td>
+            <td class="glyph">&#x2764;</td>
+            <td>#define GLYPH_UNI2764</td>
+            <td> 0x2764</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2795</td>
+            <td class="glyph">&#x2795;</td>
+            <td>#define GLYPH_UNI2795</td>
+            <td> 0x2795</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2796</td>
+            <td class="glyph">&#x2796;</td>
+            <td>#define GLYPH_UNI2796</td>
+            <td> 0x2796</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2797</td>
+            <td class="glyph">&#x2797;</td>
+            <td>#define GLYPH_UNI2797</td>
+            <td> 0x2797</td>
+
+        </tr>
+
+        <tr>
+            <td>U+27A1</td>
+            <td class="glyph">&#x27A1;</td>
+            <td>#define GLYPH_UNI27A1</td>
+            <td> 0x27A1</td>
+
+        </tr>
+
+        <tr>
+            <td>U+27B0</td>
+            <td class="glyph">&#x27B0;</td>
+            <td>#define GLYPH_UNI27B0</td>
+            <td> 0x27B0</td>
+
+        </tr>
+
+        <tr>
+            <td>U+27BF</td>
+            <td class="glyph">&#x27BF;</td>
+            <td>#define GLYPH_UNI27BF</td>
+            <td> 0x27BF</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2934</td>
+            <td class="glyph">&#x2934;</td>
+            <td>#define GLYPH_UNI2934</td>
+            <td> 0x2934</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2935</td>
+            <td class="glyph">&#x2935;</td>
+            <td>#define GLYPH_UNI2935</td>
+            <td> 0x2935</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2B05</td>
+            <td class="glyph">&#x2B05;</td>
+            <td>#define GLYPH_UNI2B05</td>
+            <td> 0x2B05</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2B06</td>
+            <td class="glyph">&#x2B06;</td>
+            <td>#define GLYPH_UNI2B06</td>
+            <td> 0x2B06</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2B07</td>
+            <td class="glyph">&#x2B07;</td>
+            <td>#define GLYPH_UNI2B07</td>
+            <td> 0x2B07</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2B1B</td>
+            <td class="glyph">&#x2B1B;</td>
+            <td>#define GLYPH_UNI2B1B</td>
+            <td> 0x2B1B</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2B1C</td>
+            <td class="glyph">&#x2B1C;</td>
+            <td>#define GLYPH_UNI2B1C</td>
+            <td> 0x2B1C</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2B50</td>
+            <td class="glyph">&#x2B50;</td>
+            <td>#define GLYPH_UNI2B50</td>
+            <td> 0x2B50</td>
+
+        </tr>
+
+        <tr>
+            <td>U+2B55</td>
+            <td class="glyph">&#x2B55;</td>
+            <td>#define GLYPH_UNI2B55</td>
+            <td> 0x2B55</td>
+
+        </tr>
+
+        <tr>
+            <td>U+3030</td>
+            <td class="glyph">&#x3030;</td>
+            <td>#define GLYPH_UNI3030</td>
+            <td> 0x3030</td>
+
+        </tr>
+
+        <tr>
+            <td>U+303D</td>
+            <td class="glyph">&#x303D;</td>
+            <td>#define GLYPH_UNI303D</td>
+            <td> 0x303D</td>
+
+        </tr>
+
+        <tr>
+            <td>U+3297</td>
+            <td class="glyph">&#x3297;</td>
+            <td>#define GLYPH_UNI3297</td>
+            <td> 0x3297</td>
+
+        </tr>
+
+        <tr>
+            <td>U+3299</td>
+            <td class="glyph">&#x3299;</td>
+            <td>#define GLYPH_UNI3299</td>
+            <td> 0x3299</td>
+
+        </tr>
+
+        <tr>
+            <td>U+FEFF</td>
+            <td class="glyph">&#xFEFF;</td>
+            <td>#define GLYPH_UNIFEFF</td>
+            <td> 0xFEFF</td>
+
+        </tr>
+
+    </table>
+</body>
+</html>

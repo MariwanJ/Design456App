@@ -214,7 +214,7 @@ namespace FR {
         virtual int handle(int ev);
         virtual bool set_child_focus(Frtk_Widget* w = nullptr);
         void do_callback();
-
+        virtual void parent_changed();
         Frtk_Widget* m_parent = nullptr;
 
         FRTK_PICTXT_STYLE m_cellStyle;

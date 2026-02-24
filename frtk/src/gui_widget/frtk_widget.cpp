@@ -85,7 +85,9 @@ namespace FR {
     }
 
     void Frtk_Widget::parent(Frtk_Widget* parent) {
-        m_parent = parent;
+        if (parent)
+            m_parent = parent;
+        parent_changed();
     }
 
     void Frtk_Widget::draw() {
@@ -501,6 +503,9 @@ namespace FR {
     void Frtk_Widget::set_callback(Callback cb)
     {
         m_callback = std::move(cb);
+    }
+    void Frtk_Widget::parent_changed(){
+
     }
 
     //callback processing

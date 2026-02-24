@@ -165,8 +165,6 @@ namespace FR {
     void Frtk_GrpWidget::addChild(std::shared_ptr<Frtk_Widget> w)
     {
         w->parent(this);
-        FRTK_CORE_APP_ASSERT(m_parent, "m_parent should be defined here");
-        w->m_linkTofrtkWindow = m_parent->m_linkTofrtkWindow;
         m_children.emplace_back(std::move(w));
     }
 
@@ -266,6 +264,13 @@ namespace FR {
             wdg->lose_focus();
         }
     }
+    void Frtk_GrpWidget::parent_changed()
+    {
+        Frtk_Widget::parent_changed();
+        for (auto& c : m_children)
+            c->parent_changed();
+    }
+
     Frtk_Window* Frtk_GrpWidget::getParentWindow() {
         auto parent = m_parent;
         if (parent!=nullptr){
