@@ -31,7 +31,7 @@
 #include <gui_widget/frtk_button.h> 
 
 namespace FR {
-	class Frtk_Check_Button : public Frtk_Button
+	FRTK_API class Frtk_Check_Button : public Frtk_Button
 	{
 	public:
 		Frtk_Check_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b = FRTK_UP_BOX);

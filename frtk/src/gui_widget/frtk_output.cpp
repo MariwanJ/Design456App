@@ -25,9 +25,16 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include <gui_widget/frtk_input.h>
+#include <gui_widget/frtk_output.h>
 
-
+namespace FR {
+    Frtk_Output::Frtk_Output(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b) :
+        Frtk_Input_Base(vg, X, Y, W, H, lbl, b)
+    {
+        m_wdgType = FRTK_NORMAL_OUTPUT;
+        m_bkg_color = glm::vec4(FR_LIGHTGREY);
+    }
+}
 
 
 

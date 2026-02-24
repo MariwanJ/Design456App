@@ -88,6 +88,7 @@ namespace FR{
         virtual float h() const override;
 
     protected:
+        static Frtk_Window* m_MainFrtkInstance;
         virtual int handle(int event) override;
         dimPos_float_t mainGui() const override;
         bool isMouse_inside() const override;

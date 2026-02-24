@@ -36,10 +36,13 @@
 
 namespace FR {
 
-#define FRTK_NO_BORDER      0.0f
-#define FRTK_THIN_BORDER    0.3f
-#define FRTK_NORMAL_BORDER  2.0f
-#define FRTK_THICK_BORDER   3.0f
+#define FRTK_NO_BORDER              0.0f
+#define FRTK_EXTRA_THIN_BORDER      0.1f
+#define FRTK_THIN_BORDER            0.3f
+#define FRTK_UNDER_NORMAL_BORDER    1.0f
+#define FRTK_NORMAL_BORDER          2.0f
+#define FRTK_THICK_BORDER           2.5f
+#define FRTK_EXTRA_THICK_BORDER     3.0f
 
    //TODO: Temporary code -- FIXME
     typedef struct {
@@ -104,73 +107,73 @@ namespace FR {
     }font_t;
 
     //frtk_no_box
-    void drawFilledRect(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth= FRTK_NORMAL_BORDER, 
+    void FRTK_API drawFilledRect(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth= FRTK_NORMAL_BORDER,
         NVGcolor baseCol = nvgRGBAf(FR_LIGHT_GRAY),
         NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW), 
         bool up = false);
     //Frtk_box_up/down - Square or rounded edges based on r
-    void drawBoxUpDown(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
+    void FRTK_API drawBoxUpDown(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
         NVGcolor baseCol = nvgRGBAf(FR_LIGHT_GRAY),
         NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW), bool up = true);
 
      
 
     //Frtk_up_frame:      frtk_down_frame:     frtk_thin_up_frame:     frtk_thin_down_frame:
-    void drawFrameRect(NVGcontext* vg, Dim_float_t dim, float r, float t, NVGcolor c, NVGcolor shadowCol, bool up);
+    void FRTK_API drawFrameRect(NVGcontext* vg, Dim_float_t dim, float r, float t, NVGcolor c, NVGcolor shadowCol, bool up);
 
     //Frtk_diamond_up_box:  frtk_diamond_down_box:
-    void drawDiamondWithState(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
+    void FRTK_API drawDiamondWithState(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
         NVGcolor baseCol = nvgRGBAf(FR_LIGHT_GRAY),
         NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
         bool up = false);
 
-    void drawSolidCircleWithState(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
+    void FRTK_API drawSolidCircleWithState(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
         NVGcolor baseCol = nvgRGBAf(FR_LIGHT_GRAY),
         NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
         bool up = false);
     
-    void drawOvalFrameWithState(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
+    void FRTK_API drawOvalFrameWithState(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
         NVGcolor baseCol = nvgRGBAf(FR_LIGHT_GRAY),
         NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
         bool up = false);
     
-    void drawSolidOvalWithState(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
+    void FRTK_API drawSolidOvalWithState(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
         NVGcolor baseCol = nvgRGBAf(FR_LIGHT_GRAY),
         NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
         bool up = false);
     
-    void drawShadowBox(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
+    void FRTK_API drawShadowBox(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
         NVGcolor baseCol = nvgRGBAf(FR_LIGHT_GRAY),
         NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
         bool up = false);
-    void drawOvalFLAT(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
+    void FRTK_API drawOvalFLAT(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
         NVGcolor baseCol = nvgRGBAf(FR_LIGHT_GRAY),
         NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
         bool up = false);
     
-    void drawOval(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
+    void FRTK_API drawOval(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
         NVGcolor baseCol = nvgRGBAf(FR_LIGHT_GRAY),
         NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW),
         bool up = false);
 
-    void draw_nice_round_box(NVGcontext* vg, Dim_float_t dim, float r, float t, NVGcolor col, NVGcolor shadowCol, bool up);
-    void draw_nice_squre(NVGcontext* vg, Dim_float_t dim, float r, float t, NVGcolor baseCol, NVGcolor shadowCol, bool pressed);
+    void FRTK_API draw_nice_round_box(NVGcontext* vg, Dim_float_t dim, float r, float t, NVGcolor col, NVGcolor shadowCol, bool up);
+    void FRTK_API draw_nice_squre(NVGcontext* vg, Dim_float_t dim, float r, float t, NVGcolor baseCol, NVGcolor shadowCol, bool pressed);
 
-    void draw_box(NVGcontext* vg, BOX_TYPE b, Dim_float_t dim, float cornerRadius, float strokeWidth, NVGcolor c, NVGcolor shadowCol, bool up);
+    void FRTK_API draw_box(NVGcontext* vg, BOX_TYPE b, Dim_float_t dim, float cornerRadius, float strokeWidth, NVGcolor c, NVGcolor shadowCol, bool up);
 
-    float getTextLeftBearing(NVGcontext* vg, const std::string& text, const font_t& fnt);
+    float FRTK_API getTextLeftBearing(NVGcontext* vg, const std::string& text, const font_t& fnt);
 
     //Horizontal = NVG_ALIGN_CENTER,    NVG_ALIGN_LEFT / NVG_ALIGN_CENTER / NVG_ALIGN_RIGHT
     //Vertical =  NVG_ALIGN_MIDDLE    NVG_ALIGN_TOP / NVG_ALIGN_MIDDLE / NVG_ALIGN_BOTTOM
     //Rotation =0.0 by default
-    void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt, bool isLabel, FontData_t &fnttData, const char *secrete = 0);
+    void FRTK_API drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt, bool isLabel, FontData_t &fnttData, const char *secrete = 0);
 
     // Function to draw a check mark with default color = BLACK
-    void drawCheckMark(NVGcontext* vg, float x, float y, float size, NVGcolor col = nvgRGBAf(FR_BLACK));
+    void FRTK_API drawCheckMark(NVGcontext* vg, float x, float y, float size, NVGcolor col = nvgRGBAf(FR_BLACK));
 
 }
 
 
 
 
-#endif // !FRTK_DDRAW_H
+#endif // !FRTK_DRAW_H

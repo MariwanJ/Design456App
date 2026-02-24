@@ -33,9 +33,15 @@
 namespace FR {
     std::shared_ptr<Frtk_Window> runTabWidget() {
         auto window = std::make_shared<Frtk_Window>(500.f, 200.f, 700.f, 700.f, "Testing buttons, toolbars", FRTK_UP_BOX);
-        auto tab = std::make_shared<Frtk_Tab>(window->getContext(), 10.0f , 10.0f  , 250.0f, 250.0f, "tab", FRTK_UP_BOX);
-        tab->lblAlign(NVG_ALIGN_TOP_CENTER);
+        auto tab = std::make_shared<Frtk_Tab>(window->getContext(), 10.0f , 10.0f  , 300.0f, 300.0f, "tab", FRTK_UP_BOX); 
         window->addChild(tab);
+        for (int i=0; i<2;++i){
+            auto newTab = tab->addTab();
+            std::string lbl = "Tab " + std::to_string(i);
+            newTab->label(lbl);
+            tab->lblAlign(NVG_ALIGN_TOP_CENTER | NVG_ALIGN_BASELINE|NVG_ALIGN_INSIDE);
+        }
+        tab->layoutTabs();
          return window;
     }
 }

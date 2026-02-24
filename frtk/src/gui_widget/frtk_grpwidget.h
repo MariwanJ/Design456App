@@ -34,7 +34,7 @@
 class Frtk_Window;
 
 namespace FR {
-    class Frtk_GrpWidget : public Frtk_Widget {
+    FRTK_API class Frtk_GrpWidget : public Frtk_Widget {
         friend Frtk_Window;
     public:
         Frtk_GrpWidget(NVGcontext* vg, float X , float Y , float W , float H , std::string label = "", BOX_TYPE b = FRTK_NO_BOX);

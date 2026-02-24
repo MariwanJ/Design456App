@@ -89,7 +89,8 @@ namespace FR {
 
     void Frtk_Input_Base::draw() {
         drawEditBoxBase(m_x, m_y, m_w, m_h);
-        drawTextInBox(m_vg, m_text.value, m_font, false, m_linkTofrtkWindow->getFontData());
+        if(m_linkTofrtkWindow)
+            drawTextInBox(m_vg, m_text.value, m_font, false, m_linkTofrtkWindow->getFontData());
         drawLabel();
         if (m_has_focus) {
             draw_focus();

@@ -198,7 +198,8 @@ namespace FR {
         draw_box(m_vg, t, { {X,Y},{W,H} }, 0.0f, FRTK_NORMAL_BORDER, nvgRGBAf(0, 0.501f, 1.0f, 1.0f), nvgRGBAf(bkg.r, bkg.g, bkg.b, bkg.a), true);
     }
     void Frtk_Widget::drawLabel() {
-        drawTextInBox(m_vg, m_label, m_font, true, m_linkTofrtkWindow->getFontData());
+        if (m_linkTofrtkWindow)
+            drawTextInBox(m_vg, m_label, m_font, true, m_linkTofrtkWindow->getFontData());
     }
     void Frtk_Widget::drawLabel(float X, float Y, float W, float H, float rotateAngle) {
         m_font.pos.x = X + m_font.fontSize * 0.4f;
@@ -206,7 +207,8 @@ namespace FR {
         m_font.size.w = W;
         m_font.size.h = H;
         m_font.Rotate = rotateAngle;
-        drawTextInBox(m_vg, m_label, m_font, true, m_linkTofrtkWindow->getFontData());
+        if (m_linkTofrtkWindow)
+            drawTextInBox(m_vg, m_label, m_font, true, m_linkTofrtkWindow->getFontData());
     }
 
     void Frtk_Widget::rotateLabel(float angle)

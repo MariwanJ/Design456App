@@ -190,7 +190,7 @@ namespace FR {
 	  0x42, 0x60, 0x82
 	};
 
-	class Frtk_Return_Button : public Frtk_Button
+	FRTK_API class Frtk_Return_Button : public Frtk_Button
 	{
 	public:
 		 Frtk_Return_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b = FRTK_UP_BOX);

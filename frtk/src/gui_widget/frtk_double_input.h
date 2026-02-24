@@ -32,7 +32,7 @@
 
 
 namespace FR {
-    class Frtk_Double_Input : public Frtk_Input_Base {
+    FRTK_API class Frtk_Double_Input : public Frtk_Input_Base {
     public:
         Frtk_Double_Input(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b);
     protected:

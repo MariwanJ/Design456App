@@ -44,7 +44,7 @@ namespace FR {
         std::string tooltips; //not implemented yet!!
     };
 
-    class Frtk_ToolBarWin : public Frtk_Window
+    FRTK_API class Frtk_ToolBarWin : public Frtk_Window
     {
     public:
         Frtk_ToolBarWin(float , float Y , float W , float H, std::string lbl, const std::vector<toolbBTN_t>& tools = {}, bool horizontal=true, BOX_TYPE b = FRTK_UP_BOX, WIDGTYPE btnType= FRTK_TOOLBAR_BUTTON);

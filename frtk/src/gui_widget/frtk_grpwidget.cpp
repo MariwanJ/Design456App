@@ -26,7 +26,7 @@
 //
 
 #include <gui_widget/frtk_grpwidget.h>
-
+#include <gui_widget/frtk_window.h>
 namespace FR {
     // translate the current keystroke into up/down/left/right for navigation:
     static int navkey() {
@@ -70,9 +70,9 @@ namespace FR {
     void Frtk_GrpWidget::draw() {
         if (m_visible) {
             drawBox();
-            draw_focus();
             drawLabel();
             draw_children();
+            draw_focus();
         }
     }
     void Frtk_GrpWidget::draw_children() {
@@ -165,21 +165,17 @@ namespace FR {
     void Frtk_GrpWidget::addChild(std::shared_ptr<Frtk_Widget> w)
     {
         w->parent(this);
-        w->m_linkTofrtkWindow = getParentWindow();
+        FRTK_CORE_APP_ASSERT(m_parent, "m_parent should be defined here");
+        w->m_linkTofrtkWindow = m_parent->m_linkTofrtkWindow;
         m_children.emplace_back(std::move(w));
-        
     }
 
     bool Frtk_GrpWidget::restore_focus() {
-        // Try saved
-        // first
         if (m_childFocus) {
             if (m_childFocus->take_focus()) {
                 return true;
             }
         }
-
-        // try the first can focus child
         for (auto& wdg : m_children) {
             if (wdg->take_focus()) return true;
         }
@@ -233,7 +229,7 @@ namespace FR {
                 }
             }
             else {
-                // Leaf widget -> try to take focus
+                // child widget -> try to focus
                 if (candidate->take_focus()) {
                     m_childFocus = candidate;
                     return true;
@@ -271,7 +267,13 @@ namespace FR {
         }
     }
     Frtk_Window* Frtk_GrpWidget::getParentWindow() {
-      return (Frtk_Window*)m_linkTofrtkWindow;
+        auto parent = m_parent;
+        if (parent!=nullptr){
+            while (parent->parent())
+                parent = parent->parent();
+            return (Frtk_Window*)parent;
+        }
+        return nullptr;
     }
 
     Frtk_Widget* Frtk_GrpWidget::focusedChild()

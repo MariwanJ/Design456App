@@ -30,23 +30,50 @@
 #include <gui_widget/frtk_button.h>
 #include <gui_widget/frtk_grpwidget.h>
 namespace FR {
-    class Frtk_Tab : public Frtk_GrpWidget {
+#define TAB_BUTTON_SIZE 20.0f
+#define padding         5.f
+    FRTK_API class Frtk_Tabwdg : public Frtk_GrpWidget {
     public:
-        Frtk_Tab(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b = FRTK_FLAT_BOX);
+        Frtk_Tabwdg(NVGcontext* vg, float w, float h, std::string l = "Tabwdg", BOX_TYPE b = FRTK_FLAT_BOX);
+        void setHeaderDim(float X, float Y, float W, float H);
+        void setBodyDim (float X, float Y, float W, float H);
+        Dim_float_t getHeadDim();
+        Dim_float_t getBodyDim();
+
+    protected:
+        virtual int handle(int ev) override;
+        virtual void draw() override;
+        virtual void drawLabel() override;
+        virtual void draw_tabHeader();
+        virtual void draw_focus() override;
+        virtual void draw_focus(BOX_TYPE t, float X, float Y, float W, float H) override;
+        virtual void draw_focus(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 bkg) override;
+        std::vector<std::shared_ptr<Frtk_GrpWidget>> m_tab;
+        void init_headwidth();
+
+    private:
+        void draWBody();
+        float m_headSapce;
+        float m_headWidth;
+        Dim_float_t m_headDim;
+        Dim_float_t m_bodyDim;
+    };
+
+    FRTK_API class Frtk_Tab : public Frtk_GrpWidget {
+    public:
+        Frtk_Tab(NVGcontext* vg, float x, float y, float w, float h, std::string l = "Tab", BOX_TYPE b = FRTK_UP_BOX);
+        virtual std::shared_ptr < Frtk_Tabwdg> addTab();
+        void layoutTabs();
+
     protected:
         virtual int handle(int ev) override;
 
         virtual void draw() override;
-        virtual void draw_tabHeader();
-        virtual void draw_tabBody();
-
-        std::vector<Frtk_GrpWidget> m_tabChildren;
+        std::vector<std::shared_ptr<Frtk_Tabwdg>> m_tabChildren;
         std::vector<Frtk_Button> m_navButton;
 
     private:
-        float m_headSapce;
-        Dim_float_t m_headDim;
-        Dim_float_t m_bodyDim;
+        
     };
 }
 #endif //FRTK_TAB_H

@@ -28,6 +28,9 @@
 #include<gui_widget/frtk_window.h>
 
 namespace FR {
+    
+    Frtk_Window* Frtk_Window::m_MainFrtkInstance = nullptr;
+
     Frtk_Window::Frtk_Window(float X, float Y, float W, float H, std::string lbl, BOX_TYPE b, bool hasHeader) :
         Frtk_Widget(X, Y, W, H, lbl, b), m_hasHeader(hasHeader) {
         init();
@@ -66,6 +69,7 @@ namespace FR {
         // widgets specific variables
         m_wdgType = FRTK_WINDOW;
         m_linkTofrtkWindow = this;
+        m_MainFrtkInstance = this;
         if (m_hasHeader) {
             m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, X, Y + m_WindowsStyle.height, W, H - m_WindowsStyle.height);
         }
@@ -73,6 +77,7 @@ namespace FR {
             m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, X, Y, W, H);
         }
         m_guiWindow->m_linkTofrtkWindow = this;
+        m_guiWindow->m_parent = this;
         m_guiWindow->boxType(b);
 
         FRTK_CORE_APP_ASSERT(m_guiWindow);
@@ -115,7 +120,6 @@ namespace FR {
     {
         return m_h;
     }
-
     void Frtk_Window::draw() {
         if (!m_visible)
             return;
@@ -177,7 +181,8 @@ namespace FR {
     void Frtk_Window::drawLabel() {
         m_font.pos = { m_x, m_y };
         m_font.size = { m_w, m_WindowsStyle.height };
-         drawTextInBox(m_vg, m_label, m_font,true, m_linkTofrtkWindow->getFontData());
+        if(m_linkTofrtkWindow)
+            drawTextInBox(m_vg, m_label, m_font,true, m_linkTofrtkWindow->getFontData());
      }
 
     void Frtk_Window::drawLabel(float X, float Y, float W, float H, float rotateAngle) {
@@ -341,10 +346,12 @@ namespace FR {
             g_focusedWdgt.current = nullptr;
         }
     }
+    
     FontData_t Frtk_Window::getFontData() const
     {
         return m_data;
     }
+
     bool Frtk_Window::set_child_focus(Frtk_Widget* w) {
         if(w){
             m_guiWindow->set_child_focus(w);

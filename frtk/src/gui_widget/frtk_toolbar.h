@@ -44,7 +44,7 @@ namespace FR {
         std::string tooltips; //not implemented yet!!
     }toolbBTN_t;
 
-    class Frtk_ToolBar : public Frtk_GrpWidget
+    FRTK_API class Frtk_ToolBar : public Frtk_GrpWidget
     {
     public:
         Frtk_ToolBar(NVGcontext* vg, float , float Y , float W , float H, std::string lbl, const std::vector<toolbBTN_t>& tools = {},bool horzontal=true, BOX_TYPE b = FRTK_UP_BOX);

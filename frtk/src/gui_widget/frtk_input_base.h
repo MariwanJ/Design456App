@@ -41,7 +41,7 @@ namespace FR {
       //  int selEnd;    
     };
 
-    class Frtk_Input_Base : public Frtk_Box {
+    FRTK_API class Frtk_Input_Base : public Frtk_Box {
     public:
         Frtk_Input_Base(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b = FRTK_DOWN_BOX);
         

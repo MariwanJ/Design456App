@@ -26,11 +26,10 @@
 //
 
 #include <gui_widget/frtk_input.h>
-
-
-
-
-
-
-
-
+namespace FR{
+Frtk_Input::Frtk_Input(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b):
+    Frtk_Input_Base(vg,X,Y,W,H,lbl,b)
+{
+    m_wdgType = FRTK_INPUT;
+}
+}

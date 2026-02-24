@@ -35,7 +35,7 @@
 
 
     namespace FR {
-        class Frtk_Search_Box : public Frtk_Input_Base {
+        FRTK_API class Frtk_Search_Box : public Frtk_Input_Base {
         public:
             Frtk_Search_Box(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b = FRTK_FLAT_BOX);
             int value(const std::string& str);
