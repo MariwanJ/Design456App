@@ -388,10 +388,14 @@ namespace FR {
             }break;
             }
             int result=0;
-            for (auto& wdg : m_children) {
+            for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
+                auto& wdg = *it;
                 //We should not allow sending events to inactive widget
                 if (wdg->active() && wdg->visible()) {
                     if (wdg->isMouse_inside()) {
+                        FRTK_CORE_INFO("mouse inside {}", wdg->label());
+                        if (wdg->m_wdgType == FRTK_GROUP)
+                            //FR_DEBUG_BREAK;
                         result = wdg->handle(ev);
                         //TODO CHECK ME IF THIS IS CORRECT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         if (result == 1)

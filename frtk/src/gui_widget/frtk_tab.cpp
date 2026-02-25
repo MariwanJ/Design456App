@@ -41,15 +41,16 @@ namespace FR {
 
     */
 
-    Frtk_Tabwdg::Frtk_Tabwdg(NVGcontext* vg, float W, float H, std::string l, BOX_TYPE b) : Frtk_Box(vg, 0.0f, 0.0f, W,H, l, b),
-        m_headSapce(2.0f), m_headDim{ 0.0f }, m_bodyDim{ 0.0f }, m_headWidth{ 0.0f },m_body(nullptr)
+    Frtk_Tabwdg::Frtk_Tabwdg(NVGcontext* vg, float W, float H, std::string l, BOX_TYPE b) : Frtk_GrpWidget(vg, 0.0f, 0.0f, W,H, l, b),
+        m_headSapce(1.0f), m_headDim{ 0.0f }, m_bodyDim{ 0.0f }, m_headWidth{ 0.0f },m_body(nullptr)
     {
         m_font.fontSize = 14.0f;
         m_font.lblAlign = NVG_ALIGN_MIDDLE_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE;
         m_color = glm::vec4(FR_LIGHTGREY);
         m_bkg_color = glm::vec4(FR_DARKGREY1);
         init_headwidth();
-        m_body = std::make_shared<Frtk_GrpWidget>(m_vg, 0, m_font.fontSize * HEIGHT_FACTOR, W,  - m_font.fontSize * HEIGHT_FACTOR);
+        m_body = std::make_shared<Frtk_GrpWidget>(m_vg, 0, m_font.fontSize * HEIGHT_FACTOR, W,  - m_font.fontSize * HEIGHT_FACTOR,"",FRTK_FLAT_BOX);
+        addChild(m_body);
         FRTK_CORE_APP_ASSERT(m_body, "obj allocation error!");
     }
     void Frtk_Tabwdg::setHeaderDim(float X, float Y, float W, float H)
@@ -83,13 +84,7 @@ namespace FR {
     }
     int Frtk_Tabwdg::handle(int ev)
     {
-        bool answer = isMouse_inside();
-        FRTK_CORE_INFO("TABWDG inside {} - {} {} ", answer, absX(), absY());
-        auto &children = m_body->getChildren();
-        for(auto & wdg :children)
-        if (m_body->send_event(*wdg, ev) == 1)
-            return 1;
-        return 0;
+        return Frtk_GrpWidget::handle(ev);
     }
     void Frtk_Tabwdg::draw()
     {
@@ -140,8 +135,8 @@ namespace FR {
     //***********************************************************************************
     //                         Tabs container widget
     //***********************************************************************************
-    Frtk_Tab::Frtk_Tab(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :
-        Frtk_GrpWidget(vg, x, y, w, h, l, FRTK_DOWN_BOX)
+    Frtk_Tab::Frtk_Tab(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b) :
+        Frtk_GrpWidget(vg, X, Y, W, H, lbl, b)
     {
         m_font.fontSize = 14.0f;
         m_font.pos = { m_x,m_y };
@@ -170,6 +165,10 @@ namespace FR {
         bt2->getFont().size.h = TAB_BUTTON_SIZE;
         addChild(bt1);
         addChild(bt2);
+
+        //FRTK_CORE_INFO("{} {}" ,bt1->absX(), bt1->absY());
+        //FRTK_CORE_INFO("{} {}", bt2->absX(), bt2->absY());
+        //FRTK_CORE_INFO("{} {}", absX(), absY());
         }
     std::shared_ptr<Frtk_Tabwdg> Frtk_Tab::addTab()
     {
@@ -193,6 +192,11 @@ namespace FR {
         draw_box(m_vg, m_boxType, { {m_x,m_y}, {m_w,m_h} }, 0.0f, FRTK_THIN_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
         drawLabel();
         Frtk_GrpWidget::draw();
+        //FRTK_CORE_INFO("-----------------");
+        //FRTK_CORE_INFO("{} {}", m_children.at(0)->absX(), m_children.at(0)->absY());
+        //FRTK_CORE_INFO("{} {}", m_children.at(1)->absX(), m_children.at(1)->absY());
+        //FRTK_CORE_INFO("{} {}", absX(), absY());
+        //FRTK_CORE_INFO("-----------------");
     }
 
     void Frtk_Tab::layoutTabs()

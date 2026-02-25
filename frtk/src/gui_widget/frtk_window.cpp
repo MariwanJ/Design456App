@@ -125,9 +125,6 @@ namespace FR {
         return 0.0f;
     }
     float Frtk_Window::absY() const {
-        if (m_hasHeader) {
-            return m_WindowsStyle.height;
-        }
         return 0.0f;
     }
 

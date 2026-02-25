@@ -37,7 +37,7 @@ namespace FR {
 #define HEIGHT_FACTOR   1.3f
 
 
-    FRTK_API class Frtk_Tabwdg : public Frtk_Box {
+    FRTK_API class Frtk_Tabwdg : public Frtk_GrpWidget {
     public:
         Frtk_Tabwdg(NVGcontext* vg, float w, float h, std::string l = "Tabwdg", BOX_TYPE b = FRTK_THIN_UP_BOX);
         void setHeaderDim(float X, float Y, float W, float H);
@@ -65,7 +65,7 @@ namespace FR {
 
     FRTK_API class Frtk_Tab : public Frtk_GrpWidget {
     public:
-        Frtk_Tab(NVGcontext* vg, float x, float y, float w, float h, std::string l = "Tab", BOX_TYPE b = FRTK_UP_BOX);
+        Frtk_Tab(NVGcontext* vg, float x, float y, float w, float h, std::string l = "Tab", BOX_TYPE b = FRTK_DOWN_BOX);
         virtual std::shared_ptr < Frtk_Tabwdg> addTab();
         void layoutTabs();
 
