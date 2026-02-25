@@ -29,34 +29,34 @@
 #define FRTK_TAB_H
 #include <gui_widget/frtk_button.h>
 #include <gui_widget/frtk_grpwidget.h>
+#include <gui_widget/frtk_box.h>
 
 namespace FR {
 #define TAB_BUTTON_SIZE 20.0f
-#define padding         5.f
+#define padding         2.f
+#define HEIGHT_FACTOR   1.3f
 
 
-
-    FRTK_API class Frtk_Tabwdg : public Frtk_GrpWidget {
+    FRTK_API class Frtk_Tabwdg : public Frtk_Box {
     public:
-        Frtk_Tabwdg(NVGcontext* vg, float w, float h, std::string l = "Tabwdg", BOX_TYPE b = FRTK_FLAT_BOX);
+        Frtk_Tabwdg(NVGcontext* vg, float w, float h, std::string l = "Tabwdg", BOX_TYPE b = FRTK_THIN_UP_BOX);
         void setHeaderDim(float X, float Y, float W, float H);
         void setBodyDim (float X, float Y, float W, float H);
         Dim_float_t getHeadDim();
         Dim_float_t getBodyDim();
+        virtual void addChild(std::shared_ptr<Frtk_Widget> wdg);
 
     protected:
+
         virtual int handle(int ev) override;
         virtual void draw() override;
         virtual void drawLabel() override;
-        virtual void draw_tabHeader();
         virtual void draw_focus() override;
         virtual void draw_focus(BOX_TYPE t, float X, float Y, float W, float H) override;
         virtual void draw_focus(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 bkg) override;
-        std::vector<std::shared_ptr<Frtk_GrpWidget>> m_tab;
+        std::shared_ptr<Frtk_GrpWidget> m_body;
         void init_headwidth();
-
     private:
-        void draWBody();
         float m_headSapce;
         float m_headWidth;
         Dim_float_t m_headDim;

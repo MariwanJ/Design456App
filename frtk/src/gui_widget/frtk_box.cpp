@@ -32,7 +32,7 @@
 namespace FR {
     Frtk_Box::Frtk_Box(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :
         Frtk_Widget(x, y, w, h, l, b),  m_Text{ 0 },
-        m_specialDrawingSize( 0.f), m_padding(2.0f)
+        m_specialDrawingSize( 0.f), m_padding(0.5f)
     {
         m_vg = vg;
         FRTK_CORE_APP_ASSERT(vg != NULL);
@@ -95,9 +95,9 @@ namespace FR {
     {
         //if (!m_Image.image)
         //    return;
-        float paddingX = 4.f;
-        float paddingY = 4.f;
-        const float spacing = 4.0f;
+        float paddingX = 1.f;
+        float paddingY = 1.f;
+        const float spacing = 1.0f;
         paddingX = m_padding ;
 
         const float origin_startX = m_x + m_padding;

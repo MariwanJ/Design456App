@@ -172,6 +172,9 @@ namespace FR {
         int lblAlign(void);
         int txtAlign(void);
 
+        font_t& getFont();
+        const font_t& getFont() const;
+
         void hide();
         bool visible() const;
         bool active(void) const;

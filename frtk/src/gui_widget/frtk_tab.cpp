@@ -41,14 +41,16 @@ namespace FR {
 
     */
 
-    Frtk_Tabwdg::Frtk_Tabwdg(NVGcontext* vg, float w, float h, std::string l, BOX_TYPE b) : Frtk_GrpWidget(vg, 0.0f, 0.0f, w, h, l, b),
-        m_headSapce(2.0f), m_headDim{ 0.0f }, m_bodyDim{ 0.0f }, m_headWidth{ 0.0f }
+    Frtk_Tabwdg::Frtk_Tabwdg(NVGcontext* vg, float W, float H, std::string l, BOX_TYPE b) : Frtk_Box(vg, 0.0f, 0.0f, W,H, l, b),
+        m_headSapce(2.0f), m_headDim{ 0.0f }, m_bodyDim{ 0.0f }, m_headWidth{ 0.0f },m_body(nullptr)
     {
         m_font.fontSize = 14.0f;
         m_font.lblAlign = NVG_ALIGN_MIDDLE_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE;
         m_color = glm::vec4(FR_LIGHTGREY);
         m_bkg_color = glm::vec4(FR_DARKGREY1);
         init_headwidth();
+        m_body = std::make_shared<Frtk_GrpWidget>(m_vg, 0, m_font.fontSize * HEIGHT_FACTOR, W,  - m_font.fontSize * HEIGHT_FACTOR);
+        FRTK_CORE_APP_ASSERT(m_body, "obj allocation error!");
     }
     void Frtk_Tabwdg::setHeaderDim(float X, float Y, float W, float H)
     {
@@ -63,7 +65,14 @@ namespace FR {
         m_bodyDim.pos.y = Y;
         m_bodyDim.size.w = W;
         m_bodyDim.size.h = H;
+        m_body->resize(X, Y, H, W);
     }
+    void Frtk_Tabwdg::addChild(std::shared_ptr<Frtk_Widget> wdg) {
+        if (wdg) {
+            m_body->addChild(wdg);
+        }
+    }
+
     Dim_float_t Frtk_Tabwdg::getHeadDim()
     {
         return m_headDim;
@@ -74,34 +83,31 @@ namespace FR {
     }
     int Frtk_Tabwdg::handle(int ev)
     {
-        if (Frtk_GrpWidget::handle(ev) == 1)
+        bool answer = isMouse_inside();
+        FRTK_CORE_INFO("TABWDG inside {} - {} {} ", answer, absX(), absY());
+        auto &children = m_body->getChildren();
+        for(auto & wdg :children)
+        if (m_body->send_event(*wdg, ev) == 1)
             return 1;
         return 0;
     }
     void Frtk_Tabwdg::draw()
     {
-        draw_tabHeader();
-        draWBody();
+        if (m_has_focus)
+            draw_box(m_vg, m_boxType, m_headDim, 0.0f, FRTK_EXTRA_THIN_BORDER, nvgRGBAf(FR_BLUE), glmToNVG(m_bkg_color), true);
+        else
+            draw_box(m_vg, m_boxType, m_headDim, 0.0f, FRTK_EXTRA_THIN_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
+        m_body->redraw();
+        m_body->draw_children();
         draw_focus();
         drawLabel();
     }
 
-    void Frtk_Tabwdg::draWBody()
-    {
-        draw_box(m_vg, m_boxType, m_bodyDim, 0.0f, FRTK_NORMAL_BORDER, nvgRGBAf(FR_GRAY), glmToNVG(m_color), true);
-    }
-
-    void Frtk_Tabwdg::draw_tabHeader()
-    {
-        if (m_has_focus)
-            draw_box(m_vg, m_boxType, m_headDim, 0.0f, FRTK_EXTRA_THIN_BORDER, nvgRGBAf(FR_LIGHTBLUE), glmToNVG(m_bkg_color), true);
-        else
-            draw_box(m_vg, m_boxType, m_headDim, 0.0f, FRTK_EXTRA_THIN_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
-    }
     void Frtk_Tabwdg::draw_focus()
     {
         if (m_has_focus)
             draw_box(m_vg, FRTK_THIN_UP_FRAME, m_headDim, 0.2f, FRTK_EXTRA_THIN_BORDER, nvgRGBAf(FR_CYAN), glmToNVG(m_bkg_color), true);
+
     }
     void Frtk_Tabwdg::draw_focus(BOX_TYPE t, float X, float Y, float W, float H)
     {
@@ -135,23 +141,36 @@ namespace FR {
     //                         Tabs container widget
     //***********************************************************************************
     Frtk_Tab::Frtk_Tab(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :
-        Frtk_GrpWidget(vg, x, y, w, h, l, b)
+        Frtk_GrpWidget(vg, x, y, w, h, l, FRTK_DOWN_BOX)
     {
         m_font.fontSize = 14.0f;
         m_font.pos = { m_x,m_y };
         m_font.size = { m_w,m_h };
         m_font.lblAlign = NVG_ALIGN_BOTTOM_CENTER | NVG_ALIGN_BASELINE;
         m_font.txtAlign = NVG_ALIGN_BOTTOM_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE;
+        m_color = glm::vec4(FR_ORANGE);
         const char* right = "\xE2\x96\xB6"; // >
-        const char* left= "\xE2\x97\x80"; // <
+        const char* left= "\xE2\x97\x80";    // <
 
-        auto bt1 = std::make_shared<Frtk_Button>(m_vg, padding, padding, TAB_BUTTON_SIZE, m_font.fontSize * 2, left, FRTK_UP_BOX);
-        auto bt2 = std::make_shared<Frtk_Button>(m_vg, m_w-padding- TAB_BUTTON_SIZE, padding, TAB_BUTTON_SIZE, m_font.fontSize*2, right, FRTK_UP_BOX);
-        m_navButton.push_back(bt1);
-        m_navButton.push_back(bt2);
+        auto bt1 = std::make_shared<Frtk_Button>(m_vg, padding, padding, TAB_BUTTON_SIZE, TAB_BUTTON_SIZE, left, FRTK_THIN_UP_BOX);
+        auto bt2 = std::make_shared<Frtk_Button>(m_vg, m_w-padding- TAB_BUTTON_SIZE, padding, TAB_BUTTON_SIZE, TAB_BUTTON_SIZE, right, FRTK_THIN_UP_BOX);
+        
+        bt1->parent(this);
+        bt2->parent(this);
+        bt1->getFont().fName = "emoji";
+        bt1->getFont().pos.x = 0;
+        bt1->getFont().pos.y = 0;
+        bt1->getFont().size.w = TAB_BUTTON_SIZE;
+        bt1->getFont().size.h = TAB_BUTTON_SIZE;
+
+        bt2->getFont().fName = "emoji";
+        bt2->getFont().pos.x = 0;
+        bt2->getFont().pos.y = 0;
+        bt2->getFont().size.w = TAB_BUTTON_SIZE;
+        bt2->getFont().size.h = TAB_BUTTON_SIZE;
         addChild(bt1);
         addChild(bt2);
-    }
+        }
     std::shared_ptr<Frtk_Tabwdg> Frtk_Tab::addTab()
     {
         //Important!! : Do not forget that pos is relative- i.e. inside a new group, your tope corner pos is NOT m_x, m_y .. it is (0.0f,0.0f)!!!
@@ -162,23 +181,24 @@ namespace FR {
 
     int Frtk_Tab::handle(int ev)
     {
-        if (Frtk_GrpWidget::handle(ev)) {
+        bool answer = isMouse_inside();
+        FRTK_CORE_INFO("{}", answer);
+        if (Frtk_GrpWidget::handle(ev) == 1)
             return 1;
-        }
         return 0;
     }
 
     void Frtk_Tab::draw()
     {
         draw_box(m_vg, m_boxType, { {m_x,m_y}, {m_w,m_h} }, 0.0f, FRTK_THIN_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
-        Frtk_GrpWidget::draw();
         drawLabel();
+        Frtk_GrpWidget::draw();
     }
 
     void Frtk_Tab::layoutTabs()
     {
-        float headerHeight = m_font.fontSize * 2 + padding;
-        float startX = TAB_BUTTON_SIZE;
+        float headerHeight = TAB_BUTTON_SIZE;
+        float startX = TAB_BUTTON_SIZE+padding;
         float currentX = startX;
         for (auto& child : m_children)
         {
@@ -191,9 +211,13 @@ namespace FR {
             const float maxWidth = m_w;
             float textWidth = bounds[2] - bounds[0];
             float width = std::clamp(textWidth, minWidth, maxWidth - padding);
-            tab->setHeaderDim(currentX, 0, width, headerHeight);
-            tab->setBodyDim(0, headerHeight, m_w, m_h - headerHeight);
-            currentX += width;
+            tab->setHeaderDim(currentX,padding, width, padding+headerHeight);
+            tab->setBodyDim(0, padding+ headerHeight, m_w, m_h - headerHeight);
+            tab->getFont().pos.x = currentX;
+            tab->getFont().pos.y = padding;
+            tab->getFont().size.w = width;
+            tab->getFont().size.h = headerHeight;
+            currentX += width+padding;
         }
      }
 }

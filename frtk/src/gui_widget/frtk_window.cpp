@@ -120,6 +120,17 @@ namespace FR {
     {
         return m_h;
     }
+
+    float Frtk_Window::absX() const{
+        return 0.0f;
+    }
+    float Frtk_Window::absY() const {
+        if (m_hasHeader) {
+            return m_WindowsStyle.height;
+        }
+        return 0.0f;
+    }
+
     void Frtk_Window::draw() {
         if (!m_visible)
             return;
@@ -131,7 +142,6 @@ namespace FR {
         if (!m_label.empty())
             drawLabel();
         draw_focus();
-        m_guiWindow->draw_children();
     }
 
     void Frtk_Window::draw_header()
@@ -297,6 +307,7 @@ namespace FR {
                 m_mainWindow->activateNavi();
             m_guiWindow->handle(events); /* we don't care about the results, 
                                             forward all events to container widget */
+
         }
         return result;
     }

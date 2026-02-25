@@ -77,7 +77,7 @@ namespace FR {
     }
     void Frtk_GrpWidget::draw_children() {
         nvgSave(m_vg);                // save current transform and state
-        nvgTranslate(m_vg, x(), m_y);  // shift drawing origin to parent
+        nvgTranslate(m_vg, m_x, m_y);  // shift drawing origin to parent
         for (auto wdg : m_children) {
             if (wdg->visible()) {
                 wdg->draw();
@@ -393,12 +393,9 @@ namespace FR {
                 if (wdg->active() && wdg->visible()) {
                     if (wdg->isMouse_inside()) {
                         result = wdg->handle(ev);
-                        //if (ev == FR_LEFT_PUSH) {
-                        //    ;//   result |= wdg->take_focus();
-                        //}
-                        ////if (result == 1) {
-                        ////    return result; // Event is consumed
-                        ////}
+                        //TODO CHECK ME IF THIS IS CORRECT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        if (result == 1)
+                            break;
                     }
                 }
             }

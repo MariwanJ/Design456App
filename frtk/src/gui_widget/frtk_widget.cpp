@@ -76,12 +76,13 @@ namespace FR {
     }
 
     float Frtk_Widget::absX() const {
-        return m_parent ? m_parent->absX() + m_x : m_x;
+        float result = m_parent ? m_parent->absX() + m_x : m_x;
+        return result;
     }
 
     float Frtk_Widget::absY() const {
-        if (!m_parent) return m_y;           // just own position
-        return m_parent->absY() + m_y;       // sum with parent
+        float result= m_parent ? m_parent->absY() + m_y : m_y;
+        return result;
     }
 
     void Frtk_Widget::parent(Frtk_Widget* parent) {
@@ -505,7 +506,8 @@ namespace FR {
         m_callback = std::move(cb);
     }
     void Frtk_Widget::parent_changed(){
-
+        if (m_parent)
+            m_linkTofrtkWindow = m_parent->m_linkTofrtkWindow;
     }
 
     //callback processing
@@ -528,4 +530,12 @@ namespace FR {
         throw NotImplementedException();
         // default: do nothing
     }
+    font_t& Frtk_Widget::getFont() { 
+        return m_font; 
+    }
+    const font_t& Frtk_Widget::getFont() const { 
+        return m_font; 
+    }
+
+
 }

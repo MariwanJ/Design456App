@@ -86,6 +86,10 @@ namespace FR{
         virtual float y() const override;
         virtual float w() const override;
         virtual float h() const override;
+        // we must override it as we have header part & 
+        // real windows part which is the group
+        virtual float absX() const override;
+        virtual float absY() const override;
 
     protected:
         static Frtk_Window* m_MainFrtkInstance;
