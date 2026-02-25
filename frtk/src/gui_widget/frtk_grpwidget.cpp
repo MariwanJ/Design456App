@@ -394,12 +394,12 @@ namespace FR {
                 if (wdg->active() && wdg->visible()) {
                     if (wdg->isMouse_inside()) {
                         FRTK_CORE_INFO("mouse inside {}", wdg->label());
-                        if (wdg->m_wdgType == FRTK_GROUP)
+                        //if (wdg->m_wdgType == FRTK_GROUP)
                             //FR_DEBUG_BREAK;
                         result = wdg->handle(ev);
                         //TODO CHECK ME IF THIS IS CORRECT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         if (result == 1)
-                            break;
+                             break;
                     }
                 }
             }

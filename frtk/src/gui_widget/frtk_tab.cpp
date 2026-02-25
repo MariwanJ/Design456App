@@ -49,9 +49,9 @@ namespace FR {
         m_color = glm::vec4(FR_LIGHTGREY);
         m_bkg_color = glm::vec4(FR_DARKGREY1);
         init_headwidth();
-        m_body = std::make_shared<Frtk_GrpWidget>(m_vg, 0, m_font.fontSize * HEIGHT_FACTOR, W,  - m_font.fontSize * HEIGHT_FACTOR,"",FRTK_FLAT_BOX);
-        addChild(m_body);
-        FRTK_CORE_APP_ASSERT(m_body, "obj allocation error!");
+       // m_body = std::make_shared<Frtk_GrpWidget>(m_vg, 0, m_font.fontSize * HEIGHT_FACTOR, W,  m_font.fontSize * HEIGHT_FACTOR,"",FRTK_NO_BOX);
+       // addChild(m_body);
+        //FRTK_CORE_APP_ASSERT(m_body, "obj allocation error!");
     }
     void Frtk_Tabwdg::setHeaderDim(float X, float Y, float W, float H)
     {
@@ -66,12 +66,13 @@ namespace FR {
         m_bodyDim.pos.y = Y;
         m_bodyDim.size.w = W;
         m_bodyDim.size.h = H;
-        m_body->resize(X, Y, H, W);
+        //m_body->resize(X, Y, H, W);
     }
-    void Frtk_Tabwdg::addChild(std::shared_ptr<Frtk_Widget> wdg) {
-        if (wdg) {
-            m_body->addChild(wdg);
-        }
+    void Frtk_Tabwdg::addToTab(std::shared_ptr<Frtk_Widget> wdg) {
+      //  if (wdg) {
+            /*m_body->*/addChild(wdg);
+        //}
+      
     }
 
     Dim_float_t Frtk_Tabwdg::getHeadDim()
@@ -82,35 +83,31 @@ namespace FR {
     {
         return m_bodyDim;
     }
-    int Frtk_Tabwdg::handle(int ev)
-    {
-        return Frtk_GrpWidget::handle(ev);
-    }
     void Frtk_Tabwdg::draw()
     {
         if (m_has_focus)
-            draw_box(m_vg, m_boxType, m_headDim, 0.0f, FRTK_EXTRA_THIN_BORDER, nvgRGBAf(FR_BLUE), glmToNVG(m_bkg_color), true);
+            draw_box(m_vg, m_boxType, m_headDim, 0.0f, FRTK_EXTRA_THIN_BORDER, glmToNVG(m_bkg_color), glmToNVG(m_color), true);
         else
             draw_box(m_vg, m_boxType, m_headDim, 0.0f, FRTK_EXTRA_THIN_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
-        m_body->redraw();
-        m_body->draw_children();
+        draw_box(m_vg, BOX_TYPE(m_boxType+1), {0,m_headDim.pos.y+ m_headDim.size.h, m_w,2.0f }, 0.0f, FRTK_EXTRA_THIN_BORDER, nvgRGBAf(FR_BLUE), glmToNVG(m_bkg_color), false);
         draw_focus();
         drawLabel();
+       // Frtk_GrpWidget::draw();
     }
 
     void Frtk_Tabwdg::draw_focus()
     {
         if (m_has_focus)
-            draw_box(m_vg, FRTK_THIN_UP_FRAME, m_headDim, 0.2f, FRTK_EXTRA_THIN_BORDER, nvgRGBAf(FR_CYAN), glmToNVG(m_bkg_color), true);
+            draw_box(m_vg, FRTK_THIN_UP_FRAME, m_headDim, 0.2f, FRTK_EXTRA_THIN_BORDER, nvgRGBAf(FR_LIGHTBLUE), glmToNVG(m_bkg_color), true);
 
     }
     void Frtk_Tabwdg::draw_focus(BOX_TYPE t, float X, float Y, float W, float H)
     {
-        draw_box(m_vg, t, { { X,Y }, { W,H } }, 0.2f, FRTK_THIN_BORDER, nvgRGBAf(FR_BEIGE), glmToNVG(m_bkg_color), true);
+        draw_box(m_vg, t, { { X,Y }, { W,H } }, 0.2f, FRTK_THIN_BORDER, nvgRGBAf(FR_LIGHTBLUE), glmToNVG(m_bkg_color), true);
     }
     void Frtk_Tabwdg::draw_focus(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 bkg)
     {
-        draw_box(m_vg, t, { { X,Y }, { W,H } }, 0.2f, FRTK_THIN_BORDER, nvgRGBAf(FR_BEIGE), glmToNVG(bkg), true);
+        draw_box(m_vg, t, { { X,Y }, { W,H } }, 0.2f, FRTK_THIN_BORDER, nvgRGBAf(FR_LIGHTBLUE), glmToNVG(bkg), true);
     }
 
     void Frtk_Tabwdg::drawLabel()
@@ -143,7 +140,6 @@ namespace FR {
         m_font.size = { m_w,m_h };
         m_font.lblAlign = NVG_ALIGN_BOTTOM_CENTER | NVG_ALIGN_BASELINE;
         m_font.txtAlign = NVG_ALIGN_BOTTOM_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE;
-        m_color = glm::vec4(FR_ORANGE);
         const char* right = "\xE2\x96\xB6"; // >
         const char* left= "\xE2\x97\x80";    // <
 
@@ -165,16 +161,15 @@ namespace FR {
         bt2->getFont().size.h = TAB_BUTTON_SIZE;
         addChild(bt1);
         addChild(bt2);
-
-        //FRTK_CORE_INFO("{} {}" ,bt1->absX(), bt1->absY());
-        //FRTK_CORE_INFO("{} {}", bt2->absX(), bt2->absY());
-        //FRTK_CORE_INFO("{} {}", absX(), absY());
         }
     std::shared_ptr<Frtk_Tabwdg> Frtk_Tab::addTab()
     {
         //Important!! : Do not forget that pos is relative- i.e. inside a new group, your tope corner pos is NOT m_x, m_y .. it is (0.0f,0.0f)!!!
         std::shared_ptr<Frtk_Tabwdg> tmpChild = std::make_shared<Frtk_Tabwdg>(m_vg, m_w, m_h);
         addChild(tmpChild);
+        if (getChildren().size() >= 3) {
+            getChildren().at(2)->focus(true);
+        }
         return tmpChild;
     }
 
@@ -185,18 +180,6 @@ namespace FR {
         if (Frtk_GrpWidget::handle(ev) == 1)
             return 1;
         return 0;
-    }
-
-    void Frtk_Tab::draw()
-    {
-        draw_box(m_vg, m_boxType, { {m_x,m_y}, {m_w,m_h} }, 0.0f, FRTK_THIN_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
-        drawLabel();
-        Frtk_GrpWidget::draw();
-        //FRTK_CORE_INFO("-----------------");
-        //FRTK_CORE_INFO("{} {}", m_children.at(0)->absX(), m_children.at(0)->absY());
-        //FRTK_CORE_INFO("{} {}", m_children.at(1)->absX(), m_children.at(1)->absY());
-        //FRTK_CORE_INFO("{} {}", absX(), absY());
-        //FRTK_CORE_INFO("-----------------");
     }
 
     void Frtk_Tab::layoutTabs()

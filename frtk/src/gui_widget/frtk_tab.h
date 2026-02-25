@@ -44,11 +44,11 @@ namespace FR {
         void setBodyDim (float X, float Y, float W, float H);
         Dim_float_t getHeadDim();
         Dim_float_t getBodyDim();
-        virtual void addChild(std::shared_ptr<Frtk_Widget> wdg);
+        virtual void addToTab(std::shared_ptr<Frtk_Widget> wdg);
 
     protected:
 
-        virtual int handle(int ev) override;
+       // virtual int handle(int ev) override;
         virtual void draw() override;
         virtual void drawLabel() override;
         virtual void draw_focus() override;
@@ -72,7 +72,7 @@ namespace FR {
     protected:
         virtual int handle(int ev) override;
 
-        virtual void draw() override;
+        //virtual void draw() override;
         std::vector<std::shared_ptr<Frtk_Tabwdg>> m_tabChildren;
         std::vector<std::shared_ptr<Frtk_Button>> m_navButton;
 
