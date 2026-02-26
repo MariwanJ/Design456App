@@ -80,32 +80,11 @@ namespace FR {
 #define glCheckFunc(x) x
 #endif
 
-// Cross-platform API export macros
-#if defined(FR_BUILD_STATIC)
-#define FRTK_API
-
-// Windows
-#elif defined(_WIN32) || defined(__CYGWIN__)
-#if defined(FR_BUILD_DLL)
-#define FRTK_API __declspec(dllexport)
-#else
-#define FRTK_API __declspec(dllimport)
-#endif
-
-// GCC / Clang (Linux, macOS, etc.)
-#elif defined(__GNUC__) || defined(__clang__)
-#define FRTK_API __attribute__((visibility("default")))
-
-// Fallback
-#else
-#define FRTK_API
-#endif
-
 #define setBIT(x) (1 << x)
 #define clearBIT(x) (0 << x)
 #define APPLY_OPACITY(c, alpha) ((c.a *= (alpha), c.a = (c.a < 0.0f ? 0.0f : (c.a > 1.0f ? 1.0f : c.a)), c.r), (c.g), (c.b), (c.a))
 
-    class NotImplementedException : public std::logic_error
+    class FRTK_API NotImplementedException : public std::logic_error
     {
     public:
         NotImplementedException() : std::logic_error{ "not implemented." } {}

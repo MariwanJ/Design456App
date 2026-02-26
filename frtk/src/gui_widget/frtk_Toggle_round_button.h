@@ -31,7 +31,7 @@
 #include <gui_widget/frtk_button.h> 
 
 namespace FR {
-	FRTK_API class Frtk_Toggle_Round_Button : public Frtk_Button
+	class FRTK_API  Frtk_Toggle_Round_Button : public Frtk_Button
 	{
 	public:
 		Frtk_Toggle_Round_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b = FRTK_UP_BOX);

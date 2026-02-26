@@ -30,7 +30,7 @@
 
 #include <gui_widget/frtk_input_base.h>
 namespace FR {
-    FRTK_API class  Frtk_Input : public Frtk_Input_Base
+    class FRTK_API   Frtk_Input : public Frtk_Input_Base
     {
         Frtk_Input(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b = FRTK_DOWN_BOX);
     };

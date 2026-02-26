@@ -245,14 +245,6 @@ namespace FR {
     BOX_TYPE Frtk_Widget::boxtype() const {
         return m_boxType;
     }
-
-    void Frtk_Widget::hide() {
-        m_visible = false;
-    }
-    bool Frtk_Widget::visible() const {
-        return m_visible;
-    }
-
     void Frtk_Widget::color(uint8_t R, uint8_t G, uint8_t B, uint8_t A) {
         m_color = glm::vec4(float(R) / 255.0f, float(G) / 255.0f, float(B) / 255.0f, float(A) / 255.0f);
         m_color_diabled = disabled_color();
@@ -537,5 +529,15 @@ namespace FR {
         return m_font; 
     }
 
+    bool Frtk_Widget::visible() const {
+        return m_visible;
+    }
 
+    void Frtk_Widget::hide(void) {
+        m_visible = false;
+        m_has_focus = false;
+    }
+    void Frtk_Widget::show(void) {
+        m_visible = true;
+    }
 }

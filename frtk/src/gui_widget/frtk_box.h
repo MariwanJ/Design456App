@@ -36,7 +36,7 @@ namespace FR {
     // Only Image alignment - text is aligned using font struct.
    
 
-    FRTK_API class Frtk_Box : public Frtk_Widget
+    class FRTK_API  Frtk_Box : public Frtk_Widget
     {
     public:
         Frtk_Box(NVGcontext* vg, float x , float y , float w , float h , std::string l , BOX_TYPE = FRTK_UP_BOX);

@@ -29,9 +29,10 @@
 #define FR_LOG_H
 
 //#define SPDLOG_WCHAR_TO_UTF8_SUPPORT
+#define FMT_HEADER_ONLY
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
+//#include <spdlog/sinks/stdout_color_sinks.h>
 #include <frtk.h>
 namespace FR {
 #ifdef _WIN32
@@ -40,7 +41,7 @@ namespace FR {
     static WinUtf8Console _utf8fix; // set UTF-8 at startup
 #endif
 
-    class Fr_Log
+    class  Fr_Log
     {
     public:
         static void Init();
@@ -61,8 +62,8 @@ namespace FR {
 
 // Application
 #define APP_APP_TRACE(...)       Fr_Log::GetAPPLogger()->trace(   u8"📜 " __VA_ARGS__)
-#define APP_APP_INFO(...)       Fr_Log::GetAPPLogger()->info(     u8"ℹ️ " __VA_ARGS__)
-#define APP_APP_WARN(...)       Fr_Log::GetAPPLogger()->warn(     u8"⚠️ " __VA_ARGS__)
+#define APP_APP_INFO(...)        Fr_Log::GetAPPLogger()->info(    u8"ℹ️ " __VA_ARGS__)
+#define APP_APP_WARN(...)        Fr_Log::GetAPPLogger()->warn(    u8"⚠️ " __VA_ARGS__)
 #define APP_APP_ERROR(...)       Fr_Log::GetAPPLogger()->error(   u8"❌ " __VA_ARGS__)
 #define APP_APP_FATAL(...)       Fr_Log::GetAPPLogger()->critical(u8"🔥 " __VA_ARGS__)
 }

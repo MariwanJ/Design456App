@@ -31,7 +31,7 @@
  
 
 namespace FR {
-    FRTK_API class Frtk_Int_Input : public Frtk_Input_Base {
+    class FRTK_API  Frtk_Int_Input : public Frtk_Input_Base {
     public:
         Frtk_Int_Input(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b);
     protected:

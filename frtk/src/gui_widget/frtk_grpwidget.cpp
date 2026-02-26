@@ -54,9 +54,8 @@ namespace FR {
         return 0;
     }
 
-
-    Frtk_GrpWidget::Frtk_GrpWidget(NVGcontext* vg, float X, float Y, float W, float H, std::string label, BOX_TYPE b) :
-        Frtk_Widget(X, Y, W, H, label, b), m_childFocus(NULL), m_grabbedChild(NULL) {
+    Frtk_GrpWidget::Frtk_GrpWidget(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b) :
+        Frtk_Widget(X, Y, W, H, lbl, b), m_childFocus(NULL), m_grabbedChild(NULL) {
         m_vg = vg;
         m_wdgType = FRTK_GROUP;
         m_font.pos.x = m_x;
@@ -78,7 +77,8 @@ namespace FR {
     void Frtk_GrpWidget::draw_children() {
         nvgSave(m_vg);                // save current transform and state
         nvgTranslate(m_vg, m_x, m_y);  // shift drawing origin to parent
-        for (auto wdg : m_children) {
+        for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
+            auto& wdg = *it;
             if (wdg->visible()) {
                 wdg->draw();
             }
@@ -141,7 +141,7 @@ namespace FR {
     }
 
     int Frtk_GrpWidget::remove_child_at(size_t index) {
-        if (index > m_children.size()) 
+        if (index > m_children.size())
             return -1;
         m_children.erase(m_children.begin() + index);
         return 0;
@@ -218,7 +218,7 @@ namespace FR {
             Frtk_Widget* candidate = m_children[currentIndex].get();
 
             // If candidate is a group, recursively navigate inside it
-            if (candidate->m_wdgType== FRTK_GROUP) {
+            if (candidate->m_wdgType == FRTK_GROUP) {
                 Frtk_GrpWidget* group = static_cast<Frtk_GrpWidget*>(candidate);
                 Frtk_Widget* nested = group->first_focusable_widget();
                 if (nested && nested->take_focus()) {
@@ -273,7 +273,7 @@ namespace FR {
 
     Frtk_Window* Frtk_GrpWidget::getParentWindow() {
         auto parent = m_parent;
-        if (parent!=nullptr){
+        if (parent != nullptr) {
             while (parent->parent())
                 parent = parent->parent();
             return (Frtk_Window*)parent;
@@ -340,78 +340,86 @@ namespace FR {
             if (navigate_focus(navkey()))
                 return 1;
             return 0;
-            }
+        }
         }
 
-        //Mouse 
-           if (!(m_active && m_visible))
-                return 0;              //inactive widget - we don't care
-            switch (ev) {
-            case FR_ENTER:
-            case FR_MOUSE_MOVE:
-            {
-                if (m_grabbedChild) {
-                    return m_grabbedChild->handle(ev);
-                }
-                Frtk_Widget* hovered = nullptr;
-                for (auto& wdg : m_children) {
-                    if (!wdg->visible() || !wdg->active())
-                        continue;
-
-                    if (wdg->isMouse_inside()) {
-                        hovered = wdg.get();
-                        break;      // top-most hit wins
-                    }
-                }
-
-                for (auto& wdg : m_children) {
-                    if (!wdg->visible())
-                        continue;
-
-                    if (wdg.get() == hovered) {
-                        if (!wdg->hasBelowMouse()) {
-                            wdg->set_BelowMouse();
-                            if (wdg->handle(FR_ENTER) == 1)
-                                return 1;
-                        }
-                    }
-                    else {
-                        if (wdg->hasBelowMouse()) {
-                            wdg->clear_BelowMouse();
-                            if (wdg->handle(FR_LEAVE) == 1) {
-                                return 1;
-                            }
-                        }
-                    }
-                }
-             
-            }break;
+        //Mouse
+        if (!(m_active && m_visible))
+            return 0;              //inactive widget - we don't care
+        switch (ev) {
+        case FR_ENTER:
+        case FR_MOUSE_MOVE:
+        {
+            if (m_grabbedChild) {
+                return m_grabbedChild->handle(ev);
             }
-            int result=0;
-            for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
-                auto& wdg = *it;
-                //We should not allow sending events to inactive widget
-                if (wdg->active() && wdg->visible()) {
-                    if (wdg->isMouse_inside()) {
-                        FRTK_CORE_INFO("mouse inside {}", wdg->label());
-                        //if (wdg->m_wdgType == FRTK_GROUP)
-                            //FR_DEBUG_BREAK;
-                        result = wdg->handle(ev);
-                        //TODO CHECK ME IF THIS IS CORRECT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        if (result == 1)
-                             break;
+            Frtk_Widget* hovered = nullptr;
+            for (auto& wdg : m_children) {
+                if (!wdg->visible() || !wdg->active())
+                    continue;
+
+                if (wdg->isMouse_inside()) {
+                    hovered = wdg.get();
+                    break;      // top-most hit wins
+                }
+            }
+
+            for (auto& wdg : m_children) {
+                if (!wdg->visible())
+                    continue;
+
+                if (wdg.get() == hovered) {
+                    if (!wdg->hasBelowMouse()) {
+                        wdg->set_BelowMouse();
+                        if (wdg->handle(FR_ENTER) == 1)
+                            return 1;
+                    }
+                }
+                else {
+                    if (wdg->hasBelowMouse()) {
+                        wdg->clear_BelowMouse();
+                        if (wdg->handle(FR_LEAVE) == 1) {
+                            return 1;
+                        }
                     }
                 }
             }
-            return result;
-        }  
-        bool Frtk_GrpWidget::take_focus() {
-            m_has_focus = true;
-            Frtk_Widget* first = first_focusable_widget();
-            if (!first) return false;
-
-            return first->take_focus();
+        }break;
         }
-    
+        int result = 0;
+        for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
+            auto& wdg = *it;
+            //We should not allow sending events to inactive widget
+            if (wdg->active() && wdg->visible()) {
+                if (wdg->isMouse_inside()) {
+                    result = wdg->handle(ev);
+                    //TODO CHECK ME IF THIS IS CORRECT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    if (result == 1)
+                        break;
+                }
+            }
+        }
+        return result;
+    }
+    bool Frtk_GrpWidget::take_focus() {
+        m_has_focus = true;
+        Frtk_Widget* first = first_focusable_widget();
+        if (!first) return false;
 
+        return first->take_focus();
+    }
+
+    void Frtk_GrpWidget::hide()
+    {
+        m_has_focus = false;
+        for (auto wdg : m_children)
+            wdg->hide();
+    }
+
+    void Frtk_GrpWidget::show()
+    {
+        m_has_focus = true;
+        for (auto wdg : m_children)
+            wdg->show();
+    }
 }

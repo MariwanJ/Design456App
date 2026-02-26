@@ -75,7 +75,7 @@ namespace FR{
         virtual bool set_child_focus(Frtk_Widget* w=nullptr);
         virtual  bool take_focus() override; 
         virtual void lose_focus() override;
-        FontData_t getFontData()  const;
+        const FontData_t &getFontData();
 
         virtual void x(float v) override;
         virtual void y(float v) override;

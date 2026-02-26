@@ -25,18 +25,31 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef FRTK_ROUND_BUTTON_H
-#define FRTK_ROUND_BUTTON_H
-
-#include <gui_widget/frtk_button.h> 
+#ifndef FRTK_SCROLL_H
+#define FRTK_SCROLL_H
+#include <gui_widget/frtk_grpwidget.h>
 
 namespace FR {
-	class FRTK_API  Frtk_Round_Button : public Frtk_Button
-	{
-	public:
-		 Frtk_Round_Button(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b = FRTK_UP_BOX);
-	protected:
-		virtual void draw();
-	};
+    class FRTK_API Frtk_Scroll : public Frtk_GrpWidget {
+    public:
+        Frtk_Scroll(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl = "Tab", BOX_TYPE b = FRTK_DOWN_BOX);
+
+    protected:
+        virtual int handle(int ev) override;
+        virtual void draw() override;
+        virtual void draw_scroll(); 
+        dimSize_float_t getTotalViewPortDim() const;
+
+        Dim_float_t m_viewPort;             //(x,y,w,h)
+
+        dimPos_float_t m_scrolloffset;      //(x,y)
+        dimSize_float_t m_scrollSize;        //(w,h)
+
+        dimSize_float_t m_scrollWidHeit;  
+
+        bool m_Vscroll_visible;
+        bool m_Hscroll_visible;
+    };
 }
-#endif // FRTK_RETURN_BUTTON_H
+
+#endif //FRTK_SCROLL_H

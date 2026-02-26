@@ -34,7 +34,7 @@
 class Frtk_Window;
 
 namespace FR {
-    FRTK_API class Frtk_GrpWidget : public Frtk_Widget {
+    class FRTK_API  Frtk_GrpWidget : public Frtk_Widget {
         friend Frtk_Window;
     public:
         Frtk_GrpWidget(NVGcontext* vg, float X , float Y , float W , float H , std::string label = "", BOX_TYPE b = FRTK_NO_BOX);
@@ -67,7 +67,8 @@ namespace FR {
         Frtk_Widget* focusedChild();
         virtual bool set_child_focus(Frtk_Widget* w=nullptr) override;
         virtual bool take_focus() override;
-    
+        virtual void hide() override;
+        virtual void show() override;
     protected:
         virtual void parent_changed() override;
         Frtk_Window* getParentWindow();

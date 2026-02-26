@@ -25,8 +25,8 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef FRTK_TAB_H
-#define FRTK_TAB_H
+#ifndef FRTK_TABS_H
+#define FRTK_TABS_H
 #include <gui_widget/frtk_button.h>
 #include <gui_widget/frtk_grpwidget.h>
 #include <gui_widget/frtk_box.h>
@@ -36,19 +36,21 @@ namespace FR {
 #define padding         2.f
 #define HEIGHT_FACTOR   1.3f
 
-
-    FRTK_API class Frtk_Tabwdg : public Frtk_GrpWidget {
+    class FRTK_API  Frtk_Tabwdg : public Frtk_GrpWidget {
     public:
-        Frtk_Tabwdg(NVGcontext* vg, float w, float h, std::string l = "Tabwdg", BOX_TYPE b = FRTK_THIN_UP_BOX);
+        Frtk_Tabwdg(NVGcontext* vg, float w, float h, std::string l = "Tabwdg", BOX_TYPE b = FRTK_UP_BOX);
         void setHeaderDim(float X, float Y, float W, float H);
-        void setBodyDim (float X, float Y, float W, float H);
+        void setBodyDim(float X, float Y, float W, float H);
         Dim_float_t getHeadDim();
         Dim_float_t getBodyDim();
-        virtual void addToTab(std::shared_ptr<Frtk_Widget> wdg);
+        virtual void addChildToTab(std::shared_ptr<Frtk_Widget> wdg);
+        virtual void show() override;
+        virtual void hide() override;
+        virtual void hide_children();
+        virtual void show_children();
+        virtual bool isTabClicked();
 
     protected:
-
-       // virtual int handle(int ev) override;
         virtual void draw() override;
         virtual void drawLabel() override;
         virtual void draw_focus() override;
@@ -56,28 +58,37 @@ namespace FR {
         virtual void draw_focus(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 bkg) override;
         std::shared_ptr<Frtk_GrpWidget> m_body;
         void init_headwidth();
+
     private:
+        //make it private, disallow outer-world see this
+        void addChild(std::shared_ptr<Frtk_Widget> wdg) override;
         float m_headSapce;
         float m_headWidth;
         Dim_float_t m_headDim;
         Dim_float_t m_bodyDim;
     };
 
-    FRTK_API class Frtk_Tab : public Frtk_GrpWidget {
+    //----------------------------------------------------------------------------------------------------------------------------------------
+
+    /*                      Container widget                                          */
+    class FRTK_API  Frtk_Tabs : public Frtk_GrpWidget {
+        friend Frtk_Tabwdg;
     public:
-        Frtk_Tab(NVGcontext* vg, float x, float y, float w, float h, std::string l = "Tab", BOX_TYPE b = FRTK_DOWN_BOX);
+        Frtk_Tabs(NVGcontext* vg, float x, float y, float w, float h, std::string l = "Tab", BOX_TYPE b = FRTK_DOWN_BOX);
         virtual std::shared_ptr < Frtk_Tabwdg> addTab();
         void layoutTabs();
+        virtual void show() override;
+        virtual void hide() override;
+        size_t activeTabIndex();
+        void activeTab(size_t ind);
+        int findIndex(Frtk_Tabwdg* w);
 
     protected:
+        virtual void draw() override;
         virtual int handle(int ev) override;
-
-        //virtual void draw() override;
-        std::vector<std::shared_ptr<Frtk_Tabwdg>> m_tabChildren;
-        std::vector<std::shared_ptr<Frtk_Button>> m_navButton;
-
     private:
-        
+        size_t m_currentActiveTab;
     };
+    static void tabButtonPressed_callback(uint8_t index, Frtk_Widget* w);
 }
-#endif //FRTK_TAB_H
+#endif //FRTK_TABS_H

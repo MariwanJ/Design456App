@@ -34,7 +34,7 @@
 namespace FR {
 
    
-    FRTK_API class Frtk_Button : public Frtk_Box
+    class FRTK_API  Frtk_Button : public Frtk_Box
     {
     public:
         Frtk_Button(NVGcontext*vg, float x , float y , float w , float h , std::string l="Button", BOX_TYPE b = FRTK_UP_BOX);

@@ -84,7 +84,7 @@
 
 // Logging / Instrumentation
 #include <fr_constants.h>
-#include <Fr_Log.h>
+#include <fr_log.h>
 
 #define SPDLOG_WCHAR_TO_UTF8_SUPPORT
 #define SPDLOG_FMT_EXTERNAL
@@ -367,6 +367,8 @@ namespace FR {
 
         FRTK_VSCROLL,
         FRTK_HSCROLL,
+        FRTK_TABWDG,
+        FRTK_TABS,
         FRTK_IMAGE,
         FRTK_TOOLBAR,           //No separate FRTK windows will be created
         FRTK_TOOLBARWIN,        //Separate FRTK Window is created

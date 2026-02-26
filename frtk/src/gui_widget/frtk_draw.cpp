@@ -667,7 +667,7 @@ namespace FR {
 
 
 
-void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt, bool isLabel, FontData_t& fnttData , const char* secrete)
+void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt, bool isLabel, const FontData_t& fnttData , const char* secrete)
 {
     nvgFontSize(vg, fnt.fontSize);
     nvgFontFace(vg, fnt.fName.c_str());

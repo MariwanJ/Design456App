@@ -90,8 +90,8 @@ namespace FR {
         if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
             spWindow->Exit();
 
-        Fr_Window* pwin = spWindow.get();    
-        auto& ek = pwin->m_sysEvents.keyB;  
+        Fr_Window* pwin = spWindow.get();
+        auto& ek = pwin->m_sysEvents.keyB;
         ek.lastKey = key;
         ek.scancode = scancode;
         ek.lastKAction = action;
@@ -119,15 +119,15 @@ namespace FR {
         if (spWindow == nullptr)
             return; //do nothing
         (void)window;
-        Fr_Window* pwin = spWindow.get();    
+        Fr_Window* pwin = spWindow.get();
         auto& em = pwin->m_sysEvents.mouse;
 
         //Avoid View jumping , we should initialize the current theta and phi
         if (spWindow->runCode && button == GLFW_MOUSE_BUTTON_MIDDLE) {
             spWindow->runCode = false;
             Fr_Camera& cam = spWindow->activeScene->getActiveCamera();
-            spWindow->theta = glm::degrees(atan2(cam.GetCamPosition().x, cam.GetCamPosition().y));
-            spWindow->phi = glm::degrees(asin(cam.GetCamPosition().z / glm::length(cam.GetCamPosition())));
+            spWindow->theta_ = glm::degrees(atan2(cam.GetCamPosition().x, cam.GetCamPosition().y));
+            spWindow->phi_ = glm::degrees(asin(cam.GetCamPosition().z / glm::length(cam.GetCamPosition())));
         }
         else if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_RELEASE) {
             spWindow->runCode = true;
@@ -219,13 +219,13 @@ namespace FR {
         float deltax = float(mouse.activeX - mouse.prevX) * pwin->mouseDefaults.MouseXYScale;
         float deltay = float(mouse.activeY - mouse.prevY) * pwin->mouseDefaults.MouseXYScale;
 
-        pwin->theta += deltax;
-        pwin->phi -= deltay;
+        pwin->theta_ += deltax;
+        pwin->phi_ -= deltay;
 
-        pwin->phi = std::clamp(pwin->phi, -89.99f, 89.99f);
+        pwin->phi_ = std::clamp(pwin->phi_, -89.99f, 89.99f);
 
-        float radTheta = glm::radians(pwin->theta);
-        float radPhi = glm::radians(pwin->phi);
+        float radTheta = glm::radians(pwin->theta_);
+        float radPhi = glm::radians(pwin->phi_);
 
         float x = pwin->radiusXYZ * cos(radPhi) * sin(radTheta);
         float y = pwin->radiusXYZ * cos(radPhi) * cos(radTheta);
@@ -261,8 +261,6 @@ namespace FR {
         }
         pwin->activeScene->getActiveCamera().setCamData(data);
     }
-
-
 
     /**  callbacks */
     void Fr_Window::mnuFileNew_cb(void* Data) {

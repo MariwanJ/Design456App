@@ -355,7 +355,7 @@ namespace FR {
         }
     }
     
-    FontData_t Frtk_Window::getFontData() const
+    const FontData_t &Frtk_Window::getFontData() 
     {
         return m_data;
     }

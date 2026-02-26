@@ -51,7 +51,7 @@ namespace FR {
     class Frtk_ToolBarWin;
     class Frtk_Radio_ToolbarWin;
 
-    FRTK_API class  Fr_Window {
+    class FRTK_API   Fr_Window {
         friend Frtk_Window;
     public:
         virtual ~Fr_Window();
@@ -313,7 +313,7 @@ namespace FR {
         //will be true if rotate/pan starts.
         static bool MouseOnce;
 
-        static float phi, theta;
+        float phi_, theta_;
 
         //Camera rotation - mouse callback
         float radiusXYZ;

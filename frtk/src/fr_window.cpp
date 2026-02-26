@@ -65,8 +65,8 @@ namespace FR {
     bool Fr_Window::s_GLFWInitialized = false;
     bool Fr_Window::s_GladInitialized = false;
     float Fr_Window::m_MousePickerRadius = 5;        //FreeCAD uses 5 pixels as default
-    float Fr_Window::phi = 0.0f;
-    float Fr_Window::theta = 0.0f;
+   /* float Fr_Window::phi_ = 0.0f;
+    float Fr_Window::theta_ = 0.0f*/;
 
     std::shared_ptr<Fr_Window> Fr_Window::spWindow = nullptr;
 
@@ -79,6 +79,7 @@ namespace FR {
     bool Fr_Window::m_RotateActive = false;
     static void error_callback(int error, const char* description)
     {
+        (void)error;
         fprintf(stderr, "Error: %s\n", description);
     }
     screenDim_t Fr_Window::m_ViewPort{ {50,50}, {800,600 } };
@@ -194,7 +195,7 @@ namespace FR {
         glfwWindowHint(GLFW_DEPTH_BITS, 32);
 
         radiusXYZ = 0.0f;
-        phi = theta = 0.f;
+        phi_ = theta_ = 0.f;
         runCode = true;
         clear_color = ImVec4(FR_WINGS3D);
 

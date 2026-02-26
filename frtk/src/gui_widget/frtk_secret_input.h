@@ -33,7 +33,7 @@
 namespace FR {
 
 #define MASK_CHAR 	 "*"
-    FRTK_API class Frtk_Secret_Input : public Frtk_Input_Base {
+    class FRTK_API  Frtk_Secret_Input : public Frtk_Input_Base {
     public:
         Frtk_Secret_Input(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b);
 

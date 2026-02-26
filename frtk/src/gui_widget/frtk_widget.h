@@ -175,8 +175,9 @@ namespace FR {
         font_t& getFont();
         const font_t& getFont() const;
 
-        void hide();
-        bool visible() const;
+        virtual void hide(void);
+        virtual void show(void);
+        bool visible(void) const;
         bool active(void) const;
         virtual void activate(void);
         virtual void disable(void);

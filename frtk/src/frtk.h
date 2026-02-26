@@ -66,6 +66,8 @@
 
 #include <charconv>//for conversion
 
+#include <frtk_api.h> //FRTK_API
+
  //for ResourcePath
 #if defined(_WIN32)
 //#include <windows.h>
