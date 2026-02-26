@@ -37,6 +37,7 @@ namespace FR {
     protected:
         virtual int handle(int ev) override;
         virtual void draw() override;
+        void draw_scroll_bar();
         virtual void draw_scroll(); 
         dimSize_float_t getTotalViewPortDim() const;
 

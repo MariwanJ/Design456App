@@ -79,6 +79,13 @@ enum NVGsolidity {
 	NVG_HOLE = 2,			// CW
 };
 
+enum NVGlineStyle {
+	NVG_LINE_SOLID = 1,
+	NVG_LINE_DASHED = 2,
+	NVG_LINE_DOTTED = 3,
+	NVG_LINE_GLOW = 4
+};
+
 enum NVGlineCap {
 	NVG_BUTT,
 	NVG_ROUND,
@@ -288,6 +295,9 @@ extern NVG_EXPORT void nvgMiterLimit(NVGcontext* ctx, float limit);
 
 // Sets the stroke width of the stroke style.
 extern NVG_EXPORT void nvgStrokeWidth(NVGcontext* ctx, float size);
+// Sets how line is drawn.
+// Can be one of NVG_LINE_SOLID (default), NVG_LINE_GLOW, NVG_LINE_DASHED, NVG LINE_DOTTED
+extern void nvgLineStyle(NVGcontext* ctx, int lineStyle);
 
 // Sets how the end of the line (cap) is drawn,
 // Can be one of: NVG_BUTT (default), NVG_ROUND, NVG_SQUARE.
@@ -575,9 +585,14 @@ extern NVG_EXPORT void nvgStroke(NVGcontext* ctx);
 // Returns handle to the font.
 extern NVG_EXPORT int nvgCreateFont(NVGcontext* ctx, const char* name, const char* filename);
 
+// fontIndex specifies which font face to load from a .ttf/.ttc file.
+extern NVG_EXPORT int nvgCreateFontAtIndex(NVGcontext* ctx, const char* name, const char* filename, const int fontIndex);
+
 // Creates font by loading it from the specified memory chunk.
 // Returns handle to the font.
 extern NVG_EXPORT int nvgCreateFontMem(NVGcontext* ctx, const char* name, unsigned char* data, int ndata, int freeData);
+// fontIndex specifies which font face to load from a .ttf/.ttc file.
+extern NVG_EXPORT int nvgCreateFontMemAtIndex(NVGcontext* ctx, const char* name, unsigned char* data, int ndata, int freeData, const int fontIndex);
 
 // Finds a loaded font of specified name, and returns handle to it, or -1 if the font is not found.
 extern NVG_EXPORT int nvgFindFont(NVGcontext* ctx, const char* name);
@@ -587,6 +602,11 @@ extern NVG_EXPORT int nvgAddFallbackFontId(NVGcontext* ctx, int baseFont, int fa
 
 // Adds a fallback font by name.
 extern NVG_EXPORT int nvgAddFallbackFont(NVGcontext* ctx, const char* baseFont, const char* fallbackFont);
+// Resets fallback fonts by handle.
+extern NVG_EXPORT void nvgResetFallbackFontsId(NVGcontext* ctx, int baseFont);
+
+// Resets fallback fonts by name.
+extern NVG_EXPORT void nvgResetFallbackFonts(NVGcontext* ctx, const char* baseFont);
 
 // Sets the font size of current text style.
 extern NVG_EXPORT void nvgFontSize(NVGcontext* ctx, float size);
@@ -656,13 +676,14 @@ struct NVGscissor {
 typedef struct NVGscissor NVGscissor;
 
 struct NVGvertex {
-	float x,y,u,v;
+	float x,y,u,v,s,t;
 };
 typedef struct NVGvertex NVGvertex;
 
 struct NVGpath {
 	int first;
 	int count;
+	int reversed;
 	unsigned char closed;
 	int nbevel;
 	NVGvertex* fill;
@@ -686,8 +707,8 @@ struct NVGparams {
 	void (*renderCancel)(void* uptr);
 	void (*renderFlush)(void* uptr);
 	void (*renderFill)(void* uptr, NVGpaint* paint, NVGcompositeOperationState compositeOperation, NVGscissor* scissor, float fringe, const float* bounds, const NVGpath* paths, int npaths);
-	void (*renderStroke)(void* uptr, NVGpaint* paint, NVGcompositeOperationState compositeOperation, NVGscissor* scissor, float fringe, float strokeWidth, const NVGpath* paths, int npaths);
-	void (*renderTriangles)(void* uptr, NVGpaint* paint, NVGcompositeOperationState compositeOperation, NVGscissor* scissor, const NVGvertex* verts, int nverts);
+	void (*renderStroke)(void* uptr, NVGpaint* paint, NVGcompositeOperationState compositeOperation, NVGscissor* scissor, float fringe, float strokeWidth, int lineStyle, const NVGpath* paths, int npaths);
+	void (*renderTriangles)(void* uptr, NVGpaint* paint, NVGcompositeOperationState compositeOperation, NVGscissor* scissor, const NVGvertex* verts, int nverts, float fringe);
 	void (*renderDelete)(void* uptr);
 };
 typedef struct NVGparams NVGparams;

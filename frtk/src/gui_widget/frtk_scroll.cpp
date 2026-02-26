@@ -25,68 +25,50 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-
 #include <gui_widget/frtk_scroll.h>
 #include <gui_widget/frtk_draw.h>
 #include <nanovg.h>
 
-namespace FR{
-
-    Frtk_Scroll::Frtk_Scroll(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl , BOX_TYPE b):
-        Frtk_GrpWidget(vg,X,Y,W,H,lbl,b), m_scrollWidHeit({8.0f,8.0f})
+namespace FR {
+    Frtk_Scroll::Frtk_Scroll(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b) :
+        Frtk_GrpWidget(vg, X, Y, W, H, lbl, b), m_scrollWidHeit({ 8.0f,8.0f })
     {
-        
     }
     void Frtk_Scroll::draw()
     {
         draw_scroll();
+    }
+    void Frtk_Scroll::draw_scroll_bar() {
     }
     void Frtk_Scroll::draw_scroll()
     {
         float t = 1.03000002e-05;
         NVGpaint shadowPaint, imgPaint, fadePaint;
         float u = (1 + cosf(t * 0.5f)) * 0.5f;
-        
+
         if (m_Vscroll_visible) {
-            // shadow of the track
-            shadowPaint = nvgBoxGradient(
-                m_vg,
-                m_x + m_w - 12 + 1,
-                m_y + 4 + 1,
-                8,
-                m_h - 8,
-                3, 4,
-                nvgRGBAf(0, 0, 0, 0.1254f),
-                nvgRGBAf(0, 0, 0, 0.3607f)
-            );
+            // Hide fades
+            fadePaint = nvgLinearGradient(m_vg, m_x, m_y, m_x, m_y + 6, nvgRGBAf(0.784f, 0.784f, 0.784f, 1.f), nvgRGBAf(0.784f, 0.784f, 0.784f, 0));
+            nvgBeginPath(m_vg);
+            nvgRect(m_vg, m_x + 4, m_y, m_w - 8, 6);
+            nvgFillPaint(m_vg, fadePaint);
+            nvgFill(m_vg);
+
+            fadePaint = nvgLinearGradient(m_vg, m_x, m_y + m_h, m_x, m_y + m_h - 6, nvgRGBAf(0.784f, 0.784f, 0.784f, 1.f), nvgRGBAf(0.784f, 0.784f, 0.784f, 0));
+            nvgBeginPath(m_vg);
+            nvgRect(m_vg, m_x + 4, m_y + m_h - 6, m_w - 8, 6);
+            nvgFillPaint(m_vg, fadePaint);
+            nvgFill(m_vg);
+
+            // Scroll bar
+            shadowPaint = nvgBoxGradient(m_vg, m_x + m_w - 12 + 1, m_y + 4 + 1, 8, m_h - 8, 3, 4, nvgRGBAf(0, 0, 0, 0.1254f), nvgRGBAf(0, 0, 0, 0.36f));
             nvgBeginPath(m_vg);
             nvgRoundedRect(m_vg, m_x + m_w - 12, m_y + 4, 8, m_h - 8, 3);
             nvgFillPaint(m_vg, shadowPaint);
+            //	nvgFillColor(m_vg, nvgRGBA(255,0,0,128));
             nvgFill(m_vg);
+  
 
-            // movable bar
-            float barY = m_y + 4 + m_scrolloffset.y; // <-- include scroll offset
-            shadowPaint = nvgBoxGradient(
-                m_vg,
-                m_x + m_w - 12 - 1,
-                barY - 1,
-                8,
-                m_scrollSize.h,
-                3, 4,
-                nvgRGBAf(FR_GAINSBORO),
-                nvgRGBAf(FR_GRAY)
-            );
-            nvgBeginPath(m_vg);
-            nvgRoundedRect(
-                m_vg,
-                m_x + m_w - 12 + 1,
-                barY + 1,
-                8 - 2,
-                m_scrollSize.h - 2,
-                2
-            );
-            nvgFillPaint(m_vg, shadowPaint);
-            nvgFill(m_vg);
         }
     }
     dimSize_float_t Frtk_Scroll::getTotalViewPortDim() const {
@@ -102,14 +84,10 @@ namespace FR{
         return result;
     }
 
-
     int Frtk_Scroll::handle(int ev) {
         return 0;
     }
-
 }
-
-
 
 //nvgSave(ctx);
 //
