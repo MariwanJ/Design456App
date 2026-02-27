@@ -682,7 +682,7 @@ namespace FR {
         int IndexOfclosestItem = 0;
         //Here, we should try to send the events to each object in the scene.
         // Depending on where the events occur, object should get them otherwise just ignore them
-        if (em.L_Pressed) {
+        if (em.L_Down) {
             IndexOfclosestItem = findClosestMeshToRay(m_activeRay);
             if (IndexOfclosestItem < 0) {
                 //Ray did not hit anything

@@ -1,4 +1,4 @@
-﻿//
+//
 // This file is a part of the Open Source Design456App
 // MIT License
 //
@@ -32,7 +32,7 @@
 #include <gui_widget/frtk_scroll.h>
 namespace FR {
     std::shared_ptr<Frtk_Window> runTabWidget() {
-        auto window = std::make_shared<Frtk_Window>(500.f, 200.f, 700.f, 700.f, "جونى باشى", FRTK_UP_BOX);
+        auto window = std::make_shared<Frtk_Window>(500.f, 200.f, 700.f, 700.f, "Testing buttons, toolbars", FRTK_UP_BOX);
         auto tab = std::make_shared<Frtk_Tabs>(window->getContext(), 10.0f, 10.0f, 300.0f, 300.0f, "tab", FRTK_UP_BOX);
         auto btn = std::make_shared<Frtk_Button>(window->getContext(), 30.0f, 30.0f, 40.0f, 40.0f, "OK!", FRTK_UP_BOX);
 
@@ -44,7 +44,7 @@ namespace FR {
             newTab->lblAlign(NVG_ALIGN_TOP_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE);
             newTab->addChildToTab(btn);
         }
-        auto sc = std::make_shared<Frtk_Scroll>(window->getContext(), 450.0f, 40.0f, 20.0f, 300.0f, "OK!", FRTK_UP_BOX);
+        auto sc = std::make_shared<Frtk_Scroll>(window->getContext(), 450.0f, 240.0f, 100.0f, 300.0f, "OK!", FRTK_UP_BOX);
         tab->layoutTabs();
         tab->parent(window.get());
         window->addChild(tab);

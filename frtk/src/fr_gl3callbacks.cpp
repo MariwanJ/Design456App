@@ -116,14 +116,11 @@ namespace FR {
     }
     void Fr_Window::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     {
-        if (spWindow == nullptr)
-            return; //do nothing
-        (void)window;
-        Fr_Window* pwin = spWindow.get();
-        auto& em = pwin->m_sysEvents.mouse;
+        if (!spWindow) return;
+        auto& em = spWindow->m_sysEvents.mouse;
 
-        //Avoid View jumping , we should initialize the current theta and phi
-        if (spWindow->runCode && button == GLFW_MOUSE_BUTTON_MIDDLE) {
+        // Special middle-button camera logic
+        if (spWindow->runCode && button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS) {
             spWindow->runCode = false;
             Fr_Camera& cam = spWindow->activeScene->getActiveCamera();
             spWindow->theta_ = glm::degrees(atan2(cam.GetCamPosition().x, cam.GetCamPosition().y));
@@ -133,13 +130,83 @@ namespace FR {
             spWindow->runCode = true;
         }
 
-        if (button == GLFW_MOUSE_BUTTON_LEFT)             em.L_Down = (action != GLFW_RELEASE);
-        else if (button == GLFW_MOUSE_BUTTON_RIGHT)       em.R_Down = (action != GLFW_RELEASE);
-        else if (button == GLFW_MOUSE_BUTTON_MIDDLE)      em.M_Down = (action != GLFW_RELEASE);
+        // Update button state
+        if (button == GLFW_MOUSE_BUTTON_LEFT)       em.L_Down = (action != GLFW_RELEASE);
+        else if (button == GLFW_MOUSE_BUTTON_RIGHT) em.R_Down = (action != GLFW_RELEASE);
+        else if (button == GLFW_MOUSE_BUTTON_MIDDLE) em.M_Down = (action != GLFW_RELEASE);
+
         em.button = button;
         em.lastMAction = action;
         em.lastMod = mods;
-        em.mouseEntered = true;
+
+        double now = glfwGetTime(); // current time for double-click detection
+
+        // Handle press events and double-click
+        if (action == GLFW_PRESS)
+        {
+            if (button == GLFW_MOUSE_BUTTON_LEFT)
+            {
+                if (now - em.L_lastClickTime <= em.doubleClickThreshold)
+                    em.mouseEvents.push_back(FR_LEFT_DCLICK);  // new enum for left double-click
+                em.L_lastClickTime = now;
+                em.mouseEvents.push_back(FR_LEFT_PUSH);
+            }
+            else if (button == GLFW_MOUSE_BUTTON_MIDDLE)
+            {
+                if (now - em.M_lastClickTime <= em.doubleClickThreshold)
+                    em.mouseEvents.push_back(FR_MIDDLE_DCLICK);
+                em.M_lastClickTime = now;
+                em.mouseEvents.push_back(FR_MIDDLE_PUSH);
+            }
+            else if (button == GLFW_MOUSE_BUTTON_RIGHT)
+            {
+                if (now - em.R_lastClickTime <= em.doubleClickThreshold)
+                    em.mouseEvents.push_back(FR_RIGHT_DCLICK);
+                em.R_lastClickTime = now;
+                em.mouseEvents.push_back(FR_RIGHT_PUSH);
+            }
+        }
+
+        // Handle drag release vs normal release
+        else if (action == GLFW_RELEASE)
+        {
+            if (button == GLFW_MOUSE_BUTTON_LEFT)
+            {
+                if (em.L_Dragging)
+                {
+                    em.L_Dragging = false;
+                    em.mouseEvents.push_back(FR_LEFT_DRAG_RELEASE);
+                }
+                else
+                {
+                    em.mouseEvents.push_back(FR_LEFT_RELEASE);
+                }
+            }
+            else if (button == GLFW_MOUSE_BUTTON_MIDDLE)
+            {
+                if (em.M_Dragging)
+                {
+                    em.M_Dragging = false;
+                    em.mouseEvents.push_back(FR_MIDDLE_DRAG_RELEASE);
+                }
+                else
+                {
+                    em.mouseEvents.push_back(FR_MIDDLE_RELEASE);
+                }
+            }
+            else if (button == GLFW_MOUSE_BUTTON_RIGHT)
+            {
+                if (em.R_Dragging)
+                {
+                    em.R_Dragging = false;
+                    em.mouseEvents.push_back(FR_RIGHT_DRAG_RELEASE);
+                }
+                else
+                {
+                    em.mouseEvents.push_back(FR_RIGHT_RELEASE);
+                }
+            }
+        }
     }
     void Fr_Window::cursor_m_positioncallback(GLFWwindow* window, double xpos, double ypos)
     {
@@ -151,8 +218,7 @@ namespace FR {
         mouse.activeX = xpos;
         mouse.activeY = ypos;
         spWindow->calculateScreenRay();
-        // SIGNALS
-        pwin->m_sysEvents.mouse.mouseMoved = true;
+        mouse.mouseEvents.emplace_back(FR_MOUSE_MOVE);
     }
 
     void Fr_Window::cursor_enter_callback(GLFWwindow* window, int entered)
@@ -161,11 +227,10 @@ namespace FR {
             return; //do nothing
         (void)window;
         Fr_Window* pwin = spWindow.get();
-        pwin->m_sysEvents.mouse.mouseEntered = (entered != 0);
-        //Reset DRAG
-        pwin->m_sysEvents.mouse.L_Drag = false;
-        pwin->m_sysEvents.mouse.R_Drag = false;
-        pwin->m_sysEvents.mouse.M_Drag = false;
+        if (entered) 
+            pwin->m_sysEvents.mouse.mouseEvents.emplace_back(FR_ENTER);
+        else
+            pwin->m_sysEvents.mouse.mouseEvents.emplace_back(FR_LEAVE);
     }
 
     void Fr_Window::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
@@ -176,7 +241,8 @@ namespace FR {
         Fr_Window* pwin = spWindow.get();
         auto& m = pwin->m_sysEvents.mouse;
         m.scrollX = xoffset;
-        m.scrollY = yoffset;
+        m.scrollY= yoffset;
+        m.mouseEvents.emplace_back(FR_SCROLL);
     }
 
     //DON'T CHANGE ME WORKS GOOD !!!! 2025-10-22

@@ -261,12 +261,16 @@ namespace FR {
        FR_WINDOW_MINIMIZE
       You call window->hide()
     */
-    enum FR_EVENTS {
+   typedef enum  {
         FR_NO_EVENT = 0,     //DONT CARE EVENT
 
         FR_LEFT_PUSH,
         FR_RIGHT_PUSH,
         FR_MIDDLE_PUSH,
+        
+        FR_LEFT_DCLICK,
+        FR_MIDDLE_DCLICK,
+        FR_RIGHT_DCLICK,
 
         FR_LEFT_RELEASE,
         FR_RIGHT_RELEASE,
@@ -301,7 +305,7 @@ namespace FR {
 
         FR_WINDOW_RESIZE,
         FR_WINDOW_MINIMIZE,
-    };
+    } FR_EVENTS;
 
     //Define all kind of MESH-widgets here, YOU MUST DO THIS!!
     typedef enum NODETYPE {
@@ -401,21 +405,20 @@ namespace FR {
         double scrollY;
 
         bool L_Down, R_Down, M_Down;
-        bool L_Pressed, L_Released, L_Drag;
-        bool R_Pressed, R_Released, R_Drag;
-        bool M_Pressed, M_Released, M_Drag;
+        bool L_Dragging, R_Dragging, M_Dragging;
 
-        bool L_WasDragging, R_WasDragging, M_WasDragging;
-        bool L_DragReleased, R_DragReleased, M_DragReleased;
-
-        bool mouseMoved;
-        bool mouseEntered; //Entered Windows area or not
+        bool insideglfwWindow;    //Entered Windows area or not
         int lastMAction;
         int lastMod;
         glm::vec3 worldPos;      // world mouse position
 
         int button;              // which button triggered last action
         int isDClick;            // double click flag
+        double L_lastClickTime ;
+        double R_lastClickTime ;
+        double M_lastClickTime ;
+        double doubleClickThreshold; //  = 0.25; // seconds
+        std::vector< FR_EVENTS> mouseEvents;
     }mouse_t;
 
     typedef struct {

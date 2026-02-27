@@ -30,26 +30,52 @@
 #include <gui_widget/frtk_grpwidget.h>
 
 namespace FR {
+    typedef struct {
+        bool btnUp;
+        bool btnDown;
+        bool btnLeft;
+        bool btnRight;
+    } btnEvent;
+
+    typedef struct {
+        Dim_float_t track;
+        Dim_float_t scroll;
+
+        Dim_float_t bnUp;
+        Dim_float_t bnDown;
+        Dim_float_t bnLeft;
+        Dim_float_t bnRight;
+        
+        glm::vec4 btnColor;
+        glm::vec4 trackColor;
+        dimPos_float_t m_scrolloffset;
+        bool m_dragVscroll;
+        bool m_dragHscroll;
+        float m_sensitivity;
+        bool m_Vscroll_visible;
+        bool m_Hscroll_visible;
+        btnEvent event;
+    } scroll_t;
+
     class FRTK_API Frtk_Scroll : public Frtk_GrpWidget {
     public:
         Frtk_Scroll(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl = "Tab", BOX_TYPE b = FRTK_DOWN_BOX);
 
+        void updateScrollGeometry();
+
     protected:
+        virtual bool isBtnPressed(uint8_t btnInd);
         virtual int handle(int ev) override;
         virtual void draw() override;
-        void draw_scroll_bar();
         virtual void draw_scroll(); 
         dimSize_float_t getTotalViewPortDim() const;
 
+        bool btnUpDownLeft;
+        bool btnDownDownRight;
+        
         Dim_float_t m_viewPort;             //(x,y,w,h)
-
-        dimPos_float_t m_scrolloffset;      //(x,y)
-        dimSize_float_t m_scrollSize;        //(w,h)
-
-        dimSize_float_t m_scrollWidHeit;  
-
-        bool m_Vscroll_visible;
-        bool m_Hscroll_visible;
+        Dim_float_t m_content;             //(x,y,w,h)
+        scroll_t m_scrollwdg;
     };
 }
 

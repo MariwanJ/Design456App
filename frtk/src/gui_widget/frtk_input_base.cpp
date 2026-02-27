@@ -489,7 +489,7 @@ namespace FR {
 
         case FR_LEFT_DRAG_RELEASE: {
             m_text.cursorPos = mouseXToCharIndex();
-            m_mainWindow->m_sysEvents.mouse.L_WasDragging = false;
+            m_mainWindow->m_sysEvents.mouse.L_Dragging = false;
             return 1;
         }
 
