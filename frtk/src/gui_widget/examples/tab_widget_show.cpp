@@ -44,7 +44,7 @@ namespace FR {
             newTab->lblAlign(NVG_ALIGN_TOP_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE);
             newTab->addChildToTab(btn);
         }
-        auto sc = std::make_shared<Frtk_Scroll>(window->getContext(), 450.0f, 240.0f, 100.0f, 300.0f, "OK!", FRTK_UP_BOX);
+        auto sc = std::make_shared<Frtk_Scroll>(window->getContext(), 200.0f, 200.0f, 300.0f, 300.0f, "OK!", FRTK_UP_BOX);
         tab->layoutTabs();
         tab->parent(window.get());
         window->addChild(tab);

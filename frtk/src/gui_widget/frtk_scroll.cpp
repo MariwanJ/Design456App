@@ -31,107 +31,186 @@
 
 namespace FR {
     Frtk_Scroll::Frtk_Scroll(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b) :
-        Frtk_GrpWidget(vg, X, Y, W, H, lbl, b), m_viewPort{ X,Y,W,H }, m_content{ X,Y,W,H }
+        Frtk_GrpWidget(vg, X, Y, W, H, lbl, FRTK_FLAT_BOX), m_viewPort{ X,Y,W,H }, m_content{ X,Y,W,H }
     {
-        m_scrollwdg.track = { 0 };
-        m_scrollwdg.scroll = { 0 };
-        m_scrollwdg.bnUp = { 0 };
-        m_scrollwdg.bnDown = { 0 };
+        m_scrollwdg.Ver.track = { 0 };
+        m_scrollwdg.Ver.scroll = { 0 };
+        m_scrollwdg.Ver.btnInc = { 0 };
+        m_scrollwdg.Ver.btnDec = { 0 };
+        m_scrollwdg.Ver.btnColor = glm::vec4(0.f, 0.f, 0.f, 0.1254f);
+        m_scrollwdg.Ver.trackColor = glm::vec4(0.f, 0.f, 0.f, 0.360f);
+        m_scrollwdg.Ver.scrollOffs = { 0.0f };
+        m_scrollwdg.sensitivity = 0.5f;
+        m_scrollwdg.Hor.visible = true;
+        m_scrollwdg.Hor.track = { 0 };
+        m_scrollwdg.Hor.scroll = { 0 };
+        m_scrollwdg.Hor.btnInc = { 0 };
+        m_scrollwdg.Hor.btnDec = { 0 };
+        m_scrollwdg.Hor.btnColor = glm::vec4(0.f, 0.f, 0.f, 0.1254f);
+        m_scrollwdg.Hor.trackColor = glm::vec4(0.f, 0.f, 0.f, 0.360f);
+        m_scrollwdg.Hor.scrollOffs = { 0.0f };
+        m_scrollwdg.sensitivity = 0.5f;
+        m_scrollwdg.Ver.visible = true;
 
-        m_scrollwdg.btnColor = glm::vec4(0.f, 0.f, 0.f, 0.1254f);
-        m_scrollwdg.trackColor = glm::vec4(0.f, 0.f, 0.f, 0.360f);
-        m_scrollwdg.m_scrolloffset = { 0.0f };
-        m_scrollwdg.m_dragVscroll = 0.0f;
-        m_scrollwdg.m_dragHscroll = 0.0f;
-        m_scrollwdg.m_sensitivity = 0.5f;
-        m_scrollwdg.m_Vscroll_visible = true;
-        m_scrollwdg.m_Hscroll_visible = false;
         updateScrollGeometry();
     }
     void Frtk_Scroll::updateScrollGeometry()
     {
-        // --- Fixed sizes ---
-        const float scrollbarThickness = 9.0f; // fixed width/height of scrollbar, buttons, thumb
-        const float minThumbSize = 4.0f;       // minimum size of the thumb
-        const float trackExtra = 5.0f;          // optional: track slightly bigger than thumb for border
+        const float scrollbarThickness = 9.0f;
+        const float minThumbSize = 4.0f;
+        const float trackExtra = 5.0f;
 
-        // --- Vertical scrollbar ---
-        if (m_scrollwdg.m_Vscroll_visible)
-        {
-            // Buttons
-            m_scrollwdg.bnUp.size.w = scrollbarThickness + trackExtra;
-            m_scrollwdg.bnUp.size.h = scrollbarThickness;
-            m_scrollwdg.bnUp.pos.x = m_x + m_w - scrollbarThickness - trackExtra / 2;
-            m_scrollwdg.bnUp.pos.y = m_y;
+        if (m_scrollwdg.Ver.visible) {
+            // V scrollbar
+                // Buttons
+            m_scrollwdg.Ver.btnInc.size.w = scrollbarThickness + trackExtra;
+            m_scrollwdg.Ver.btnInc.size.h = scrollbarThickness;
+            m_scrollwdg.Ver.btnInc.pos.x = m_x + m_w - scrollbarThickness - trackExtra / 2;
+            m_scrollwdg.Ver.btnInc.pos.y = m_y;
 
-            m_scrollwdg.bnDown.size.w = scrollbarThickness + trackExtra;
-            m_scrollwdg.bnDown.size.h = scrollbarThickness;
-            m_scrollwdg.bnDown.pos.x = m_x + m_w - scrollbarThickness - trackExtra / 2;
-            m_scrollwdg.bnDown.pos.y = m_y + m_h - scrollbarThickness;
+            m_scrollwdg.Ver.btnDec.size.w = scrollbarThickness + trackExtra;
+            m_scrollwdg.Ver.btnDec.size.h = scrollbarThickness;
+            m_scrollwdg.Ver.btnDec.pos.x = m_x + m_w - scrollbarThickness - trackExtra / 2;
+            m_scrollwdg.Ver.btnDec.pos.y = m_y + m_h - scrollbarThickness;
 
-            // Track (between buttons)
-            m_scrollwdg.track.pos.x = m_x + m_w - scrollbarThickness - trackExtra / 2;
-            m_scrollwdg.track.pos.y = m_y + scrollbarThickness;
-            m_scrollwdg.track.size.w = scrollbarThickness + trackExtra;
-            m_scrollwdg.track.size.h = m_h - 2 * scrollbarThickness;
+            //scroll bar - bkg
+            m_scrollwdg.Ver.track.pos.x = m_x + m_w - scrollbarThickness - trackExtra / 2;
+            m_scrollwdg.Ver.track.pos.y = m_y + scrollbarThickness;
+            m_scrollwdg.Ver.track.size.w = scrollbarThickness + trackExtra;
+            m_scrollwdg.Ver.track.size.h = m_h - 2 * scrollbarThickness;
 
-            // Thumb
+            // scroll-middle-button
             float fractionVisible = std::min(1.0f, 0.80f * m_viewPort.size.h / m_content.size.h);
-            m_scrollwdg.scroll.size.w = scrollbarThickness;
-            m_scrollwdg.scroll.size.h = std::max(minThumbSize, fractionVisible * m_scrollwdg.track.size.h);
-            float scrollRatioY = m_scrollwdg.m_scrolloffset.y; // normalized 0..1
-            m_scrollwdg.scroll.pos.x = m_scrollwdg.track.pos.x + trackExtra / 2;
-            m_scrollwdg.scroll.pos.y = m_scrollwdg.track.pos.y + scrollRatioY * (m_scrollwdg.track.size.h - m_scrollwdg.scroll.size.h);
+            m_scrollwdg.Ver.scroll.size.w = scrollbarThickness;
+            m_scrollwdg.Ver.scroll.size.h = std::max(minThumbSize, fractionVisible * m_scrollwdg.Ver.track.size.h);
+            float scrollRatioY = m_scrollwdg.Ver.scrollOffs.y;
+            m_scrollwdg.Ver.scroll.pos.x = m_scrollwdg.Ver.track.pos.x + trackExtra / 2;
+            m_scrollwdg.Ver.scroll.pos.y = m_scrollwdg.Ver.track.pos.y + scrollRatioY * (m_scrollwdg.Ver.track.size.h - m_scrollwdg.Ver.scroll.size.h);
         }
 
-        // --- Horizontal scrollbar ---
-        if (m_scrollwdg.m_Hscroll_visible)
+        // H scrollbar
+        if (m_scrollwdg.Hor.visible)
         {
             // Buttons
-            m_scrollwdg.bnUp.size.w = scrollbarThickness;
-            m_scrollwdg.bnUp.size.h = scrollbarThickness + trackExtra;
-            m_scrollwdg.bnUp.pos.x = m_x;
-            m_scrollwdg.bnUp.pos.y = m_y + m_h - scrollbarThickness - trackExtra / 2;
+            m_scrollwdg.Hor.btnDec.size.w = scrollbarThickness;
+            m_scrollwdg.Hor.btnDec.size.h = scrollbarThickness + trackExtra;
+            m_scrollwdg.Hor.btnDec.pos.x = m_x;
+            m_scrollwdg.Hor.btnDec.pos.y = m_y + m_h - scrollbarThickness - trackExtra / 2;
 
-            m_scrollwdg.bnDown.size.w = scrollbarThickness;
-            m_scrollwdg.bnDown.size.h = scrollbarThickness;
-            m_scrollwdg.bnDown.pos.x = m_x + m_w - scrollbarThickness;
-            m_scrollwdg.bnDown.pos.y = m_y + m_h - scrollbarThickness;
+            m_scrollwdg.Hor.btnInc.size.w = scrollbarThickness;
+            m_scrollwdg.Hor.btnInc.size.h = scrollbarThickness;
+            m_scrollwdg.Hor.btnInc.pos.x = m_x + m_w - scrollbarThickness;
+            m_scrollwdg.Hor.btnInc.pos.y = m_y + m_h - scrollbarThickness;
 
-            // Track (between buttons)
-            m_scrollwdg.track.pos.x = m_x + scrollbarThickness; // optional: leave space for left button
-            m_scrollwdg.track.pos.y = m_y + m_h - scrollbarThickness;
-            m_scrollwdg.track.size.w = m_w - 2 * scrollbarThickness;
-            m_scrollwdg.track.size.h = scrollbarThickness + trackExtra;
+            m_scrollwdg.Hor.track.pos.x = m_x + scrollbarThickness;
+            m_scrollwdg.Hor.track.pos.y = m_y + m_h - scrollbarThickness;
+            m_scrollwdg.Hor.track.size.w = m_w - 2 * scrollbarThickness;
+            m_scrollwdg.Hor.track.size.h = scrollbarThickness + trackExtra;
 
-            // Thumb
-            float fractionVisible = std::min(1.0f, m_viewPort.size.w / m_content.size.w);
-            m_scrollwdg.scroll.size.h = scrollbarThickness;
-            m_scrollwdg.scroll.size.w = std::max(minThumbSize, fractionVisible * m_scrollwdg.track.size.w);
-            float scrollRatioX = m_scrollwdg.m_scrolloffset.x;
-            m_scrollwdg.scroll.pos.x = m_scrollwdg.track.pos.x + scrollRatioX * (m_scrollwdg.track.size.w - m_scrollwdg.scroll.size.w);
-            m_scrollwdg.scroll.pos.y = m_scrollwdg.track.pos.y;
+            // middle-button
+            float fractionVisible = std::min(1.0f, 0.8f * m_viewPort.size.w / m_content.size.w);
+            m_scrollwdg.Hor.scroll.size.h = scrollbarThickness;
+            m_scrollwdg.Hor.scroll.size.w = std::max(minThumbSize, fractionVisible * m_scrollwdg.Hor.track.size.w);
+            float scrollRatioX = m_scrollwdg.Hor.scrollOffs.x;
+            m_scrollwdg.Hor.scroll.pos.x = m_scrollwdg.Hor.track.pos.x + scrollRatioX * (m_scrollwdg.Hor.track.size.w - m_scrollwdg.Hor.scroll.size.w);
+            m_scrollwdg.Hor.scroll.pos.y = m_scrollwdg.Hor.track.pos.y + trackExtra / 2;
         }
     }
     void Frtk_Scroll::draw()
     {
-        draw_scroll();
+        draw_scrollV();
+        draw_scrollH();
     }
-    void Frtk_Scroll::draw_scroll()
+    void Frtk_Scroll::draw_scrollH()
     {
         NVGpaint shadowPaint, fadePaint;
 
-        // --- Up button ---
-        fadePaint = nvgLinearGradient(m_vg, m_scrollwdg.bnUp.pos.x, m_scrollwdg.bnUp.pos.y, m_scrollwdg.bnUp.pos.x, m_scrollwdg.bnUp.pos.y + m_scrollwdg.bnUp.size.h, nvgRGBAf(0.85f, 0.85f, 0.85f, 1.0f), nvgRGBAf(0.65f, 0.65f, 0.65f, 1.0f));
+        // Up btn
+        fadePaint = nvgLinearGradient(m_vg, m_scrollwdg.Hor.btnInc.pos.x,
+            m_scrollwdg.Hor.btnInc.pos.y,
+            m_scrollwdg.Hor.btnInc.size.w,
+            m_scrollwdg.Hor.btnInc.size.h,
+            nvgRGBAf(0.85f, 0.85f, 0.85f, 1.0f), nvgRGBAf(0.65f, 0.65f, 0.65f, 1.0f));
         nvgBeginPath(m_vg);
-        nvgRoundedRect(m_vg, m_scrollwdg.bnUp.pos.x, m_scrollwdg.bnUp.pos.y, m_scrollwdg.bnUp.size.w, m_scrollwdg.bnUp.size.h, 2.0f);
+        nvgRoundedRect(m_vg, m_scrollwdg.Hor.btnInc.pos.x,
+            m_scrollwdg.Hor.btnInc.pos.y,
+            m_scrollwdg.Hor.btnInc.size.w,
+            m_scrollwdg.Hor.btnInc.size.h, 2.0f);
+        nvgFillPaint(m_vg, fadePaint);
+        nvgFill(m_vg);
+
+        nvgBeginPath(m_vg);
+
+        float midX = m_scrollwdg.Hor.btnInc.pos.x + m_scrollwdg.Hor.btnInc.size.w * 0.5f;
+        float midY = m_scrollwdg.Hor.btnInc.pos.y + m_scrollwdg.Hor.btnInc.size.h * 0.5f;
+        float tri = 4.0f;
+        nvgMoveTo(m_vg, midX + tri, midY);
+        nvgLineTo(m_vg, midX - tri, midY - tri);
+        nvgLineTo(m_vg, midX - tri, midY + tri);
+        nvgClosePath(m_vg);
+        nvgFillColor(m_vg, nvgRGBAf(FR_BEIGE));
+        nvgFill(m_vg);
+
+        float X_, Y_, W_, H_;
+        X_ = m_scrollwdg.Hor.btnDec.pos.x;
+        Y_ = m_scrollwdg.Hor.btnDec.pos.y;
+        W_ = m_scrollwdg.Hor.btnDec.size.w;
+        H_ = m_scrollwdg.Hor.btnDec.size.h;
+
+        // Down button
+        fadePaint = nvgLinearGradient(m_vg, X_, Y_, X_, Y_ + H_, nvgRGBAf(0.85f, 0.85f, 0.85f, 1.0f), nvgRGBAf(0.65f, 0.65f, 0.65f, 1.0f));
+        nvgBeginPath(m_vg);
+        nvgRoundedRect(m_vg, X_, Y_, W_, H_, 2.0f);
+        nvgFillPaint(m_vg, fadePaint);
+        nvgFill(m_vg);
+
+        // Down arrow
+        nvgBeginPath(m_vg);
+        midX = m_scrollwdg.Hor.btnDec.pos.x + m_scrollwdg.Hor.btnDec.size.w * 0.5f;
+        midY = m_scrollwdg.Hor.btnDec.pos.y + m_scrollwdg.Hor.btnDec.size.h * 0.5f;
+        float triSize = 4.0f;
+
+        nvgBeginPath(m_vg);
+
+        nvgMoveTo(m_vg, midX - triSize, midY);
+        nvgLineTo(m_vg, midX + triSize, midY - triSize);
+        nvgLineTo(m_vg, midX + triSize, midY + triSize);
+        nvgClosePath(m_vg);
+        nvgFillColor(m_vg, nvgRGBAf(FR_BEIGE));
+        nvgFill(m_vg);
+
+        // Track
+        nvgBeginPath(m_vg);
+        nvgRoundedRect(m_vg, m_scrollwdg.Hor.track.pos.x, m_scrollwdg.Hor.track.pos.y,
+            m_scrollwdg.Hor.track.size.w, m_scrollwdg.Hor.track.size.h, 2.0f);
+        nvgFillColor(m_vg, glmToNVG(m_scrollwdg.Hor.trackColor));
+        nvgFill(m_vg);
+
+        X_ = m_scrollwdg.Hor.scroll.pos.x + m_scrollwdg.Hor.scrollOffs.x;
+        Y_ = m_scrollwdg.Hor.scroll.pos.y + m_scrollwdg.Hor.scrollOffs.y;
+        W_ = m_scrollwdg.Hor.scroll.size.w;
+        H_ = m_scrollwdg.Hor.scroll.size.h;
+        shadowPaint = nvgBoxGradient(m_vg, X_, Y_, W_, H_, 3, 4, nvgRGBAf(FR_GAINSBORO), nvgRGBAf(FR_GRAY));
+        nvgBeginPath(m_vg);
+        nvgRoundedRect(m_vg, X_, Y_, W_, H_, 3.0f);
+        nvgFillPaint(m_vg, shadowPaint);
+        nvgFill(m_vg);
+    }
+    void Frtk_Scroll::draw_scrollV()
+    {
+        NVGpaint shadowPaint, fadePaint;
+
+        // Up btn
+        fadePaint = nvgLinearGradient(m_vg, m_scrollwdg.Ver.btnInc.pos.x, m_scrollwdg.Ver.btnInc.pos.y, m_scrollwdg.Ver.btnInc.pos.x, m_scrollwdg.Ver.btnInc.pos.y + m_scrollwdg.Ver.btnInc.size.h, nvgRGBAf(0.85f, 0.85f, 0.85f, 1.0f), nvgRGBAf(0.65f, 0.65f, 0.65f, 1.0f));
+        nvgBeginPath(m_vg);
+        nvgRoundedRect(m_vg, m_scrollwdg.Ver.btnInc.pos.x, m_scrollwdg.Ver.btnInc.pos.y, m_scrollwdg.Ver.btnInc.size.w, m_scrollwdg.Ver.btnInc.size.h, 2.0f);
         nvgFillPaint(m_vg, fadePaint);
         nvgFill(m_vg);
 
         // Up arrow
         nvgBeginPath(m_vg);
-        float midX = m_scrollwdg.bnUp.pos.x + m_scrollwdg.bnUp.size.w * 0.5f;
-        float midY = m_scrollwdg.bnUp.pos.y + m_scrollwdg.bnUp.size.h * 0.5f;
+        float midX = m_scrollwdg.Ver.btnInc.pos.x + m_scrollwdg.Ver.btnInc.size.w * 0.5f;
+        float midY = m_scrollwdg.Ver.btnInc.pos.y + m_scrollwdg.Ver.btnInc.size.h * 0.5f;
         float triSize = 4.0f;
         nvgMoveTo(m_vg, midX, midY - triSize);
         nvgLineTo(m_vg, midX - triSize, midY + triSize);
@@ -141,12 +220,12 @@ namespace FR {
         nvgFill(m_vg);
 
         float X_, Y_, W_, H_;
-        X_ = m_scrollwdg.bnDown.pos.x;
-        Y_ = m_scrollwdg.bnDown.pos.y;
-        W_ = m_scrollwdg.bnDown.size.w;
-        H_ = m_scrollwdg.bnDown.size.h;
+        X_ = m_scrollwdg.Ver.btnDec.pos.x;
+        Y_ = m_scrollwdg.Ver.btnDec.pos.y;
+        W_ = m_scrollwdg.Ver.btnDec.size.w;
+        H_ = m_scrollwdg.Ver.btnDec.size.h;
 
-        // --- Down button ---
+        // Down button
         fadePaint = nvgLinearGradient(m_vg, X_, Y_, X_, Y_ + H_, nvgRGBAf(0.85f, 0.85f, 0.85f, 1.0f), nvgRGBAf(0.65f, 0.65f, 0.65f, 1.0f));
         nvgBeginPath(m_vg);
         nvgRoundedRect(m_vg, X_, Y_, W_, H_, 2.0f);
@@ -155,8 +234,8 @@ namespace FR {
 
         // Down arrow
         nvgBeginPath(m_vg);
-        midX = m_scrollwdg.bnDown.pos.x + m_scrollwdg.bnDown.size.w * 0.5f;
-        midY = m_scrollwdg.bnDown.pos.y + m_scrollwdg.bnDown.size.h * 0.5f;
+        midX = m_scrollwdg.Ver.btnDec.pos.x + m_scrollwdg.Ver.btnDec.size.w * 0.5f;
+        midY = m_scrollwdg.Ver.btnDec.pos.y + m_scrollwdg.Ver.btnDec.size.h * 0.5f;
         nvgMoveTo(m_vg, midX, midY + triSize);
         nvgLineTo(m_vg, midX - triSize, midY - triSize);
         nvgLineTo(m_vg, midX + triSize, midY - triSize);
@@ -164,112 +243,137 @@ namespace FR {
         nvgFillColor(m_vg, nvgRGBAf(FR_BEIGE));
         nvgFill(m_vg);
 
-        // --- Track ---
+        // Track
         nvgBeginPath(m_vg);
-        nvgRoundedRect(m_vg, m_scrollwdg.track.pos.x, m_scrollwdg.track.pos.y,
-            m_scrollwdg.track.size.w, m_scrollwdg.track.size.h, 2.0f);
-        nvgFillColor(m_vg, glmToNVG(m_scrollwdg.trackColor));
+        nvgRoundedRect(m_vg, m_scrollwdg.Ver.track.pos.x, m_scrollwdg.Ver.track.pos.y,
+            m_scrollwdg.Ver.track.size.w, m_scrollwdg.Ver.track.size.h, 2.0f);
+        nvgFillColor(m_vg, glmToNVG(m_scrollwdg.Ver.trackColor));
         nvgFill(m_vg);
 
-        if (m_scrollwdg.m_Vscroll_visible)
-        {
-            float X_, Y_, W_, H_;
-            X_ = m_scrollwdg.scroll.pos.x + m_scrollwdg.m_scrolloffset.x;
-            Y_ = m_scrollwdg.scroll.pos.y + m_scrollwdg.m_scrolloffset.y;
-            W_ = m_scrollwdg.scroll.size.w;
-            H_ = m_scrollwdg.scroll.size.h;
-            shadowPaint = nvgBoxGradient(m_vg, X_, Y_, W_, H_, 3, 4, nvgRGBAf(FR_GAINSBORO), nvgRGBAf(FR_GRAY));
-            nvgBeginPath(m_vg);
-            nvgRoundedRect(m_vg, X_, Y_, W_, H_, 3.0f);
-            nvgFillPaint(m_vg, shadowPaint);
-            nvgFill(m_vg);
-        }
-
-        if (m_scrollwdg.m_Hscroll_visible)
-        {
-            shadowPaint = nvgBoxGradient(m_vg, X_, Y_, W_, H_, 3, 4, nvgRGBAf(FR_GAINSBORO), nvgRGBAf(FR_GRAY));
-            nvgBeginPath(m_vg);
-            nvgRoundedRect(m_vg, X_, Y_, W_, H_, 3.0f);
-            nvgFillPaint(m_vg, shadowPaint);
-            nvgFill(m_vg);
-        }
+        X_ = m_scrollwdg.Ver.scroll.pos.x + m_scrollwdg.Ver.scrollOffs.x;
+        Y_ = m_scrollwdg.Ver.scroll.pos.y + m_scrollwdg.Ver.scrollOffs.y;
+        W_ = m_scrollwdg.Ver.scroll.size.w;
+        H_ = m_scrollwdg.Ver.scroll.size.h;
+        shadowPaint = nvgBoxGradient(m_vg, X_, Y_, W_, H_, 3, 4, nvgRGBAf(FR_GAINSBORO), nvgRGBAf(FR_GRAY));
+        nvgBeginPath(m_vg);
+        nvgRoundedRect(m_vg, X_, Y_, W_, H_, 3.0f);
+        nvgFillPaint(m_vg, shadowPaint);
+        nvgFill(m_vg);
     }
 
     dimSize_float_t Frtk_Scroll::getTotalViewPortDim() const {
         dimSize_float_t result;
         result.w = m_w;
         result.h = m_h;
-        if (m_scrollwdg.m_Vscroll_visible)
-            result.w -= m_scrollwdg.scroll.size.w;
-        if (m_scrollwdg.m_Hscroll_visible)
-            result.h -= m_scrollwdg.scroll.size.h;
+        if (m_scrollwdg.Ver.visible)
+            result.w -= m_scrollwdg.Ver.scroll.size.w;
+        if (m_scrollwdg.Hor.visible)
+            result.h -= m_scrollwdg.Hor.scroll.size.h;
         result.w = std::max(0.f, result.w);
         result.h = std::max(0.f, result.h);
         return result;
     }
-    bool Frtk_Scroll::isBtnPressed(uint8_t btnInd) {
-        bool result;
-        auto mouse = m_mainWindow->m_sysEvents.mouse;
-        Dim_float_t btnAbsUpPos , btnAbsDownPos;
-        btnAbsUpPos.pos.x = absX() + (m_x - m_scrollwdg.bnUp.pos.x);
-        btnAbsUpPos.pos.y = absY() + (m_y - m_scrollwdg.bnUp.pos.y);
-        
-        btnAbsDownPos.pos.x = absX() + (m_x - m_scrollwdg.bnUp.pos.x);
-        btnAbsDownPos.pos.y = absY() + (m_y - m_scrollwdg.bnUp.pos.y);
 
-        switch (btnInd) {
-        case 0: {
-            if (m_scrollwdg.m_Vscroll_visible) {
-                if (mouse.activeX >= btnAbsUpPos.pos.x &&
-                    mouse.activeY >= btnAbsUpPos.pos.y &&
-                    mouse.activeX <= btnAbsUpPos.pos.x + m_scrollwdg.bnUp.size.w &&
-                    mouse.activeY <= btnAbsUpPos.pos.y + m_scrollwdg.bnUp.size.h) {
-                    result = true;
-                }
-            }
-        }break;
-        case 1: {
-            if (m_scrollwdg.m_Vscroll_visible) {
-                if (mouse.activeX >= btnAbsDownPos.pos.x &&
-                    mouse.activeY >= btnAbsDownPos.pos.y &&
-                    mouse.activeX <= btnAbsDownPos.pos.x + m_scrollwdg.bnDown.size.w &&
-                    mouse.activeY <= btnAbsDownPos.pos.y + m_scrollwdg.bnDown.size.h) {
-                    result = true;
-                }
-            }
-        }break;
+    void Frtk_Scroll::updateBtnPressed()
+    {
+        const auto& mouse = m_mainWindow->m_sysEvents.mouse;
 
+        // reset state each frame
+        m_activeBtns = {};
+
+        auto hit = [&](const auto& btn)->bool
+            {
+                float x = absX() ;
+                float y = absY() ;
+                 x += (-m_x + btn.pos.x);
+                 y += (-m_y + btn.pos.y);
+
+                return mouse.activeX >= x &&
+                    mouse.activeY >= y &&
+                    mouse.activeX <= x + btn.size.w &&
+                    mouse.activeY <= y + btn.size.h;
+            };
+
+        if (m_scrollwdg.Ver.visible)
+        {
+            if (hit(m_scrollwdg.Ver.btnInc))   m_activeBtns.up = true;
+            if (hit(m_scrollwdg.Ver.btnDec)) m_activeBtns.down = true;
         }
-       }
 
+        if (m_scrollwdg.Hor.visible)
+        {
+            if (hit(m_scrollwdg.Hor.btnInc))   m_activeBtns.left = true;
+            if (hit(m_scrollwdg.Hor.btnDec)) m_activeBtns.right = true;
+        }
     }
-    int Frtk_Scroll::handle(int ev) {
-        auto mouse = m_mainWindow->m_sysEvents.mouse;
-        float delta = (mouse.prevY - mouse.activeY) * m_scrollwdg.m_sensitivity;
-        if (isMouse_inside() || m_scrollwdg.m_dragVscroll || m_scrollwdg.m_dragHscroll) {
-            if (m_scrollwdg.m_Vscroll_visible) {
-                if (ev == FR_LEFT_PUSH) {
-                    
+
+    int Frtk_Scroll::handle(int ev)
+    {
+        const auto& mouse = m_mainWindow->m_sysEvents.mouse;
+
+        if (!(isMouse_inside() || m_scrollwdg.Ver.dragging || m_scrollwdg.Hor.dragging))
+            return 0;
+
+        if (ev == FR_LEFT_PUSH)
+        {
+            updateBtnPressed();
+
+            if (m_activeBtns.up)    m_scrollwdg.Ver.scrollOffs.y -= 10.f;
+            if (m_activeBtns.down)  m_scrollwdg.Ver.scrollOffs.y += 10.f;
+            if (m_activeBtns.left)  m_scrollwdg.Hor.scrollOffs.x -= 10.f;
+            if (m_activeBtns.right) m_scrollwdg.Hor.scrollOffs.x += 10.f;
+         
+  
+        if (m_scrollwdg.Ver.visible)
+        {
+            float offx = absX() + m_scrollwdg.Ver.scroll.pos.x;
+            float offy = absY() + m_scrollwdg.Ver.scroll.pos.y;
+            if (mouse.activeX >= offx &&
+                mouse.activeX <= offx + m_scrollwdg.Ver.scroll.size.w &&
+                mouse.activeY >= offy &&
+                mouse.activeY <= offy + m_scrollwdg.Ver.scroll.size.h) {
+                float deltaY = (mouse.prevY - mouse.activeY) * m_scrollwdg.sensitivity;
+                FR_DEBUG_BREAK;
+                if (ev == FR_LEFT_DRAG_PUSH || (ev == FR_LEFT_DRAG_MOVE && m_scrollwdg.Ver.dragging))
+                {
+                    m_scrollwdg.Ver.dragging = true;
+
+                    float newPos = m_scrollwdg.Ver.scrollOffs.y - deltaY;
+                    m_scrollwdg.Ver.scrollOffs.y = std::clamp(newPos, 0.f, m_h - m_scrollwdg.Ver.scroll.size.h);
                 }
-                if (ev == FR_LEFT_DRAG_PUSH || (ev == FR_LEFT_DRAG_MOVE && m_scrollwdg.m_dragVscroll)) {
-                    m_scrollwdg.m_dragVscroll = true;
-                    m_scrollwdg.m_scrolloffset.y = std::clamp(m_scrollwdg.m_scrolloffset.y -= delta, 0.f, m_h - m_scrollwdg.scroll.size.h);
-                }
-                else if (ev == FR_LEFT_DRAG_RELEASE) {
-                    m_scrollwdg.m_dragVscroll = false;
-                }
-            }
-            else if (m_scrollwdg.m_Hscroll_visible) {
-                if (ev == FR_LEFT_DRAG_PUSH || (ev == FR_LEFT_DRAG_MOVE && m_scrollwdg.m_dragHscroll)) {
-                    m_scrollwdg.m_dragHscroll = true;
-                    m_scrollwdg.m_scrolloffset.x = std::clamp(m_scrollwdg.m_scrolloffset.x -= delta, 0.f, m_w - m_scrollwdg.scroll.size.w);
-                }
-                else if (ev == FR_LEFT_DRAG_RELEASE) {
-                    m_scrollwdg.m_dragVscroll = false;
+                else if (ev == FR_LEFT_DRAG_RELEASE)
+                {
+                    m_scrollwdg.Ver.dragging = false;
                 }
             }
         }
-        return 0;
+
+        if (m_scrollwdg.Hor.visible)
+        {
+            float offx = absX() + -m_x+m_scrollwdg.Hor.scroll.pos.x;
+            float offy = absY() + -m_y + m_scrollwdg.Hor.scroll.pos.y;
+            if (mouse.activeX >= offx &&
+                mouse.activeX <= offx + m_scrollwdg.Hor.scroll.size.w &&
+                mouse.activeY >= offy &&
+                mouse.activeY <= offy + m_scrollwdg.Hor.scroll.size.h) {
+                float deltaX = (mouse.prevX - mouse.activeX) * m_scrollwdg.sensitivity;
+                if (ev == FR_LEFT_DRAG_PUSH ||
+                    (ev == FR_LEFT_DRAG_MOVE && m_scrollwdg.Hor.dragging))
+                {
+                    m_scrollwdg.Hor.dragging = true;
+
+                    float newPos = m_scrollwdg.Hor.scrollOffs.x - deltaX;
+                    m_scrollwdg.Hor.scrollOffs.x = std::clamp(newPos, 0.f, m_w - m_scrollwdg.Hor.scroll.size.w);
+                }
+                else if (ev == FR_LEFT_DRAG_RELEASE)
+                {
+                    m_scrollwdg.Hor.dragging = false;
+                }
+            }
+        }
+        }
+
+        return 1;
     }
 }
 

@@ -40,22 +40,28 @@ namespace FR {
     typedef struct {
         Dim_float_t track;
         Dim_float_t scroll;
-
-        Dim_float_t bnUp;
-        Dim_float_t bnDown;
-        Dim_float_t bnLeft;
-        Dim_float_t bnRight;
-        
+        Dim_float_t btnDec;   // up / left
+        Dim_float_t btnInc;   // down / right
         glm::vec4 btnColor;
         glm::vec4 trackColor;
-        dimPos_float_t m_scrolloffset;
-        bool m_dragVscroll;
-        bool m_dragHscroll;
-        float m_sensitivity;
-        bool m_Vscroll_visible;
-        bool m_Hscroll_visible;
+        dimPos_float_t scrollOffs;
+        bool visible;
+        bool dragging;
+    } ScrollBarAxis_t;
+
+    typedef struct {
+        ScrollBarAxis_t Ver;
+        ScrollBarAxis_t Hor;
+        float sensitivity;
         btnEvent event;
-    } scroll_t;
+    } Scroll_t;
+
+    struct activeButton_t {
+        bool up{};
+        bool down{};
+        bool left{};
+        bool right{};
+    };
 
     class FRTK_API Frtk_Scroll : public Frtk_GrpWidget {
     public:
@@ -64,18 +70,21 @@ namespace FR {
         void updateScrollGeometry();
 
     protected:
-        virtual bool isBtnPressed(uint8_t btnInd);
+        void updateBtnPressed();
         virtual int handle(int ev) override;
         virtual void draw() override;
-        virtual void draw_scroll(); 
+        virtual void draw_scrollV();
+        virtual void draw_scrollH();
         dimSize_float_t getTotalViewPortDim() const;
-
+        
         bool btnUpDownLeft;
         bool btnDownDownRight;
         
         Dim_float_t m_viewPort;             //(x,y,w,h)
         Dim_float_t m_content;             //(x,y,w,h)
-        scroll_t m_scrollwdg;
+        Scroll_t m_scrollwdg;
+    private:
+    activeButton_t m_activeBtns;
     };
 }
 
