@@ -68,6 +68,7 @@ namespace FR {
         Frtk_Scroll(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl = "Tab", BOX_TYPE b = FRTK_DOWN_BOX);
 
         void updateScrollGeometry();
+ 
 
     protected:
         void updateBtnPressed();
@@ -85,6 +86,11 @@ namespace FR {
         Scroll_t m_scrollwdg;
     private:
     activeButton_t m_activeBtns;
+    float scrollbarThickness ;
+    float minThumbSize ;
+    float trackExtra ;
+    float squarePadding;
+
     };
 }
 
