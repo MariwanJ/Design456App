@@ -49,6 +49,10 @@ namespace FR {
         tab->parent(window.get());
         window->addChild(tab);
         sc->parent(window.get());
+        for (int i = 0; i < 5; i++) {
+            auto btn = std::make_shared<Frtk_Button>(window->getContext(), 00.0f+i*45, 0.0f, 40.0f, 40.0f, "OK!", FRTK_UP_BOX);
+            sc->addChild(btn);
+        }
         window->addChild(sc);
         return window;
     }

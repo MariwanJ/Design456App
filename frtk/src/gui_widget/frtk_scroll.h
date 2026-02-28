@@ -74,6 +74,7 @@ namespace FR {
         int updateBtnPressed();
         virtual int handle(int ev) override;
         virtual void draw() override;
+        virtual void draw_children() override;
         virtual void draw_scrollV();
         virtual void draw_scrollH();
         dimSize_float_t getTotalViewPortDim() const;

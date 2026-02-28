@@ -122,6 +122,43 @@ namespace FR {
     {
         draw_scrollV();
         draw_scrollH();
+        draw_children();
+    }
+    void Frtk_Scroll::draw_children() {
+
+
+            // clip to viewport
+            nvgSave(m_vg);
+            nvgScissor(m_vg, m_viewPort.pos.x, m_viewPort.pos.y, m_viewPort.size.w, m_viewPort.size.h);
+
+            // move drawing space opposite to scroll
+            nvgTranslate(m_vg, m_viewPort.pos.x - m_scrollwdg.Hor.scrollOffs.x, m_viewPort.pos.y - m_scrollwdg.Ver.scrollOffs.y);
+
+            // --- draw your content in content coordinates ---
+
+            //// example grid
+            //nvgBeginPath(m_vg);
+            //for (int x = 0; x < m_content.size.w; x += 100) {
+            //    nvgMoveTo(m_vg, x, 0);
+            //    nvgLineTo(m_vg, x, m_content.size.h);
+            //}
+            //for (int y = 0; y < m_content.size.h; y += 100) {
+            //    nvgMoveTo(m_vg, 0, y);
+            //    nvgLineTo(m_vg, m_content.size.w, y);
+            //}
+            //nvgStrokeColor(m_vg, nvgRGBAf(0.3137f, 0.3137f, 0.3137f, 1.f));
+            //nvgStroke(m_vg);
+
+            //// example rectangle in content space
+            //nvgBeginPath(m_vg);
+            //nvgRect(m_vg, 400, 300, 200, 150);
+            //nvgFillColor(m_vg, nvgRGBAf(0.784f, 0.3137f, 0.3137f, 1.f));
+            //nvgFill(m_vg);
+            Frtk_GrpWidget::draw_children();
+            nvgRestore(m_vg);
+   
+
+
     }
     void Frtk_Scroll::draw_scrollH()
     {
