@@ -71,7 +71,7 @@ namespace FR {
  
 
     protected:
-        void updateBtnPressed();
+        int updateBtnPressed();
         virtual int handle(int ev) override;
         virtual void draw() override;
         virtual void draw_scrollV();

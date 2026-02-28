@@ -299,108 +299,118 @@ namespace FR {
     //Return = 0 or -1 Event should continue to be delivered to other widgets
     //Return = 1 Event consumed
     //Return = 0 or -1 Event should continue to be delivered to other widgets
-    int Frtk_GrpWidget::handle(int ev) {
-        //Keyboard events
-        switch (ev) {
-        case FR_FOCUS: {
+    int Frtk_GrpWidget::handle(int ev)
+    {
+        // Focus events
+        if (ev == FR_FOCUS) {
+            // Try restoring last focused child
+            if (m_childFocus && m_childFocus->take_focus())
+                return 1;
+
             switch (navkey()) {
-            default: {
-                if (m_childFocus != nullptr && m_childFocus->take_focus()) {
-                    return 1;
-                }
-                return 0;
-            }
+            case GLFW_KEY_LEFT:
+            case GLFW_KEY_UP:
+                for (auto it = m_children.rbegin(); it != m_children.rend(); ++it)
+                    if ((*it)->take_focus()) return 1;
+                break;
 
             case GLFW_KEY_RIGHT:
-            case GLFW_KEY_DOWN: {
-                for (auto& wdg : m_children) {
-                    if (wdg->take_focus()) return 1;
-                }
+            case GLFW_KEY_DOWN:
+            default:
+                for (auto& w : m_children)
+                    if (w->take_focus()) return 1;
                 break;
             }
+            return 0;
+        }
 
-            case GLFW_KEY_LEFT:
-            case GLFW_KEY_UP: {
-                for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
-                    if ((*it)->take_focus()) return 1;
-                }break;
-            }
-            }
+        if (ev == FR_UNFOCUS) {
+            if (m_childFocus)
+                m_childFocus->handle(FR_UNFOCUS);
+            m_childFocus = nullptr;
             return 0;
         }
-        case FR_UNFOCUS: {
-            m_childFocus = g_focusedWdgt.prev;
-            return 0;
-        }
-        case FR_KEYBOARD: {
-            if (m_childFocus && m_childFocus->active() && m_childFocus->visible()) {
-                if (m_childFocus->handle(FR_KEYBOARD) == 1)
-                    return 1;   // child consumed key
+
+        if (ev == FR_KEYBOARD) {
+            if (m_childFocus &&
+                m_childFocus->active() &&
+                m_childFocus->visible() &&
+                m_childFocus->parent() == this)
+            {
+                if (m_childFocus->handle(FR_KEYBOARD))
+                    return 1;
             }
+
             if (navigate_focus(navkey()))
                 return 1;
+
             return 0;
         }
+
+        if (!(m_active && m_visible))
+            return 0;
+
+        if (m_grabbedChild) {
+            if (m_grabbedChild->visible() && m_grabbedChild->active())
+                return m_grabbedChild->handle(ev);
+            m_grabbedChild = nullptr;
         }
 
-        //Mouse
-        if (!(m_active && m_visible))
-            return 0;              //inactive widget - we don't care
-        switch (ev) {
-        case FR_ENTER:
-        case FR_MOUSE_MOVE:
-        {
-            if (m_grabbedChild) {
-                return m_grabbedChild->handle(ev);
-            }
-            Frtk_Widget* hovered = nullptr;
-            for (auto& wdg : m_children) {
-                if (!wdg->visible() || !wdg->active())
-                    continue;
+        if (ev == FR_ENTER || ev == FR_MOUSE_MOVE) {
 
-                if (wdg->isMouse_inside()) {
-                    hovered = wdg.get();
-                    break;      // top-most hit wins
+            Frtk_Widget* hovered = nullptr;
+
+            // Find top-most hovered child (reverse order = topmost first)
+            for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
+                auto& w = *it;
+                if (w->visible() && w->active() && w->isMouse_inside()) {
+                    hovered = w.get();
+                    break;
                 }
             }
 
-            for (auto& wdg : m_children) {
-                if (!wdg->visible())
-                    continue;
+            // Send enter/leave updates 
+            for (auto& w : m_children) {
+                if (!w->visible()) continue;
 
-                if (wdg.get() == hovered) {
-                    if (!wdg->hasBelowMouse()) {
-                        wdg->set_BelowMouse();
-                        if (wdg->handle(FR_ENTER) == 1)
-                            return 1;
+                if (w.get() == hovered) {
+                    if (!w->hasBelowMouse()) {
+                        w->set_BelowMouse();
+                        w->handle(FR_ENTER);
                     }
                 }
                 else {
-                    if (wdg->hasBelowMouse()) {
-                        wdg->clear_BelowMouse();
-                        if (wdg->handle(FR_LEAVE) == 1) {
-                            return 1;
-                        }
+                    if (w->hasBelowMouse()) {
+                        w->clear_BelowMouse();
+                        w->handle(FR_LEAVE);
                     }
                 }
             }
-        }break;
         }
-        int result = 0;
+
         for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
-            auto& wdg = *it;
-            //We should not allow sending events to inactive widget
-            if (wdg->active() && wdg->visible()) {
-                if (wdg->isMouse_inside()) {
-                    result = wdg->handle(ev);
-                    //TODO CHECK ME IF THIS IS CORRECT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                    if (result == 1)
-                        break;
-                }
+            auto& w = *it;
+
+            if (!w->visible() || !w->active())
+                continue;
+            bool test_drag = (  ev == FR_LEFT_DRAG_MOVE ||
+                                ev == FR_MIDDLE_DRAG_MOVE ||
+                                ev == FR_RIGHT_DRAG_MOVE ||
+                                ev == FR_LEFT_DRAG_PUSH ||
+                                ev == FR_MIDDLE_DRAG_PUSH ||
+                                ev == FR_RIGHT_DRAG_PUSH ||
+                                ev == FR_LEFT_DRAG_RELEASE||
+                                ev == FR_MIDDLE_DRAG_RELEASE ||
+                                ev == FR_RIGHT_DRAG_RELEASE);
+
+            if (w->isMouse_inside() || test_drag ) {
+                if (w->handle(ev))
+                    return 1;
             }
         }
-        return result;
+        return 0;
     }
+
     bool Frtk_GrpWidget::take_focus() {
         m_has_focus = true;
         Frtk_Widget* first = first_focusable_widget();

@@ -304,7 +304,6 @@ namespace FR {
                 m_mainWindow->activateNavi();
             m_guiWindow->handle(events); /* we don't care about the results, 
                                             forward all events to container widget */
-
         }
         return result;
     }
