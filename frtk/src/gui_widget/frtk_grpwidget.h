@@ -73,6 +73,7 @@ namespace FR {
         virtual void parent_changed() override;
         Frtk_Window* getParentWindow();
         virtual void draw()  override;
+        Frtk_Widget* getTopMouseOverChild();
         virtual int handle(int ev) override;
         dimPos_float_t mainGui() const override;
         std::vector<std::shared_ptr<Frtk_Widget>> m_children;

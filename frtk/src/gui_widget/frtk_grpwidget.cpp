@@ -295,6 +295,20 @@ namespace FR {
         return { m_x, m_y + FRTK_WINDOWS_TITLE_HEIGHT };
     }
 
+    Frtk_Widget* Frtk_GrpWidget::getTopMouseOverChild()
+    {
+        for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
+            Frtk_Widget* w = it->get();
+            if (!w->visible() || !w->active() || !w->isMouse_inside())
+                continue;
+            if (auto* grp = dynamic_cast<Frtk_GrpWidget*>(w)) {
+                if (Frtk_Widget* deep = grp->getTopMouseOverChild())
+                    return deep;
+            }
+            return w;
+        }
+        return nullptr;
+    }
     //Return = 1 Event consumed
     //Return = 0 or -1 Event should continue to be delivered to other widgets
     //Return = 1 Event consumed
@@ -358,32 +372,29 @@ namespace FR {
 
         if (ev == FR_ENTER || ev == FR_MOUSE_MOVE) {
 
-            Frtk_Widget* hovered = nullptr;
-
-            // Find top-most hovered child (reverse order = topmost first)
-            for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
-                auto& w = *it;
-                if (w->visible() && w->active() && w->isMouse_inside()) {
-                    hovered = w.get();
-                    break;
-                }
-            }
-
-            // Send enter/leave updates 
+            // Find top-most active child (reverse order = topmost first)
+            Frtk_Widget* actWdg = getTopMouseOverChild();
+            
+            if(actWdg!=nullptr){
             for (auto& w : m_children) {
                 if (!w->visible()) continue;
 
-                if (w.get() == hovered) {
+                if (w.get() == actWdg) {
                     if (!w->hasBelowMouse()) {
                         w->set_BelowMouse();
+                        FRTK_CORE_INFO(" enter sent {}", w->label());
                         w->handle(FR_ENTER);
                     }
                 }
                 else {
+//                    if (actWdg->label() == "OK!")
+//                        FR_DEBUG_BREAK;
                     if (w->hasBelowMouse()) {
                         w->clear_BelowMouse();
+                        FRTK_CORE_INFO(" leave sent {}", w->label());
                         w->handle(FR_LEAVE);
                     }
+                }
                 }
             }
         }
