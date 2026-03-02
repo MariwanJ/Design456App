@@ -302,7 +302,7 @@ namespace FR {
             // Scene should not get events if the mouse was over a frtk-window!!!! IMPORTANT TO REMEMBER!!!
             if (!m_dragging)
                 m_mainWindow->activateNavi();
-            m_guiWindow->handle(events); /* we don't care about the results, 
+                m_guiWindow->handle(events); /* we don't care about the results, 
                                             forward all events to container widget */
         }
         return result;

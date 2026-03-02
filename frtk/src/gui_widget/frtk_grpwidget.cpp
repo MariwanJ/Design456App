@@ -120,7 +120,7 @@ namespace FR {
     }
 
     int Frtk_GrpWidget::send_event(Frtk_Widget& w, int ev) {
-        return w.handle(ev);
+            return w.handle(ev);
     }
     int Frtk_GrpWidget::findIndex(const std::shared_ptr<Frtk_Widget>& w) const {
         auto it = std::find(m_children.begin(), m_children.end(), w);
@@ -367,80 +367,76 @@ namespace FR {
         if (m_grabbedChild) {
             if (m_grabbedChild->visible() && m_grabbedChild->active())
                 return m_grabbedChild->handle(ev);
-            m_grabbedChild = nullptr;
+            //m_grabbedChild = nullptr;
         }
 
         if (ev == FR_ENTER || ev == FR_MOUSE_MOVE) {
-
             // Find top-most active child (reverse order = topmost first)
             Frtk_Widget* actWdg = getTopMouseOverChild();
-            
-            if(actWdg!=nullptr){
-            for (auto& w : m_children) {
-                if (!w->visible()) continue;
+            if (actWdg != nullptr) {
+                for (auto& w : m_children) {
+                    if (!w->visible()) continue;
 
-                if (w.get() == actWdg) {
-                    if (!w->hasBelowMouse()) {
-                        w->set_BelowMouse();
-                        FRTK_CORE_INFO(" enter sent {}", w->label());
-                        w->handle(FR_ENTER);
+                    Frtk_Widget* newWdg = actWdg;
+                    Frtk_Widget* oldWdg = g_focusedWdgt.g_underMouse;
+                    if (newWdg != oldWdg) {
+                        if (oldWdg) {
+                            oldWdg->clear_BelowMouse();
+                            send_event(*oldWdg, FR_LEAVE);
+                        }
+                        g_focusedWdgt.g_underMouse = newWdg;
+                        if (newWdg) {
+                            newWdg->set_BelowMouse();
+                            send_event(*newWdg, FR_ENTER);
+                        }
                     }
-                }
-                else {
-//                    if (actWdg->label() == "OK!")
-//                        FR_DEBUG_BREAK;
-                    if (w->hasBelowMouse()) {
-                        w->clear_BelowMouse();
-                        FRTK_CORE_INFO(" leave sent {}", w->label());
-                        w->handle(FR_LEAVE);
-                    }
-                }
                 }
             }
         }
+    
 
-        for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
-            auto& w = *it;
+    for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
+        auto& w = *it;
 
-            if (!w->visible() || !w->active())
-                continue;
-            bool test_drag = (  ev == FR_LEFT_DRAG_MOVE ||
-                                ev == FR_MIDDLE_DRAG_MOVE ||
-                                ev == FR_RIGHT_DRAG_MOVE ||
-                                ev == FR_LEFT_DRAG_PUSH ||
-                                ev == FR_MIDDLE_DRAG_PUSH ||
-                                ev == FR_RIGHT_DRAG_PUSH ||
-                                ev == FR_LEFT_DRAG_RELEASE||
-                                ev == FR_MIDDLE_DRAG_RELEASE ||
-                                ev == FR_RIGHT_DRAG_RELEASE);
+        if (!w->visible() || !w->active())
+            continue;
+        bool test_drag = (ev == FR_LEFT_DRAG_MOVE ||
+            ev == FR_MIDDLE_DRAG_MOVE ||
+            ev == FR_RIGHT_DRAG_MOVE ||
+            ev == FR_LEFT_DRAG_PUSH ||
+            ev == FR_MIDDLE_DRAG_PUSH ||
+            ev == FR_RIGHT_DRAG_PUSH ||
+            ev == FR_LEFT_DRAG_RELEASE ||
+            ev == FR_MIDDLE_DRAG_RELEASE ||
+            ev == FR_RIGHT_DRAG_RELEASE);
 
-            if (w->isMouse_inside() || test_drag ) {
-                if (w->handle(ev))
-                    return 1;
-            }
+        if (w->isMouse_inside() || test_drag) {
+            if (w->handle(ev))
+                return 1;
         }
-        return 0;
     }
+    return 0;
+}
 
-    bool Frtk_GrpWidget::take_focus() {
-        m_has_focus = true;
-        Frtk_Widget* first = first_focusable_widget();
-        if (!first) return false;
+bool Frtk_GrpWidget::take_focus() {
+    m_has_focus = true;
+    Frtk_Widget* first = first_focusable_widget();
+    if (!first) return false;
 
-        return first->take_focus();
-    }
+    return first->take_focus();
+}
 
-    void Frtk_GrpWidget::hide()
-    {
-        m_has_focus = false;
-        for (auto wdg : m_children)
-            wdg->hide();
-    }
+void Frtk_GrpWidget::hide()
+{
+    m_has_focus = false;
+    for (auto wdg : m_children)
+        wdg->hide();
+}
 
-    void Frtk_GrpWidget::show()
-    {
-        m_has_focus = true;
-        for (auto wdg : m_children)
-            wdg->show();
-    }
+void Frtk_GrpWidget::show()
+{
+    m_has_focus = true;
+    for (auto wdg : m_children)
+        wdg->show();
+}
 }
