@@ -358,16 +358,42 @@ namespace FR {
         if (ev == FR_LEFT_PUSH || ev == FR_LEFT_DRAG_RELEASE ||
             ev == FR_LEFT_DRAG_PUSH || ev == FR_LEFT_DRAG_MOVE) {
             if (updateBtnPressed()) {
-                //TODO FIX ME WE SHOULD HAVE DIFF CALLBACKS
-                do_callback();
-                return 1;
+            //TODO FIX ME WE SHOULD HAVE DIFF CALLBACKS
+                
+            //BUTTONS 
+                auto clamp = [](float v, float lo, float hi) {
+                    return std::max(lo, std::min(v, hi));
+                    };
+                
+                if (m_activeBtns.up) {
+                    m_scrollwdg.Ver.scrollOffs.y =
+                        clamp(m_scrollwdg.Ver.scrollOffs.y - 10.f, 0.f,  m_scrollwdg.Ver.track.size.h - m_scrollwdg.Ver.scroll.size.h);
+                    do_callback();
+                    return 1;
+                }
+
+                if (m_activeBtns.down) {
+                    m_scrollwdg.Ver.scrollOffs.y =
+                        clamp(m_scrollwdg.Ver.scrollOffs.y + 10.f, 0.f, m_scrollwdg.Ver.track.size.h - m_scrollwdg.Ver.scroll.size.h);
+                    do_callback();
+                    return 1;
+                }
+
+                if (m_activeBtns.right) {
+                    m_scrollwdg.Hor.scrollOffs.x =
+                        clamp(m_scrollwdg.Hor.scrollOffs.x + 10.f, 0.f, m_scrollwdg.Hor.track.size.w - m_scrollwdg.Hor.scroll.size.w);
+                    do_callback();
+                    return 1;
+                }
+
+                if (m_activeBtns.left) {
+                    m_scrollwdg.Hor.scrollOffs.x =
+                        clamp(m_scrollwdg.Hor.scrollOffs.x - 10.f, 0.f, m_scrollwdg.Hor.track.size.w - m_scrollwdg.Hor.scroll.size.w);
+                    do_callback();
+                    return 1;
+                }
             }
-
-            if (m_activeBtns.up)    m_scrollwdg.Ver.scrollOffs.y -= 10.f;
-            if (m_activeBtns.down)  m_scrollwdg.Ver.scrollOffs.y += 10.f;
-            if (m_activeBtns.left)  m_scrollwdg.Hor.scrollOffs.x -= 10.f;
-            if (m_activeBtns.right) m_scrollwdg.Hor.scrollOffs.x += 10.f;
-
+            //SCROLL 
             if (m_scrollwdg.Ver.visible)
             {
                 float offx = absX() + -m_x + m_scrollwdg.Ver.scroll.pos.x;
@@ -390,7 +416,7 @@ namespace FR {
                         }
                     return 1;
                 }
-                 else if (ev == FR_LEFT_DRAG_RELEASE)
+                 else if (ev == FR_LEFT_DRAG_RELEASE || ev == FR_LEAVE )
                  {
                     m_scrollwdg.Ver.dragging = false;
                     return 1;
@@ -420,7 +446,7 @@ namespace FR {
                         }
                     return 1;
                 }
-                 else if (ev == FR_LEFT_DRAG_RELEASE)
+                 else if (ev == FR_LEFT_DRAG_RELEASE || ev == FR_LEAVE)
                  {
                  m_scrollwdg.Hor.dragging = false;
                  return 1;

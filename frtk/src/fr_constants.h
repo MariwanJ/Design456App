@@ -59,7 +59,7 @@ namespace FR {
     many other software, we define only height 
     as width could be variable */
 #define FRTK_TOOLBAR_BUTTON_HEGHT 32.0f
-#define FRTK_TOOLBAR_BUTTON_FONT_SIZE 14
+#define FRTK_TOOLBAR_BUTTON_FONT_SIZE 13
 
 #define FRTK_FOCUS_OPACITY_VALUE 0.35f
 
