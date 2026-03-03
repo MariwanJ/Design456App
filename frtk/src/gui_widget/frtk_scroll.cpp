@@ -176,18 +176,13 @@ namespace FR {
         draw_children();
     }
     void Frtk_Scroll::draw_children() {
-            // clip to viewport
             nvgSave(m_vg);
             nvgScissor(m_vg, m_viewPort.pos.x, m_viewPort.pos.y, m_viewPort.size.w, m_viewPort.size.h);
-
-            // move drawing space opposite to scroll
             nvgTranslate(m_vg, m_viewPort.pos.x - m_scrollwdg.Hor.scrollOffs.x, m_viewPort.pos.y - m_scrollwdg.Ver.scrollOffs.y);
             Frtk_GrpWidget::draw_children();
             nvgRestore(m_vg);
-   
-
-
     }
+
     void Frtk_Scroll::draw_scrollH()
     {
         NVGpaint shadowPaint, fadePaint;
