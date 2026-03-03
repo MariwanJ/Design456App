@@ -263,6 +263,7 @@ namespace FR {
         }
         return tmpChild;
     }
+
     int Frtk_Tabs::findIndex(Frtk_Tabwdg* w) {
         for (size_t i = 0; i < m_children.size(); ++i) {
             if (m_children[i].get() == w)

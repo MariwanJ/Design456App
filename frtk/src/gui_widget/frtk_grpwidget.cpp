@@ -162,10 +162,10 @@ namespace FR {
     void Frtk_GrpWidget::remove_all() {
         m_children.clear();
     }
-    void Frtk_GrpWidget::addChild(std::shared_ptr<Frtk_Widget> w)
+    void Frtk_GrpWidget::addChild(std::shared_ptr<Frtk_Widget> wdg)
     {
-        w->parent(this);
-        m_children.emplace_back(std::move(w));
+        wdg->parent(this);
+        m_children.emplace_back(std::move(wdg));
     }
 
     bool Frtk_GrpWidget::restore_focus() {

@@ -36,7 +36,10 @@ namespace FR {
         bool btnLeft;
         bool btnRight;
     } btnEvent;
-
+    typedef struct {
+        bool H;
+        bool V;
+    } overflow_t;
     typedef struct {
         Dim_float_t track;
         Dim_float_t scroll;
@@ -67,8 +70,16 @@ namespace FR {
     public:
         Frtk_Scroll(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl = "Tab", BOX_TYPE b = FRTK_DOWN_BOX);
 
+        bool checkOverflow();
+
+        void updateContentSize();
+
         void updateScrollGeometry();
- 
+        virtual int remove_child_at(size_t index) override;
+        virtual int remove_child(std::shared_ptr<Frtk_Widget>& wdg) override;
+        virtual void remove_all() override;
+        virtual void addChild(std::shared_ptr<Frtk_Widget> w)override;
+
 
     protected:
         int updateBtnPressed();
@@ -87,10 +98,11 @@ namespace FR {
         Scroll_t m_scrollwdg;
     private:
     activeButton_t m_activeBtns;
-    float scrollbarThickness ;
-    float minThumbSize ;
-    float trackExtra ;
-    float squarePadding;
+    float m_scrollbarThickness ;
+    float m_minThumbSize ;
+    float m_trackExtra ;
+    float m_squarePadding;
+    overflow_t m_overflow;
 
     };
 }

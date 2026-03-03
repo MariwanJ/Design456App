@@ -58,7 +58,7 @@ namespace FR {
         virtual int remove_child(std::shared_ptr<Frtk_Widget> &wdg);
         virtual void remove_all();
 
-        virtual void addChild(std::shared_ptr<Frtk_Widget> w);
+        virtual void addChild(std::shared_ptr<Frtk_Widget> wdg);
         virtual bool navigate_focus(int key);
         Frtk_Widget* first_focusable_widget();
         //Return a const reference to prevent modification

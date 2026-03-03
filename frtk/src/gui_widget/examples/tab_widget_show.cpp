@@ -32,8 +32,8 @@
 #include <gui_widget/frtk_scroll.h>
 namespace FR {
     std::shared_ptr<Frtk_Window> runTabWidget() {
-        auto window = std::make_shared<Frtk_Window>(500.f, 200.f, 700.f, 700.f, "Testing buttons, toolbars", FRTK_UP_BOX);
-        auto tab = std::make_shared<Frtk_Tabs>(window->getContext(), 10.0f, 10.0f, 300.0f, 300.0f, "tab", FRTK_UP_BOX);
+        auto window = std::make_shared<Frtk_Window>(500.f, 200.f, 700.f, 600.f, "Testing buttons, toolbars", FRTK_UP_BOX);
+        auto tab = std::make_shared<Frtk_Tabs>(window->getContext(), 0.0f, 0.0f, 250.0f, 250.0f, "tab", FRTK_UP_BOX);
         auto btn = std::make_shared<Frtk_Button>(window->getContext(), 30.0f, 30.0f, 40.0f, 40.0f, "OK!", FRTK_UP_BOX);
 
         tab->lblAlign(NVG_ALIGN_TOP_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE);
@@ -44,15 +44,15 @@ namespace FR {
             newTab->lblAlign(NVG_ALIGN_TOP_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE);
             newTab->addChildToTab(btn);
         }
-        auto sc = std::make_shared<Frtk_Scroll>(window->getContext(), 200.0f, 200.0f, 300.0f, 300.0f, "OK!", FRTK_UP_BOX);
+        auto sc = std::make_shared<Frtk_Scroll>(window->getContext(), 250, 250.0f, 300.0f, 300.0f, "OK!", FRTK_UP_BOX);
         tab->layoutTabs();
         tab->parent(window.get());
         window->addChild(tab);
         sc->parent(window.get());
-       /* for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
             auto btn = std::make_shared<Frtk_Button>(window->getContext(), 00.0f+i*45, 0.0f, 40.0f, 40.0f, "OK!", FRTK_UP_BOX);
             sc->addChild(btn);
-        }*/
+        }
         window->addChild(sc);
         return window;
     }
