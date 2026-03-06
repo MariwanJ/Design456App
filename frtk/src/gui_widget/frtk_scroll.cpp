@@ -31,7 +31,7 @@
 
 namespace FR {
     Frtk_Scroll::Frtk_Scroll(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b) :
-        Frtk_GrpWidget(vg, X, Y, W, H, lbl, FRTK_FLAT_BOX),
+        Frtk_GrpWidget(vg, X, Y, W, H, lbl, b),
         m_overflow{false, false}, m_content{ 0.0f,0.0f,W,H }, m_viewPort{ 0,0,W,H}
     {
         m_scrollwdg.Ver.track = { 0 };
@@ -60,6 +60,7 @@ namespace FR {
         m_viewPort.size.w = m_w - m_squarePadding;
         m_viewPort.size.h = m_h - m_squarePadding;
         m_content.pos = { 0.0f, 0.0f };
+        m_bkg_color = glm::vec4(FR_DARK_GRAY);
     }
     
    bool Frtk_Scroll::checkOverflow() {
@@ -104,7 +105,7 @@ namespace FR {
             m_scrollwdg.Ver.track.size.h = m_h - 2 * m_scrollbarThickness - m_squarePadding * 2;
 
             // scroll-middle-button
-            float fractionVisible = std::min(1.0f, 0.80f * m_viewPort.size.h / m_content.size.h);
+            float fractionVisible = std::min(1.0f, m_viewPort.size.h / m_content.size.h);
             m_scrollwdg.Ver.scroll.size.w = m_scrollbarThickness;
             m_scrollwdg.Ver.scroll.size.h = std::max(m_minThumbSize, fractionVisible * m_scrollwdg.Ver.track.size.h);
             float scrollRatioY = m_scrollwdg.Ver.scrollOffs.y;
@@ -133,7 +134,7 @@ namespace FR {
             m_scrollwdg.Hor.track.size.h = m_scrollbarThickness + m_trackExtra;
 
             // middle-button
-            float fractionVisible = std::min(1.0f, 0.8f * m_viewPort.size.w / m_content.size.w);
+            float fractionVisible = std::min(1.0f, 0.70f * m_viewPort.size.w / m_content.size.w);
             m_scrollwdg.Hor.scroll.size.h = m_scrollbarThickness;
             m_scrollwdg.Hor.scroll.size.w = std::max(m_minThumbSize, fractionVisible * m_scrollwdg.Hor.track.size.w);
             float scrollRatioX = m_scrollwdg.Hor.scrollOffs.x;
@@ -171,13 +172,14 @@ namespace FR {
 
     void Frtk_Scroll::draw()
     {
+        draw_box(m_vg, m_boxType, { {m_x, m_y},m_w,m_h }, 0, FRTK_NORMAL_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
         draw_scrollV();
         draw_scrollH();
         draw_children();
     }
     void Frtk_Scroll::draw_children() {
-            nvgSave(m_vg);
-            nvgScissor(m_vg, m_viewPort.pos.x, m_viewPort.pos.y, m_viewPort.size.w, m_viewPort.size.h);
+            nvgSave(m_vg);  
+            nvgScissor(m_vg, m_x, m_y, m_viewPort.size.w,  m_viewPort.size.h);
             nvgTranslate(m_vg, m_viewPort.pos.x - m_scrollwdg.Hor.scrollOffs.x, m_viewPort.pos.y - m_scrollwdg.Ver.scrollOffs.y);
             Frtk_GrpWidget::draw_children();
             nvgRestore(m_vg);
@@ -425,7 +427,7 @@ namespace FR {
                     mouse.activeX <= offx + m_scrollwdg.Ver.scroll.size.w &&
                     mouse.activeY >= offy &&
                     mouse.activeY <= offy + m_scrollwdg.Ver.scroll.size.h);
-                if (testBound || ev == FR_LEFT_DRAG_MOVE && m_scrollwdg.Ver.dragging)
+                if (testBound || ev == FR_LEFT_DRAG_MOVE && m_scrollwdg.Ver.dragging && !m_scrollwdg.Hor.dragging)
                 {
                     float deltaY = (mouse.prevY - mouse.activeY) * m_scrollwdg.sensitivity;
                     if (ev == FR_LEFT_DRAG_PUSH) {
@@ -435,7 +437,20 @@ namespace FR {
                         if (ev == FR_LEFT_DRAG_MOVE && m_scrollwdg.Ver.dragging)
                         {
                             float newPos = m_scrollwdg.Ver.scrollOffs.y - deltaY;
-                            m_scrollwdg.Ver.scrollOffs.y = std::clamp(newPos, 0.f, m_h - m_scrollwdg.Ver.scroll.size.h - m_squarePadding - 4 * m_scrollwdg.Ver.btnInc.size.h);
+                            float maxPos = m_h - m_scrollwdg.Ver.scroll.size.h - m_squarePadding - 4 * m_scrollwdg.Ver.btnInc.size.h;
+                            if (maxPos <= 0.f)
+                            {
+                                m_scrollwdg.Ver.scrollOffs.y = 0.f;
+                            }
+                            else
+                            {
+                                if (newPos < 0.f)
+                                    m_scrollwdg.Ver.scrollOffs.y = 0.f;
+                                else if (newPos > maxPos)
+                                    m_scrollwdg.Ver.scrollOffs.y = maxPos;
+                                else
+                                    m_scrollwdg.Ver.scrollOffs.y = newPos;
+                            }
                         }
                     return 1;
                 }
@@ -448,13 +463,13 @@ namespace FR {
             }
             if (m_scrollwdg.Hor.visible)
             {
-                float offx = absX() + -m_x + m_scrollwdg.Hor.scroll.pos.x;
-                float offy = absY() + -m_y + m_scrollwdg.Hor.scroll.pos.y;
+                float offx = absX() + - m_x + m_scrollwdg.Hor.scroll.pos.x;
+                float offy = absY() + - m_y + m_scrollwdg.Hor.scroll.pos.y;
                 bool testBound = (mouse.activeX >= offx &&
                     mouse.activeX <= offx + m_scrollwdg.Hor.scroll.size.w &&
                     mouse.activeY >= offy &&
                     mouse.activeY <= offy + m_scrollwdg.Hor.scroll.size.h);
-                if (testBound || ev == FR_LEFT_DRAG_MOVE && m_scrollwdg.Hor.dragging) {
+                if (testBound || ev == FR_LEFT_DRAG_MOVE && m_scrollwdg.Hor.dragging && !m_scrollwdg.Ver.dragging) {
                     float deltaX = (mouse.prevX - mouse.activeX) * m_scrollwdg.sensitivity;
 
                     if (ev == FR_LEFT_DRAG_PUSH) {
@@ -465,7 +480,20 @@ namespace FR {
                         {
                             m_scrollwdg.Hor.dragging = true;
                             float newPos = m_scrollwdg.Hor.scrollOffs.x - deltaX;
-                            m_scrollwdg.Hor.scrollOffs.x = std::clamp(newPos, 0.f, m_w - m_scrollwdg.Hor.scroll.size.w- m_squarePadding - 4 * m_scrollwdg.Hor.btnInc.size.w);
+                            float maxPos = m_w - m_scrollwdg.Hor.scroll.size.w - m_squarePadding - 4 * m_scrollwdg.Hor.btnInc.size.w;
+                            if (maxPos <= 0.f)
+                            {
+                                m_scrollwdg.Hor.scrollOffs.x = 0.f;
+                            }
+                            else
+                            {
+                                if (newPos < 0.f)
+                                    m_scrollwdg.Hor.scrollOffs.x = 0.f;
+                                else if (newPos > maxPos)
+                                    m_scrollwdg.Hor.scrollOffs.x = maxPos;
+                                else
+                                    m_scrollwdg.Hor.scrollOffs.x = newPos;
+                            }
                         }
                     return 1;
                 }

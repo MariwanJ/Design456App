@@ -401,7 +401,7 @@ namespace FR {
 
      int Fr_Window::GLFWrun()
      {
-         m_nvgContext = nvgCreateGL3(NVG_ANTIALIAS);
+         m_nvgContext = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
          if (!m_nvgContext) {
              FRTK_CORE_FATAL("Failed to create context for NanoVG");
              glfwTerminate();
