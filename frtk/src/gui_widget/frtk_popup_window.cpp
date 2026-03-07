@@ -4,9 +4,12 @@
 #include <nanovg_gl.h>
 #include <fr_core.h>
 #include<gui_widget/frtk_glfnano_window.h>
+#include <gui_widget/frtk_draw.h>
+#include "frtk_popup_window.h"
 
 namespace FR {
-    Frtk_GlfwNano_Window::Frtk_GlfwNano_Window(int X, int Y, int W, int H, std::string lbl) :
+    Frtk_Popup_Window::Frtk_Popup_Window(int X, int Y, int W, int H, std::string lbl, BOX_TYPE b):
+        Frtk_GrpWidget(nullptr,X,Y,W,H,lbl,b),
         gl_version_major(4), gl_version_minor(6), m_vg(nullptr), m_linkToMainWindow(nullptr){
         // Initialize GLFW
         if (!glfwInit()) {
@@ -29,40 +32,40 @@ namespace FR {
             glfwTerminate();
         }
     }
-    void Frtk_GlfwNano_Window::setlinkToMain(Fr_Window* window) {
+    void Frtk_Popup_Window::setlinkToMain(Fr_Window* window) {
         m_linkToMainWindow = window;
     }
-    void Frtk_GlfwNano_Window::setDecorated(GLFWwindow* w, bool decorated)
+    void Frtk_Popup_Window::setDecorated(GLFWwindow* w, bool decorated)
     {
         glfwSetWindowAttrib(w, GLFW_DECORATED, decorated);
     }
-
-    const std::string& Frtk_GlfwNano_Window::label()
+    int Frtk_Popup_Window::handle(int ev)
     {
-        return m_label;
+        return 0;
     }
 
-    int Frtk_GlfwNano_Window::run(void) {
+
+    void Frtk_Popup_Window::draw() {
+        if (!m_visible)
+            return;
+        FRTK_CORE_APP_ASSERT(m_vg != nullptr);
+        draw_box(m_vg, m_boxType, { { m_x, m_y }, { m_w, m_y } }, 0.0f, FRTK_NORMAL_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
+        Frtk_GrpWidget::draw_children();
+        if (!m_label.empty())
+            drawLabel();
+        draw_focus();
+
+    }
+    int Frtk_Popup_Window::run(void) {
         while (!glfwWindowShouldClose(m_glfwWindow)) {
             int winWidth, winHeight;
             glfwGetFramebufferSize(m_glfwWindow, &winWidth, &winHeight);
             glViewport(0, 0, winWidth, winHeight);
-            glClearColor(0.3f, 0.3f, 0.32f, 1.0f);
+            glClearColor(FR_GRAY);
             glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-            // Start NanoVG frame
-            nvgBeginFrame(m_vg, winWidth, winHeight, 1.0f);
-
-            // Draw a line
-            nvgBeginPath(m_vg);
-            nvgMoveTo(m_vg, 100, 100);   // start point
-            nvgLineTo(m_vg, 700, 500);   // end point
-            nvgStrokeColor(m_vg, nvgRGB(255, 0, 0)); // red line
-            nvgStrokeWidth(m_vg, 2.0f);
-            nvgStroke(m_vg);
-
+            nvgBeginFrame(m_vg, m_w, m_h    , 1.0f);
+            draw();
             nvgEndFrame(m_vg);
-
             glfwSwapBuffers(m_glfwWindow);
             glfwPollEvents();
         }
@@ -73,43 +76,9 @@ namespace FR {
         glfwTerminate();
         return 0;
     }
-
-    int Frtk_GlfwNano_Window::x()
+    void Frtk_Popup_Window::position(float X, float Y)
     {
-        return m_x;
-    }
-    int Frtk_GlfwNano_Window::y()
-    {
-        return m_y;
-    }
-    int Frtk_GlfwNano_Window::w()
-    {
-        return m_w;
-    }
-    int Frtk_GlfwNano_Window::h()
-    {
-        return m_h;
-    }
-    void Frtk_GlfwNano_Window::x(int X)
-    {
-        m_x = X;
-    }
-    void Frtk_GlfwNano_Window::y(int Y)
-    {
-        m_y = Y;
-    }
-    void Frtk_GlfwNano_Window::w(int W)
-    {
-        m_w = W;
-    }
-    void Frtk_GlfwNano_Window::h(int H)
-    {
-        m_h = H;
-    }
-    void Frtk_GlfwNano_Window::position(int X, int Y)
-    {
-        m_x = X;
-        m_y = Y;
+        m_x = (int)X;
+        m_y = (int)Y;
         glfwSetWindowPos(m_glfwWindow, X, Y);
-    }
 }

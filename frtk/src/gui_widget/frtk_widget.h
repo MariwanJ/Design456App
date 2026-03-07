@@ -163,8 +163,8 @@ namespace FR {
         virtual float absY() const;
 
         virtual void resize(float X, float Y, float W, float H);
-        void position(float X, float Y);
-        void size(float W, float H);
+        virtual void position(float X, float Y);
+        virtual void size(float W, float H);
         
         void lblAlign(int ALIGN);
         void txtAlign(int ALIGN);

@@ -32,10 +32,11 @@
 #include <gui_widget/frtk_widget.h>
 
 class Frtk_Window;
-
+class Frtk_Popup_Window;
 namespace FR {
     class FRTK_API  Frtk_GrpWidget : public Frtk_Widget {
         friend Frtk_Window;
+        friend Frtk_Popup_Window;
     public:
         Frtk_GrpWidget(NVGcontext* vg, float X , float Y , float W , float H , std::string label = "", BOX_TYPE b = FRTK_NO_BOX);
         virtual ~Frtk_GrpWidget();
