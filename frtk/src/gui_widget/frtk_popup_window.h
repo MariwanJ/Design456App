@@ -2,10 +2,9 @@
 #define FRTK_POPUP_WINDOW_H
 
 #include <frtk.h>
-#include <fr_core.h>
+
 #include <GLFW/glfw3.h>
-#include <nanovg.h>
-#include <nanovg_gl.h> // for OpenGL 3 backend
+#include <fr_core.h>
 #include <gui_widget/frtk_grpwidget.h>
 
 namespace FR{

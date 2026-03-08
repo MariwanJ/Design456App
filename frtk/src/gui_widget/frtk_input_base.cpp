@@ -24,12 +24,10 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-
+#include <frtk.h>
 #include <gui_widget/frtk_input_base.h>
 #include <gui_widget/frtk_window.h>
-#include <nanovg.h>
-#include <frtk.h>
-#include <fr_core.h>
+
 namespace FR {
 #define ICON_SEARCH 0x1F50D
 #define ICON_CIRCLED_CROSS 0x2716

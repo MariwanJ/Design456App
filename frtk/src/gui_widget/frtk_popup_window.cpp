@@ -1,16 +1,12 @@
 //NanoVG
 #define NANOVG_GL3_IMPLEMENTATION
-#include <nanovg.h>
-#include <nanovg_gl.h>
-#include <fr_core.h>
-#include<gui_widget/frtk_glfnano_window.h>
+#include<gui_widget/frtk_popup_window.h>
 #include <gui_widget/frtk_draw.h>
-#include "frtk_popup_window.h"
 
 namespace FR {
-    Frtk_Popup_Window::Frtk_Popup_Window(int X, int Y, int W, int H, std::string lbl, BOX_TYPE b):
-        Frtk_GrpWidget(nullptr,X,Y,W,H,lbl,b),
-        gl_version_major(4), gl_version_minor(6), m_vg(nullptr), m_linkToMainWindow(nullptr){
+    Frtk_Popup_Window::Frtk_Popup_Window(int X, int Y, int W, int H, std::string lbl, BOX_TYPE b) :
+        Frtk_GrpWidget(nullptr, X, Y, W, H, lbl, b),
+        gl_version_major(4), gl_version_minor(6), m_linkToMainWindow(nullptr) {
         // Initialize GLFW
         if (!glfwInit()) {
             FRTK_CORE_FATAL("Failed to initialize GLFW");
@@ -44,7 +40,6 @@ namespace FR {
         return 0;
     }
 
-
     void Frtk_Popup_Window::draw() {
         if (!m_visible)
             return;
@@ -54,7 +49,6 @@ namespace FR {
         if (!m_label.empty())
             drawLabel();
         draw_focus();
-
     }
     int Frtk_Popup_Window::run(void) {
         while (!glfwWindowShouldClose(m_glfwWindow)) {
@@ -63,7 +57,7 @@ namespace FR {
             glViewport(0, 0, winWidth, winHeight);
             glClearColor(FR_GRAY);
             glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-            nvgBeginFrame(m_vg, m_w, m_h    , 1.0f);
+            nvgBeginFrame(m_vg, m_w, m_h, 1.0f);
             draw();
             nvgEndFrame(m_vg);
             glfwSwapBuffers(m_glfwWindow);
@@ -81,4 +75,5 @@ namespace FR {
         m_x = (int)X;
         m_y = (int)Y;
         glfwSetWindowPos(m_glfwWindow, X, Y);
+    }
 }

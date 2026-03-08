@@ -28,7 +28,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 #include<glad/glad.h>
-#include <fr_core.h>
+
 #include <fr_shader_program.h>
 #include <fr_window.h>
 namespace FR {

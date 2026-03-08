@@ -27,7 +27,6 @@
 #include <fr_application.h>
 #include <glm/gtx/transform.hpp>
 #include <fr_camera.h>
-#include <fr_core.h>
 
 
 

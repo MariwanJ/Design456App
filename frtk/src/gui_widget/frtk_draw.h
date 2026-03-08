@@ -32,7 +32,6 @@
 
 */
 #include <fr_core.h>
-#include <nanovg.h>
 
 namespace FR {
 
@@ -172,8 +171,5 @@ namespace FR {
     void FRTK_API drawCheckMark(NVGcontext* vg, float x, float y, float size, NVGcolor col = nvgRGBAf(FR_BLACK));
 
 }
-
-
-
 
 #endif // !FRTK_DRAW_H

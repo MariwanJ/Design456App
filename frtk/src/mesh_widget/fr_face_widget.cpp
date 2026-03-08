@@ -27,7 +27,7 @@
 #include "fr_face_widget.h"
 #include <glm/gtx/transform.hpp>
 #include<fr_window.h>
-#include <fr_core.h>
+
 namespace FR {
     Fr_Face_Widget::Fr_Face_Widget(std::shared_ptr<std::vector <float>> vertices,
         std::shared_ptr<std::vector <unsigned int>> indicies,

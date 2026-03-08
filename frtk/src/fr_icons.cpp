@@ -32,7 +32,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdlib.h>
-#include <fr_core.h>
+
 namespace FR {
     loadImage::loadImage(std::string fName) :_fName(fName)
     {

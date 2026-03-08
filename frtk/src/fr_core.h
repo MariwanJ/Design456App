@@ -42,6 +42,7 @@
 
 //NanoVG
 #include <nanovg.h>
+#include <nanovg_gl.h>
 
 #undef None                      // Fix X11 macro conflict
 #endif

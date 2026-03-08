@@ -27,7 +27,6 @@
 
 #include <gui_widget/frtk_scroll.h>
 #include <gui_widget/frtk_draw.h>
-#include <nanovg.h>
 
 namespace FR {
     Frtk_Scroll::Frtk_Scroll(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b) :

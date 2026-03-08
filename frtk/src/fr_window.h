@@ -28,7 +28,7 @@
 #define FR_WINDOW_H
 
 #include <fr_core.h>
-#include<fr_scene.h>
+#include <fr_scene.h>
 #include <fr_boundbox.h>
 #include <fr_transform.h>       //just for debug - remove it when done TODO : FIXME
 #include <fr_camera.h>

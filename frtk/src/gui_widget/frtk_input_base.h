@@ -31,7 +31,6 @@
 #include <frtk.h>
 #include <gui_widget/frtk_box.h>
 #include <gui_widget/frtk_draw.h>
-#include <nanovg.h>
 
 namespace FR {
     struct TextInput {

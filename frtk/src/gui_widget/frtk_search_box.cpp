@@ -26,8 +26,7 @@
 //
 
 #include <gui_widget/frtk_search_box.h>
-#include <nanovg.h>
-#include "frtk_input_base.h"
+#include <gui_widget/frtk_input_base.h>
 
 namespace FR {
 #define ICON_SEARCH 0x1F50D
