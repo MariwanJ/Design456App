@@ -12,10 +12,7 @@ class Frtk_Popup_Window : public Frtk_GrpWidget{
     public:
         Frtk_Popup_Window(int X, int Y, int W, int H, std::string lbl, BOX_TYPE b = FRTK_UP_BOX);
         void setlinkToMain(Fr_Window* window);
-        virtual void redraw() override;
-        virtual void show() override;
-        virtual void hide();
-        virtual void resize(float X, float Y, float W, float H);
+ 
         virtual void position(float X, float Y) override;
         virtual void setDecorated(GLFWwindow* w, bool decorated);
         int run(void);
@@ -23,10 +20,13 @@ class Frtk_Popup_Window : public Frtk_GrpWidget{
     protected:
         virtual int handle(int ev) override;
         virtual void draw() override;
-        GLFWwindow *m_glfwWindow;
+        GLFWwindow *m_glfpopWindow;
         int gl_version_major;
         int gl_version_minor;
         Fr_Window* m_linkToMainWindow;
+        bool s_GLFWpopInitialized;
+        bool s_GladInitialized;
+
 
 };
 }

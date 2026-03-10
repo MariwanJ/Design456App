@@ -34,12 +34,13 @@
  * .
  */
  //NanoVG
-#define NANOVG_GL3_IMPLEMENTATION
+ 
 #include <fr_window.h>
 #include <fr_widget.h>
 
 #if 1 //Temporary code  - testing gui toolkit
 #include <gui_widget/frtk_window.h>
+#include <gui_widget/frtk_popup_window.h>
 #include <gui_widget/examples/demo2.h>
 #include <gui_widget/examples/buttons_demo.h>
 #include <gui_widget/examples/input_output.h>
@@ -385,16 +386,9 @@ namespace FR {
      void Fr_Window::resize(int x, int y, int w, int h)
      {
          glfwSetWindowPos(pGLFWWindow, x, y);
-         glfwSetWindowSize(pGLFWWindow, w, y);
+         glfwSetWindowSize(pGLFWWindow, w, h);
      }
 
-     void Fr_Window::show() {
-         if (createGLFWwindow() != 0) {
-             if (s_GladInitialized == true) {
-                 //                       TODO: DO WE NEED THIS? I remove it for now
-             }
-         }
-     }
 
      int Fr_Window::GLFWrun()
      {
@@ -476,6 +470,8 @@ namespace FR {
          m_selectionTB = createSelectionToolbar();
          m_selectionTB->parent(this); //do not forget this !!!
          m_frtkWindow.emplace_back(m_selectionTB);
+         std::shared_ptr<Frtk_Popup_Window> popWin = std::make_shared <Frtk_Popup_Window>(100, 100, 400, 400, "PopuWindow");
+         popWin->run();
          bool onlyOnce = false;
          while (!glfwWindowShouldClose(pGLFWWindow))
          {

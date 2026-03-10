@@ -9,12 +9,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="obsolete\nanovg_gl2.h">
-      <Filter>obsolete</Filter>
-    </ClInclude>
-    <ClInclude Include="obsolete\nanovg_gl3.h">
-      <Filter>obsolete</Filter>
-    </ClInclude>
     <ClInclude Include="src\fontstash.h">
       <Filter>src</Filter>
     </ClInclude>

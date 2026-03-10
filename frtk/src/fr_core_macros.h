@@ -27,7 +27,6 @@
 #ifndef FR_COMMON_H
 #define FR_COMMAN_H
 #include <frtk.h>
-#include <fr_core.h>
 
 namespace FR {
     // Get Current Directory

@@ -38,11 +38,14 @@
 #include <glad/glad.h>          // Modern OpenGL loader
 #include <GLFW/glfw3.h>         // GLFW context and window
 #include <GLFW/glfw3native.h>   // Native access (X11 on Linux)
-#include <fr_core_macros.h>
 
+#define NANOVG_GL3
 //NanoVG
 #include <nanovg.h>
 #include <nanovg_gl.h>
+
+
+#include <fr_core_macros.h>
 
 #undef None                      // Fix X11 macro conflict
 #endif
@@ -51,10 +54,7 @@
 #include <imgui_impl_opengl3.h>
 
 // Standard Libraries
-#include <string>
-#include <cstring>
-#include <cerrno>
-#include <limits.h>
+
 
 
 //beep 

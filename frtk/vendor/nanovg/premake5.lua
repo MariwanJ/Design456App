@@ -16,7 +16,8 @@ project "nanovg"
 	}
 	includedirs { 
 	"src",
-	"obsolete"
+	"obsolete",
+	"%{IncludeDir.Glad}",
 	}
 	
     filter "system:linux"
