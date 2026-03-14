@@ -39,12 +39,12 @@
 #include <fr_widget.h>
 
 #if 1 //Temporary code  - testing gui toolkit
+#include <gui_widget/frtk_vwin.h>
 #include <gui_widget/frtk_window.h>
-#include <gui_widget/frtk_popup_window.h>
 #include <gui_widget/examples/demo2.h>
 #include <gui_widget/examples/buttons_demo.h>
 #include <gui_widget/examples/input_output.h>
-#include <gui_widget/frtk_toolbarwin.h>
+#include <gui_widget/frtk_toolbar_vwin.h>
 #include <gui_widget/examples/tab_widget_show.h>
 #endif
 
@@ -475,7 +475,7 @@ namespace FR {
          bool onlyOnce = false;
          while (!glfwWindowShouldClose(pGLFWWindow))
          {
-             auto popWindow= Frtk_Popup_Window::getFrtkPopWindow();
+             auto popWindow= Frtk_Window::getFrtkPopWindow();
              if (popWindow) {
                  popWindow->render_popupWindow();
              }
@@ -659,7 +659,7 @@ namespace FR {
          //FRTK GUI HANDLE
          for (auto it = m_frtkWindow.rbegin(); it != m_frtkWindow.rend(); ++it)
          {
-             std::shared_ptr<Frtk_Window> gui_win = *it;
+             std::shared_ptr<Frtk_Vwin> gui_win = *it;
 
              if (gui_win->handle(events) == 1)
                  return 1; // consumed by a child widget
@@ -699,7 +699,7 @@ namespace FR {
                                  if (g_focusedWdgt.current) {
                                      // There is a focused child -> find next widget inside the window
                                      Frtk_Widget* w = g_focusedWdgt.current;
-                                     while (w->parent() && !dynamic_cast<Frtk_Window*>(w->parent()))
+                                     while (w->parent() && !dynamic_cast<Frtk_Vwin*>(w->parent()))
                                      {
                                          w = w->parent();
                                      }

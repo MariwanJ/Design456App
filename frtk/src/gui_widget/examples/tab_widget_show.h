@@ -29,10 +29,10 @@
 #define TAB_WIDGET_SHOW_H
 
 
-#include <gui_widget/frtk_window.h>
+#include <gui_widget/frtk_vwin.h>
 
 
 namespace FR{
-    std::shared_ptr<Frtk_Window>  runTabWidget();
+    std::shared_ptr<Frtk_Vwin>  runTabWidget();
 }
 #endif//TAB_WIDGET_SHOW_H

@@ -208,7 +208,7 @@ namespace FR {
         void widgetType(WIDGTYPE nVal);
 
         Frtk_Widget* parent();
-        Frtk_Window* m_linkTofrtkWindow;
+        Frtk_Vwin* m_linkTofrtkWindow;
 
     protected:
         virtual void draw(void);
@@ -262,7 +262,7 @@ namespace FR {
         Frtk_Widget* current;
         Frtk_Widget* prev;
         Frtk_Widget* g_underMouse;
-        Frtk_Window* keyboardOwner;
+        Frtk_Vwin* keyboardOwner;
     }global_focus_tracker_t;
 
     extern global_focus_tracker_t g_focusedWdgt;

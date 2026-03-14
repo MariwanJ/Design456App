@@ -31,12 +31,12 @@
 #include <fr_core.h>
 #include <gui_widget/frtk_widget.h>
 
+class Frtk_Vwin;
 class Frtk_Window;
-class Frtk_Popup_Window;
 namespace FR {
     class FRTK_API  Frtk_GrpWidget : public Frtk_Widget {
+        friend Frtk_Vwin;
         friend Frtk_Window;
-        friend Frtk_Popup_Window;
     public:
         Frtk_GrpWidget(NVGcontext* vg, float X , float Y , float W , float H , std::string label = "", BOX_TYPE b = FRTK_NO_BOX);
         virtual ~Frtk_GrpWidget();
@@ -72,7 +72,7 @@ namespace FR {
         virtual void show() override;
     protected:
         virtual void parent_changed() override;
-        Frtk_Window* getParentWindow();
+        Frtk_Vwin* getParentWindow();
         virtual void draw()  override;
         Frtk_Widget* getTopMouseOverChild();
         virtual int handle(int ev) override;

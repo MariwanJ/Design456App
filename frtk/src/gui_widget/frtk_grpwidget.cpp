@@ -26,7 +26,7 @@
 //
 
 #include <gui_widget/frtk_grpwidget.h>
-#include <gui_widget/frtk_window.h>
+#include <gui_widget/frtk_vwin.h>
 namespace FR {
     // translate the current keystroke into up/down/left/right for navigation:
     static int navkey() {
@@ -271,12 +271,12 @@ namespace FR {
             c->parent_changed();
     }
 
-    Frtk_Window* Frtk_GrpWidget::getParentWindow() {
+    Frtk_Vwin* Frtk_GrpWidget::getParentWindow() {
         auto parent = m_parent;
         if (parent != nullptr) {
             while (parent->parent())
                 parent = parent->parent();
-            return (Frtk_Window*)parent;
+            return (Frtk_Vwin*)parent;
         }
         return nullptr;
     }

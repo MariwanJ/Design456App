@@ -29,10 +29,10 @@
 #define INPUT_OUTPUT_H_
 
 
-#include <gui_widget/frtk_window.h>
+#include <gui_widget/frtk_vwin.h>
 
 
 namespace FR{
-    std::shared_ptr<Frtk_Window>  runInputOutput();
+    std::shared_ptr<Frtk_Vwin>  runInputOutput();
 }
 #endif//INPUT_OUTPUT_H_

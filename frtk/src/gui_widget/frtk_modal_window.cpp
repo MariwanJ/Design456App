@@ -25,15 +25,14 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef DEMO_H
-#define DEMO_H
+//NanoVG
 
-
-#include <gui_widget/frtk_vwin.h>
-
-
-
-namespace FR{
-    std::shared_ptr<Frtk_Vwin>  runFRTKdemo2();
-}
-#endif
+#include<gui_widget/frtk_modal_window.h>
+#include <gui_widget/frtk_draw.h>
+#include <frtk.h>
+namespace FR {
+    Frtk_Modal_Window::Frtk_Modal_Window(int X, int Y, int W, int H, std::string lbl, BOX_TYPE b) :
+        Frtk_Window( X, Y, W, H, lbl, b) {
+    }
+    }
+  

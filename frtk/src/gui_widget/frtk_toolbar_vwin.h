@@ -25,10 +25,10 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#ifndef FRTK_TOOLBARWIN_H
-#define FRTK_TOOLBARWIN_H
+#ifndef FRTK_TOOLBARVWIN_H
+#define FRTK_TOOLBARVWIN_H
 
-#include <gui_widget/frtk_window.h>
+#include <gui_widget/frtk_vwin.h>
 #include <gui_widget/frtk_draw.h>
 #include<gui_widget/frtk_toolbar_button.h>
 
@@ -44,10 +44,10 @@ namespace FR {
         std::string tooltips; //not implemented yet!!
     };
 
-    class FRTK_API  Frtk_ToolBarWin : public Frtk_Window
+    class FRTK_API  Frtk_ToolBarVwin : public Frtk_Vwin
     {
     public:
-        Frtk_ToolBarWin(float , float Y , float W , float H, std::string lbl, const std::vector<toolbBTN_t>& tools = {}, bool horizontal=true, BOX_TYPE b = FRTK_UP_BOX, WIDGTYPE btnType= FRTK_TOOLBAR_BUTTON);
+        Frtk_ToolBarVwin(float , float Y , float W , float H, std::string lbl, const std::vector<toolbBTN_t>& tools = {}, bool horizontal=true, BOX_TYPE b = FRTK_UP_BOX, WIDGTYPE btnType= FRTK_TOOLBAR_BUTTON);
         void    dockable(bool val);
         bool    dockable();
         void horizontal(bool val);
@@ -83,4 +83,4 @@ namespace FR {
         WIDGTYPE m_buttonsType;
     };
 }
-#endif // FL_TOOLBAR_H
+#endif // FRTK_TOOLBAR_VWIN_H

@@ -29,11 +29,11 @@
 #define BUTTONS_DEMO_H
 
 
-#include <gui_widget/frtk_window.h>
+#include <gui_widget/frtk_vwin.h>
 
 
 
 namespace FR{
-    std::shared_ptr<Frtk_Window>  runFRTKdemo();
+    std::shared_ptr<Frtk_Vwin>  runFRTKdemo();
 }
 #endif //BUTTONS_DEMO_H

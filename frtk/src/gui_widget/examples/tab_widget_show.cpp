@@ -28,11 +28,11 @@
 #include<gui_widget/examples/tab_widget_show.h>
 
 #include <gui_widget/frtk_tab.h>
-#include <gui_widget/frtk_window.h>
+#include <gui_widget/frtk_vwin.h>
 #include <gui_widget/frtk_scroll.h>
 namespace FR {
-    std::shared_ptr<Frtk_Window> runTabWidget() {
-        auto window = std::make_shared<Frtk_Window>(500.f, 200.f, 700.f, 600.f, "Testing buttons, toolbars", FRTK_UP_BOX);
+    std::shared_ptr<Frtk_Vwin> runTabWidget() {
+        auto window = std::make_shared<Frtk_Vwin>(500.f, 200.f, 700.f, 600.f, "Testing buttons, toolbars", FRTK_UP_BOX);
         auto tab = std::make_shared<Frtk_Tabs>(window->getContext(), 0.0f, 0.0f, 200.0f, 200.0f, "tab", FRTK_UP_BOX);
         auto btn = std::make_shared<Frtk_Button>(window->getContext(), 30.0f, 30.0f, 40.0f, 40.0f, "OK!", FRTK_UP_BOX);
 

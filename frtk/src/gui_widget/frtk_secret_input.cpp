@@ -27,7 +27,7 @@
 
 #include <gui_widget/frtk_input.h>
 #include "frtk_secret_input.h"
-#include <gui_widget/frtk_window.h>
+#include <gui_widget/frtk_vwin.h>
 
 namespace FR{
 

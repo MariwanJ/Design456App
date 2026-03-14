@@ -26,10 +26,10 @@
 //
 
 #include <gui_widget/frtk_main_toolbar.h>
-#include <gui_widget/Frtk_ToolBarWin.h>
+#include <gui_widget/frtk_toolbar_vwin.h>
 #include <fr_file_dialog.h>
 #include <fr_window.h>
-#include <gui_widget/frtk_popup_window.h>
+#include <gui_widget/frtk_window.h>
 namespace FR {
 /*
                         TOOLBARS CALLBACKS
@@ -106,7 +106,7 @@ namespace FR {
 
 */
 
-    std::shared_ptr<Frtk_ToolBarWin> Fr_Window::createMainToolbar() {
+    std::shared_ptr<Frtk_ToolBarVwin> Fr_Window::createMainToolbar() {
         std::vector<toolbBTN_t> tools1 = {
         {"New",                                                                         // std::string lbl
         "New",                                                                          //std::string name
@@ -138,12 +138,12 @@ namespace FR {
         FRTK_UP_BOX,
         "" },
     };
-        std::shared_ptr<Frtk_ToolBarWin>tb1=std::make_shared<Frtk_ToolBarWin>(0.0f, y() + menuHeight(), 350, FRTK_TOOLBAR_HEIGHT, "", tools1, true);
+        std::shared_ptr<Frtk_ToolBarVwin>tb1=std::make_shared<Frtk_ToolBarVwin>(0.0f, y() + menuHeight(), 350, FRTK_TOOLBAR_HEIGHT, "", tools1, true);
         tb1->widgetType(FRTK_TOOLBARWIN);
         return tb1;
 }
 
-std::shared_ptr<Frtk_ToolBarWin> Fr_Window::createSelectionToolbar() {
+std::shared_ptr<Frtk_ToolBarVwin> Fr_Window::createSelectionToolbar() {
     std::vector<toolbBTN_t> tools2 = {
         {"",                                                                                                // std::string lbl
         "Mesh",                                                                                             //std::string name
@@ -174,8 +174,8 @@ std::shared_ptr<Frtk_ToolBarWin> Fr_Window::createSelectionToolbar() {
         FRTK_FLAT_BOX,
         ""},
     };
-    //Frtk_ToolBarWin(float, float Y, float W, float H, std::string lbl, const std::vector<toolbBTN_t>&tools = {}, bool horizontal = true, BOX_TYPE b = FRTK_UP_BOX, WIDGTYPE btnType = FRTK_TOOLBAR_BUTTON);
-    std::shared_ptr<Frtk_ToolBarWin> tb2 = std::make_shared<Frtk_ToolBarWin>(w() / 2 - FRTK_TOOLBAR_HEIGHT * 2,
+    //Frtk_ToolBarVwin(float, float Y, float W, float H, std::string lbl, const std::vector<toolbBTN_t>&tools = {}, bool horizontal = true, BOX_TYPE b = FRTK_UP_BOX, WIDGTYPE btnType = FRTK_TOOLBAR_BUTTON);
+    std::shared_ptr<Frtk_ToolBarVwin> tb2 = std::make_shared<Frtk_ToolBarVwin>(w() / 2 - FRTK_TOOLBAR_HEIGHT * 2,
         y() + menuHeight(),
         FRTK_TOOLBAR_HEIGHT * 4 + FRTK_TOOLBAR_HEIGHT / 2,
         FRTK_TOOLBAR_HEIGHT, "",

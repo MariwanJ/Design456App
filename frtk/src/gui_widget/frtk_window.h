@@ -24,84 +24,75 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-
 #ifndef FRTK_WINDOW_H
 #define FRTK_WINDOW_H
 
-#include<gui_widget/frtk_grpwidget.h>
+#include <frtk.h>
+#include <frtk_api.h>
 
-namespace FR{
+#include <GLFW/glfw3.h>
+#include <fr_core.h>
+#include <gui_widget/frtk_grpwidget.h>
 
-
-
+namespace FR {
     typedef struct {
-        float height;
-        float bevelHeight;
-        float cornerRadius;
+        Frtk_Widget* current;
+        Frtk_Widget* prev;
+        Frtk_Widget* g_underMouse;
+    }global_focus_tracker_popup_t;
+    extern   global_focus_tracker_popup_t g_PopupWindfocusedWdgt;
 
-        NVGcolor topColor;
-        NVGcolor bottomColor;
-        NVGcolor strokeColor;
-        float strokeAlpha;
-        float m_cornerRadius;
-    } Frtk_HeaderStyle_t;
-    
-    class Frtk_Window : public Frtk_Widget {
-        friend Fr_Window;
+    class Frtk_Window : public Frtk_GrpWidget {
     public:
-        Frtk_Window(float X, float Y, float W, float H, std::string lbl = "Frtk_Window", BOX_TYPE b=FRTK_UP_BOX, bool hasHeader = true);
+        Frtk_Window(int X, int Y, int W, int H, std::string lbl, BOX_TYPE b = FRTK_UP_BOX);
 
-        std::shared_ptr<Frtk_GrpWidget> m_guiWindow;
-        void init(void);
-        void drawLabel()  override;
-        void drawLabel(float X, float Y, float W, float H, float rotateAngle=0.0f)   override;
-        NVGcontext* getContext(void);
-
-        virtual void remove_child_at(size_t &index);
-        virtual void remove_child(std::shared_ptr<Frtk_Widget>& wdg);
-        virtual void remove_all();
-
-        virtual void addChild(std::shared_ptr<Frtk_Widget> w);
-
-        int loadFonts();
-        Frtk_HeaderStyle_t style();
-        void style(Frtk_HeaderStyle_t & STYLE);
-        bool Header_clicked(void);
-        inline NVGcolor setAlpha(FR_COLOR& c, float alpha) { return NVGcolor{ c.R,c.G,c.B,alpha }; }
-        Frtk_HeaderStyle_t m_WindowsStyle;
+        void setlinkToMain(Fr_Window* window);
+        virtual int Exit();
+        static GLFWwindow* getCurrentGLWindow();
+        static screenDim_t getScreenDim(void);
+        static void deinitializeGlad();
+        virtual void position(float X, float Y) override;
+        virtual void setDecorated(GLFWwindow* w, bool decorated);
+        int render_popupWindow(void);
+        void initSystemEvents();
         
-        bool hasHeader()const;
-        void hasHeader(bool val);
-        virtual bool set_child_focus(Frtk_Widget* w=nullptr);
-        virtual  bool take_focus() override; 
-        virtual void lose_focus() override;
-        const FontData_t &getFontData();
+        static Frtk_Window* getFrtkPopWindow();
 
-        virtual void x(float v) override;
-        virtual void y(float v) override;
-        virtual void w(float v) override;
-        virtual void h(float v) override;
+        static Frtk_Window* sp_popWindow;
+        ImVec4 clear_color;
+        GLFWcursor* MainWinCursor;
+        std::vector<CharEvent_t> m_unicodeChars;
 
-        virtual float x() const override;
-        virtual float y() const override;
-        virtual float w() const override;
-        virtual float h() const override;
-        // we must override it as we have header part & 
-        // real windows part which is the group
-        virtual float absX() const override;
-        virtual float absY() const override;
+        static Fr_InputEvent_t m_sysEvents;
+        virtual void show();
 
     protected:
-        static Frtk_Window* m_MainFrtkInstance;
-        virtual int handle(int event) override;
-        dimPos_float_t mainGui() const override;
-        bool isMouse_inside() const override;
-        virtual void draw(void) override;
-        virtual void draw_header();
-        FontData_t m_data;
-        std::string default_font_path;
-        bool m_hasHeader;
+        screenDim_t glfDim;
+        static screenDim_t m_ViewPort;
+        GLFWcursor* cursorHand = nullptr;
+        GLFWcursor* cursorCrosshair = nullptr;
+
+        static void glfwWindosResize(GLFWwindow* window, int width, int height);
+        static void glfwWindPos(GLFWwindow* window, int pos_x, int pos_y);
+        static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+        static void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+        static void char_callback(GLFWwindow* window, unsigned int codepoint);
+        static void cursor_m_positioncallback(GLFWwindow* win, double xpos, double ypos);
+        static void cursor_enter_callback(GLFWwindow* win, int entered);
+        static void mouse_button_callback(GLFWwindow* win, int button, int action, int mods);
+        static void scroll_callback(GLFWwindow* win, double xoffset, double yoffset);
+        static void joystick_callback(int jid, int events);
+
+        virtual int handle(int ev) override;
+        virtual void draw() override;
+
+        static GLFWwindow* m_glfpopWindow;
+        int gl_version_major;
+        int gl_version_minor;
+        Fr_Window* m_linkToMainWindow;
+        static bool s_GLFWpopInitialized;
+        static bool s_GladpopInitialized;
+        void flush();
     };
-    
 }
-#endif //!FRTK_WINDOW_H
+#endif //FRTK_POPUP_WINDOW_H

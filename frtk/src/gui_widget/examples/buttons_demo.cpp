@@ -50,7 +50,7 @@ namespace FR {
         FRTK_CORE_INFO("BUTTON WITH INDEX {} pressed", index);
     }
 
-    std::shared_ptr<Frtk_Window> runFRTKdemo() {
+    std::shared_ptr<Frtk_Vwin> runFRTKdemo() {
         /*
           boxtypes:
           =========
@@ -88,7 +88,7 @@ namespace FR {
 
         float counter = 0.f;
         //int i = 0;
-        auto window = std::make_shared<Frtk_Window>(500.f, 200.f, 500.f, 500.f, "Testing buttons, toolbars",FRTK_UP_BOX);
+        auto window = std::make_shared<Frtk_Vwin>(500.f, 200.f, 500.f, 500.f, "Testing buttons, toolbars",FRTK_UP_BOX);
         //frtk_check_button
         //frtk_light_button
         //frtk_repeat_button

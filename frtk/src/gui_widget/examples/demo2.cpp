@@ -33,7 +33,7 @@
 #include <gui_widget/frtk_toolbar_button.h>
 #include <gui_widget/frtk_check_button.h>
 namespace FR {
-    std::shared_ptr<Frtk_Window> runFRTKdemo2() {
+    std::shared_ptr<Frtk_Vwin> runFRTKdemo2() {
         /*
           boxtypes:
           =========
@@ -62,7 +62,7 @@ namespace FR {
                 FRTK_OVALFLAT_BOX,
 
         */
-        auto window = std::make_shared<Frtk_Window>(500.f, 200.f, 500.f, 500.f, "Testing Buttons");
+        auto window = std::make_shared<Frtk_Vwin>(500.f, 200.f, 500.f, 500.f, "Testing Buttons");
         std::shared_ptr<Frtk_Box> box;
         std::string imagePath = EXE_CURRENT_DIR + "/resources/icons/32x32/House-32x32.png";
 

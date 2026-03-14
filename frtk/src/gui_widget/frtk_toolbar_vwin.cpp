@@ -25,7 +25,7 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include <gui_widget/frtk_toolbarwin.h>
+#include <gui_widget/frtk_toolbar_vwin.h>
 
 #include <gui_widget/frtk_toggle_button.h>
 #include <gui_widget/frtk_Toggle_light_button.h>
@@ -37,8 +37,8 @@
 
 namespace FR {
 #define DOCKING_BTN_SIZE FRTK_TOOLBAR_BUTTON_HEGHT/2
-    Frtk_ToolBarWin::Frtk_ToolBarWin(float X, float Y, float W, float H, std::string lbl,
-        const std::vector<toolbBTN_t>& tools, bool horizontal, BOX_TYPE b, WIDGTYPE btnType) : Frtk_Window(X, Y, W, H, lbl, b, false),
+    Frtk_ToolBarVwin::Frtk_ToolBarVwin(float X, float Y, float W, float H, std::string lbl,
+        const std::vector<toolbBTN_t>& tools, bool horizontal, BOX_TYPE b, WIDGTYPE btnType) : Frtk_Vwin(X, Y, W, H, lbl, b, false),
         m_dockable(false), m_padding(1.0f), m_horizontal(horizontal), m_parent(NULL), m_buttonsType(btnType) {
         m_boxType = b;
         init();
@@ -51,24 +51,24 @@ namespace FR {
         addButton(tools);
         m_linkTofrtkWindow = this;
     }
-    Fr_Window* Frtk_ToolBarWin::parent(void) {
+    Fr_Window* Frtk_ToolBarVwin::parent(void) {
         return m_parent;
     }
-    void Frtk_ToolBarWin::parent(Fr_Window* w) {
+    void Frtk_ToolBarVwin::parent(Fr_Window* w) {
         m_parent = w;
     }
 
-    bool Frtk_ToolBarWin::dockable()
+    bool Frtk_ToolBarVwin::dockable()
     {
         return m_dockable;
     }
-    void Frtk_ToolBarWin::horizontal(bool val)
+    void Frtk_ToolBarVwin::horizontal(bool val)
     {
         m_horizontal = val;
     }
 
 
-    void Frtk_ToolBarWin::addButton(const std::vector<toolbBTN_t>& btns)
+    void Frtk_ToolBarVwin::addButton(const std::vector<toolbBTN_t>& btns)
     {
         Dim_float_t btnDim;
 
@@ -135,7 +135,7 @@ namespace FR {
         }
     }
 
-    int Frtk_ToolBarWin::removeButton(const std::string& name)
+    int Frtk_ToolBarVwin::removeButton(const std::string& name)
     {
         auto btnchildren = m_guiWindow->getChildren();
         for (auto& wdg : btnchildren) {
@@ -147,21 +147,21 @@ namespace FR {
         return 0;
     }
 
-    void Frtk_ToolBarWin::dockable(bool val)
+    void Frtk_ToolBarVwin::dockable(bool val)
     {
         m_dockable = val;
     }
-    bool Frtk_ToolBarWin::dockingBTN(void) {
+    bool Frtk_ToolBarVwin::dockingBTN(void) {
         const auto& mouse = m_mainWindow->m_sysEvents.mouse;
         bool result = mouse.activeX >= m_dockingSize.pos.x + m_x && mouse.activeX <= m_dockingSize.pos.x + m_x + m_dockingSize.size.w &&
             mouse.activeY >= m_dockingSize.pos.y + m_y && mouse.activeY <= m_dockingSize.pos.y + m_y + m_dockingSize.size.h;
         return result;
     }
-    void Frtk_ToolBarWin::addButtonAtPos(const std::shared_ptr<Frtk_ToolBar_Button>& w)
+    void Frtk_ToolBarVwin::addButtonAtPos(const std::shared_ptr<Frtk_ToolBar_Button>& w)
     {
         m_guiWindow->addChild(w);
     }
-    void Frtk_ToolBarWin::drawVerticalDivider()
+    void Frtk_ToolBarVwin::drawVerticalDivider()
     {
         const float cx = m_x + DOCKING_BTN_SIZE * 0.5f;
         const float cy = m_y + DOCKING_BTN_SIZE * 0.5f;
@@ -203,7 +203,7 @@ namespace FR {
         nvgStroke(m_vg);
     }
 
-    void Frtk_ToolBarWin::draw() {
+    void Frtk_ToolBarVwin::draw() {
         if (!m_visible)
             return;
         FRTK_CORE_APP_ASSERT(m_vg != nullptr);
@@ -214,7 +214,7 @@ namespace FR {
         draw_focus();
     }
 
-    void Frtk_ToolBarWin::setLayoutHorizontal() {
+    void Frtk_ToolBarVwin::setLayoutHorizontal() {
         m_font.Rotate = 0.0f;
 
         float temp = m_h;
@@ -239,7 +239,7 @@ namespace FR {
         redraw();
     }
 
-    void Frtk_ToolBarWin::setLayoutVertical() {
+    void Frtk_ToolBarVwin::setLayoutVertical() {
         m_font.Rotate = 90.0f;
         float temp = m_h;
         h(m_w);
@@ -262,7 +262,7 @@ namespace FR {
         }
     }
 
-    void Frtk_ToolBarWin::applyDocking() {
+    void Frtk_ToolBarVwin::applyDocking() {
         float snapThreshold = 20.0f;            // how close to edge to dock
         float winWidth = m_mainWindow->w();
         float winHeight = m_mainWindow->h();
@@ -334,7 +334,7 @@ namespace FR {
         this->position(m_x, m_y);
     }
 
-    int Frtk_ToolBarWin::handle(int ev)
+    int Frtk_ToolBarVwin::handle(int ev)
     {
    //        Fr_Window* win = m_parent; //just to make it clear what m_parent is here
 
@@ -414,7 +414,7 @@ namespace FR {
                 }
             }
             else {
-                return Frtk_Window::handle(ev);
+                return Frtk_Vwin::handle(ev);
             }
         }
         return result;

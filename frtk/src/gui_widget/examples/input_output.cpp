@@ -34,9 +34,9 @@
 
 namespace FR {
 
-    std::shared_ptr<Frtk_Window> runInputOutput() {
+    std::shared_ptr<Frtk_Vwin> runInputOutput() {
 
-        auto window = std::make_shared<Frtk_Window>(500.f, 200.f, 700.f, 700.f, "Testing buttons, toolbars", FRTK_UP_BOX);
+        auto window = std::make_shared<Frtk_Vwin>(500.f, 200.f, 700.f, 700.f, "Testing buttons, toolbars", FRTK_UP_BOX);
         for (int i = 0; i < 3; ++i){
             for (int j = 0; j < 3; ++j)
             {

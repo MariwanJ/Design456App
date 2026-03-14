@@ -24,16 +24,20 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
+#ifndef FRTK_MODAL_WINDOW_H
+#define FRTK_MODAL_WINDOW_H
 
-#ifndef DEMO_H
-#define DEMO_H
+#include <frtk.h>
+#include <frtk_api.h>
 
+#include <GLFW/glfw3.h>
+#include <fr_core.h>
+#include <gui_widget/frtk_window.h>
 
-#include <gui_widget/frtk_vwin.h>
-
-
-
-namespace FR{
-    std::shared_ptr<Frtk_Vwin>  runFRTKdemo2();
+namespace FR {
+    class Frtk_Modal_Window : public Frtk_Window {
+    public:
+        Frtk_Modal_Window(int X, int Y, int W, int H, std::string lbl, BOX_TYPE b = FRTK_UP_BOX);
+    };
 }
-#endif
+#endif //FRTK_MODAL_WINDOW_H

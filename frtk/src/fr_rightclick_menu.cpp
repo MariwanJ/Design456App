@@ -28,7 +28,7 @@
 #include <frtk.h>
 #include <fr_window.h>
 #include "fr_gl3callbacks.h"
-#include <gui_widget/frtk_popup_window.h>
+#include <gui_widget/frtk_window.h>
 
 namespace FR {
 
@@ -40,7 +40,7 @@ namespace FR {
         m_rightClickMenu->Exit();
         m_rightClickMenu = nullptr;
     }
-    m_rightClickMenu = std::make_shared <Frtk_Popup_Window>(100, 100, 400, 400, "PopuWindow");
+    m_rightClickMenu = std::make_shared <Frtk_Window>(100, 100, 400, 400, "PopuWindow");
     m_rightClickMenu->show();
 }
 }

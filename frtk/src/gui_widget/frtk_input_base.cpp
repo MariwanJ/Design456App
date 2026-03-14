@@ -26,7 +26,7 @@
 //
 #include <frtk.h>
 #include <gui_widget/frtk_input_base.h>
-#include <gui_widget/frtk_window.h>
+#include <gui_widget/frtk_vwin.h>
 
 namespace FR {
 #define ICON_SEARCH 0x1F50D

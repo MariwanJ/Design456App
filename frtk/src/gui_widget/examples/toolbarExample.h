@@ -29,11 +29,11 @@
 #define FRTK_TOOLBAREXAMPLE_H_H
 
 
-#include <gui_widget/Frtk_ToolBarWin.h>
+#include <gui_widget/frtk_toolbar_vwin.h>
 
 
 
 namespace FR{
-    std::shared_ptr<Frtk_ToolBarWin>  runFRTKToolbarDemo();
+    std::shared_ptr<Frtk_ToolBarVwin>  runFRTKToolbarDemo();
 } 
-#endif  //FRTK_TOOLBAREXAMPLE_H
+#endif  //FRTK_TOOLBAREXAMPLE_H_H

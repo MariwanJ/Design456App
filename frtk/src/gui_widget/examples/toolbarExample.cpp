@@ -32,7 +32,7 @@ namespace FR {
         FRTK_CORE_INFO("BUTTON WITH INDEX {} pressed", index);
     }
 
-    std::shared_ptr<Frtk_ToolBarWin> runFRTKToolbarDemo() {
+    std::shared_ptr<Frtk_ToolBarVwin> runFRTKToolbarDemo() {
 
 
 
@@ -48,7 +48,7 @@ namespace FR {
         };
         
         
-        std::shared_ptr<Frtk_ToolBarWin> tb1=std::make_shared<Frtk_ToolBarWin>( 450.f, 300.0f,350, FRTK_TOOLBAR_HEIGHT, "", tools,true);
+        std::shared_ptr<Frtk_ToolBarVwin> tb1=std::make_shared<Frtk_ToolBarVwin>( 450.f, 300.0f,350, FRTK_TOOLBAR_HEIGHT, "", tools,true);
         
         return tb1;
     }

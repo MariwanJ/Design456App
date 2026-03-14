@@ -46,13 +46,13 @@
 
 /** end Fr_Window */
 namespace FR {
-    class Frtk_Window;
+    class Frtk_Vwin;
     
-    class Frtk_ToolBarWin;
+    class Frtk_ToolBarVwin;
     class Frtk_Radio_ToolbarWin;
-    class Frtk_Popup_Window;
+    class Frtk_Window;
     class FRTK_API   Fr_Window {
-        friend Frtk_Window;
+        friend Frtk_Vwin;
     public:
         virtual ~Fr_Window();
         // Singleton accessor
@@ -194,7 +194,7 @@ namespace FR {
 		defaultFont SystemFont;
         static std::shared_ptr<Fr_Window> spWindow;
 
-        std::vector<std::shared_ptr<Frtk_Window>> m_frtkWindow;
+        std::vector<std::shared_ptr<Frtk_Vwin>> m_frtkWindow;
 
         std::shared_ptr<Fr_Scene> activeScene;
 
@@ -205,10 +205,10 @@ namespace FR {
 
     protected:
 
-        std::shared_ptr<Frtk_ToolBarWin>  createMainToolbar();
-        std::shared_ptr<Frtk_ToolBarWin> createSelectionToolbar();
-        std::shared_ptr<Frtk_ToolBarWin> m_MainToolbar;
-        std::shared_ptr<Frtk_ToolBarWin> m_selectionTB;
+        std::shared_ptr<Frtk_ToolBarVwin>  createMainToolbar();
+        std::shared_ptr<Frtk_ToolBarVwin> createSelectionToolbar();
+        std::shared_ptr<Frtk_ToolBarVwin> m_MainToolbar;
+        std::shared_ptr<Frtk_ToolBarVwin> m_selectionTB;
 
         FRTK_WIN_TYPE m_winType;
         static screenDim_t m_ViewPort;
@@ -291,7 +291,7 @@ namespace FR {
         int gl_version_major;
         int gl_version_minor;
         mouseScale_t mouseDefaults;
-        std::shared_ptr<Frtk_Popup_Window> m_rightClickMenu;
+        std::shared_ptr<Frtk_Window> m_rightClickMenu;
         //Mouse picker variable
         static int RECURSION_COUNT;
         static float RAY_RANGE;

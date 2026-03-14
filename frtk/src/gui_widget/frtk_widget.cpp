@@ -26,7 +26,7 @@
 //
 #include <frtk.h>
 #include <gui_widget/frtk_widget.h>
-#include <gui_widget/frtk_window.h>
+#include <gui_widget/frtk_vwin.h>
 #include <fr_window.h>
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
