@@ -40,7 +40,7 @@
 
 #if 1 //Temporary code  - testing gui toolkit
 #include <gui_widget/frtk_vwin.h>
-#include <gui_widget/frtk_window.h>
+#include <gui_widget/frtk_rclick_menu_win.h>
 #include <gui_widget/examples/demo2.h>
 #include <gui_widget/examples/buttons_demo.h>
 #include <gui_widget/examples/input_output.h>
@@ -475,7 +475,7 @@ namespace FR {
          bool onlyOnce = false;
          while (!glfwWindowShouldClose(pGLFWWindow))
          {
-             auto popWindow= Frtk_Window::getFrtkPopWindow();
+             auto popWindow= Frtk_Rclick_menuWin::getWindow();
              if (popWindow) {
                  popWindow->render_popupWindow();
              }

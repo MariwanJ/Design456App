@@ -67,7 +67,7 @@ namespace FR {
         g_focusedWdgt.prev = this;
 
         // widgets specific variables
-        m_wdgType = FRTK_WINDOW;
+        m_wdgType = FRTK_VWINDOW;
         m_linkTofrtkWindow = this;
         m_MainFrtkInstance = this;
         if (m_hasHeader) {

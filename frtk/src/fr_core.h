@@ -336,8 +336,20 @@ namespace FR {
     //Update this as needed - FRTK GUI ENUM
     typedef enum WIDGTYPE {
         FRTK_WIDGET,
-        FRTK_GROUP,
-        FRTK_WINDOW,
+        //glfw windows (real glfw) 
+        FRTK_GLFW_WIN, //BASE WINDOWS
+        FRTK_GLFW_RIGT_CLICK_WIN,
+        FRTK_MODAL_WIN,
+        FRTK_MSG_WIN,
+        FRTK_MSG_ERROR,
+        FRTK_INPUT_WIN,
+        
+        // Virtual Windows (inside scene) - no glfw, based on scene gflw window
+        FRTK_VWINDOW,
+        FRTK_TOOLBARWIN,        //Separate FRTK vWindow is created
+        FRTK_TOOLBARWIN_TOOGLE, //Separate FRTK vWindow is created - but buttons are TOGGLE buttons
+
+        FRTK_GROUP,  //container for all widgets
         FRTK_BOX,
 
         FRTK_NORMAL_BUTTON,
@@ -376,8 +388,6 @@ namespace FR {
         FRTK_TABS,
         FRTK_IMAGE,
         FRTK_TOOLBAR,           //No separate FRTK windows will be created
-        FRTK_TOOLBARWIN,        //Separate FRTK Window is created
-        FRTK_TOOLBARWIN_TOOGLE, //Separate FRTK Window is created - but buttons are TOGGLE buttons
         FRTK_TOOLBAR_BUTTON,
     } WIDGTYPE;
 

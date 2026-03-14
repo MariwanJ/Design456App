@@ -74,7 +74,7 @@ namespace FR {
         }
     };
 
-    GLFWwindow* Frtk_Window::m_glfpopWindow = nullptr;
+    GLFWwindow* Frtk_Window::m_glfWindow = nullptr;
 
     Frtk_Window::Frtk_Window(int X, int Y, int W, int H, std::string lbl, BOX_TYPE b) :
         Frtk_GrpWidget(nullptr, 0, 0, W, H, lbl, b),
@@ -82,8 +82,9 @@ namespace FR {
         gl_version_major(4), gl_version_minor(6), m_linkToMainWindow(nullptr) {
         // Initialize GLFW
         sp_popWindow = this;
+        m_wdgType = FRTK_GLFW_WIN;
     }
-    Frtk_Window* Frtk_Window::getFrtkPopWindow() {
+    Frtk_Window* Frtk_Window::getWindow() {
         return sp_popWindow;
     }
     void Frtk_Window::setlinkToMain(Fr_Window* window) {
@@ -116,31 +117,31 @@ namespace FR {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-        m_glfpopWindow = glfwCreateWindow(
+        m_glfWindow = glfwCreateWindow(
             glfDim.size.w, glfDim.size.h,
             "NanoVG Popup",
             NULL,
             m_linkToMainWindow->getCurrentGLWindow() // share context
         );
 
-        if (!m_glfpopWindow)
+        if (!m_glfWindow)
         {
             FRTK_CORE_FATAL("Failed to create GLFW window");
             return;
         }
 
-        glfwMakeContextCurrent(m_glfpopWindow);
+        glfwMakeContextCurrent(m_glfWindow);
         glfwSwapInterval(1);
 
-        glfwSetWindowPos(m_glfpopWindow, glfDim.pos.x, glfDim.pos.y);
+        glfwSetWindowPos(m_glfWindow, glfDim.pos.x, glfDim.pos.y);
 
-        glfwSetFramebufferSizeCallback(m_glfpopWindow, framebuffer_size_callback);
-        glfwSetKeyCallback(m_glfpopWindow, keyboard_callback);
-        glfwSetCharCallback(m_glfpopWindow, char_callback);
-        glfwSetCursorPosCallback(m_glfpopWindow, cursor_m_positioncallback);
-        glfwSetCursorEnterCallback(m_glfpopWindow, cursor_enter_callback);
-        glfwSetMouseButtonCallback(m_glfpopWindow, mouse_button_callback);
-        glfwSetScrollCallback(m_glfpopWindow, scroll_callback);
+        glfwSetFramebufferSizeCallback(m_glfWindow, framebuffer_size_callback);
+        glfwSetKeyCallback(m_glfWindow, keyboard_callback);
+        glfwSetCharCallback(m_glfWindow, char_callback);
+        glfwSetCursorPosCallback(m_glfWindow, cursor_m_positioncallback);
+        glfwSetCursorEnterCallback(m_glfWindow, cursor_enter_callback);
+        glfwSetMouseButtonCallback(m_glfWindow, mouse_button_callback);
+        glfwSetScrollCallback(m_glfWindow, scroll_callback);
 
         m_vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
 
@@ -148,25 +149,25 @@ namespace FR {
             FRTK_CORE_FATAL("Could not init NanoVG.");
     }
     int Frtk_Window::render_popupWindow(void) {
-        if (m_glfpopWindow) {
-            if (!glfwWindowShouldClose(m_glfpopWindow)) {
+        if (m_glfWindow) {
+            if (!glfwWindowShouldClose(m_glfWindow)) {
                 int winWidth, winHeight;
-                glfwGetFramebufferSize(m_glfpopWindow, &winWidth, &winHeight);
+                glfwGetFramebufferSize(m_glfWindow, &winWidth, &winHeight);
                 glViewport(0, 0, winWidth, winHeight);
                 glClearColor(FR_GRAY);
                 glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
                 nvgBeginFrame(m_vg, m_w, m_h, 1.0f);
                 draw();
                 nvgEndFrame(m_vg);
-                glfwSwapBuffers(m_glfpopWindow);
+                glfwSwapBuffers(m_glfWindow);
                 glfwPollEvents();
             }
             else {
-                glfwMakeContextCurrent(m_glfpopWindow);
-                glfwDestroyWindow(m_glfpopWindow);
+                glfwMakeContextCurrent(m_glfWindow);
+                glfwDestroyWindow(m_glfWindow);
                 glfwMakeContextCurrent(m_linkToMainWindow->getCurrentGLWindow());
                 glfwFocusWindow(m_linkToMainWindow->getCurrentGLWindow());
-                m_glfpopWindow = nullptr;
+                m_glfWindow = nullptr;
             }
         }
         return 0;
@@ -175,15 +176,15 @@ namespace FR {
     {
         glfDim.pos.x = (int)X;
         glfDim.pos.y = (int)Y;
-        glfwSetWindowPos(m_glfpopWindow, X, Y);
+        glfwSetWindowPos(m_glfWindow, X, Y);
     }
     int Frtk_Window::Exit()
     {
-        if (m_glfpopWindow)
+        if (m_glfWindow)
         {
             m_children.clear();
-            glfwDestroyWindow(m_glfpopWindow);
-            m_glfpopWindow = nullptr;
+            glfwDestroyWindow(m_glfWindow);
+            m_glfWindow = nullptr;
             return 1;
         }
         return 0;

@@ -56,7 +56,7 @@ namespace FR {
         int render_popupWindow(void);
         void initSystemEvents();
         
-        static Frtk_Window* getFrtkPopWindow();
+        static Frtk_Window* getWindow();
 
         static Frtk_Window* sp_popWindow;
         ImVec4 clear_color;
@@ -64,7 +64,7 @@ namespace FR {
         std::vector<CharEvent_t> m_unicodeChars;
 
         static Fr_InputEvent_t m_sysEvents;
-        virtual void show();
+        virtual void show();        //MUST be overridden to create other type of glfw windows
 
     protected:
         screenDim_t glfDim;
@@ -86,7 +86,7 @@ namespace FR {
         virtual int handle(int ev) override;
         virtual void draw() override;
 
-        static GLFWwindow* m_glfpopWindow;
+        static GLFWwindow* m_glfWindow;
         int gl_version_major;
         int gl_version_minor;
         Fr_Window* m_linkToMainWindow;

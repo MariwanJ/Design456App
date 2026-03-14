@@ -24,8 +24,8 @@
 //
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
-#ifndef FRTK_MODAL_WINDOW_H
-#define FRTK_MODAL_WINDOW_H
+#ifndef FRTK_RCLICK_MENUWIN_H
+#define FRTK_RCLICK_MENUWIN_H
 
 #include <frtk.h>
 #include <frtk_api.h>
@@ -35,12 +35,12 @@
 #include <gui_widget/frtk_window.h>
 
 namespace FR {
-    class Frtk_Modal_Window : public Frtk_Window {
+    class Frtk_Rclick_menuWin : public Frtk_Window {
     public:
-        Frtk_Modal_Window(int X, int Y, int W, int H, std::string lbl, BOX_TYPE b = FRTK_UP_BOX);
+        Frtk_Rclick_menuWin(int X, int Y, int W, int H, std::string lbl, BOX_TYPE b = FRTK_UP_BOX);
         virtual void show() override;
     protected:
         
     };
 }
-#endif //FRTK_MODAL_WINDOW_H
+#endif //FRTK_RCLICK_MENUWIN_H

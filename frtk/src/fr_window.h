@@ -50,7 +50,7 @@ namespace FR {
     
     class Frtk_ToolBarVwin;
     class Frtk_Radio_ToolbarWin;
-    class Frtk_Window;
+    class Frtk_Rclick_menuWin;
     class FRTK_API   Fr_Window {
         friend Frtk_Vwin;
     public:
@@ -291,7 +291,7 @@ namespace FR {
         int gl_version_major;
         int gl_version_minor;
         mouseScale_t mouseDefaults;
-        std::shared_ptr<Frtk_Window> m_rightClickMenu;
+        std::shared_ptr<Frtk_Rclick_menuWin> m_rightClickMenu;
         //Mouse picker variable
         static int RECURSION_COUNT;
         static float RAY_RANGE;

@@ -35,7 +35,7 @@ namespace FR {
     {
         if (sp_popWindow == nullptr)
             return;
-        Frtk_Window* pwin = Frtk_Window::getFrtkPopWindow();
+        Frtk_Window* pwin = Frtk_Window::getWindow();
         pwin->m_ViewPort.size.w = width;
         pwin->m_ViewPort.size.h = height;
 
@@ -46,7 +46,7 @@ namespace FR {
         if (sp_popWindow == nullptr)
             return;
         (void)window;
-        Frtk_Window* pwin = Frtk_Window::getFrtkPopWindow();
+        Frtk_Window* pwin = Frtk_Window::getWindow();
         pwin->m_ViewPort.pos.x = pos_x;
         pwin->m_ViewPort.pos.y = pos_y;
     }
@@ -54,7 +54,7 @@ namespace FR {
     {
         if (sp_popWindow == nullptr)
             return;
-        Frtk_Window* pwin = Frtk_Window::getFrtkPopWindow();
+        Frtk_Window* pwin = Frtk_Window::getWindow();
         pwin->m_ViewPort.size.w = width;
         pwin->m_ViewPort.size.h = height;
         if (s_GLFWpopInitialized && s_GLFWpopInitialized) {
@@ -83,7 +83,7 @@ namespace FR {
         if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
             sp_popWindow->Exit();
 
-        Frtk_Window* pwin = Frtk_Window::getFrtkPopWindow();
+        Frtk_Window* pwin = Frtk_Window::getWindow();
         auto& ek = pwin->m_sysEvents.keyB;
         ek.lastKey = key;
         ek.scancode = scancode;
@@ -195,7 +195,7 @@ namespace FR {
         if (!sp_popWindow)
             return;
         (void)window;
-        Frtk_Window* pwin = Frtk_Window::getFrtkPopWindow();
+        Frtk_Window* pwin = Frtk_Window::getWindow();
         auto& mouse = pwin->m_sysEvents.mouse;
         mouse.activeX = xpos;
         mouse.activeY = ypos;
@@ -207,7 +207,7 @@ namespace FR {
         if (sp_popWindow == nullptr)
             return; //do nothing
         (void)window;
-        Frtk_Window* pwin = Frtk_Window::getFrtkPopWindow();
+        Frtk_Window* pwin = Frtk_Window::getWindow();
         if (entered) 
             pwin->m_sysEvents.mouse.mouseEvents.emplace_back(FR_ENTER);
         else
@@ -219,7 +219,7 @@ namespace FR {
         if (sp_popWindow == nullptr)
             return;
         (void)window;
-        Frtk_Window* pwin = Frtk_Window::getFrtkPopWindow();
+        Frtk_Window* pwin = Frtk_Window::getWindow();
         auto& m = pwin->m_sysEvents.mouse;
         m.scrollX = xoffset;
         m.scrollY= yoffset;

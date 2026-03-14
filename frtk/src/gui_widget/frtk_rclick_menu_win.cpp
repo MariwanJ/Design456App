@@ -27,25 +27,37 @@
 
 //NanoVG
 
-#include<gui_widget/frtk_modal_window.h>
+#include<gui_widget/frtk_rclick_menu_win.h>
 #include <gui_widget/frtk_draw.h>
 #include <frtk.h>
 namespace FR {
-    Frtk_Modal_Window::Frtk_Modal_Window(int X, int Y, int W, int H, std::string lbl, BOX_TYPE b) :
+
+
+    // Callback function for window focus - if it lose focus, destroy the window
+    void window_focus_callback(GLFWwindow* window, int focused) {
+        if (focused == GLFW_FALSE) {
+            // Hide & destroy the window if it loses focus
+            glfwMakeContextCurrent(window);
+            glfwHideWindow(window);
+            glfwSetWindowShouldClose(window, GL_TRUE);
+        }
+    }
+
+
+
+    Frtk_Rclick_menuWin::Frtk_Rclick_menuWin(int X, int Y, int W, int H, std::string lbl, BOX_TYPE b) :
         Frtk_Window( X, Y, W, H, lbl, b) {
-        m_wdgType = FRTK_MODAL_WIN;
+        m_wdgType = FRTK_GLFW_RIGT_CLICK_WIN;
 
     }
-    void Frtk_Modal_Window::show()
+    void Frtk_Rclick_menuWin::show()
     {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl_version_major);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_version_minor);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_FLOATING, GL_TRUE);  //modal.
-        
-        //glfwWindowHint(GLFW_DECORATED, GL_FALSE); disable decoration 
-        //glfwWindowHint(GLFW_RESIZABLE, GL_TRUE or GL_FALSE) disable resizable 
+        glfwWindowHint(GLFW_DECORATED, GL_FALSE); //disable decoration 
+        glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);  //disable realizable 
 
         m_glfWindow = glfwCreateWindow(
             glfDim.size.w, glfDim.size.h,
@@ -53,8 +65,6 @@ namespace FR {
             NULL,
             m_linkToMainWindow->getCurrentGLWindow() // share context
         );
-        
-        glfwFocusWindow(m_glfWindow);        //should give modal effect TODO: TESTME !!! 
 
         if (!m_glfWindow)
         {
@@ -76,6 +86,8 @@ namespace FR {
         glfwSetScrollCallback(m_glfWindow, scroll_callback);
 
         m_vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
+        
+        glfwSetWindowFocusCallback(m_glfWindow, window_focus_callback);
 
         if (!m_vg)
             FRTK_CORE_FATAL("Could not init NanoVG.");
