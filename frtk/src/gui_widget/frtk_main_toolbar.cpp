@@ -52,13 +52,7 @@ namespace FR {
             }
         } break;
         case FR_FILE_CLOSE: {
-            if (m_rightClickMenu){
-                //if it was visible - remove it 
-                m_rightClickMenu->Exit();
-                m_rightClickMenu = nullptr;
-            }
-            m_rightClickMenu = std::make_shared <Frtk_Popup_Window>(100, 100, 400, 400, "PopuWindow");
-            m_rightClickMenu->show();
+         
         } break;
         case FR_FILE_SAVE: {
         } break;

@@ -114,7 +114,7 @@ namespace FR {
         //experimental code
         glm::vec3 calculateMouseWorldPos();
 
-
+        virtual void showRightClickMenu();
         
 
         /**

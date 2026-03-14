@@ -67,7 +67,7 @@ namespace FR {
         virtual void show();
 
     protected:
-
+        screenDim_t glfDim;
         static screenDim_t m_ViewPort;
         GLFWcursor* cursorHand = nullptr;
         GLFWcursor* cursorCrosshair = nullptr;

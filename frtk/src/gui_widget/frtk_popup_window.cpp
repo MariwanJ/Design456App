@@ -77,8 +77,8 @@ namespace FR {
     GLFWwindow* Frtk_Popup_Window::m_glfpopWindow = nullptr;
 
     Frtk_Popup_Window::Frtk_Popup_Window(int X, int Y, int W, int H, std::string lbl, BOX_TYPE b) :
-        Frtk_GrpWidget(nullptr, X, Y, W, H, lbl, b),
-        MainWinCursor(nullptr),
+        Frtk_GrpWidget(nullptr, 0, 0, W, H, lbl, b),
+        MainWinCursor(nullptr), glfDim({ {(int)X,(int)Y }, { (int)W,(int)H } }),
         gl_version_major(4), gl_version_minor(6), m_linkToMainWindow(nullptr) {
         // Initialize GLFW
         sp_popWindow = this;
@@ -102,7 +102,7 @@ namespace FR {
         if (!m_visible)
             return;
         FRTK_CORE_APP_ASSERT(m_vg != nullptr);
-        draw_box(m_vg, m_boxType, { { m_x, m_y }, { m_w, m_y } }, 0.0f, FRTK_NORMAL_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
+        draw_box(m_vg, m_boxType, { { 0.0f, 0.0f }, { m_w, m_h } }, 0.0f, FRTK_NORMAL_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
         Frtk_GrpWidget::draw_children();
         if (!m_label.empty())
             drawLabel();
@@ -117,7 +117,7 @@ namespace FR {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
         m_glfpopWindow = glfwCreateWindow(
-            800, 600,
+            glfDim.size.w, glfDim.size.h,
             "NanoVG Popup",
             NULL,
             m_linkToMainWindow->getCurrentGLWindow() // share context
@@ -132,7 +132,7 @@ namespace FR {
         glfwMakeContextCurrent(m_glfpopWindow);
         glfwSwapInterval(1);
 
-        glfwSetWindowPos(m_glfpopWindow, m_x, m_y);
+        glfwSetWindowPos(m_glfpopWindow, glfDim.pos.x, glfDim.pos.y);
 
         glfwSetFramebufferSizeCallback(m_glfpopWindow, framebuffer_size_callback);
         glfwSetKeyCallback(m_glfpopWindow, keyboard_callback);
@@ -173,8 +173,8 @@ namespace FR {
     }
     void Frtk_Popup_Window::position(float X, float Y)
     {
-        m_x = (int)X;
-        m_y = (int)Y;
+        glfDim.pos.x = (int)X;
+        glfDim.pos.y = (int)Y;
         glfwSetWindowPos(m_glfpopWindow, X, Y);
     }
     int Frtk_Popup_Window::Exit()

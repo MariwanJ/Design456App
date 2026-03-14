@@ -763,6 +763,11 @@ namespace FR {
              cameraZoom(pGLFWWindow);
              return 1;
          }
+         case FR_RIGHT_PUSH: {
+             //Right Click Menu -
+             showRightClickMenu();
+             return 1;
+         } break;
          default: {}
          }
          // Send event to Scene Container (Mesh objects)
