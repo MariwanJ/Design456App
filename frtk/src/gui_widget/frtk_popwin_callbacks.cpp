@@ -33,9 +33,9 @@
 namespace FR {
     void Frtk_Popup_Window::glfwWindosResize(GLFWwindow* window, int width, int height)
     {
-        if (spWindow == nullptr)
+        if (sp_popWindow == nullptr)
             return;
-        Frtk_Popup_Window* pwin = spWindow.get();
+        Frtk_Popup_Window* pwin = Frtk_Popup_Window::getFrtkPopWindow();
         pwin->m_ViewPort.size.w = width;
         pwin->m_ViewPort.size.h = height;
 
@@ -43,21 +43,21 @@ namespace FR {
     }
     void Frtk_Popup_Window::glfwWindPos(GLFWwindow* window, int pos_x, int pos_y)
     {
-        if (spWindow == nullptr)
+        if (sp_popWindow == nullptr)
             return;
         (void)window;
-        Frtk_Popup_Window* pwin = spWindow.get();
+        Frtk_Popup_Window* pwin = Frtk_Popup_Window::getFrtkPopWindow();
         pwin->m_ViewPort.pos.x = pos_x;
         pwin->m_ViewPort.pos.y = pos_y;
     }
     void Frtk_Popup_Window::framebuffer_size_callback(GLFWwindow* window, int width, int height)
     {
-        if (spWindow == nullptr)
+        if (sp_popWindow == nullptr)
             return;
-        Frtk_Popup_Window* pwin = spWindow.get();
+        Frtk_Popup_Window* pwin = Frtk_Popup_Window::getFrtkPopWindow();
         pwin->m_ViewPort.size.w = width;
         pwin->m_ViewPort.size.h = height;
-        if (s_GladpopInitialized && s_GLFWpopInitialized) {
+        if (s_GLFWpopInitialized && s_GLFWpopInitialized) {
             glViewport(0, 0, width, width);
         }
     }
@@ -76,14 +76,14 @@ namespace FR {
     */
     void Frtk_Popup_Window::keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
-        if (spWindow == nullptr)
+        if (sp_popWindow == nullptr)
             return; //do nothing
         (void)window;
 
         if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-            spWindow->Exit();
+            sp_popWindow->Exit();
 
-        Frtk_Popup_Window* pwin = spWindow.get();
+        Frtk_Popup_Window* pwin = Frtk_Popup_Window::getFrtkPopWindow();
         auto& ek = pwin->m_sysEvents.keyB;
         ek.lastKey = key;
         ek.scancode = scancode;
@@ -100,8 +100,8 @@ namespace FR {
 
     void Frtk_Popup_Window::char_callback(GLFWwindow* window, unsigned int codepoint)
     {
-        if (!spWindow) return;
-        spWindow->m_unicodeChars.push_back({ codepoint });
+        if (!sp_popWindow) return;
+        sp_popWindow->m_unicodeChars.push_back({ codepoint });
     }
 
     void Frtk_Popup_Window::joystick_callback(int jid, int events)
@@ -109,8 +109,8 @@ namespace FR {
     }
     void Frtk_Popup_Window::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     {
-        if (!spWindow) return;
-        auto& em = spWindow->m_sysEvents.mouse;
+        if (!sp_popWindow) return;
+        auto& em = sp_popWindow->m_sysEvents.mouse;
 
         // Update button state
         if (button == GLFW_MOUSE_BUTTON_LEFT)       em.L_Down = (action != GLFW_RELEASE);
@@ -192,10 +192,10 @@ namespace FR {
     }
     void Frtk_Popup_Window::cursor_m_positioncallback(GLFWwindow* window, double xpos, double ypos)
     {
-        if (!spWindow)
+        if (!sp_popWindow)
             return;
         (void)window;
-        Frtk_Popup_Window* pwin = spWindow.get();
+        Frtk_Popup_Window* pwin = Frtk_Popup_Window::getFrtkPopWindow();
         auto& mouse = pwin->m_sysEvents.mouse;
         mouse.activeX = xpos;
         mouse.activeY = ypos;
@@ -204,10 +204,10 @@ namespace FR {
 
     void Frtk_Popup_Window::cursor_enter_callback(GLFWwindow* window, int entered)
     {
-        if (spWindow == nullptr)
+        if (sp_popWindow == nullptr)
             return; //do nothing
         (void)window;
-        Frtk_Popup_Window* pwin = spWindow.get();
+        Frtk_Popup_Window* pwin = Frtk_Popup_Window::getFrtkPopWindow();
         if (entered) 
             pwin->m_sysEvents.mouse.mouseEvents.emplace_back(FR_ENTER);
         else
@@ -216,10 +216,10 @@ namespace FR {
 
     void Frtk_Popup_Window::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     {
-        if (spWindow == nullptr)
+        if (sp_popWindow == nullptr)
             return;
         (void)window;
-        Frtk_Popup_Window* pwin = spWindow.get();
+        Frtk_Popup_Window* pwin = Frtk_Popup_Window::getFrtkPopWindow();
         auto& m = pwin->m_sysEvents.mouse;
         m.scrollX = xoffset;
         m.scrollY= yoffset;

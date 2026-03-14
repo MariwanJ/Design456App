@@ -29,7 +29,7 @@
 #include <gui_widget/Frtk_ToolBarWin.h>
 #include <fr_file_dialog.h>
 #include <fr_window.h>
-
+#include <gui_widget/frtk_popup_window.h>
 namespace FR {
 /*
                         TOOLBARS CALLBACKS
@@ -52,6 +52,13 @@ namespace FR {
             }
         } break;
         case FR_FILE_CLOSE: {
+            if (m_rightClickMenu){
+                //if it was visible - remove it 
+                m_rightClickMenu->Exit();
+                m_rightClickMenu = nullptr;
+            }
+            m_rightClickMenu = std::make_shared <Frtk_Popup_Window>(100, 100, 400, 400, "PopuWindow");
+            m_rightClickMenu->show();
         } break;
         case FR_FILE_SAVE: {
         } break;

@@ -161,6 +161,7 @@ namespace FR {
 
      Fr_Window::Fr_Window(int x, int y, int w, int h, const std::string& label)
          : m_label(label),
+         m_rightClickMenu(nullptr),
          cursorHand(nullptr),
          cursorCrosshair(nullptr),
          runCode(false),
@@ -470,11 +471,15 @@ namespace FR {
          m_selectionTB = createSelectionToolbar();
          m_selectionTB->parent(this); //do not forget this !!!
          m_frtkWindow.emplace_back(m_selectionTB);
-         std::shared_ptr<Frtk_Popup_Window> popWin = std::make_shared <Frtk_Popup_Window>(100, 100, 400, 400, "PopuWindow");
-         popWin->run();
+
          bool onlyOnce = false;
          while (!glfwWindowShouldClose(pGLFWWindow))
          {
+             auto popWindow= Frtk_Popup_Window::getFrtkPopWindow();
+             if (popWindow) {
+                 popWindow->render_popupWindow();
+             }
+
              //ALL 3D Drawings
              activeScene->RenderScene();
 

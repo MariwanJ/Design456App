@@ -305,7 +305,7 @@ namespace FR {
         /*        FR_PROFILE_FUNCTION();
                 FR_PROFILE_SCOPE("imgui_ViewPort");   */
         int windowX, windowY;
-        GLFWwindow* window = glfwGetCurrentContext();
+        GLFWwindow* window = win->getCurrentGLWindow();
         glfwGetWindowPos(window, &windowX, &windowY);
 
         // Camera setup

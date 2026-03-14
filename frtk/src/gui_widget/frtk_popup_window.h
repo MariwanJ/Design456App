@@ -35,38 +35,43 @@
 #include <gui_widget/frtk_grpwidget.h>
 
 namespace FR {
-    class Frtk_Popup_Window : public Frtk_GrpWidget {
- typedef struct {
+    typedef struct {
         Frtk_Widget* current;
         Frtk_Widget* prev;
         Frtk_Widget* g_underMouse;
     }global_focus_tracker_popup_t;
+    extern   global_focus_tracker_popup_t g_PopupWindfocusedWdgt;
 
-  extern   global_focus_tracker_popup_t g_PopupWindfocusedWdgt;
+    class Frtk_Popup_Window : public Frtk_GrpWidget {
     public:
         Frtk_Popup_Window(int X, int Y, int W, int H, std::string lbl, BOX_TYPE b = FRTK_UP_BOX);
-        void setlinkToMain(Fr_Window* window);
-       virtual int Exit();
- 		static GLFWwindow* getCurrentGLWindow();
- 		static screenDim_t getScreenDim(void);
- 		static void deinitializeGlad();
 
- static Fr_InputEvent_t m_sysEvents;
-        void initSystemEvents();
-static std::shared_ptr<Frtk_Popup_Window> spWindow;
-  ImVec4 clear_color;
- GLFWcursor* MainWinCursor;  
-        std::vector<CharEvent_t> m_unicodeChars;
-        
+        void setlinkToMain(Fr_Window* window);
+        virtual int Exit();
+        static GLFWwindow* getCurrentGLWindow();
+        static screenDim_t getScreenDim(void);
+        static void deinitializeGlad();
         virtual void position(float X, float Y) override;
         virtual void setDecorated(GLFWwindow* w, bool decorated);
-        int run(void);
+        int render_popupWindow(void);
+        void initSystemEvents();
+        
+        static Frtk_Popup_Window* getFrtkPopWindow();
+
+        static Frtk_Popup_Window* sp_popWindow;
+        ImVec4 clear_color;
+        GLFWcursor* MainWinCursor;
+        std::vector<CharEvent_t> m_unicodeChars;
+
+        static Fr_InputEvent_t m_sysEvents;
+        virtual void show();
 
     protected:
 
-  		static screenDim_t m_ViewPort;
+        static screenDim_t m_ViewPort;
         GLFWcursor* cursorHand = nullptr;
         GLFWcursor* cursorCrosshair = nullptr;
+
         static void glfwWindosResize(GLFWwindow* window, int width, int height);
         static void glfwWindPos(GLFWwindow* window, int pos_x, int pos_y);
         static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -80,14 +85,14 @@ static std::shared_ptr<Frtk_Popup_Window> spWindow;
 
         virtual int handle(int ev) override;
         virtual void draw() override;
-        GLFWwindow* m_glfpopWindow;
+
+        static GLFWwindow* m_glfpopWindow;
         int gl_version_major;
         int gl_version_minor;
         Fr_Window* m_linkToMainWindow;
-        bool s_GLFWpopInitialized;
-        bool s_GladInitialized;
- 		NVGcontext* m_nvgContext; //NanoVG Context
-		void flush();
+        static bool s_GLFWpopInitialized;
+        static bool s_GladpopInitialized;
+        void flush();
     };
 }
 #endif //FRTK_POPUP_WINDOW_H
