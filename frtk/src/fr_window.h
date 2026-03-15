@@ -46,8 +46,8 @@
 
 /** end Fr_Window */
 namespace FR {
-    class Frtk_Vwin;
-    
+    class Frtk_Vwin;        // virtual nanvg window
+    class Frtk_Window;      // real glfw with nanovg window
     class Frtk_ToolBarVwin;
     class Frtk_Radio_ToolbarWin;
     class Frtk_Rclick_menuWin;

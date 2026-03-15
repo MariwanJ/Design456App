@@ -208,7 +208,8 @@ namespace FR {
         void widgetType(WIDGTYPE nVal);
 
         Frtk_Widget* parent();
-        Frtk_Vwin* m_linkTofrtkWindow;
+        Frtk_Vwin* m_linkToVfrtkWindow;  //virtual window, maybe main scene
+        Frtk_Window* m_linkTofrtkWindow; // 
 
     protected:
         virtual void draw(void);

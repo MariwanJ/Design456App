@@ -40,7 +40,8 @@ namespace FR {
         m_rightClickMenu->Exit();
         m_rightClickMenu = nullptr;
     }
-    m_rightClickMenu = std::make_shared <Frtk_Rclick_menuWin>(100, 100, 400, 400, "PopuWindow");
+    auto mouse = m_sysEvents.mouse;
+    m_rightClickMenu = std::make_shared <Frtk_Rclick_menuWin>(mouse.activeX, mouse.activeY, 200, 200, "PopuWindow");
     m_rightClickMenu->show();
 }
 }

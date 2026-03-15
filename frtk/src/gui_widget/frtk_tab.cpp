@@ -194,8 +194,8 @@ namespace FR {
 
     void Frtk_Tabwdg::drawLabel()
     {
-        if (m_linkTofrtkWindow)
-            drawTextInBox(m_vg, m_label, m_font, true, m_linkTofrtkWindow->getFontData());
+        if (m_linkToVfrtkWindow)
+            drawTextInBox(m_vg, m_label, m_font, true, m_linkToVfrtkWindow->getFontData());
     }
 
     void Frtk_Tabwdg::init_headwidth()

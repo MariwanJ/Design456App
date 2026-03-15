@@ -68,7 +68,7 @@ namespace FR {
 
         // widgets specific variables
         m_wdgType = FRTK_VWINDOW;
-        m_linkTofrtkWindow = this;
+        m_linkToVfrtkWindow = this;
         m_MainFrtkInstance = this;
         if (m_hasHeader) {
             m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, X, Y + m_WindowsStyle.height, W, H - m_WindowsStyle.height);
@@ -76,7 +76,7 @@ namespace FR {
         else {
             m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, X, Y, W, H);
         }
-        m_guiWindow->m_linkTofrtkWindow = this;
+        m_guiWindow->m_linkToVfrtkWindow = this;
         m_guiWindow->parent(this);
         m_guiWindow->boxType(b);
 
@@ -188,8 +188,8 @@ namespace FR {
     void Frtk_Vwin::drawLabel() {
         m_font.pos = { m_x, m_y };
         m_font.size = { m_w, m_WindowsStyle.height };
-        if(m_linkTofrtkWindow)
-            drawTextInBox(m_vg, m_label, m_font,true, m_linkTofrtkWindow->getFontData());
+        if(m_linkToVfrtkWindow)
+            drawTextInBox(m_vg, m_label, m_font,true, m_linkToVfrtkWindow->getFontData());
      }
 
     void Frtk_Vwin::drawLabel(float X, float Y, float W, float H, float rotateAngle) {
@@ -332,7 +332,7 @@ namespace FR {
         m_guiWindow->remove_all();
     }
     void Frtk_Vwin::addChild(std::shared_ptr<Frtk_Widget> w) {
-        w->m_linkTofrtkWindow = this;
+        w->m_linkToVfrtkWindow = this;
         m_guiWindow->addChild(w);
     }
     bool Frtk_Vwin::hasHeader() const {

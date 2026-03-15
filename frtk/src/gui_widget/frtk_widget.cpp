@@ -46,7 +46,7 @@ namespace FR {
         m_label(label), m_wdgType(FRTK_WIDGET), m_boxType(b), m_has_focus(false),
         m_Image({ nullptr, {{0.f, 0.f}, {0.f, 0.f}} }), m_cellStyle(FR_IMG_LEFT_TO_TEXT),
         m_visible(true), m_dragging(false), m_active(true),
-        m_cantake_focus(true), m_IconTexture(0), m_vg(NULL), m_linkTofrtkWindow(nullptr),
+        m_cantake_focus(true), m_IconTexture(0), m_vg(NULL), m_linkToVfrtkWindow(nullptr),
         m_borderColor(glm::vec4(FR_DARKSLATEGREY)), m_borderWidth(FRTK_NORMAL_BORDER),
         m_callback(default_callback),
         m_color(glm::vec4(FR_GAINSBORO)), m_bkg_color(FR_SILVER) {
@@ -201,8 +201,8 @@ namespace FR {
         draw_box(m_vg, t, { {X,Y},{W,H} }, 0.0f, FRTK_NORMAL_BORDER, nvgRGBAf(0, 0.501f, 1.0f, 1.0f), nvgRGBAf(bkg.r, bkg.g, bkg.b, bkg.a), true);
     }
     void Frtk_Widget::drawLabel() {
-        if (m_linkTofrtkWindow)
-            drawTextInBox(m_vg, m_label, m_font, true, m_linkTofrtkWindow->getFontData());
+        if (m_linkToVfrtkWindow)
+            drawTextInBox(m_vg, m_label, m_font, true, m_linkToVfrtkWindow->getFontData());
     }
     void Frtk_Widget::drawLabel(float X, float Y, float W, float H, float rotateAngle) {
         m_font.pos.x = X + m_font.fontSize * 0.4f;
@@ -210,8 +210,8 @@ namespace FR {
         m_font.size.w = W;
         m_font.size.h = H;
         m_font.Rotate = rotateAngle;
-        if (m_linkTofrtkWindow)
-            drawTextInBox(m_vg, m_label, m_font, true, m_linkTofrtkWindow->getFontData());
+        if (m_linkToVfrtkWindow)
+            drawTextInBox(m_vg, m_label, m_font, true, m_linkToVfrtkWindow->getFontData());
     }
 
     void Frtk_Widget::rotateLabel(float angle)
@@ -499,7 +499,7 @@ namespace FR {
     }
     void Frtk_Widget::parent_changed(){
         if (m_parent)
-            m_linkTofrtkWindow = m_parent->m_linkTofrtkWindow;
+            m_linkToVfrtkWindow = m_parent->m_linkToVfrtkWindow;
     }
 
     //callback processing

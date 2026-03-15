@@ -90,7 +90,7 @@ namespace FR {
             m_scrollwdg.Ver.btnInc.size.w = m_scrollbarThickness + m_trackExtra;
             m_scrollwdg.Ver.btnInc.size.h = m_scrollbarThickness;
             m_scrollwdg.Ver.btnInc.pos.x = m_x + m_w - m_scrollbarThickness - m_trackExtra / 2;
-            m_scrollwdg.Ver.btnInc.pos.y = m_y + m_squarePadding;
+            m_scrollwdg.Ver.btnInc.pos.y = m_y ;
 
             m_scrollwdg.Ver.btnDec.size.w = m_scrollbarThickness + m_trackExtra;
             m_scrollwdg.Ver.btnDec.size.h = m_scrollbarThickness;
@@ -99,9 +99,9 @@ namespace FR {
 
             //scroll bar - bkg
             m_scrollwdg.Ver.track.pos.x = m_x + m_w - m_scrollbarThickness - m_trackExtra / 2;
-            m_scrollwdg.Ver.track.pos.y = m_y + m_scrollbarThickness + m_squarePadding;
+            m_scrollwdg.Ver.track.pos.y = m_y + m_scrollbarThickness ;
             m_scrollwdg.Ver.track.size.w = m_scrollbarThickness + m_trackExtra;
-            m_scrollwdg.Ver.track.size.h = m_h - 2 * m_scrollbarThickness - m_squarePadding * 2;
+            m_scrollwdg.Ver.track.size.h = m_h - 2 * m_scrollbarThickness - m_squarePadding*2;
 
             // scroll-middle-button
             float fractionVisible = std::min(1.0f, m_viewPort.size.h / m_content.size.h);
@@ -503,6 +503,13 @@ namespace FR {
                  }
                 
                 }
+            for (const auto wdg : m_children) {
+                //We need to make local mouse coordinate dep on offset :
+                auto win = m_linkToVfrtkWindow;
+                if(wdg->isMouse_inside())
+                    if (send_event(*wdg,ev) == 1)
+                    return 1; 
+            }
             return 0;
         }
     
