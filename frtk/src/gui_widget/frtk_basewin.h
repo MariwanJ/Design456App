@@ -1,0 +1,84 @@
+//
+// This file is a part of the Open Source Design456App
+// MIT License
+//
+// Copyright (c) 2026
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
+//  Author :Mariwan Jalal    mariwan.jalal@gmail.com
+//
+
+#ifndef FRTK_BASEWIN_H
+#define FRTK_BASEWIN_H
+
+#include<gui_widget/frtk_grpwidget.h>
+
+namespace FR{
+    
+    class Frtk_BaseWin : public Frtk_Widget {
+        friend Fr_Window;
+    public:
+        std::shared_ptr<Frtk_GrpWidget> m_guiWindow;
+        virtual void init(void);
+        virtual void drawLabel()  override;
+        virtual void drawLabel(float X, float Y, float W, float H, float rotateAngle=0.0f)   override;
+        virtual NVGcontext* getContext(void);
+
+        virtual void remove_child_at(size_t &index);
+        virtual void remove_child(std::shared_ptr<Frtk_Widget>& wdg);
+        virtual void remove_all();
+        virtual void addChild(std::shared_ptr<Frtk_Widget> w);
+
+        virtual int loadFonts();
+        bool Header_clicked(void);
+        inline NVGcolor setAlpha(FR_COLOR& c, float alpha) { return NVGcolor{ c.R,c.G,c.B,alpha }; }
+
+        virtual bool set_child_focus(Frtk_Widget* w=nullptr);
+        virtual  bool take_focus() override; 
+        virtual void lose_focus() override;
+        virtual const FontData_t &getFontData();
+
+        virtual void x(float v) override;
+        virtual void y(float v) override;
+        virtual void w(float v) override;
+        virtual void h(float v) override;
+
+        virtual float x() const override;
+        virtual float y() const override;
+        virtual float w() const override;
+        virtual float h() const override;
+        // we must override it as we have header part & 
+        // real windows part which is the group
+        virtual float absX() const override;
+        virtual float absY() const override;
+
+    protected:
+        
+        Frtk_BaseWin(float X, float Y, float W, float H, std::string lbl = "Frtk_BaseWin", BOX_TYPE b = FRTK_UP_BOX, bool hasHeader = true);
+        virtual int handle(int event) override;
+        dimPos_float_t mainGui() const override;
+        bool isMouse_inside() const override;
+        virtual void draw(void) override;
+        FontData_t m_data;
+        std::string default_font_path;
+        bool m_hasHeader;
+    };
+}
+#endif //!FRTK_BASEWIN_H

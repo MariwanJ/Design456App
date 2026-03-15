@@ -271,12 +271,12 @@ namespace FR {
             c->parent_changed();
     }
 
-    Frtk_Vwin* Frtk_GrpWidget::getParentWindow() {
+    Frtk_BaseWin* Frtk_GrpWidget::getParentWindow() {
         auto parent = m_parent;
         if (parent != nullptr) {
             while (parent->parent())
                 parent = parent->parent();
-            return (Frtk_Vwin*)parent;
+            return (Frtk_BaseWin*)parent;
         }
         return nullptr;
     }

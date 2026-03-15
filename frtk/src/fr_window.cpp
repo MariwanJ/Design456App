@@ -475,9 +475,8 @@ namespace FR {
          bool onlyOnce = false;
          while (!glfwWindowShouldClose(pGLFWWindow))
          {
-             auto popWindow= Frtk_Rclick_menuWin::getWindow();
-             if (popWindow) {
-                 popWindow->render_popupWindow();
+            if(m_rightClickMenu){
+                m_rightClickMenu->render();
              }
 
              //ALL 3D Drawings

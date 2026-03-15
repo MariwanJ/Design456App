@@ -40,8 +40,8 @@ FR::Frtk_Secret_Input::Frtk_Secret_Input(NVGcontext* vg, float X, float Y, float
 
 void Frtk_Secret_Input::draw() {
     drawEditBoxBase(m_x, m_y, m_w, m_h);
-    if(m_linkToVfrtkWindow)
-        drawTextInBox(m_vg, m_text.value, m_font, false, m_linkToVfrtkWindow->getFontData(), MASK_CHAR);
+    if(m_linkTofrtkWindow)
+        drawTextInBox(m_vg, m_text.value, m_font, false, m_linkTofrtkWindow->getFontData(), MASK_CHAR);
     drawLabel();
     if (m_has_focus) {
         draw_focus();

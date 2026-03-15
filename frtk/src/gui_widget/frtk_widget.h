@@ -81,6 +81,10 @@ namespace FR {
         FR_IMG_RIGHT_TO_TEXT = 7
     }FRTK_PICTXT_STYLE;
 
+    class Frtk_BaseWin;
+    class Frtk_Vwin;
+    class Frtk_Window;
+
     class FRTK_API Frtk_Widget {
         friend class Frtk_GrpWidget;
 
@@ -208,8 +212,7 @@ namespace FR {
         void widgetType(WIDGTYPE nVal);
 
         Frtk_Widget* parent();
-        Frtk_Vwin* m_linkToVfrtkWindow;  //virtual window, maybe main scene
-        Frtk_Window* m_linkTofrtkWindow; // 
+        Frtk_BaseWin* m_linkTofrtkWindow; // 
 
     protected:
         virtual void draw(void);
@@ -263,7 +266,7 @@ namespace FR {
         Frtk_Widget* current;
         Frtk_Widget* prev;
         Frtk_Widget* g_underMouse;
-        Frtk_Vwin* keyboardOwner;
+        Frtk_BaseWin* keyboardOwner;
     }global_focus_tracker_t;
 
     extern global_focus_tracker_t g_focusedWdgt;

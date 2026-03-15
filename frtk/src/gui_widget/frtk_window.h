@@ -32,7 +32,7 @@
 
 #include <GLFW/glfw3.h>
 #include <fr_core.h>
-#include <gui_widget/frtk_grpwidget.h>
+#include <gui_widget/frtk_vwin.h>
 
 namespace FR {
     typedef struct {
@@ -42,7 +42,7 @@ namespace FR {
     }global_focus_tracker_popup_t;
     extern   global_focus_tracker_popup_t g_PopupWindfocusedWdgt;
 
-    class Frtk_Window : public Frtk_GrpWidget {
+    class Frtk_Window : public Frtk_BaseWin {
     public:
         Frtk_Window(int X, int Y, int W, int H, std::string lbl, BOX_TYPE b = FRTK_UP_BOX);
 
@@ -53,7 +53,7 @@ namespace FR {
         static void deinitializeGlad();
         virtual void position(float X, float Y) override;
         virtual void setDecorated(GLFWwindow* w, bool decorated);
-        int render_popupWindow(void);
+        int render(void);
         void initSystemEvents();
         
         static Frtk_Window* getWindow();
@@ -71,6 +71,8 @@ namespace FR {
         static screenDim_t m_ViewPort;
         GLFWcursor* cursorHand = nullptr;
         GLFWcursor* cursorCrosshair = nullptr;
+        
+        virtual void init(void) override;
 
         static void glfwWindosResize(GLFWwindow* window, int width, int height);
         static void glfwWindPos(GLFWwindow* window, int pos_x, int pos_y);

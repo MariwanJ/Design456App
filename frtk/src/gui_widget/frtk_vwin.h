@@ -28,11 +28,9 @@
 #ifndef FRTK_VWIN_H
 #define FRTK_VWIN_H
 
-#include<gui_widget/frtk_grpwidget.h>
+#include<gui_widget/frtk_basewin.h>
 
 namespace FR{
-
-
 
     typedef struct {
         float height;
@@ -45,61 +43,37 @@ namespace FR{
         float strokeAlpha;
         float m_cornerRadius;
     } Frtk_HeaderStyle_t;
-    
-    class Frtk_Vwin : public Frtk_Widget {
+
+
+
+    class Frtk_Vwin : public Frtk_BaseWin {
         friend Fr_Window;
     public:
         Frtk_Vwin(float X, float Y, float W, float H, std::string lbl = "Frtk_Vwin", BOX_TYPE b=FRTK_UP_BOX, bool hasHeader = true);
+        virtual void init(void) override;
+        virtual void drawLabel()  override ;
+        virtual void drawLabel(float X, float Y, float W, float H, float rotateAngle=0.0f)   override ;
+        virtual NVGcontext* getContext(void) override;
 
-        std::shared_ptr<Frtk_GrpWidget> m_guiWindow;
-        void init(void);
-        void drawLabel()  override;
-        void drawLabel(float X, float Y, float W, float H, float rotateAngle=0.0f)   override;
-        NVGcontext* getContext(void);
-
-        virtual void remove_child_at(size_t &index);
-        virtual void remove_child(std::shared_ptr<Frtk_Widget>& wdg);
-        virtual void remove_all();
-
-        virtual void addChild(std::shared_ptr<Frtk_Widget> w);
-
-        int loadFonts();
-        Frtk_HeaderStyle_t style();
-        void style(Frtk_HeaderStyle_t & STYLE);
-        bool Header_clicked(void);
-        inline NVGcolor setAlpha(FR_COLOR& c, float alpha) { return NVGcolor{ c.R,c.G,c.B,alpha }; }
+        virtual Frtk_HeaderStyle_t style();
+        virtual void style(Frtk_HeaderStyle_t & STYLE);
+        virtual bool Header_clicked(void);
+        virtual inline NVGcolor setAlpha(FR_COLOR& c, float alpha) { return NVGcolor{ c.R,c.G,c.B,alpha }; }
+        
         Frtk_HeaderStyle_t m_WindowsStyle;
         
-        bool hasHeader()const;
-        void hasHeader(bool val);
+        virtual bool hasHeader()const;
+        virtual void hasHeader(bool val);
         virtual bool set_child_focus(Frtk_Widget* w=nullptr);
-        virtual  bool take_focus() override; 
+        virtual bool take_focus() override; 
         virtual void lose_focus() override;
         const FontData_t &getFontData();
 
-        virtual void x(float v) override;
-        virtual void y(float v) override;
-        virtual void w(float v) override;
-        virtual void h(float v) override;
-
-        virtual float x() const override;
-        virtual float y() const override;
-        virtual float w() const override;
-        virtual float h() const override;
-        // we must override it as we have header part & 
-        // real windows part which is the group
-        virtual float absX() const override;
-        virtual float absY() const override;
-
     protected:
-        static Frtk_Vwin* m_MainFrtkInstance;
         virtual int handle(int event) override;
         dimPos_float_t mainGui() const override;
-        bool isMouse_inside() const override;
         virtual void draw(void) override;
         virtual void draw_header();
-        FontData_t m_data;
-        std::string default_font_path;
         bool m_hasHeader;
     };
     

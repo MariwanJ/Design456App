@@ -505,7 +505,7 @@ namespace FR {
                 }
             for (const auto wdg : m_children) {
                 //We need to make local mouse coordinate dep on offset :
-                auto win = m_linkToVfrtkWindow;
+                auto win = m_linkTofrtkWindow;
                 if(wdg->isMouse_inside())
                     if (send_event(*wdg,ev) == 1)
                     return 1; 

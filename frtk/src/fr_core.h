@@ -337,7 +337,8 @@ namespace FR {
     typedef enum WIDGTYPE {
         FRTK_WIDGET,
         //glfw windows (real glfw) 
-        FRTK_GLFW_WIN, //BASE WINDOWS
+        FRTK_BASEWIN,   // SHOULD BE Subclassed
+        FRTK_WINDOW ,   //WINDOWS
         FRTK_GLFW_RIGT_CLICK_WIN,
         FRTK_MODAL_WIN,
         FRTK_MSG_WIN,

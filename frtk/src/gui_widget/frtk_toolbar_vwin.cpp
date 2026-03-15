@@ -49,7 +49,7 @@ namespace FR {
             m_dockingSize = { {0.0,0.0},{FRTK_TOOLBAR_HEIGHT,FRTK_TOOLBAR_BUTTON_HEGHT} };
         //Create the buttons
         addButton(tools);
-        m_linkToVfrtkWindow = this;
+        m_linkTofrtkWindow = this;
     }
     Fr_Window* Frtk_ToolBarVwin::parent(void) {
         return m_parent;

@@ -77,12 +77,12 @@ namespace FR {
     GLFWwindow* Frtk_Window::m_glfWindow = nullptr;
 
     Frtk_Window::Frtk_Window(int X, int Y, int W, int H, std::string lbl, BOX_TYPE b) :
-        Frtk_GrpWidget(nullptr, 0, 0, W, H, lbl, b),
+        Frtk_BaseWin(X, Y, W, H, lbl, b),
         MainWinCursor(nullptr), glfDim({ {(int)X,(int)Y }, { (int)W,(int)H } }),
         gl_version_major(4), gl_version_minor(6), m_linkToMainWindow(nullptr) {
         // Initialize GLFW
         sp_popWindow = this;
-        m_wdgType = FRTK_GLFW_WIN;
+        m_wdgType = FRTK_WINDOW;
         m_bkg_color = glm::vec4(FR_BLACK);
     }
     Frtk_Window* Frtk_Window::getWindow() {
@@ -105,10 +105,28 @@ namespace FR {
             return;
         FRTK_CORE_APP_ASSERT(m_vg != nullptr);
         draw_box(m_vg, m_boxType, { { 0.0f, 0.0f }, { m_w, m_h } }, 3.0f, FRTK_THICK_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
-        Frtk_GrpWidget::draw_children();
+        m_guiWindow->draw_children();
         if (!m_label.empty())
             drawLabel();
         draw_focus();
+    }
+    void Frtk_Window::init(void) {
+        default_font_path = EXE_CURRENT_DIR + "/frtk/vendor/nanovg/example/";
+        loadFonts();
+
+        /*When windows start to be visible, it will be the focused widget.
+        this can change later as children get focus. current and prev will be the same here
+        */
+        //global variables
+        g_focusedWdgt.current = this;
+        g_focusedWdgt.prev = this;
+        // widgets specific variables
+        m_linkTofrtkWindow = this;
+        m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, 0, 0, m_w, m_h);
+        FRTK_CORE_APP_ASSERT(m_guiWindow);
+        m_guiWindow->m_linkTofrtkWindow = this;
+        m_guiWindow->parent(this);
+        m_guiWindow->boxType(m_boxType);
     }
 
     void Frtk_Window::show()
@@ -148,8 +166,9 @@ namespace FR {
 
         if (!m_vg)
             FRTK_CORE_FATAL("Could not init NanoVG.");
+        init();
     }
-    int Frtk_Window::render_popupWindow(void) {
+    int Frtk_Window::render(void) {
         if (m_glfWindow) {
             if (!glfwWindowShouldClose(m_glfWindow)) {
                 int winWidth, winHeight;
@@ -183,7 +202,7 @@ namespace FR {
     {
         if (m_glfWindow)
         {
-            m_children.clear();
+            m_guiWindow->remove_all();
             glfwDestroyWindow(m_glfWindow);
             m_glfWindow = nullptr;
             return 1;

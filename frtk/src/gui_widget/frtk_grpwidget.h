@@ -31,10 +31,11 @@
 #include <fr_core.h>
 #include <gui_widget/frtk_widget.h>
 
-class Frtk_Vwin;
-class Frtk_Window;
+
+
 namespace FR {
     class FRTK_API  Frtk_GrpWidget : public Frtk_Widget {
+        friend Frtk_BaseWin;
         friend Frtk_Vwin;
         friend Frtk_Window;
     public:
@@ -72,7 +73,7 @@ namespace FR {
         virtual void show() override;
     protected:
         virtual void parent_changed() override;
-        Frtk_Vwin* getParentWindow();
+        Frtk_BaseWin* getParentWindow();
         virtual void draw()  override;
         Frtk_Widget* getTopMouseOverChild();
         virtual int handle(int ev) override;

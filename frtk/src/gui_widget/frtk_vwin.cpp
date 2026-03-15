@@ -29,11 +29,9 @@
 
 namespace FR {
     
-    Frtk_Vwin* Frtk_Vwin::m_MainFrtkInstance = nullptr;
-
     Frtk_Vwin::Frtk_Vwin(float X, float Y, float W, float H, std::string lbl, BOX_TYPE b, bool hasHeader) :
-        Frtk_Widget(X, Y, W, H, lbl, b), m_hasHeader(hasHeader) {
-        init();
+        Frtk_BaseWin(X, Y, W, H, lbl, b), m_hasHeader(hasHeader) {
+     
         m_data.fontBold = 0;
         m_data.fontEmoji = 0;
         m_data.fontIcons = 0;
@@ -58,76 +56,9 @@ namespace FR {
         m_font.pos.y = m_y + m_font.fontSize * 0.4f;
         m_font.size.w = m_w;
         m_font.size.h = m_h;
-
-        /*When windows start to be visible, it will be the focused widget.
-        this can change later as children get focus. current and prev will be the same here
-        */
-        //global variables
-        g_focusedWdgt.current = this;
-        g_focusedWdgt.prev = this;
-
-        // widgets specific variables
-        m_wdgType = FRTK_VWINDOW;
-        m_linkToVfrtkWindow = this;
-        m_MainFrtkInstance = this;
-        if (m_hasHeader) {
-            m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, X, Y + m_WindowsStyle.height, W, H - m_WindowsStyle.height);
-        }
-        else {
-            m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, X, Y, W, H);
-        }
-        m_guiWindow->m_linkToVfrtkWindow = this;
-        m_guiWindow->parent(this);
-        m_guiWindow->boxType(b);
-
-        FRTK_CORE_APP_ASSERT(m_guiWindow);
+        init();
     }
-    void Frtk_Vwin::x(float v) {
-        m_x = v;
-        m_guiWindow->x(v);
-    }
-    void Frtk_Vwin::y(float v) {
-        m_y = v;
-        m_guiWindow->y(v);
-
-    }
-    void Frtk_Vwin::w(float v) {
-        m_w = v;
-        m_guiWindow->w(v);
-
-    }
-    void Frtk_Vwin::h(float v) {
-        m_h = v;
-        m_guiWindow->h(v);
-    }
-
-    float Frtk_Vwin::x() const
-    {
-        return m_x;
-    }
-
-    float Frtk_Vwin::y() const
-    {
-        return m_y;
-    }
-
-    float Frtk_Vwin::w() const
-    {
-        return m_w;
-    }
-
-    float Frtk_Vwin::h() const
-    {
-        return m_h;
-    }
-
-    float Frtk_Vwin::absX() const{
-        return 0.0f;
-    }
-    float Frtk_Vwin::absY() const {
-        return 0.0f;
-    }
-
+   
     void Frtk_Vwin::draw() {
         if (!m_visible)
             return;
@@ -184,12 +115,35 @@ namespace FR {
 
         default_font_path = EXE_CURRENT_DIR + "/frtk/vendor/nanovg/example/";
         loadFonts();
+
+        /*When windows start to be visible, it will be the focused widget.
+        this can change later as children get focus. current and prev will be the same here
+        */
+        //global variables
+        g_focusedWdgt.current = this;
+        g_focusedWdgt.prev = this;
+
+        // widgets specific variables
+        m_wdgType = FRTK_VWINDOW;
+        m_linkTofrtkWindow = this;
+        if (m_hasHeader) {
+            m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, m_x, m_y + m_WindowsStyle.height, m_w, m_h - m_WindowsStyle.height);
+        }
+        else {
+            m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, m_x,m_y,m_w,m_h);
+        }
+        FRTK_CORE_APP_ASSERT(m_guiWindow);
+        m_guiWindow->m_linkTofrtkWindow = this;
+        m_guiWindow->parent(this);
+        m_guiWindow->boxType(m_boxType);
+
+        
     }
     void Frtk_Vwin::drawLabel() {
         m_font.pos = { m_x, m_y };
         m_font.size = { m_w, m_WindowsStyle.height };
-        if(m_linkToVfrtkWindow)
-            drawTextInBox(m_vg, m_label, m_font,true, m_linkToVfrtkWindow->getFontData());
+        if(m_linkTofrtkWindow)
+            drawTextInBox(m_vg, m_label, m_font,true, m_linkTofrtkWindow->getFontData());
      }
 
     void Frtk_Vwin::drawLabel(float X, float Y, float W, float H, float rotateAngle) {
@@ -204,41 +158,7 @@ namespace FR {
         return m_mainWindow->getnvgContext();
     }
 
-    int Frtk_Vwin::loadFonts()
-    {
-        //TODO FIXME: Do we need emoji fonts?? don't think so.
-        if (m_vg == NULL)
-            return -1;
-
-        std::string f = default_font_path + "entypo.ttf";
-        m_data.fontIcons = nvgCreateFont(m_vg, "icons", f.c_str());
-        if (m_data.fontIcons == -1) {
-            printf("Could not add font icons.\n");
-            return -1;
-        }
-        f = default_font_path + "Roboto-Regular.ttf";
-        m_data.fontNormal = nvgCreateFont(m_vg, "sans", f.c_str());
-        if (m_data.fontNormal == -1) {
-            printf("Could not add font italic.\n");
-            return -1;
-        }
-        f = default_font_path + "Roboto-Bold.ttf";
-        m_data.fontBold = nvgCreateFont(m_vg, "sans-bold", f.c_str());
-        if (m_data.fontBold == -1) {
-            printf("Could not add font bold.\n");
-            return -1;
-        }
-        f = default_font_path + "NotoEmoji-Regular.ttf";
-        m_data.fontEmoji = nvgCreateFont(m_vg, "emoji", f.c_str());
-        if (m_data.fontEmoji == -1) {
-            printf("Could not add font emoji.\n");
-            return -1;
-        }
-        nvgAddFallbackFontId(m_vg, m_data.fontNormal, m_data.fontEmoji);
-        nvgAddFallbackFontId(m_vg, m_data.fontBold, m_data.fontEmoji);
-
-        return 0;
-    }
+    
     Frtk_HeaderStyle_t Frtk_Vwin::style() {
         return m_WindowsStyle;
     }
@@ -313,28 +233,6 @@ namespace FR {
         return { x(), y() };
     }
 
-    bool Frtk_Vwin::isMouse_inside() const
-    {
-        const auto& mouse = m_mainWindow->m_sysEvents.mouse; // content-space mouse
-        bool result;
-        result = mouse.activeX >= m_x && mouse.activeX <= m_x + m_w &&
-            mouse.activeY >= m_y && mouse.activeY <= m_y + m_h;
-        return result;
-    }
-
-    void Frtk_Vwin::remove_child_at(size_t& index) {
-        m_guiWindow->remove_child_at(index);
-    }
-    void Frtk_Vwin::remove_child(std::shared_ptr<Frtk_Widget>& wdg) {
-        m_guiWindow->remove_child(wdg);
-    }
-    void Frtk_Vwin::remove_all() {
-        m_guiWindow->remove_all();
-    }
-    void Frtk_Vwin::addChild(std::shared_ptr<Frtk_Widget> w) {
-        w->m_linkToVfrtkWindow = this;
-        m_guiWindow->addChild(w);
-    }
     bool Frtk_Vwin::hasHeader() const {
         return m_hasHeader;
     }

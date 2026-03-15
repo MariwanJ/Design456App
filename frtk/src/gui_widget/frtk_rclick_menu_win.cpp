@@ -91,6 +91,7 @@ namespace FR {
 
         if (!m_vg)
             FRTK_CORE_FATAL("Could not init NanoVG.");
+        init();
     }
 
     }
