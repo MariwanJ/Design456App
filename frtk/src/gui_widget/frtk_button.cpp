@@ -127,7 +127,20 @@ namespace FR {
                 m_Image.opacity = 1.0f;
                 m_value = 0;
             }
-        }
+        }else
+            if (e == FR_LEFT_DRAG_MOVE && !isMouse_inside()) {
+                if (!(m_wdgType == FRTK_CHECK_BUTTON ||
+                    m_wdgType == FRTK_TOGGLE_LIGHT_BUTTON ||
+                    m_wdgType == FRTK_TOGGLE_ROUND_BUTTON ||
+                    m_wdgType == FRTK_SWITCH_BUTTON ||
+                    m_wdgType == FRTK_TOGGLE_BUTTON ||
+                    m_wdgType == FRTK_LIGHT_BUTTON ||
+                    m_wdgType == FRTK_ROUND_BUTTON)) {
+                    m_Image.opacity = 1.0f;
+                    m_value = 0;
+                    return 1;
+                }
+            }
         return 0;
     }
 

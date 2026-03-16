@@ -375,7 +375,7 @@ namespace FR {
 
     int Frtk_Scroll::handle(int ev)
     {
-        const auto& mouse = m_mainWindow->m_sysEvents.mouse;
+        auto& mouse = m_mainWindow->m_sysEvents.mouse;
         if (!(isMouse_inside() || m_scrollwdg.Ver.dragging || m_scrollwdg.Hor.dragging))
             return 0;
 
@@ -503,14 +503,22 @@ namespace FR {
                  }
                 
                 }
+            int result = 0;
+            dimPos_float_t savemousepos = { mouse.activeX, mouse.activeY };
+            mouse.activeX += m_scrollwdg.Hor.scrollOffs.x;  //local mouse pos after offset
+            mouse.activeY += m_scrollwdg.Hor.scrollOffs.y;  //local mouse pos after offset
             for (const auto wdg : m_children) {
                 //We need to make local mouse coordinate dep on offset :
                 auto win = m_linkTofrtkWindow;
                 if(wdg->isMouse_inside())
-                    if (send_event(*wdg,ev) == 1)
-                    return 1; 
+                    if (send_event(*wdg, ev) == 1) {
+                        result = 1;
+                        break;
+                    }
             }
-            return 0;
+            mouse.activeX = savemousepos.x;
+            mouse.activeY = savemousepos.y;
+            return result;
         }
     
 }

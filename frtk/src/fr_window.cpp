@@ -747,6 +747,7 @@ namespace FR {
 
          switch (events) {
          case FR_MIDDLE_DRAG_PUSH:
+         case FR_MIDDLE_DRAG_MOVE:
              if (ek.shiftDown) {
                  // Pan the camera
                  this->cameraPAN(pGLFWWindow);

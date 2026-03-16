@@ -63,6 +63,7 @@ namespace FR {
             m_label->LoadFont();
         }
         m_WidgType = NODETYPE::FR_SHAPE;
+        initializeVBO();
     }
 #if 0 //For debugging only
 
@@ -114,7 +115,7 @@ namespace FR {
     }
 
     void Fr_Shape::draw() {
-        initializeVBO();
+        
         glCheckFunc(glBindVertexArray(m_vao));
         glCheckFunc(glDrawElements(GL_TRIANGLES, m_indices->size(), GL_UNSIGNED_INT, 0));
         glCheckFunc(glBindVertexArray(0));
