@@ -337,7 +337,6 @@ namespace FR {
     int Frtk_ToolBarVwin::handle(int ev)
     {
    //        Fr_Window* win = m_parent; //just to make it clear what m_parent is here
-
         FRTK_CORE_APP_ASSERT(m_parent);
         if (dockingBTN() && ev == FR_LEFT_DRAG_PUSH) {
             m_dragging = true;
@@ -387,7 +386,7 @@ namespace FR {
                 }
             }
             // WE MUST RETURN ALWAYS 1 .. events over the window should be consumed
-            // we dont care if the group dosen't consume the events
+            // we don't care if the group doesn't consume the events
             // Scene should not get events if the mouse was over a frtk-window!!!! IMPORTANT TO REMEMBER!!!
             if (!m_dragging)
                 m_mainWindow->activateNavi();

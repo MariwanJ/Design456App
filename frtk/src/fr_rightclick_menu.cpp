@@ -41,7 +41,7 @@ namespace FR {
         m_rightClickMenu = nullptr;
     }
     auto mouse = m_sysEvents.mouse;
-    m_rightClickMenu = std::make_shared <Frtk_Rclick_menuWin>(mouse.activeX, mouse.activeY, 200, 200, "PopuWindow");
+    m_rightClickMenu = std::make_shared <Frtk_Rclick_menuWin>(mouse.activeX + x(), mouse.activeY+y(), 200, 200, "PopuWindow");
     m_rightClickMenu->show();
 }
 }

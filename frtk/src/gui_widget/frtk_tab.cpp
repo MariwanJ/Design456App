@@ -38,52 +38,17 @@ namespace FR {
        ----------------------------------------
 
     */
-    //Left-Right buttons callbacks
-
-    static void tabButtonPressed_callback(uint8_t index, Frtk_Widget* w) {
-        if (!w) return;
-
-        auto tab = dynamic_cast<Frtk_Tabs*>(w);
-        if (!tab) return;
-
-        auto tabwdgs = tab->getChildren();
-        if (tabwdgs.empty()) return;
-
-        // Find the currently focused widget
-        size_t focusedIndex = 0;
-        bool found = false;
-        for (size_t i = 0; i < tabwdgs.size(); ++i) {
-            if (tabwdgs[i]->has_focus()) {
-                focusedIndex = i;
-                found = true;
-                break;
-            }
-        }
-        size_t newIndex = 0;
-        if (found) {
-            if (index == 0) {                           // <----
-                newIndex = (focusedIndex == 2) ? 2 : focusedIndex - 1;
-            }
-            else if (index == 1) {        //  ---->
-                newIndex = (focusedIndex + 1 < tabwdgs.size()) ? focusedIndex + 1 : 2;
-            }
-        }
-        // Set focus to the new widget
-        tab->activeTab(newIndex);
-        tabwdgs[focusedIndex]->focus(false);
-        tabwdgs[newIndex]->focus(true);
-    }
 
     Frtk_Tabwdg::Frtk_Tabwdg(NVGcontext* vg, float W, float H, std::string l, BOX_TYPE b) : Frtk_GrpWidget(vg, 0.0f, 0.0f, W, H, l, b),
         m_headSapce(1.0f), m_headDim{ 0.0f }, m_bodyDim{ 0.0f }, m_headWidth{ 0.0f }
     {
         m_wdgType = FRTK_TABWDG;
-        m_font.fontSize = 14.0f;
+        m_font.fontSize = 12.0f;
         m_font.lblAlign = NVG_ALIGN_MIDDLE_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE;
         m_color = glm::vec4(FR_LIGHTGREY);
         m_bkg_color = glm::vec4(FR_DARKGREY1);
         init_headwidth();
-        m_body = std::make_shared<Frtk_GrpWidget>(m_vg, 0, m_font.fontSize * HEIGHT_FACTOR + 2, W,H-m_font.fontSize * HEIGHT_FACTOR+5, "", FRTK_FLAT_BOX);
+        m_body = std::make_shared<Frtk_GrpWidget>(m_vg, 0, m_font.fontSize * HEIGHT_FACTOR + 2, W, H - m_font.fontSize * HEIGHT_FACTOR + 5, "", FRTK_FLAT_BOX);
         addChild(m_body);
         FRTK_CORE_APP_ASSERT(m_body, "obj allocation error!");
     }
@@ -162,11 +127,11 @@ namespace FR {
     void Frtk_Tabwdg::draw()
     {
         if (m_has_focus) {
-            draw_box(m_vg, m_boxType, m_headDim, 0.0f, FRTK_EXTRA_THIN_BORDER, glmToNVG(m_bkg_color), glmToNVG(m_color), true);
+            draw_box(m_vg, m_boxType, m_headDim, 1.0f, FRTK_EXTRA_THIN_BORDER, glmToNVG(m_bkg_color), glmToNVG(m_color), true);
             m_body->show();
         }
         else {
-            draw_box(m_vg, m_boxType, m_headDim, 0.0f, FRTK_EXTRA_THIN_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
+            draw_box(m_vg, m_boxType, m_headDim, 1.0f, FRTK_EXTRA_THIN_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
             m_body->hide();
         }
         draw_box(m_vg, BOX_TYPE(m_boxType + 1), { 0,m_headDim.pos.y + m_headDim.size.h, m_w,2.0f }, 0.0f, FRTK_EXTRA_THIN_BORDER, nvgRGBAf(FR_BLUE), glmToNVG(m_bkg_color), false);
@@ -211,12 +176,28 @@ namespace FR {
         m_headWidth = std::clamp(textWidth + padding, minWidth, maxWidth);
     }
 
+    /** ***********************************************************************************************************************************************************/
+
     //***********************************************************************************
     //                         Tabs container widget
     //***********************************************************************************
+
+    //Left-Right buttons callbacks
+    static void tabButtonPressed_callback(uint8_t index, Frtk_Widget* w) {
+        if (!w) return;
+
+        auto tab = dynamic_cast<Frtk_Tabs*>(w);
+        if (!tab) return;
+        auto tabwdgs = tab->getChildren();
+        if (tabwdgs.empty()) return;
+        size_t focusedIndex = 0;
+        bool found = false;
+        tab->calcOffset(index);
+    }
+
     Frtk_Tabs::Frtk_Tabs(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b) :
-        Frtk_GrpWidget(vg, X, Y, W, H, lbl, b), m_currentActiveTab(0)
-    {
+        Frtk_GrpWidget(vg, X, Y, W, H, lbl, b), m_currentActiveTab(0), m_firstVisible(nullptr), m_lastVisible(nullptr),
+        m_viewPort{ { 0.0, 0.0 },{0.0, 0.0} }, m_content{ 0.0 }, m_viewOffs(0) {
         Frtk_Tabs* tab = this;  // store explicitly
         m_font.fontSize = 14.0f;
         m_font.pos = { m_x,m_y };
@@ -249,6 +230,82 @@ namespace FR {
         addChild(bt2);
         m_wdgType = FRTK_TABS;
         m_currentActiveTab = 2;
+        m_viewPort.pos.x = X + TAB_BUTTON_SIZE;
+        m_viewPort.pos.y = Y + padding;
+        m_viewPort.size.w = W;
+        m_viewPort.size.h = padding * 2 + TAB_BUTTON_SIZE;
+    }
+
+    bool Frtk_Tabs::shouldClip() {
+        return (m_viewPort.size.w < m_content.size.w);
+    }
+    int Frtk_Tabs::getIndex(std::shared_ptr < Frtk_Tabwdg> wdg) {
+        std::shared_ptr<Frtk_Widget> basewdgt = std::static_pointer_cast<Frtk_Widget>(wdg);
+        for (size_t i = 2; i < m_children.size(); ++i) {
+            if (m_children[i] == basewdgt) {
+                return i - 2;
+            }
+        }
+        return -1;
+    }
+    void Frtk_Tabs::calcOffset(uint8_t btn) {
+        if (!shouldClip())
+        {
+            m_viewOffs = 0.0f;
+            return;
+        }
+        switch (btn) {
+        case 0: {
+            //<--
+            int index1 = getIndex(m_firstVisible);
+            if (index1 < 2) {
+                FRTK_CORE_FATAL("Tab not found as it should be first tab!");
+                return; //This should not happen
+            }
+            if (m_children.size() - 1 > index1) {
+                index1++;
+                m_firstVisible = std::static_pointer_cast<Frtk_Tabwdg>(m_children[index1]);
+                float width = m_firstVisible->getHeadDim().size.w;
+                std::shared_ptr<Frtk_Tabwdg> nwdgt = nullptr;
+                while (width < m_viewPort.size.w && index1 < m_children.size()) {
+                    nwdgt = std::static_pointer_cast<Frtk_Tabwdg>(m_children[index1]);
+                    width += nwdgt->getHeadDim().size.w;
+                    index1++;
+                }
+                m_viewOffs = width;
+                if (nwdgt)
+                    m_lastVisible = nwdgt;
+                else
+                    m_lastVisible = m_firstVisible;
+            }
+        }
+              break;
+        case 1: {
+            //-->
+            int index1 = getIndex(m_lastVisible);
+            if (index1 < 0) {
+                FRTK_CORE_FATAL("Tab not found as it should be first tab!");
+                return; //This should not happen
+            }
+            index1--;
+            if (m_children.size() - 1 > 4 && index1 > 2) {
+                m_lastVisible = std::static_pointer_cast<Frtk_Tabwdg>(m_children[index1]);
+                float width = m_lastVisible->getHeadDim().size.w;
+                std::shared_ptr<Frtk_Tabwdg> nwdgt = nullptr;
+                while (width < m_viewPort.size.w && index1 > 2) {
+                    nwdgt = std::static_pointer_cast<Frtk_Tabwdg>(m_children[index1]);
+                    width += nwdgt->getHeadDim().size.w;
+                    index1--;
+                }
+                m_viewOffs = width;
+                if (nwdgt)
+                    m_firstVisible = nwdgt;
+                else
+                    m_firstVisible = m_lastVisible;
+            }
+        }break;
+        default: FRTK_CORE_FATAL("Tab button value was wrong!"); // This should never happen
+        }
     }
     std::shared_ptr<Frtk_Tabwdg> Frtk_Tabs::addTab()
     {
@@ -256,6 +313,10 @@ namespace FR {
         // inside a new group, your tope corner pos is NOT m_x, m_y
         // .. it is (0.0f,0.0f)!!!
         std::shared_ptr<Frtk_Tabwdg> tmpChild = std::make_shared<Frtk_Tabwdg>(m_vg, m_w, m_h);
+        if (!m_firstVisible) {
+            m_firstVisible = tmpChild;
+        }
+        m_lastVisible = tmpChild;
         addChild(tmpChild);
         if (getChildren().size() >= 3) {
             getChildren().at(2)->focus(true);
@@ -274,12 +335,34 @@ namespace FR {
 
     void Frtk_Tabs::draw()
     {
-        //draw_children();
-        Frtk_GrpWidget::draw();
+        // nvgSave(m_vg);
+      //   nvgScissor(m_vg, m_viewPort.pos.x, m_viewPort.pos.y, m_viewPort.size.w, m_viewPort.size.h);
+      //   nvgTranslate(m_vg, m_viewPort.pos.x - m_viewOffs, m_viewPort.pos.y);
+        int ind1, ind2;
+        ind1 = getIndex(m_firstVisible);
+        ind2 = getIndex(m_lastVisible);
+        if (ind1 >= 0 && ind2 >= 0) {
+            for (int i = ind1; i < ind2; ++i) {
+                m_children[i]->redraw();
+            }
+        }
+        else {
+            if (ind1 >= 0) {
+                m_firstVisible->redraw();
+            }
+            if (ind2 >= 0) {
+                m_lastVisible->redraw();
+            }
+        }
+        //Frtk_GrpWidget::draw_children();
+     //   nvgRestore(m_vg);
+        drawLabel();
     }
 
     int Frtk_Tabs::handle(int ev)
     {
+        if (!isMouse_inside())
+            return 0;
         if (ev == FR_LEFT_PUSH) {
             int focusedIndex = -1;
             int newIndex = -1;
@@ -297,7 +380,7 @@ namespace FR {
                     }
 
                     if (newIndex != -1) {
-                        if (focusedIndex != -1){
+                        if (focusedIndex != -1) {
                             m_children[focusedIndex]->focus(false);
                         }
                         activeTab(newIndex);
@@ -314,7 +397,7 @@ namespace FR {
     void Frtk_Tabs::layoutTabs()
     {
         float headerHeight = TAB_BUTTON_SIZE;
-        float startX = TAB_BUTTON_SIZE + padding;
+        float startX = TAB_BUTTON_SIZE * 1.5 + padding;
         float currentX = startX;
         for (auto& child : m_children)
         {
@@ -323,7 +406,7 @@ namespace FR {
             auto tab = std::dynamic_pointer_cast<Frtk_Tabwdg>(child);
             float bounds[4];
             nvgTextBounds(m_vg, 0, 0, tab->label().c_str(), nullptr, bounds);
-            const float minWidth = 30.0f;
+            const float minWidth = 45.0f;
             const float maxWidth = m_w;
             float textWidth = bounds[2] - bounds[0];
             float width = std::clamp(textWidth, minWidth, maxWidth - padding);
@@ -334,8 +417,11 @@ namespace FR {
             tab->getFont().size.w = width;
             tab->getFont().size.h = headerHeight;
             currentX += width + padding;
+            m_content.size.w += tab->m_headDim.size.w;
         }
+        m_content.size.h = headerHeight;
     }
+
     void Frtk_Tabs::show() {
         m_visible = true;
         Frtk_GrpWidget::show();

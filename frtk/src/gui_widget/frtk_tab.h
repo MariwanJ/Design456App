@@ -32,11 +32,12 @@
 #include <gui_widget/frtk_box.h>
 
 namespace FR {
-#define TAB_BUTTON_SIZE 20.0f
-#define padding         2.f
+#define TAB_BUTTON_SIZE 15.0f
+#define padding         3.f
 #define HEIGHT_FACTOR   1.3f
-
+    class Frtk_Tabs;
     class FRTK_API  Frtk_Tabwdg : public Frtk_GrpWidget {
+        friend Frtk_Tabs;
     public:
         Frtk_Tabwdg(NVGcontext* vg, float w, float h, std::string l = "Tabwdg", BOX_TYPE b = FRTK_UP_BOX);
         void setHeaderDim(float X, float Y, float W, float H);
@@ -58,14 +59,14 @@ namespace FR {
         virtual void draw_focus(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 bkg) override;
         std::shared_ptr<Frtk_GrpWidget> m_body;
         void init_headwidth();
-
-    private:
-        //make it private, disallow outer-world see this
-        void addChild(std::shared_ptr<Frtk_Widget> wdg) override;
         float m_headSapce;
         float m_headWidth;
         Dim_float_t m_headDim;
         Dim_float_t m_bodyDim;
+
+    private:
+        //make it private, disallow outer-world see this
+        void addChild(std::shared_ptr<Frtk_Widget> wdg) override;
     };
 
     //----------------------------------------------------------------------------------------------------------------------------------------
@@ -82,8 +83,21 @@ namespace FR {
         size_t activeTabIndex();
         void activeTab(size_t ind);
         int findIndex(Frtk_Tabwdg* w);
+        inline const Dim_float_t getViewPort() { return m_viewPort;}
+        inline const Dim_float_t getContent() { return m_content; }
+        inline void setOffset(const float& ofs) { m_viewOffs = ofs; }
+        bool shouldClip();
+        void Frtk_Tabs::calcOffset(uint8_t index);
+        int  getIndex(std::shared_ptr < Frtk_Tabwdg> wdg);
 
     protected:
+        Dim_float_t m_viewPort;             //(x,y,w,h)
+        Dim_float_t m_content;             //(x,y,w,h)
+        float m_viewOffs;
+        std::shared_ptr<Frtk_Tabwdg> m_firstVisible;
+        std::shared_ptr<Frtk_Tabwdg> m_lastVisible;
+
+
         virtual void draw() override;
         virtual int handle(int ev) override;
     private:
