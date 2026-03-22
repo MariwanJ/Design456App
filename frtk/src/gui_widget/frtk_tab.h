@@ -32,9 +32,22 @@
 #include <gui_widget/frtk_box.h>
 
 namespace FR {
+    class Frtk_Tabwdg;
 #define TAB_BUTTON_SIZE 15.0f
-#define padding         3.f
+#define Hpadding         8.0f
+#define Vpadding         3.0f
 #define HEIGHT_FACTOR   1.3f
+    typedef struct {
+        bool body;
+        bool head;
+    }Visibile_t;
+    typedef struct {
+        std::shared_ptr<Frtk_Tabwdg> m_prev;
+        std::shared_ptr<Frtk_Tabwdg> m_current;
+        std::shared_ptr<Frtk_Tabwdg> m_first;
+        std::shared_ptr<Frtk_Tabwdg> m_last;
+    }history_t;
+
     class Frtk_Tabs;
     class FRTK_API  Frtk_Tabwdg : public Frtk_GrpWidget {
         friend Frtk_Tabs;
@@ -44,6 +57,7 @@ namespace FR {
         void setBodyDim(float X, float Y, float W, float H);
         Dim_float_t getHeadDim();
         Dim_float_t getBodyDim();
+        void draw_head();
         virtual void addChildToTab(std::shared_ptr<Frtk_Widget> wdg);
         virtual void show() override;
         virtual void hide() override;
@@ -52,24 +66,49 @@ namespace FR {
         virtual bool isTabClicked();
 
     protected:
+        void draw_body();
         virtual void draw() override;
         virtual void drawLabel() override;
         virtual void draw_focus() override;
         virtual void draw_focus(BOX_TYPE t, float X, float Y, float W, float H) override;
         virtual void draw_focus(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 bkg) override;
         std::shared_ptr<Frtk_GrpWidget> m_body;
-        void init_headwidth();
+        Visibile_t m_tabParts;
         float m_headSapce;
         float m_headWidth;
         Dim_float_t m_headDim;
         Dim_float_t m_bodyDim;
 
-    private:
-        //make it private, disallow outer-world see this
-        void addChild(std::shared_ptr<Frtk_Widget> wdg) override;
     };
 
     //----------------------------------------------------------------------------------------------------------------------------------------
+
+
+    typedef struct {
+        bool btnLeft;
+        bool btnRight;
+    } btnTabEvent;
+
+    typedef struct {
+        bool H;
+    } overTabflow_t;
+
+    typedef struct {
+        Dim_float_t btnDec;
+        Dim_float_t btnInc;
+        glm::vec4 btnColor;
+    } ScrollTabBarAxis_t;
+
+    typedef struct {
+        ScrollTabBarAxis_t Hor;
+        btnTabEvent event;
+    } TabScroll_t;
+
+    typedef struct {
+        bool left;
+        bool right;
+    }activeTabButton_t;
+
 
     /*                      Container widget                                          */
     class FRTK_API  Frtk_Tabs : public Frtk_GrpWidget {
@@ -80,29 +119,42 @@ namespace FR {
         void layoutTabs();
         virtual void show() override;
         virtual void hide() override;
-        size_t activeTabIndex();
         void activeTab(size_t ind);
         int findIndex(Frtk_Tabwdg* w);
-        inline const Dim_float_t getViewPort() { return m_viewPort;}
+        inline const Dim_float_t getViewPort() { return m_viewPort; }
         inline const Dim_float_t getContent() { return m_content; }
         inline void setOffset(const float& ofs) { m_viewOffs = ofs; }
         bool shouldClip();
-        void Frtk_Tabs::calcOffset(uint8_t index);
         int  getIndex(std::shared_ptr < Frtk_Tabwdg> wdg);
+
+    protected:
+        bool btnUpDownLeft;
+        bool btnDownDownRight;
+        TabScroll_t m_scrollwdg;
+
+    private:
+        activeTabButton_t m_activeBtns;
+        float m_scrollbarThickness;
+        float m_minThumbSize;
+        float m_trackExtra;
+        float m_squarePadding;
+        overTabflow_t m_overflow;
+        size_t getWidthFirstLastTabs();
 
     protected:
         Dim_float_t m_viewPort;             //(x,y,w,h)
         Dim_float_t m_content;             //(x,y,w,h)
         float m_viewOffs;
-        std::shared_ptr<Frtk_Tabwdg> m_firstVisible;
-        std::shared_ptr<Frtk_Tabwdg> m_lastVisible;
+        history_t m_history;
 
+        void draw_scrollH();
+        void updteTabBTNpos();
+        bool checkOverflow();
+        void updateContentSize();
+        int updateBtnPressed();
 
         virtual void draw() override;
         virtual int handle(int ev) override;
-    private:
-        size_t m_currentActiveTab;
     };
-    static void tabButtonPressed_callback(uint8_t index, Frtk_Widget* w);
 }
 #endif //FRTK_TABS_H

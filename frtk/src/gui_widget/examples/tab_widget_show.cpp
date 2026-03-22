@@ -37,7 +37,7 @@ namespace FR {
         auto btn = std::make_shared<Frtk_Button>(window->getContext(), 30.0f, 30.0f, 40.0f, 40.0f, "OK!", FRTK_UP_BOX);
 
         tab->lblAlign(NVG_ALIGN_TOP_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE);
-        for (int i = 0; i < 6; ++i) {
+        for (int i = 0; i < 10; ++i) {
             auto newTab = tab->addTab();
             std::string lbl = "Tab " + std::to_string(i);
             newTab->label(lbl);
