@@ -42,7 +42,8 @@ namespace FR {
             std::string lbl = "Tab " + std::to_string(i);
             newTab->label(lbl);
             newTab->lblAlign(NVG_ALIGN_TOP_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE);
-            newTab->addChildToTab(btn);
+            if(i==0)
+                newTab->addChildToTab(btn);
         }
         auto sc = std::make_shared<Frtk_Scroll>(window->getContext(), 250, 250.0f, 300.0f, 300.0f, "OK!", FRTK_UP_BOX);
         sc->boxType(FRTK_UP_BOX);

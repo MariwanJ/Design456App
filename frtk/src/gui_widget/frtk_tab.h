@@ -131,17 +131,6 @@ namespace FR {
         bool btnUpDownLeft;
         bool btnDownDownRight;
         TabScroll_t m_scrollwdg;
-
-    private:
-        activeTabButton_t m_activeBtns;
-        float m_scrollbarThickness;
-        float m_minThumbSize;
-        float m_trackExtra;
-        float m_squarePadding;
-        overTabflow_t m_overflow;
-        size_t getWidthFirstLastTabs();
-
-    protected:
         Dim_float_t m_viewPort;             //(x,y,w,h)
         Dim_float_t m_content;             //(x,y,w,h)
         float m_viewOffs;
@@ -155,6 +144,16 @@ namespace FR {
 
         virtual void draw() override;
         virtual int handle(int ev) override;
+
+    private:
+        activeTabButton_t m_activeBtns;
+        float m_scrollbarThickness;
+        float m_minThumbSize;
+        float m_trackExtra;
+        float m_squarePadding;
+        overTabflow_t m_overflow;
+        size_t getWidthFirstLastTabs();
+
     };
 }
 #endif //FRTK_TABS_H
