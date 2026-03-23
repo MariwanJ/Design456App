@@ -84,6 +84,7 @@ namespace FR {
         sp_popWindow = this;
         m_wdgType = FRTK_WINDOW;
         m_bkg_color = glm::vec4(FR_BLACK);
+        m_cornerRadius = 3.0f;
     }
     Frtk_Window* Frtk_Window::getWindow() {
         return sp_popWindow;
@@ -104,7 +105,7 @@ namespace FR {
         if (!m_visible)
             return;
         FRTK_CORE_APP_ASSERT(m_vg != nullptr);
-        draw_box(m_vg, m_boxType, { { 0.0f, 0.0f }, { m_w, m_h } }, 3.0f, FRTK_THICK_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
+        draw_box(m_vg, m_boxType, { { 0.0f, 0.0f }, { m_w, m_h } }, m_cornerRadius, FRTK_THICK_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
         m_guiWindow->draw_children();
         if (!m_label.empty())
             drawLabel();

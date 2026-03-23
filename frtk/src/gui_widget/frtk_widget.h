@@ -229,6 +229,8 @@ namespace FR {
 
         NVGcontext* m_vg;
         float m_x, m_y, m_w, m_h;
+        float m_cornerRadius;
+
         std::string m_label;
         glm::vec4 m_color;
         glm::vec4 m_color_diabled;

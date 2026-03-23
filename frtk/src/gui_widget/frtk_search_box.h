@@ -59,7 +59,7 @@
             int m_cursorPos;
             int m_mark;
             int m_tab_nav;
-            float m_cornerRadius;
+
 
         };
 }

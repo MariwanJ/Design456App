@@ -38,26 +38,26 @@ namespace FR {
         Dim_float_t dim = { { m_x,m_y },{m_w,m_h} };
         NVGcolor lightCol = nvgRGBAf(FR_ORANGE);
         if (m_value) {
-            draw_box(m_vg, FRTK_UP_BOX, dim, 0.0f, m_borderWidth,
+            draw_box(m_vg, FRTK_UP_BOX, dim, m_cornerRadius, m_borderWidth,
                 glmToNVG(m_color),
                 glmToNVG(m_borderColor), true);
             dim.pos.x = m_x + m_padding;
             dim.pos.y = m_y + m_h / 2 - m_specialDrawingSize / 2;
             dim.size = { m_specialDrawingSize,m_specialDrawingSize };
 
-            draw_box(m_vg, FRTK_UP_BOX, dim, 0.0f, FRTK_THIN_BORDER,
+            draw_box(m_vg, FRTK_UP_BOX, dim, m_cornerRadius, FRTK_THIN_BORDER,
                 lightCol,
                 glmToNVG(m_borderColor), false);
         }
         else {
-            drawBoxUpDown(m_vg, dim, 0.0f, m_borderWidth,
+            drawBoxUpDown(m_vg, dim, m_cornerRadius, m_borderWidth,
                 glmToNVG(m_color),
                 glmToNVG(m_borderColor), true);
             dim.pos.x = m_x + m_padding;
             dim.pos.y = m_y + m_h / 2 - m_specialDrawingSize / 2;
             dim.size = { m_specialDrawingSize,m_specialDrawingSize };
             lightCol = nvgRGBAf(FR_WHITE);
-            draw_box(m_vg, FRTK_UP_BOX, dim, 0.0f, FRTK_THIN_BORDER,
+            draw_box(m_vg, FRTK_UP_BOX, dim, m_cornerRadius, FRTK_THIN_BORDER,
                 lightCol,
                 glmToNVG(m_borderColor), true);
         }

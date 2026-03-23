@@ -36,7 +36,7 @@ namespace FR {
 #define TAB_BUTTON_SIZE 15.0f
 #define Hpadding         8.0f
 #define Vpadding         3.0f
-#define HEIGHT_FACTOR   1.3f
+#define HEIGHT_FACTOR    1.3f
     typedef struct {
         bool body;
         bool head;
@@ -63,7 +63,7 @@ namespace FR {
         virtual void hide() override;
         virtual void hide_children();
         virtual void show_children();
-        virtual bool isTabClicked();
+        virtual bool isTabClicked(dimPos_float_t &mousePos);
 
     protected:
         void draw_body();

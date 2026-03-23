@@ -43,7 +43,7 @@ namespace FR {
 
     Fr_Window* Frtk_Widget::m_mainWindow = nullptr;
     Frtk_Widget::Frtk_Widget(float X, float Y, float W, float H, std::string label, BOX_TYPE b) :m_x(X), m_y(Y), m_w(W), m_h(H),
-        m_label(label), m_wdgType(FRTK_WIDGET), m_boxType(b), m_has_focus(false),
+        m_label(label), m_wdgType(FRTK_WIDGET), m_boxType(b), m_has_focus(false), m_cornerRadius(0.0f),
         m_Image({ nullptr, {{0.f, 0.f}, {0.f, 0.f}} }), m_cellStyle(FR_IMG_LEFT_TO_TEXT),
         m_visible(true), m_dragging(false), m_active(true),
         m_cantake_focus(true), m_IconTexture(0), m_vg(NULL), m_linkTofrtkWindow(nullptr),
@@ -198,7 +198,9 @@ namespace FR {
         nvgStroke(m_vg);
     }
     void Frtk_Widget::draw_focus(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 bkg) {
-        draw_box(m_vg, t, { {X,Y},{W,H} }, 0.0f, FRTK_NORMAL_BORDER, nvgRGBAf(0, 0.501f, 1.0f, 1.0f), nvgRGBAf(bkg.r, bkg.g, bkg.b, bkg.a), true);
+        if (!m_has_focus)
+            return;
+        draw_box(m_vg, t, { {X,Y},{W,H} }, m_cornerRadius, FRTK_NORMAL_BORDER, nvgRGBAf(0, 0.501f, 1.0f, 1.0f), nvgRGBAf(bkg.r, bkg.g, bkg.b, bkg.a), true);
     }
     void Frtk_Widget::drawLabel() {
         if (m_linkTofrtkWindow)

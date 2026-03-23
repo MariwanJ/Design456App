@@ -171,7 +171,7 @@ namespace FR {
 
     void Frtk_Scroll::draw()
     {
-        draw_box(m_vg, m_boxType, { {m_x, m_y},m_w,m_h }, 0, FRTK_NORMAL_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
+        draw_box(m_vg, m_boxType, { {m_x, m_y},m_w,m_h }, m_cornerRadius, FRTK_NORMAL_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
         draw_scrollV();
         draw_scrollH();
         draw_children();
@@ -429,8 +429,9 @@ namespace FR {
                 if (testBound || ev == FR_LEFT_DRAG_MOVE && m_scrollwdg.Ver.dragging && !m_scrollwdg.Hor.dragging)
                 {
                     float deltaY = (mouse.prevY - mouse.activeY) * m_scrollwdg.sensitivity;
-                    if (ev == FR_LEFT_DRAG_PUSH) {
+                    if (ev == FR_LEFT_DRAG_PUSH && testBound) {
                         m_scrollwdg.Ver.dragging = true;
+                        return 1;
                     }
                     else
                         if (ev == FR_LEFT_DRAG_MOVE && m_scrollwdg.Ver.dragging)

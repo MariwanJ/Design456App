@@ -50,6 +50,7 @@ namespace FR {
         m_cursorColor = nvgRGBAf(FR_CHARCOAL);
         m_cursorColor.a = 0.75f;//Opacity
         m_wdgType = FRTK_BASE_INPUT;
+        m_cornerRadius = 0.1f;
     }
 
     std::string Frtk_Input_Base::cpToUTF8(uint32_t cp) {
@@ -82,7 +83,7 @@ namespace FR {
     void Frtk_Input_Base::drawEditBoxBase(float x, float y, float w, float h)
     {
         NVGpaint bg;
-        draw_box(m_vg, m_boxType, { {x,y} ,{ w,h } }, 0.01f, FRTK_THIN_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), false);
+        draw_box(m_vg, m_boxType, { {x,y} ,{ w,h } }, m_cornerRadius, FRTK_THIN_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), false);
     }
 
     void Frtk_Input_Base::draw() {

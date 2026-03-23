@@ -32,7 +32,7 @@ namespace FR {
 #define ICON_SEARCH 0x1F50D
 #define ICON_CIRCLED_CROSS 0x2716
     Frtk_Search_Box::Frtk_Search_Box(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b) :
-        Frtk_Input_Base(vg, X, Y, W, H, lbl, b), m_cornerRadius(m_h * .5f)
+        Frtk_Input_Base(vg, X, Y, W, H, lbl, b) 
     {
         m_color = glm::vec4(FR_WHITE);
         m_bkg_color = glm::vec4(FR_GRAY);
@@ -47,6 +47,7 @@ namespace FR {
 
         m_SearchIconPos = { m_x, m_y + m_h / 2.0f };
         m_CloseIconPos = { m_x + m_w - (m_font.fontSize * 2.2f), m_y + m_h / 2.0f };
+        m_cornerRadius = m_h * .5f;
     }
 
     int Frtk_Search_Box::handle(int ev)

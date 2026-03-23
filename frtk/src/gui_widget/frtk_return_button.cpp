@@ -42,10 +42,10 @@ namespace FR {
     void Frtk_Return_Button::draw()
     {
         if (m_value == 0){
-            draw_box(m_vg, m_boxType, {{ m_x,m_y }, { m_w,m_h }}, 0.0f, FRTK_NORMAL_BORDER, glmToNVG(m_color), glmToNVG(m_borderColor), true);
+            draw_box(m_vg, m_boxType, {{ m_x,m_y }, { m_w,m_h }}, m_cornerRadius, FRTK_NORMAL_BORDER, glmToNVG(m_color), glmToNVG(m_borderColor), true);
         }
         else {
-            draw_box(m_vg, m_boxType, {{ m_x,m_y }, { m_w,m_h }}, 0.0f, FRTK_NORMAL_BORDER, glmToNVG(m_color), glmToNVG(m_borderColor), false);
+            draw_box(m_vg, m_boxType, {{ m_x,m_y }, { m_w,m_h }}, m_cornerRadius, FRTK_NORMAL_BORDER, glmToNVG(m_color), glmToNVG(m_borderColor), false);
         }
         if (m_IconTexture != 0){
             drawImage();//Dimensions are already calculated using style

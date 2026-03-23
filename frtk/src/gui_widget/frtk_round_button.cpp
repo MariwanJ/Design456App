@@ -40,7 +40,7 @@ namespace FR {
         NVGcolor lightCol = nvgRGBAf(FR_WHITE);
 
         //body
-        draw_box(m_vg, FRTK_FLAT_BOX, dim, 0.0f, m_borderWidth,
+        draw_box(m_vg, FRTK_FLAT_BOX, dim, m_cornerRadius, m_borderWidth,
             glmToNVG(m_color),
             glmToNVG(m_borderColor), true);
         dim.pos.x = m_x + m_padding;
@@ -49,19 +49,19 @@ namespace FR {
 
         //draw the round indicator
         if (m_value) {
-            draw_box(m_vg, FRTK_ROUND_UP_BOX, dim, 0.0f, FRTK_THIN_BORDER,
+            draw_box(m_vg, FRTK_ROUND_UP_BOX, dim, m_cornerRadius, FRTK_THIN_BORDER,
                 lightCol,
                 glmToNVG(m_borderColor), false);
             dim.pos.x = m_x + m_padding + m_specialDrawingSize / 4;
             dim.pos.y = m_y + m_h / 2 - m_specialDrawingSize / 4;
             dim.size = { m_specialDrawingSize/2 ,m_specialDrawingSize/2 };
 
-            draw_box(m_vg, FRTK_ROUND_UP_BOX, dim, 0.0f, FRTK_THIN_BORDER,
+            draw_box(m_vg, FRTK_ROUND_UP_BOX, dim, m_cornerRadius, FRTK_THIN_BORDER,
                 nvgRGBAf(FR_BLACK),
                 glmToNVG(m_borderColor), false);
         }
         else {
-            draw_box(m_vg, FRTK_ROUND_UP_BOX, dim, 0.0f, FRTK_THIN_BORDER,
+            draw_box(m_vg, FRTK_ROUND_UP_BOX, dim, m_cornerRadius, FRTK_THIN_BORDER,
                 lightCol,
                 glmToNVG(m_borderColor), false);
         }
