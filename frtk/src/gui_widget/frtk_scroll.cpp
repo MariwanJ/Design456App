@@ -51,6 +51,9 @@ namespace FR {
         m_scrollwdg.Hor.scrollOffs = { 0.0f };
         m_scrollwdg.sensitivity = 0.5f;
         m_scrollwdg.Ver.visible = true;
+        m_scrollwdg.Hor.dragging = false;
+        m_scrollwdg.Ver.dragging = false;
+
         m_scrollbarThickness = 9.0f;
         m_minThumbSize = 4.0f;
         m_trackExtra = 5.0f;
@@ -469,54 +472,49 @@ namespace FR {
                 else if (ev == FR_LEFT_DRAG_RELEASE || ev == FR_LEAVE)
                 {
                     m_scrollwdg.Ver.dragging = false;
+                    m_scrollwdg.Hor.dragging = false;
                     m_eventType = ScrollEventType::NONE;
                     return 1;
                 }
             }
-        }
-        if (m_scrollwdg.Hor.visible)
-        {
-            float offx = absX() + -m_x + m_scrollwdg.Hor.scroll.pos.x;
-            float offy = absY() + -m_y + m_scrollwdg.Hor.scroll.pos.y;
-            bool testBound = (mouse.activeX >= offx &&
-                mouse.activeX <= offx + m_scrollwdg.Hor.scroll.size.w &&
-                mouse.activeY >= offy &&
-                mouse.activeY <= offy + m_scrollwdg.Hor.scroll.size.h);
-            if (testBound || ev == FR_LEFT_DRAG_MOVE && m_scrollwdg.Hor.dragging && !m_scrollwdg.Ver.dragging) {
-                float deltaX = (mouse.prevX - mouse.activeX) * m_scrollwdg.sensitivity;
 
-                if (ev == FR_LEFT_DRAG_PUSH) {
-                    m_eventType = ScrollEventType::DRAG_H;
+            if (m_scrollwdg.Hor.visible) {
+                float offx = absX() - m_x + m_scrollwdg.Hor.scroll.pos.x;
+                float offy = absY() - m_y + m_scrollwdg.Hor.scroll.pos.y;
+
+                bool testBound = (mouse.activeX >= offx &&
+                    mouse.activeX <= offx + m_scrollwdg.Hor.scroll.size.w &&
+                    mouse.activeY >= offy &&
+                    mouse.activeY <= offy + m_scrollwdg.Hor.scroll.size.h);
+
+                FRTK_CORE_INFO("DRAG {}", m_scrollwdg.Hor.dragging);
+
+                // Start drag
+                if (testBound && ev == FR_LEFT_DRAG_PUSH) {
                     m_scrollwdg.Hor.dragging = true;
+                    m_eventType = ScrollEventType::DRAG_H;
+                    return 1;
                 }
-                else
-                    if (ev == FR_LEFT_DRAG_MOVE && m_scrollwdg.Hor.dragging)
-                    {
-                        m_scrollwdg.Hor.dragging = true;
-                        m_eventType = ScrollEventType::DRAG_H;
-                        float newPos = m_scrollwdg.Hor.scrollOffs.x - deltaX;
-                        float maxPos = m_w - m_scrollwdg.Hor.scroll.size.w - m_squarePadding - 4 * m_scrollwdg.Hor.btnInc.size.w;
-                        if (maxPos <= 0.f)
-                        {
-                            m_scrollwdg.Hor.scrollOffs.x = 0.f;
-                        }
-                        else
-                        {
-                            if (newPos < 0.f)
-                                m_scrollwdg.Hor.scrollOffs.x = 0.f;
-                            else if (newPos > maxPos)
-                                m_scrollwdg.Hor.scrollOffs.x = maxPos;
-                            else
-                                m_scrollwdg.Hor.scrollOffs.x = newPos;
-                        }
-                    }
-                return 1;
-            }
-            else if (ev == FR_LEFT_DRAG_RELEASE || ev == FR_LEAVE)
-            {
-                m_eventType = ScrollEventType::NONE;
-                m_scrollwdg.Hor.dragging = false;
-                return 1;
+
+                // Continue drag
+                if (m_scrollwdg.Hor.dragging && ev == FR_LEFT_DRAG_MOVE) {
+                    float deltaX = (mouse.prevX - mouse.activeX) * m_scrollwdg.sensitivity;
+                    m_eventType = ScrollEventType::DRAG_H;
+
+                    float newPos = m_scrollwdg.Hor.scrollOffs.x - deltaX;
+                    float maxPos = m_w - m_scrollwdg.Hor.scroll.size.w - m_squarePadding - 4 * m_scrollwdg.Hor.btnInc.size.w;
+                    m_scrollwdg.Hor.scrollOffs.x = std::clamp(newPos, 0.f, maxPos);
+                    return 1;
+                }
+
+                // Stop drag
+                if (ev == FR_LEFT_DRAG_RELEASE || ev == FR_LEAVE) {
+                    m_scrollwdg.Ver.dragging = false;
+                    m_scrollwdg.Hor.dragging = false;
+                    FRTK_CORE_INFO("DRAG2 {}", m_scrollwdg.Hor.dragging);
+                    m_eventType = ScrollEventType::NONE;
+                    return 1;
+                }
             }
         }
         int result = 0;
