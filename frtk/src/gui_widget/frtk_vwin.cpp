@@ -28,10 +28,8 @@
 #include<gui_widget/frtk_vwin.h>
 
 namespace FR {
-    
     Frtk_Vwin::Frtk_Vwin(float X, float Y, float W, float H, std::string lbl, BOX_TYPE b, bool hasHeader) :
         Frtk_BaseWin(X, Y, W, H, lbl, b), m_hasHeader(hasHeader) {
-     
         m_data.fontBold = 0;
         m_data.fontEmoji = 0;
         m_data.fontIcons = 0;
@@ -58,7 +56,7 @@ namespace FR {
         m_font.size.h = m_h;
         init();
     }
-   
+
     void Frtk_Vwin::draw() {
         if (!m_visible)
             return;
@@ -130,21 +128,19 @@ namespace FR {
             m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, m_x, m_y + m_WindowsStyle.height, m_w, m_h - m_WindowsStyle.height);
         }
         else {
-            m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, m_x,m_y,m_w,m_h);
+            m_guiWindow = std::make_shared<Frtk_GrpWidget>(m_vg, m_x, m_y, m_w, m_h);
         }
         FRTK_CORE_APP_ASSERT(m_guiWindow);
         m_guiWindow->m_linkTofrtkWindow = this;
         m_guiWindow->parent(this);
         m_guiWindow->boxType(m_boxType);
-
-        
     }
     void Frtk_Vwin::drawLabel() {
         m_font.pos = { m_x, m_y };
         m_font.size = { m_w, m_WindowsStyle.height };
-        if(m_linkTofrtkWindow)
-            drawTextInBox(m_vg, m_label, m_font,true, m_linkTofrtkWindow->getFontData());
-     }
+        if (m_linkTofrtkWindow)
+            drawTextInBox(m_vg, m_label, m_font, true, m_linkTofrtkWindow->getFontData());
+    }
 
     void Frtk_Vwin::drawLabel(float X, float Y, float W, float H, float rotateAngle) {
         m_font.size.w = W;
@@ -158,7 +154,6 @@ namespace FR {
         return m_mainWindow->getnvgContext();
     }
 
-    
     Frtk_HeaderStyle_t Frtk_Vwin::style() {
         return m_WindowsStyle;
     }
@@ -197,11 +192,14 @@ namespace FR {
         if (mouseIsInside || m_dragging) {
             m_mainWindow->deactivateNavi();
             result = 1;
-
             if (m_hasHeader) {
-                if (Header_clicked() || m_dragging) {
+                if (Header_clicked()) {
                     if (events == FR_LEFT_DRAG_MOVE) {
                         m_dragging = true;
+                    }
+                }
+                if (m_dragging) {
+                    if (events == FR_LEFT_DRAG_MOVE) {
                         float dx, dy;
                         const auto& mouse = m_mainWindow->m_sysEvents.mouse;
                         dx = (float)(mouse.prevX - mouse.activeX);
@@ -217,13 +215,14 @@ namespace FR {
                     }
                 }
             }
+
             // WE MUST RETURN ALWAYS 1 .. events over the window should be consumed
             // we don't care if the group doesn't consume the events
             // Scene should not get events if the mouse was over a frtk-window!!!! IMPORTANT TO REMEMBER!!!
             if (!m_dragging)
                 m_mainWindow->activateNavi();
-                m_guiWindow->handle(events); /* we don't care about the results, 
-                                            forward all events to container widget */
+            m_guiWindow->handle(events); /* we don't care about the results,
+                                          forward all events to container widget */
         }
         return result;
     }
@@ -244,21 +243,21 @@ namespace FR {
         m_has_focus = false;
         Frtk_Widget::lose_focus();
         m_guiWindow->lose_focus();
-        
+
         if (g_focusedWdgt.keyboardOwner == this) {
             g_focusedWdgt.keyboardOwner = nullptr;
             g_focusedWdgt.prev = g_focusedWdgt.current;
             g_focusedWdgt.current = nullptr;
         }
     }
-    
-    const FontData_t &Frtk_Vwin::getFontData() 
+
+    const FontData_t& Frtk_Vwin::getFontData()
     {
         return m_data;
     }
 
     bool Frtk_Vwin::set_child_focus(Frtk_Widget* w) {
-        if(w){
+        if (w) {
             m_guiWindow->set_child_focus(w);
         }
         return false;
@@ -266,12 +265,11 @@ namespace FR {
 
     bool Frtk_Vwin::take_focus()
     {
-        if (can_focus()){
+        if (can_focus()) {
             Frtk_Widget::take_focus();
             m_guiWindow->take_focus();
             return true;
         }
         return false;
     }
-
 }

@@ -46,7 +46,7 @@
 
 
 namespace FR {
-    void doCallback(size_t index) {
+    static void doMyCallback(size_t index) {
         FRTK_CORE_INFO("BUTTON WITH INDEX {} pressed", index);
     }
 
@@ -98,15 +98,21 @@ namespace FR {
         //frtk_toggle_round_button
         //frtk_toolbar_button
         
-        std::string iconPath1 =EXE_CURRENT_DIR + "/resources/icons/32x32/";
+        std::string iconPath1 = EXE_CURRENT_DIR + "/resources/icons/32x32/";
         std::string imagePath1 = EXE_CURRENT_DIR + "/resources/icons/32x32/House-32x32.png";
-        
-        std::vector<toolbBTN_t> tools = {
-            // std::string lbl; std::string name; dimSize_float_t size; std::string icon; Frtk_Widget::Callback callback_; std::string tooltips !!
-            {"New","New"   ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath1 + "Folder-Create-32x32.png",[](Frtk_Widget* w)    { (void)w; doCallback(0); }, ""},
-            {"Open","Open"  ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath1 + "Folder-Import-32x32.png", [](Frtk_Widget* w)  { (void)w; doCallback(1); }, ""},
-            {"Close","Close" ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath1 + "Folder-Close-32x32.png" , [](Frtk_Widget* w) { (void)w; doCallback(2); }, ""},
-        };
+         dimSize_float_t dim = { FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT };
+        //std::vector<toolbBTN_t> tools = {
+        //    {"New",  "New"   ,dim, iconPath1 + "Folder-Create-32x32.png"  , [](Frtk_Widget* w)  { (void)w; doMyCallback(0); }, ""}
+        //    {"Open", "Open"  ,dim , iconPath1 + "Folder-Import-32x32.png"  , [](Frtk_Widget* w)  { (void)w; doMyCallback(1); }, ""},
+        //    {"Close","Close" ,dim , iconPath1 + "Folder-Close-32x32.png"   , [](Frtk_Widget* w)  { (void)w; doMyCallback(2); }, ""},
+        //};
+
+         std::vector<toolbBTN_t> tools = {
+             // std::string lbl; std::string name; dimSize_float_t size; std::string icon; Frtk_Widget::Callback callback_; std::string tooltips !!
+             {"New","New"   ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath + "Folder-Create-32x32.png",[](Frtk_Widget* w) { doMyCallback(0); },    FRTK_UP_BOX, ""},
+             {"Open","Open"  ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath + "Folder-Import-32x32.png", [](Frtk_Widget* w) { doMyCallback(1); },  FRTK_UP_BOX, ""},
+             {"Close","Close" ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath + "Folder-Close-32x32.png" , [](Frtk_Widget* w) { doMyCallback(2); }, FRTK_UP_BOX, ""},
+         };
 
         std::shared_ptr<Frtk_ToolBar> tb1=std::make_shared<Frtk_ToolBar>(window->getContext(), 0.f, 350.0f, window->w(), FRTK_TOOLBAR_HEIGHT, "Toolbar1", tools);
         std::shared_ptr<Frtk_ToolBar> tb2 = std::make_shared<Frtk_ToolBar>(window->getContext(),350.f, 0.0f, FRTK_TOOLBAR_HEIGHT, window->h(), "Toolbar2", tools,false);

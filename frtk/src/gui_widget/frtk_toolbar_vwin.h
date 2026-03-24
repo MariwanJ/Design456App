@@ -34,16 +34,6 @@
 
 namespace FR {
 
-    struct toolbBTN_t {
-        std::string lbl;
-        std::string name;
-        dimSize_float_t size;
-        std::string icon;
-        Frtk_Widget::Callback callback_;
-        BOX_TYPE boxType;
-        std::string tooltips; //not implemented yet!!
-    };
-
     class FRTK_API  Frtk_ToolBarVwin : public Frtk_Vwin
     {
     public:

@@ -35,14 +35,14 @@
 
 namespace FR {
 
-    typedef struct {
-        std::string lbl;
-        std::string name;
-        dimSize_float_t size;
-        std::string icon;
-        Frtk_Widget::Callback callback_;
-        std::string tooltips; //not implemented yet!!
-    }toolbBTN_t;
+    //typedef struct {
+    //    std::string lbl;
+    //    std::string name;
+    //    dimSize_float_t size;
+    //    std::string icon;
+    //    Frtk_Widget::Callback callback_;
+    //    std::string tooltips; //not implemented yet!!
+    //}toolbBTN_t;
 
     class FRTK_API  Frtk_ToolBar : public Frtk_GrpWidget
     {

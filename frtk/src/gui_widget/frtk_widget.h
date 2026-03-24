@@ -272,6 +272,18 @@ namespace FR {
     }global_focus_tracker_t;
 
     extern global_focus_tracker_t g_focusedWdgt;
+
+
+    typedef struct {
+        std::string lbl;
+        std::string name;
+        dimSize_float_t size;
+        std::string icon;
+        Frtk_Widget::Callback callback_;
+        BOX_TYPE boxType;
+        std::string tooltips; //not implemented yet!!
+    }toolbBTN_t;
+
 }
 
 #endif // !FRTK_WIDGET_H

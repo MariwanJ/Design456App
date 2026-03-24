@@ -454,6 +454,7 @@ namespace FR {
         bool superDown;
     }Keybaord_t;
 
+
     /*Structure changed to prevent bugs
     (Keyboards events are separated from mouse
      as some of the variable names are the same)*/

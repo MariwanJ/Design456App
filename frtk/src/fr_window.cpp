@@ -456,10 +456,10 @@ namespace FR {
 
          userData_t data;
          //Temporary Code -- TODO : Remove Me when you are done with the new GUI SYSTEM !!!!!  2026-01-30 Mariwan
-        // auto TB = runFRTKdemo2();
-        // m_frtkWindow.emplace_back(TB);
-         //m_frtkWindow.push_back(runFRTKdemo());
-        // m_frtkWindow.push_back(runInputOutput());
+         auto TB = runFRTKdemo2();
+         m_frtkWindow.emplace_back(TB);
+         m_frtkWindow.push_back(runFRTKdemo());
+         m_frtkWindow.push_back(runInputOutput());
 
          m_frtkWindow.emplace_back(runTabWidget());
          //TOOLBAR CREATION  - USING NEW GUI TOOLKIT
