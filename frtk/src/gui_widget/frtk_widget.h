@@ -84,6 +84,8 @@ namespace FR {
     class Frtk_BaseWin;
     class Frtk_Vwin;
     class Frtk_Window;
+    class Frtk_Widget;
+
 
     class FRTK_API Frtk_Widget {
         friend class Frtk_GrpWidget;
@@ -99,6 +101,8 @@ namespace FR {
         Frtk_Widget& operator=(Frtk_Widget&&) = default;
 
     public:
+        using Callback = std::function<void(Frtk_Widget&)>;
+
         virtual void redraw(void);
         /*Use always this check inside handle before treating any widget.
           Main this toolkit window, SHOULD consume the event
@@ -203,8 +207,6 @@ namespace FR {
         void set_BelowMouse();
         void clear_BelowMouse();
 
-        //Callback function definition
-        using Callback = std::function<void(Frtk_Widget*)>;
         void set_callback(Callback cb);
 
         virtual dimPos_float_t mainGui() const;
@@ -215,6 +217,7 @@ namespace FR {
         Frtk_BaseWin* m_linkTofrtkWindow; // 
 
     protected:
+        //Callback function definition
         virtual void draw(void);
         virtual void drawLabel();
         virtual void drawLabel(float X, float Y, float W, float H = 18.0 * 1.3f, float rotateAngle = 0.0f);

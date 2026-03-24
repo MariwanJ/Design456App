@@ -25,6 +25,48 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
+/**
+ *          SAMPLE CODE FOR SCROLL CALLBACK
+ *
+      static void mycallback(Frtk_Widget* w) {
+        if (auto* sb = dynamic_cast<Frtk_Scroll*>(w)) {
+            switch (sb->scrollEvent()) {
+            case ScrollEventType::BTN_UP:
+                // handle up
+                Scroll_t data = sb->getScrollData();
+                // do what you want with the data, you have offset (v/h) ..etc
+                break;
+
+            case ScrollEventType::BTN_DOWN:
+                Scroll_t data = sb->getScrollData();
+                // do what you want with the data, you have offset (v/h) ..etc
+                break;
+
+            case ScrollEventType::BTN_RIGHT:
+                Scroll_t data = sb->getScrollData();
+                // do what you want with the data, you have offset (v/h) ..etc
+
+                break;
+            case ScrollEventType::BTN_LEFT:
+                Scroll_t data = sb->getScrollData();
+                // do what you want with the data, you have offset (v/h) ..etc
+
+                break;
+            case ScrollEventType::DRAG_V:
+                Scroll_t data = sb->getScrollData();
+                // do what you want with the data, you have offset (v/h) ..etc
+                break;
+
+            case ScrollEventType::DRAG_H:
+                Scroll_t data = sb->getScrollData();
+                // do what you want with the data, you have offset (v/h) ..etc
+                break;
+            }
+        }
+    }
+  
+ */
+
 #ifndef FRTK_SCROLL_H
 #define FRTK_SCROLL_H
 #include <gui_widget/frtk_grpwidget.h>
@@ -66,6 +108,15 @@ namespace FR {
         bool right{};
     };
 
+    enum class ScrollEventType {
+        NONE,
+        BTN_UP,
+        BTN_DOWN,
+        BTN_LEFT,
+        BTN_RIGHT,
+        DRAG_V,
+        DRAG_H
+    };
     class FRTK_API Frtk_Scroll : public Frtk_GrpWidget {
     public:
         Frtk_Scroll(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl = "Tab", BOX_TYPE b = FRTK_DOWN_BOX);
@@ -79,8 +130,8 @@ namespace FR {
         virtual int remove_child(std::shared_ptr<Frtk_Widget>& wdg) override;
         virtual void remove_all() override;
         virtual void addChild(std::shared_ptr<Frtk_Widget> w)override;
-
-
+        ScrollEventType scrollEvent();
+        Scroll_t getScrollData();
     protected:
         int updateBtnPressed();
         virtual int handle(int ev) override;
@@ -89,21 +140,21 @@ namespace FR {
         virtual void draw_scrollV();
         virtual void draw_scrollH();
         dimSize_float_t getTotalViewPortDim() const;
-        
+
         bool btnUpDownLeft;
         bool btnDownDownRight;
-        
+
         Dim_float_t m_viewPort;             //(x,y,w,h)
         Dim_float_t m_content;             //(x,y,w,h)
         Scroll_t m_scrollwdg;
     private:
-    activeButton_t m_activeBtns;
-    float m_scrollbarThickness ;
-    float m_minThumbSize ;
-    float m_trackExtra ;
-    float m_squarePadding;
-    overflow_t m_overflow;
-
+        ScrollEventType m_eventType;
+        activeButton_t m_activeBtns;
+        float m_scrollbarThickness;
+        float m_minThumbSize;
+        float m_trackExtra;
+        float m_squarePadding;
+        overflow_t m_overflow;
     };
 }
 

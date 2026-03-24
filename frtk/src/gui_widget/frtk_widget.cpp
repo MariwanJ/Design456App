@@ -34,7 +34,7 @@
 
 namespace FR {
     //Default callback function.Replace with your custom callback.Arguments are possible.
-    void default_callback(Frtk_Widget* w) {
+    static void default_callback(Frtk_Widget& w) {
         FRTK_CORE_INFO("Default callback: replace this with your custom callback");
     }
 
@@ -506,7 +506,7 @@ namespace FR {
 
     //callback processing
     void Frtk_Widget::do_callback() {
-        if (m_callback) m_callback(this);
+        if (m_callback) m_callback(*this);
     }
     dimPos_float_t Frtk_Widget::mainGui() const {
         throw NotImplementedException();
