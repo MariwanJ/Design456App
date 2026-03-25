@@ -42,6 +42,7 @@
 #include <gui_widget/frtk_vwin.h>
 #include <gui_widget/frtk_rclick_menu_win.h>
 #include <gui_widget/examples/demo2.h>
+#include <gui_widget/examples/demo3.h>
 #include <gui_widget/examples/buttons_demo.h>
 #include <gui_widget/examples/input_output.h>
 #include <gui_widget/frtk_toolbar_vwin.h>
@@ -456,12 +457,13 @@ namespace FR {
 
          userData_t data;
          //Temporary Code -- TODO : Remove Me when you are done with the new GUI SYSTEM !!!!!  2026-01-30 Mariwan
-         auto TB = runFRTKdemo2();
+         /*auto TB = runFRTKdemo2();
          m_frtkWindow.emplace_back(TB);
          m_frtkWindow.push_back(runFRTKdemo());
          m_frtkWindow.push_back(runInputOutput());
 
-         m_frtkWindow.emplace_back(runTabWidget());
+         m_frtkWindow.emplace_back(runTabWidget());*/
+         m_frtkWindow.emplace_back(runFRTKdemo3());
          //TOOLBAR CREATION  - USING NEW GUI TOOLKIT
 
          m_MainToolbar = createMainToolbar();
