@@ -105,11 +105,15 @@ namespace FR {
         float Rotate;
     }font_t;
 
+    void FRTK_API drawLineWithState(NVGcontext* vg, Dim_float_t dim, float strokeWidth = FRTK_NORMAL_BORDER,
+        NVGcolor baseCol = nvgRGBAf(FR_LIGHT_GRAY), NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW), bool up = false);
+
     //frtk_no_box
     void FRTK_API drawFilledRect(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth= FRTK_NORMAL_BORDER,
         NVGcolor baseCol = nvgRGBAf(FR_LIGHT_GRAY),
         NVGcolor shadowColor = nvgRGBAf(FR_DARK_SHADOW), 
         bool up = false);
+
     //Frtk_box_up/down - Square or rounded edges based on r
     void FRTK_API drawBoxUpDown(NVGcontext* vg, Dim_float_t dim, float r, float strokeWidth = FRTK_NORMAL_BORDER,
         NVGcolor baseCol = nvgRGBAf(FR_LIGHT_GRAY),

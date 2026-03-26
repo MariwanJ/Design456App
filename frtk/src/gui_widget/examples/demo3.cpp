@@ -32,11 +32,12 @@ namespace FR {
     std::shared_ptr<Frtk_Vwin> runFRTKdemo3() {
  
         auto window = std::make_shared<Frtk_Vwin>(500.f, 200.f, 500.f, 500.f, "Testing Buttons");
-        std::shared_ptr<Frtk_Slider> sliderH= std::make_shared<Frtk_Slider>(window->getContext(), 250.0f, 250.0f, 200.0f, 56.0f, "SLIDER- H", FRTK_UP_BOX);
+        std::shared_ptr<Frtk_Slider> sliderH= std::make_shared<Frtk_Slider>(window->getContext(), 250.0f, 175.0f, 200.0f, 56.0f, "SLIDER- H", FRTK_OSHADOW_DOWN_BOX);
+        sliderH->stepSize(20.0f);
         sliderH->sliderType(H_SLIDER);
         window->addChild(sliderH);
 
-        std::shared_ptr<Frtk_Slider> sliderV = std::make_shared<Frtk_Slider>(window->getContext(), 250.0f, 250.0f, 56.0f, 200.0f, "SLIDER - V", FRTK_UP_BOX);
+        std::shared_ptr<Frtk_Slider> sliderV = std::make_shared<Frtk_Slider>(window->getContext(), 200.0f, 250.0f, 56.0f, 200.0f, "SLIDER - V", FRTK_UP_BOX);
         sliderV->sliderType(V_SLIDER);
         window->addChild(sliderV);
 

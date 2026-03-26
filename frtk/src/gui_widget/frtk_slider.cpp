@@ -28,10 +28,11 @@
 
 namespace FR {
     Frtk_Slider::Frtk_Slider(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b) :
-        Frtk_Box(vg, X, Y, W, H, lbl, b), m_range{ 0.0f,100.f },
-        m_highlight{ 0.0f,0.0f }, m_value(0), m_sliderType(H_SLIDER), m_speedFactor(0.75f)
+        Frtk_Box(vg, X, Y, W, H, lbl, b), m_range{ 0.0f,100.f }, m_knobDim{ 0 },
+        m_highlight{ 0.0f,0.0f }, m_value(0), m_sliderType(H_SLIDER),
+        m_speedFactor(0.75f), m_stepSize(0.1f), m_accumulated(0.f)
     {
-        m_nobColor.nob = glm::vec4(FR_DARKGREY1);
+        m_nobColor.knob = glm::vec4(FR_DARKGREY1);
         m_nobColor.inner = glm::vec4(FR_BEIGE);
         m_nobColor.shadow = glm::vec4(FR_DARK_SHADOW);
         m_nobColor.track = glm::vec4(FR_DARKSLATEGREY);
@@ -69,14 +70,14 @@ namespace FR {
             testBound = (
                 mouse.activeX >= X &&
                 mouse.activeX <= X + m_w &&
-                mouse.activeY >= Y + m_h * 0.5f - m_h * 0.2f &&
-                mouse.activeY <= Y + m_h * 0.5f + m_h * 0.2f
+                mouse.activeY >= Y + m_h * 0.5f - m_knobDim.radious * 2 &&
+                mouse.activeY <= Y + m_h * 0.5f + m_knobDim.radious * 2
                 );
         }
         else {
             testBound = (
-                mouse.activeX >= X + m_w * 0.5f - m_w * 0.2f &&
-                mouse.activeX <= X + m_w * 0.5f + m_w * 0.2f &&
+                mouse.activeX >= X + m_w * 0.5f - m_knobDim.radious * 2 &&
+                mouse.activeX <= X + m_w * 0.5f + m_knobDim.radious * 2 &&
                 mouse.activeY >= Y &&
                 mouse.activeY <= Y + m_h
                 );
@@ -87,6 +88,26 @@ namespace FR {
     void Frtk_Slider::sliderType(const slidertype_t& t)
     {
         m_sliderType = t;
+    }
+
+    knob_posSize_t& Frtk_Slider::knobDim()
+    {
+        return m_knobDim;
+    }
+
+    const knob_posSize_t& Frtk_Slider::knobDim() const
+    {
+        return m_knobDim;
+    }
+
+    void Frtk_Slider::stepSize(const float& step)
+    {
+        m_stepSize = step;
+    }
+
+    float Frtk_Slider::stepSize()
+    {
+        return m_stepSize;
     }
 
     int Frtk_Slider::handle(int ev)
@@ -101,17 +122,40 @@ namespace FR {
             else if (ev == FR_LEFT_DRAG_MOVE && m_dragging) {
                 if (m_sliderType == H_SLIDER) {
                     float deltaX = mouse.activeX - mouse.prevX;
-                    float kr = (int)(m_h * 0.4f);
+                    m_knobDim.radious = (int)(m_h * 0.4f);
                     float kshadow = 3;
-                    float trackW = m_w - 2.0f * (kr + kshadow);
-                    m_value += (deltaX / trackW) * (m_range.max - m_range.min) * m_speedFactor;
+                    float trackW = m_w - 2.0f * (m_knobDim.radious + kshadow);
+                    float sign = (deltaX < 0) ? -1.0f : 1.0f;
+                    m_speedFactor = m_stepSize / m_w;
+                    if (m_stepSize>0.0f) {
+                        m_accumulated += deltaX;
+                        if (abs(m_accumulated) > m_w / m_stepSize) {
+                            m_value += m_stepSize * sign;
+                            m_accumulated = 0.0f;
+                        }
+                    }
+                    else {
+                        m_value += (deltaX / trackW) * (m_range.max - m_range.min) * m_speedFactor;
+                    }
                 }
                 else {
                     float deltaY = mouse.prevY - mouse.activeY; // inverted: up = more
-                    float kr = (int)(m_w * 0.4f);
+                    float sign = (deltaY < 0) ? -1.0f : 1.0f;
+                    m_knobDim.radious = (int)(m_w * 0.4f);
+
                     float kshadow = 3;
-                    float trackH = m_h - 2.0f * (kr + kshadow);
-                    m_value += (deltaY / trackH) * (m_range.max - m_range.min) * m_speedFactor;
+                    float trackH = m_h - 2.0f * (m_knobDim.radious + kshadow);
+                    if (m_stepSize > 0.0f) {
+                        if (deltaY > m_h / m_stepSize)
+                            m_accumulated += deltaY;
+                        if (abs(m_accumulated) > m_h / m_stepSize) {
+                            m_value += m_stepSize * sign;
+                            m_accumulated = 0.0f;
+                        }
+                    }
+                    else {
+                        m_value += (deltaY / trackH) * (m_range.max - m_range.min) * m_speedFactor;
+                    }
                 }
                 m_value = std::clamp(m_value, m_range.min, m_range.max);
                 return 1;
@@ -125,75 +169,145 @@ namespace FR {
         return 0;
     }
 
+    void Frtk_Slider::drawSliderSteps()
+    {
+        if (!(m_stepSize > 0.0f ))
+            return;
+
+        float padding = m_stepSize;
+
+        if (m_sliderType == H_SLIDER) {
+            float usableW = m_w - 2 * padding;
+            int steps = (int)(usableW / m_stepSize);
+
+            float startX = m_x + padding;
+            float centerY = m_y + m_h * 0.5f;
+            float tickH = m_h * 0.3f; // total tick height
+
+            for (int i = 0; i <= steps; i++) {
+                float px = startX + i * m_stepSize;
+
+                if (px > m_x + m_w - padding)
+                    break;
+
+                px = floor(px) + 0.5f;
+
+                Dim_float_t dim;
+                dim.pos = { px, centerY - tickH * 0.5f };
+                dim.size = { 0.0f, tickH }; // vertical line
+
+                drawLineWithState(
+                    m_vg,
+                    dim,
+                    1.0f,
+                    nvgRGBAf(0.7f, 0.7f, 0.7f, 1.0f),
+                    nvgRGBAf(0.2f, 0.2f, 0.2f, 1.0f),
+                    true
+                );
+            }
+        }
+        else {
+            float usableH = m_h - 2 * padding;
+            int steps = (int)(usableH / m_stepSize);
+
+            float startY = m_y + padding;
+            float centerX = m_x + m_w * 0.5f;
+            float tickW = m_w * 0.3f;
+
+            for (int i = 0; i <= steps; i++) {
+                float py = startY + i * m_stepSize;
+
+                if (py > m_y + m_h - padding)
+                    break;
+
+                py = floor(py) + 0.5f;
+
+                Dim_float_t dim;
+                dim.pos = { centerX - tickW * 0.5f, py };
+                dim.size = { tickW, 0.0f }; // horizontal line
+
+                drawLineWithState(
+                    m_vg,
+                    dim,
+                    1.0f,
+                    nvgRGBAf(0.7f, 0.7f, 0.7f, 1.0f),
+                    nvgRGBAf(0.2f, 0.2f, 0.2f, 1.0f),
+                    true
+                );
+            }
+        }
+    }
     void Frtk_Slider::draw()
     {
         draw_box(m_vg, m_boxType, { {m_x,m_y},{m_w,m_h} }, m_cornerRadius, FRTK_EXTRA_THIN_BORDER, glmToNVG(m_color), glmToNVG(m_nobColor.shadow), false);
-        if (m_sliderType==H_SLIDER){
-        float cx = m_x + m_w;
-        float cy = m_y + m_h * 0.50f;
-        float kr = (int)(m_h * 0.20f);
-        float kshadow = 3;
-        float startX = m_x + kr + kshadow;
-        float widthX = m_w - 2.0f * (kr + kshadow);
+        drawSliderSteps();
 
-        float knobX = startX + (m_value - m_range.min) / (m_range.max - m_range.min) * widthX;
-        float knobY = cy + 0.5f;
+        if (m_sliderType == H_SLIDER) {
+            m_knobDim.pos.x = m_x + m_w;
+            m_knobDim.pos.y = m_y + m_h * 0.50f;
+            m_knobDim.radious = (m_h * 0.20f);
+            float kshadow = 3;
+            float startX = m_x + m_knobDim.radious + kshadow;
+            float widthX = m_w - 2.0f * (m_knobDim.radious + kshadow);
 
-        //  Track 
-        NVGcolor track1 = glmToNVG(m_nobColor.track);;
-        NVGcolor track2 = track1;
-        if (m_active) {
-            track1.a = 0.125f;
-            track2.a = 0.5f;
-        }
-        else {
-            track1.a = 0.039f;
-            track2.a = 0.8203f;
-        }
-        NVGpaint bg = nvgBoxGradient(m_vg, startX, cy - 3 + 1, widthX, 6, 3, 3, track1, track2);
-        nvgBeginPath(m_vg);
-        nvgRoundedRect(m_vg, startX, cy - 3 + 1, widthX, 6, 2);
-        nvgFillPaint(m_vg, bg);
-        nvgFill(m_vg);
+            float knobX = startX + (m_value - m_range.min) / (m_range.max - m_range.min) * widthX;
+            float knobY = m_knobDim.pos.y + 0.5f;
 
-        // Highlight range
-        if (m_highlight.max != m_highlight.min)
-        {
+            //  Track
+            NVGcolor track1 = glmToNVG(m_nobColor.track);;
+            NVGcolor track2 = track1;
+            if (m_active) {
+                track1.a = 0.125f;
+                track2.a = 0.5f;
+            }
+            else {
+                track1.a = 0.039f;
+                track2.a = 0.8203f;
+            }
+            NVGpaint bg = nvgBoxGradient(m_vg, startX, m_knobDim.pos.y - 3 + 1, widthX, 6, 3, 3, track1, track2);
             nvgBeginPath(m_vg);
-            nvgRoundedRect(m_vg, startX + m_highlight.min * m_w, cy - kshadow + 1, widthX * (m_highlight.max - m_highlight.min), kshadow * 2, 2);
-            nvgFillColor(m_vg, glmToNVG(m_color));
+            nvgRoundedRect(m_vg, startX, m_knobDim.pos.y - 3 + 1, widthX, 6, 2);
+            nvgFillPaint(m_vg, bg);
             nvgFill(m_vg);
-        }
 
-        NVGpaint knobShadow = nvgRadialGradient(m_vg, knobX, knobY, kr - kshadow, kr + kshadow, nvgRGBAf(0.0f, 0.0f, 0.0f, 0.25f), nvgRGBAf(FR_BLACK));
-        NVGpaint knob = nvgLinearGradient(m_vg, m_x, cy - kr, m_x, cy + kr, glmToNVG(m_nobColor.nob), glmToNVG(m_nobColor.shadow));
-        NVGpaint knobReverse = nvgLinearGradient(m_vg, m_x, cy - kr, m_x, cy + kr, glmToNVG(m_color), glmToNVG(m_nobColor.shadow));
+            // Highlight range
+            if (m_highlight.max != m_highlight.min)
+            {
+                nvgBeginPath(m_vg);
+                nvgRoundedRect(m_vg, startX + m_highlight.min * m_w, m_knobDim.pos.y - kshadow + 1, widthX * (m_highlight.max - m_highlight.min), kshadow * 2, 2);
+                nvgFillColor(m_vg, glmToNVG(m_color));
+                nvgFill(m_vg);
+            }
 
-        nvgBeginPath(m_vg);
-        nvgCircle(m_vg, knobX, knobY, kr);
-        nvgStrokeColor(m_vg, glmToNVG(m_bkg_color));
-        nvgFillPaint(m_vg, knob);
-        nvgStroke(m_vg);
-        nvgFill(m_vg);
+            NVGpaint knobShadow = nvgRadialGradient(m_vg, knobX, knobY, m_knobDim.radious - kshadow, m_knobDim.radious + kshadow, nvgRGBAf(0.0f, 0.0f, 0.0f, 0.25f), nvgRGBAf(FR_BLACK));
+            NVGpaint knob = nvgLinearGradient(m_vg, m_x, m_knobDim.pos.y - m_knobDim.radious, m_x, m_knobDim.pos.y + m_knobDim.radious, glmToNVG(m_nobColor.knob), glmToNVG(m_nobColor.shadow));
+            NVGpaint knobReverse = nvgLinearGradient(m_vg, m_x, m_knobDim.pos.y - m_knobDim.radious, m_x, m_knobDim.pos.y + m_knobDim.radious, glmToNVG(m_color), glmToNVG(m_nobColor.shadow));
 
-        // Knob inner
-        nvgBeginPath(m_vg);
-        nvgCircle(m_vg, knobX, knobY, kr / 2.0f);
-        nvgFillColor(m_vg, glmToNVG(m_nobColor.inner));
-        nvgStrokePaint(m_vg, knobReverse);
-        nvgStroke(m_vg);
-        nvgFill(m_vg);
+            nvgBeginPath(m_vg);
+            nvgCircle(m_vg, knobX, knobY, m_knobDim.radious);
+            nvgStrokeColor(m_vg, glmToNVG(m_bkg_color));
+            nvgFillPaint(m_vg, knob);
+            nvgStroke(m_vg);
+            nvgFill(m_vg);
+
+            // Knob inner
+            nvgBeginPath(m_vg);
+            nvgCircle(m_vg, knobX, knobY, m_knobDim.radious / 2.0f);
+            nvgFillColor(m_vg, glmToNVG(m_nobColor.inner));
+            nvgStrokePaint(m_vg, knobReverse);
+            nvgStroke(m_vg);
+            nvgFill(m_vg);
         }
         else // V_SLIDER
         {
             float cx = m_x + m_w * 0.5f;
-            float cy = m_y;                          // top of widget
-            float kr = (int)(m_w * 0.20f);
+            m_knobDim.pos.y = m_y;                          // top of widget
+            m_knobDim.radious = (int)(m_w * 0.20f);
             float kshadow = 3;
-            float startY = m_y + kr + kshadow;
-            float heightY = m_h - 2.0f * (kr + kshadow);
+            float startY = m_y + m_knobDim.radious + kshadow;
+            float heightY = m_h - 2.0f * (m_knobDim.radious + kshadow);
 
-            // knob travels top - bottom, but value increases upward 
+            // knob travels top - bottom, but value increases upward
             float knobY = startY + (1.0f - (m_value - m_range.min) / (m_range.max - m_range.min)) * heightY;
             float knobX = cx + 0.5f;
 
@@ -233,25 +347,25 @@ namespace FR {
 
             // Knob shadow
             NVGpaint knobShadow = nvgRadialGradient(m_vg,
-                knobX, knobY, kr - kshadow, kr + kshadow,
+                knobX, knobY, m_knobDim.radious - kshadow, m_knobDim.radious + kshadow,
                 nvgRGBAf(0.0f, 0.0f, 0.0f, 0.25f),
                 nvgRGBAf(FR_BLACK));
 
-            // Knob gradients 
+            // Knob gradients
             NVGpaint knob = nvgLinearGradient(m_vg,
-                cx - kr, m_y,
-                cx + kr, m_y,
-                glmToNVG(m_nobColor.nob),
+                cx - m_knobDim.radious, m_y,
+                cx + m_knobDim.radious, m_y,
+                glmToNVG(m_nobColor.knob),
                 glmToNVG(m_nobColor.shadow));
 
             NVGpaint knobReverse = nvgLinearGradient(m_vg,
-                cx - kr, m_y,
-                cx + kr, m_y,
+                cx - m_knobDim.radious, m_y,
+                cx + m_knobDim.radious, m_y,
                 glmToNVG(m_color),
                 glmToNVG(m_nobColor.shadow));
 
             nvgBeginPath(m_vg);
-            nvgCircle(m_vg, knobX, knobY, kr);
+            nvgCircle(m_vg, knobX, knobY, m_knobDim.radious);
             nvgStrokeColor(m_vg, glmToNVG(m_bkg_color));
             nvgFillPaint(m_vg, knob);
             nvgStroke(m_vg);
@@ -259,7 +373,7 @@ namespace FR {
 
             // Knob inner
             nvgBeginPath(m_vg);
-            nvgCircle(m_vg, knobX, knobY, kr / 2.0f);
+            nvgCircle(m_vg, knobX, knobY, m_knobDim.radious / 2.0f);
             nvgFillColor(m_vg, glmToNVG(m_nobColor.inner));
             nvgStrokePaint(m_vg, knobReverse);
             nvgStroke(m_vg);

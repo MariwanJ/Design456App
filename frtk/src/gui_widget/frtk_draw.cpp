@@ -27,6 +27,38 @@
 
 #include<gui_widget/frtk_draw.h>
 namespace FR {
+    void FRTK_API drawLineWithState(NVGcontext* vg, Dim_float_t dim,
+        float strokeWidth, NVGcolor baseCol, NVGcolor shadowColor, bool up)
+    {
+        // Main line
+        nvgBeginPath(vg);
+        nvgMoveTo(vg, dim.pos.x, dim.pos.y);
+        nvgLineTo(vg, dim.pos.x + dim.size.w, dim.pos.y + dim.size.h);
+        nvgStrokeWidth(vg, strokeWidth);
+        nvgStrokeColor(vg, baseCol);
+        nvgStroke(vg);
+
+        // Subtle highlight/shadow for 3D effect
+        float offset = 1.0f;
+
+        nvgBeginPath(vg);
+
+        if (up) {
+            // highlight on top/left
+            nvgMoveTo(vg, dim.pos.x - offset, dim.pos.y - offset);
+            nvgLineTo(vg, dim.pos.x + dim.size.w - offset, dim.pos.y + dim.size.h - offset);
+        }
+        else {
+            // shadow on bottom/right
+            nvgMoveTo(vg, dim.pos.x + offset, dim.pos.y + offset);
+            nvgLineTo(vg, dim.pos.x + dim.size.w + offset, dim.pos.y + dim.size.h + offset);
+        }
+
+        nvgStrokeWidth(vg, strokeWidth);
+        nvgStrokeColor(vg, shadowColor);
+        nvgStroke(vg);
+    }
+
     //FRTK_NO_BOX
     void drawFilledRect(NVGcontext* vg, Dim_float_t dim, float r, float t, NVGcolor c, NVGcolor shadowCol, bool up)
     {
@@ -665,106 +697,103 @@ namespace FR {
     //    nvgRestore(vg);
     //}
 
+    void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt, bool isLabel, const FontData_t& fnttData, const char* secrete)
+    {
+        nvgFontSize(vg, fnt.fontSize);
+        nvgFontFace(vg, fnt.fName.c_str());
 
+        int align = isLabel ? fnt.lblAlign : fnt.txtAlign;
+        bool inside = (align & NVG_ALIGN_INSIDE) != 0;
 
-void drawTextInBox(NVGcontext* vg, const std::string& text, font_t& fnt, bool isLabel, const FontData_t& fnttData , const char* secrete)
-{
-    nvgFontSize(vg, fnt.fontSize);
-    nvgFontFace(vg, fnt.fName.c_str());
+        int nvgAlign = (align & 0x7F) | NVG_ALIGN_BASELINE;
+        nvgTextAlign(vg, nvgAlign);
 
-    int align = isLabel ? fnt.lblAlign : fnt.txtAlign;
-    bool inside = (align & NVG_ALIGN_INSIDE) != 0;
+        float asc, desc, lineh;
+        nvgTextMetrics(vg, &asc, &desc, &lineh);
 
-    int nvgAlign = (align & 0x7F) | NVG_ALIGN_BASELINE;
-    nvgTextAlign(vg, nvgAlign);
+        const float boxX = fnt.pos.x;
+        const float boxY = fnt.pos.y;
+        const float boxW = fnt.size.w;
+        const float boxH = fnt.size.h;
 
-    float asc, desc, lineh;
-    nvgTextMetrics(vg, &asc, &desc, &lineh);
+        float textW = getTextWidth(vg, text, fnt.fontSize, fnt.fName.c_str());
 
-    const float boxX = fnt.pos.x;
-    const float boxY = fnt.pos.y;
-    const float boxW = fnt.size.w;
-    const float boxH = fnt.size.h;
-
-    float textW = getTextWidth(vg, text, fnt.fontSize, fnt.fName.c_str());
-
-    // Compute visual left edge for horizontal alignment
-    float visualX = boxX;
-    if (align & NVG_ALIGN_CENTER) {
-        visualX = boxX + boxW * 0.5f - textW * 0.5f;
-    }
-    else if (align & NVG_ALIGN_RIGHT) {
-        visualX = inside ? (boxX + boxW - textW) : (boxX + boxW );
-    }
-    else if (align & NVG_ALIGN_LEFT) {
-        visualX = inside ? boxX : (boxX - textW - (asc - desc) * 0.5f);
-    }
-
-    // Compute baseline Y for vertical alignment
-    float visualY = boxY;
-    if (inside) {
-        if (align & NVG_ALIGN_TOP) visualY = boxY + asc * 1.2f;
-        else if (align & NVG_ALIGN_MIDDLE) { 
-            if (isLabel) 
-                visualY = boxY + boxH * 0.5F + (asc + desc) * 0.5f; 
-            else 
-                visualY = boxY + boxH * 0.5F - (asc + desc) * 0.5f; 
+        // Compute visual left edge for horizontal alignment
+        float visualX = boxX;
+        if (align & NVG_ALIGN_CENTER) {
+            visualX = boxX + boxW * 0.5f - textW * 0.5f;
         }
-        else if (align & NVG_ALIGN_BOTTOM) visualY = boxY + boxH - desc;
-        else visualY = boxY + asc;
-    }
-    else {
-        if (align & NVG_ALIGN_TOP) visualY = boxY - (asc - desc) * 0.6f;
-        else if (align & NVG_ALIGN_MIDDLE) visualY = boxY + boxH *.5 - (asc +desc) * 0.5f;
-        else if (align & NVG_ALIGN_BOTTOM) visualY = boxY + boxH + (asc - desc) * 0.4f;
-    }
+        else if (align & NVG_ALIGN_RIGHT) {
+            visualX = inside ? (boxX + boxW - textW) : (boxX + boxW);
+        }
+        else if (align & NVG_ALIGN_LEFT) {
+            visualX = inside ? boxX : (boxX - textW - (asc - desc) * 0.5f);
+        }
 
-    // Store visual origin in fnt.realPos for hit-testing
-    if (!isLabel) {
-        fnt.realPos.x = visualX;   // left edge of text
-        fnt.realPos.y = visualY;   // baseline Y
-    }
-
-    // Draw text relative to visual origin
-    nvgSave(vg);
-    nvgTranslate(vg, visualX, visualY);
-    if (fnt.Rotate != 0.0f)
-        nvgRotate(vg, glm::radians(fnt.Rotate));
-
-    // Shadow
-    if (fnt.blur > 0.0f) {
-        nvgFontBlur(vg, fnt.blur);
-        nvgFillColor(vg, fnt.shadowCol);
-        if (secrete!=0) {
-            size_t maskLen = strlen(secrete);
-            size_t len = text.size(); // number of chars
-
-            std::vector<char> buf(len * maskLen + 1); // +1 for null
-            char* p = buf.data();
-
-            for (size_t i = 0; i < len; ++i)
-            {
-                memcpy(p, secrete, maskLen);
-                p += maskLen;
+        // Compute baseline Y for vertical alignment
+        float visualY = boxY;
+        if (inside) {
+            if (align & NVG_ALIGN_TOP) visualY = boxY + asc * 1.2f;
+            else if (align & NVG_ALIGN_MIDDLE) {
+                if (isLabel)
+                    visualY = boxY + boxH * 0.5F + (asc + desc) * 0.5f;
+                else
+                    visualY = boxY + boxH * 0.5F - (asc + desc) * 0.5f;
             }
-
-            *p = '\0'; // null-terminate
-            nvgText(vg, fnt.shadowOffs.x, fnt.shadowOffs.y, buf.data(), nullptr);
-            nvgFontBlur(vg, 0.0f);
-            nvgFillColor(vg, fnt.forgColor);
-            nvgText(vg, 0.0f, 0.0f, buf.data(), nullptr);
-
+            else if (align & NVG_ALIGN_BOTTOM) visualY = boxY + boxH - desc;
+            else visualY = boxY + asc;
         }
-        else
-        {
-            nvgText(vg, fnt.shadowOffs.x, fnt.shadowOffs.y, text.c_str(), nullptr);
-            
-            // Main text
-            nvgFontBlur(vg, 0.0f);
-            nvgFillColor(vg, fnt.forgColor);
-            nvgText(vg, 0.0f, 0.0f, text.c_str(), nullptr);
+        else {
+            if (align & NVG_ALIGN_TOP) visualY = boxY - (asc - desc) * 0.6f;
+            else if (align & NVG_ALIGN_MIDDLE) visualY = boxY + boxH * .5 - (asc + desc) * 0.5f;
+            else if (align & NVG_ALIGN_BOTTOM) visualY = boxY + boxH + (asc - desc);
         }
+
+        // Store visual origin in fnt.realPos for hit-testing
+        if (!isLabel) {
+            fnt.realPos.x = visualX;   // left edge of text
+            fnt.realPos.y = visualY;   // baseline Y
+        }
+
+        // Draw text relative to visual origin
+        nvgSave(vg);
+        nvgTranslate(vg, visualX, visualY);
+        if (fnt.Rotate != 0.0f)
+            nvgRotate(vg, glm::radians(fnt.Rotate));
+
+        // Shadow
+        if (fnt.blur > 0.0f) {
+            nvgFontBlur(vg, fnt.blur);
+            nvgFillColor(vg, fnt.shadowCol);
+            if (secrete != 0) {
+                size_t maskLen = strlen(secrete);
+                size_t len = text.size(); // number of chars
+
+                std::vector<char> buf(len * maskLen + 1); // +1 for null
+                char* p = buf.data();
+
+                for (size_t i = 0; i < len; ++i)
+                {
+                    memcpy(p, secrete, maskLen);
+                    p += maskLen;
+                }
+
+                *p = '\0'; // null-terminate
+                nvgText(vg, fnt.shadowOffs.x, fnt.shadowOffs.y, buf.data(), nullptr);
+                nvgFontBlur(vg, 0.0f);
+                nvgFillColor(vg, fnt.forgColor);
+                nvgText(vg, 0.0f, 0.0f, buf.data(), nullptr);
+            }
+            else
+            {
+                nvgText(vg, fnt.shadowOffs.x, fnt.shadowOffs.y, text.c_str(), nullptr);
+
+                // Main text
+                nvgFontBlur(vg, 0.0f);
+                nvgFillColor(vg, fnt.forgColor);
+                nvgText(vg, 0.0f, 0.0f, text.c_str(), nullptr);
+            }
+        }
+        nvgRestore(vg);
     }
-    nvgRestore(vg);
-}
 }

@@ -38,18 +38,25 @@ typedef struct {
     float max;
 }range_t;
 
+
+namespace FR {
+
 typedef struct {
-    glm::vec4 nob;
+    glm::vec4 knob;
     glm::vec4 inner;
     glm::vec4 shadow;
     glm::vec4 track;
 }nobcolor_t;
 
+typedef struct{
+    dimPos_float_t pos;
+    float radious;
+} knob_posSize_t;
+
 typedef enum {
     V_SLIDER,
     H_SLIDER,
 } slidertype_t;
-namespace FR {
 
     class FRTK_API Frtk_Slider : public Frtk_Box {
     public:
@@ -63,14 +70,25 @@ namespace FR {
         range_t Range() const;
         bool isMouseInsideSliderBar();
         void sliderType(const slidertype_t &t);
+        knob_posSize_t& Frtk_Slider::knobDim();
+        const knob_posSize_t& Frtk_Slider::knobDim() const;
+        void stepSize(const float &step);
+        float stepSize();
+
     protected:
+        float m_stepSize;
+        float m_dragAccum;
+        knob_posSize_t m_knobDim;
+
         virtual int handle(int ev) override;
+        void drawSliderSteps();
         virtual void draw() override;
         slidertype_t m_sliderType;
         range_t m_highlight;
         range_t m_range;
         float m_value;
         float m_speedFactor;
+        float m_accumulated; 
     };
 }
 
