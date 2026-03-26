@@ -127,7 +127,7 @@ namespace FR {
                     float trackW = m_w - 2.0f * (m_knobDim.radious + kshadow);
                     float sign = (deltaX < 0) ? -1.0f : 1.0f;
                     m_speedFactor = m_stepSize / m_w;
-                    if (m_stepSize>0.0f) {
+                    if (m_stepSize > 0.0f) {
                         m_accumulated += deltaX;
                         if (abs(m_accumulated) > m_w / m_stepSize) {
                             m_value += m_stepSize * sign;
@@ -141,7 +141,7 @@ namespace FR {
                 else {
                     float deltaY = mouse.prevY - mouse.activeY; // inverted: up = more
                     float sign = (deltaY < 0) ? -1.0f : 1.0f;
-                    m_knobDim.radious = (int)(m_w * 0.4f);
+                    m_knobDim.radious = (m_w * 0.4f);
 
                     float kshadow = 3;
                     float trackH = m_h - 2.0f * (m_knobDim.radious + kshadow);
@@ -171,7 +171,7 @@ namespace FR {
 
     void Frtk_Slider::drawSliderSteps()
     {
-        if (!(m_stepSize > 0.0f ))
+        if (!(m_stepSize > 0.0f))
             return;
 
         float padding = m_stepSize;
@@ -207,34 +207,23 @@ namespace FR {
             }
         }
         else {
-            float usableH = m_h - 2 * padding;
-            int steps = (int)(usableH / m_stepSize);
-
-            float startY = m_y + padding;
-            float centerX = m_x + m_w * 0.5f;
-            float tickW = m_w * 0.3f;
-
-            for (int i = 0; i <= steps; i++) {
-                float py = startY + i * m_stepSize;
-
-                if (py > m_y + m_h - padding)
-                    break;
-
-                py = floor(py) + 0.5f;
-
-                Dim_float_t dim;
-                dim.pos = { centerX - tickW * 0.5f, py };
-                dim.size = { tickW, 0.0f }; // horizontal line
-
-                drawLineWithState(
-                    m_vg,
-                    dim,
-                    1.0f,
-                    nvgRGBAf(0.7f, 0.7f, 0.7f, 1.0f),
-                    nvgRGBAf(0.2f, 0.2f, 0.2f, 1.0f),
-                    true
-                );
-            }
+            //TODO FIXME 
+            //float usableH = m_h - 2 * padding;
+            //int steps = (int)(usableH / m_stepSize);
+            //float startY = m_y + padding;
+            //float centerX = m_x + m_w * 0.5f;
+            //float tickW = m_w * 0.3f;
+            //for (int i = 0; i <= steps; i++) {
+            //    float py = startY + i * m_stepSize;
+            //    if (py > m_y + m_h - padding)
+            //        break;
+            //    py = floor(py) + 0.5f;
+            //    Dim_float_t dim;
+            //    dim.pos = { centerX - tickW * 0.5f, py };
+            //    dim.size = { tickW, 0.0f }; // horizontal line
+            //    drawLineWithState(                    m_vg,                    dim,                    1.0f,                    nvgRGBAf(0.7f, 0.7f, 0.7f, 1.0f),                    nvgRGBAf(0.2f, 0.2f, 0.2f, 1.0f),                    true
+            //    );
+            //}
         }
     }
     void Frtk_Slider::draw()
@@ -300,16 +289,16 @@ namespace FR {
         }
         else // V_SLIDER
         {
-            float cx = m_x + m_w * 0.5f;
+            m_knobDim.pos.x = m_x + m_w * 0.5f;
             m_knobDim.pos.y = m_y;                          // top of widget
-            m_knobDim.radious = (int)(m_w * 0.20f);
+            m_knobDim.radious = m_w * 0.20f;
             float kshadow = 3;
             float startY = m_y + m_knobDim.radious + kshadow;
             float heightY = m_h - 2.0f * (m_knobDim.radious + kshadow);
 
             // knob travels top - bottom, but value increases upward
             float knobY = startY + (1.0f - (m_value - m_range.min) / (m_range.max - m_range.min)) * heightY;
-            float knobX = cx + 0.5f;
+            float knobX = m_knobDim.pos.x + 0.5f;
 
             // Track
             NVGcolor track1 = glmToNVG(m_nobColor.track);
@@ -323,11 +312,9 @@ namespace FR {
                 track2.a = 0.8203f;
             }
 
-            NVGpaint bg = nvgBoxGradient(m_vg,
-                cx - 3 + 1, startY, 6, heightY, 3, 3,
-                track1, track2);
+            NVGpaint bg = nvgBoxGradient(m_vg, m_knobDim.pos.x - 3 + 1, startY, 6, heightY, 3, 3, track1, track2);
             nvgBeginPath(m_vg);
-            nvgRoundedRect(m_vg, cx - 3 + 1, startY, 6, heightY, 2);
+            nvgRoundedRect(m_vg, m_knobDim.pos.x - 3 + 1, startY, 6, heightY, 2);
             nvgFillPaint(m_vg, bg);
             nvgFill(m_vg);
 
@@ -335,34 +322,20 @@ namespace FR {
             if (m_highlight.max != m_highlight.min)
             {
                 nvgBeginPath(m_vg);
-                nvgRoundedRect(m_vg,
-                    cx - kshadow + 1,
-                    startY + m_highlight.min * m_h,
-                    kshadow * 2,
-                    heightY * (m_highlight.max - m_highlight.min),
-                    2);
+                nvgRoundedRect(m_vg, m_knobDim.pos.x - kshadow + 1, startY + m_highlight.min * m_h, kshadow * 2, heightY * (m_highlight.max - m_highlight.min), 2);
                 nvgFillColor(m_vg, glmToNVG(m_color));
                 nvgFill(m_vg);
             }
 
             // Knob shadow
-            NVGpaint knobShadow = nvgRadialGradient(m_vg,
-                knobX, knobY, m_knobDim.radious - kshadow, m_knobDim.radious + kshadow,
-                nvgRGBAf(0.0f, 0.0f, 0.0f, 0.25f),
-                nvgRGBAf(FR_BLACK));
+            NVGpaint knobShadow = nvgRadialGradient(m_vg, knobX, knobY, m_knobDim.radious - kshadow,
+                m_knobDim.radious + kshadow, nvgRGBAf(0.0f, 0.0f, 0.0f, 0.25f), nvgRGBAf(FR_BLACK));
 
             // Knob gradients
-            NVGpaint knob = nvgLinearGradient(m_vg,
-                cx - m_knobDim.radious, m_y,
-                cx + m_knobDim.radious, m_y,
-                glmToNVG(m_nobColor.knob),
-                glmToNVG(m_nobColor.shadow));
-
-            NVGpaint knobReverse = nvgLinearGradient(m_vg,
-                cx - m_knobDim.radious, m_y,
-                cx + m_knobDim.radious, m_y,
-                glmToNVG(m_color),
-                glmToNVG(m_nobColor.shadow));
+            NVGpaint knob = nvgLinearGradient(m_vg, m_knobDim.pos.x - m_knobDim.radious, m_y, m_knobDim.pos.x + m_knobDim.radious, m_y,
+                glmToNVG(m_nobColor.knob), glmToNVG(m_nobColor.shadow));
+            NVGpaint knobReverse = nvgLinearGradient(m_vg, m_knobDim.pos.x - m_knobDim.radious, m_y, m_knobDim.pos.x + m_knobDim.radious,
+                m_y, glmToNVG(m_color), glmToNVG(m_nobColor.shadow));
 
             nvgBeginPath(m_vg);
             nvgCircle(m_vg, knobX, knobY, m_knobDim.radious);
@@ -379,6 +352,6 @@ namespace FR {
             nvgStroke(m_vg);
             nvgFill(m_vg);
         }
-        drawLabel();
+      drawLabel();
     }
 }
