@@ -122,12 +122,10 @@ namespace FR {
             }
             if (ev == FR_LEFT_DRAG_MOVE && m_dragging) {
                 if (m_sliderType == H_SLIDER) {
-                    float deltaX = mouse.activeX - mouse.prevX;
+                    float deltaX =  mouse.activeX- mouse.prevX  ;
                     float kshadow = 3;
                     float trackW = m_w - 2.0f * (m_knobDim.radious + kshadow);
                     float sign = (deltaX < 0) ? -1.0f : 1.0f;
-
-                    m_speedFactor = m_stepSize / m_w;
                     if (m_stepSize > 0.5f) {
                         m_accumulated += deltaX;
                         if (abs(m_accumulated) > m_w / m_stepSize) {
@@ -136,6 +134,7 @@ namespace FR {
                         }
                     }
                     else {
+                       
                         m_value += (deltaX / trackW) * (m_range.max - m_range.min) * m_speedFactor;
                     }
                 }
@@ -147,8 +146,8 @@ namespace FR {
                     float sign = (deltaY < 0) ? -1.0f : 1.0f;
 
                     if (m_stepSize > 0.5f) {
-                        if (deltaY > m_h / m_stepSize)
-                            m_accumulated += deltaY;
+                        m_accumulated += deltaY;
+                        FRTK_CORE_INFO("{} {} {} ", deltaY, m_accumulated, m_value);
                         if (abs(m_accumulated) > m_h / m_stepSize) {
                             m_value += m_stepSize * sign;
                             m_accumulated = 0.0f;

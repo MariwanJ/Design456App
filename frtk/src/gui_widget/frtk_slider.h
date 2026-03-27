@@ -38,41 +38,39 @@ typedef struct {
     float max;
 }range_t;
 
-
 namespace FR {
+    typedef struct {
+        glm::vec4 knob;
+        glm::vec4 inner;
+        glm::vec4 shadow;
+        glm::vec4 track;
+    }nobcolor_t;
 
-typedef struct {
-    glm::vec4 knob;
-    glm::vec4 inner;
-    glm::vec4 shadow;
-    glm::vec4 track;
-}nobcolor_t;
+    typedef struct {
+        dimPos_float_t pos;
+        float radious;
+    } knob_posSize_t;
 
-typedef struct{
-    dimPos_float_t pos;
-    float radious;
-} knob_posSize_t;
-
-typedef enum {
-    V_SLIDER,
-    H_SLIDER,
-} slidertype_t;
+    typedef enum {
+        V_SLIDER,
+        H_SLIDER,
+    } slidertype_t;
 
     class FRTK_API Frtk_Slider : public Frtk_Box {
     public:
         Frtk_Slider(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl = "Tab", BOX_TYPE b = FRTK_DOWN_BOX);
         ~Frtk_Slider();
-        
+
         nobcolor_t m_nobColor;
-        float value()const; 
-        void vlaue(const float &v);
+        float value()const;
+        void vlaue(const float& v);
         void setRange(const range_t range);
         range_t Range() const;
         bool isMouseInsideSliderBar();
-        void sliderType(const slidertype_t &t);
+        void sliderType(const slidertype_t& t);
         knob_posSize_t& Frtk_Slider::knobDim();
         const knob_posSize_t& Frtk_Slider::knobDim() const;
-        void stepSize(const float &step);
+        void stepSize(const float& step);
         float stepSize();
 
     protected:
@@ -88,7 +86,7 @@ typedef enum {
         range_t m_range;
         float m_value;
         float m_speedFactor;
-        float m_accumulated; 
+        float m_accumulated;
     };
 }
 
