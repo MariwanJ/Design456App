@@ -25,27 +25,32 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-#include<gui_widget/examples/demo3.h>
-#include <gui_widget/frtk_slider.h>
-#include <gui_widget/frtk_color_picker.h>
+#ifndef FRTK_FRTK_COLOR_PICKER_H
+#define FRTK_FRTK_COLOR_PICKER_H
+
+#include <frtk.h>
+#include <fr_core.h>
+#include <gui_widget/frtk_box.h>
+
+
 namespace FR {
-    std::shared_ptr<Frtk_Vwin> runFRTKdemo3() {
-        auto window = std::make_shared<Frtk_Vwin>(500.f, 200.f, 500.f, 500.f, "Testing new Widgets");
-        std::shared_ptr<Frtk_Slider> sliderH = std::make_shared<Frtk_Slider>(window->getContext(), 250.0f, 175.0f, 200.0f, 56.0f, "SLIDER- H", FRTK_OSHADOW_DOWN_BOX);
+    
+
+    class FRTK_API  Frtk_Color_Picker : public Frtk_Box {
+    public:
+        Frtk_Color_Picker(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b);
+        glm::vec4 pickedColorRGB();
+        glm::vec4 pickedColorHSV();
+        glm::vec4 pickedColorCMYK();
+        NVGcolor  pickedColorNVG();
+
+    protected:
+        virtual void draw() override;
+        virtual int handle(int ev) override;
+
+        float t; 
+        glm::vec4 m_picked;
         
-      //  sliderH->stepSize(10.0f);
-        sliderH->sliderType(H_SLIDER);
-        window->addChild(sliderH);
-
-        std::shared_ptr<Frtk_Slider> sliderV = std::make_shared<Frtk_Slider>(window->getContext(), 200.0f, 250.0f, 56.0f, 200.0f, "SLIDER - V", FRTK_UP_BOX);
-        sliderV->sliderType(V_SLIDER);
-       // sliderV->stepSize(5.0f);
-        window->addChild(sliderV);
-
-        std::shared_ptr<Frtk_Color_Picker> col = std::make_shared<Frtk_Color_Picker>(window->getContext(), 50.0f, 50.0f, 200.0f, 200.0f, "colorPicker", FRTK_UP_BOX);
-        window->addChild(col);
-
-
-        return window;
-    }
+    };
 }
+#endif //FRTK_FRTK_COLOR_PICKER_H
