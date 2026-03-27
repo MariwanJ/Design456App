@@ -39,6 +39,7 @@ namespace FR {
         m_cornerRadius = 3.0f;
         m_dragging = false;
         m_font.lblAlign = NVG_ALIGN_BOTTOM_CENTER;
+        m_knobDim.radious = 11.2;
     }
 
     Frtk_Slider::~Frtk_Slider()
@@ -115,19 +116,19 @@ namespace FR {
         auto& mouse = m_mainWindow->m_sysEvents.mouse;
         bool testBound = isMouseInsideSliderBar();
         if (testBound || (ev == FR_LEFT_DRAG_MOVE && m_dragging)) {
-            if (ev == FR_LEFT_DRAG_PUSH && testBound) {
+            if (ev == FR_LEFT_DRAG_PUSH && testBound && !m_dragging) {
                 m_dragging = true;
                 return 1;
             }
-            else if (ev == FR_LEFT_DRAG_MOVE && m_dragging) {
+            if (ev == FR_LEFT_DRAG_MOVE && m_dragging) {
                 if (m_sliderType == H_SLIDER) {
                     float deltaX = mouse.activeX - mouse.prevX;
-                    m_knobDim.radious = (int)(m_h * 0.4f);
                     float kshadow = 3;
                     float trackW = m_w - 2.0f * (m_knobDim.radious + kshadow);
                     float sign = (deltaX < 0) ? -1.0f : 1.0f;
+
                     m_speedFactor = m_stepSize / m_w;
-                    if (m_stepSize > 0.0f) {
+                    if (m_stepSize > 0.5f) {
                         m_accumulated += deltaX;
                         if (abs(m_accumulated) > m_w / m_stepSize) {
                             m_value += m_stepSize * sign;
@@ -138,14 +139,14 @@ namespace FR {
                         m_value += (deltaX / trackW) * (m_range.max - m_range.min) * m_speedFactor;
                     }
                 }
-                else {
+                else if (m_sliderType == V_SLIDER) {
                     float deltaY = mouse.prevY - mouse.activeY; // inverted: up = more
-                    float sign = (deltaY < 0) ? -1.0f : 1.0f;
-                    m_knobDim.radious = (m_w * 0.4f);
 
                     float kshadow = 3;
                     float trackH = m_h - 2.0f * (m_knobDim.radious + kshadow);
-                    if (m_stepSize > 0.0f) {
+                    float sign = (deltaY < 0) ? -1.0f : 1.0f;
+
+                    if (m_stepSize > 0.5f) {
                         if (deltaY > m_h / m_stepSize)
                             m_accumulated += deltaY;
                         if (abs(m_accumulated) > m_h / m_stepSize) {
@@ -158,20 +159,21 @@ namespace FR {
                     }
                 }
                 m_value = std::clamp(m_value, m_range.min, m_range.max);
-                return 1;
-            }
-            else if ((ev == FR_LEFT_DRAG_RELEASE || ev == FR_LEAVE) && m_dragging) {
-                m_dragging = false;
+
                 do_callback();
                 return 1;
             }
+        }
+        else
+        {
+            m_dragging = false;
         }
         return 0;
     }
 
     void Frtk_Slider::drawSliderSteps()
     {
-        if (!(m_stepSize > 0.0f))
+        if (!(m_stepSize > 0.5f))
             return;
 
         float padding = m_stepSize;
@@ -196,34 +198,30 @@ namespace FR {
                 dim.pos = { px, centerY - tickH * 0.5f };
                 dim.size = { 0.0f, tickH }; // vertical line
 
-                drawLineWithState(
-                    m_vg,
-                    dim,
-                    1.0f,
-                    nvgRGBAf(0.7f, 0.7f, 0.7f, 1.0f),
-                    nvgRGBAf(0.2f, 0.2f, 0.2f, 1.0f),
-                    true
-                );
+                drawLineWithState(m_vg, dim, 1.0f, nvgRGBAf(0.7f, 0.7f, 0.7f, 1.0f),
+                    nvgRGBAf(0.2f, 0.2f, 0.2f, 1.0f), true);
             }
         }
         else {
-            //TODO FIXME 
-            //float usableH = m_h - 2 * padding;
-            //int steps = (int)(usableH / m_stepSize);
-            //float startY = m_y + padding;
-            //float centerX = m_x + m_w * 0.5f;
-            //float tickW = m_w * 0.3f;
-            //for (int i = 0; i <= steps; i++) {
-            //    float py = startY + i * m_stepSize;
-            //    if (py > m_y + m_h - padding)
-            //        break;
-            //    py = floor(py) + 0.5f;
-            //    Dim_float_t dim;
-            //    dim.pos = { centerX - tickW * 0.5f, py };
-            //    dim.size = { tickW, 0.0f }; // horizontal line
-            //    drawLineWithState(                    m_vg,                    dim,                    1.0f,                    nvgRGBAf(0.7f, 0.7f, 0.7f, 1.0f),                    nvgRGBAf(0.2f, 0.2f, 0.2f, 1.0f),                    true
-            //    );
-            //}
+            if (!(m_stepSize > 0.5f))
+                return;
+            //TODO FIXME
+            float usableH = m_h - 2 * padding;
+            int steps = (int)(usableH / m_stepSize);
+            float startY = m_y + padding;
+            float centerX = m_x + m_w * 0.5f;
+            float tickW = m_w * 0.3f;
+            for (int i = 0; i <= steps; i++) {
+                float py = startY + i * m_stepSize;
+                if (py > m_y + m_h - padding)
+                    break;
+                py = floor(py) + 0.5f;
+                Dim_float_t dim;
+                dim.pos = { centerX - tickW * 0.5f, py };
+                dim.size = { tickW, 0.0f }; // horizontal line
+                drawLineWithState(m_vg, dim, 1.0f, nvgRGBAf(0.7f, 0.7f, 0.7f, 1.0f),
+                    nvgRGBAf(0.2f, 0.2f, 0.2f, 1.0f), true);
+            }
         }
     }
     void Frtk_Slider::draw()
@@ -234,7 +232,6 @@ namespace FR {
         if (m_sliderType == H_SLIDER) {
             m_knobDim.pos.x = m_x + m_w;
             m_knobDim.pos.y = m_y + m_h * 0.50f;
-            m_knobDim.radious = (m_h * 0.20f);
             float kshadow = 3;
             float startX = m_x + m_knobDim.radious + kshadow;
             float widthX = m_w - 2.0f * (m_knobDim.radious + kshadow);
@@ -282,7 +279,10 @@ namespace FR {
             // Knob inner
             nvgBeginPath(m_vg);
             nvgCircle(m_vg, knobX, knobY, m_knobDim.radious / 2.0f);
-            nvgFillColor(m_vg, glmToNVG(m_nobColor.inner));
+            if (!m_dragging)
+                nvgFillColor(m_vg, glmToNVG(m_nobColor.inner));
+            else
+                nvgFillColor(m_vg, glmToNVG(glm::vec4(FR_YELLOW)));
             nvgStrokePaint(m_vg, knobReverse);
             nvgStroke(m_vg);
             nvgFill(m_vg);
@@ -291,7 +291,6 @@ namespace FR {
         {
             m_knobDim.pos.x = m_x + m_w * 0.5f;
             m_knobDim.pos.y = m_y;                          // top of widget
-            m_knobDim.radious = m_w * 0.20f;
             float kshadow = 3;
             float startY = m_y + m_knobDim.radious + kshadow;
             float heightY = m_h - 2.0f * (m_knobDim.radious + kshadow);
@@ -347,11 +346,16 @@ namespace FR {
             // Knob inner
             nvgBeginPath(m_vg);
             nvgCircle(m_vg, knobX, knobY, m_knobDim.radious / 2.0f);
-            nvgFillColor(m_vg, glmToNVG(m_nobColor.inner));
+
+            if (!m_dragging)
+                nvgFillColor(m_vg, glmToNVG(m_nobColor.inner));
+            else
+                nvgFillColor(m_vg, glmToNVG(glm::vec4(FR_YELLOW)));
+
             nvgStrokePaint(m_vg, knobReverse);
             nvgStroke(m_vg);
             nvgFill(m_vg);
         }
-      drawLabel();
+        drawLabel();
     }
 }
