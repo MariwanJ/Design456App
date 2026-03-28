@@ -32,25 +32,61 @@
 #include <fr_core.h>
 #include <gui_widget/frtk_box.h>
 
-
 namespace FR {
-    
+    typedef struct {
+        float c, m, y, k;
+    }CMYK_t;
+
+    typedef struct {
+        float h, s, v;
+    } HSV_t;
 
     class FRTK_API  Frtk_Color_Picker : public Frtk_Box {
+        typedef struct {
+            float ax;
+            float ay;
+            float bx;
+            float by;
+            Dim_float_t center;
+        } triang_t;
+
     public:
         Frtk_Color_Picker(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b);
-        glm::vec4 pickedColorRGB();
-        glm::vec4 pickedColorHSV();
-        glm::vec4 pickedColorCMYK();
+        glm::vec4 pickedColorRGBA();
+        HSV_t pickedColorHSV();
+        CMYK_t pickedColorCMYK();
         NVGcolor  pickedColorNVG();
 
+        void draw_pad_cursor();
+
+        void drawOuterCircleColorPad();
+
+        void draw_colPad();
+
+        void baseTriangle();
+
+        float pickerDeg();
+
+        void updateMousePos();
+
     protected:
+        void pickerInsideTriangle();
         virtual void draw() override;
         virtual int handle(int ev) override;
+        glm::vec4 colorFromTriangle();
 
-        float t; 
+        bool insideColorPad();
+        bool insideTriangle();
+        float m_pickerDeg;
         glm::vec4 m_picked;
-        
+        Dim_float_t m_baseDim;
+        Dim_float_t m_pickerDim;
+        circle_posRadius_t m_Tripicker;
+        triang_t triangelDim;
+        float m_padWidt;
+        bool m_Tdraggin;
+        bool m_Cdraggin;
+        float r;
     };
 }
 #endif //FRTK_FRTK_COLOR_PICKER_H

@@ -59,7 +59,7 @@ namespace FR {
         /**
          * Sets the opacity
          */
-        void SetOpacity(float alpha);
+        void opacity(float alpha);
 
         /**
          * Sets the mesh

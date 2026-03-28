@@ -265,11 +265,6 @@ namespace FR {
         return m_color;
     }
 
-    void Fr_Widget::SetOpacity(float alpha)
-    {
-        m_color.baseColor[3] = alpha;
-    }
-
     void Frtk_Widget::opacity(float A) {
         m_color.z = A;
     }
@@ -291,7 +286,7 @@ namespace FR {
         m_color_diabled = disabled_color();
     }
     void Frtk_Widget::bkg_color(glm::vec4 col) {
-        m_color = col;
+        m_bkg_color = col;
         m_color_diabled = disabled_color();
     }
 

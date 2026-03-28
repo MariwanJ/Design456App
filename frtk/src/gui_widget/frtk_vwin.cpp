@@ -256,6 +256,7 @@ namespace FR {
         return m_data;
     }
 
+
     bool Frtk_Vwin::set_child_focus(Frtk_Widget* w) {
         if (w) {
             m_guiWindow->set_child_focus(w);

@@ -69,6 +69,21 @@ namespace FR{
         virtual float absX() const override;
         virtual float absY() const override;
 
+
+        virtual void color(uint8_t R, uint8_t G, uint8_t B, uint8_t A = 255) override;
+        virtual void color(float R, float G, float B, float A = 1.0f) override;
+        virtual void color(glm::vec4 col) override;
+        
+        virtual void  opacity(float A = 1.0f) override;
+        virtual void  opacity(uint8_t A = 255) override;
+        
+        virtual void bkg_color(uint8_t R, uint8_t G, uint8_t B, uint8_t A = 255) override;
+        virtual void bkg_color(float R, float G, float B, float A = 1.0f) override;
+        virtual void bkg_color(glm::vec4 col) override;
+
+        virtual void  bkg_opacity(float A = 1.0f) override;
+        virtual void  bkg_opacity(uint8_t A = 255) override;
+
     protected:
         
         Frtk_BaseWin(float X, float Y, float W, float H, std::string lbl = "Frtk_BaseWin", BOX_TYPE b = FRTK_UP_BOX, bool hasHeader = true);

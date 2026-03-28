@@ -213,4 +213,63 @@ namespace FR {
         return false;
     }
 
+    void Frtk_BaseWin::color(uint8_t R, uint8_t G, uint8_t B, uint8_t A) {
+        m_color = glm::vec4(float(R) / 255.0f, float(G) / 255.0f, float(B) / 255.0f, float(A) / 255.0f);
+        m_color_diabled = disabled_color();
+        m_guiWindow->color(m_color);
+    }
+    void Frtk_BaseWin::color(float R, float G, float B, float A) {
+        m_color = glm::vec4(R, G, B, A);
+        m_color_diabled = disabled_color();
+        m_guiWindow->color(m_color);
+    }
+    void Frtk_BaseWin::color(glm::vec4 col) {
+        m_color = col;
+        m_color_diabled = disabled_color();
+        m_guiWindow->color(m_color);
+    }
+
+    void Frtk_BaseWin::opacity(float alpha)
+    {
+        m_color.a = alpha ;
+        m_guiWindow->opacity(alpha);
+    }
+
+    void Frtk_BaseWin::opacity(uint8_t A) {
+        m_color.a = float(A) / 255.0f;
+        m_guiWindow->opacity(A);
+    }
+
+
+    void Frtk_BaseWin::bkg_color(uint8_t R, uint8_t G, uint8_t B, uint8_t A) {
+        m_bkg_color = glm::vec4(float(R) / 255.0f, float(G) / 255.0f, float(B) / 255.0f, float(A) / 255.0f);
+        m_color_diabled = disabled_color();
+        m_guiWindow->bkg_color(m_bkg_color);
+    }
+    void Frtk_BaseWin::bkg_color(float R, float G, float B, float A) {
+        m_bkg_color = glm::vec4(R, G, B, A);
+        m_color_diabled = disabled_color();
+        m_guiWindow->bkg_color(m_bkg_color);
+    }
+    void Frtk_BaseWin::bkg_color(glm::vec4 col) {
+        m_bkg_color = col;
+        m_color_diabled = disabled_color();
+        m_guiWindow->bkg_color(m_bkg_color);
+    }
+
+    void Frtk_BaseWin::bkg_opacity(float A) {
+        m_bkg_color.w = A;
+    }
+    void Frtk_BaseWin::bkg_opacity(uint8_t A) {
+        m_bkg_color.w = float(A) / 255.0f;
+    }
+
+
+
+
+
+
+
+
+
 }

@@ -164,6 +164,7 @@ namespace FR {
         float y;
     }dimPos_float_t;
 
+
     typedef struct {
         int w;
         int h;
@@ -178,6 +179,12 @@ namespace FR {
         dimPos_float_t pos;
         dimSize_float_t size;
     } Dim_float_t;
+
+    typedef struct {
+        dimPos_float_t pos;
+        float radious;
+    } circle_posRadius_t;
+
 
     typedef struct {
         dimPos_int_t pos;
@@ -471,6 +478,7 @@ namespace FR {
     } iconImageSize_t;
 
     extern float mouseClickCircleRadious;
+    
 
 
 } //FR

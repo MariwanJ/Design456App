@@ -91,12 +91,12 @@ namespace FR {
         m_sliderType = t;
     }
 
-    knob_posSize_t& Frtk_Slider::knobDim()
+    circle_posRadius_t& Frtk_Slider::knobDim()
     {
         return m_knobDim;
     }
 
-    const knob_posSize_t& Frtk_Slider::knobDim() const
+    const circle_posRadius_t& Frtk_Slider::knobDim() const
     {
         return m_knobDim;
     }

@@ -46,10 +46,7 @@ namespace FR {
         glm::vec4 track;
     }nobcolor_t;
 
-    typedef struct {
-        dimPos_float_t pos;
-        float radious;
-    } knob_posSize_t;
+
 
     typedef enum {
         V_SLIDER,
@@ -68,15 +65,15 @@ namespace FR {
         range_t Range() const;
         bool isMouseInsideSliderBar();
         void sliderType(const slidertype_t& t);
-        knob_posSize_t& Frtk_Slider::knobDim();
-        const knob_posSize_t& Frtk_Slider::knobDim() const;
+        circle_posRadius_t& Frtk_Slider::knobDim();
+        const circle_posRadius_t& Frtk_Slider::knobDim() const;
         void stepSize(const float& step);
         float stepSize();
 
     protected:
         float m_stepSize;
         float m_dragAccum;
-        knob_posSize_t m_knobDim;
+        circle_posRadius_t m_knobDim;
 
         virtual int handle(int ev) override;
         void drawSliderSteps();

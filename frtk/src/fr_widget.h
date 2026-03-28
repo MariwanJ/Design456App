@@ -215,7 +215,7 @@ namespace FR {
         void SetColor(glm::vec4 c);
 
         /** Sets the opacity */
-        void SetOpacity(float alpha);
+        void opacity(float alpha);
         virtual GLuint getCurrentTexturer(void);
 
         /** Retrieve tab index of the widget */

@@ -107,7 +107,7 @@ namespace FR {
         );
     }
 
-    void Fr_GridShader::SetOpacity(float alpha) {
+    void Fr_GridShader::opacity(float alpha) {
         m_Color.a = alpha;
     }
 

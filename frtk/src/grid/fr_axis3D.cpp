@@ -140,7 +140,7 @@ namespace FR {
         m_Red = std::make_shared<Fr_GridShader>(); //  color and
         m_Red->SetColor(glm::vec4(FR_RED));
         m_Red->SetPrimative(primativeR);
-        m_Red->SetOpacity(1.0f);
+        m_Red->opacity(1.0f);
 
         std::shared_ptr <Fr_Primatives>primativeG = std::shared_ptr<Fr_Primatives>(new Fr_Primatives());
         primativeG->SetVertices(verticesGreen, indicesGreen);
@@ -148,14 +148,14 @@ namespace FR {
         m_Green = std::make_shared<Fr_GridShader>(); //  color and
         m_Green->SetColor(glm::vec4(FR_GREEN));
         m_Green->SetPrimative(primativeG);
-        m_Green->SetOpacity(0.5f);
+        m_Green->opacity(0.5f);
 
         auto primativeB = std::make_shared<Fr_Primatives>();
         primativeB->SetVertices(verticesBlue, indicesBlue);
         primativeB->lineWidth(m_axisWidth); //THICKER LINE
         m_Blue = std::make_shared<Fr_GridShader>(); //  color and
         m_Blue->SetColor(glm::vec4(FR_BLUE));
-        m_Blue->SetOpacity(0.50f);
+        m_Blue->opacity(0.50f);
         m_Blue->SetPrimative(primativeB);
 
         auto primativeZB = std::make_shared<Fr_Primatives>();
@@ -164,7 +164,7 @@ namespace FR {
         m_ZBlue = std::make_shared<Fr_GridShader>(); //  color and
         m_ZBlue->SetColor(glm::vec4(FR_YELLOW));
         m_ZBlue->SetPrimative(primativeZB);
-        m_ZBlue->SetOpacity(0.5f);
+        m_ZBlue->opacity(0.5f);
     }
 
     void Fr_Axis3D::setVisible(bool status)

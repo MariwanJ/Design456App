@@ -139,24 +139,24 @@ namespace FR {
             return nvgRGBAf(c.r, c.g, c.b, c.a);
         }
 
-        void color(uint8_t R, uint8_t G, uint8_t B, uint8_t A = 255);
-        void color(float R, float G, float B, float A = 1.0f);
-        void color(glm::vec4 col);
-        glm::vec4 color(void) const;
+        virtual void color(uint8_t R, uint8_t G, uint8_t B, uint8_t A = 255);
+        virtual void color(float R, float G, float B, float A = 1.0f);
+        virtual void color(glm::vec4 col);
+        virtual glm::vec4 color(void) const;
 
 
-        void  opacity(float A = 1.0f);
-        void  opacity(uint8_t A = 255);
-        float opacity() const;
+        virtual void  opacity(float A = 1.0f);
+        virtual void  opacity(uint8_t A = 255);
+        virtual float opacity() const;
 
-        void bkg_color(uint8_t R, uint8_t G, uint8_t B, uint8_t A = 255);
-        void bkg_color(float R, float G, float B, float A = 1.0f);
-        void bkg_color(glm::vec4 col);
+        virtual void bkg_color(uint8_t R, uint8_t G, uint8_t B, uint8_t A = 255);
+        virtual void bkg_color(float R, float G, float B, float A = 1.0f);
+        virtual void bkg_color(glm::vec4 col);
 
-        void  bkg_opacity(float A = 1.0f);
-        void  bkg_opacity(uint8_t A = 255);
-        float bkg_opacity(void) const;
-
+        virtual void  bkg_opacity(float A = 1.0f);
+        virtual void  bkg_opacity(uint8_t A = 255);
+        virtual float bkg_opacity(void) const;
+        
         virtual void x(float v);
         virtual void y(float v);
         virtual void w(float v);
