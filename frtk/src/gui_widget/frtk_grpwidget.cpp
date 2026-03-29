@@ -75,12 +75,14 @@ namespace FR {
         }
     }
     void Frtk_GrpWidget::draw_children() {
-        nvgSave(m_vg);                // save current transform and state
-        nvgTranslate(m_vg, m_x, m_y);  // shift drawing origin to parent
+        nvgSave(m_vg);                          // save current transform and state
+        nvgTranslate(m_vg, m_x, m_y);           // shift drawing origin to parent
         for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
             auto& wdg = *it;
             if (wdg->visible()) {
                 wdg->draw();
+                //if (wdg->m_has_focus)
+                //    wdg->draw_focus();
             }
         }
         nvgRestore(m_vg);             // restore previous transform
@@ -290,6 +292,24 @@ namespace FR {
         m_childFocus = w;
         return true;
     }
+    void Frtk_GrpWidget::clearFocusAll()
+    {
+        focus(false);
+        for (auto& child : m_children) {
+            if (child->hasChildren()) {
+                child->clearFocusAll();
+            }else
+            {
+              child->m_has_focus=false;
+            }
+        }
+    }
+
+    bool Frtk_GrpWidget::hasChildren()
+    {
+        return (m_children.size() > 0);
+    }
+
 
     dimPos_float_t Frtk_GrpWidget::mainGui() const {
         return { m_x, m_y + FRTK_WINDOWS_TITLE_HEIGHT };

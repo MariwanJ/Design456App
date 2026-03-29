@@ -68,14 +68,14 @@ namespace FR {
         float cx = x + w - h * 0.5f;
         float cy = y + h * 0.5f;
         drawKnob(vg, cx, cy, knobR, knobColor);
-        m_Image.dim.pos.x = cx - knobR;
+       m_Image->dim.pos.x = cx - knobR;
     }
     void Frtk_Light_Button::drawToggleOff(NVGcontext* vg, float x, float y, float w, float h, NVGcolor knobColor) {
         drawToggleBase(vg, x, y, w, h, nvgRGBAf(0.8627f, 0.4705f, 0.4705f, 1.0f),   /* top red*/ nvgRGBAf(0.6274f, 0.1568f, 0.1568f, 1.0f)      /* bottom red*/);
         float knobR = h * 0.4f;
         float cx = x + h * 0.5f;
         float cy = y + h * 0.5f;
-        m_Image.dim.pos.x=   cx - knobR ;
+       m_Image->dim.pos.x=   cx - knobR ;
         drawKnob(vg, cx, cy, knobR, knobColor);
     }
 

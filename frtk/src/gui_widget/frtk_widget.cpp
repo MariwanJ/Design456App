@@ -44,9 +44,9 @@ namespace FR {
     Fr_Window* Frtk_Widget::m_mainWindow = nullptr;
     Frtk_Widget::Frtk_Widget(float X, float Y, float W, float H, std::string label, BOX_TYPE b) :m_x(X), m_y(Y), m_w(W), m_h(H),
         m_label(label), m_wdgType(FRTK_WIDGET), m_boxType(b), m_has_focus(false), m_cornerRadius(0.0f),
-        m_Image({ nullptr, {{0.f, 0.f}, {0.f, 0.f}} }), m_cellStyle(FR_IMG_LEFT_TO_TEXT),
+        m_Image(nullptr), m_cellStyle(FR_IMG_LEFT_TO_TEXT),
         m_visible(true), m_dragging(false), m_active(true),
-        m_cantake_focus(true), m_IconTexture(0), m_vg(NULL), m_linkTofrtkWindow(nullptr),
+        m_cantake_focus(true), m_vg(NULL), m_linkTofrtkWindow(nullptr),
         m_borderColor(glm::vec4(FR_DARKSLATEGREY)), m_borderWidth(FRTK_NORMAL_BORDER),
         m_callback(default_callback),
         m_color(glm::vec4(FR_GAINSBORO)), m_bkg_color(FR_SILVER) {
@@ -68,11 +68,19 @@ namespace FR {
         m_font.Rotate = 0.0f;
         m_font.shadowCol = nvgRGBAf(0.0f, 0.0f, 0.0f, 0.38f);
         m_font.shadowOffs = { 0.5f,0.5f };
-        m_Image.opacity = 1.0;
+        //I think we should have this always. we replace it when we want but we should initialize it
+        m_Image = std::make_shared< iconImageSize_t>();
+
+        m_Image->opacity = 1.0;
         m_color_diabled = disabled_color();
     }
     Frtk_Widget* Frtk_Widget::parent() {
         return m_parent;
+    }
+
+    font_t Frtk_Widget::fontData() const
+    {
+        return m_font;
     }
 
     float Frtk_Widget::absX() const {
@@ -215,7 +223,15 @@ namespace FR {
         if (m_linkTofrtkWindow)
             drawTextInBox(m_vg, m_label, m_font, true, m_linkTofrtkWindow->getFontData());
     }
-
+    bool Frtk_Widget::hasChildren() {
+        //You must override this if your widget is a group widget
+        return false;
+    }
+    void Frtk_Widget::clearFocusAll() {
+        //Only group widget should create this, neither be called for normal widgets
+        m_has_focus = false;
+        return;
+    }
     void Frtk_Widget::rotateLabel(float angle)
     {
         m_font.Rotate = angle;
@@ -327,20 +343,27 @@ namespace FR {
         return m_h;
     }
     void Frtk_Widget::resize(float X, float Y, float W, float H) {
+
         m_x = X;
         m_y = Y;
         m_w = W;
         m_h = H;
 
-        m_Image.dim.pos.x = X;
-        m_Image.dim.pos.y = Y;
-        m_Image.dim.size.w = W;
-        m_Image.dim.size.h = H;
-
         m_font.pos.x = X;
         m_font.pos.y = Y;
         m_font.size.w = W;
         m_font.size.h = H;
+
+        if (!m_Image)
+        {
+            m_Image = std::make_shared< iconImageSize_t>();
+            m_Image = { 0 };
+        }
+        
+        m_Image->dim.pos.x = X;
+        m_Image->dim.pos.y = Y;
+        m_Image->dim.size.w = W;
+        m_Image->dim.size.h = H;
     }
     void Frtk_Widget::position(float X, float Y) {
         resize(X, Y, m_w, m_h);
@@ -380,33 +403,52 @@ namespace FR {
         if (path.empty())
             return -1;
 
-        int w = 0, h = 0, channels = 0;
+        int w = 0, h = 0;
 
-        unsigned char* data = stbi_load(path.c_str(), &w, &h, &channels, 4);
-
+        unsigned char* data = stbi_load(path.c_str(), &w, &h, nullptr, 4);
         if (!data)
             return -1;
 
+        // Apply tint ONCE if provided
         if (tint)
         {
-            const int pixels = w * h;
-            for (int i = 0; i < pixels; ++i)
+            uint8_t r = static_cast<uint8_t>(tint->r * 255.0f);
+            uint8_t g = static_cast<uint8_t>(tint->g * 255.0f);
+            uint8_t b = static_cast<uint8_t>(tint->b * 255.0f);
+
+            for (int i = 0; i < w * h; ++i)
             {
-                const uint8_t& a = data[i * 4 + 3];
+                uint8_t& a = data[i * 4 + 3];
                 if (a == 0) continue;
-                data[i * 4 + 0] = tint->r;
-                data[i * 4 + 1] = tint->g;
-                data[i * 4 + 2] = tint->b;
+
+                data[i * 4 + 0] = r;
+                data[i * 4 + 1] = g;
+                data[i * 4 + 2] = b;
             }
         }
 
-        m_Image.dim.size.w = float(w);
-        m_Image.dim.size.h = float(h);
+        if (!m_Image){
+            m_Image = std::make_shared<iconImageSize_t>();
+            m_Image = { 0 };
+        }
+            
+        m_Image->dim.size.w = float(w);
+        m_Image->dim.size.h = float(h);
 
-        m_Image.image.reset(data, stbi_image_free);
-        m_IconTexture = nvgCreateImageRGBA(m_vg, w, h, 0, data);
-        if (m_IconTexture == 0)
+        // Delete previous texture if exists
+        if (m_Image->texture != 0) {
+            nvgDeleteImage(m_vg, m_Image->texture);
+            m_Image->texture = 0;
+        }
+
+        GLuint tex = nvgCreateImageRGBA(m_vg, w, h, 0, data);
+
+        stbi_image_free(data); // free immediately
+
+        if (tex == 0)
             return -1;
+
+        m_Image->texture = tex;
 
         return 0;
     }
@@ -416,16 +458,20 @@ namespace FR {
         if (pngData.empty())
             return -1;
 
-        int w = 0, h = 0, channels = 0;
+        int w = 0, h = 0;
 
-        unsigned char* decoded =
-            stbi_load_from_memory(pngData.data(),
-                static_cast<int>(pngData.size()),
-                &w, &h, &channels, 4);
+        unsigned char* decoded = stbi_load_from_memory(
+            pngData.data(),
+            static_cast<int>(pngData.size()),
+            &w, &h,
+            nullptr,
+            4
+        );
 
         if (!decoded)
             return -1;
 
+        // Apply tint ONCE if provided
         if (tint)
         {
             uint8_t r = static_cast<uint8_t>(tint->r * 255.0f);
@@ -434,8 +480,8 @@ namespace FR {
 
             for (int i = 0; i < w * h; ++i)
             {
-                const uint8_t& a = decoded[i * 4 + 3];
-                if (a == 0) continue; // transparent
+                uint8_t& a = decoded[i * 4 + 3];
+                if (a == 0) continue;
 
                 decoded[i * 4 + 0] = r;
                 decoded[i * 4 + 1] = g;
@@ -443,38 +489,60 @@ namespace FR {
             }
         }
 
-        m_Image.dim.size.w = static_cast<float>(w);
-        m_Image.dim.size.h = static_cast<float>(h);
-        m_Image.image.reset(decoded, stbi_image_free);
-        m_IconTexture = nvgCreateImageRGBA(m_vg, w, h, 0, decoded);
-        if (m_IconTexture == 0)
+        if (!m_Image)
+            m_Image = std::make_shared<iconImageSize_t>();
+
+        m_Image->dim.size.w = static_cast<float>(w);
+        m_Image->dim.size.h = static_cast<float>(h);
+
+        // Delete previous texture
+        if (m_Image->texture != 0) {
+            nvgDeleteImage(m_vg, m_Image->texture);
+            m_Image->texture = 0;
+        }
+
+        GLuint tex = nvgCreateImageRGBA(m_vg, w, h, 0, decoded);
+
+        stbi_image_free(decoded); // free immediately
+
+        if (tex == 0)
             return -1;
+
+        m_Image->texture = tex;
 
         return 0;
     }
 
+
     void Frtk_Widget::drawImage(Dim_float_t dim) {
-        m_Image.dim = dim;
+        if (!m_Image)
+            return;
+
+        m_Image->dim = dim;
         drawImage();
     }
     void Frtk_Widget::drawImage(void)
     {
-        if (!m_IconTexture) return;
+        if (!m_Image)
+            return;
+        if (!m_Image->texture) return;
         nvgSave(m_vg);
-        nvgGlobalAlpha(m_vg, m_Image.opacity);
+        nvgGlobalAlpha(m_vg, m_Image->opacity);
         nvgBeginPath(m_vg);
-        nvgRect(m_vg, m_Image.dim.pos.x, m_Image.dim.pos.y, m_Image.dim.size.w, m_Image.dim.size.h);
-        nvgFillPaint(m_vg, nvgImagePattern(m_vg, m_Image.dim.pos.x, m_Image.dim.pos.y,
-            m_Image.dim.size.w, m_Image.dim.size.h, 0.0f, m_IconTexture, 1.0f));
+        nvgRect(m_vg, m_Image->dim.pos.x, m_Image->dim.pos.y, m_Image->dim.size.w, m_Image->dim.size.h);
+        nvgFillPaint(m_vg, nvgImagePattern(m_vg, m_Image->dim.pos.x, m_Image->dim.pos.y,
+            m_Image->dim.size.w, m_Image->dim.size.h, 0.0f, m_Image->texture, 1.0f));
         nvgFill(m_vg);
         nvgRestore(m_vg);
     }
 
     void Frtk_Widget::drawImage(float x, float y, float w, float h) {
-        m_Image.dim.pos.x = x;
-        m_Image.dim.pos.y = y;
-        m_Image.dim.size.w = w;
-        m_Image.dim.size.h = h;
+        if (!m_Image)
+            return;
+        m_Image->dim.pos.x = x;
+        m_Image->dim.pos.y = y;
+        m_Image->dim.size.w = w;
+        m_Image->dim.size.h = h;
         drawImage();
     }
 

@@ -707,8 +707,10 @@ namespace FR {
 
                                      // Use tree traversal starting from topGroup
                                      Frtk_GrpWidget* topGroup = dynamic_cast<Frtk_GrpWidget*>(w);
-                                     if (topGroup->navigate_focus(key))
-                                         next = topGroup->focusedChild();
+                                     if(topGroup){
+                                         if (topGroup->navigate_focus(key))
+                                             next = topGroup->focusedChild();
+                                        }
                                  }
                                  else {
                                      // No focused widget -> pick first focusable child

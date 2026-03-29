@@ -118,7 +118,6 @@ namespace FR {
         float r_inner = r;
         float r_outer = r + 20;
         bool result = (dist >= r_inner && dist <= r_outer);
-        FRTK_CORE_INFO("{}", result);
         return result;
     }
 
@@ -144,7 +143,6 @@ namespace FR {
         float d1 = cross(v1x, v1y, v2x, v2y, mx, my);
         float d2 = cross(v2x, v2y, v0x, v0y, mx, my);
         bool result = (d0 >= 0 && d1 >= 0 && d2 >= 0) || (d0 <= 0 && d1 <= 0 && d2 <= 0);
-        FRTK_CORE_INFO("{}", result);
         return result;
     }
 
@@ -372,10 +370,12 @@ namespace FR {
                 }
         }
         else if (ev == FR_LEFT_DRAG_RELEASE || ev == FR_LEFT_RELEASE) {
-            m_Tdraggin = true;
-            m_Cdraggin = true;
+            if(m_Tdraggin || m_Cdraggin){
             m_picked = colorFromTriangle();
+            m_Tdraggin = false;
+            m_Cdraggin = false;
             do_callback();
+            }
         }
         return 0;
     }

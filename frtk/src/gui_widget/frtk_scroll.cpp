@@ -487,8 +487,6 @@ namespace FR {
                     mouse.activeY >= offy &&
                     mouse.activeY <= offy + m_scrollwdg.Hor.scroll.size.h);
 
-                FRTK_CORE_INFO("DRAG {}", m_scrollwdg.Hor.dragging);
-
                 // Start drag
                 if (testBound && ev == FR_LEFT_DRAG_PUSH) {
                     m_scrollwdg.Hor.dragging = true;
@@ -511,7 +509,6 @@ namespace FR {
                 if (ev == FR_LEFT_DRAG_RELEASE || ev == FR_LEAVE) {
                     m_scrollwdg.Ver.dragging = false;
                     m_scrollwdg.Hor.dragging = false;
-                    FRTK_CORE_INFO("DRAG2 {}", m_scrollwdg.Hor.dragging);
                     m_eventType = ScrollEventType::NONE;
                     return 1;
                 }

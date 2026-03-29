@@ -128,9 +128,9 @@ namespace FR {
         virtual int wdgImage(std::string path, std::optional<glm::vec4> tint = std::nullopt);
         virtual int wdgImage(const std::vector<uint8_t>& pngData, std::optional<glm::vec4> tint = std::nullopt);
 
-        void drawImage(Dim_float_t dim);
-        void drawImage();
-        void drawImage(float x, float y, float w, float h);
+        virtual void drawImage(Dim_float_t dim);
+        virtual void drawImage();
+        virtual void drawImage(float x, float y, float w, float h);
 
         bool can_focus() const;
 
@@ -202,6 +202,7 @@ namespace FR {
         virtual void focus(bool val);
         virtual void lose_focus();
         virtual bool take_focus(void);
+        virtual void clearFocusAll();
 
         bool hasBelowMouse() const;
         void set_BelowMouse();
@@ -215,17 +216,20 @@ namespace FR {
 
         Frtk_Widget* parent();
         Frtk_BaseWin* m_linkTofrtkWindow; // 
-
+        font_t fontData() const;
     protected:
         //Callback function definition
         virtual void draw(void);
         virtual void drawLabel();
         virtual void drawLabel(float X, float Y, float W, float H = 18.0 * 1.3f, float rotateAngle = 0.0f);
+        
+        virtual bool hasChildren() ;
 
         virtual int handle(int ev);
         virtual bool set_child_focus(Frtk_Widget* w = nullptr);
         void do_callback();
         virtual void parent_changed();
+        //TODO : Change this to a safer impl. And then remove the custome variable in Frtk_Tree_Item with this one.2026-03-29
         Frtk_Widget* m_parent = nullptr;
 
         FRTK_PICTXT_STYLE m_cellStyle;
@@ -250,7 +254,7 @@ namespace FR {
         BOX_TYPE m_boxType;
         bool m_has_focus;
         bool m_cantake_focus;  //is it allowed to get focus
-        iconImageSize_t m_Image;
+        std::shared_ptr<iconImageSize_t> m_Image;
 
         Callback m_callback;
         GLuint m_IconTexture;

@@ -173,6 +173,8 @@ namespace FR {
 
     // Function to draw a check mark with default color = BLACK
     void FRTK_API drawCheckMark(NVGcontext* vg, float x, float y, float size, NVGcolor col = nvgRGBAf(FR_BLACK));
+    
+    float getTextWidth(NVGcontext* vg, const std::string& str, float fontSize, const char* fontName);
 
 }
 

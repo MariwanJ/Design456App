@@ -93,8 +93,9 @@ namespace FR {
 
     void Frtk_Box::computeBoxLayout()
     {
-        //if (!m_Image.image)
-        //    return;
+        if (!m_Image)
+            return;
+
         float paddingX = 1.f;
         float paddingY = 1.f;
         const float spacing = 1.0f;
@@ -105,14 +106,14 @@ namespace FR {
         const float origin_maxW = m_w - 2.f * paddingX;
         const float origin_maxH = m_h - 2.f * paddingY;
 
-        dimSize_float_t iconSize = m_Image.dim.size;
+        dimSize_float_t iconSize = m_Image->dim.size;
         if (iconSize.w > 0.f && iconSize.h > 0.f)
         {
             float maxW = origin_maxW;
             float maxH = origin_maxH;
 
             if (m_cellStyle == FR_IMG_LEFT_TO_TEXT || m_cellStyle == FR_IMG_RIGHT_TO_TEXT){
-                maxW = origin_maxW - m_Image.dim.size.w + paddingX * 2;
+                maxW = origin_maxW - m_Image->dim.size.w + paddingX * 2;
             }
             else if (m_cellStyle <= FR_IMG_UNDER_TEXT_RIGHT){
                 maxH = origin_maxH * 0.5f;
@@ -131,17 +132,17 @@ namespace FR {
         case FR_IMG_OVER_TEXT_LEFT:
         case FR_IMG_OVER_TEXT_RIGHT:
         {
-            m_Image.dim.pos.y = origin_startY;
+            m_Image->dim.pos.y = origin_startY;
             if (m_cellStyle == FR_IMG_OVER_TEXT_LEFT)
-                m_Image.dim.pos.x = origin_startX;
+                m_Image->dim.pos.x = origin_startX;
             else if (m_cellStyle == FR_IMG_OVER_TEXT_RIGHT)
-                m_Image.dim.pos.x = origin_startX + origin_maxW - iconSize.w;
+                m_Image->dim.pos.x = origin_startX + origin_maxW - iconSize.w;
             else
-                m_Image.dim.pos.x = origin_startX + (origin_maxW - iconSize.w) * 0.5f;
+                m_Image->dim.pos.x = origin_startX + (origin_maxW - iconSize.w) * 0.5f;
 
-            m_Image.dim.size = iconSize;
+            m_Image->dim.size = iconSize;
 
-            textY = m_Image.dim.pos.y + iconSize.h + spacing;
+            textY = m_Image->dim.pos.y + iconSize.h + spacing;
             textH = origin_startY + origin_maxH - textY;
         } break;
 
@@ -149,37 +150,37 @@ namespace FR {
         case FR_IMG_UNDER_TEXT_LEFT:
         case FR_IMG_UNDER_TEXT_RIGHT:
         {
-            m_Image.dim.pos.y = origin_startY + origin_maxH - iconSize.h;
+            m_Image->dim.pos.y = origin_startY + origin_maxH - iconSize.h;
 
             if (m_cellStyle == FR_IMG_UNDER_TEXT_LEFT)
-                m_Image.dim.pos.x = origin_startX;
+                m_Image->dim.pos.x = origin_startX;
             else if (m_cellStyle == FR_IMG_UNDER_TEXT_RIGHT)
-                m_Image.dim.pos.x = origin_startX + origin_maxW - iconSize.w;
+                m_Image->dim.pos.x = origin_startX + origin_maxW - iconSize.w;
             else
-                m_Image.dim.pos.x = origin_startX + (origin_maxW - iconSize.w) * 0.5f;
+                m_Image->dim.pos.x = origin_startX + (origin_maxW - iconSize.w) * 0.5f;
 
-            m_Image.dim.size = iconSize;
+            m_Image->dim.size = iconSize;
 
-            textH = m_Image.dim.pos.y - spacing - origin_startY;
+            textH = m_Image->dim.pos.y - spacing - origin_startY;
         } break;
 
         case FR_IMG_LEFT_TO_TEXT:
         {
             
-            m_Image.dim.pos.x = origin_startX + spacing + m_specialDrawingSize;
-            m_Image.dim.pos.y = origin_startY + (origin_maxH - iconSize.h) * 0.5f;
-            m_Image.dim.size = iconSize;
-            textX = m_Image.dim.pos.x  + spacing+ m_specialDrawingSize;
+            m_Image->dim.pos.x = origin_startX + spacing + m_specialDrawingSize;
+            m_Image->dim.pos.y = origin_startY + (origin_maxH - iconSize.h) * 0.5f;
+            m_Image->dim.size = iconSize;
+            textX = m_Image->dim.pos.x  + spacing+ m_specialDrawingSize;
             textW = origin_startX + origin_maxW - textX;
         } break;
 
         case FR_IMG_RIGHT_TO_TEXT:
         {
             
-            m_Image.dim.pos.x = m_x + m_w - paddingX - iconSize.w ;
-            m_Image.dim.pos.y = origin_startY + (origin_maxH - iconSize.h) * 0.5f;
-            m_Image.dim.size = iconSize;
-            textW = m_Image.dim.pos.x - spacing - origin_startX- m_specialDrawingSize;
+            m_Image->dim.pos.x = m_x + m_w - paddingX - iconSize.w ;
+            m_Image->dim.pos.y = origin_startY + (origin_maxH - iconSize.h) * 0.5f;
+            m_Image->dim.size = iconSize;
+            textW = m_Image->dim.pos.x - spacing - origin_startX- m_specialDrawingSize;
             textX = textX + m_specialDrawingSize+m_padding;
             
         } break;

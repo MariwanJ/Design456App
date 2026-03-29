@@ -28,18 +28,18 @@
 #include<gui_widget/examples/demo3.h>
 #include <gui_widget/frtk_slider.h>
 #include <gui_widget/frtk_color_picker.h>
+#include <gui_widget/frtk_tree.h>
 namespace FR {
     //Default callback function.Replace with your custom callback.Arguments are possible.
     static void pickcolor(Frtk_Widget& w, Frtk_Widget& win) {
         auto* wid = dynamic_cast<Frtk_Color_Picker*>(&w);
         glm::vec4 col = wid->pickedColorRGBA();
-        FRTK_CORE_INFO("{} {} {} {}", col.r, col.g, col.b, col.a);
         win.color(col);
     }
 
     std::shared_ptr<Frtk_Vwin> runFRTKdemo3() {
         auto window = std::make_shared<Frtk_Vwin>(500.f, 200.f, 500.f, 500.f, "Testing new Widgets");
-        std::shared_ptr<Frtk_Slider> sliderH = std::make_shared<Frtk_Slider>(window->getContext(), 250.0f, 175.0f, 200.0f, 56.0f, "SLIDER- H", FRTK_OSHADOW_DOWN_BOX);
+        std::shared_ptr<Frtk_Slider> sliderH = std::make_shared<Frtk_Slider>(window->getContext(), 275.0f, 250.0f, 200.0f, 56.0f, "SLIDER- H", FRTK_OSHADOW_DOWN_BOX);
 
         //  sliderH->stepSize(10.0f);
         sliderH->sliderType(H_SLIDER);
@@ -50,10 +50,34 @@ namespace FR {
         // sliderV->stepSize(5.0f);
         window->addChild(sliderV);
 
-        std::shared_ptr<Frtk_Color_Picker> col = std::make_shared<Frtk_Color_Picker>(window->getContext(), 40.0f, 40.0f, 200.0f, 200.0f, "colorPicker", FRTK_UP_BOX);
-        col->set_callback([window](Frtk_Widget& w) { pickcolor(w, *window);});
-        
+        std::shared_ptr<Frtk_Color_Picker> col = std::make_shared<Frtk_Color_Picker>(window->getContext(), 10.0f, 10.0f, 200.0f, 200.0f, "colorPicker", FRTK_UP_BOX);
+        col->set_callback([window](Frtk_Widget& w) { pickcolor(w, *window); });
+
         window->addChild(col);
-        return window;
+
+        std::shared_ptr<Frtk_Tree> tree = std::make_shared<Frtk_Tree>(window->getContext(), 290.0f, 10.0f, 200.0f, 200.0f, "Tree", FRTK_UP_BOX);
+        std::shared_ptr<Frtk_Tree_Item> root = std::make_shared<Frtk_Tree_Item>(window->getContext(), 0.f, 0.f, 0.f, 0.f, "Root", FRTK_FLAT_BOX);
+        root->itemType(FRTK_TREE_ITEM_ROOT);
+        tree->addChild(root);
+
+        for (size_t i = 0; i < 10; i++) {
+            std::string n= "item "+ std::to_string(i);
+            std::shared_ptr<Frtk_Tree_Item> it1 = std::make_shared<Frtk_Tree_Item>(window->getContext(), 0.f, 0.f, 0.f, 0.f, n, FRTK_FLAT_BOX);
+            it1->itemType(FRTK_TREE_ITEM_MIDDLE);
+            root->addChild(it1);
+            for (size_t j = 0; j < 1; j++) {
+                std::string n = "sub_item " + std::to_string(i)+ std::to_string(j);
+                std::shared_ptr<Frtk_Tree_Item> itt1 = std::make_shared<Frtk_Tree_Item>(window->getContext(), 0.f, 0.f, 0.f, 0.f, n, FRTK_FLAT_BOX);
+                itt1->itemType(FRTK_TREE_ITEM_MIDDLE);
+                it1->addChild(itt1);
+                std::string nn = "sub_sub_item " + std::to_string(i) + std::to_string(j);
+                std::shared_ptr<Frtk_Tree_Item> itt2 = std::make_shared<Frtk_Tree_Item>(window->getContext(), 0.f, 0.f, 0.f, 0.f, nn, FRTK_FLAT_BOX);
+                itt2->itemType(FRTK_TREE_ITEM_MIDDLE);
+                itt1->addChild(itt2);
             }
+        }
+        window->addChild(tree);
+        tree->updateTree();
+        return window;
     }
+}

@@ -177,7 +177,7 @@ namespace FR {
                 glViewport(0, 0, winWidth, winHeight);
                 glClearColor(FR_GRAY);
                 glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-                nvgBeginFrame(m_vg, m_w, m_h, 1.0f);
+                nvgBeginFrame(m_vg, m_w, m_h, m_mainWindow->getAspectRation());
                 draw();
                 nvgEndFrame(m_vg);
                 glfwSwapBuffers(m_glfWindow);

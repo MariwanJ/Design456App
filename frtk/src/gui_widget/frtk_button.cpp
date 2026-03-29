@@ -96,8 +96,8 @@ namespace FR {
             else {
                 m_value = 1;
             }
-            if (m_value == 1)  m_Image.opacity = 0.5;
-            else               m_Image.opacity = 1.0;
+            if (m_value == 1)  m_Image->opacity = 0.5;
+            else               m_Image->opacity = 1.0;
 
             return 1;
         }
@@ -110,7 +110,7 @@ namespace FR {
                 m_wdgType == FRTK_LIGHT_BUTTON ||
                 m_wdgType == FRTK_ROUND_BUTTON)) {
                 m_value = 0;
-                m_Image.opacity = 1.0f;
+                m_Image->opacity = 1.0f;
                 //Button Callbacks SHOULD AND MUST be fired up only on release, and mouse is on the widget.
                 do_callback();
                 return 1;
@@ -124,7 +124,7 @@ namespace FR {
                 m_wdgType == FRTK_TOGGLE_BUTTON ||
                 m_wdgType == FRTK_LIGHT_BUTTON ||
                 m_wdgType == FRTK_ROUND_BUTTON)) {
-                m_Image.opacity = 1.0f;
+                m_Image->opacity = 1.0f;
                 m_value = 0;
             }
         }else
@@ -136,7 +136,7 @@ namespace FR {
                     m_wdgType == FRTK_TOGGLE_BUTTON ||
                     m_wdgType == FRTK_LIGHT_BUTTON ||
                     m_wdgType == FRTK_ROUND_BUTTON)) {
-                    m_Image.opacity = 1.0f;
+                    m_Image->opacity = 1.0f;
                     m_value = 0;
                     return 1;
                 }

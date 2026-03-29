@@ -61,14 +61,14 @@ namespace FR {
             if (e == FR_LEFT_PUSH) {
                 m_repeatTimer = m_delayBeforeStart;
                 m_value = 1;
-                m_Image.opacity = 0.5;
+                m_Image->opacity = 0.5;
 
                 return 1;
             }
             else if (e == FR_LEFT_RELEASE) {
                 m_repeatTimer = 0.0f; // stop repeating
                 m_value = 0;
-                m_Image.opacity = 1.0;
+                m_Image->opacity = 1.0;
 
                 return 1;
             }

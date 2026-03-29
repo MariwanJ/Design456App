@@ -351,7 +351,7 @@ namespace FR {
         FRTK_MSG_WIN,
         FRTK_MSG_ERROR,
         FRTK_INPUT_WIN,
-        
+
         // Virtual Windows (inside scene) - no glfw, based on scene gflw window
         FRTK_VWINDOW,
         FRTK_TOOLBARWIN,        //Separate FRTK vWindow is created
@@ -394,6 +394,11 @@ namespace FR {
         FRTK_HSCROLL,
         FRTK_TABWDG,
         FRTK_TABS,
+        FRTK_SLIDER_WIDGET,
+        FRTK_SCROLL_WIDGET,
+        FRTK_TREE_ITEM_WIDGET,
+        FRTK_TREE_WIDGET,
+
         FRTK_IMAGE,
         FRTK_TOOLBAR,           //No separate FRTK windows will be created
         FRTK_TOOLBAR_BUTTON,
@@ -472,7 +477,7 @@ namespace FR {
 
     //used to keep pointer to image-icon, and it's size
     typedef struct {
-        std::shared_ptr<uint8_t> image;
+        GLuint texture;
         Dim_float_t dim;
         float opacity;
     } iconImageSize_t;

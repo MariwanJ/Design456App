@@ -71,6 +71,9 @@ namespace FR {
         virtual bool take_focus() override;
         virtual void hide() override;
         virtual void show() override;
+        virtual void clearFocusAll() override;
+        virtual bool hasChildren() override;
+
     protected:
         virtual void parent_changed() override;
         Frtk_BaseWin* getParentWindow();

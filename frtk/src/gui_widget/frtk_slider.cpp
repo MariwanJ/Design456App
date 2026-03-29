@@ -40,6 +40,7 @@ namespace FR {
         m_dragging = false;
         m_font.lblAlign = NVG_ALIGN_BOTTOM_CENTER;
         m_knobDim.radious = 11.2;
+        m_wdgType = FRTK_SLIDER_WIDGET;
     }
 
     Frtk_Slider::~Frtk_Slider()
@@ -147,7 +148,6 @@ namespace FR {
 
                     if (m_stepSize > 0.5f) {
                         m_accumulated += deltaY;
-                        FRTK_CORE_INFO("{} {} {} ", deltaY, m_accumulated, m_value);
                         if (abs(m_accumulated) > m_h / m_stepSize) {
                             m_value += m_stepSize * sign;
                             m_accumulated = 0.0f;

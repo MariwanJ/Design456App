@@ -85,7 +85,7 @@ namespace FR {
         nvgFillPaint(m_vg, inner);
         nvgFill(m_vg);
         
-        m_Image.dim.pos.x = x +  /*-m_padding*/ + FRTK_ICON_SIZE.x / 2;
+        m_Image->dim.pos.x = x +  /*-m_padding*/ + FRTK_ICON_SIZE.x / 2;
     }
     void Frtk_Switch_Button::drawLabels( float cxOn, float cxOff, float cy, float size, int onActive) {
         nvgFontFace(m_vg, m_font.fName.c_str());
