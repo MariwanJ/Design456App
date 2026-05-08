@@ -460,9 +460,12 @@ namespace FR {
          /*auto TB = runFRTKdemo2();
          m_frtkWindow.emplace_back(TB);
          m_frtkWindow.push_back(runFRTKdemo());
-         m_frtkWindow.push_back(runInputOutput());
+
 
          m_frtkWindow.emplace_back(runTabWidget());*/
+         
+         m_frtkWindow.push_back(runInputOutput());
+         
          m_frtkWindow.emplace_back(runFRTKdemo3());
          //TOOLBAR CREATION  - USING NEW GUI TOOLKIT
 

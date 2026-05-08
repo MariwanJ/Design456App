@@ -32,7 +32,7 @@ namespace FR {
 #define ICON_SEARCH 0x1F50D
 #define ICON_CIRCLED_CROSS 0x2716
     Frtk_Search_Box::Frtk_Search_Box(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b) :
-        Frtk_Input_Base(vg, X, Y, W, H, lbl, b) 
+        Frtk_Input_Base(vg, X, Y, W, H, lbl, b)
     {
         m_color = glm::vec4(FR_WHITE);
         m_bkg_color = glm::vec4(FR_GRAY);
@@ -43,16 +43,21 @@ namespace FR {
         m_font.shadowCol = nvgRGBAf(FR_DARKGREY2);
         m_font.lblAlign = NVG_ALIGN_TOP_LEFT;
         m_font.lblAlign = NVG_ALIGN_TOP_LEFT;
-        
 
-        m_SearchIconPos = { m_x, m_y + m_h / 2.0f };
-        m_CloseIconPos = { m_x + m_w - (m_font.fontSize * 2.2f), m_y + m_h / 2.0f };
+        m_SearchIconPos = { m_x, m_y + m_h * 0.5f };
         m_cornerRadius = m_h * .5f;
     }
-
-    int Frtk_Search_Box::handle(int ev)
-    {
-        return 0;
+    bool Frtk_Search_Box::searchIconClicked() {
+        float localMouseX = m_mainWindow->m_sysEvents.mouse.activeX ;
+        float localMouseY = m_mainWindow->m_sysEvents.mouse.activeY ;
+        float xx = absX();
+        float yy = absY() + m_h * 0.4f;
+        if (localMouseX >= xx
+            && localMouseX <= xx+ m_font.fontSize
+            && localMouseY >= yy
+            && localMouseY <= yy + m_font.fontSize*2
+            ) return true;
+        return false;
     }
 
     void Frtk_Search_Box::draw() {
@@ -73,14 +78,6 @@ namespace FR {
         nvgFillColor(m_vg, nvgRGBAf(0.0f, 0.0f, 0.0f, 0.25f));
         nvgTextAlign(m_vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
         nvgText(m_vg, m_SearchIconPos.x, m_SearchIconPos.y, cpToUTF8(ICON_SEARCH).c_str(), NULL);
-
-        //close icon drawing
-        nvgFontSize(m_vg, m_font.fontSize + m_h * 0.5f);
-        nvgFontFace(m_vg, "icons");
-        nvgFillColor(m_vg, nvgRGBAf(0.0f, 0.0f, 0.0f, 0.25f));
-        nvgTextAlign(m_vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-        nvgText(m_vg, m_CloseIconPos.x, m_CloseIconPos.y, cpToUTF8(ICON_CIRCLED_CROSS).c_str(), NULL);
-
         draw_focus();
     }
 
@@ -113,6 +110,26 @@ namespace FR {
     int Frtk_Search_Box::value(const std::string& str)
     {
         m_searchWords = str;
+        return 0;
+    }
+    int Frtk_Search_Box::handle(int ev)
+    {
+        if (isMouse_inside()) {
+            focus(true);
+            switch (ev) {
+            case  FR_LEFT_RELEASE: {
+                if (searchIconClicked())
+                    do_callback();
+                return 1;
+            }
+            case  FR_KEYBOARD: {
+                if (m_mainWindow->m_sysEvents.keyB.lastKey == GLFW_KEY_ENTER || m_mainWindow->m_sysEvents.keyB.lastKey == GLFW_KEY_KP_ENTER)
+                    do_callback();
+                return 1;
+            }
+            }
+        }
+
         return 0;
     }
 }

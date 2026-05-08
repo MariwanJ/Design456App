@@ -38,18 +38,16 @@
         class FRTK_API  Frtk_Search_Box : public Frtk_Input_Base {
         public:
             Frtk_Search_Box(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b = FRTK_FLAT_BOX);
+            bool searchIconClicked();
             int value(const std::string& str);
 
         protected:
             virtual int handle(int ev) override;
             virtual void draw();
 
-
             virtual void draw_focus() override;
             virtual void draw_focus(BOX_TYPE t, float X, float Y, float W, float H) override;
             virtual void draw_focus(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 bkg) override;
-            
-
 
             std::string m_searchWords;
 
