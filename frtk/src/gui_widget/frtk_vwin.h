@@ -30,8 +30,7 @@
 
 #include<gui_widget/frtk_basewin.h>
 
-namespace FR{
-
+namespace FR {
     typedef struct {
         float height;
         float bevelHeight;
@@ -44,42 +43,38 @@ namespace FR{
         float m_cornerRadius;
     } Frtk_HeaderStyle_t;
 
-
-
     class Frtk_Vwin : public Frtk_BaseWin {
         friend Fr_Window;
     public:
-        Frtk_Vwin(float X, float Y, float W, float H, std::string lbl = "Frtk_Vwin", BOX_TYPE b=FRTK_UP_BOX, bool hasHeader = true);
+        Frtk_Vwin(float X, float Y, float W, float H, std::string lbl = "Frtk_Vwin", BOX_TYPE b = FRTK_UP_BOX, bool hasHeader = true);
         virtual void init(void) override;
-        virtual void drawLabel()  override ;
-        virtual void drawLabel(float X, float Y, float W, float H, float rotateAngle=0.0f)   override ;
+        virtual void drawLabel()  override;
+        virtual void drawLabel(float X, float Y, float W, float H, float rotateAngle = 0.0f)   override;
         virtual NVGcontext* getContext(void) override;
 
         virtual Frtk_HeaderStyle_t style();
-        virtual void style(Frtk_HeaderStyle_t & STYLE);
+        virtual void style(Frtk_HeaderStyle_t& STYLE);
         virtual bool Header_clicked(void);
         virtual inline NVGcolor setAlpha(FR_COLOR& c, float alpha) { return NVGcolor{ c.R,c.G,c.B,alpha }; }
-        
+
         Frtk_HeaderStyle_t m_WindowsStyle;
-        
+
         virtual bool hasHeader()const;
         virtual void hasHeader(bool val);
-        virtual bool set_child_focus(Frtk_Widget* w=nullptr);
-        virtual bool take_focus() override; 
+        virtual bool set_child_focus(Frtk_Widget* w = nullptr);
+        virtual bool take_focus() override;
         virtual void lose_focus() override;
-        const FontData_t &getFontData();
-
-
-
-
+        const FontData_t& getFontData();
 
     protected:
         virtual int handle(int event) override;
         dimPos_float_t mainGui() const override;
         virtual void draw(void) override;
+
+        virtual void draw_focus() override;
+
         virtual void draw_header();
         bool m_hasHeader;
     };
-    
 }
 #endif //!FRTK_VWIN_H

@@ -33,14 +33,12 @@
 
 namespace FR {
     class Frtk_Tabwdg;
-#define TAB_BUTTON_SIZE 15.0f
-#define Hpadding         8.0f
-#define Vpadding         3.0f
-#define HEIGHT_FACTOR    1.3f
+
     typedef struct {
         bool body;
         bool head;
     }Visibile_t;
+
     typedef struct {
         std::shared_ptr<Frtk_Tabwdg> m_prev;
         std::shared_ptr<Frtk_Tabwdg> m_current;
@@ -49,6 +47,7 @@ namespace FR {
     }history_t;
 
     class Frtk_Tabs;
+
     class FRTK_API  Frtk_Tabwdg : public Frtk_GrpWidget {
         friend Frtk_Tabs;
     public:
@@ -153,6 +152,7 @@ namespace FR {
         float m_squarePadding;
         overTabflow_t m_overflow;
         size_t getWidthFirstLastTabs();
+        bool m_needLayout;
 
     };
 }

@@ -70,6 +70,19 @@ namespace FR {
         draw_focus();
     }
 
+    void Frtk_Vwin::draw_focus() {
+        if (!m_has_focus)
+            return;
+        nvgBeginPath(m_vg);
+        if (m_hasHeader)
+            nvgRect(m_vg, m_x, m_y, m_w, m_h);
+        else
+            nvgRect(m_vg, m_x, m_y + m_WindowsStyle.height, m_w, m_h - m_WindowsStyle.height);
+        nvgStrokeColor(m_vg, nvgRGBAf(0, 0.501f, 1.0f, FRTK_FOCUS_OPACITY_VALUE)); // Blue focus outline
+        nvgStrokeWidth(m_vg, 2.0f);
+        nvgStroke(m_vg);
+    }
+
     void Frtk_Vwin::draw_header()
     {
         float headerHeight = m_WindowsStyle.height;
@@ -255,7 +268,6 @@ namespace FR {
     {
         return m_data;
     }
-
 
     bool Frtk_Vwin::set_child_focus(Frtk_Widget* w) {
         if (w) {

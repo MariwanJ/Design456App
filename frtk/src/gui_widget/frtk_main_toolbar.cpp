@@ -138,7 +138,7 @@ namespace FR {
         FRTK_UP_BOX,
         "" },
     };
-        std::shared_ptr<Frtk_ToolBarVwin>tb1=std::make_shared<Frtk_ToolBarVwin>(0.0f, y() + menuHeight(), 350, FRTK_TOOLBAR_HEIGHT, "", tools1, true);
+        std::shared_ptr<Frtk_ToolBarVwin>tb1=std::make_shared<Frtk_ToolBarVwin>(0.0f, 21.0f, w(), FRTK_TOOLBAR_HEIGHT, "", tools1, true);
         tb1->widgetType(FRTK_TOOLBARWIN);
         return tb1;
 }
@@ -176,7 +176,7 @@ std::shared_ptr<Frtk_ToolBarVwin> Fr_Window::createSelectionToolbar() {
     };
     //Frtk_ToolBarVwin(float, float Y, float W, float H, std::string lbl, const std::vector<toolbBTN_t>&tools = {}, bool horizontal = true, BOX_TYPE b = FRTK_UP_BOX, WIDGTYPE btnType = FRTK_TOOLBAR_BUTTON);
     std::shared_ptr<Frtk_ToolBarVwin> tb2 = std::make_shared<Frtk_ToolBarVwin>(w() / 2 - FRTK_TOOLBAR_HEIGHT * 2,
-        y() + menuHeight(),
+        21.0f + FRTK_TOOLBAR_HEIGHT,
         FRTK_TOOLBAR_HEIGHT * 4 + FRTK_TOOLBAR_HEIGHT / 2,
         FRTK_TOOLBAR_HEIGHT, "",
         tools2, true,

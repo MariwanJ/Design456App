@@ -26,7 +26,6 @@
 //
 
 #include <gui_widget/frtk_toolbar_vwin.h>
-
 #include <gui_widget/frtk_toggle_button.h>
 #include <gui_widget/frtk_Toggle_light_button.h>
 #include <gui_widget/frtk_Toggle_round_button.h>
@@ -66,7 +65,6 @@ namespace FR {
     {
         m_horizontal = val;
     }
-
 
     void Frtk_ToolBarVwin::addButton(const std::vector<toolbBTN_t>& btns)
     {
@@ -336,7 +334,7 @@ namespace FR {
 
     int Frtk_ToolBarVwin::handle(int ev)
     {
-   //        Fr_Window* win = m_parent; //just to make it clear what m_parent is here
+        //        Fr_Window* win = m_parent; //just to make it clear what m_parent is here
         FRTK_CORE_APP_ASSERT(m_parent);
         if (dockingBTN() && ev == FR_LEFT_DRAG_PUSH) {
             m_dragging = true;
@@ -361,7 +359,6 @@ namespace FR {
             }
         }
 
-        
         int result = 0;
         if (isMouse_inside() || m_dragging) {
             m_mainWindow->deactivateNavi();
@@ -392,7 +389,7 @@ namespace FR {
                 m_mainWindow->activateNavi();
             size_t noOfChildren = m_guiWindow->getChildrenNo();
             if (m_wdgType == FRTK_TOOLBARWIN_TOOGLE) {
-                //ONLY ACTIVE WHEN WE HAVE TOOGLE BUTTONS TOOLBAR  
+                //ONLY ACTIVE WHEN WE HAVE TOOGLE BUTTONS TOOLBAR
                 for (size_t i = 0; i < noOfChildren; ++i) {
                     auto wdg = m_guiWindow->getChildAt(i);
                     std::shared_ptr<Frtk_Button> btn = std::dynamic_pointer_cast<Frtk_Button>(wdg);

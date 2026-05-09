@@ -84,7 +84,6 @@ namespace FR {
         std::vector<std::shared_ptr<Frtk_Widget>> m_children;
         Frtk_Widget* m_childFocus;  //keep track of focused widget
         Frtk_Widget* m_grabbedChild;
-    private:
     };
 }
 #endif // !FRTK_GRPWIDGET_H

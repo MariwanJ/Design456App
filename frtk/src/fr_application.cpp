@@ -28,17 +28,13 @@
 #include <glm/gtx/transform.hpp>
 #include <fr_camera.h>
 
-
-
 namespace FR {
-
     std::string EXE_CURRENT_DIR;
     std::string fontPath;
     std::string iconPath;
 
     Fr_Application::Fr_Application(int x, int y, int w, int h, const char* l) :Fr_Window(x, y, w, h, l)
     {
-
     }
 
     Fr_Application::~Fr_Application()
@@ -48,8 +44,8 @@ namespace FR {
 
     int Fr_Application::run(int argc, char** argv)
     {
-        (void) argc; //avoid warning 
-        (void) argv; //avoid warning 
+        (void)argc; //avoid warning
+        (void)argv; //avoid warning
 
         createGLFWwindow();
         return GLFWrun();

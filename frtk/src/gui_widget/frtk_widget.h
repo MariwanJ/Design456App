@@ -215,7 +215,7 @@ namespace FR {
         void widgetType(WIDGTYPE nVal);
 
         Frtk_Widget* parent();
-        Frtk_BaseWin* m_linkTofrtkWindow; // 
+        Frtk_BaseWin* m_linkTofrtkWindow;
         font_t fontData() const;
     protected:
         //Callback function definition

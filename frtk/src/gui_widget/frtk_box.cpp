@@ -31,16 +31,16 @@
 // class constructor
 namespace FR {
     Frtk_Box::Frtk_Box(NVGcontext* vg, float x, float y, float w, float h, std::string l, BOX_TYPE b) :
-        Frtk_Widget(x, y, w, h, l, b),  m_Text{ 0 },
-        m_specialDrawingSize( 0.f), m_padding(0.5f)
+        Frtk_Widget(x, y, w, h, l, b), m_Text{ 0 },
+        m_specialDrawingSize(0.f), m_padding(0.5f)
     {
         m_vg = vg;
         FRTK_CORE_APP_ASSERT(vg != NULL);
         m_font.lblAlign = NVG_ALIGN_MIDDLE_CENTER | NVG_ALIGN_INSIDE;
         m_font.txtAlign = NVG_ALIGN_MIDDLE_CENTER | NVG_ALIGN_INSIDE;
         m_borderColor = glm::vec4(FR_BLACK);
-        m_font.pos.x = m_x ;
-        m_font.pos.y = m_y ;
+        m_font.pos.x = m_x;
+        m_font.pos.y = m_y;
         m_font.size.w = m_w;
         m_font.size.h = m_h;
     }
@@ -68,8 +68,8 @@ namespace FR {
         //always check for all widgets
         if (!m_visible)
             return;
-        draw_box(m_vg, m_boxType, {{ m_x,m_y }, { m_w,m_h }}, 0.0f, FRTK_NORMAL_BORDER, 
-            glmToNVG(m_color), 
+        draw_box(m_vg, m_boxType, { { m_x,m_y }, { m_w,m_h } }, 0.0f, FRTK_NORMAL_BORDER,
+            glmToNVG(m_color),
             glmToNVG(m_borderColor), true);
         drawLabel();
 
@@ -84,11 +84,11 @@ namespace FR {
     }
     int Frtk_Box::handle(int e)
     {
-        //just as a reminder YOU SHOULD ALWAYS RUN THIS CHECK: 
-       //  if (!m_active || !m_visible) return 0; //inactive widget - we don't care 
-        
+        //just as a reminder YOU SHOULD ALWAYS RUN THIS CHECK:
+       //  if (!m_active || !m_visible) return 0; //inactive widget - we don't care
+
          //Does not handle any events... at least not at the moment
-         return 0;
+        return 0;
     }
 
     void Frtk_Box::computeBoxLayout()
@@ -99,7 +99,7 @@ namespace FR {
         float paddingX = 1.f;
         float paddingY = 1.f;
         const float spacing = 1.0f;
-        paddingX = m_padding ;
+        paddingX = m_padding;
 
         const float origin_startX = m_x + m_padding;
         const float origin_startY = m_y + paddingY;
@@ -112,10 +112,10 @@ namespace FR {
             float maxW = origin_maxW;
             float maxH = origin_maxH;
 
-            if (m_cellStyle == FR_IMG_LEFT_TO_TEXT || m_cellStyle == FR_IMG_RIGHT_TO_TEXT){
+            if (m_cellStyle == FR_IMG_LEFT_TO_TEXT || m_cellStyle == FR_IMG_RIGHT_TO_TEXT) {
                 maxW = origin_maxW - m_Image->dim.size.w + paddingX * 2;
             }
-            else if (m_cellStyle <= FR_IMG_UNDER_TEXT_RIGHT){
+            else if (m_cellStyle <= FR_IMG_UNDER_TEXT_RIGHT) {
                 maxH = origin_maxH * 0.5f;
             }
             iconSize = scaleToFit(iconSize, origin_maxW, maxH);
@@ -166,23 +166,20 @@ namespace FR {
 
         case FR_IMG_LEFT_TO_TEXT:
         {
-            
             m_Image->dim.pos.x = origin_startX + spacing + m_specialDrawingSize;
             m_Image->dim.pos.y = origin_startY + (origin_maxH - iconSize.h) * 0.5f;
             m_Image->dim.size = iconSize;
-            textX = m_Image->dim.pos.x  + spacing+ m_specialDrawingSize;
+            textX = m_Image->dim.pos.x + spacing + m_specialDrawingSize;
             textW = origin_startX + origin_maxW - textX;
         } break;
 
         case FR_IMG_RIGHT_TO_TEXT:
         {
-            
-            m_Image->dim.pos.x = m_x + m_w - paddingX - iconSize.w ;
+            m_Image->dim.pos.x = m_x + m_w - paddingX - iconSize.w;
             m_Image->dim.pos.y = origin_startY + (origin_maxH - iconSize.h) * 0.5f;
             m_Image->dim.size = iconSize;
-            textW = m_Image->dim.pos.x - spacing - origin_startX- m_specialDrawingSize;
-            textX = textX + m_specialDrawingSize+m_padding;
-            
+            textW = m_Image->dim.pos.x - spacing - origin_startX - m_specialDrawingSize;
+            textX = textX + m_specialDrawingSize + m_padding;
         } break;
         }
 
@@ -209,5 +206,4 @@ namespace FR {
         applyStyle();
         return 0;
     }
-
 }

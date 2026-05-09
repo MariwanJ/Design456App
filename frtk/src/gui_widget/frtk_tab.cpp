@@ -1,4 +1,4 @@
-//
+﻿//
 // This file is a part of the Open Source Design456App
 // MIT License
 //
@@ -38,6 +38,11 @@ namespace FR {
        ----------------------------------------
 
     */
+
+    #define TAB_BUTTON_SIZE 15.0f
+    #define TAB_HPADDING     8.0f
+    #define TAB_VPADDING     3.0f
+    #define HEIGHT_FACTOR    1.3f
 
     Frtk_Tabwdg::Frtk_Tabwdg(NVGcontext* vg, float W, float H, std::string l, BOX_TYPE b) : Frtk_GrpWidget(vg, 0.0f, 0.0f, W, H, l, b),
         m_headSapce(1.0f), m_headDim{ 0.0f }, m_bodyDim{ 0.0f }, m_headWidth{ 0.0f }, m_tabParts{ false, false }
@@ -167,7 +172,8 @@ namespace FR {
     Frtk_Tabs::Frtk_Tabs(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b) :
         Frtk_GrpWidget(vg, X, Y, W, H, lbl, b),
         m_viewPort{ { 0.0, 0.0 },{0.0, 0.0} },
-        m_content{ 0.0 }, m_viewOffs(0), m_history{ nullptr,nullptr ,nullptr ,nullptr } {
+        m_content{ 0.0 }, m_viewOffs(0), m_needLayout(false),
+        m_history{ nullptr,nullptr ,nullptr ,nullptr } {
         Frtk_Tabs* tab = this;  // store explicitly
         m_font.fontSize = 12.0f;
         m_font.pos = { m_x,m_y };
@@ -178,9 +184,9 @@ namespace FR {
         const char* left = "\xE2\x97\x80";    // <
 
         m_wdgType = FRTK_TABS;
-        m_viewPort.pos.x = X + Hpadding;
-        m_viewPort.pos.y = Y + Vpadding;
-        m_viewPort.size.w = W - TAB_BUTTON_SIZE - Hpadding;
+        m_viewPort.pos.x = X + TAB_HPADDING;
+        m_viewPort.pos.y = Y + TAB_VPADDING;
+        m_viewPort.size.w = W - TAB_BUTTON_SIZE - TAB_HPADDING;
         m_viewPort.size.h = m_h;
 
         m_scrollwdg.Hor.btnInc = { 0 };
@@ -210,31 +216,40 @@ namespace FR {
         float headerHeight = m_font.fontSize * 1.15f;
         float startX = TAB_BUTTON_SIZE;
         float currentX = startX;
+
+        nvgSave(m_vg);
+        nvgFontSize(m_vg, m_font.fontSize);
+        nvgFontFace(m_vg, m_font.fName.c_str());
+
         for (auto& child : m_children)
         {
             auto tab = std::dynamic_pointer_cast<Frtk_Tabwdg>(child);
-            float bounds[4];
+            if (!tab) continue;
+
+            float bounds[4] = { 0 };
             nvgTextBounds(m_vg, 0, 0, tab->label().c_str(), nullptr, bounds);
+
             const float minWidth = 45.0f;
             const float maxWidth = m_w;
             float textWidth = bounds[2] - bounds[0];
-            float width = std::clamp(textWidth, minWidth, maxWidth - Hpadding);
-            tab->setHeaderDim(currentX, Vpadding, width, headerHeight);
+            float width = std::clamp(textWidth, minWidth, maxWidth - TAB_HPADDING);
+            tab->setHeaderDim(currentX, TAB_VPADDING, width, headerHeight);
             tab->getFont().pos.x = currentX;
             tab->getFont().pos.y = headerHeight / 4;
             tab->getFont().size.w = width;
             tab->getFont().size.h = headerHeight;
-            tab->setBodyDim(0, Vpadding * 2 + headerHeight, m_w, m_h - Vpadding * 2 - headerHeight);
+            tab->setBodyDim(0, TAB_VPADDING * 2 + headerHeight, m_w, m_h - TAB_VPADDING * 2 - headerHeight);
             currentX += width + 1;
             m_content.size.w += tab->m_headDim.size.w;
         }
+        nvgRestore(m_vg);
         m_content.size.h = headerHeight;
     }
 
     void Frtk_Tabs::updateContentSize()
     {
         float maxW = m_w - m_viewPort.size.w;
-        float maxH = m_h - Vpadding;
+        float maxH = m_h - TAB_VPADDING;
         for (auto& child : m_children)
         {
             std::shared_ptr<Frtk_Tabwdg> wdg = std::dynamic_pointer_cast<Frtk_Tabwdg>(child);
@@ -265,12 +280,19 @@ namespace FR {
 
     void Frtk_Tabs::draw()
     {
+        if (m_needLayout) {
+            /*
+            Call this only when it needs to be updated, for example after adding tab.
+            Must be here, since font width cannot be calculated without active context.
+            */
+            layoutTabs();
+        }
         draw_box(m_vg, m_boxType, { {m_x, m_y}, {m_w, m_h} }, m_cornerRadius, FRTK_THIN_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
         draw_scrollH();
 
         // Draw all tab HEADERS
         nvgSave(m_vg);
-        nvgScissor(m_vg, m_viewPort.pos.x + TAB_BUTTON_SIZE, m_viewPort.pos.y, m_viewPort.size.w - Hpadding - TAB_BUTTON_SIZE, m_viewPort.size.h);
+        nvgScissor(m_vg, m_viewPort.pos.x + TAB_BUTTON_SIZE, m_viewPort.pos.y, m_viewPort.size.w - TAB_HPADDING - TAB_BUTTON_SIZE, m_viewPort.size.h);
         nvgTranslate(m_vg, m_viewPort.pos.x - m_viewOffs, m_viewPort.pos.y);
 
         for (size_t i = 0; i < m_children.size(); ++i) {
@@ -379,7 +401,7 @@ namespace FR {
         // inside a new group, your tope corner pos is NOT m_x, m_y
         // .. it is (0.0f,0.0f)!!!
         std::shared_ptr<Frtk_Tabwdg> tmpChild = std::make_shared<Frtk_Tabwdg>(m_vg, m_w, m_h);
-
+        m_needLayout = true;
         if (!m_history.m_first) {
             m_history.m_first = tmpChild;
             m_history.m_current = tmpChild;
@@ -391,11 +413,8 @@ namespace FR {
             tmpChild->focus(false);
             tmpChild->m_body->hide();
         }
-
         addChild(tmpChild);
-        layoutTabs();
         updateContentSize();
-
         if (m_content.size.w <= m_viewPort.size.w)
             m_history.m_last = tmpChild;
         return tmpChild;
@@ -447,6 +466,8 @@ namespace FR {
                 else
                     if (m_activeBtns.left) {
                         if (ind1 > 0) {
+                            if (!m_history.m_last)
+                                return 0;
                             dim = m_history.m_last->getHeadDim();
                             m_viewOffs -= dim.size.w;
                             if (m_viewOffs < 0)

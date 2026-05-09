@@ -39,10 +39,7 @@
 #include<../src/halfedge/fr_shape.h>
 #include <mesh_widget/fr_line_widget.h>  //TODO: Put me somewhere else
 #include <mesh_widget/fr_face_widget.h>  //TODO: Put me somewhere else
-
 #include<fr_checkIntersection.h>
-
-
 
 /** end Fr_Window */
 namespace FR {
@@ -51,6 +48,7 @@ namespace FR {
     class Frtk_ToolBarVwin;
     class Frtk_Radio_ToolbarWin;
     class Frtk_Rclick_menuWin;
+    class Frtk_Tabs;
     class FRTK_API   Fr_Window {
         friend Frtk_Vwin;
     public:
@@ -58,7 +56,7 @@ namespace FR {
         // Singleton accessor
         static std::shared_ptr<Fr_Window> getFr_Window(
             int x = 0, int y = 0, int w = 800, int h = 600, const std::string& label = "Design456App");
-        
+
     protected:
         Fr_Window(int x, int y, int w, int h, const std::string& label);
 
@@ -88,14 +86,14 @@ namespace FR {
          */
         virtual void CreateScene();  //Must be overridden to get the desired results
 
-         /**
-          * Resize Fr_Window size which affects glfw windows.
-          *
-          * \param x left-start position of the window
-          * \param y top-start position of the window
-          * \param w width of the window
-          * \param h height of the window
-          */
+        /**
+         * Resize Fr_Window size which affects glfw windows.
+         *
+         * \param x left-start position of the window
+         * \param y top-start position of the window
+         * \param w width of the window
+         * \param h height of the window
+         */
         virtual void resize(int x, int y, int w, int h);
 
         virtual void hide();
@@ -115,7 +113,6 @@ namespace FR {
         glm::vec3 calculateMouseWorldPos();
 
         virtual void showRightClickMenu();
-        
 
         /**
          * Function to change the initialization variable of glad to false.
@@ -123,7 +120,6 @@ namespace FR {
          * while it is not initialized.
          */
         static void deinitializeGlad();
-
 
         int  x()const;
         int  y()const;
@@ -140,7 +136,7 @@ namespace FR {
         void calculateScreenRay();
 
         NVGcontext* getnvgContext(void); //NanoVG Context
-        
+
         /**
          * Handle is a very important function that take care of all events happening (mouse, keyboard or between widgets).
          * Whenever a widget consumes the events, it should return 0. FR_NO_EVENTS means that there is no more events left.
@@ -152,8 +148,7 @@ namespace FR {
          */
         virtual int handle(int events);
 
-
-        //Treats events per frame 
+        //Treats events per frame
         virtual void updateInputEvents(void);
 
         /**
@@ -181,8 +176,7 @@ namespace FR {
 
         int renderimGUI(userData_t& data);
 
-        int renderNewGUI(); //temporary function 
-
+        int renderNewGUI(); //temporary function
 
         static Fr_InputEvent_t m_sysEvents;
         void initSystemEvents();
@@ -190,8 +184,8 @@ namespace FR {
         void activateNavi();
 
         float menuHeight(void) const;
-        
-		defaultFont SystemFont;
+
+        defaultFont SystemFont;
         static std::shared_ptr<Fr_Window> spWindow;
 
         std::vector<std::shared_ptr<Frtk_Vwin>> m_frtkWindow;
@@ -209,26 +203,25 @@ namespace FR {
         std::shared_ptr<Frtk_ToolBarVwin> createSelectionToolbar();
         std::shared_ptr<Frtk_ToolBarVwin> m_MainToolbar;
         std::shared_ptr<Frtk_ToolBarVwin> m_selectionTB;
-
+        std::shared_ptr<Frtk_Vwin> m_leftPanel;
         FRTK_WIN_TYPE m_winType;
         static screenDim_t m_ViewPort;
+        
+        std::shared_ptr<Frtk_Tabs> m_leftPanelTab;
 
         GLFWcursor* cursorHand = nullptr;
         GLFWcursor* cursorCrosshair = nullptr;
 
+        void mainToolbar_callback(size_t index, void* data = nullptr);
+        void selectionToolbar_callback(size_t index, void* data = nullptr);
 
-        void mainToolbar_callback(size_t index, void *data=nullptr);
-        void selectionToolbar_callback(size_t index, void *data=nullptr);
+        std::shared_ptr<Frtk_Vwin> leftPanel();
 
-        int imgui_LeftPanel();
         int imgui_menu();
 
         int createGLFWwindow();
 
-  
-
         int imguimzo_init();
-
 
         static void glfwWindosResize(GLFWwindow* window, int width, int height);
         static void glfwWindPos(GLFWwindow* window, int pos_x, int pos_y);
@@ -237,7 +230,7 @@ namespace FR {
 
         static void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
         static void char_callback(GLFWwindow* window, unsigned int codepoint);
-        
+
         static void cursor_m_positioncallback(GLFWwindow* win, double xpos, double ypos);
 
         static void cursor_enter_callback(GLFWwindow* win, int entered);
@@ -268,9 +261,6 @@ namespace FR {
         void mnuSelFace_cb(void* data);
         void mnuSelEdges_cb(void* data);
         void mnuSelVertex_cb(void* data);
-
-        void CameraOptions(void);
-        void SunOptions(void);
 
         void mnuEditUndo(void* Data);
         void mnuEditRedo(void* Data);
@@ -309,7 +299,7 @@ namespace FR {
         /**
          * Keep track of the active camera.
          */
-        //will be true if rotate/pan starts.
+         //will be true if rotate/pan starts.
         static bool MouseOnce;
 
         float phi_, theta_;
@@ -322,8 +312,6 @@ namespace FR {
         NVGcontext* m_nvgContext; //NanoVG Context
 
         void flush();
-
-
     };
 }
 

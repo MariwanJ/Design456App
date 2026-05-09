@@ -27,7 +27,6 @@
 
 #include <frtk.h>
 #include<fr_constants.h>
-
 #include <fr_window.h>
 #include "fr_gl3callbacks.h"
 
@@ -46,6 +45,7 @@ namespace FR {
         if (pwin->m_ViewPort.size.h != 0) {
             pwin->activeScene->m_cameras[index].m_aspect_ratio = static_cast<float>(pwin->m_ViewPort.size.w) / pwin->m_ViewPort.size.h;
         }
+        spWindow->resizeWindow(spWindow->x(), spWindow->y(), float(width), float(height));
     }
     void Fr_Window::glfwWindPos(GLFWwindow* window, int pos_x, int pos_y)
     {

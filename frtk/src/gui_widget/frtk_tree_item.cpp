@@ -106,14 +106,14 @@ namespace FR {
         if (root != this) {
             float x_line = parent()->x()+ m_style.hArm * (m_level-1);
             float y_line = parent()->y() + H* 0.5f;
-            // | line 
+            // | line
             nvgBeginPath(m_vg);
             nvgStrokeColor(m_vg, m_style.lineColor);
             nvgStrokeWidth(m_vg, m_style.lineWidth);
             nvgMoveTo(m_vg, m_style.Hpadding + 2 , H );
             nvgLineTo(m_vg, m_style.Hpadding + 2 , m_y + H *0.5);
             nvgStroke(m_vg);
-            // ---- line 
+            // ---- line
             nvgBeginPath(m_vg);
             nvgStrokeColor(m_vg, m_style.lineColor);
             nvgStrokeWidth(m_vg, m_style.lineWidth);
@@ -144,7 +144,7 @@ namespace FR {
         else
             activeIcn->dim.pos = { m_x + m_style.toggleIcon.size.w + m_style.Hpadding, m_y - H * 0.5f };
         m_font.pos.x = activeIcn->dim.pos.x + activeIcn->dim.size.w + m_style.Hpadding;
-        m_font.pos.y = Y+m_style.Vpadding+2;
+        m_font.pos.y = Y+m_style.Vpadding + 2;
         drawLabel();
         drawImage();
     }
@@ -459,7 +459,7 @@ namespace FR {
         FRTK_CORE_INFO("label= {} local mouse x{}  y{} -- icon x{} y{} ",m_label, localMouseX, localMouseY, m_style.toggleIcon.pos.x, m_style.toggleIcon.pos.y);
         return (localMouseX >= m_style.toggleIcon.pos.x &&
                 localMouseX <= m_style.toggleIcon.pos.x + m_style.toggleIcon.size.w &&
-                localMouseY >= m_style.toggleIcon.pos.y && 
+                localMouseY >= m_style.toggleIcon.pos.y &&
                 localMouseY <= m_style.toggleIcon.pos.y + m_style.toggleIcon.size.h);
     }
 

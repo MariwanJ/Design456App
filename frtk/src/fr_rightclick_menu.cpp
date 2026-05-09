@@ -31,17 +31,16 @@
 #include <gui_widget/frtk_rclick_menu_win.h>
 
 namespace FR {
-
-    void Fr_Window::showRightClickMenu(){
-    //Right click should activate the pop up windows which has a bunch of commands, and menus 
-           //TODO : make this to be more elegant and create the right-click menu 
-    if (m_rightClickMenu) {
-        //if it was visible - remove it 
-        m_rightClickMenu->Exit();
-        m_rightClickMenu = nullptr;
+    void Fr_Window::showRightClickMenu() {
+        //Right click should activate the pop up windows which has a bunch of commands, and menus
+               //TODO : make this to be more elegant and create the right-click menu
+        if (m_rightClickMenu) {
+            //if it was visible - remove it
+            m_rightClickMenu->Exit();
+            m_rightClickMenu = nullptr;
+        }
+        auto mouse = m_sysEvents.mouse;
+        m_rightClickMenu = std::make_shared <Frtk_Rclick_menuWin>(mouse.activeX + x(), mouse.activeY + y(), 200, 200, "PopuWindow");
+        m_rightClickMenu->show();
     }
-    auto mouse = m_sysEvents.mouse;
-    m_rightClickMenu = std::make_shared <Frtk_Rclick_menuWin>(mouse.activeX + x(), mouse.activeY+y(), 200, 200, "PopuWindow");
-    m_rightClickMenu->show();
-}
 }
