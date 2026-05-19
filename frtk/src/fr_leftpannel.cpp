@@ -33,22 +33,65 @@
 #include<Math/fr_math.h>
 #include<fr_constants.h>
 #include <gui_widget/frtk_tab.h>
+#include <gui_widget/frtk_button.h>
 namespace FR {
+    void Fr_Window::setupBasicShapes(std::shared_ptr< Frtk_Vwin> leftpanel, std::shared_ptr<Frtk_Tabwdg> basic) {
+        //Add Basic shape buttons:
+        const float hPadding = 10.0f;
+        const float vPadding = 10.0f;
+        const float btnSize = 40.0f;
+        const float startX = 5.0f;
+        const float startY = 5.0f;
+        const int   cols = 5;
+
+        auto cx = leftpanel->getContext();
+        std::string iconPath48 = iconPath + "/48x48/";
+
+        const std::vector<std::string> icons = {
+            "Part_Box.png",
+            "Part_Cone.png",
+            "Part_Cylinder.png",
+            "Part_Ellipsoid.png",
+            "Part_Prism.png",
+            "Part_Pyramid.png",
+            "Part_Sphere.png",
+            "Part_Torus.png",
+            "Part_Tube.png",
+            "Part_Wedge.png",
+        };
+
+        for (int i = 0; i < (int)icons.size(); ++i) {
+            int col = i % cols;
+            int row = i / cols;
+            float x = startX + col * (btnSize + hPadding);
+            float y = startY + row * (btnSize + vPadding);
+            auto btn = std::make_shared<Frtk_Button>(cx, x, y, btnSize, btnSize, "");
+            btn->wdgImage(iconPath48 + icons[i]);
+            basic->addChild(btn);
+        }
+    }
     std::shared_ptr<Frtk_Vwin> Fr_Window::leftPanel()
     {
         Dim_float_t dim = { {0.0f, 28.0f },{400, h() - 28.f} };
         std::shared_ptr<Frtk_Vwin> leftPanel = std::make_shared<Frtk_Vwin>(dim.pos.x, dim.pos.y, dim.size.w, dim.size.h, "");
         leftPanel->hasHeader(false);
-        
-        m_leftPanelTab = std::make_shared<Frtk_Tabs>(leftPanel->getContext(),0.0f, 0.0f, leftPanel->w(), leftPanel->h() / 2,"Main");
+        auto cx = leftPanel->getContext();
+        m_leftPanelTab = std::make_shared<Frtk_Tabs>(cx, 0.0f, 0.0f, leftPanel->w(), leftPanel->h() / 2, "Main");
+
         auto newTab = m_leftPanelTab->addTab();
         newTab->label("Model");
         newTab->lblAlign(NVG_ALIGN_TOP_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE);
-        
+
+        auto basic = m_leftPanelTab->addTab();
+        basic->label("Basic Shapes");
+        basic->lblAlign(NVG_ALIGN_TOP_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE);
+
         newTab = m_leftPanelTab->addTab();
-        newTab->label("Basic Shapes");
+        newTab->label("Advanced Shapes");
         newTab->lblAlign(NVG_ALIGN_TOP_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE);
+
         leftPanel->addChild(m_leftPanelTab);
+        setupBasicShapes(leftPanel, basic);
         return leftPanel;
     }
 }

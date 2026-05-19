@@ -49,6 +49,7 @@ namespace FR {
     class Frtk_Radio_ToolbarWin;
     class Frtk_Rclick_menuWin;
     class Frtk_Tabs;
+    class Frtk_Tabwdg;
     class FRTK_API   Fr_Window {
         friend Frtk_Vwin;
     public:
@@ -214,6 +215,7 @@ namespace FR {
 
         void mainToolbar_callback(size_t index, void* data = nullptr);
         void selectionToolbar_callback(size_t index, void* data = nullptr);
+        void setupBasicShapes(std::shared_ptr<Frtk_Vwin> leftpanel, std::shared_ptr<Frtk_Tabwdg> basic);
 
         std::shared_ptr<Frtk_Vwin> leftPanel();
 

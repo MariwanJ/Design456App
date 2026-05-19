@@ -238,7 +238,7 @@ namespace FR {
         }
 
         fontPath = EXE_CURRENT_DIR + "/resources/fonts/";
-        iconPath = EXE_CURRENT_DIR + "/resources/icons/32x32/";
+        iconPath = EXE_CURRENT_DIR + "/resources/icons/";
         initSystemEvents();
     }
 
@@ -454,8 +454,9 @@ namespace FR {
         glfwGetFramebufferSize(pGLFWWindow, &m_ViewPort.size.w, &m_ViewPort.size.h);
 
         userData_t data;
-        m_frtkWindow.push_back(runInputOutput());
-        m_frtkWindow.emplace_back(runFRTKdemo3());
+        //m_frtkWindow.push_back(runInputOutput());
+        //m_frtkWindow.emplace_back(runFRTKdemo3());
+        //m_frtkWindow.emplace_back(runTabWidget());
 
         m_MainToolbar = createMainToolbar();
         m_MainToolbar->parent(this);

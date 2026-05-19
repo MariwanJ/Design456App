@@ -59,6 +59,8 @@ namespace FR {
         virtual int remove_child_at(size_t index);
         virtual int remove_child(std::shared_ptr<Frtk_Widget> &wdg);
         virtual void remove_all();
+        virtual void disable() override;
+        virtual void activate() override;
 
         virtual void addChild(std::shared_ptr<Frtk_Widget> wdg);
         virtual bool navigate_focus(int key);

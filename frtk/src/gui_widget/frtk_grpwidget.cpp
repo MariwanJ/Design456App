@@ -81,8 +81,6 @@ namespace FR {
             auto& wdg = *it;
             if (wdg->visible()) {
                 wdg->draw();
-                //if (wdg->m_has_focus)
-                //    wdg->draw_focus();
             }
         }
         nvgRestore(m_vg);             // restore previous transform
@@ -163,6 +161,20 @@ namespace FR {
 
     void Frtk_GrpWidget::remove_all() {
         m_children.clear();
+    }
+    void Frtk_GrpWidget::disable()
+    {
+        m_active = false; 
+        for (auto& wdg : m_children) {
+            wdg->m_active = false;
+        }
+    }
+    void Frtk_GrpWidget::activate()
+    {
+        m_active = true;
+        for (auto& wdg : m_children) {
+            wdg->m_active = true;
+        }
     }
     void Frtk_GrpWidget::addChild(std::shared_ptr<Frtk_Widget> wdg)
     {
@@ -340,7 +352,6 @@ namespace FR {
             // Try restoring last focused child
             if (m_childFocus && m_childFocus->take_focus())
                 return 1;
-
             switch (navkey()) {
             case GLFW_KEY_LEFT:
             case GLFW_KEY_UP:
@@ -395,7 +406,8 @@ namespace FR {
             Frtk_Widget* actWdg = getTopMouseOverChild();
             if (actWdg != nullptr) {
                 for (auto& w : m_children) {
-                    if (!w->visible()) continue;
+                    if (!w->visible()) 
+                        continue;
 
                     Frtk_Widget* newWdg = actWdg;
                     Frtk_Widget* oldWdg = g_focusedWdgt.g_underMouse;
@@ -429,7 +441,6 @@ namespace FR {
             ev == FR_LEFT_DRAG_RELEASE ||
             ev == FR_MIDDLE_DRAG_RELEASE ||
             ev == FR_RIGHT_DRAG_RELEASE);
-
         if (w->isMouse_inside() || test_drag) {
             if (w->handle(ev))
                 return 1;
@@ -448,6 +459,8 @@ bool Frtk_GrpWidget::take_focus() {
 
 void Frtk_GrpWidget::hide()
 {
+    if (!m_visible)
+        return;  
     m_has_focus = false;
     for (auto wdg : m_children)
         wdg->hide();
@@ -455,6 +468,8 @@ void Frtk_GrpWidget::hide()
 
 void Frtk_GrpWidget::show()
 {
+    if (m_visible) 
+        return;  
     m_has_focus = true;
     for (auto wdg : m_children)
         wdg->show();

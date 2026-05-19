@@ -36,15 +36,15 @@ namespace FR {
 
 
 
-        std::string iconPath = EXE_CURRENT_DIR + "/resources/icons/32x32/";
+        std::string iconPath32 = EXE_CURRENT_DIR + "/resources/icons/32x32";
         std::string imagePath = EXE_CURRENT_DIR + "/resources/icons/32x32/House-32x32.png";
         
 
         std::vector<toolbBTN_t> tools = {
             // std::string lbl; std::string name; dimSize_float_t size; std::string icon; Frtk_Widget::Callback callback_; std::string tooltips !!
-            {"New","New"   ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath + "Folder-Create-32x32.png",[](Frtk_Widget& w) { doAnotherCallback(0); },   FRTK_UP_BOX, ""},
-            {"Open","Open"  ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath + "Folder-Import-32x32.png", [](Frtk_Widget& w) { doAnotherCallback(1); }, FRTK_UP_BOX, ""},
-            {"Close","Close" ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath + "Folder-Close-32x32.png" , [](Frtk_Widget& w) { doAnotherCallback(2); },FRTK_UP_BOX, ""},
+            {"New","New"   ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath32 + "Folder-Create-32x32.png",[](Frtk_Widget& w) { doAnotherCallback(0); },   FRTK_UP_BOX, ""},
+            {"Open","Open"  ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath32 + "Folder-Import-32x32.png", [](Frtk_Widget& w) { doAnotherCallback(1); }, FRTK_UP_BOX, ""},
+            {"Close","Close" ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath32 + "Folder-Close-32x32.png" , [](Frtk_Widget& w) { doAnotherCallback(2); },FRTK_UP_BOX, ""},
         };
         
         

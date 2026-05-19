@@ -39,10 +39,10 @@ namespace FR {
 
     */
 
-    #define TAB_BUTTON_SIZE 15.0f
-    #define TAB_HPADDING     8.0f
-    #define TAB_VPADDING     3.0f
-    #define HEIGHT_FACTOR    1.3f
+#define TAB_BUTTON_SIZE 15.0f
+#define TAB_HPADDING     8.0f
+#define TAB_VPADDING     3.0f
+#define HEIGHT_FACTOR    1.3f
 
     Frtk_Tabwdg::Frtk_Tabwdg(NVGcontext* vg, float W, float H, std::string l, BOX_TYPE b) : Frtk_GrpWidget(vg, 0.0f, 0.0f, W, H, l, b),
         m_headSapce(1.0f), m_headDim{ 0.0f }, m_bodyDim{ 0.0f }, m_headWidth{ 0.0f }, m_tabParts{ false, false }
@@ -52,9 +52,9 @@ namespace FR {
         m_font.lblAlign = NVG_ALIGN_MIDDLE_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE;
         m_color = glm::vec4(FR_LIGHTGREY);
         m_bkg_color = glm::vec4(FR_DARKGREY1);
-        m_body = std::make_shared<Frtk_GrpWidget>(vg, 0, m_font.fontSize * HEIGHT_FACTOR + 2, W, H - m_font.fontSize * HEIGHT_FACTOR + 5, "", FRTK_FLAT_BOX);
+        m_body = std::make_shared<Frtk_GrpWidget>(vg, 0, m_font.fontSize * HEIGHT_FACTOR + 2, W, H - m_font.fontSize * HEIGHT_FACTOR + 5, "", FRTK_ROUNDED_BOX_UP);
         FRTK_CORE_APP_ASSERT(m_body, "obj allocation error!");
-        addChild(m_body);//Only one child , using group make the implementation easier
+        Frtk_GrpWidget::addChild(m_body);
         m_cornerRadius = 0.2f;
     }
 
@@ -73,7 +73,7 @@ namespace FR {
         m_bodyDim.size.h = H;
         m_body->resize(X, Y, W, H);
     }
-    void Frtk_Tabwdg::addChildToTab(std::shared_ptr<Frtk_Widget> wdg) {
+    void Frtk_Tabwdg::addChild(std::shared_ptr<Frtk_Widget> wdg) {
         if (wdg) {
             m_body->addChild(wdg);
         }
@@ -82,13 +82,13 @@ namespace FR {
     void Frtk_Tabwdg::show()
     {
         m_visible = true;
-        m_body->show();
+        show_children();
     }
 
     void Frtk_Tabwdg::hide()
     {
         m_visible = false;
-        m_body->hide();
+        hide_children();
     }
 
     void Frtk_Tabwdg::hide_children()
@@ -114,28 +114,55 @@ namespace FR {
     {
         return m_headDim;
     }
+
     Dim_float_t Frtk_Tabwdg::getBodyDim()
     {
         return m_bodyDim;
     }
+
     void Frtk_Tabwdg::draw_head() {
-        if (m_has_focus) {
+        if (!m_visible)
+            return;
+        if (m_active) {
             draw_box(m_vg, m_boxType, m_headDim, m_cornerRadius, FRTK_EXTRA_THIN_BORDER, glmToNVG(m_bkg_color), glmToNVG(m_color), true);
-            draw_focus();
+            if (m_has_focus) {
+                draw_focus();
+            }
         }
         else {
             draw_box(m_vg, m_boxType, m_headDim, m_cornerRadius, FRTK_EXTRA_THIN_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
         }
         drawLabel();
     }
+
     void Frtk_Tabwdg::draw_body() {
-        if (m_body->visible()) {
-            draw_children();
-        }
+        if (!m_visible)
+            return;
+        if (m_active)
+            m_body->draw_children();
     }
+
+    int Frtk_Tabwdg::handle(int ev)
+    {
+        if (!active() || !visible())
+            auto children = m_body->getChildren();
+        for (size_t i = 0; i < m_children.size(); ++i) {
+            auto& wdg = m_children[i];
+            if (!wdg->visible() || !wdg->active())
+                continue;
+            if (wdg->isMouse_inside()) {
+                if (send_event(*wdg, ev) == 1)
+                    return 1;
+            }
+        }
+        return 0;
+    }
+
     void Frtk_Tabwdg::draw()
     {
-        draw_head();
+        if (!m_visible)
+            return
+            draw_head();
         draw_body();
     }
 
@@ -159,12 +186,13 @@ namespace FR {
 
     void Frtk_Tabwdg::drawLabel()
     {
+        if (!m_visible)
+            return;
         if (m_linkTofrtkWindow)
             drawTextInBox(m_vg, m_label, m_font, true, m_linkTofrtkWindow->getFontData());
     }
 
     /** ***********************************************************************************************************************************************************/
-
      //***********************************************************************************
      //                         Tabs container widget
      //***********************************************************************************
@@ -180,9 +208,6 @@ namespace FR {
         m_font.size = { m_w,m_h };
         m_font.lblAlign = NVG_ALIGN_BOTTOM_CENTER | NVG_ALIGN_BASELINE;
         m_font.txtAlign = NVG_ALIGN_BOTTOM_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE;
-        const char* right = "\xE2\x96\xB6"; // >
-        const char* left = "\xE2\x97\x80";    // <
-
         m_wdgType = FRTK_TABS;
         m_viewPort.pos.x = X + TAB_HPADDING;
         m_viewPort.pos.y = Y + TAB_VPADDING;
@@ -244,20 +269,25 @@ namespace FR {
         }
         nvgRestore(m_vg);
         m_content.size.h = headerHeight;
+        updateContentSize();
     }
 
     void Frtk_Tabs::updateContentSize()
     {
         float maxW = m_w - m_viewPort.size.w;
-        float maxH = m_h - TAB_VPADDING;
         for (auto& child : m_children)
         {
             std::shared_ptr<Frtk_Tabwdg> wdg = std::dynamic_pointer_cast<Frtk_Tabwdg>(child);
             float left = wdg->getHeadDim().pos.x + wdg->getHeadDim().size.w;
-            if (left > maxW)
+            if (left > maxW) {
                 maxW = left;
+            }
+            else {
+                m_history.m_last = wdg;
+            }
         }
-        m_content.size.w = maxW;
+        if (m_content.size.w <= m_viewPort.size.w)
+            m_content.size.w = maxW;
     }
 
     bool Frtk_Tabs::checkOverflow() {
@@ -280,6 +310,8 @@ namespace FR {
 
     void Frtk_Tabs::draw()
     {
+        if (!m_visible)
+            return;
         if (m_needLayout) {
             /*
             Call this only when it needs to be updated, for example after adding tab.
@@ -287,27 +319,23 @@ namespace FR {
             */
             layoutTabs();
         }
+        //Background color for the whole TAB widget
         draw_box(m_vg, m_boxType, { {m_x, m_y}, {m_w, m_h} }, m_cornerRadius, FRTK_THIN_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
         draw_scrollH();
 
-        // Draw all tab HEADERS
+        // Draw all tab children-HEADERS
         nvgSave(m_vg);
         nvgScissor(m_vg, m_viewPort.pos.x + TAB_BUTTON_SIZE, m_viewPort.pos.y, m_viewPort.size.w - TAB_HPADDING - TAB_BUTTON_SIZE, m_viewPort.size.h);
         nvgTranslate(m_vg, m_viewPort.pos.x - m_viewOffs, m_viewPort.pos.y);
-
         for (size_t i = 0; i < m_children.size(); ++i) {
             std::shared_ptr<Frtk_Tabwdg> wdg = std::dynamic_pointer_cast<Frtk_Tabwdg>(m_children[i]);
             wdg->draw_head();
         }
-        nvgRestore(m_vg);
 
-        // Draw ONLY the active tab's body
+        nvgRestore(m_vg);
         for (size_t i = 0; i < m_children.size(); ++i) {
             std::shared_ptr<Frtk_Tabwdg> wdg = std::dynamic_pointer_cast<Frtk_Tabwdg>(m_children[i]);
-            if (wdg->visible()) {
-                wdg->draw_body();
-                break; // only one active tab at a time
-            }
+            wdg->draw();
         }
     }
 
@@ -405,18 +433,18 @@ namespace FR {
         if (!m_history.m_first) {
             m_history.m_first = tmpChild;
             m_history.m_current = tmpChild;
+            m_history.m_prev = nullptr;
             m_history.m_last = tmpChild;
             m_history.m_current->focus(true);
+            m_history.m_current->activate();
         }
         else
         {
             tmpChild->focus(false);
-            tmpChild->m_body->hide();
+            tmpChild->disable(); //The tab child normally should be disabled
         }
         addChild(tmpChild);
-        updateContentSize();
-        if (m_content.size.w <= m_viewPort.size.w)
-            m_history.m_last = tmpChild;
+
         return tmpChild;
     }
 
@@ -441,15 +469,16 @@ namespace FR {
     {
         if (!isMouse_inside())
             return 0;
-        Dim_float_t dim = { 0.0f };
 
+        Dim_float_t dim = { 0.0f };
+        int focusedIndex = -1;
         if (ev == FR_LEFT_PUSH) {
-            auto mouse = m_mainWindow->m_sysEvents.mouse;
-            float saveX = mouse.activeX;
+            auto& mouse = m_mainWindow->m_sysEvents.mouse;  // reference, not copy
+            // Notice that, if all Tab-heads are visible, this will do nothing!!
+            // don't think that the buttons are not working
             if (updateBtnPressed()) {
                 size_t ind1 = getIndex(m_history.m_first);
                 size_t ind2 = getIndex(m_history.m_last);
-
                 if (m_activeBtns.right) {
                     if (ind2 < m_children.size() - 1) {
                         m_history.m_last = std::static_pointer_cast<Frtk_Tabwdg>(m_children[ind2 + 1]);
@@ -459,49 +488,57 @@ namespace FR {
                             float maxOffset = m_content.size.w - m_viewPort.size.w;
                             if (m_viewOffs > maxOffset)
                                 m_viewOffs = maxOffset;
-                            m_history.m_first = std::static_pointer_cast<Frtk_Tabwdg> (m_children[ind1 + 1]);
+                            m_history.m_first = std::static_pointer_cast<Frtk_Tabwdg>(m_children[ind1 + 1]);
                         }
                     }
                 }
-                else
-                    if (m_activeBtns.left) {
-                        if (ind1 > 0) {
-                            if (!m_history.m_last)
-                                return 0;
-                            dim = m_history.m_last->getHeadDim();
-                            m_viewOffs -= dim.size.w;
-                            if (m_viewOffs < 0)
-                                m_viewOffs = 0;
-                            m_history.m_first = std::static_pointer_cast<Frtk_Tabwdg>(m_children[ind1 - 1]);
-                            m_history.m_last = std::static_pointer_cast<Frtk_Tabwdg>(m_children[ind2 - 1]);
-                        }
+                else if (m_activeBtns.left) {
+                    if (ind1 > 0) {
+                        if (!m_history.m_last)
+                            return 0;
+                        dim = m_history.m_last->getHeadDim();
+                        m_viewOffs -= dim.size.w;
+                        if (m_viewOffs < 0)
+                            m_viewOffs = 0;
+                        m_history.m_first = std::static_pointer_cast<Frtk_Tabwdg>(m_children[ind1 - 1]);
+                        m_history.m_last = std::static_pointer_cast<Frtk_Tabwdg>(m_children[ind2 - 1]);
                     }
+                }
                 return 1;
             }
 
-            int focusedIndex = -1;
-            int newIndex = -1;
+            float savedX = mouse.activeX;
             mouse.activeX += m_viewOffs;
 
+            int newIndex = -1;
             for (size_t i = 0; i < m_children.size(); ++i) {
                 if (auto* tabwdg = dynamic_cast<Frtk_Tabwdg*>(m_children[i].get())) {
+                    if (tabwdg->active())
+                        focusedIndex = static_cast<int>(i);
+
                     dimPos_float_t activeM = { mouse.activeX, mouse.activeY };
-                    if (tabwdg->isTabClicked(activeM)) {
-                        newIndex = i;
-                    }
-                    if (newIndex != -1) {
-                        if (focusedIndex != -1) {
-                            m_children[focusedIndex]->focus(false);
-                        }
-                        activeTab(newIndex);
-                    }
+                    if (tabwdg->isTabClicked(activeM))
+                        newIndex = static_cast<int>(i);
                 }
             }
-            mouse.activeX = saveX;
+            mouse.activeX = savedX;   // restore before any child forwarding
+            if (newIndex != -1 && newIndex != focusedIndex) {
+                if (focusedIndex != -1)
+                    m_children[focusedIndex]->focus(false);
+                activeTab(newIndex);
+                return 1;
+            }
         }
-        if (Frtk_GrpWidget::handle(ev) == 1)
-            return 1;
-        return 0;
+        else
+            if (ev == FR_LEFT_RELEASE) {
+                if (updateBtnPressed()) {
+                }
+            }
+
+        if (label() == "Basic Shapes")
+            FR_DEBUG_BREAK;
+
+        return Frtk_GrpWidget::handle(ev);
     }
 
     void Frtk_Tabs::show() {
@@ -516,12 +553,12 @@ namespace FR {
     void Frtk_Tabs::activeTab(size_t ind)
     {
         m_history.m_prev = m_history.m_current;
-        m_history.m_current->focus(false);
-        m_history.m_current->m_body->hide();
-        m_history.m_current->color(FR_LIGHTGREY);
+        m_history.m_prev->disable();
+        m_history.m_prev->focus(false);
+        m_history.m_prev->color(FR_LIGHTGREY);
         m_history.m_current = std::dynamic_pointer_cast<Frtk_Tabwdg>(m_children[ind]);
         m_history.m_current->focus(true);
-        m_history.m_current->m_body->show();
+        m_history.m_current->activate();
         m_history.m_current->color(FR_DARKGREY1);
     }
 }

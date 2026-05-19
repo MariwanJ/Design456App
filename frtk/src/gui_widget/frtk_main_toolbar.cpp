@@ -111,7 +111,7 @@ namespace FR {
         {"New",                                                                         // std::string lbl
         "New",                                                                          //std::string name
         {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},                          //dimSize_float_t size
-        iconPath + "Folder-Create-32x32.png",                                           //std::string icon
+        iconPath + "/32x32/" + "Folder-Create-32x32.png",                                           //std::string icon
         [this](Frtk_Widget& w) { this->mainToolbar_callback(FR_FILE_NEW); },            //Frtk_Widget::Callback callback_
         FRTK_UP_BOX,                                                                    //WIDGTYPE boxType
         "",                                                                             //std::string tooltips;  //not implemented y
@@ -119,21 +119,21 @@ namespace FR {
         { "Open",
          "Open",
         {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},
-        iconPath + "Folder-Open-32x32.png",
+        iconPath + "/32x32/" + "Folder-Open-32x32.png",
         [this](Frtk_Widget& w) { this->mainToolbar_callback(FR_FILE_OPEN); },
         FRTK_UP_BOX,
         "" },
         { "Close",
          "Close",
          {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},
-         iconPath + "Folder-Close-32x32.png",
+         iconPath + "/32x32/" + "Folder-Close-32x32.png",
          [this](Frtk_Widget& w) { this->mainToolbar_callback(FR_FILE_CLOSE); },
          FRTK_UP_BOX,
          "" },
         { "Save",
         "Save",
         {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},
-        iconPath + "Save-32x32.png",
+        iconPath + "/32x32/" + "Save-32x32.png",
         [this](Frtk_Widget& w) { this->mainToolbar_callback(FR_FILE_CLOSE); },
         FRTK_UP_BOX,
         "" },
@@ -148,28 +148,28 @@ std::shared_ptr<Frtk_ToolBarVwin> Fr_Window::createSelectionToolbar() {
         {"",                                                                                                // std::string lbl
         "Mesh",                                                                                             //std::string name
         {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},                                              //dimSize_float_t size
-        iconPath + "SelectionModeBody.png",                                                                 //std::string icon
+        iconPath + "/32x32/" + "SelectionModeBody.png",                                                                 //std::string icon
         [this](Frtk_Widget& w) { this->selectionToolbar_callback(FR_SELECTION_MESH); },                     //Frtk_Widget::Callback callback_
         FRTK_FLAT_BOX,                                                                                      //BOX_TYPE boxType
         ""},                                                                                                //std::string tooltips;  //not implemented y
         {"",
         "Face",
         {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},
-        iconPath + "SelectionModeFace.png",
+        iconPath + "/32x32/" + "SelectionModeFace.png",
         [this](Frtk_Widget& w) { this->selectionToolbar_callback(FR_SELECTION_FACE); }, 
         FRTK_FLAT_BOX, 
         ""},
         {"",
         "Edge",
         {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},
-        iconPath + "SelectionModeEdges.png", 
+        iconPath + "/32x32/" + "SelectionModeEdges.png",
         [this](Frtk_Widget& w) { this->selectionToolbar_callback(FR_SELECTION_EDGE);},
         FRTK_FLAT_BOX, 
         ""},
         {"",
         "Vertex",
         {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},
-        iconPath + "SelectionModeVertex.png",
+        iconPath + "/32x32/" + "SelectionModeVertex.png",
         [this](Frtk_Widget& w) { this->selectionToolbar_callback(FR_SELECTION_VERTEX);},
         FRTK_FLAT_BOX,
         ""},

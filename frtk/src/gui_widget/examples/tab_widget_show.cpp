@@ -42,15 +42,17 @@ namespace FR {
             std::string lbl = "Tab " + std::to_string(i);
             newTab->label(lbl);
             newTab->lblAlign(NVG_ALIGN_TOP_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE);
-            if(i==0)
-                newTab->addChildToTab(btn);
+            if (i == 0) {
+                newTab->addChild(btn); 
+                btn->label(btn->label() + std::to_string(i));
+            }
+                
         }
         auto sc = std::make_shared<Frtk_Scroll>(window->getContext(), 250, 250.0f, 300.0f, 300.0f, "OK!", FRTK_UP_BOX);
         sc->boxType(FRTK_UP_BOX);
         tab->layoutTabs();
         tab->parent(window.get());
         window->addChild(tab);
-        sc->parent(window.get());
         for (int i = 0; i < 15; i++) {
             auto btn = std::make_shared<Frtk_Button>(window->getContext(), 00.0f+i*45, 0.0f, 40.0f, 40.0f, "OK!", FRTK_UP_BOX);
             sc->addChild(btn);
