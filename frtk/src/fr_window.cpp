@@ -53,6 +53,7 @@
 
   //Remove me later : TODO
 #include<halfedge/fr_shape.h>
+#include <gui_widget/examples/toolbarExample.h>
 /** end fr_grl3 */
 namespace FR {
     int Fr_Window::RECURSION_COUNT = 200;
@@ -457,6 +458,13 @@ namespace FR {
         //m_frtkWindow.push_back(runInputOutput());
         //m_frtkWindow.emplace_back(runFRTKdemo3());
         //m_frtkWindow.emplace_back(runTabWidget());
+        //auto bb = runFRTKToolbarDemo();
+        //bb->parent(this);
+        //m_frtkWindow.emplace_back(bb);
+        
+        //This leftPanel should be before toolbars. Since its head is affecting the toolbar : TODO : FIXME
+        m_leftPanel = leftPanel();
+        m_frtkWindow.emplace_back(m_leftPanel);
 
         m_MainToolbar = createMainToolbar();
         m_MainToolbar->parent(this);
@@ -465,8 +473,6 @@ namespace FR {
         m_selectionTB = createSelectionToolbar();
         m_selectionTB->parent(this);
         m_frtkWindow.emplace_back(m_selectionTB);
-        m_leftPanel = leftPanel();
-        m_frtkWindow.emplace_back(m_leftPanel);
 
         while (!glfwWindowShouldClose(pGLFWWindow))
         {

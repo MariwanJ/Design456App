@@ -41,28 +41,24 @@ namespace FR {
         return m_filters;
     }
     std::string fileDialog::openFile() {
-        const char** filters = new const char* [m_filters.size()];
-        for (size_t i = 0; i < m_filters.size(); ++i) {
-            filters[i] = m_filters[i].c_str();
-        }
-        
-            const char* result = tinyfd_openFileDialog(
-            m_title.c_str(),          // Dialog title
-            m_defaultpath.c_str(),    // Default path
-            m_filters.size(),         // Number of filter patterns
-            filters,                  // Filter patterns
-            NULL,                    // Filter description
-            0                        // Allow multiple selection?
+        std::vector<const char*> filters;
+        for (const auto& f : m_filters)
+            filters.push_back(f.c_str());
+
+        const char* result = tinyfd_openFileDialog(
+            m_title.c_str(),
+            m_defaultpath.c_str(),
+            filters.size(),
+            filters.data(),
+            NULL,
+            0
         );
-        if (result) {
-            return std::string(result); 
-        }
-        else {
-            return ""; // or handle cancel case differently
-        }
+
+        return result ? result : "";
     }
+
     std::string fileDialog::saveFile(std::string fileName) {
-        const char** filters = new const char* [m_filters.size()];
+        const char** filters = new const char* [m_filters.size()+1];
         for (size_t i = 0; i < m_filters.size(); ++i) {
             filters[i] = m_filters[i].c_str();
         }
