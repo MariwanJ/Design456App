@@ -33,12 +33,8 @@ namespace FR {
     }
 
     std::shared_ptr<Frtk_ToolBarVwin> runFRTKToolbarDemo() {
-
-
-
         std::string iconPath32 = EXE_CURRENT_DIR + "/resources/icons/32x32";
         std::string imagePath = EXE_CURRENT_DIR + "/resources/icons/32x32/House-32x32.png";
-        
 
         std::vector<toolbBTN_t> tools = {
             // std::string lbl; std::string name; dimSize_float_t size; std::string icon; Frtk_Widget::Callback callback_; std::string tooltips !!
@@ -46,10 +42,9 @@ namespace FR {
             {"Open","Open"  ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath32 + "Folder-Import-32x32.png", [](Frtk_Widget& w) { doAnotherCallback(1); }, FRTK_UP_BOX, ""},
             {"Close","Close" ,{FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},iconPath32 + "Folder-Close-32x32.png" , [](Frtk_Widget& w) { doAnotherCallback(2); },FRTK_UP_BOX, ""},
         };
-        
-        
-        std::shared_ptr<Frtk_ToolBarVwin> tb1=std::make_shared<Frtk_ToolBarVwin>( 450.f, 300.0f,350, FRTK_TOOLBAR_HEIGHT, "", tools,true);
-        
+
+        std::shared_ptr<Frtk_ToolBarVwin> tb1 = std::make_shared<Frtk_ToolBarVwin>(450.f, 300.0f, 350, FRTK_TOOLBAR_HEIGHT, "", tools, true);
+
         return tb1;
     }
 }

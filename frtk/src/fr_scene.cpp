@@ -83,9 +83,37 @@ namespace FR {
             m_world.push_back(newtT);
             return;
         }
+        else if (fName.find(".obj") != std::string::npos) {
+            //Not implemented yet  - here .obj should be treated.
+            FR_DEBUG_BREAK;
+        }
+        else if (fName.find("OFF") != std::string::npos) {
+            // Here we have a header file with the .off file as a string 
+            std::shared_ptr<Fr_Shape> newObj = std::make_shared<Fr_Shape>(fName);
+            newObj->Translate(0, 0, 0);
+            newObj->Scale(1, 1, 1);
+            newObj->Rotate(0, 1, 0, 0); //TODO CHECK ME
+            //texture
+            newObj->m_Texture2D = std::make_shared<Fr_Texture2D>();
+            std::string TexturePath = EXE_CURRENT_DIR + "/resources/Texture/";
+            std::string imag = (TexturePath + "2.png");
+            if (newObj->m_Texture2D->set2DTexture(imag))
+            {
+                newObj->m_Texture2D->setup2DTexture();      //Don't forget to do this always
+            }
+            else {
+                FR_DEBUG_BREAK;
+            }
+            newObj->hasTexture(1);
+            //convert fName to be a unique name
+            std::string nFname = separateFN(fName);
+            SceneItemStruct newtT(newObj, nFname);
+            m_world.push_back(newtT);
+            return;
+         }
         else {
             FR_DEBUG_BREAK;
-            //Not implemented yet  - here .obj should be treated.
+
         }
         return;
     }

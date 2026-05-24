@@ -58,16 +58,16 @@ namespace FR {
     }
 
     std::string fileDialog::saveFile(std::string fileName) {
-        const char** filters = new const char* [m_filters.size()+1];
+        const char** filters = new const char* [m_filters.size() + 1];
         for (size_t i = 0; i < m_filters.size(); ++i) {
             filters[i] = m_filters[i].c_str();
         }
         const char* result = tinyfd_saveFileDialog(
-            m_title.c_str(),          // Dialog title
+            m_title.c_str(),         // Dialog title
             fileName.c_str(),        // Default filename
             m_filters.size(),        // Number of filter patterns
             filters,                 // Filter patterns
-            NULL                    // Filter description
+            NULL                     // Filter description
         );
         if (result) {
             return std::string(result);

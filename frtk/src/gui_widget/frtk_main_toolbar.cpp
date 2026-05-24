@@ -31,10 +31,10 @@
 #include <fr_window.h>
 #include <gui_widget/frtk_window.h>
 namespace FR {
-/*
-                        TOOLBARS CALLBACKS
+    /*
+                            TOOLBARS CALLBACKS
 
-*/
+    */
     void Fr_Window::mainToolbar_callback(size_t index, void* data) {
         std::shared_ptr<Fr_Window> win = Fr_Window::getFr_Window();
         switch (index) {
@@ -52,7 +52,6 @@ namespace FR {
             }
         } break;
         case FR_FILE_CLOSE: {
-         
         } break;
         case FR_FILE_SAVE: {
         } break;
@@ -137,56 +136,56 @@ namespace FR {
         [this](Frtk_Widget& w) { this->mainToolbar_callback(FR_FILE_CLOSE); },
         FRTK_UP_BOX,
         "" },
-    };
-        std::shared_ptr<Frtk_ToolBarVwin>tb1=std::make_shared<Frtk_ToolBarVwin>(0.0f, 21.0f, w(), FRTK_TOOLBAR_HEIGHT, "", tools1, true);
+        };
+        std::shared_ptr<Frtk_ToolBarVwin>tb1 = std::make_shared<Frtk_ToolBarVwin>(0.0f, 21.0f, w(), FRTK_TOOLBAR_HEIGHT, "", tools1, true);
         tb1->widgetType(FRTK_TOOLBARWIN);
         return tb1;
-}
-
-std::shared_ptr<Frtk_ToolBarVwin> Fr_Window::createSelectionToolbar() {
-    std::vector<toolbBTN_t> tools2 = {
-        {"",                                                                                                // std::string lbl
-        "Mesh",                                                                                             //std::string name
-        {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},                                              //dimSize_float_t size
-        iconPath + "/32x32/" + "SelectionModeBody.png",                                                                 //std::string icon
-        [this](Frtk_Widget& w) { this->selectionToolbar_callback(FR_SELECTION_MESH); },                     //Frtk_Widget::Callback callback_
-        FRTK_FLAT_BOX,                                                                                      //BOX_TYPE boxType
-        ""},                                                                                                //std::string tooltips;  //not implemented y
-        {"",
-        "Face",
-        {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},
-        iconPath + "/32x32/" + "SelectionModeFace.png",
-        [this](Frtk_Widget& w) { this->selectionToolbar_callback(FR_SELECTION_FACE); }, 
-        FRTK_FLAT_BOX, 
-        ""},
-        {"",
-        "Edge",
-        {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},
-        iconPath + "/32x32/" + "SelectionModeEdges.png",
-        [this](Frtk_Widget& w) { this->selectionToolbar_callback(FR_SELECTION_EDGE);},
-        FRTK_FLAT_BOX, 
-        ""},
-        {"",
-        "Vertex",
-        {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},
-        iconPath + "/32x32/" + "SelectionModeVertex.png",
-        [this](Frtk_Widget& w) { this->selectionToolbar_callback(FR_SELECTION_VERTEX);},
-        FRTK_FLAT_BOX,
-        ""},
-    };
-    //Frtk_ToolBarVwin(float, float Y, float W, float H, std::string lbl, const std::vector<toolbBTN_t>&tools = {}, bool horizontal = true, BOX_TYPE b = FRTK_UP_BOX, WIDGTYPE btnType = FRTK_TOOLBAR_BUTTON);
-    std::shared_ptr<Frtk_ToolBarVwin> tb2 = std::make_shared<Frtk_ToolBarVwin>(w() / 2 - FRTK_TOOLBAR_HEIGHT * 2,
-        21.0f + FRTK_TOOLBAR_HEIGHT,
-        FRTK_TOOLBAR_HEIGHT * 4 + FRTK_TOOLBAR_HEIGHT / 2,
-        FRTK_TOOLBAR_HEIGHT, "",
-        tools2, true,
-        FRTK_FLAT_BOX, FRTK_TOGGLE_BUTTON);
-    size_t childrens = tb2->m_guiWindow->getChildrenNo();
-    for (size_t i = 0; i < childrens; ++i) {
-        tb2->m_guiWindow->getChildAt(i)->cellStyle(FR_IMG_LEFT_TO_TEXT); //Make both be in the center;
     }
-    tb2->widgetType(FRTK_TOOLBARWIN_TOOGLE);
-    //tb2->dockable(false); //don't allow docking - this should be a static toolbar in the middle of the screen.
-    return tb2;
-}
+
+    std::shared_ptr<Frtk_ToolBarVwin> Fr_Window::createSelectionToolbar() {
+        std::vector<toolbBTN_t> tools2 = {
+            {"",                                                                                                // std::string lbl
+            "Mesh",                                                                                             //std::string name
+            {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},                                              //dimSize_float_t size
+            iconPath + "/32x32/" + "SelectionModeBody.png",                                                                 //std::string icon
+            [this](Frtk_Widget& w) { this->selectionToolbar_callback(FR_SELECTION_MESH); },                     //Frtk_Widget::Callback callback_
+            FRTK_FLAT_BOX,                                                                                      //BOX_TYPE boxType
+            ""},                                                                                                //std::string tooltips;  //not implemented y
+            {"",
+            "Face",
+            {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},
+            iconPath + "/32x32/" + "SelectionModeFace.png",
+            [this](Frtk_Widget& w) { this->selectionToolbar_callback(FR_SELECTION_FACE); },
+            FRTK_FLAT_BOX,
+            ""},
+            {"",
+            "Edge",
+            {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},
+            iconPath + "/32x32/" + "SelectionModeEdges.png",
+            [this](Frtk_Widget& w) { this->selectionToolbar_callback(FR_SELECTION_EDGE); },
+            FRTK_FLAT_BOX,
+            ""},
+            {"",
+            "Vertex",
+            {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},
+            iconPath + "/32x32/" + "SelectionModeVertex.png",
+            [this](Frtk_Widget& w) { this->selectionToolbar_callback(FR_SELECTION_VERTEX); },
+            FRTK_FLAT_BOX,
+            ""},
+        };
+        //Frtk_ToolBarVwin(float, float Y, float W, float H, std::string lbl, const std::vector<toolbBTN_t>&tools = {}, bool horizontal = true, BOX_TYPE b = FRTK_UP_BOX, WIDGTYPE btnType = FRTK_TOOLBAR_BUTTON);
+        std::shared_ptr<Frtk_ToolBarVwin> tb2 = std::make_shared<Frtk_ToolBarVwin>(w() / 2 - FRTK_TOOLBAR_HEIGHT * 2,
+            21.0f + FRTK_TOOLBAR_HEIGHT,
+            FRTK_TOOLBAR_HEIGHT * 4 + FRTK_TOOLBAR_HEIGHT / 2,
+            FRTK_TOOLBAR_HEIGHT, "",
+            tools2, true,
+            FRTK_FLAT_BOX, FRTK_TOGGLE_BUTTON);
+        size_t childrens = tb2->m_guiWindow->getChildrenNo();
+        for (size_t i = 0; i < childrens; ++i) {
+            tb2->m_guiWindow->getChildAt(i)->cellStyle(FR_IMG_LEFT_TO_TEXT); //Make both be in the center;
+        }
+        tb2->widgetType(FRTK_TOOLBARWIN_TOOGLE);
+        //tb2->dockable(false); //don't allow docking - this should be a static toolbar in the middle of the screen.
+        return tb2;
+    }
 }

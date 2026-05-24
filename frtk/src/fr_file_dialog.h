@@ -33,10 +33,10 @@
 namespace FR {
     class FRTK_API fileDialog {
     public:
-        fileDialog(std::string path, 
-            std::vector<std::string> filter = { "*.off", "*.obj", "*.*" } ,
-                    std::string title="Open Document");
-        void filter(std::vector<std::string> &filter);
+        fileDialog(std::string path,
+            std::vector<std::string> filter = { "*.off", "*.obj", "*.*" },
+            std::string title = "Open Document");
+        void filter(std::vector<std::string>& filter);
         std::string openFile();
         std::string saveFile(std::string fileName);
         std::vector<std::string>& filter();
