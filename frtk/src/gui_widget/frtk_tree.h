@@ -35,7 +35,7 @@ namespace FR {
     class Frtk_Tree : public  Frtk_GrpWidget {
         friend Frtk_Tree_Item;
     public:
-        Frtk_Tree(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b);
+        Frtk_Tree(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl = "", BOX_TYPE b = FRTK_FLAT_BOX);
         std::shared_ptr<Frtk_Tree_Item> rootWdg();
         void updateTree();
         void layoutItems();

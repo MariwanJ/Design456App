@@ -361,22 +361,15 @@ namespace FR {
         float Y = 0.0f;
 
         if (isRoot())
-            Y = -m_style.Vpadding;
+            Y = - m_style.Vpadding;
         else
-            Y = -m_style.halfVline;
+            Y = m_y - m_style.halfVline/2;
 
         float W = getWidth() + tree->defaultIcons[0].dim.size.w;
         float H = m_style.itemHeight;
 
         float step = 4.0f;   // spacing between dots
         float dot = 2.0f;   // length of each dot
-
-        /* experimental
-        * I keep this just as a hint how you can draw also the focus .. but the current focus is OK
-            draw_focus(FRTK_DOWN_FRAME, X, Y, W, H,glm::vec4(FR_RED));
-            nvgRestore(m_vg);
-            return;
-        */
 
         nvgSave(m_vg);
         nvgBeginPath(m_vg);
@@ -465,10 +458,10 @@ namespace FR {
 
     bool Frtk_Tree_Item::isItemClick() {
         auto mouse = m_mainWindow->m_sysEvents.mouse;
-        float X = absX();
-        float Y = absY();
-        return (mouse.activeX >= X && mouse.activeX <= X + getWidth() + m_style.Hpadding * 0.5f &&
-            mouse.activeY > Y && mouse.activeY < Y + m_style.itemHeight);
+        float localMouseX = mouse.activeX - absX() + m_x;
+        float localMouseY = mouse.activeY - absY() + m_y;
+        return (localMouseX >= m_x && localMouseX <= m_x + getWidth() + m_style.Hpadding * 0.5f &&
+            localMouseY> m_y && localMouseY < m_y + m_style.itemHeight);
     }
 
     void Frtk_Tree_Item::clearFocusAll()
