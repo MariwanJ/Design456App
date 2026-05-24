@@ -25,8 +25,6 @@
 //  Author :Mariwan Jalal    mariwan.jalal@gmail.com
 //
 
-//NanoVG
-
 #include<gui_widget/frtk_window.h>
 #include <gui_widget/frtk_draw.h>
 #include <frtk.h>

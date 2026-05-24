@@ -83,8 +83,8 @@ namespace FR{
 
         virtual void  bkg_opacity(float A = 1.0f) override;
         virtual void  bkg_opacity(uint8_t A = 255) override;
-
-    protected:
+        
+      protected:
         
         Frtk_BaseWin(float X, float Y, float W, float H, std::string lbl = "Frtk_BaseWin", BOX_TYPE b = FRTK_UP_BOX, bool hasHeader = true);
         virtual int handle(int event) override;

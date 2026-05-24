@@ -63,6 +63,7 @@ namespace FR {
         virtual void show_children();
         virtual bool isTabClicked(dimPos_float_t &mousePos);
         virtual void addChild(std::shared_ptr<Frtk_Widget> wdg) override;
+        std::shared_ptr<Frtk_GrpWidget> getChildren();
 
     protected:
         void draw_body();

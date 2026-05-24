@@ -79,6 +79,11 @@ namespace FR {
         }
     }
 
+    std::shared_ptr<Frtk_GrpWidget> Frtk_Tabwdg::getChildren()
+    {
+        return m_body;
+    }
+
     void Frtk_Tabwdg::show()
     {
         m_visible = true;
@@ -278,13 +283,17 @@ namespace FR {
         for (auto& child : m_children)
         {
             std::shared_ptr<Frtk_Tabwdg> wdg = std::dynamic_pointer_cast<Frtk_Tabwdg>(child);
-            float left = wdg->getHeadDim().pos.x + wdg->getHeadDim().size.w;
-            if (left > maxW) {
-                maxW = left;
+            if (wdg){
+                if(wdg->label()=="Model"){
+                float left = wdg->getHeadDim().pos.x + wdg->getHeadDim().size.w;
+                if (left > maxW) {
+                    maxW = left;
+                }
+                else {
+                    m_history.m_last = wdg;
+                }
             }
-            else {
-                m_history.m_last = wdg;
-            }
+        }
         }
         if (m_content.size.w <= m_viewPort.size.w)
             m_content.size.w = maxW;
@@ -329,13 +338,15 @@ namespace FR {
         nvgTranslate(m_vg, m_viewPort.pos.x - m_viewOffs, m_viewPort.pos.y);
         for (size_t i = 0; i < m_children.size(); ++i) {
             std::shared_ptr<Frtk_Tabwdg> wdg = std::dynamic_pointer_cast<Frtk_Tabwdg>(m_children[i]);
-            wdg->draw_head();
+            if (wdg)
+                wdg->draw_head();
         }
 
         nvgRestore(m_vg);
         for (size_t i = 0; i < m_children.size(); ++i) {
             std::shared_ptr<Frtk_Tabwdg> wdg = std::dynamic_pointer_cast<Frtk_Tabwdg>(m_children[i]);
-            wdg->draw();
+            if(wdg)
+                wdg->draw();
         }
     }
 

@@ -263,13 +263,4 @@ namespace FR {
     void Frtk_BaseWin::bkg_opacity(uint8_t A) {
         m_bkg_color.w = float(A) / 255.0f;
     }
-
-
-
-
-
-
-
-
-
 }

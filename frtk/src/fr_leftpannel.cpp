@@ -35,18 +35,20 @@
 #include <gui_widget/frtk_tab.h>
 #include <gui_widget/frtk_button.h>
 #include <fr_basic_shapes.h>
+#include <gui_widget/frtk_tree.h>
+#include <gui_widget/frtk_tree_item.h>
 
 namespace FR {
     typedef enum {
         PART_BOX = 0,
-        PART_CONE  ,
-        PART_CYLINDER  ,
-        PART_ELLIPSOID ,
-        PART_PRISM ,
-        PART_PYRAMID ,
+        PART_CONE,
+        PART_CYLINDER,
+        PART_ELLIPSOID,
+        PART_PRISM,
+        PART_PYRAMID,
         PART_SPHERE = 6,
         PART_TORUS = 7,
-        PART_TUBE ,
+        PART_TUBE,
         PART_WEDGE,
     }BASIC_ICONS;
 
@@ -106,6 +108,54 @@ namespace FR {
             w->activeScene->add3DObject(content);
         } break;
         }
+        w->updateModelTab();
+    }
+    void Fr_Window::setupModel(std::shared_ptr<Frtk_Vwin> leftpanel, std::shared_ptr<Frtk_Tabwdg> model) {
+        auto cx = leftpanel->getContext();
+        std::shared_ptr<Frtk_Tree> tree = std::make_shared<Frtk_Tree>(cx, 5.0f, 5.0f, leftpanel->w() - 5.0f, leftpanel->h() / 2 - 5.0f, "", FRTK_DOWN_BOX);
+        tree->color(FR_WHITE);
+        auto root = std::make_shared<Frtk_Tree_Item>(cx, 0, 0, 0, 0, "Scene World");
+        root->itemType(FRTK_TREE_ITEM_ROOT);
+        tree->addChild(root);
+        for (auto obj : activeScene->m_world) {
+            if (!(obj.name == "Sun" || obj.name == "Grid" || obj.name == "Axis3D")) {
+                auto item = std::make_shared<Frtk_Tree_Item>(cx, 0, 0, 0, 0, obj.name);
+                item->itemType(FRTK_TREE_ITEM_MIDDLE);
+                root->addChild(item);
+            }
+        }
+        model->addChild(tree);
+    }
+    void Fr_Window::updateModelTab()
+
+    {
+        std::shared_ptr<Frtk_Tabs> tabs = std::static_pointer_cast<Frtk_Tabs>(m_leftPanel->m_guiWindow->getChildren()[0]);
+        std::shared_ptr<Frtk_Tabwdg> model_tab = std::static_pointer_cast<Frtk_Tabwdg>(tabs->getChildren()[0]);
+        std::shared_ptr<Frtk_Tree> tree = std::static_pointer_cast<Frtk_Tree>(model_tab->getChildren()->getChildren()[0]);
+        auto cx = m_leftPanel->getContext();
+        for (auto& worldItem : activeScene->m_world)
+        {
+            bool exists = false;
+
+            for (auto& child : tree->getChildren())
+            {
+                if (child->label() == worldItem.name)
+                {
+                    exists = true;
+                    break;
+                }
+
+                if (!exists)
+                {
+                    if (worldItem.name != "Sun" &&
+                        worldItem.name != "Grid" &&
+                        worldItem.name != "Axis3D") {
+                        auto nItem = std::make_shared<Frtk_Tree_Item>(cx, 0.0f, 0.0f, 0.0f, 0.0f, worldItem.name);
+                        tree->addChild(nItem);
+                    }
+                }
+            }
+        }
     }
 
     void Fr_Window::setupBasicShapes(std::shared_ptr<Frtk_Vwin> leftpanel, std::shared_ptr<Frtk_Tabwdg> basic) {
@@ -139,22 +189,23 @@ namespace FR {
         std::shared_ptr<Frtk_Vwin> leftPanel = std::make_shared<Frtk_Vwin>(dim.pos.x, dim.pos.y, dim.size.w, dim.size.h, "");
         leftPanel->hasHeader(false);
         auto cx = leftPanel->getContext();
-        m_leftPanelTab = std::make_shared<Frtk_Tabs>(cx, 0.0f, 0.0f, leftPanel->w(), leftPanel->h() / 2, "Main");
+        auto m_leftPanelTab = std::make_shared<Frtk_Tabs>(cx, 0.0f, 0.0f, leftPanel->w(), leftPanel->h() / 2, "Main");
 
-        auto newTab = m_leftPanelTab->addTab();
-        newTab->label("Model");
-        newTab->lblAlign(NVG_ALIGN_TOP_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE);
+        auto model = m_leftPanelTab->addTab();
+        model->label("Model");
+        model->lblAlign(NVG_ALIGN_TOP_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE);
 
         auto basic = m_leftPanelTab->addTab();
         basic->label("Basic Shapes");
         basic->lblAlign(NVG_ALIGN_TOP_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE);
 
-        newTab = m_leftPanelTab->addTab();
-        newTab->label("Advanced Shapes");
-        newTab->lblAlign(NVG_ALIGN_TOP_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE);
+        auto advanced_shapes = m_leftPanelTab->addTab();
+        advanced_shapes->label("Advanced Shapes");
+        advanced_shapes->lblAlign(NVG_ALIGN_TOP_CENTER | NVG_ALIGN_BASELINE | NVG_ALIGN_INSIDE);
 
         leftPanel->addChild(m_leftPanelTab);
         setupBasicShapes(leftPanel, basic);
+        setupModel(leftPanel, model);
         return leftPanel;
     }
 }

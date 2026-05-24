@@ -46,6 +46,7 @@ namespace FR {
         m_style.bgColor = nvgRGBAf(FR_LIGHT_GRAY);
         m_style.selColor = nvgRGBAf(FR_LIGHTYELLOW);
         m_font.lblAlign = NVG_ALIGN_MIDDLE_LEFT | NVG_ALIGN_INSIDE;
+        m_itemType = FRTK_TREE_ITEM_MIDDLE;
     }
     Frtk_Tree_Item::~Frtk_Tree_Item()
     {
@@ -449,7 +450,6 @@ namespace FR {
         auto mouse = m_mainWindow->m_sysEvents.mouse;
         float localMouseX = mouse.activeX - absX()+m_x;
         float localMouseY = mouse.activeY - absY()+m_y;
-        FRTK_CORE_INFO("label= {} local mouse x{}  y{} -- icon x{} y{} ",m_label, localMouseX, localMouseY, m_style.toggleIcon.pos.x, m_style.toggleIcon.pos.y);
         return (localMouseX >= m_style.toggleIcon.pos.x &&
                 localMouseX <= m_style.toggleIcon.pos.x + m_style.toggleIcon.size.w &&
                 localMouseY >= m_style.toggleIcon.pos.y &&

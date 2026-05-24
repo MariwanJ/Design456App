@@ -197,6 +197,7 @@ namespace FR {
 
         GLFWcursor* MainWinCursor;  //needed to change to hand, rotation.
         std::vector<CharEvent_t> m_unicodeChars;
+        void updateModelTab();
 
     protected:
 
@@ -207,14 +208,14 @@ namespace FR {
         std::shared_ptr<Frtk_Vwin> m_leftPanel;
         FRTK_WIN_TYPE m_winType;
         static screenDim_t m_ViewPort;
-        
-        std::shared_ptr<Frtk_Tabs> m_leftPanelTab;
 
         GLFWcursor* cursorHand = nullptr;
         GLFWcursor* cursorCrosshair = nullptr;
 
         void mainToolbar_callback(size_t index, void* data = nullptr);
         void selectionToolbar_callback(size_t index, void* data = nullptr);
+        void setupModel(std::shared_ptr<Frtk_Vwin> leftpanel, std::shared_ptr<Frtk_Tabwdg> model);
+
         void setupBasicShapes(std::shared_ptr<Frtk_Vwin> leftpanel, std::shared_ptr<Frtk_Tabwdg> basic);
 
         std::shared_ptr<Frtk_Vwin> leftPanel();
