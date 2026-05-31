@@ -35,19 +35,21 @@
  */
  //NanoVG
 
+
 #include <fr_window.h>
 #include <fr_widget.h>
 
-#if 1 //Temporary code  - testing gui toolkit
-#include <gui_widget/frtk_vwin.h>
-#include <gui_widget/frtk_rclick_menu_win.h>
+#if 0  //just for developing phase .. remove it when you are done with frtk gui toolkit
 #include <gui_widget/examples/demo2.h>
 #include <gui_widget/examples/demo3.h>
 #include <gui_widget/examples/buttons_demo.h>
 #include <gui_widget/examples/input_output.h>
+#endif
+#include <gui_widget/frtk_vwin.h>
+#include <gui_widget/frtk_leftpannel.h>
+#include <gui_widget/frtk_rclick_menu_win.h>
 #include <gui_widget/frtk_toolbar_vwin.h>
 #include <gui_widget/examples/tab_widget_show.h>
-#endif
 
  /** Fr_Window */
 
@@ -345,7 +347,6 @@ namespace FR {
     int Fr_Window::createGLFWwindow()
     {
         glfwInit();
-
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
@@ -463,7 +464,8 @@ namespace FR {
         //m_frtkWindow.emplace_back(bb);
         
         //This leftPanel should be before toolbars. Since its head is affecting the toolbar : TODO : FIXME
-        m_leftPanel = leftPanel();
+        Dim_float_t dim = { {0.0f, 58.0f,},{400.0f, h() - 28.f} };
+        m_leftPanel = std::make_shared<Frtk_LeftPanel>(dim.pos.x, dim.pos.y, dim.size.w, dim.size.h,"",FRTK_FLAT_BOX, false);
         m_frtkWindow.emplace_back(m_leftPanel);
 
         m_MainToolbar = createMainToolbar();

@@ -44,7 +44,7 @@ namespace FR {
     Fr_Window* Frtk_Widget::m_mainWindow = nullptr;
     Frtk_Widget::Frtk_Widget(float X, float Y, float W, float H, std::string label, BOX_TYPE b) :m_x(X), m_y(Y), m_w(W), m_h(H),
         m_label(label), m_wdgType(FRTK_WIDGET), m_boxType(b), m_has_focus(false), m_cornerRadius(0.0f),
-        m_Image(nullptr), m_cellStyle(FR_IMG_LEFT_TO_TEXT),
+        m_Image(nullptr), m_cellStyle(FR_IMG_LEFT_TO_TEXT), m_linkToMainWindow(nullptr),
         m_visible(true), m_dragging(false), m_active(true),
         m_cantake_focus(true), m_vg(NULL), m_linkTofrtkWindow(nullptr),
         m_borderColor(glm::vec4(FR_DARKSLATEGREY)), m_borderWidth(FRTK_NORMAL_BORDER),

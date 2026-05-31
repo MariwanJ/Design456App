@@ -216,6 +216,7 @@ namespace FR {
 
         Frtk_Widget* parent();
         Frtk_BaseWin* m_linkTofrtkWindow;
+        std::shared_ptr<Fr_Window> m_linkToMainWindow;
         font_t fontData() const;
     protected:
         //Callback function definition

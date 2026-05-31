@@ -126,6 +126,7 @@ namespace FR {
         inline void setOffset(const float& ofs) { m_viewOffs = ofs; }
         bool shouldClip();
         int  getIndex(std::shared_ptr < Frtk_Tabwdg> wdg);
+        std::shared_ptr < Frtk_Tabwdg> getMdelTab();
 
     protected:
         bool btnUpDownLeft;

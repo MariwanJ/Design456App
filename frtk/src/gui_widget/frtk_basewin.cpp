@@ -26,7 +26,7 @@
 //
 
 #include<gui_widget/frtk_basewin.h>
-
+#include <fr_log.h>
 namespace FR {
     
     Frtk_BaseWin::Frtk_BaseWin(float X, float Y, float W, float H, std::string lbl, BOX_TYPE b, bool hasHeader) :
@@ -55,6 +55,10 @@ namespace FR {
         // widgets specific variables
         m_wdgType = FRTK_BASEWIN;
         m_linkTofrtkWindow = this;
+        m_linkToMainWindow = Fr_Window::getFr_Window();
+        if (!m_linkToMainWindow) {
+            FRTK_CORE_FATAL("{ Could not initialize Fr_Window instance inside Frtk Base Window }");
+        }
     }
     void Frtk_BaseWin::x(float v) {
         m_x = v;

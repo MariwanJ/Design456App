@@ -28,12 +28,11 @@
 
 #include <fr_scene.h>
 #include <fr_window.h>
-
 #include <fr_log.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
-
+#include <gui_widget/frtk_vwin.h>
+#include <gui_widget/frtk_leftpannel.h>
 #include <vector>
 
 namespace FR {
@@ -52,10 +51,11 @@ namespace FR {
         return m_cameras[m_active_camera];
     }
     //TODO : THIS MUST BE FIXED !!!!!!
-    void Fr_Scene::add3DObject(std::string fName)
+    void Fr_Scene::add3DObject(std::string fName, std::string objName)
     {
         if (fName.find(".off") != std::string::npos) {
-            std::shared_ptr<Fr_Shape> newObj = std::make_shared<Fr_Shape>(fName);
+            std::shared_ptr<Fr_Shape> newObj;
+            newObj = std::make_shared<Fr_Shape>(fName);
             newObj->Translate(0, 0, 0);
             newObj->Scale(1, 1, 1);
             newObj->Rotate(0, 1, 0, 0); //TODO CHECK ME
@@ -78,17 +78,17 @@ namespace FR {
             }
             newObj->hasTexture(1);
             //convert fName to be a unique name
-            std::string nFname = separateFN(fName);
+            std::string nFname;
+            if (objName.empty())
+                nFname = separateFN(fName);
+            else
+                nFname = objName;
+
             SceneItemStruct newtT(newObj, nFname);
             m_world.push_back(newtT);
-            return;
-        }
-        else if (fName.find(".obj") != std::string::npos) {
-            //Not implemented yet  - here .obj should be treated.
-            FR_DEBUG_BREAK;
         }
         else if (fName.find("OFF") != std::string::npos) {
-            // Here we have a header file with the .off file as a string 
+            // Here we have a header file with the .off file as a string
             std::shared_ptr<Fr_Shape> newObj = std::make_shared<Fr_Shape>(fName);
             newObj->Translate(0, 0, 0);
             newObj->Scale(1, 1, 1);
@@ -106,14 +106,47 @@ namespace FR {
             }
             newObj->hasTexture(1);
             //convert fName to be a unique name
-            std::string nFname = separateFN(fName);
+            std::string nFname;
+            if (objName.empty())
+                nFname = separateFN(fName);
+            else
+                nFname = objName;
             SceneItemStruct newtT(newObj, nFname);
             m_world.push_back(newtT);
             return;
-         }
+        }
+        else if (fName.find(".obj") != std::string::npos) {
+            //Not implemented yet  - here .obj should be treated.
+            FR_DEBUG_BREAK;
+        }
         else {
             FR_DEBUG_BREAK;
-
+        }
+        std::shared_ptr<FR::Fr_Window> win = FR::Fr_Window::getFr_Window();
+        FRTK_CORE_APP_ASSERT(win != nullptr);
+        std::shared_ptr<Frtk_Tabwdg> model_tab = win->m_leftPanel->getModel();
+        std::shared_ptr<Frtk_Tree> tree = win->m_leftPanel->m_modelTree;
+        auto cx = win->m_leftPanel->getContext();
+        for (auto& worldItem : win->activeScene->m_world)
+        {
+            bool exists = false;
+            for (auto& child : tree->getChildren())
+            {
+                if (child->label() == worldItem.name)
+                {
+                    exists = true;
+                    break;
+                }
+                if (!exists)
+                {
+                    if (worldItem.name != "Sun" &&
+                        worldItem.name != "Grid" &&
+                        worldItem.name != "Axis3D") {
+                        auto nItem = std::make_shared<Frtk_Tree_Item>(cx, 0.0f, 0.0f, 0.0f, 0.0f, worldItem.name);
+                        tree->addChild(nItem);
+                    }
+                }
+            }
         }
         return;
     }
@@ -310,7 +343,7 @@ namespace FR {
         CreateGrid();
     }
 
-    void Fr_Scene::setRayValue(ray_t &val)
+    void Fr_Scene::setRayValue(ray_t& val)
     {
         m_activeRay = val;
     }
@@ -329,7 +362,7 @@ namespace FR {
         std::shared_ptr<FR::Fr_Window> win = FR::Fr_Window::getFr_Window();
         FRTK_CORE_APP_ASSERT(win != nullptr);
 
-        ImGuiWindowFlags window_flags =  ImGuiWindowFlags_NoTitleBar;
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar;
         /*        FR_PROFILE_FUNCTION();
                 FR_PROFILE_SCOPE("imgui_ViewPort");   */
         int windowX, windowY;
@@ -521,8 +554,8 @@ namespace FR {
         int res = handle_selection(ev);
         for (auto& obj : m_world) {
             if (obj.Sceneitem->handle(ev) == 1) {
-                return 1; //Event is consumed 
-           }
+                return 1; //Event is consumed
+            }
         }
         return 0; //We could not use the event .. Return 0 as we don't care , Never return value >0 if you don't care
     }
@@ -583,11 +616,10 @@ namespace FR {
 
         float closestT = std::numeric_limits<float>::max();
         glm::vec3 intersectionPoint(0.0f, 0.0f, 0.0f);
-           int IndexOfclosestItem = -1;
+        int IndexOfclosestItem = -1;
         for (size_t i = 0; i < m_world.size(); ++i) {
             if (m_world[i].Sceneitem->is2Dobj())
             {
-                
                 NODETYPE type = m_world[i].Sceneitem->type();
                 bool isFaceWidget = (type >= FR_FACE_WIDGET && type < FR_FACE_WIDGET + 10000);
                 bool isEdgeWidget = (type >= FR_LINE_WIDGET && type < FR_LINE_WIDGET + 10000);
@@ -691,7 +723,6 @@ namespace FR {
         //We need to find closest object to the screen,
         // if the object is behind another object, we should ignore it
        // Fr_Widget* closestItem = nullptr;
-       
 
         glm::vec3 intersectionPoint;
 
@@ -729,135 +760,135 @@ namespace FR {
                 }
                 if (m_world.at(IndexOfclosestItem).Sceneitem->m_boundBox->isRayInsideBoundingBox(m_activeRay)) {
                     switch (m_currentSelMode) {
-                        case SelectionMode::MESH: {
-                            mesh.toggleMeshSelection();
-                            result = 1;
-                        } break;
+                    case SelectionMode::MESH: {
+                        mesh.toggleMeshSelection();
+                        result = 1;
+                    } break;
 
-                        case SelectionMode::FACE:
-                        {
-                            OpenMesh::FaceHandle pickedFace;
-                            if (m_world.at(IndexOfclosestItem).Sceneitem->is3Dobj()) {
-                                float t = 0.0f;
-                                if (pickAFace(IndexOfclosestItem, pickedFace, t)) {
-                                    if (pickedFace.is_valid())
-                                    {
-                                        if (!mesh.property(mesh.f_fake, pickedFace)){
-                                            //Only real faces, faked faces are skipped
-                                            selectCoplanarFaces(mesh, pickedFace);
-                                        }
-                                        result = 1;
-                                    }
-                                }
-                            }
-                            else {
-                                //Here we have only one face which is the indexofclosesitem already found
-                                pickedFace = *mesh.faces_begin();
-                                if (pickedFace.is_valid()) {
+                    case SelectionMode::FACE:
+                    {
+                        OpenMesh::FaceHandle pickedFace;
+                        if (m_world.at(IndexOfclosestItem).Sceneitem->is3Dobj()) {
+                            float t = 0.0f;
+                            if (pickAFace(IndexOfclosestItem, pickedFace, t)) {
+                                if (pickedFace.is_valid())
+                                {
                                     if (!mesh.property(mesh.f_fake, pickedFace)) {
+                                        //Only real faces, faked faces are skipped
                                         selectCoplanarFaces(mesh, pickedFace);
-                                        result = 1;
                                     }
+                                    result = 1;
                                 }
                             }
                         }
-                        break;
-
-                        case SelectionMode::EDGE:
-                        case SelectionMode::VERTEX:
-                        {
-                            OpenMesh::FaceHandle pickedFace;
-                            float faceT;
-                            float closestS = FLT_MAX;
-                            OpenMesh::EdgeHandle bestEdge;
-                            bool found = false;
-                            int type = m_world.at(IndexOfclosestItem).Sceneitem->type();
-
-                            bool isFaceWidget = (type >= FR_FACE_WIDGET && type < FR_FACE_WIDGET + 10000);
-                            bool isEdgeWidget = (type >= FR_LINE_WIDGET && type < FR_LINE_WIDGET + 10000);
-                            bool isPointWidget = (type >= FR_POINT_WIDGET && type < FR_POINT_WIDGET + 10000);
-
-                            if (!ek.ctrlDown) {
-                                mesh.clearAllSelections();
+                        else {
+                            //Here we have only one face which is the indexofclosesitem already found
+                            pickedFace = *mesh.faces_begin();
+                            if (pickedFace.is_valid()) {
+                                if (!mesh.property(mesh.f_fake, pickedFace)) {
+                                    selectCoplanarFaces(mesh, pickedFace);
+                                    result = 1;
+                                }
                             }
+                        }
+                    }
+                    break;
 
-                            if (isPointWidget) {
-                                VertexHandle v = *mesh.vertices_begin();
-                                mesh.toggleVertexSelection(v);
-                                result = 1;
+                    case SelectionMode::EDGE:
+                    case SelectionMode::VERTEX:
+                    {
+                        OpenMesh::FaceHandle pickedFace;
+                        float faceT;
+                        float closestS = FLT_MAX;
+                        OpenMesh::EdgeHandle bestEdge;
+                        bool found = false;
+                        int type = m_world.at(IndexOfclosestItem).Sceneitem->type();
+
+                        bool isFaceWidget = (type >= FR_FACE_WIDGET && type < FR_FACE_WIDGET + 10000);
+                        bool isEdgeWidget = (type >= FR_LINE_WIDGET && type < FR_LINE_WIDGET + 10000);
+                        bool isPointWidget = (type >= FR_POINT_WIDGET && type < FR_POINT_WIDGET + 10000);
+
+                        if (!ek.ctrlDown) {
+                            mesh.clearAllSelections();
+                        }
+
+                        if (isPointWidget) {
+                            VertexHandle v = *mesh.vertices_begin();
+                            mesh.toggleVertexSelection(v);
+                            result = 1;
+                            break;
+                        }
+                        else if (isFaceWidget || isEdgeWidget) {
+                            pickedFace = *mesh.faces_begin();
+                        }
+                        else if (m_world.at(IndexOfclosestItem).Sceneitem->is3Dobj()) {
+                            if (!pickAFace(IndexOfclosestItem, pickedFace, faceT)) {
                                 break;
                             }
-                            else if (isFaceWidget || isEdgeWidget) {
-                                pickedFace = *mesh.faces_begin();
-                            }
-                            else if (m_world.at(IndexOfclosestItem).Sceneitem->is3Dobj()) {
-                                if (!pickAFace(IndexOfclosestItem, pickedFace, faceT)) {
-                                    break;
-                                }
-                            }
-                            if (pickedFace.is_valid()) {
-                                for (auto fh : mesh.fh_range(pickedFace))
+                        }
+                        if (pickedFace.is_valid()) {
+                            for (auto fh : mesh.fh_range(pickedFace))
+                            {
+                                OpenMesh::EdgeHandle eh = mesh.edge_handle(fh);
+
+                                // Get edge endpoints
+                                OpenMesh::HalfedgeHandle heh = mesh.halfedge_handle(eh, 0);
+                                OpenMesh::VertexHandle v0 = mesh.from_vertex_handle(heh);
+                                OpenMesh::VertexHandle v1 = mesh.to_vertex_handle(heh);
+                                bool isFake = mesh.property(mesh.v_fake, v0) == true || mesh.property(mesh.v_fake, v1) == true;
+                                if (isFake)
+                                    continue; //FAKE FACE - Do nothing !!!
+                                const auto& p0 = mesh.point(v0);
+                                const auto& p1 = mesh.point(v1);
+                                std::vector<glm::vec3> vert = { glm::vec3(p0[0], p0[1], p0[2]), glm::vec3(p1[0], p1[1], p1[2]) };
+                                glm::vec3 hitPoint;
+                                float s;
+
+                                if (intersectLineSegment3D(m_activeRay, vert, hitPoint, s))
                                 {
-                                    OpenMesh::EdgeHandle eh = mesh.edge_handle(fh);
-
-                                    // Get edge endpoints
-                                    OpenMesh::HalfedgeHandle heh = mesh.halfedge_handle(eh, 0);
-                                    OpenMesh::VertexHandle v0 = mesh.from_vertex_handle(heh);
-                                    OpenMesh::VertexHandle v1 = mesh.to_vertex_handle(heh);
-                                    bool isFake= mesh.property(mesh.v_fake, v0) == true || mesh.property(mesh.v_fake, v1) == true ;
-                                    if (isFake)
-                                        continue; //FAKE FACE - Do nothing !!!
-                                    const auto& p0 = mesh.point(v0);
-                                    const auto& p1 = mesh.point(v1);
-                                    std::vector<glm::vec3> vert = { glm::vec3(p0[0], p0[1], p0[2]), glm::vec3(p1[0], p1[1], p1[2]) };
-                                    glm::vec3 hitPoint;
-                                    float s;
-
-                                    if (intersectLineSegment3D(m_activeRay, vert, hitPoint, s))
+                                    if (s < closestS)
                                     {
-                                        if (s < closestS)
-                                        {
-                                            closestS = s;
-                                            bestEdge = eh;
-                                            intersectionPoint = hitPoint;
-                                            found = true;
-                                        }
+                                        closestS = s;
+                                        bestEdge = eh;
+                                        intersectionPoint = hitPoint;
+                                        found = true;
                                     }
                                 }
                             }
-                            if (found)
-                            {
-                                if (m_currentSelMode == SelectionMode::EDGE) {
-                                    mesh.toggleEdgeSelection(bestEdge);
-                                    result = 1;
-                                }
-                                else if (m_currentSelMode == SelectionMode::VERTEX) {
-                                    OpenMesh::HalfedgeHandle heh = mesh.halfedge_handle(bestEdge, 0);
-
-                                    OpenMesh::VertexHandle v0 = mesh.from_vertex_handle(heh);
-                                    OpenMesh::VertexHandle v1 = mesh.to_vertex_handle(heh);
-
-                                    const auto& p0 = mesh.point(v0);
-                                    const auto& p1 = mesh.point(v1);
-                                    bool isFake = mesh.property(mesh.v_fake, v0) == true || mesh.property(mesh.v_fake, v1) == true;
-                                    if (isFake)
-                                        break; //FAKE FACE - Do nothing !!!
-
-                                    glm::vec3 g0(p0[0], p0[1], p0[2]);
-                                    glm::vec3 g1(p1[0], p1[1], p1[2]);
-
-                                    float d0 = glm::length(intersectionPoint - g0);
-                                    float d1 = glm::length(intersectionPoint - g1);
-
-                                    OpenMesh::VertexHandle pickedVertex = (d0 < d1) ? v0 : v1;
-
-                                    mesh.toggleVertexSelection(pickedVertex);
-                                    result = 1;
-                                }
-                            }
-                        }break;
-                        default: {} break;
                         }
+                        if (found)
+                        {
+                            if (m_currentSelMode == SelectionMode::EDGE) {
+                                mesh.toggleEdgeSelection(bestEdge);
+                                result = 1;
+                            }
+                            else if (m_currentSelMode == SelectionMode::VERTEX) {
+                                OpenMesh::HalfedgeHandle heh = mesh.halfedge_handle(bestEdge, 0);
+
+                                OpenMesh::VertexHandle v0 = mesh.from_vertex_handle(heh);
+                                OpenMesh::VertexHandle v1 = mesh.to_vertex_handle(heh);
+
+                                const auto& p0 = mesh.point(v0);
+                                const auto& p1 = mesh.point(v1);
+                                bool isFake = mesh.property(mesh.v_fake, v0) == true || mesh.property(mesh.v_fake, v1) == true;
+                                if (isFake)
+                                    break; //FAKE FACE - Do nothing !!!
+
+                                glm::vec3 g0(p0[0], p0[1], p0[2]);
+                                glm::vec3 g1(p1[0], p1[1], p1[2]);
+
+                                float d0 = glm::length(intersectionPoint - g0);
+                                float d1 = glm::length(intersectionPoint - g1);
+
+                                OpenMesh::VertexHandle pickedVertex = (d0 < d1) ? v0 : v1;
+
+                                mesh.toggleVertexSelection(pickedVertex);
+                                result = 1;
+                            }
+                        }
+                    }break;
+                    default: {} break;
+                    }
                 }
                 else
                 {

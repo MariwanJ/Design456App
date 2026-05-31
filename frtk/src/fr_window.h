@@ -36,14 +36,15 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include<../src/halfedge/fr_shape.h>
+#include <../src/halfedge/fr_shape.h>
 #include <mesh_widget/fr_line_widget.h>  //TODO: Put me somewhere else
 #include <mesh_widget/fr_face_widget.h>  //TODO: Put me somewhere else
-#include<fr_checkIntersection.h>
+#include <fr_checkIntersection.h>
 
 /** end Fr_Window */
 namespace FR {
     class Frtk_Vwin;        // virtual nanvg window
+    class Frtk_LeftPanel;        // virtual nanvg window
     class Frtk_Window;      // real glfw with nanovg window
     class Frtk_ToolBarVwin;
     class Frtk_Radio_ToolbarWin;
@@ -52,6 +53,7 @@ namespace FR {
     class Frtk_Tabwdg;
     class FRTK_API   Fr_Window {
         friend Frtk_Vwin;
+        friend Frtk_LeftPanel;
     public:
         virtual ~Fr_Window();
         // Singleton accessor
@@ -197,7 +199,7 @@ namespace FR {
 
         GLFWcursor* MainWinCursor;  //needed to change to hand, rotation.
         std::vector<CharEvent_t> m_unicodeChars;
-        void updateModelTab();
+        std::shared_ptr<Frtk_LeftPanel> m_leftPanel;
 
     protected:
 
@@ -205,7 +207,7 @@ namespace FR {
         std::shared_ptr<Frtk_ToolBarVwin> createSelectionToolbar();
         std::shared_ptr<Frtk_ToolBarVwin> m_MainToolbar;
         std::shared_ptr<Frtk_ToolBarVwin> m_selectionTB;
-        std::shared_ptr<Frtk_Vwin> m_leftPanel;
+
         FRTK_WIN_TYPE m_winType;
         static screenDim_t m_ViewPort;
 
@@ -214,12 +216,6 @@ namespace FR {
 
         void mainToolbar_callback(size_t index, void* data = nullptr);
         void selectionToolbar_callback(size_t index, void* data = nullptr);
-        void setupModel(std::shared_ptr<Frtk_Vwin> leftpanel, std::shared_ptr<Frtk_Tabwdg> model);
-
-        void setupBasicShapes(std::shared_ptr<Frtk_Vwin> leftpanel, std::shared_ptr<Frtk_Tabwdg> basic);
-
-        std::shared_ptr<Frtk_Vwin> leftPanel();
-
         int imgui_menu();
 
         int createGLFWwindow();

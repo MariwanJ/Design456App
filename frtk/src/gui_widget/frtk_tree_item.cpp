@@ -130,7 +130,7 @@ namespace FR {
         Frtk_Tree* tree = static_cast<Frtk_Tree*> (root->parent());
         if (tree->defaultIcons.empty())
             return;
-        if (!hasChildren()) {
+        if (!(hasChildren() || isRoot()) ) {
             activeIcn = &tree->defaultIcons[2];
         }
         else if (isOpen()) {
@@ -247,7 +247,7 @@ namespace FR {
         if (tree->defaultIcons.empty())
             return;
 
-        if (!hasChildren()) {
+        if (!hasChildren() && !isRoot()) {
             activeIcn = &tree->defaultIcons[2];
             GLuint texture = tree->getIconTexture(TREE_ITEM_PAPER);
         }
@@ -297,17 +297,17 @@ namespace FR {
         if (tree->defaultIcons.empty())
             return;
 
-        if (!hasChildren()) {
+        if (!(hasChildren() || isRoot())) {
             activeIcn = &tree->defaultIcons[2];
             texture = tree->getIconTexture(TREE_ITEM_PAPER);
         }
         else if (isOpen()) {
-            activeIcn = &tree->defaultIcons[1];
+            activeIcn = &tree->defaultIcons[0];
             texture = tree->getIconTexture(TREE_ITEM_OPEN);
         }
         else
         {
-            activeIcn = &tree->defaultIcons[0];
+            activeIcn = &tree->defaultIcons[1];
             texture = tree->getIconTexture(TREE_ITEM_CLOSED);
         }
         float x = floorf(activeIcn->dim.pos.x);
