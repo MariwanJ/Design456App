@@ -45,7 +45,8 @@ namespace FR {
         void collectSelected(const std::vector<std::shared_ptr<Frtk_Widget>>& children, 
                                         std::vector<std::shared_ptr<Frtk_Tree_Item>>& items);
         
-        virtual void addChild(std::shared_ptr<Frtk_Widget> wdg) override;
+        virtual void addChild(std::shared_ptr<Frtk_Widget> wdg) override; // for back compatibility with Frtk_Widget 
+        virtual void addChild(std::shared_ptr<Frtk_Tree_Item> wdg);
         GLuint getIconTexture(iconType_t type) const;
 
     protected:

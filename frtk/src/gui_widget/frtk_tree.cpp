@@ -72,7 +72,11 @@ namespace FR {
             return std::dynamic_pointer_cast<Frtk_Tree_Item>(m_children[0]); //first item is the root
         return nullptr;
     }
-    void Frtk_Tree::addChild(std::shared_ptr<Frtk_Widget> wdg)
+    void Frtk_Tree::addChild(std::shared_ptr<Frtk_Widget> wdg) {
+
+        addChild(std::dynamic_pointer_cast<Frtk_Tree_Item>(wdg));
+    }
+    void Frtk_Tree::addChild(std::shared_ptr<Frtk_Tree_Item> wdg)
     {
         //Only root and level 1 is added by this (addChild) function
         auto item = std::dynamic_pointer_cast<Frtk_Tree_Item>(wdg);
@@ -85,15 +89,15 @@ namespace FR {
             return;
         }
         auto root = std::dynamic_pointer_cast<Frtk_Tree_Item>(m_children[0]);
-        /*This should always be the case, all children
-            added to the tree in the
+        /*This should always be the case, all children  added to the tree in the
             first level should become a child of root*/
         root->addChild(wdg);
     }
 
     void Frtk_Tree::draw()
     {
-        draw_box(m_vg, m_boxType, { {m_x, m_y}, {m_w, m_h} }, m_cornerRadius, FRTK_NORMAL_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
+        draw_box(m_vg, m_boxType, { {m_x, m_y}, {m_w, m_h} }, m_cornerRadius, 
+            FRTK_NORMAL_BORDER, glmToNVG(m_color), glmToNVG(m_bkg_color), true);
         layoutItems();
         nvgSave(m_vg);
         nvgTranslate(m_vg, m_x, m_y);
@@ -101,7 +105,8 @@ namespace FR {
         nvgRestore(m_vg);
     }
     void Frtk_Tree::draw_children() {
-        std::shared_ptr<Frtk_Tree_Item> item = std::dynamic_pointer_cast<Frtk_Tree_Item> (m_children[0]);
+        std::shared_ptr<Frtk_Tree_Item> item = 
+            std::dynamic_pointer_cast<Frtk_Tree_Item> (m_children[0]);
         item->draw();
     }
 
@@ -116,7 +121,7 @@ namespace FR {
         root->updateChildren();
         layoutItems();
     }
-
+  
     void Frtk_Tree::layoutItems()
     {
         auto root = std::dynamic_pointer_cast<Frtk_Tree_Item>(m_children[0]);

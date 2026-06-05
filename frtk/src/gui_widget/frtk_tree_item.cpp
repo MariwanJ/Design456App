@@ -31,7 +31,7 @@
 
 namespace FR {
     Frtk_Tree_Item::Frtk_Tree_Item(NVGcontext* vg, float X, float Y, float W, float H, std::string lbl, BOX_TYPE b) :
-        Frtk_GrpWidget(vg, X, Y, W, H, lbl, b), m_itemType(FRTK_TREE_ITEM_NONE), m_level(-1),
+        Frtk_GrpWidget(vg, X, Y, W, H, lbl, b), m_itemType(FRTK_TREE_ITEM_NONE), m_level(-1), id(0),
         m_cachedWidth(0.0f), m_dirty(true), m_selected(false), m_open(false), m_draggin(false)
     {
         m_wdgType = FRTK_TREE_ITEM_WIDGET;

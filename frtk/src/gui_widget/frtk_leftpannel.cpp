@@ -39,7 +39,7 @@
 #include <fr_menu.h>
 
 namespace FR {
-    static void cb_BasicShapes(Frtk_Vwin* w, size_t index) {
+    static void cb_BasicShapes(Frtk_LeftPanel* w, size_t index) {
         if (!w || !w->m_linkToMainWindow) {
             FRTK_CORE_FATAL("Could not find a windows instances, Basic Shape callback");
             return;
@@ -89,15 +89,46 @@ namespace FR {
             win->activeScene->add3DObject(content, std::string("Wedge") + nr);
         } break;
         }
-       // updateModel();
     }
+    void Frtk_LeftPanel::updateTree() {
+        auto win = m_linkToMainWindow;
+        std::shared_ptr< Frtk_Tree_Item > root = std::dynamic_pointer_cast<Frtk_Tree_Item> (m_modelTree->getChildren()[0]);
+        auto children = root->getChildren();
+        for (auto wdg : m_linkToMainWindow->activeScene->m_world) {
+            bool found = false; 
+            for (size_t i = 0; i < children.size(); ++i) {
+                std::shared_ptr<Frtk_Tree_Item> itempntr = std::dynamic_pointer_cast<Frtk_Tree_Item> (children[i]);
+                FRTK_CORE_INFO("item id {}  wdg id {}", itempntr->id, wdg.id);
+                if(itempntr)
+                    if (itempntr->id == wdg.id) {
+                        found = true; 
+                        break;
+                    }   
+            }
+            if (!found) {
+                if (!(wdg.name == "Sun" || wdg.name == "Grid" || wdg.name == "Axis3D")) {
+                    std::shared_ptr<Frtk_Tree_Item> nItem = std::make_shared<Frtk_Tree_Item>(m_vg, 0.0f, 0.0f, 0.0f, 0.0f, wdg.name);
+                    nItem->id = wdg.id;
+                    auto root= std::dynamic_pointer_cast<Frtk_Tree_Item> (m_modelTree->getChildren()[0]);
+                    root->addChild(nItem);
+                }
+            }
+        }
+    }
+
+    void Frtk_LeftPanel::draw_focus()
+    {
+        //Here focus should be drawn in another way. At the moment we do nothing 
+        //TODO: FIX ME : 2026-06-01
+    }
+
     void Frtk_LeftPanel::setupModel() {
         auto cx = m_vg;
-        std::shared_ptr<Frtk_Tree> tree = std::make_shared<Frtk_Tree>(cx, 5.0f, 5.0f, m_w - 5.0f, m_h * 0.5f - 5.0f, "", FRTK_DOWN_BOX);
-        tree->color(FR_WHITE);
+        m_modelTree = std::make_shared<Frtk_Tree>(cx, 5.0f, 5.0f, m_w - 5.0f, m_h * 0.5f - 5.0f, "", FRTK_DOWN_BOX);
+        m_modelTree->color(FR_WHITE);
         auto root = std::make_shared<Frtk_Tree_Item>(cx, 0, 0, 0, 0, "Scene World");
         root->itemType(FRTK_TREE_ITEM_ROOT);
-        tree->addChild(root);
+        m_modelTree->addChild(root);
         for (auto obj : m_linkToMainWindow->activeScene->m_world) {
             if (!(obj.name == "Sun" || obj.name == "Grid" || obj.name == "Axis3D")) {
                 auto item = std::make_shared<Frtk_Tree_Item>(cx, 0, 0, 0, 0, obj.name);
@@ -105,7 +136,7 @@ namespace FR {
                 root->addChild(item);
             }
         }
-        m_Model->addChild(tree);
+        m_Model->addChild(m_modelTree);
     }
 
     Frtk_LeftPanel::Frtk_LeftPanel(float X, float Y, float W, float H, std::string lbl, BOX_TYPE b, bool hasHeader) : Frtk_Vwin(X, Y, W, H, lbl, b, hasHeader)

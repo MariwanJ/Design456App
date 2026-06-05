@@ -70,7 +70,10 @@ namespace FR {
         //        std::shared_ptr<Frtk_Tabwdg> getBasic();
         //        std::shared_ptr<Frtk_Tabwdg> getAdvanced();
         std::shared_ptr<Frtk_Tree> m_modelTree;
+        void updateTree();
+
     protected:
+        virtual void draw_focus() override;
         void setupModel();
         std::shared_ptr<Frtk_Tabs> m_mainTab;
         std::shared_ptr<Frtk_Tabwdg> m_Basic;

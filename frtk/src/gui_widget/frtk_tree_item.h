@@ -74,6 +74,7 @@ namespace FR {
         treeItemtype_t itemType();
         virtual void clearFocusAll() override;
         virtual void addChild(std::shared_ptr<Frtk_Widget> wdg) override;
+        uint64_t id;
 
     protected:
         Frtk_Tree_Item* getRoot() const;

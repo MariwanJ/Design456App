@@ -53,8 +53,9 @@ namespace FR {
     //TODO : THIS MUST BE FIXED !!!!!!
     void Fr_Scene::add3DObject(std::string fName, std::string objName)
     {
+        std::string nFname;
+        std::shared_ptr<Fr_Shape> newObj;
         if (fName.find(".off") != std::string::npos) {
-            std::shared_ptr<Fr_Shape> newObj;
             newObj = std::make_shared<Fr_Shape>(fName);
             newObj->Translate(0, 0, 0);
             newObj->Scale(1, 1, 1);
@@ -68,7 +69,6 @@ namespace FR {
             //std::string imag = (TexturePath+"3.png");
             //std::string imag = (TexturePath + "5.png");
             //std::string imag = (TexturePath+"default.png");
-
             if (newObj->m_Texture2D->set2DTexture(imag))
             {
                 newObj->m_Texture2D->setup2DTexture();      //Don't forget to do this always
@@ -78,18 +78,14 @@ namespace FR {
             }
             newObj->hasTexture(1);
             //convert fName to be a unique name
-            std::string nFname;
             if (objName.empty())
                 nFname = separateFN(fName);
             else
                 nFname = objName;
-
-            SceneItemStruct newtT(newObj, nFname);
-            m_world.push_back(newtT);
         }
         else if (fName.find("OFF") != std::string::npos) {
             // Here we have a header file with the .off file as a string
-            std::shared_ptr<Fr_Shape> newObj = std::make_shared<Fr_Shape>(fName);
+            newObj = std::make_shared<Fr_Shape>(fName);
             newObj->Translate(0, 0, 0);
             newObj->Scale(1, 1, 1);
             newObj->Rotate(0, 1, 0, 0); //TODO CHECK ME
@@ -106,14 +102,11 @@ namespace FR {
             }
             newObj->hasTexture(1);
             //convert fName to be a unique name
-            std::string nFname;
+
             if (objName.empty())
                 nFname = separateFN(fName);
             else
                 nFname = objName;
-            SceneItemStruct newtT(newObj, nFname);
-            m_world.push_back(newtT);
-            return;
         }
         else if (fName.find(".obj") != std::string::npos) {
             //Not implemented yet  - here .obj should be treated.
@@ -122,32 +115,11 @@ namespace FR {
         else {
             FR_DEBUG_BREAK;
         }
-        std::shared_ptr<FR::Fr_Window> win = FR::Fr_Window::getFr_Window();
-        FRTK_CORE_APP_ASSERT(win != nullptr);
-        std::shared_ptr<Frtk_Tabwdg> model_tab = win->m_leftPanel->getModel();
-        std::shared_ptr<Frtk_Tree> tree = win->m_leftPanel->m_modelTree;
-        auto cx = win->m_leftPanel->getContext();
-        for (auto& worldItem : win->activeScene->m_world)
-        {
-            bool exists = false;
-            for (auto& child : tree->getChildren())
-            {
-                if (child->label() == worldItem.name)
-                {
-                    exists = true;
-                    break;
-                }
-                if (!exists)
-                {
-                    if (worldItem.name != "Sun" &&
-                        worldItem.name != "Grid" &&
-                        worldItem.name != "Axis3D") {
-                        auto nItem = std::make_shared<Frtk_Tree_Item>(cx, 0.0f, 0.0f, 0.0f, 0.0f, worldItem.name);
-                        tree->addChild(nItem);
-                    }
-                }
-            }
-        }
+
+        SceneItemStruct newtT(newObj, nFname);
+        m_world.push_back(newtT);
+        auto win = Fr_Window::getFr_Window();
+        win->m_leftPanel->updateTree();
         return;
     }
 
