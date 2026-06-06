@@ -523,7 +523,20 @@ namespace FR {
 
     int Fr_Scene::handle(int ev)
     {
-        int res = handle_selection(ev);
+        if (ev == FR_LEFT_PUSH || 
+            ev == FR_LEFT_RELEASE ||
+            ev == FR_RIGHT_PUSH ||
+            ev == FR_RIGHT_RELEASE ||
+            ev == FR_MIDDLE_PUSH ||
+            ev == FR_MIDDLE_RELEASE ||
+            ev == GLFW_MOUSE_DOUBLE_CLICK|| //NOT SURE IF IT IS CORRECT
+            ev == FR_LEFT_DRAG_MOVE ||
+            ev == FR_RIGHT_DRAG_MOVE ||
+            ev == FR_LEFT_DRAG_PUSH ||
+            ev == FR_RIGHT_DRAG_PUSH 
+              ){ 
+            int res = handle_selection(ev);
+        }
         for (auto& obj : m_world) {
             if (obj.Sceneitem->handle(ev) == 1) {
                 return 1; //Event is consumed
@@ -705,7 +718,7 @@ namespace FR {
 
         std::shared_ptr<FR::Fr_Window> win = FR::Fr_Window::getFr_Window();
         FRTK_CORE_APP_ASSERT(win != nullptr);
-        GLFWwindow* glfWin = Fr_Window::getCurrentGLWindow();
+        //GLFWwindow* glfWin = Fr_Window::getCurrentGLWindow();
 
         auto& em = win->m_sysEvents.mouse;
         auto& ek = win->m_sysEvents.keyB;
@@ -728,7 +741,9 @@ namespace FR {
             else {
                 MyMesh& mesh = m_world.at(IndexOfclosestItem).Sceneitem->m_mesh;
                 if (!ek.ctrlDown) {
-                    mesh.clearAllSelections();
+                    for (size_t i = 0; i < m_world.size(); ++i) {
+                        m_world.at(i).Sceneitem->m_mesh.clearAllSelections(); //Deselect all objects that are not visible
+                    }
                 }
                 if (m_world.at(IndexOfclosestItem).Sceneitem->m_boundBox->isRayInsideBoundingBox(m_activeRay)) {
                     switch (m_currentSelMode) {
