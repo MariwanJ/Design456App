@@ -143,7 +143,6 @@ namespace FR {
     void Fr_Shape::Render(RenderInfo& info) {
         if (!m_active)
             return;
-        //auto mvp = info.projection * info.modelview * m_Matrix; //TODO: This is not correct as modelview = m_Matrix. We should separate these two things.
         auto mvp = info.projection * info.modelview;
         if (m_color.baseColor.a == 1)
             RenderSilhouette(mvp);

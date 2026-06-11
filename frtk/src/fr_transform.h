@@ -30,8 +30,12 @@
 #include <fr_core.h>
 #include <memory>
 
+
 namespace FR {
+    class Fr_Widget;
+
     class FRTK_API Fr_Transform {
+        friend Fr_Widget;
     public:
         /**
          * Constructor

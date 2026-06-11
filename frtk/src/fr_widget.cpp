@@ -129,6 +129,19 @@ namespace FR {
             }
         }
     }
+    void Fr_Widget::rebaseVerticesToLocalSpace()
+    {
+        glm::vec3 origin = m_boundBox->Center();
+        origin.z = m_boundBox->minZ();
+        for (size_t i = 0; i < m_vertices->size(); i += 3)
+        {
+            m_vertices->at(i + 0) -= origin.x;
+            m_vertices->at(i + 1) -= origin.y;
+            m_vertices->at(i + 2) -= origin.z;
+        }
+        m_transform.m_position += origin;
+        m_boundBox->calBoundBox(); // update bound box
+    }
 
     void Fr_Widget::ReadFile(const std::string& path) {
         if (!m_vertices) {
@@ -167,6 +180,7 @@ namespace FR {
         initializeVAO();
         CreateShader();
         calcualteTextCoor();  //TODO:  ??? don't think it is correct
+        rebaseVerticesToLocalSpace();
     }
 
     Fr_Widget::~Fr_Widget()
@@ -306,7 +320,7 @@ namespace FR {
     {
         m_color.baseColor = c;
     }
-   
+
     void Fr_Widget::do_callback()
     {
         throw NotImplementedException();
@@ -529,7 +543,7 @@ namespace FR {
         return false;
     }
 
-     void Fr_Widget::RenderTexture2D() {
+    void Fr_Widget::RenderTexture2D() {
     }
     void Fr_Widget::isActive(bool active) {
         m_active = active;

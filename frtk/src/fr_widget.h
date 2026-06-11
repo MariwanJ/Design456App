@@ -73,8 +73,6 @@ namespace FR {
         unsigned int faces_indices;
     }selection_vao_vbo_t;
 
-
-
     class Fr_Widget;
     class Fr_Group;
     class Shape;
@@ -259,7 +257,6 @@ namespace FR {
 
         virtual void calcualteTextCoor();
 
-        //
         virtual void createBuffers(void);
         virtual void initSelectionVAOs();
         virtual int initializeVBO(void);
@@ -301,11 +298,11 @@ namespace FR {
 
         /*
             Widget position:
-            Each 2D/3D object will have a Transform class which represent the 
-            translation, rotation, and scale. 
-            Vertices will be converted to world-space. 
-            i.e. they will be relative to origin and they 
-            get a transform for their position based on the 
+            Each 2D/3D object will have a Transform class which represent the
+            translation, rotation, and scale.
+            Vertices will be converted to world-space.
+            i.e. they will be relative to origin and they
+            get a transform for their position based on the
             vertices. This is to avoid the confusion you get
             in FreeCAD as not always the object is relative to
            origin which make translation, rotation more confusing.
@@ -313,6 +310,8 @@ namespace FR {
         Fr_Transform m_transform;
 
     protected:
+        
+        void rebaseVerticesToLocalSpace();
 
         virtual void lbl_draw();
 
