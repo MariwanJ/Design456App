@@ -523,18 +523,18 @@ namespace FR {
 
     int Fr_Scene::handle(int ev)
     {
-        if (ev == FR_LEFT_PUSH || 
+        if (ev == FR_LEFT_PUSH ||
             ev == FR_LEFT_RELEASE ||
             ev == FR_RIGHT_PUSH ||
             ev == FR_RIGHT_RELEASE ||
             ev == FR_MIDDLE_PUSH ||
             ev == FR_MIDDLE_RELEASE ||
-            ev == GLFW_MOUSE_DOUBLE_CLICK|| //NOT SURE IF IT IS CORRECT
+            ev == GLFW_MOUSE_DOUBLE_CLICK || //NOT SURE IF IT IS CORRECT
             ev == FR_LEFT_DRAG_MOVE ||
             ev == FR_RIGHT_DRAG_MOVE ||
             ev == FR_LEFT_DRAG_PUSH ||
-            ev == FR_RIGHT_DRAG_PUSH 
-              ){ 
+            ev == FR_RIGHT_DRAG_PUSH
+            ) {
             int res = handle_selection(ev);
         }
         for (auto& obj : m_world) {
@@ -733,7 +733,8 @@ namespace FR {
                 //TODO : check and test if this is the desired functionality for selection, deselection
                 if ((!ek.ctrlDown)) {
                     for (size_t i = 0; i < m_world.size(); ++i) {
-                        m_world.at(i).Sceneitem->m_mesh.clearAllSelections(); //Deselect all objects that are not visible
+                        //Deselect all objects
+                        m_world.at(i).Sceneitem->m_mesh.clearAllSelections();
                     }
                 }
                 result = -1; //no selection, all cleared
@@ -742,7 +743,7 @@ namespace FR {
                 MyMesh& mesh = m_world.at(IndexOfclosestItem).Sceneitem->m_mesh;
                 if (!ek.ctrlDown) {
                     for (size_t i = 0; i < m_world.size(); ++i) {
-                        m_world.at(i).Sceneitem->m_mesh.clearAllSelections(); //Deselect all objects that are not visible
+                        m_world.at(i).Sceneitem->m_mesh.clearAllSelections(); //Deselect all objects
                     }
                 }
                 if (m_world.at(IndexOfclosestItem).Sceneitem->m_boundBox->isRayInsideBoundingBox(m_activeRay)) {

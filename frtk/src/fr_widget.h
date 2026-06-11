@@ -143,9 +143,6 @@ namespace FR {
         virtual void ReadFile(const std::string& path);
         virtual void ReadMeshString(const std::string& mshData);
 
-        virtual glm::vec3 position(void);
-        virtual void position(glm::vec3 val);
-
         virtual bool SetupTexture2D();
         virtual void RenderTexture2D();
 
@@ -196,8 +193,6 @@ namespace FR {
         void has_focus(bool value);
         void visible(bool value);
         bool visible(void);
-
-
 
         /** Let the object be visible */
         virtual void show();
@@ -304,6 +299,19 @@ namespace FR {
             return static_cast<int>(m_WidgType) >= 40000;
         }
 
+        /*
+            Widget position:
+            Each 2D/3D object will have a Transform class which represent the 
+            translation, rotation, and scale. 
+            Vertices will be converted to world-space. 
+            i.e. they will be relative to origin and they 
+            get a transform for their position based on the 
+            vertices. This is to avoid the confusion you get
+            in FreeCAD as not always the object is relative to
+           origin which make translation, rotation more confusing.
+        */
+        Fr_Transform m_transform;
+
     protected:
 
         virtual void lbl_draw();
@@ -326,24 +334,6 @@ namespace FR {
         int uniqueIndex;
         int m_Parent; // -1 for Abstract class that doesn't have parent, and for the Root class
 
-        /*
-            Widget position,
-            but it is a problem since we have vertices and they are not normalized.
-            Any time position is changed, will make the vertices invalid as they will change their position
-            TODO: FIXME!!!!
-            Think about how to use this new variable,
-            The problem FreeCAD has about transformation should not affect this projects.
-            Always, position should be relative to origin (0,0,0) and the vertices should represent also the
-            same principle. how? i don't know yet!!
-        */
-        glm::vec3 m_WdgPosition;
-
-        //// OpenMesh Edges object. In this widget system we use edges not faces.
-        //std::vector<std::pair<MyMesh::VertexHandle, MyMesh::VertexHandle>> openEdges;
-
-        //std::vector<MyMesh::FaceHandle> m_faces;
-
-        /** From shader */
         /** Sets the uniform light data */
         virtual void LoadLights(std::shared_ptr<ShaderProgram> program, const std::vector<LightInfo>& lights);
 

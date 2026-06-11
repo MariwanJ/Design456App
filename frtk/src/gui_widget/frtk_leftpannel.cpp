@@ -127,6 +127,7 @@ namespace FR {
         m_modelTree = std::make_shared<Frtk_Tree>(cx, 5.0f, 5.0f, m_w - 5.0f, m_h * 0.5f - 5.0f, "", FRTK_DOWN_BOX);
         m_modelTree->color(FR_WHITE);
         auto root = std::make_shared<Frtk_Tree_Item>(cx, 0, 0, 0, 0, "Scene World");
+        root->Open(true);
         root->itemType(FRTK_TREE_ITEM_ROOT);
         m_modelTree->addChild(root);
         for (auto obj : m_linkToMainWindow->activeScene->m_world) {

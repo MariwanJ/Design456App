@@ -39,7 +39,7 @@ namespace FR {
         std::shared_ptr<std::vector <unsigned int>> indicies,
         std::string label) :m_vertices(std::move(vertices)),
         m_Matrix(glm::mat4(1.0f)), m_indices(std::move(indicies)), m_vao(0), m_vbo{ 0 },
-        m_lineWidth(1), m_selectionlineWidth(5), m_pointSize(10), m_WdgPosition(0), m_label(0), m_sel_vao({ 0 }), m_silhouette(DEFAULT_SIHOUETTE)
+        m_lineWidth(1), m_selectionlineWidth(5), m_pointSize(10), m_label(0), m_sel_vao({ 0 }), m_silhouette(DEFAULT_SIHOUETTE)
     {
         m_lineType = FR_NOT_DEFINED; //You should define it before use it
 
@@ -129,19 +129,6 @@ namespace FR {
             }
         }
     }
-    glm::vec3 Fr_Widget::position(void)
-    {
-        return m_WdgPosition;
-    }
-    void Fr_Widget::position(glm::vec3 val)
-    {
-        m_WdgPosition = val;
-        /*TODO: FIXME .. THIS SHOULD AFFECT THE VERTICES,
-            USING ONLY glm::translate will not affect the internal
-            vertices we have inside m_vertices.
-            We need to find out how to re-calculate them or not??
-            */
-    }
 
     void Fr_Widget::ReadFile(const std::string& path) {
         if (!m_vertices) {
@@ -198,7 +185,7 @@ namespace FR {
     }
     void Fr_Widget::SetupLight(const glm::mat4& modelview, std::vector<LightInfo>& lights)
     {
-        return; //You should override this
+        return; //do nothing should be sub-classed
     }
 
     void Fr_Widget::Render(RenderInfo& info)
@@ -240,11 +227,11 @@ namespace FR {
 
     bool Fr_Widget::setup()
     {
-        return false;   //Should be sub-classed to change that.
+        return false;   //do nothing should be sub-classed
     }
 
     void Fr_Widget::RenderText(RenderInfo& info) {
-        return; //should be sub-classed to define this
+        return;  //do nothing should be sub-classed
     }
 
     void Fr_Widget::resize(std::shared_ptr<std::vector<float>>vertices_,
@@ -291,14 +278,12 @@ namespace FR {
 
     int Fr_Widget::handle(int ev)
     {
-        return 0;
-        //This must be sub-classed.
+        return 0;  //do nothing should be sub-classed
     }
 
     void Fr_Widget::show()
     {
-        //This must be sub-classed.
-        m_visible = true;
+        m_visible = true;  //do nothing should be sub-classed
     }
 
     void Fr_Widget::hide()
@@ -321,7 +306,6 @@ namespace FR {
     {
         m_color.baseColor = c;
     }
-
    
     void Fr_Widget::do_callback()
     {
@@ -542,7 +526,6 @@ namespace FR {
 
     bool Fr_Widget::SetupTexture2D() {
         //Dummy code does nothing should be sub-classed
-        /*(void)info;*/
         return false;
     }
 
@@ -732,7 +715,6 @@ namespace FR {
                 m_vertices->at(i + 1),
                 m_vertices->at(i + 2)
             );
-
             // Normalize the vertex to fit between -1 and 1
             glm::vec3 normalized = (vertex - m_min) / range * 2.0f - 1.0f;
             m_vertices->at(i) = normalized.x;

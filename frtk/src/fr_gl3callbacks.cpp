@@ -123,8 +123,8 @@ namespace FR {
         if (spWindow->runCode && button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS) {
             spWindow->runCode = false;
             Fr_Camera& cam = spWindow->activeScene->getActiveCamera();
-            spWindow->theta_ = glm::degrees(atan2(cam.GetCamPosition().x, cam.GetCamPosition().y));
-            spWindow->phi_ = glm::degrees(asin(cam.GetCamPosition().z / glm::length(cam.GetCamPosition())));
+            spWindow->theta_ = glm::degrees(atan2(cam.Position().x, cam.Position().y));
+            spWindow->phi_ = glm::degrees(asin(cam.Position().z / glm::length(cam.Position())));
         }
         else if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_RELEASE) {
             spWindow->runCode = true;
@@ -278,7 +278,7 @@ namespace FR {
 
         Fr_Camera& cam = pwin->activeScene->getActiveCamera();
 
-        pwin->radiusXYZ = glm::length(cam.m_position);
+        pwin->radiusXYZ = glm::length(cam.Position());
 
         // Compute deltas
         auto& mouse = pwin->m_sysEvents.mouse;
@@ -458,4 +458,5 @@ namespace FR {
         mFace->SetColor(glm::vec4(FR_GREENYELLOW));
         activeScene->addObject(mFace, "Fr_Face_Widget");
     }
+ 
 }

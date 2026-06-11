@@ -69,7 +69,7 @@ namespace FR {
 
     glm::vec3 Fr_Window::getPointOnRay(const glm::vec3& ray, float distance)
     {
-        glm::vec3 camPos = activeScene->m_cameras[(unsigned int)activeScene->m_active_camera].GetCamPosition();
+        glm::vec3 camPos = activeScene->m_cameras[(unsigned int)activeScene->m_active_camera].Position();
         return (camPos + ray * distance);
     }
 

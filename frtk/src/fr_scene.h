@@ -146,8 +146,6 @@ namespace FR {
             answer.reset(); 
         }
 
-
-
         void add3DObject(std::string fName, std::string objName = "");
         void addObject(SceneItemStruct&& item);
         void addObject(std::shared_ptr<Fr_Widget> item, std::string name = "NoName");

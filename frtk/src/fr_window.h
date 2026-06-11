@@ -62,9 +62,10 @@ namespace FR {
 
     protected:
         Fr_Window(int x, int y, int w, int h, const std::string& label);
+        
 
     public:
-        void RenderGizmo(void);
+        void RenderAxisGizmo(void);
 
         virtual int Exit();
         /**
@@ -268,7 +269,9 @@ namespace FR {
         void mnuEditPaste(void* Data);
 
         void mnuDrawLine_cb(void* Data);
-
+        void activateTranslationAt(SceneItemStruct& item, dimPos_float_t pos ={0.0f , 0.0f});
+        bool m_showGizmo;
+        dimSize_float_t m_gizmoTranslationPos;
         /**
          * GLAD VERSION DEFINITION
          * Currently it is 4.3.

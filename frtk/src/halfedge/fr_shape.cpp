@@ -56,7 +56,7 @@ namespace FR {
         else {
             FRTK_CORE_APP_ASSERT("ERROR: No mesh provided to the class");
         }
-        init(); //This will initializes all Openmesh, vertices, edget ..etc
+        init(); //This will initializes all Openmesh, vertices, edges ..etc
 
         if (m_label) {
             m_label->pos(glm::vec3(m_boundBox->minX(), m_boundBox->maxY(), 0.0f));

@@ -76,6 +76,10 @@ namespace FR {
     {
         return m_open;
     }
+    void Frtk_Tree_Item::Open(bool val)
+    {
+        m_open = val;
+    }
     bool Frtk_Tree_Item::isTail()
     {
         return (m_itemType == FRTK_TREE_ITEM_TAIL);

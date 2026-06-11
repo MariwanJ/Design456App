@@ -65,8 +65,6 @@ namespace FR {
         Fr_Camera& operator=(const Fr_Camera& other) = delete;
 
         void SetCamPosition(float x, float y, float z);
-        glm::vec3 GetCamPosition() const;
-
         glm::vec3 GetCamDirection() const;
 
         void setupCameraHomeValues();
@@ -74,6 +72,8 @@ namespace FR {
         void SetDirection(float x, float y, float z);
 
         void SetUp(float x, float y, float z);
+        void isActive(bool active);
+        bool isActive(void);
 
         /**
          * .
@@ -112,9 +112,8 @@ namespace FR {
         float getRatio() const;
 
     private:
-
+        bool m_active;
         uint8_t m_camType;
-        glm::vec3 m_position;
         glm::vec3 m_direction;
         glm::vec3 m_up;   //RIGHT
         float m_fovy;     //LEFT

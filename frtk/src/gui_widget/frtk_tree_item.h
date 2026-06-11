@@ -67,6 +67,7 @@ namespace FR {
         Frtk_Tree_Item(NVGcontext* vg, float X, float Y, float W, float H, std::string label = "", BOX_TYPE b = FRTK_NO_BOX);
         virtual ~Frtk_Tree_Item();
         bool isOpen(void);
+        void Open(bool val);
         bool isTail();
         bool isRoot() const;
         virtual bool hasChildren() override;

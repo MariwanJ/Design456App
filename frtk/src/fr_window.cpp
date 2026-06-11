@@ -176,7 +176,9 @@ namespace FR {
         radiusXYZ(0.0f),
         m_winType(FRTK_WIN_TYPE::NORMAL),
         m_leftPanel(nullptr),
-        m_menuHeight(5.0f)
+        m_menuHeight(5.0f),
+        m_showGizmo(false),
+        m_gizmoTranslationPos({ 0.0f, 0.0f })
     {
         /** from Fr_Window */
         mouseDefaults.MouseScrollScale = 5.0f;

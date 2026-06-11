@@ -31,104 +31,67 @@
 
 namespace FR {
     Fr_Transform::Fr_Transform() :
-        m_Position(0, 0, 0),
-        x_{ 0 },
-        y_{ 0 },
-        z_{ 0 },
-        v_(0, 0, 0),
-        invertX_{ false },
-        invertY_{ false }
+        m_position(0, 0, 0),
+        m_x{ 0 },
+        m_y{ 0 },
+        m_z{ 0 }
     {
-        m_ViewMatrix = glm::mat4(1.0f);
-        m_InverseViewMatrix = glm::inverse(m_ViewMatrix);
+        m_viewMatrix = glm::mat4(1.0f);
+        m_InverseViewMatrix = glm::inverse(m_viewMatrix);
     }
 
     void Fr_Transform::Rotate(float x, float y, float z, float angle) {
-        m_ViewMatrix = glm::rotate(m_ViewMatrix, glm::radians(angle), glm::vec3(x, y, z));
-        m_InverseViewMatrix = glm::inverse(m_ViewMatrix);
+        m_viewMatrix = glm::rotate(m_viewMatrix, glm::radians(angle), glm::vec3(x, y, z));
+        m_InverseViewMatrix = glm::inverse(m_viewMatrix);
     }
 
     void Fr_Transform::Rotate(glm::vec3 axis, float angle)
     {
-        m_ViewMatrix = glm::rotate(m_ViewMatrix, glm::radians(angle), axis);
-        m_InverseViewMatrix = glm::inverse(m_ViewMatrix);
+        m_viewMatrix = glm::rotate(m_viewMatrix, glm::radians(angle), axis);
+        m_InverseViewMatrix = glm::inverse(m_viewMatrix);
     }
 
     void Fr_Transform::Translate(glm::vec3 value) {
-        m_ViewMatrix = glm::translate(glm::mat4{ 1 }, value);
-        m_InverseViewMatrix = glm::inverse(m_ViewMatrix);
+        m_viewMatrix = glm::translate(glm::mat4{ 1 }, value);
+        m_InverseViewMatrix = glm::inverse(m_viewMatrix);
     }
 
     void Fr_Transform::Translate(float x, float y, float z) {
-        x_ = x; y_ = y; z_ = z;
-        m_ViewMatrix = glm::translate(glm::mat4{ 1 }, glm::vec3(x, y, z));
-        m_InverseViewMatrix = glm::inverse(m_ViewMatrix);
+        m_x = x; m_y = y; m_z = z;
+        m_viewMatrix = glm::translate(glm::mat4{ 1 }, glm::vec3(x, y, z));
+        m_InverseViewMatrix = glm::inverse(m_viewMatrix);
     }
 
     void Fr_Transform::Scale(float x, float y, float z) {
-        m_ViewMatrix = glm::scale(m_ViewMatrix, glm::vec3(x, y, z));
-        m_InverseViewMatrix = glm::inverse(m_ViewMatrix);
+        m_viewMatrix = glm::scale(m_viewMatrix, glm::vec3(x, y, z));
+        m_InverseViewMatrix = glm::inverse(m_viewMatrix);
     }
 
     void Fr_Transform::Scale(glm::vec3 value) {
-        m_ViewMatrix = glm::scale(m_ViewMatrix, value);
-        m_InverseViewMatrix = glm::inverse(m_ViewMatrix);
+        m_viewMatrix = glm::scale(m_viewMatrix, value);
+        m_InverseViewMatrix = glm::inverse(m_viewMatrix);
     }
 
     glm::mat4 Fr_Transform::GetViewMatrix() {
-        return m_ViewMatrix;
+        return m_viewMatrix;
     }
 
     glm::mat4 Fr_Transform::GetInverseViewMatrix() {
         return m_InverseViewMatrix;
     }
 
-    void Fr_Transform::SetPosition(float x, float y, float z) {
-        m_Position = glm::vec3(x, y, z);
-        Translate(m_Position);
+    void Fr_Transform::Position(float x, float y, float z) {
+        m_position = glm::vec3(x, y, z);
+        Translate(m_position);
     }
 
-    void Fr_Transform::SetPosition(glm::vec3 pos)
+    void Fr_Transform::Position(glm::vec3 pos)
     {
-        m_Position = pos;
+        m_position = pos;
         Translate(pos);
     }
 
-    void Fr_Transform::SetInvertAxis(bool invertX, bool invertY) {
-        invertX_ = invertX;
-        invertY_ = invertY;
+    glm::vec3 Fr_Transform::Position() {
+        return m_position;
     }
-
-    glm::vec3 Fr_Transform::computeSphereCoordinate(double x, double y) {
-        int vp[4];
-        glGetIntegerv(GL_VIEWPORT, vp);
-        const float w = (float)vp[2];
-        const float h = (float)vp[3];
-
-        if (invertX_) x = w - x;
-        if (invertY_) y = h - y;
-
-        const float radius = std::min(w / 2.0f, h / 2.0f);
-        float vx = float((x - w / 2.0f) / radius);
-        float vy = float((h - y - h / 2.0f) / radius);
-        float vz = 0.f;
-
-        const float dist = hypot(vx, vy);
-        if (dist > 1.0f) {
-            vx /= dist;
-            vy /= dist;
-        }
-        else {
-            vz = sqrt(1 - vx * vx - vy * vy);
-        }
-        return glm::vec3(vx, vy, vz);
-    }
-
-    bool Fr_Transform::isActive(void) {
-        return m_active;
-    }
-    void Fr_Transform::isActive(bool val) {
-        m_active = val;
-    }
-
 }

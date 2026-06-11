@@ -35,50 +35,49 @@
 
 #include "ImGuizmo.h"
 
-
 namespace FR {
     int Fr_Window::imguimzo_init()
     {
         return 0;
     }
 
-    void Fr_Window::RenderGizmo(void) {
+    void Fr_Window::RenderAxisGizmo(void) {
         Fr_Camera& cam = activeScene->getActiveCamera();
         userData_t data;
         ImGuiIO& io = ImGui::GetIO();
         cam.getCamData(data);
-         ImGuizmo::SetRect(0.f, 0.f, (float)w(), (float)h());
+        ImGuizmo::SetRect(0.f, 0.f, (float)w(), (float)h());
         glm::mat4 view = cam.GetViewMatrix();
         float viewManipulateSize = 100.0f;
-        
+
         ImVec2 pos(x() + w() - (int)viewManipulateSize, y() + 105);
         ImVec2 size(viewManipulateSize, viewManipulateSize);
         ImGuizmo::ViewManipulate(
-            glm::value_ptr(view),               
-            viewManipulateSize,                 
+            glm::value_ptr(view),
+            viewManipulateSize,
             pos,
             size,
-            0x60606060                        
+            0x60606060
         );
-        if (m_NaviCube){
+        if (m_NaviCube) {
             view = glm::inverse(view);
-            data.cam_pos_= glm::vec3(view[3]);
-            data.up_=(glm::vec3(view[1]));
+            data.cam_pos_ = glm::vec3(view[3]);
+            data.up_ = (glm::vec3(view[1]));
             cam.setCamData(data);
         }
         //Axis under Navi Cube
         const float gizmoSize = 500.f;
         const float margin = 150.0f;
         const float* noSnap = nullptr;
-        pos=ImVec2(pos.x -200, pos.y-50);
+        pos = ImVec2(pos.x - 200, pos.y - 50);
         ImGuizmo::SetDrawlist(ImGui::GetForegroundDrawList());
         ImGuizmo::SetRect(pos.x, pos.y, gizmoSize, gizmoSize);
-        glm::mat4 identity(1.0f); //dummy 
+        glm::mat4 identity(1.0f); //dummy
         view[3] = glm::vec4(0, 0, 0, 1);
         ImGuizmo::Enable(true);
 
-         glm::mat4 newViewMatrix = glm::mat4(glm::mat3(cam.GetViewMatrix()));// Extract rotation 
-         newViewMatrix[3] = glm::vec4(0.0f, 0.0f, -150.0f, 1.0f);        // Translation 
+        glm::mat4 newViewMatrix = glm::mat4(glm::mat3(cam.GetViewMatrix()));// Extract rotation
+        newViewMatrix[3] = glm::vec4(0.0f, 0.0f, -150.0f, 1.0f);        // Translation
 
         ImGuizmo::Manipulate(
             glm::value_ptr(newViewMatrix),
@@ -89,9 +88,7 @@ namespace FR {
             nullptr,
             noSnap
         );
-
     }
-
 
     /************************
     *   Contains all ImGUI and ImGuimzo functions
@@ -106,14 +103,66 @@ namespace FR {
         //ImGuiStyle& style = ImGui::GetStyle();
         //style.WindowPadding = ImVec2(1, 1);
         //style.FramePadding = ImVec2(1, 1);
-        RenderGizmo();
+        RenderAxisGizmo();
         if (imgui_menu() < 0) {
             return -1;
         }
+        if (m_showGizmo) {
+            // activateTranslationAt();    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        }
         return 1;
     }
-    
-    
+
+    void Fr_Window::activateTranslationAt(SceneItemStruct& item, dimPos_float_t in_pos)
+    {
+        Fr_Camera& cam = activeScene->getActiveCamera();
+        userData_t data;
+        ImGuiIO& io = ImGui::GetIO();
+        cam.getCamData(data);
+        ImGuizmo::SetRect(0.f, 0.f, (float)w(), (float)h());
+        glm::mat4 view = cam.GetViewMatrix();
+        float viewManipulateSize = 100.0f;
+
+        ImVec2 pos(in_pos.x, in_pos.y);
+        ImVec2 size(viewManipulateSize, viewManipulateSize);
+        ImGuizmo::ViewManipulate(
+            glm::value_ptr(view),
+            viewManipulateSize,
+            pos,
+            size,
+            0x60606060
+        );
+        view = cam.GetViewMatrix();
+        glm::mat4 objectMatrix = item.Sceneitem->GetMatrix();
+        const float* noSnap = nullptr;
+
+        ImGuizmo::Manipulate(
+            glm::value_ptr(view),
+            glm::value_ptr(cam.getProjection()),
+            ImGuizmo::TRANSLATE,
+            ImGuizmo::LOCAL,
+            glm::value_ptr(objectMatrix)
+        );
+        float matrixTranslation[3];
+        float matrixRotation[3];
+        float matrixScale[3];
+
+        ImGuizmo::DecomposeMatrixToComponents(
+            glm::value_ptr(objectMatrix),
+            matrixTranslation,
+            matrixRotation,
+            matrixScale
+        );
+
+        //TODO THIS IS WRONG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //TODO THIS IS WRONG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        item.Sceneitem->m_transform.Position(glm::vec3(matrixTranslation[0],
+            matrixTranslation[1],
+            matrixTranslation[2]));
+        item.Sceneitem->m_transform.Rotate(matrixRotation[0], matrixRotation[1], matrixRotation[2], 0);
+        item.Sceneitem->m_transform.Scale(matrixScale[0], matrixScale[1], matrixScale[2]);
+    }
+
     float Fr_Window::getAspectRation() const
     {
         return Fr_Camera::m_aspect_ratio;
@@ -157,7 +206,7 @@ namespace FR {
             }
             if (ImGui::BeginMenu("Tools"))
             {
-              //  ImGui::MenuItem("Show/Hide Camera Options", "", &CamerOptionVisible);
+                //  ImGui::MenuItem("Show/Hide Camera Options", "", &CamerOptionVisible);
                 ImGui::EndMenu();
             }
             ImGui::EndMainMenuBar();
@@ -165,5 +214,4 @@ namespace FR {
         m_menuHeight = ImGui::GetFrameHeight();
         return 0;
     }
-
 }

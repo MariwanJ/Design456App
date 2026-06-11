@@ -65,11 +65,10 @@ namespace FR {
 
     protected:
         //Camera ViewMatrix and it's inverse
-        glm::mat4 m_ViewMatrix;
+        glm::mat4 m_viewMatrix;
         glm::mat4 m_InverseViewMatrix;
 
     public:
-
         /**
          * Accumulates the inverse of the manipulator matrix
          */
@@ -79,34 +78,13 @@ namespace FR {
         /**
          * Sets the reference point (world center)
          */
-        void SetPosition(float x, float y, float z);
+        void Position(float x, float y, float z);
+        void Position(glm::vec3 pos);
+        glm::vec3 Position();
 
-        void SetPosition(glm::vec3 pos);
-
-        /**
-         * Sets whether each axis is inverted or not
-         */
-        void SetInvertAxis(bool invertX, bool invertY = false);
-
-        bool isActive(void);
-        void isActive(bool val);
     protected:
-        bool m_active;
-    private:
-        enum class Operation {
-            kRotation,  //Mouse click and drag
-            kZoom,       //Left mouse and drag
-            kNone       //nothing
-        };
-
-        /** Computes the sphere vector for rotation */
-        glm::vec3 computeSphereCoordinate(double x, double y);
-
-        glm::vec3 m_Position;
-        Operation operation_;
-        float x_, y_, z_;
-        glm::vec3 v_;
-        bool invertX_, invertY_;
+        glm::vec3 m_position;
+        float m_x, m_y, m_z;
     };
 }
 
