@@ -111,15 +111,14 @@ namespace FR {
 
         // Default constructor is disallowed
         Fr_Widget() = delete;
-        Fr_Widget(std::shared_ptr <std::vector<float>> vertices,
-            std::shared_ptr <std::vector<unsigned int>> indicies,
-            std::string label);
+        Fr_Widget(std::string label);
+        Fr_Widget(const MyMesh& mesh, std::string label) ;
 
         //TODO: Should this be public??
         virtual void init(void); //We need this if the widget is created (sub-classed) without vertices, like in reading files.
 
         /** Virtual destructor */
-        virtual ~Fr_Widget();
+        virtual ~Fr_Widget() = default;
 
         /** Create shader program that will be used by the entire widget system */
         virtual void CreateShader();
@@ -343,7 +342,6 @@ namespace FR {
         bool m_resizable;
         int m_tabIndex;
         int m_hasTexture;
-        glm::mat4 m_Matrix;
         bool m_normalized; //if the vertices are normalized
 
         // Attributes

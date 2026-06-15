@@ -45,13 +45,13 @@ namespace FR {
         if (pwin->m_ViewPort.size.h != 0) {
             pwin->activeScene->m_cameras[index].m_aspect_ratio = static_cast<float>(pwin->m_ViewPort.size.w) / pwin->m_ViewPort.size.h;
         }
-        spWindow->resizeWindow(spWindow->x(), spWindow->y(), float(width), float(height));
+        spWindow->resizeWindow(spWindow->x(), spWindow->y(), width, height);
     }
     void Fr_Window::glfwWindPos(GLFWwindow* window, int pos_x, int pos_y)
     {
+        (void)window;
         if (spWindow == nullptr)
             return;
-        (void)window;
         Fr_Window* pwin = spWindow.get();
         pwin->m_ViewPort.pos.x = pos_x;
         pwin->m_ViewPort.pos.y = pos_y;
@@ -107,15 +107,20 @@ namespace FR {
 
     void Fr_Window::char_callback(GLFWwindow* window, unsigned int codepoint)
     {
+        (void)window;
         if (!spWindow) return;
         spWindow->m_unicodeChars.push_back({ codepoint });
     }
 
     void Fr_Window::joystick_callback(int jid, int events)
     {
+        (void)events;        (void)jid;
+
+
     }
     void Fr_Window::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     {
+        (void)window;
         if (!spWindow) return;
         auto& em = spWindow->m_sysEvents.mouse;
 
@@ -330,99 +335,116 @@ namespace FR {
 
     /**  callbacks */
     void Fr_Window::mnuFileNew_cb(void* Data) {
+        (void)Data;
         mainToolbar_callback(FR_FILE_NEW);
     }
 
     void Fr_Window::mnuFileOpen_cb(void* Data) {
+        (void)Data;
         mainToolbar_callback(FR_FILE_OPEN);
     }
 
     void Fr_Window::mnuFileClose_cb(void* Data) {
+        (void)Data;
         mainToolbar_callback(FR_FILE_CLOSE);
     }
 
     void Fr_Window::mnuFileSave_cb(void* Data) {
+        (void)Data;
         mainToolbar_callback(FR_FILE_SAVE);
     }
 
     void Fr_Window::mnuFileSaveAs_cb(void* Data) {
+        (void)Data;
         mainToolbar_callback(FR_FILE_SAVEAS);
     }
 
     void Fr_Window::mnuFileExport_cb(void* Data) {
+        (void)Data;
         mainToolbar_callback(FR_FILE_EXPORT);
     }
 
     void Fr_Window::mnuFileImport_cb(void* Data) {
+        (void)Data;
         mainToolbar_callback(FR_FILE_IMPORT);
     }
 
     void Fr_Window::mnuFileExit_cb(void* Data) {
+        (void)Data;
         Exit();
     }
 
     //Selection toolbar callbacks
     void Fr_Window::mnuSelMesh_cb(void* data)
     {
+        (void)data;
+
         //TODO: NOT SURE WHAT TO HAVE HERE !!2026-02-16
     }
 
     void Fr_Window::mnuSelFace_cb(void* data)
     {
+        (void)data;
         //TODO: NOT SURE WHAT TO HAVE HERE !!2026-02-16
     }
 
     void Fr_Window::mnuSelEdges_cb(void* data)
     {
+        (void)data;
         //TODO: NOT SURE WHAT TO HAVE HERE !!2026-02-16
     }
 
     void Fr_Window::mnuSelVertex_cb(void* data)
     {
+        (void)data;
         //TODO: NOT SURE WHAT TO HAVE HERE !!2026-02-16
     }
 
     void Fr_Window::mnuEditUndo(void* Data) {
+        (void)Data;
         mainToolbar_callback(FR_EDIT_UNDO);
     }
 
     void Fr_Window::mnuEditRedo(void* Data) {
+        (void)Data;
         mainToolbar_callback(FR_EDIT_REDO);
     }
 
     void Fr_Window::mnuEditCopy(void* Data) {
+        (void)Data;
         mainToolbar_callback(FR_EDIT_COPY);
     }
 
     void Fr_Window::mnuEditCut(void* Data) {
+        (void)Data;
         mainToolbar_callback(FR_EDIT_CUT);
     }
 
     void Fr_Window::mnuEditPaste(void* Data) {
+        (void)Data;
         mainToolbar_callback(FR_EDIT_PASTE);
     }
 
     //Special Toolbars
     //Experimental code  -- just for debugging purpose
     void Fr_Window::mnuDrawLine_cb(void* Data) {
+        (void)Data;
         //We assume that we work only on XY plane where Z=0 :
         //
         // TODO . Make this more general and possible to use any face of any object to draw
         std::shared_ptr<std::vector<float>> vert = std::make_shared<std::vector<float>>();
         std::shared_ptr<std::vector<unsigned int>> ind = std::make_shared<std::vector<unsigned int>>();
         //Temporary code .. make a line from (0x0x0) to (100,100,100)
-        vert->push_back(10.0f);
-        vert->push_back(10.0f);
-        vert->push_back(0.0f);
-        vert->push_back(100.0f);
-        vert->push_back(100.0f);
-        vert->push_back(0.0f);
 
-        ind->push_back(0);
-        ind->push_back(1);
+        MyMesh mesh;
 
-        std::shared_ptr<Fr_Line_Widget> mline = std::make_shared<Fr_Line_Widget>(vert, ind);
+        auto v0 = mesh.add_vertex(MyMesh::Point(10.0f, 10.0f, 0.0f));
+        auto v1 = mesh.add_vertex(MyMesh::Point(100.0f, 100.0f, 0.0f));
+        auto v2 = mesh.add_vertex(MyMesh::Point(100.0f, 100.001f, 0.0f));
+        // Create face
+        mesh.add_face( v0, v1, v2 );
 
+        std::shared_ptr<Fr_Line_Widget> mline = std::make_shared<Fr_Line_Widget>(mesh);
         mline->pointPicker(true);
         mline->SetColor(glm::vec4(FR_RED));
         activeScene->addObject(mline, "Fr_Line_Widget");
@@ -431,29 +453,26 @@ namespace FR {
         std::shared_ptr<std::vector<float>> vert2 = std::make_shared<std::vector<float>>();
         std::shared_ptr<std::vector<unsigned int>> ind2 = std::make_shared<std::vector<unsigned int>>();
 
-        vert2->push_back(-10.0f);
-        vert2->push_back(-10.0f);
-        vert2->push_back(0.0f);
+        MyMesh mesh1;
 
-        vert2->push_back(-30.0f);
-        vert2->push_back(-10.0f);
-        vert2->push_back(0.0f);
+        auto vv0 = mesh1.add_vertex(MyMesh::Point(-10.0f, -10.0f, 0.0f));
+        auto vv1 = mesh1.add_vertex(MyMesh::Point(-30.0f, -10.0f, 0.0f));
+        auto vv2 = mesh1.add_vertex(MyMesh::Point(-30.0f, -30.0f, 0.0f));
+        auto vv3 = mesh1.add_vertex(MyMesh::Point(-10.0f, -30.0f, 0.0f));
 
-        vert2->push_back(-30.0f);
-        vert2->push_back(-30.0f);
-        vert2->push_back(0.0f);
+        std::vector<MyMesh::VertexHandle> face;
+        face.push_back(vv0);
+        face.push_back(vv1);
+        face.push_back(vv2);
+        face.push_back(vv3);
 
-        vert2->push_back(-10.0f);
-        vert2->push_back(-30.0f);
-        vert2->push_back(0.0f);
+        auto fh = mesh1.add_face(face);
 
-        ind2->push_back(0);
-        ind2->push_back(1);
-        ind2->push_back(2);
-        ind2->push_back(3);
-
-        std::shared_ptr<Fr_Face_Widget> mFace = std::make_shared<Fr_Face_Widget>(vert2, ind2);
-
+        if (!fh.is_valid())
+        {
+            std::cout << "Failed to create face\n";
+        }
+        std::shared_ptr<Fr_Face_Widget> mFace = std::make_shared<Fr_Face_Widget>(mesh1);
         mFace->pointPicker(true);
         mFace->SetColor(glm::vec4(FR_GREENYELLOW));
         activeScene->addObject(mFace, "Fr_Face_Widget");

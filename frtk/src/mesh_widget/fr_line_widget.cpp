@@ -29,9 +29,7 @@
 #include <glm/gtx/transform.hpp>
 #include <fr_window.h>
 namespace FR {
-    Fr_Line_Widget::Fr_Line_Widget(std::shared_ptr<std::vector <float>> vertices,
-                                    std::shared_ptr<std::vector <unsigned int>> indicies,
-                                    std::string label) : Fr_Widget(vertices, indicies, label), m_pointPicker(false)
+    Fr_Line_Widget::Fr_Line_Widget(std::string label) : Fr_Widget(label), m_pointPicker(false)
     {
         m_normals = std::make_shared<std::vector<float>>();
         m_textureCoord = std::make_shared<std::vector<float>>();
@@ -86,6 +84,10 @@ namespace FR {
         m_lineType = FR_LINES;
         //always mesh will be fake since it is only 2D widget
         m_mesh.property(m_mesh.m_fake) = wasFake;
+    }
+
+    Fr_Line_Widget::Fr_Line_Widget(MyMesh& mesh, std::string label):Fr_Widget(mesh,label)
+    {
     }
 
     Fr_Line_Widget::~Fr_Line_Widget()
@@ -145,7 +147,7 @@ namespace FR {
     void Fr_Line_Widget::RenderSelection(RenderInfo& info) {
         if (!m_active)
             return;
-        auto mvp = info.projection * info.modelview * m_Matrix;
+        auto mvp = info.projection * info.modelview * m_transform.m_Matrix;
         m_shader->wdg_selection_prog->Enable();
         m_shader->wdg_selection_prog->SetAttribLocation("position", 0);
         m_shader->wdg_selection_prog->SetAttribLocation("selectionMask", 1); // depending on the status, it will give yellow color or color
@@ -166,7 +168,7 @@ namespace FR {
         if (!m_active)
             return;
 
-        auto mvp = info.projection * info.modelview * m_Matrix;
+        auto mvp = info.projection * info.modelview * m_transform.m_Matrix;
         auto normalmatrix = glm::transpose(glm::inverse(info.modelview));
         m_shader->wdg_prog->Enable();
         LoadLights(m_shader->wdg_prog, info.lights);

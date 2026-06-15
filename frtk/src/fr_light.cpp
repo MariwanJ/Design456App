@@ -30,7 +30,7 @@
 #include <fr_light.h>
 #include <fr_widget.h>
 namespace FR {
-    Fr_Light::Fr_Light(glm::vec4 m_lightColor) :Fr_Widget(NULL,NULL,""),
+    Fr_Light::Fr_Light(glm::vec4 m_lightColor) :Fr_Widget(""),
                                                 m_lightColor(m_lightColor),
                                                 m_position(0, 0, 0, 1),
                                                 m_ambient(0.2, 0.2, 0.2, 1),
@@ -49,7 +49,7 @@ namespace FR {
         m_spot_direction = glm::vec4(0, 0, 0, 0);
         m_spot_exponent = 0.0f;
     }
-    Fr_Light::Fr_Light():Fr_Widget(NULL, NULL, ""), m_lightColor(m_lightColor),
+    Fr_Light::Fr_Light():Fr_Widget(""), m_lightColor(m_lightColor),
                                                     m_position(0, 0, 0, 1),
                                                     m_ambient(0.2, 0.2, 0.2, 1),
                                                     m_diffuse(0.4, 0.4, 0.4, 1),

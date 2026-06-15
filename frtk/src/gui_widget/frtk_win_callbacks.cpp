@@ -52,12 +52,13 @@ namespace FR {
     }
     void Frtk_Window::framebuffer_size_callback(GLFWwindow* window, int width, int height)
     {
+        (void)window;
         if (sp_popWindow == nullptr)
             return;
         Frtk_Window* pwin = Frtk_Window::getWindow();
         pwin->m_ViewPort.size.w = width;
         pwin->m_ViewPort.size.h = height;
-        if (s_GLFWpopInitialized && s_GLFWpopInitialized) {
+        if (s_GLFWpopInitialized) {
             glViewport(0, 0, width, width);
         }
     }
@@ -100,15 +101,18 @@ namespace FR {
 
     void Frtk_Window::char_callback(GLFWwindow* window, unsigned int codepoint)
     {
+        (void)window;
         if (!sp_popWindow) return;
         sp_popWindow->m_unicodeChars.push_back({ codepoint });
     }
 
     void Frtk_Window::joystick_callback(int jid, int events)
     {
+        (void)events; (void)jid;
     }
     void Frtk_Window::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     {
+        (void)window;
         if (!sp_popWindow) return;
         auto& em = sp_popWindow->m_sysEvents.mouse;
 

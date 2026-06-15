@@ -75,7 +75,7 @@ namespace FR {
     GLFWwindow* Frtk_Window::m_glfWindow = nullptr;
 
     Frtk_Window::Frtk_Window(int X, int Y, int W, int H, std::string lbl, BOX_TYPE b) :
-        Frtk_BaseWin(X, Y, W, H, lbl, b),
+        Frtk_BaseWin((float)X, (float)Y, (float)W, (float)H, lbl, b),
         MainWinCursor(nullptr), glfDim({ {(int)X,(int)Y }, { (int)W,(int)H } }),
         gl_version_major(4), gl_version_minor(6), m_linkToMainWindow(nullptr) {
         // Initialize GLFW
@@ -96,6 +96,8 @@ namespace FR {
     }
     int Frtk_Window::handle(int ev)
     {
+        (void)ev;
+        //TODO FIX ME !!! 2026-06-15
         return 0;
     }
 
@@ -195,7 +197,7 @@ namespace FR {
     {
         glfDim.pos.x = (int)X;
         glfDim.pos.y = (int)Y;
-        glfwSetWindowPos(m_glfWindow, X, Y);
+        glfwSetWindowPos(m_glfWindow, glfDim.pos.x, glfDim.pos.y);
     }
     int Frtk_Window::Exit()
     {

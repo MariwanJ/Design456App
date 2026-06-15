@@ -35,6 +35,7 @@
 namespace FR {
     //Default callback function.Replace with your custom callback.Arguments are possible.
     static void default_callback(Frtk_Widget& w) {
+        (void)w;
         FRTK_CORE_INFO("Default callback: replace this with your custom callback");
     }
 
@@ -112,6 +113,7 @@ namespace FR {
     }
 
     int Frtk_Widget::handle(int ev) {
+        (void)ev;
         throw NotImplementedException();  // this method should be implemented by subclassing the widget
     }
 
@@ -139,9 +141,11 @@ namespace FR {
         throw NotImplementedException();  // this method should be implemented by subclassing the widget
     }
     void Frtk_Widget::drawBox(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 c) {
+        (void)t; (void)X; (void)Y; (void)W; (void)H; (void)c;
         throw NotImplementedException();  // this method should be implemented by subclassing the widget
     }
     void Frtk_Widget::drawBox(BOX_TYPE t, glm::vec4 c) {
+        (void)t; (void)c;
         throw NotImplementedException();  // this method should be implemented by subclassing the widget
     }
 
@@ -199,6 +203,11 @@ namespace FR {
     void Frtk_Widget::draw_focus(BOX_TYPE t, float X, float Y, float W, float H) {
         if (!m_has_focus)
             return;
+
+        draw_box(m_vg, t, { {X,Y},{W,H} }, m_cornerRadius, FRTK_NORMAL_BORDER, 
+            nvgRGBAf(0, 0.501f, 1.0f, 1.0f), 
+            nvgRGBAf(m_bkg_color.r, m_bkg_color.g, m_bkg_color.b, m_bkg_color.a), true);
+
         nvgBeginPath(m_vg);
         nvgRect(m_vg, X, Y, W, H);
         nvgStrokeColor(m_vg, nvgRGBAf(0, 0.501f, 1.0f, FRTK_FOCUS_OPACITY_VALUE)); // Blue focus outline
@@ -208,7 +217,9 @@ namespace FR {
     void Frtk_Widget::draw_focus(BOX_TYPE t, float X, float Y, float W, float H, glm::vec4 bkg) {
         if (!m_has_focus)
             return;
-        draw_box(m_vg, t, { {X,Y},{W,H} }, m_cornerRadius, FRTK_NORMAL_BORDER, nvgRGBAf(0, 0.501f, 1.0f, 1.0f), nvgRGBAf(bkg.r, bkg.g, bkg.b, bkg.a), true);
+        draw_box(m_vg, t, { {X,Y},{W,H} }, m_cornerRadius, FRTK_NORMAL_BORDER, 
+            nvgRGBAf(0, 0.501f, 1.0f, 1.0f),
+            nvgRGBAf(bkg.r, bkg.g, bkg.b, bkg.a), true);
     }
     void Frtk_Widget::drawLabel() {
         if (m_linkTofrtkWindow)

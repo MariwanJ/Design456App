@@ -32,10 +32,7 @@
 
 
 namespace FR {
-    class Fr_Widget;
-
     class FRTK_API Fr_Transform {
-        friend Fr_Widget;
     public:
         /**
          * Constructor
@@ -67,10 +64,11 @@ namespace FR {
 
         virtual void Scale(glm::vec3 value);
 
+        glm::mat4 m_Matrix;
+        glm::mat4 m_InverseMatrix;
+        glm::vec3 m_position;
     protected:
-        //Camera ViewMatrix and it's inverse
-        glm::mat4 m_viewMatrix;
-        glm::mat4 m_InverseViewMatrix;
+        float m_x, m_y, m_z;
 
     public:
         /**
@@ -85,10 +83,6 @@ namespace FR {
         void Position(float x, float y, float z);
         void Position(glm::vec3 pos);
         glm::vec3 Position();
-
-    protected:
-        glm::vec3 m_position;
-        float m_x, m_y, m_z;
     };
 }
 

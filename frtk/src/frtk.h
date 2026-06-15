@@ -69,7 +69,7 @@
 
 #include <frtk_api.h> //FRTK_API
 
- //for ResourcePath
+//for ResourcePath
 #if defined(_WIN32)
 //#include <windows.h>
 #include <Shlwapi.h>

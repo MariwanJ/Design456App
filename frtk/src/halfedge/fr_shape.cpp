@@ -38,7 +38,7 @@ namespace FR {
         0.0, 0.0, 0.5, 0.0,
         0.5, 0.5, 0.5, 1.0);
 
-    Fr_Shape::Fr_Shape(const std::string& fpath, glm::vec4 color, float silhouette) :Fr_Widget(NULL, NULL, "Shape"),
+    Fr_Shape::Fr_Shape(const std::string& fpath, glm::vec4 color, float silhouette) :Fr_Widget("Shape"),
         linktoMainWindow(NULL), normalized_(false)
     {
         m_label = std::make_shared<Fr_Label>(); //default constructor with default values
@@ -101,7 +101,7 @@ namespace FR {
 #endif
 
     //Default constructor with no vertices defined
-    Fr_Shape::Fr_Shape() : Fr_Widget(NULL, NULL, "") {
+    Fr_Shape::Fr_Shape() : Fr_Widget("") {
     }
 
     Fr_Shape::~Fr_Shape() {
@@ -208,7 +208,7 @@ namespace FR {
         if (!m_active)
             return;
 
-        auto mvp = info.projection * info.modelview * m_Matrix;
+        auto mvp = info.projection * info.modelview * m_transform.m_Matrix;
 
         m_shader->wdg_selection_prog->Enable();
         m_shader->wdg_selection_prog->SetAttribLocation("position", 0);

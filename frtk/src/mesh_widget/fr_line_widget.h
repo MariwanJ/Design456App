@@ -6,14 +6,12 @@
 namespace FR {
     class FRTK_API Fr_Line_Widget : public Fr_Widget {
     public:
-        Fr_Line_Widget(std::shared_ptr<std::vector <float>>vertices,
-            std::shared_ptr<std::vector <unsigned int>> indicies,
-            std::string label = "");
+        Fr_Line_Widget(std::string label = "");
+        Fr_Line_Widget(MyMesh & mesh, std::string label = "");
         virtual ~Fr_Line_Widget();
         //Default constructor is disallowed
         Fr_Line_Widget() = delete;
         virtual void draw();
-        void draw_points();
         virtual void redraw() override;
 
         virtual void lbl_draw();

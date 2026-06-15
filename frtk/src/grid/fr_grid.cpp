@@ -33,7 +33,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 namespace FR {
-    Fr_Grid::Fr_Grid() :Fr_Widget(NULL, NULL, ""), gridShader(0)
+    Fr_Grid::Fr_Grid() :Fr_Widget(""), gridShader(0)
     {
         setGridParam();//default values. Otherwise you have to use setGridParam
         type(NODETYPE::FR_GRID);

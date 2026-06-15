@@ -172,7 +172,7 @@ namespace FR {
 
         m_ProjectionMatrix = projection;
         updateViewMatrix();         // Ensure this updates m_ViewMatrix correctly
-        modelview = m_viewMatrix;
+        modelview = m_Matrix;
 
         return true;
     }
@@ -415,13 +415,13 @@ namespace FR {
     }
 
     void Fr_Camera::updateViewMatrix() {
-        m_viewMatrix = glm::lookAt(m_position, m_direction, m_up);
-        m_InverseViewMatrix = glm::inverse(m_viewMatrix);
+        m_Matrix = glm::lookAt(m_position, m_direction, m_up);
+        m_InverseMatrix = glm::inverse(m_Matrix);
     }
 
     glm::mat4 Fr_Camera::GetViewMatrix() {
         updateViewMatrix();
-        return m_viewMatrix;
+        return m_Matrix;
     }
 
     void Fr_Camera::SetOrthographicSize(float size_)
@@ -442,6 +442,6 @@ namespace FR {
 
     glm::mat4 Fr_Camera::GetInverseViewMatrix() {
         updateViewMatrix();
-        return m_InverseViewMatrix;
+        return m_InverseMatrix;
     }
 }

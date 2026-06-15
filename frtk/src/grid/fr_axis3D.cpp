@@ -32,7 +32,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "fr_axis3D.h"
 namespace FR {
-    Fr_Axis3D::Fr_Axis3D() :Fr_Widget(NULL, NULL, ""), ZstepSize_(10), stepWidth_(10), m_axisWidth(1.5f)
+    Fr_Axis3D::Fr_Axis3D() :Fr_Widget(""), ZstepSize_(10), stepWidth_(10), m_axisWidth(1.5f)
     {
         m_WidgType = NODETYPE::FR_AXIS3D;
     }

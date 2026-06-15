@@ -8,12 +8,9 @@
 namespace FR {
     class FRTK_API Fr_Face_Widget : public Fr_Widget {
     public:
-        Fr_Face_Widget(std::shared_ptr<std::vector <float>>vertices,
-            std::shared_ptr<std::vector <unsigned int>> indicies,
-            std::string label = "");
+        Fr_Face_Widget( std::string label = "");
+        Fr_Face_Widget(const MyMesh& mesh, std::string label="");
         virtual ~Fr_Face_Widget();
-        //Default constructor is disallowed
-        Fr_Face_Widget() = delete;
         virtual void draw();
         virtual void redraw() override;
 

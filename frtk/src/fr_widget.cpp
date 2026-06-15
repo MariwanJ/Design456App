@@ -34,12 +34,7 @@
 #include FT_FREETYPE_H
 
 namespace FR {
-    //Constructor
-    Fr_Widget::Fr_Widget(std::shared_ptr<std::vector <float>> vertices,
-        std::shared_ptr<std::vector <unsigned int>> indicies,
-        std::string label) :m_vertices(std::move(vertices)),
-        m_Matrix(glm::mat4(1.0f)), m_indices(std::move(indicies)), m_vao(0), m_vbo{ 0 },
-        m_lineWidth(1), m_selectionlineWidth(5), m_pointSize(10), m_label(0), m_sel_vao({ 0 }), m_silhouette(DEFAULT_SIHOUETTE)
+    Fr_Widget::Fr_Widget( std::string label) : m_vao(0), m_vbo{ 0 }, m_lineWidth(1), m_selectionlineWidth(5), m_pointSize(10), m_sel_vao({ 0 }), m_silhouette(DEFAULT_SIHOUETTE)
     {
         m_lineType = FR_NOT_DEFINED; //You should define it before use it
 
@@ -56,17 +51,23 @@ namespace FR {
         m_WidgType = NODETYPE::FR_WIDGET;   //widget type
         m_tabIndex = -1;
         m_hasTexture = 0;
+        
+        m_label = std::make_shared<Fr_Label>();
+        m_label->label(label);
+
         // Attributes
         m_color.baseColor = glm::vec4(FR_ANTIQUEWHITE);
         m_color.faceSelectColor = glm::vec4(FR_LIGHTYELLOW);
         m_color.edgeSelectColor = glm::vec4(FR_LIGHTGOLDENRODYELLOW);
         m_color.vertexSelectColor = glm::vec4(FR_YELLOW);
-
         //Change ALFA (transparency)
         m_color.faceSelectColor.a = m_color.edgeSelectColor.a = m_color.vertexSelectColor.a = 0.5f;
-
         m_texture = 0; //used to return the texture for imgui rendering inside window.
         m_shader = std::make_shared<Shader_t>();
+    }
+
+    Fr_Widget::Fr_Widget(const MyMesh& mesh, std::string label)
+    {
     }
 
     void Fr_Widget::ReadMeshString(const std::string& mshData) {
@@ -169,6 +170,7 @@ namespace FR {
         }
     }
 
+
     void Fr_Widget::init(void) {
         FRTK_CORE_APP_ASSERT(!m_vertices->empty() && "ERROR: You should provide vertices before initializing the object");
         CreateShader();
@@ -181,10 +183,6 @@ namespace FR {
         CreateShader();
         calcualteTextCoor();  //TODO:  ??? don't think it is correct
         rebaseVerticesToLocalSpace();
-    }
-
-    Fr_Widget::~Fr_Widget()
-    {
     }
 
     void Fr_Widget::CreateShader() {
@@ -346,36 +344,36 @@ namespace FR {
     }
     void Fr_Widget::Rotate(float x, float y, float z, float angle)
     {
-        m_Matrix = glm::rotate(m_Matrix, glm::radians(angle), glm::vec3(x, y, z));
+      m_transform.m_Matrix = glm::rotate(m_transform.m_Matrix, glm::radians(angle), glm::vec3(x, y, z));
     }
     void Fr_Widget::Rotate(glm::vec3 axis, float angle)
     {
-        m_Matrix = glm::rotate(m_Matrix, glm::radians(angle), axis);
+        m_transform.m_Matrix = glm::rotate(m_transform.m_Matrix, glm::radians(angle), axis);
     }
     void Fr_Widget::Translate(glm::vec3 v)
     {
-        m_Matrix = glm::translate(m_Matrix, v);
+        m_transform.m_Matrix = glm::translate(m_transform.m_Matrix, v);
     }
     void Fr_Widget::Translate(float x, float y, float z)
     {
-        m_Matrix = glm::translate(m_Matrix, glm::vec3(x, y, z));
+        m_transform.m_Matrix = glm::translate(m_transform.m_Matrix, glm::vec3(x, y, z));
     }
     void Fr_Widget::Scale(float x, float y, float z)
     {
-        m_Matrix = glm::scale(m_Matrix, glm::vec3(x, y, z));
+        m_transform.m_Matrix = glm::scale(m_transform.m_Matrix, glm::vec3(x, y, z));
     }
     void Fr_Widget::Scale(glm::vec3 value)
     {
-        m_Matrix = glm::scale(m_Matrix, value);
+        m_transform.m_Matrix = glm::scale(m_transform.m_Matrix, value);
     }
     glm::mat4 Fr_Widget::GetMatrix()
     {
-        return m_Matrix;
+        return m_transform.m_Matrix;
     }
 
     glm::mat4 Fr_Widget::GetInvers()
     {
-        return (glm::inverse(m_Matrix));
+        return (glm::inverse(m_transform.m_Matrix));
     }
     std::shared_ptr<std::vector<float>> Fr_Widget::getVertices() {
         return m_vertices;

@@ -29,9 +29,7 @@
 #include<fr_window.h>
 
 namespace FR {
-    Fr_Face_Widget::Fr_Face_Widget(std::shared_ptr<std::vector <float>> vertices,
-        std::shared_ptr<std::vector <unsigned int>> indicies,
-        std::string label) : Fr_Widget(vertices, indicies, label), m_pointPicker(false)
+    Fr_Face_Widget::Fr_Face_Widget(std::string label): Fr_Widget(label), m_pointPicker(false)
     {
         std::vector<MyMesh::VertexHandle> vertexHandles;
         for (size_t i = 0; i < m_vertices->size(); i += 3) {
@@ -47,6 +45,11 @@ namespace FR {
         init();
         m_WidgType = NODETYPE::FR_FACE_WIDGET;
         m_lineType = FR_CLOSED_LOOP;
+    }
+
+    Fr_Face_Widget::Fr_Face_Widget(const MyMesh& mesh, std::string label): 
+        Fr_Widget(mesh, label), m_pointPicker(false)
+    {
     }
 
     Fr_Face_Widget::~Fr_Face_Widget()
@@ -107,7 +110,7 @@ namespace FR {
         if (!m_active)
             return;
 
-        auto mvp = info.projection * info.modelview * m_Matrix;
+        auto mvp = info.projection * info.modelview * m_transform.m_Matrix;
 
         m_shader->wdg_selection_prog->Enable();
         m_shader->wdg_selection_prog->SetAttribLocation("position", 0);
@@ -149,7 +152,7 @@ namespace FR {
         if (!m_active)
             return;
 
-        auto mvp = info.projection * info.modelview * m_Matrix;
+        auto mvp = info.projection * info.modelview * m_transform.m_Matrix;
         auto normalmatrix = glm::transpose(glm::inverse(info.modelview));
         m_shader->wdg_prog->Enable();
         LoadLights(m_shader->wdg_prog, info.lights);

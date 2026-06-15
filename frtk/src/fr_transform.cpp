@@ -36,48 +36,48 @@ namespace FR {
         m_y{ 0 },
         m_z{ 0 }
     {
-        m_viewMatrix = glm::mat4(1.0f);
-        m_InverseViewMatrix = glm::inverse(m_viewMatrix);
+        m_Matrix = glm::mat4(1.0f);
+        m_InverseMatrix = glm::inverse(m_Matrix);
     }
 
     void Fr_Transform::Rotate(float x, float y, float z, float angle) {
-        m_viewMatrix = glm::rotate(m_viewMatrix, glm::radians(angle), glm::vec3(x, y, z));
-        m_InverseViewMatrix = glm::inverse(m_viewMatrix);
+        m_Matrix = glm::rotate(m_Matrix, glm::radians(angle), glm::vec3(x, y, z));
+        m_InverseMatrix = glm::inverse(m_Matrix);
     }
 
     void Fr_Transform::Rotate(glm::vec3 axis, float angle)
     {
-        m_viewMatrix = glm::rotate(m_viewMatrix, glm::radians(angle), axis);
-        m_InverseViewMatrix = glm::inverse(m_viewMatrix);
+        m_Matrix = glm::rotate(m_Matrix, glm::radians(angle), axis);
+        m_InverseMatrix = glm::inverse(m_Matrix);
     }
 
     void Fr_Transform::Translate(glm::vec3 value) {
-        m_viewMatrix = glm::translate(glm::mat4{ 1 }, value);
-        m_InverseViewMatrix = glm::inverse(m_viewMatrix);
+        m_Matrix = glm::translate(glm::mat4{ 1 }, value);
+        m_InverseMatrix = glm::inverse(m_Matrix);
     }
 
     void Fr_Transform::Translate(float x, float y, float z) {
         m_x = x; m_y = y; m_z = z;
-        m_viewMatrix = glm::translate(glm::mat4{ 1 }, glm::vec3(x, y, z));
-        m_InverseViewMatrix = glm::inverse(m_viewMatrix);
+        m_Matrix = glm::translate(glm::mat4{ 1 }, glm::vec3(x, y, z));
+        m_InverseMatrix = glm::inverse(m_Matrix);
     }
 
     void Fr_Transform::Scale(float x, float y, float z) {
-        m_viewMatrix = glm::scale(m_viewMatrix, glm::vec3(x, y, z));
-        m_InverseViewMatrix = glm::inverse(m_viewMatrix);
+        m_Matrix = glm::scale(m_Matrix, glm::vec3(x, y, z));
+        m_InverseMatrix = glm::inverse(m_Matrix);
     }
 
     void Fr_Transform::Scale(glm::vec3 value) {
-        m_viewMatrix = glm::scale(m_viewMatrix, value);
-        m_InverseViewMatrix = glm::inverse(m_viewMatrix);
+        m_Matrix = glm::scale(m_Matrix, value);
+        m_InverseMatrix = glm::inverse(m_Matrix);
     }
 
     glm::mat4 Fr_Transform::GetViewMatrix() {
-        return m_viewMatrix;
+        return m_Matrix;
     }
 
     glm::mat4 Fr_Transform::GetInverseViewMatrix() {
-        return m_InverseViewMatrix;
+        return m_InverseMatrix;
     }
 
     void Fr_Transform::Position(float x, float y, float z) {
