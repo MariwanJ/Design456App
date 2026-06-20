@@ -266,7 +266,6 @@ namespace FR {
         }
         if (m_mesh.has_vert_sel() > 0) {
             //2 Points for each edge
-
             for (const auto& vh : m_mesh.vertices())
             {
                 if (!m_mesh.isVertexSelected(vh)) continue;
@@ -275,7 +274,6 @@ namespace FR {
                 m_selectionData.vertices.push_back(p[1]);
                 m_selectionData.vertices.push_back(p[2]);
             }
-
             glCheckFunc(glBindBuffer(GL_ARRAY_BUFFER, m_sel_vbo.vertex));
             glCheckFunc(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_selectionData.vertices.size(), m_selectionData.vertices.data(), GL_STATIC_DRAW));
         }

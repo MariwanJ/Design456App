@@ -66,106 +66,175 @@ namespace FR {
         m_shader = std::make_shared<Shader_t>();
     }
 
-    Fr_Widget::Fr_Widget(const MyMesh& mesh, std::string label)
+    Fr_Widget::Fr_Widget(const MyMesh& mesh, std::string label) : Fr_Widget(label)
     {
+        m_mesh = mesh;
     }
 
-    void Fr_Widget::ReadMeshString(const std::string& mshData) {
+    void Fr_Widget::ReadMeshString(const std::string& mshData)
+    {
         std::istringstream input(mshData);
-        if (!m_vertices) {
+        if (!m_vertices)
             m_vertices = std::make_shared<std::vector<float>>();
-        }
-        if (!m_indices) {
+        if (!m_indices)
             m_indices = std::make_shared<std::vector<unsigned int>>();
-        }
-        if (!m_normals) {
+        if (!m_normals)
             m_normals = std::make_shared<std::vector<float>>();
-        }
+
+        // Clear previous data
+        m_mesh.clear();
+        m_vertices->clear();
+        m_indices->clear();
+        m_normals->clear();
+
         std::string header;
         std::getline(input, header);
 
-        size_t nVertices, nTriangles, nQuads;
+        size_t nVertices = 0;
+        size_t nTriangles = 0;
+        size_t nQuads = 0;
+
         input >> nVertices >> nTriangles >> nQuads;
 
         m_vertices->resize(nVertices * 3);
         for (size_t i = 0; i < m_vertices->size(); ++i)
-            input >> m_vertices->at(i);
-
-        m_indices->resize((nTriangles + 2 * nQuads) * 3);
-        size_t idx = 0;
-        for (size_t i = 0; i < nTriangles + nQuads; ++i) {
-            int polygon;
+        {
+            if (!(input >> (*m_vertices)[i]))
+                throw std::runtime_error("Failed to read vertex data");
+        }
+        m_indices->reserve((nTriangles + 2 * nQuads) * 3);
+        for (size_t i = 0; i < nTriangles + nQuads; ++i)
+        {
+            unsigned int polygon = 0;
             input >> polygon;
-            if (polygon == 3) {
-                input >> m_indices->at(idx++);
-                input >> m_indices->at(idx++);
-                input >> m_indices->at(idx++);
+
+            if (polygon == 3)
+            {
+                unsigned int a, b, c;
+                input >> a >> b >> c;
+
+                m_indices->push_back(a);
+                m_indices->push_back(b);
+                m_indices->push_back(c);
             }
-            else {
-                float quad[4];              /// TODO: This is really not supported yet
-                input >> quad[0] >> quad[1] >> quad[2] >> quad[3];
-                m_indices->at(idx++) = quad[0];
-                m_indices->at(idx++) = quad[1];
-                m_indices->at(idx++) = quad[2];
-                m_indices->at(idx++) = quad[2];
-                m_indices->at(idx++) = quad[3];
-                m_indices->at(idx++) = quad[0];
+            else if (polygon == 4)
+            {
+                unsigned int a, b, c, d;
+                input >> a >> b >> c >> d;
+
+                m_indices->push_back(a);
+                m_indices->push_back(b);
+                m_indices->push_back(c);
+
+                m_indices->push_back(c);
+                m_indices->push_back(d);
+                m_indices->push_back(a);
+            }
+            else
+            {
+                FRTK_CORE_FATAL("Unsupported polygon size: {}" , std::to_string(polygon) );
             }
         }
+
+        // Create OpenMesh vertices
         std::vector<MyMesh::VertexHandle> vhandles;
         vhandles.reserve(nVertices);
-        for (size_t i = 0; i < nVertices; ++i) {
-            MyMesh::Point p((*m_vertices)[3 * i], (*m_vertices)[3 * i + 1], (*m_vertices)[3 * i + 2]);
+
+        for (size_t i = 0; i < nVertices; ++i)
+        {
+            MyMesh::Point p(
+                (*m_vertices)[3 * i + 0],
+                (*m_vertices)[3 * i + 1],
+                (*m_vertices)[3 * i + 2]);
+
             vhandles.push_back(m_mesh.add_vertex(p));
         }
-        for (size_t i = 0; i < nTriangles; ++i) {
+        const size_t triangleCount = m_indices->size() / 3;
+        for (size_t i = 0; i < triangleCount; ++i)
+        {
             std::vector<MyMesh::VertexHandle> faceV;
-            for (int j = 0; j < 3; ++j) {
-                idx = (*m_indices)[3 * i + j];
-                faceV.push_back(vhandles[idx]); // use stored handles!
+            faceV.reserve(3);
+            for (int j = 0; j < 3; ++j)
+            {
+                unsigned int idx = (*m_indices)[3 * i + j];
+
+                if (idx >= vhandles.size())
+                {
+                    FRTK_CORE_FATAL("Face references invalid vertex index: {}", std::to_string(idx));
+                }
+                faceV.push_back(vhandles[idx]);
             }
             auto fh = m_mesh.add_face(faceV);
-            if (!fh.is_valid()) {
-                std::cerr << "Failed to add face " << i << std::endl;
+            if (!fh.is_valid())
+            {
+                FRTK_CORE_ERROR("Warning: Failed to add face {}", i );
             }
         }
     }
+
     void Fr_Widget::rebaseVerticesToLocalSpace()
     {
         glm::vec3 origin = m_boundBox->Center();
         origin.z = m_boundBox->minZ();
-        for (size_t i = 0; i < m_vertices->size(); i += 3)
+
+        MyMesh::Point offset(origin.x, origin.y, origin.z);
+
+        for (auto vh : m_mesh.vertices())
         {
-            m_vertices->at(i + 0) -= origin.x;
-            m_vertices->at(i + 1) -= origin.y;
-            m_vertices->at(i + 2) -= origin.z;
+            m_mesh.set_point(vh, m_mesh.point(vh) - offset);
         }
+
         m_transform.m_position += origin;
-        m_boundBox->calBoundBox(); // update bound box
     }
 
-    void Fr_Widget::ReadFile(const std::string& path) {
-        if (!m_vertices) {
-            m_vertices = std::make_shared < std::vector<float>>();
-        }
-        if (!m_indices) {
-            m_indices = std::make_shared < std::vector<unsigned int>>();
-        }
+    void Fr_Widget::ReadFile(const std::string& path)
+    {
+        if (!m_vertices)
+            m_vertices = std::make_shared<std::vector<float>>();
+
+        if (!m_indices)
+            m_indices = std::make_shared<std::vector<unsigned int>>();
+
+        m_vertices->clear();
+        m_indices->clear();
+
         if (!OpenMesh::IO::read_mesh(m_mesh, path))
         {
             throw std::runtime_error("Failed to read mesh from " + path);
         }
+
+        // Verify that all faces are triangles
+        for (auto fit = m_mesh.faces_begin(); fit != m_mesh.faces_end(); ++fit)
+        {
+            size_t vertexCount = 0;
+
+            for (auto fvit = m_mesh.fv_iter(*fit); fvit.is_valid(); ++fvit)
+                ++vertexCount;
+
+            if (vertexCount != 3)
+            {
+                throw std::runtime_error(
+                    "Mesh contains non-triangular faces. Only triangulated meshes are supported.");
+            }
+        }
+
         m_vertices->reserve(m_mesh.n_vertices() * 3);
-        m_indices->reserve(m_mesh.n_faces() * 3); // TODO: We need to make sure there are only 3 vert/obj
-        for (auto vit = m_mesh.vertices_begin(); vit != m_mesh.vertices_end(); ++vit) {
-            MyMesh::Point p = m_mesh.point(*vit);
+        m_indices->reserve(m_mesh.n_faces() * 3);
+
+        for (auto vit = m_mesh.vertices_begin(); vit != m_mesh.vertices_end(); ++vit)
+        {
+            const MyMesh::Point& p = m_mesh.point(*vit);
+
             m_vertices->emplace_back(static_cast<float>(p[0]));
             m_vertices->emplace_back(static_cast<float>(p[1]));
             m_vertices->emplace_back(static_cast<float>(p[2]));
         }
-        for (auto fit = m_mesh.faces_begin(); fit != m_mesh.faces_end(); ++fit) {
-            for (auto fvit = m_mesh.fv_iter(*fit); fvit.is_valid(); ++fvit) {
-                m_indices->emplace_back(fvit.handle().idx());
+
+        for (auto fit = m_mesh.faces_begin(); fit != m_mesh.faces_end(); ++fit)
+        {
+            for (auto fvit = m_mesh.fv_iter(*fit); fvit.is_valid(); ++fvit)
+            {
+                m_indices->emplace_back(fvit->idx());
             }
         }
     }
@@ -175,6 +244,7 @@ namespace FR {
         FRTK_CORE_APP_ASSERT(!m_vertices->empty() && "ERROR: You should provide vertices before initializing the object");
         CreateShader();
         m_boundBox = std::make_shared <cBoundBox3D>();
+        rebaseVerticesToLocalSpace();
         m_boundBox->setVertices(m_vertices);
         CalculateNormals();
         createBuffers();
@@ -182,7 +252,7 @@ namespace FR {
         initializeVAO();
         CreateShader();
         calcualteTextCoor();  //TODO:  ??? don't think it is correct
-        rebaseVerticesToLocalSpace();
+
     }
 
     void Fr_Widget::CreateShader() {

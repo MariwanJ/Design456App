@@ -101,11 +101,11 @@ namespace FR {
 #endif
 
     //Default constructor with no vertices defined
-    Fr_Shape::Fr_Shape() : Fr_Widget("") {
+    Fr_Shape::Fr_Shape() : Fr_Widget(""){
     }
 
     Fr_Shape::~Fr_Shape() {
-        //Think about cleanup here ?????
+    //Think about cleanup here ?????
 
 /*        if (m_vao != 0) {
             glCheckFunc(glDeleteVertexArrays(1, &m_vao));

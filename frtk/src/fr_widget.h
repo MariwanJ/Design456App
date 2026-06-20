@@ -111,8 +111,8 @@ namespace FR {
 
         // Default constructor is disallowed
         Fr_Widget() = delete;
-        Fr_Widget(std::string label);
-        Fr_Widget(const MyMesh& mesh, std::string label) ;
+        Fr_Widget(std::string label="");
+        Fr_Widget(const MyMesh& mesh, std::string label="");
 
         //TODO: Should this be public??
         virtual void init(void); //We need this if the widget is created (sub-classed) without vertices, like in reading files.

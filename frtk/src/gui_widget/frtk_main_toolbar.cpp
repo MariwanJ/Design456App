@@ -27,13 +27,13 @@
 
 #include <gui_widget/frtk_main_toolbar.h>
 #include <gui_widget/frtk_toolbar_vwin.h>
+#include <gui_widget/frtk_toggle_button.h>
 #include <fr_file_dialog.h>
 #include <fr_window.h>
 #include <gui_widget/frtk_window.h>
 namespace FR {
     /*
-                            TOOLBARS CALLBACKS
-
+      TOOLBARS CALLBACKS
     */
     void Fr_Window::mainToolbar_callback(size_t index, void* data) {
         std::shared_ptr<Fr_Window> win = Fr_Window::getFr_Window();
@@ -98,19 +98,13 @@ namespace FR {
         }
         }
     }
-    //********************************************************************************************************************************************
-
-    /*
-                        TOOLBARS DEFINITIONS
-
-*/
 
     std::shared_ptr<Frtk_ToolBarVwin> Fr_Window::createMainToolbar() {
         std::vector<toolbBTN_t> tools1 = {
         {"New",                                                                         // std::string lbl
         "New",                                                                          //std::string name
         {FRTK_TOOLBAR_BUTTON_HEGHT,FRTK_TOOLBAR_BUTTON_HEGHT},                          //dimSize_float_t size
-        iconPath + "/32x32/" + "Folder-Create-32x32.png",                                           //std::string icon
+        iconPath + "/32x32/" + "Folder-Create-32x32.png",                               //std::string icon
         [this](Frtk_Widget& w) { this->mainToolbar_callback(FR_FILE_NEW); },            //Frtk_Widget::Callback callback_
         FRTK_UP_BOX,                                                                    //WIDGTYPE boxType
         "",                                                                             //std::string tooltips;  //not implemented y
@@ -173,7 +167,6 @@ namespace FR {
             FRTK_FLAT_BOX,
             ""},
         };
-        //Frtk_ToolBarVwin(float, float Y, float W, float H, std::string lbl, const std::vector<toolbBTN_t>&tools = {}, bool horizontal = true, BOX_TYPE b = FRTK_UP_BOX, WIDGTYPE btnType = FRTK_TOOLBAR_BUTTON);
         std::shared_ptr<Frtk_ToolBarVwin> tb2 = std::make_shared<Frtk_ToolBarVwin>(w() / 2 - FRTK_TOOLBAR_HEIGHT * 2,
             21.0f + FRTK_TOOLBAR_HEIGHT,
             FRTK_TOOLBAR_HEIGHT * 4 + FRTK_TOOLBAR_HEIGHT / 2,
@@ -182,10 +175,13 @@ namespace FR {
             FRTK_FLAT_BOX, FRTK_TOGGLE_BUTTON);
         size_t childrens = tb2->m_guiWindow->getChildrenNo();
         for (size_t i = 0; i < childrens; ++i) {
-            tb2->m_guiWindow->getChildAt(i)->cellStyle(FR_IMG_LEFT_TO_TEXT); //Make both be in the center;
+            std::shared_ptr<Frtk_Toggle_Button> child = std::dynamic_pointer_cast<Frtk_Toggle_Button>(tb2->m_guiWindow->getChildAt(i));
+            if (i == 0) {
+                child->value(1); //Default (Mesh Selection is active)
+            }
+            child->cellStyle(FR_IMG_LEFT_TO_TEXT); //Make both be in the center;
         }
         tb2->widgetType(FRTK_TOOLBARWIN_TOOGLE);
-        //tb2->dockable(false); //don't allow docking - this should be a static toolbar in the middle of the screen.
         return tb2;
     }
 }
